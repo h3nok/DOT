@@ -1,0 +1,1349 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.25 0.2 280);  /* Deep Purple */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.55 0.2 200);  /* Cyan Blue */
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.65 0.25 320);  /* Electric Purple */
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.25 0.2 280);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.12 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.12 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.65 0.25 280);  /* Bright Purple */
+  --primary-foreground: oklch(0.08 0 0);
+  --secondary: oklch(0.75 0.2 200);  /* Bright Cyan */
+  --secondary-foreground: oklch(0.08 0 0);
+  --muted: oklch(0.18 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.8 0.25 320);  /* Neon Purple */
+  --accent-foreground: oklch(0.08 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.12 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.65 0.25 280);
+  --sidebar-primary-foreground: oklch(0.08 0 0);
+  --sidebar-accent: oklch(0.18 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.25 0 0);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', monospace;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, oklch(0.25 0.2 280) 0%, oklch(0.55 0.2 200) 50%, oklch(0.65 0.25 320) 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, oklch(0.25 0.2 280) 0%, oklch(0.55 0.2 200) 50%, oklch(0.65 0.25 320) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.neon-glow {
+  box-shadow: 0 0 20px oklch(0.65 0.25 320), 0 0 40px oklch(0.65 0.25 320), 0 0 60px oklch(0.65 0.25 320);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  border-color: oklch(0.65 0.25 320);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 25px 50px -12px oklch(0.65 0.25 320 / 0.3);
+}
+
+.glass-effect {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-effect {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 1s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 20px oklch(0.65 0.25 320 / 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px oklch(0.65 0.25 320 / 0.8), 0 0 60px oklch(0.65 0.25 320 / 0.6);
+  }
+}
+
+.digital-grid {
+  background-image: 
+    linear-gradient(rgba(101, 67, 204, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(101, 67, 204, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .digital-grid {
+  background-image: 
+    linear-gradient(rgba(165, 101, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(165, 101, 255, 0.2) 1px, transparent 1px);
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.97 0 0);
+  border-radius: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: oklch(0.12 0 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, oklch(0.25 0.2 280), oklch(0.65 0.25 320));
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, oklch(0.35 0.2 280), oklch(0.75 0.25 320));
+  background-clip: content-box;
+}
+
+/* Rich text editor styles */
+.prose {
+  max-width: none;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: 'Orbitron', monospace;
+  background: linear-gradient(135deg, oklch(0.25 0.2 280), oklch(0.65 0.25 320));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.prose blockquote {
+  border-left: 4px solid oklch(0.65 0.25 320);
+  background: oklch(0.99 0 0);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  position: relative;
+}
+
+.dark .prose blockquote {
+  background: oklch(0.12 0 0);
+  border-left-color: oklch(0.8 0.25 320);
+}
+
+.prose code {
+  font-family: 'JetBrains Mono', monospace;
+  background: oklch(0.97 0 0);
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  border: 1px solid oklch(0.922 0 0);
+}
+
+.dark .prose code {
+  background: oklch(0.18 0 0);
+  border-color: oklch(0.25 0 0);
+}
+
+.prose pre {
+  background: oklch(0.97 0 0);
+  border: 1px solid oklch(0.922 0 0);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  position: relative;
+}
+
+.dark .prose pre {
+  background: oklch(0.12 0 0);
+  border-color: oklch(0.25 0 0);
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+/* Forum and discussion styles */
+.discussion-thread {
+  border-left: 3px solid oklch(0.922 0 0);
+  padding-left: 1.5rem;
+  margin-left: 1.5rem;
+  position: relative;
+}
+
+.discussion-thread.active {
+  border-left-color: oklch(0.65 0.25 320);
+}
+
+.dark .discussion-thread {
+  border-left-color: oklch(0.25 0 0);
+}
+
+.dark .discussion-thread.active {
+  border-left-color: oklch(0.8 0.25 320);
+}
+
+/* Progress indicators */
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease;
+  transform-origin: 50% 50%;
+}
+
+/* Notification styles */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background: linear-gradient(135deg, oklch(0.25 0.2 280), oklch(0.65 0.25 320));
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px oklch(0.65 0.25 320 / 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, oklch(0.55 0.2 200), oklch(0.75 0.2 200));
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px oklch(0.55 0.2 200 / 0.4);
+}
+
+/* Loading animations */
+.loading-dots {
+  display: inline-block;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Floating elements */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .gradient-bg {
+    background: oklch(0.25 0.2 280);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-4px);
+  }
+  
+  .glass-effect {
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .dark .glass-effect {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .neon-glow {
+    box-shadow: 0 0 10px oklch(0.65 0.25 320);
+  }
+}
+
+/* Theme transition */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom focus styles */
+.focus-visible:focus-visible {
+  outline: 2px solid oklch(0.65 0.25 320);
+  outline-offset: 2px;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Emergent Complexity Animations */
+.emergent-complexity {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Fractal Consciousness Field */
+.fractal-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, oklch(0.1 0.25 320 / 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, oklch(0.1 0.25 320 / 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, oklch(0.05 0.25 320 / 0.05) 0%, transparent 70%);
+  animation: fractalBreath 12s infinite ease-in-out;
+}
+
+@keyframes fractalBreath {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.4) rotate(180deg);
+    opacity: 0.7;
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    opacity: 0.4;
+  }
+}
+
+/* Fractal Nodes - Self-Similar Structures */
+.fractal-node {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: oklch(0.7 0.25 320);
+  border-radius: 50%;
+  animation: fractalFloat 10s infinite ease-in-out;
+}
+
+.fractal-node:nth-child(1) { animation-delay: 0s; left: 10%; top: 20%; }
+.fractal-node:nth-child(2) { animation-delay: 1s; left: 20%; top: 60%; }
+.fractal-node:nth-child(3) { animation-delay: 2s; left: 30%; top: 40%; }
+.fractal-node:nth-child(4) { animation-delay: 3s; left: 40%; top: 80%; }
+.fractal-node:nth-child(5) { animation-delay: 4s; left: 50%; top: 30%; }
+.fractal-node:nth-child(6) { animation-delay: 5s; left: 60%; top: 70%; }
+.fractal-node:nth-child(7) { animation-delay: 6s; left: 70%; top: 50%; }
+.fractal-node:nth-child(8) { animation-delay: 7s; left: 80%; top: 25%; }
+.fractal-node:nth-child(9) { animation-delay: 0.5s; left: 15%; top: 75%; }
+.fractal-node:nth-child(10) { animation-delay: 1.5s; left: 25%; top: 35%; }
+.fractal-node:nth-child(11) { animation-delay: 2.5s; left: 35%; top: 65%; }
+.fractal-node:nth-child(12) { animation-delay: 3.5s; left: 45%; top: 45%; }
+.fractal-node:nth-child(13) { animation-delay: 4.5s; left: 55%; top: 85%; }
+.fractal-node:nth-child(14) { animation-delay: 5.5s; left: 65%; top: 15%; }
+.fractal-node:nth-child(15) { animation-delay: 6.5s; left: 75%; top: 55%; }
+.fractal-node:nth-child(16) { animation-delay: 7.5s; left: 85%; top: 35%; }
+
+/* Second Level Fractal Nodes */
+.fractal-node-2 {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: oklch(0.8 0.25 320);
+  border-radius: 50%;
+  animation: fractalFloat2 8s infinite ease-in-out;
+}
+
+.fractal-node-2:nth-child(17) { animation-delay: 0.2s; left: 12%; top: 22%; }
+.fractal-node-2:nth-child(18) { animation-delay: 1.2s; left: 22%; top: 62%; }
+.fractal-node-2:nth-child(19) { animation-delay: 2.2s; left: 32%; top: 42%; }
+.fractal-node-2:nth-child(20) { animation-delay: 3.2s; left: 42%; top: 82%; }
+.fractal-node-2:nth-child(21) { animation-delay: 4.2s; left: 52%; top: 32%; }
+.fractal-node-2:nth-child(22) { animation-delay: 5.2s; left: 62%; top: 72%; }
+.fractal-node-2:nth-child(23) { animation-delay: 6.2s; left: 72%; top: 52%; }
+.fractal-node-2:nth-child(24) { animation-delay: 7.2s; left: 82%; top: 27%; }
+
+/* Third Level Fractal Nodes */
+.fractal-node-3 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: oklch(0.9 0.25 320);
+  border-radius: 50%;
+  animation: fractalFloat3 6s infinite ease-in-out;
+}
+
+.fractal-node-3:nth-child(25) { animation-delay: 0.4s; left: 11%; top: 21%; }
+.fractal-node-3:nth-child(26) { animation-delay: 1.4s; left: 21%; top: 61%; }
+.fractal-node-3:nth-child(27) { animation-delay: 2.4s; left: 31%; top: 41%; }
+.fractal-node-3:nth-child(28) { animation-delay: 3.4s; left: 41%; top: 81%; }
+.fractal-node-3:nth-child(29) { animation-delay: 4.4s; left: 51%; top: 31%; }
+.fractal-node-3:nth-child(30) { animation-delay: 5.4s; left: 61%; top: 71%; }
+
+@keyframes fractalFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-15px) scale(1.3) rotate(90deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-25px) scale(1.1) rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-35px) scale(1.4) rotate(270deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fractalFloat2 {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translateY(-12px) scale(1.2) rotate(120deg);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translateY(-20px) scale(1.1) rotate(240deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes fractalFloat3 {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.1) rotate(180deg);
+    opacity: 0.7;
+  }
+}
+
+/* Complex System Formation - Emergent Clusters */
+.system-cluster {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, oklch(0.8 0.25 320), oklch(0.6 0.25 320 / 0.6));
+  border-radius: 50%;
+  animation: systemEmerge 15s infinite ease-in-out;
+  box-shadow: 0 0 25px oklch(0.8 0.25 320 / 0.4);
+}
+
+.system-cluster:nth-child(31) { 
+  left: 30%; 
+  top: 50%; 
+  animation-delay: 0s;
+}
+.system-cluster:nth-child(32) { 
+  left: 60%; 
+  top: 30%; 
+  animation-delay: 5s;
+}
+.system-cluster:nth-child(33) { 
+  left: 45%; 
+  top: 70%; 
+  animation-delay: 10s;
+}
+
+@keyframes systemEmerge {
+  0%, 100% {
+    transform: scale(0.3);
+    opacity: 0.2;
+    box-shadow: 0 0 5px oklch(0.8 0.25 320 / 0.2);
+  }
+  20% {
+    transform: scale(0.8);
+    opacity: 0.5;
+    box-shadow: 0 0 15px oklch(0.8 0.25 320 / 0.3);
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 0.8;
+    box-shadow: 0 0 25px oklch(0.8 0.25 320 / 0.5);
+  }
+  60% {
+    transform: scale(1.8);
+    opacity: 1;
+    box-shadow: 0 0 35px oklch(0.8 0.25 320 / 0.7);
+  }
+  80% {
+    transform: scale(1.4);
+    opacity: 0.7;
+    box-shadow: 0 0 20px oklch(0.8 0.25 320 / 0.4);
+  }
+}
+
+/* Fractal Connections - Self-Similar Networks */
+.fractal-connection {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.7 0.25 320 / 0.4), transparent);
+  animation: fractalPulse 6s infinite ease-in-out;
+  transform-origin: left center;
+}
+
+.fractal-connection:nth-child(34) { 
+  width: 140px; 
+  left: 12%; 
+  top: 22%; 
+  transform: rotate(45deg);
+  animation-delay: 0s;
+}
+.fractal-connection:nth-child(35) { 
+  width: 100px; 
+  left: 22%; 
+  top: 42%; 
+  transform: rotate(-30deg);
+  animation-delay: 1s;
+}
+.fractal-connection:nth-child(36) { 
+  width: 120px; 
+  left: 32%; 
+  top: 52%; 
+  transform: rotate(60deg);
+  animation-delay: 2s;
+}
+.fractal-connection:nth-child(37) { 
+  width: 110px; 
+  left: 42%; 
+  top: 32%; 
+  transform: rotate(-45deg);
+  animation-delay: 3s;
+}
+.fractal-connection:nth-child(38) { 
+  width: 130px; 
+  left: 52%; 
+  top: 62%; 
+  transform: rotate(25deg);
+  animation-delay: 0.5s;
+}
+.fractal-connection:nth-child(39) { 
+  width: 115px; 
+  left: 62%; 
+  top: 22%; 
+  transform: rotate(-60deg);
+  animation-delay: 1.5s;
+}
+.fractal-connection:nth-child(40) { 
+  width: 105px; 
+  left: 72%; 
+  top: 42%; 
+  transform: rotate(40deg);
+  animation-delay: 2.5s;
+}
+.fractal-connection:nth-child(41) { 
+  width: 125px; 
+  left: 82%; 
+  top: 62%; 
+  transform: rotate(-35deg);
+  animation-delay: 3.5s;
+}
+
+/* Micro-connections for fractal detail */
+.fractal-micro-connection {
+  position: absolute;
+  height: 0.5px;
+  background: linear-gradient(90deg, transparent, oklch(0.8 0.25 320 / 0.3), transparent);
+  animation: microPulse 4s infinite ease-in-out;
+  transform-origin: left center;
+}
+
+.fractal-micro-connection:nth-child(42) { 
+  width: 60px; 
+  left: 15%; 
+  top: 25%; 
+  transform: rotate(20deg);
+  animation-delay: 0.2s;
+}
+.fractal-micro-connection:nth-child(43) { 
+  width: 50px; 
+  left: 25%; 
+  top: 45%; 
+  transform: rotate(-15deg);
+  animation-delay: 1.2s;
+}
+.fractal-micro-connection:nth-child(44) { 
+  width: 70px; 
+  left: 35%; 
+  top: 55%; 
+  transform: rotate(35deg);
+  animation-delay: 2.2s;
+}
+.fractal-micro-connection:nth-child(45) { 
+  width: 55px; 
+  left: 45%; 
+  top: 35%; 
+  transform: rotate(-25deg);
+  animation-delay: 3.2s;
+}
+
+@keyframes fractalPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleX(1) rotate(var(--rotation, 0deg));
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleX(1.3) rotate(var(--rotation, 0deg));
+  }
+}
+
+@keyframes microPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scaleX(1) rotate(var(--rotation, 0deg));
+  }
+  50% {
+    opacity: 0.6;
+    transform: scaleX(1.2) rotate(var(--rotation, 0deg));
+  }
+}
+
+/* Consciousness Waves - Fractal Patterns */
+.fractal-wave {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    oklch(0.7 0.25 320 / 0.3) 25%, 
+    oklch(0.8 0.25 320 / 0.5) 50%, 
+    oklch(0.7 0.25 320 / 0.3) 75%, 
+    transparent 100%);
+  animation: fractalWaveFlow 8s infinite ease-in-out;
+}
+
+.fractal-wave:nth-child(46) { 
+  top: 20%; 
+  animation-delay: 0s;
+}
+.fractal-wave:nth-child(47) { 
+  top: 50%; 
+  animation-delay: 2.5s;
+}
+.fractal-wave:nth-child(48) { 
+  top: 80%; 
+  animation-delay: 5s;
+}
+
+@keyframes fractalWaveFlow {
+  0%, 100% {
+    transform: translateX(-100%) scaleY(1);
+    opacity: 0;
+  }
+  25% {
+    transform: translateX(-50%) scaleY(1.2);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateX(0%) scaleY(1.5);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateX(50%) scaleY(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(100%) scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* Emergent Complexity Particle System */
+.consciousness-particle-system {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Particle Base */
+.consciousness-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: oklch(0.8 0.25 320);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.1s ease;
+}
+
+/* Particle Variants */
+.consciousness-particle.seed {
+  background: oklch(0.9 0.25 320);
+  width: 2px;
+  height: 2px;
+  opacity: 0.6;
+}
+
+.consciousness-particle.aligned {
+  background: oklch(0.7 0.25 320);
+  width: 4px;
+  height: 4px;
+  opacity: 0.8;
+  box-shadow: 0 0 8px oklch(0.7 0.25 320 / 0.5);
+}
+
+.consciousness-particle.cohesive {
+  background: oklch(0.6 0.25 320);
+  width: 5px;
+  height: 5px;
+  opacity: 1;
+  box-shadow: 0 0 12px oklch(0.6 0.25 320 / 0.6);
+}
+
+.consciousness-particle.emergent {
+  background: oklch(0.5 0.25 320);
+  width: 6px;
+  height: 6px;
+  opacity: 1;
+  box-shadow: 0 0 16px oklch(0.5 0.25 320 / 0.7);
+}
+
+/* Motion Trails */
+.particle-trail {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: oklch(0.8 0.25 320 / 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: trailFade 3s ease-out forwards;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+/* Emergent Structures */
+.emergent-structure {
+  position: absolute;
+  border: 1px solid oklch(0.7 0.25 320 / 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: structureEmerge 8s ease-in-out infinite;
+}
+
+.emergent-structure.swirl {
+  border-radius: 0;
+  border: none;
+  background: conic-gradient(from 0deg, 
+    transparent 0deg, 
+    oklch(0.7 0.25 320 / 0.1) 90deg, 
+    transparent 180deg, 
+    oklch(0.7 0.25 320 / 0.05) 270deg, 
+    transparent 360deg);
+}
+
+.emergent-structure.lattice {
+  border-radius: 0;
+  border: 1px solid oklch(0.7 0.25 320 / 0.3);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    oklch(0.7 0.25 320 / 0.05) 10px,
+    oklch(0.7 0.25 320 / 0.05) 20px
+  );
+}
+
+.emergent-structure.vortex {
+  border-radius: 50%;
+  border: 2px solid oklch(0.7 0.25 320 / 0.4);
+  background: radial-gradient(circle, 
+    oklch(0.7 0.25 320 / 0.1) 0%, 
+    transparent 70%);
+}
+
+@keyframes structureEmerge {
+  0%, 100% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    opacity: 0.5;
+  }
+}
+
+/* Perlin Flow Field */
+.flow-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at 20% 30%, oklch(0.1 0.25 320 / 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, oklch(0.1 0.25 320 / 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, oklch(0.05 0.25 320 / 0.02) 0%, transparent 70%);
+  animation: flowFieldShift 20s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes flowFieldShift {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-10px) translateY(-5px) rotate(90deg);
+  }
+  50% {
+    transform: translateX(5px) translateY(-10px) rotate(180deg);
+  }
+  75% {
+    transform: translateX(-5px) translateY(5px) rotate(270deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(360deg);
+  }
+}
+
+/* Neighborhood Visualization */
+.neighborhood {
+  position: absolute;
+  border: 1px dashed oklch(0.7 0.25 320 / 0.2);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: neighborhoodPulse 2s ease-in-out infinite;
+}
+
+@keyframes neighborhoodPulse {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+}
+
+/* Feedback Loops */
+.feedback-loop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, 
+    transparent 0deg, 
+    oklch(0.1 0.25 320 / 0.02) 45deg, 
+    transparent 90deg, 
+    oklch(0.1 0.25 320 / 0.01) 135deg, 
+    transparent 180deg, 
+    oklch(0.1 0.25 320 / 0.02) 225deg, 
+    transparent 270deg, 
+    oklch(0.1 0.25 320 / 0.01) 315deg, 
+    transparent 360deg);
+  animation: feedbackRotate 15s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes feedbackRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+/* Particle Swarm States */
+.particle-swarm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.swarm-state-seed {
+  animation: swarmSeed 10s infinite ease-in-out;
+}
+
+.swarm-state-motion {
+  animation: swarmMotion 8s infinite ease-in-out;
+}
+
+.swarm-state-rules {
+  animation: swarmRules 12s infinite ease-in-out;
+}
+
+.swarm-state-feedback {
+  animation: swarmFeedback 15s infinite ease-in-out;
+}
+
+.swarm-state-emergent {
+  animation: swarmEmergent 20s infinite ease-in-out;
+}
+
+@keyframes swarmSeed {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+@keyframes swarmMotion {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(20px) translateY(-10px);
+  }
+  50% {
+    transform: translateX(-15px) translateY(15px);
+  }
+  75% {
+    transform: translateX(10px) translateY(-5px);
+  }
+}
+
+@keyframes swarmRules {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  33% {
+    transform: scale(1.1) rotate(120deg);
+  }
+  66% {
+    transform: scale(0.9) rotate(240deg);
+  }
+}
+
+@keyframes swarmFeedback {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+  }
+  25% {
+    transform: scale(1.2) translateX(10px);
+  }
+  50% {
+    transform: scale(0.8) translateX(-10px);
+  }
+  75% {
+    transform: scale(1.1) translateX(5px);
+  }
+}
+
+@keyframes swarmEmergent {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(1.3) rotate(72deg);
+    opacity: 0.8;
+  }
+  40% {
+    transform: scale(0.7) rotate(144deg);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.4) rotate(216deg);
+    opacity: 0.9;
+  }
+  80% {
+    transform: scale(0.9) rotate(288deg);
+    opacity: 0.7;
+  }
+}
+
+/* Consciousness Field Animation */
+.consciousness-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, 
+    oklch(0.1 0.25 320 / 0.1) 0%, 
+    oklch(0.05 0.25 320 / 0.05) 50%, 
+    transparent 100%);
+  animation: fieldBreath 8s infinite ease-in-out;
+}
+
+@keyframes fieldBreath {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Digital Organism Particles */
+.organism-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: oklch(0.9 0.25 320);
+  border-radius: 50%;
+  animation: particleSwarm 10s infinite linear;
+}
+
+.organism-particle:nth-child(63) { animation-delay: 0s; left: 5%; top: 10%; }
+.organism-particle:nth-child(64) { animation-delay: 1s; left: 15%; top: 20%; }
+.organism-particle:nth-child(65) { animation-delay: 2s; left: 25%; top: 15%; }
+.organism-particle:nth-child(66) { animation-delay: 3s; left: 35%; top: 25%; }
+.organism-particle:nth-child(67) { animation-delay: 4s; left: 45%; top: 20%; }
+.organism-particle:nth-child(68) { animation-delay: 5s; left: 55%; top: 30%; }
+.organism-particle:nth-child(69) { animation-delay: 6s; left: 65%; top: 25%; }
+.organism-particle:nth-child(70) { animation-delay: 7s; left: 75%; top: 35%; }
+.organism-particle:nth-child(71) { animation-delay: 8s; left: 85%; top: 30%; }
+.organism-particle:nth-child(72) { animation-delay: 9s; left: 95%; top: 40%; }
+
+@keyframes particleSwarm {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(100px, -50px) scale(1.5);
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(200px, -100px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Reality Frame Shifts */
+.reality-shift {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, 
+    transparent 0deg, 
+    oklch(0.1 0.25 320 / 0.1) 90deg, 
+    transparent 180deg, 
+    oklch(0.1 0.25 320 / 0.05) 270deg, 
+    transparent 360deg);
+  animation: realityShift 20s infinite linear;
+  opacity: 0.3;
+}
+
+@keyframes realityShift {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced form styles */
+.form-input {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  background: rgba(255, 255, 255, 1);
+  border-color: oklch(0.65 0.25 320);
+  box-shadow: 0 0 0 3px oklch(0.65 0.25 320 / 0.1);
+}
+
+.dark .form-input {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.dark .form-input:focus {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: oklch(0.8 0.25 320);
+  box-shadow: 0 0 0 3px oklch(0.8 0.25 320 / 0.2);
+}
+
+.light .gradient-bg,
+.light .gradient-bg * {
+  color: #222 !important;
+}
+
+/* Light mode adjustments for spinning fractal/conic backgrounds */
+.light .reality-fractal-shift {
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    oklch(0.1 0.05 320 / 0.03) 45deg,
+    oklch(0.1 0.05 320 / 0.06) 90deg,
+    transparent 135deg,
+    oklch(0.1 0.05 320 / 0.03) 180deg,
+    oklch(0.1 0.05 320 / 0.06) 225deg,
+    transparent 270deg,
+    oklch(0.1 0.05 320 / 0.03) 315deg,
+    transparent 360deg);
+  opacity: 0.12;
+}
+
+.light .feedback-loop {
+  background: conic-gradient(from 0deg,
+    transparent 0deg,
+    oklch(0.1 0.05 320 / 0.01) 45deg,
+    transparent 90deg,
+    oklch(0.1 0.05 320 / 0.005) 135deg,
+    transparent 180deg,
+    oklch(0.1 0.05 320 / 0.01) 225deg,
+    transparent 270deg,
+    oklch(0.1 0.05 320 / 0.005) 315deg,
+    transparent 360deg);
+  opacity: 0.08;
+}
+
+.light .fractal-field {
+  background: 
+    radial-gradient(circle at 20% 30%, oklch(0.1 0.05 320 / 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, oklch(0.1 0.05 320 / 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, oklch(0.05 0.05 320 / 0.02) 0%, transparent 70%);
+  opacity: 0.18;
+}
+
