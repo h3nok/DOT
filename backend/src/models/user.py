@@ -298,3 +298,65 @@ class Vote(db.Model):
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
+class Subscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    subscription_id = db.Column(db.String(255), unique=True, nullable=False)  # Stripe subscription ID
+    customer_id = db.Column(db.String(255), nullable=False)  # Stripe customer ID
+    amount = db.Column(db.Integer, nullable=False)  # Amount in cents
+    currency = db.Column(db.String(3), default='usd')
+    email = db.Column(db.String(255), nullable=False)
+    tier = db.Column(db.String(50), nullable=False)  # supporter, patron
+    status = db.Column(db.String(20), default='active')  # active, cancelled, past_due
+    current_period_start = db.Column(db.DateTime, nullable=False)
+    current_period_end = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Subscription {self.subscription_id}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'subscription_id': self.subscription_id,
+            'customer_id': self.customer_id,
+            'amount': self.amount,
+            'currency': self.currency,
+            'email': self.email,
+            'tier': self.tier,
+            'status': self.status,
+            'current_period_start': self.current_period_start.isoformat() if self.current_period_start else None,
+            'current_period_end': self.current_period_end.isoformat() if self.current_period_end else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+class Donation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Integer, nullable=False)  # Amount in cents
+    currency = db.Column(db.String(3), default='usd')
+    payment_intent_id = db.Column(db.String(255), unique=True, nullable=False)  # Stripe payment intent ID
+    email = db.Column(db.String(255), nullable=False)
+    tier = db.Column(db.String(50), nullable=True)  # custom, supporter, patron
+    status = db.Column(db.String(20), default='pending')  # pending, completed, failed
+    donation_type = db.Column(db.String(20), default='one_time')  # one_time, recurring
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Donation {self.payment_intent_id}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'amount': self.amount,
+            'currency': self.currency,
+            'payment_intent_id': self.payment_intent_id,
+            'email': self.email,
+            'tier': self.tier,
+            'status': self.status,
+            'donation_type': self.donation_type,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+

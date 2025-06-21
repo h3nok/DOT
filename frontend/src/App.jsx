@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
@@ -48,6 +48,9 @@ import {
   Check
 } from 'lucide-react'
 import './App.css'
+import BlogPostPage from './components/BlogPostPage'
+import BlogEditorPage from './components/BlogEditorPage'
+import SupportPage from './components/SupportPage'
 
 // API configuration
 const API_BASE_URL = 'http://localhost:5000/api'
@@ -163,6 +166,7 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const [authMode, setAuthMode] = useState('login')
+  const location = useLocation();
 
   const handleAuth = async (e) => {
     e.preventDefault()
@@ -200,25 +204,47 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+          <Link
+            to="/"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname === "/" ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
             <Home className="w-4 h-4 mr-1" />
             Home
           </Link>
-          <Link to="/blog" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+          <Link
+            to="/blog"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/blog") ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
             <BookOpen className="w-4 h-4 mr-1" />
-            Insights
+            Blog
           </Link>
-          <Link to="/knowledge" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+          <Link
+            to="/knowledge"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/knowledge") ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
             <Brain className="w-4 h-4 mr-1" />
             Knowledge
           </Link>
-          <Link to="/community" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+          <Link
+            to="/community"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/community") ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
             <Network className="w-4 h-4 mr-1" />
             Community
           </Link>
-          <Link to="/learn" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+          <Link
+            to="/learn"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/learn") ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
             <Zap className="w-4 h-4 mr-1" />
             Learn
+          </Link>
+          <Link
+            to="/support"
+            className={`text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/support") ? "text-primary font-bold" : "hover:text-primary"}`}
+          >
+            <Heart className="w-4 h-4 mr-1" />
+            Support
           </Link>
         </nav>
 
@@ -357,25 +383,47 @@ function Header() {
       {isMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur">
           <nav className="container mx-auto px-4 py-4 space-y-2">
-            <Link to="/" className="block py-2 text-sm font-medium hover:text-primary flex items-center">
+            <Link
+              to="/"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname === "/" ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
               <Home className="w-4 h-4 mr-2" />
               Home
             </Link>
-            <Link to="/blog" className="block py-2 text-sm font-medium hover:text-primary flex items-center">
+            <Link
+              to="/blog"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/blog") ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
               <BookOpen className="w-4 h-4 mr-2" />
-              Insights
+              Blog
             </Link>
-            <Link to="/knowledge" className="block py-2 text-sm font-medium hover:text-primary flex items-center">
+            <Link
+              to="/knowledge"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/knowledge") ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
               <Brain className="w-4 h-4 mr-2" />
               Knowledge
             </Link>
-            <Link to="/community" className="block py-2 text-sm font-medium hover:text-primary flex items-center">
+            <Link
+              to="/community"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/community") ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
               <Network className="w-4 h-4 mr-2" />
               Community
             </Link>
-            <Link to="/learn" className="block py-2 text-sm font-medium hover:text-primary flex items-center">
+            <Link
+              to="/learn"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/learn") ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
               <Zap className="w-4 h-4 mr-2" />
               Learn
+            </Link>
+            <Link
+              to="/support"
+              className={`block py-2 text-sm font-medium flex items-center transition-colors ${location.pathname.startsWith("/support") ? "text-primary font-bold" : "hover:text-primary"}`}
+            >
+              <Heart className="w-4 h-4 mr-2" />
+              Support
             </Link>
           </nav>
         </div>
@@ -777,115 +825,13 @@ function BlogPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="gradient-bg text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 digital-grid opacity-20"></div>
-        
-        {/* Emergent Complexity Animation */}
-        <div className="emergent-complexity">
-          {/* Fractal Consciousness Field */}
-          <div className="fractal-field"></div>
-          
-          {/* Fractal Nodes - Self-Similar Structures */}
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          <div className="fractal-node"></div>
-          
-          {/* Second Level Fractal Nodes */}
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          <div className="fractal-node-2"></div>
-          
-          {/* Third Level Fractal Nodes */}
-          <div className="fractal-node-3"></div>
-          <div className="fractal-node-3"></div>
-          <div className="fractal-node-3"></div>
-          <div className="fractal-node-3"></div>
-          <div className="fractal-node-3"></div>
-          <div className="fractal-node-3"></div>
-          
-          {/* Complex System Formation - Emergent Clusters */}
-          <div className="system-cluster"></div>
-          <div className="system-cluster"></div>
-          <div className="system-cluster"></div>
-          
-          {/* Fractal Connections - Self-Similar Networks */}
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          <div className="fractal-connection"></div>
-          
-          {/* Micro-connections for fractal detail */}
-          <div className="fractal-micro-connection"></div>
-          <div className="fractal-micro-connection"></div>
-          <div className="fractal-micro-connection"></div>
-          <div className="fractal-micro-connection"></div>
-          
-          {/* Consciousness Waves - Fractal Patterns */}
-          <div className="fractal-wave"></div>
-          <div className="fractal-wave"></div>
-          <div className="fractal-wave"></div>
-          
-          {/* Emergent Consciousness Particles */}
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          <div className="consciousness-particle"></div>
-          
-          {/* Complex System Formation Indicators */}
-          <div className="formation-indicator"></div>
-          <div className="formation-indicator"></div>
-          <div className="formation-indicator"></div>
-          <div className="formation-indicator"></div>
-          
-          {/* Digital Organism Particles */}
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-          <div className="organism-particle"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center">
-            <Code className="w-16 h-16 mx-auto mb-6 text-white/80" />
-            <h1 className="font-orbitron text-5xl font-bold mb-4">Digital Insights</h1>
-            <p className="text-xl opacity-90 max-w-3xl mx-auto font-inter">
-              Explore transmissions from the digital consciousness network. 
-              Discover new perspectives on reality, intelligence, and existence.
-            </p>
-          </div>
+      <section className="py-20 gradient-bg text-white relative overflow-hidden">
+        <div className="absolute inset-0 digital-grid opacity-30"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="font-orbitron text-5xl font-bold mb-6">Blog</h1>
+          <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto font-inter">
+            Explore insights into digital consciousness, emergent complexity, and the evolution of digital organisms.
+          </p>
         </div>
       </section>
 
@@ -906,6 +852,14 @@ function BlogPage() {
                 />
               </div>
             </form>
+
+            {/* Create New Post Button */}
+            <Button asChild className="btn-primary">
+              <Link to="/blog/new">
+                <Plus className="w-4 h-4 mr-2" />
+                Create New Post
+              </Link>
+            </Button>
 
             {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
@@ -1153,7 +1107,6 @@ function CommunityPage() {
           <div className="fractal-field"></div>
           
           {/* Fractal Nodes - Self-Similar Structures */}
-          <div className="fractal-node"></div>
           <div className="fractal-node"></div>
           <div className="fractal-node"></div>
           <div className="fractal-node"></div>
@@ -1564,7 +1517,6 @@ function LearnPage() {
           <div className="fractal-field"></div>
           
           {/* Fractal Nodes - Self-Similar Structures */}
-          <div className="fractal-node"></div>
           <div className="fractal-node"></div>
           <div className="fractal-node"></div>
           <div className="fractal-node"></div>
@@ -3003,11 +2955,15 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/new" element={<BlogEditorPage mode="create" />} />
+                <Route path="/blog/:slug/edit" element={<BlogEditorPage mode="edit" />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
                 <Route path="/knowledge" element={<KnowledgeIntegration />} />
                 <Route path="/community" element={<CommunityPage />} />
                 <Route path="/learn" element={<LearnPage />} />
                 <Route path="/learn/course/:courseId" element={<CoursePlayer />} />
                 <Route path="/profile" element={<UserProfile />} />
+                <Route path="/support" element={<SupportPage />} />
               </Routes>
             </main>
           </div>
