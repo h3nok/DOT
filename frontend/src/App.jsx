@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './shared/contexts/ThemeContext';
 import Navigation from './blocks/core/navigation/Navigation';
-import HomePage from './components/HomePage';
+import HomePage from './blocks/core/home/HomePage';
 import BlogPage from './blocks/knowledge/blog/BlogPage';
 import BlogPostPage from './blocks/knowledge/blog/BlogPostPage';
 import BlogEditorPage from './blocks/knowledge/blog/BlogEditorPage';
@@ -10,7 +10,7 @@ import CommunityPage from './blocks/community/CommunityPage';
 import LearnPage from './blocks/learn/LearnPage';
 import SupportPage from './blocks/support/SupportPage';
 import IntegrationPage from './blocks/integration/IntegrationPage';
-import UserProfilePage from './components/UserProfilePage';
+import UserProfilePage from './blocks/core/profile/UserProfilePage';
 import './App.css';
 
 function App() {

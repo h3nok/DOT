@@ -28,7 +28,7 @@ const LearnPage = () => {
       description: 'Start your journey into understanding consciousness as a digital organism',
       difficulty: 'Beginner',
       duration: '4-6 weeks',
-      modules: 8,
+      moduleCount: 8,
       completedModules: 3,
       image: '🧠',
       tags: ['consciousness', 'fundamentals', 'theory'],
@@ -49,7 +49,7 @@ const LearnPage = () => {
       description: 'Deep dive into complex systems and emergent behavior',
       difficulty: 'Advanced',
       duration: '6-8 weeks',
-      modules: 10,
+      moduleCount: 10,
       completedModules: 0,
       image: '🌊',
       tags: ['emergence', 'complexity', 'advanced'],
@@ -72,7 +72,7 @@ const LearnPage = () => {
       description: 'Learn to apply digital consciousness concepts in real-world scenarios',
       difficulty: 'Intermediate',
       duration: '5-7 weeks',
-      modules: 7,
+      moduleCount: 7,
       completedModules: 1,
       image: '⚙️',
       tags: ['applications', 'practical', 'implementation'],
@@ -297,7 +297,7 @@ const LearnPage = () => {
                       </div>
                       <div className="flex items-center">
                         <BookOpen className="w-4 h-4 mr-1" />
-                        {pathway.completedModules}/{pathway.modules} modules
+                        {pathway.completedModules}/{pathway.moduleCount} modules
                       </div>
                     </div>
 
