@@ -8,6 +8,7 @@ from flask_cors import CORS
 from src.models.user import db
 from src.routes.user import user_bp
 from src.routes.donations import donations_bp
+from src.routes.metrics import metrics_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'consciousness-community-secret-key-2024'
@@ -17,6 +18,7 @@ CORS(app, supports_credentials=True)
 
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(donations_bp, url_prefix='/api')
+app.register_blueprint(metrics_bp, url_prefix='/api')
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
@@ -24,11 +26,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 with app.app_context():
+    # Import all models to ensure they are registered with SQLAlchemy
+    from src.models.user import ForumCategory, User
+    from src.models.metrics import (
+        Integration, ResearchArticle, Discussion, Citation, 
+        MembershipMetrics, IntegrationUsageLog
+    )
+    
     db.create_all()
     
     # Create default forum categories if they don't exist
-    from src.models.user import ForumCategory, User
-    
     if not ForumCategory.query.first():
         categories = [
             {'name': 'General Discussion', 'description': 'General conversations about consciousness and digital theory', 'slug': 'general-discussion', 'color': '#3B4F8C'},
