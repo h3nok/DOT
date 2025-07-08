@@ -1,4 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&display=swap');
+/* All Imports - Must be at the top */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+@import "katex/dist/katex.min.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -42,6 +54,50 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Enhanced Slideshow Floating Effect */
+.slideshow-float {
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slideshow-float:hover {
+  box-shadow: 
+    0 32px 64px -12px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Enhanced button interactions */
+.slideshow-button {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slideshow-button:hover {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transform: scale(1.1);
+}
+
+.slideshow-button:active {
+  transform: scale(0.95);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(0.99 0 0);
@@ -50,7 +106,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.25 0.2 280);  /* Deep Purple */
+  --primary: oklch(0.6 0.25 240);  /* Bright Blue */
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.55 0.2 200);  /* Cyan Blue */
   --secondary-foreground: oklch(0.985 0 0);
@@ -85,7 +141,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.25 0.2 280);
+  --primary: oklch(0.6 0.25 240);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.55 0.2 200);
   --secondary-foreground: oklch(0.985 0 0);
@@ -100,44 +156,44 @@
 }
 
 .dark {
-  --background: oklch(0.08 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.12 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.65 0.25 280);
-  --primary-foreground: oklch(0.08 0 0);
+  --background: oklch(0.11 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.7 0.25 280);
+  --primary-foreground: oklch(0.11 0 0);
   --secondary: oklch(0.75 0.2 200);
-  --secondary-foreground: oklch(0.08 0 0);
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --secondary-foreground: oklch(0.11 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.65 0 0);
   --accent: oklch(0.8 0.25 320);
-  --accent-foreground: oklch(0.08 0 0);
+  --accent-foreground: oklch(0.11 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.25 0 0);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.3 0 0);
   --ring: oklch(0.556 0 0);
 }
 
 .consciousness {
-  --background: oklch(0.05 0.1 280);
-  --foreground: oklch(0.95 0.05 280);
-  --card: oklch(0.08 0.08 280);
-  --card-foreground: oklch(0.95 0.05 280);
-  --popover: oklch(0.08 0.08 280);
-  --popover-foreground: oklch(0.95 0.05 280);
+  --background: oklch(0.08 0.05 280);
+  --foreground: oklch(0.92 0.05 280);
+  --card: oklch(0.12 0.06 280);
+  --card-foreground: oklch(0.92 0.05 280);
+  --popover: oklch(0.12 0.06 280);
+  --popover-foreground: oklch(0.92 0.05 280);
   --primary: oklch(0.7 0.3 320);
-  --primary-foreground: oklch(0.05 0.1 280);
+  --primary-foreground: oklch(0.08 0.05 280);
   --secondary: oklch(0.6 0.25 200);
-  --secondary-foreground: oklch(0.05 0.1 280);
-  --muted: oklch(0.15 0.05 280);
-  --muted-foreground: oklch(0.7 0.05 280);
+  --secondary-foreground: oklch(0.08 0.05 280);
+  --muted: oklch(0.18 0.04 280);
+  --muted-foreground: oklch(0.65 0.04 280);
   --accent: oklch(0.8 0.35 280);
-  --accent-foreground: oklch(0.05 0.1 280);
+  --accent-foreground: oklch(0.08 0.05 280);
   --destructive: oklch(0.7 0.3 20);
-  --border: oklch(0.2 0.1 280);
-  --input: oklch(0.2 0.1 280);
+  --border: oklch(0.25 0.08 280);
+  --input: oklch(0.25 0.08 280);
   --ring: oklch(0.7 0.3 320);
 }
 
@@ -164,7 +220,7 @@
 
 .fractal {
   --background: oklch(0.04 0.12 320);
-  --foreground: oklch(0.92 0.08 320);
+ 
   --card: oklch(0.07 0.09 320);
   --card-foreground: oklch(0.92 0.08 320);
   --popover: oklch(0.07 0.09 320);
@@ -215,14 +271,14 @@
   --primary-foreground: oklch(0.02 0.1 260);
   --secondary: oklch(0.6 0.3 240);
   --secondary-foreground: oklch(0.02 0.1 260);
-  --muted: oklch(0.12 0.05 260);
-  --muted-foreground: oklch(0.7 0.05 260);
-  --accent: oklch(0.8 0.45 300);
+  --muted: oklch(0.12 0.08 260);
+  --muted-foreground: oklch(0.7 0.08 260);
+  --accent: oklch(0.85 0.45 300);
   --accent-foreground: oklch(0.02 0.1 260);
-  --destructive: oklch(0.7 0.4 20);
+  --destructive: oklch(0.75 0.4 20);
   --border: oklch(0.18 0.12 260);
   --input: oklch(0.18 0.12 260);
-  --ring: oklch(0.75 0.4 280);
+  --ring: oklch(0.75 0.4 180);
 }
 
 .aurora {
@@ -358,6 +414,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-feature-settings: 'liga' 1, 'kern' 1, 'ss01' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
   }
 }
 
@@ -411,6 +473,219 @@
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px oklch(0.1 0.1 280 / 0.15);
+}
+
+/* Enhanced Typography Configuration */
+.font-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-feature-settings: 'liga' 1, 'kern' 1, 'ss01' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-heading {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+.font-code {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-feature-settings: 'liga' 1, 'kern' 1, 'zero' 1;
+}
+
+/* Enhanced Math Equation Styling */
+.katex {
+  font-size: 1.1em !important;
+  color: var(--foreground) !important;
+}
+
+.katex-display {
+  margin: 1.5em 0 !important;
+  padding: 1rem !important;
+  background: var(--muted) !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--border) !important;
+  overflow-x: auto !important;
+}
+
+.katex-display .katex {
+  text-align: center !important;
+}
+
+/* Enhanced Code Block Styling */
+.markdown-content pre {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--card) !important;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.markdown-content pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  font-size: inherit !important;
+}
+
+.markdown-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875em;
+  background: var(--muted);
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+/* Enhanced Reading Typography */
+.prose {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.75;
+  color: var(--foreground);
+  max-width: none;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.prose h1 { font-size: 2.25rem; }
+.prose h2 { font-size: 1.875rem; }
+.prose h3 { font-size: 1.5rem; }
+.prose h4 { font-size: 1.25rem; }
+
+.prose p {
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.prose em {
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  background: var(--muted);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.prose ul, .prose ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+}
+
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover {
+  color: var(--accent);
+}
+
+/* Table Styling */
+.prose table {
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.prose th, .prose td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose th {
+  background: var(--muted);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prose tr:hover {
+  background: var(--muted);
+}
+
+/* Math-specific enhancements */
+.math-inline {
+  display: inline-block;
+  margin: 0 0.125rem;
+  padding: 0.125rem 0.25rem;
+  background: var(--muted);
+  border-radius: 0.25rem;
+  font-family: 'Computer Modern', 'Latin Modern Math', 'STIX Two Math', serif;
+}
+
+.math-display {
+  display: block;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* Code syntax highlighting improvements */
+.hljs {
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  .prose h1 { font-size: 1.875rem; }
+  .prose h2 { font-size: 1.5rem; }
+  .prose h3 { font-size: 1.25rem; }
+  .prose h4 { font-size: 1.125rem; }
+  
+  .katex-display {
+    padding: 0.75rem !important;
+    margin: 1rem 0 !important;
+  }
+  
+  .markdown-content pre {
+    padding: 0.75rem;
+    margin: 1rem 0;
+  }
 }
 
 /* Reading-Optimized Styles */
@@ -638,7 +913,7 @@
   border: 1px solid oklch(0.922 0 0);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  overflow-x: auto;
+  overflow: auto;
   position: relative;
 }
 
@@ -990,24 +1265,242 @@
     transparent 100%);
 }
 
+/* Enhanced Light Mode Universe Effects */
+.light .universe-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 30% 20%, oklch(0.88 0.08 280 / 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, oklch(0.85 0.12 320 / 0.08) 0%, transparent 40%),
+    linear-gradient(180deg, oklch(0.90 0.05 280 / 0.05) 0%, transparent 30%, transparent 70%, oklch(0.87 0.08 240 / 0.05) 100%);
+  z-index: 1;
+}
 
+/* Light mode atmospheric layers */
+.light .atmosphere-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 1200px 300px at 50% 0%, oklch(0.92 0.06 280 / 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 200px at 50% 100%, oklch(0.89 0.08 240 / 0.04) 0%, transparent 50%);
+  animation: atmosphereFlow 35s ease-in-out infinite;
+}
 
-/* Responsive Animations - Reduced on Mobile */
-@media (max-width: 768px) {
-  .emergent-complexity {
+@keyframes atmosphereFlow {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
     opacity: 0.4;
   }
-  
-  .fractal-node,
-  .fractal-node-2,
-  .fractal-node-3 {
-    animation-duration: 16s;
-  }
-  
-  .fractal-connection {
-    opacity: 0.5;
+  50% {
+    transform: scale(1.1) rotate(180deg);
+    opacity: 0.7;
   }
 }
+
+/* Enhanced light mode star visibility */
+.light .star-field::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 60px 20px, oklch(0.25 0.2 280 / 0.8), transparent),
+    radial-gradient(1px 1px at 110px 60px, oklch(0.3 0.18 200 / 0.7), transparent),
+    radial-gradient(2px 2px at 180px 90px, oklch(0.28 0.22 320 / 0.9), transparent);
+  background-repeat: repeat;
+  background-size: 220px 120px;
+  animation: starShimmer 15s ease-in-out infinite;
+}
+
+@keyframes starShimmer {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Light mode cosmic depth enhancement */
+.light .cosmic-depth {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    conic-gradient(from 0deg at 50% 50%, 
+      oklch(0.90 0.05 280 / 0.02) 0deg,
+      oklch(0.88 0.08 320 / 0.03) 90deg,
+      oklch(0.85 0.06 200 / 0.02) 180deg,
+      oklch(0.87 0.07 240 / 0.025) 270deg,
+      oklch(0.90 0.05 280 / 0.02) 360deg);
+  animation: cosmicRotate 60s linear infinite;
+}
+
+@keyframes cosmicRotate {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+/* Dark mode enhancements for consistency */
+.dark .star-field {
+  opacity: 0.9;
+}
+
+.dark .nebula-layer {
+  opacity: 0.6;
+}
+
+.dark .cosmic-dust {
+  opacity: 0.4;
+}
+
+.dark .galaxy-layer {
+  opacity: 0.8;
+}
+
+/* Theme transition smoothing */
+.universe-background,
+.universe-background * {
+  transition: opacity 0.5s ease, background 0.5s ease;
+}
+
+/* Enhanced shooting stars for light mode */
+.light .shooting-star::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(90deg, oklch(0.2 0.15 280 / 0.8), transparent);
+  top: 50%;
+  left: -30px;
+  transform: translateY(-50%);
+}
+
+/* Enhanced Slideshow Visual Cues */
+.slideshow-progress-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.slideshow-progress-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Slideshow entrance animation */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.slideshow-enter {
+  animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Keyboard Navigation Enhancements */
+.slideshow-container:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: 1.5rem;
+}
+
+.slideshow-container:focus {
+  outline: none;
+}
+
+/* Keyboard shortcuts styling */
+kbd {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-muted);
+  color: var(--color-muted-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Enhanced slideshow accessibility */
+.slideshow-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.slideshow-button:focus {
+  outline: none;
+}
+
+/* Improved progress dot accessibility */
+.progress-dot-active {
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.7);
+    opacity: 0.8;
+  }
+}
+
+/* Pause indicator when focused */
+.slideshow-container:focus-within .slideshow-float {
+  animation-play-state: paused;
+}
+
+/* Enhanced keyboard help tooltip */
+.keyboard-help {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .keyboard-help {
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ...existing code... */
 
 
 

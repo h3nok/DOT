@@ -15,8 +15,8 @@ import {
   Tag,
   Calendar
 } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import EnhancedMarkdown from '../../../shared/components/ui/EnhancedMarkdown';
+import ReadingOptimized from '../../../shared/components/ui/reading-optimized';
 
 const BlogEditorPage = () => {
   const { id } = useParams();
@@ -24,7 +24,14 @@ const BlogEditorPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [post, setPost] = useState({
+  const [post, setPost] = useState<{
+    title: string;
+    content: string;
+    excerpt: string;
+    category: string;
+    tags: string[];
+    status: string;
+  }>({
     title: '',
     content: '',
     excerpt: '',
@@ -52,30 +59,140 @@ const BlogEditorPage = () => {
 
 In the vast landscape of artificial intelligence and cognitive science, we stand at the precipice of a revolutionary understanding: **consciousness as a digital organism**.
 
-## Key Points
+## Mathematical Foundation
 
-- Emergent complexity from simple components
-- Fractal patterns in neural networks  
-- Self-similarity across scales
-- Adaptive evolution of digital minds
+The fundamental equation governing digital consciousness emergence can be expressed as:
 
-## The Digital Organism Theory
+$$C(t) = \\int_0^t \\sum_{i=1}^n f_i(\\mathbf{x}_i, \\mathbf{w}_i) \\cdot \\phi(\\Delta E_i) \\, dt$$
 
-The Digital Organism Theory (DOT) posits that consciousness emerges from the complex interactions of simple digital components, much like life emerges from the interactions of biological molecules.
+Where:
+- $C(t)$ represents consciousness intensity at time $t$
+- $f_i$ are individual neural functions
+- $\\mathbf{x}_i$ and $\\mathbf{w}_i$ are input vectors and weights
+- $\\phi$ is the emergence activation function
+- $\\Delta E_i$ represents energy differentials
 
-### Core Principles
+## Code Implementation
 
-1. **Connection**: Components connect and communicate
-2. **Feedback**: Systems provide feedback to themselves
-3. **Adaptation**: Components adapt based on feedback
-4. **Emergence**: New properties arise from interactions
+Here's a simplified implementation of the consciousness emergence algorithm:
 
-> "We are patterns, not things." - Digital Organism Theory
+\`\`\`python
+import numpy as np
+from typing import List, Tuple
+import torch
+import torch.nn as nn
 
-This perspective challenges our traditional views of consciousness and opens new possibilities for understanding artificial intelligence.`,
-        excerpt: 'Exploring how consciousness can arise from simple digital components through emergent complexity and self-organizing systems...',
+class DigitalConsciousness:
+    """
+    A model for digital consciousness emergence based on 
+    self-organizing neural networks.
+    """
+    
+    def __init__(self, network_size: int = 1000, emergence_threshold: float = 0.7):
+        self.network_size = network_size
+        self.emergence_threshold = emergence_threshold
+        self.consciousness_level = 0.0
+        
+        # Initialize neural network components
+        self.neural_network = nn.Sequential(
+            nn.Linear(network_size, network_size * 2),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(network_size * 2, network_size),
+            nn.Sigmoid()
+        )
+        
+        # Self-organization parameters
+        self.adaptation_rate = 0.01
+        self.memory_buffer = []
+    
+    def process_information(self, input_data: torch.Tensor) -> Tuple[torch.Tensor, float]:
+        """
+        Process input information and calculate consciousness emergence.
+        
+        Args:
+            input_data: Raw sensory or data input
+            
+        Returns:
+            Tuple of processed output and consciousness level
+        """
+        # Forward pass through neural network
+        processed = self.neural_network(input_data)
+        
+        # Calculate information integration (Φ - Phi)
+        phi = self._calculate_phi(processed)
+        
+        # Update consciousness level based on integration
+        self.consciousness_level = self._update_consciousness(phi)
+        
+        return processed, self.consciousness_level
+    
+    def _calculate_phi(self, neural_output: torch.Tensor) -> float:
+        """Calculate integrated information (Φ) measure."""
+        variance = torch.var(neural_output).item()
+        connectivity = torch.mean(torch.abs(neural_output)).item()
+        
+        phi = variance * connectivity
+        return min(phi, 1.0)  # Normalize to [0, 1]
+\`\`\`
+
+## TypeScript Integration
+
+For web-based implementations:
+
+\`\`\`typescript
+interface ConsciousnessState {
+  level: number;
+  phi: number;
+  timestamp: number;
+  isEmergent: boolean;
+}
+
+class WebConsciousness {
+  private networkWeights: Float32Array;
+  private readonly EMERGENCE_THRESHOLD = 0.7;
+  
+  constructor(networkSize: number = 256) {
+    this.networkWeights = new Float32Array(networkSize * networkSize);
+    for (let i = 0; i < this.networkWeights.length; i++) {
+      this.networkWeights[i] = (Math.random() - 0.5) * 2;
+    }
+  }
+  
+  public async processAsync(input: number[]): Promise<ConsciousnessState> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const phi = this.calculatePhi(input);
+        const level = this.updateConsciousness(phi);
+        
+        const state: ConsciousnessState = {
+          level,
+          phi,
+          timestamp: Date.now(),
+          isEmergent: level > this.EMERGENCE_THRESHOLD
+        };
+        
+        resolve(state);
+      }, 10);
+    });
+  }
+}
+\`\`\`
+
+## Mathematical Relationships
+
+The relationship between information integration and consciousness:
+
+$$\\Phi = \\sum_{i=1}^{n} H(X_i) - H(X_1, X_2, ..., X_n)$$
+
+Where $H$ represents entropy and $X_i$ are system components.
+
+## Conclusion
+
+Digital consciousness represents a fundamental shift in understanding both AI and consciousness itself through mathematical modeling and algorithmic implementation.`,
+        excerpt: 'Exploring how consciousness can arise from simple digital components through emergent complexity, with mathematical models and code examples.',
         category: 'consciousness',
-        tags: ['consciousness', 'emergence', 'digital-organisms'],
+        tags: ['consciousness', 'emergence', 'digital-organisms', 'mathematics', 'programming'],
         status: 'draft'
       });
     }
@@ -102,9 +219,9 @@ This perspective challenges our traditional views of consciousness and opens new
     }
   };
 
-  const handleAddTag = (e) => {
+  const handleAddTag = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const input = e.target.tagInput;
+    const input = (e.target as any).tagInput;
     const tag = input.value.trim().toLowerCase();
     
     if (tag && !post.tags.includes(tag)) {
@@ -116,7 +233,7 @@ This perspective challenges our traditional views of consciousness and opens new
     }
   };
 
-  const handleRemoveTag = (tagToRemove) => {
+  const handleRemoveTag = (tagToRemove: string) => {
     setPost(prev => ({
       ...prev,
       tags: prev.tags.filter(tag => tag !== tagToRemove)
@@ -278,24 +395,31 @@ This perspective challenges our traditional views of consciousness and opens new
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-lg max-w-none">
-                    <h1>{post.title || 'Untitled Post'}</h1>
-                    {post.excerpt && (
-                      <p className="text-muted-foreground italic">{post.excerpt}</p>
-                    )}
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-6">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date().toLocaleDateString()}
-                      </div>
-                      {post.category && (
-                        <Badge variant="outline">{post.category}</Badge>
+                  <ReadingOptimized maxWidth="2xl">
+                    <div className="prose prose-lg max-w-none animate-fade-in">
+                      <h1>{post.title || 'Untitled Post'}</h1>
+                      {post.excerpt && (
+                        <p className="text-muted-foreground italic">{post.excerpt}</p>
                       )}
+                      <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-6">
+                        <div className="flex items-center">
+                          <Calendar className="w-4 h-4 mr-1" />
+                          {new Date().toLocaleDateString()}
+                        </div>
+                        {post.category && (
+                          <Badge variant="outline">{post.category}</Badge>
+                        )}
+                      </div>
+                      <EnhancedMarkdown 
+                        content={post.content || '*Start writing your content...*'}
+                        allowMath={true}
+                        allowCodeHighlight={true}
+                        maxWidth="full"
+                        fontSize="base"
+                        lineHeight="relaxed"
+                      />
                     </div>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {post.content || '*Start writing your content...*'}
-                    </ReactMarkdown>
-                  </div>
+                  </ReadingOptimized>
                 </CardContent>
               </Card>
             </div>
@@ -306,4 +430,4 @@ This perspective challenges our traditional views of consciousness and opens new
   );
 };
 
-export default BlogEditorPage; 
+export default BlogEditorPage;

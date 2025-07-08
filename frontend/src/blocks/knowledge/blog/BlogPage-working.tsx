@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../../shared/components/ui/button';
 import { Input } from '../../../shared/components/ui/input';
@@ -38,125 +38,6 @@ interface BlogPost {
   isBookmarked?: boolean;
 }
 
-// Custom hook for debounced search
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-  
-  return debouncedValue;
-};
-
-// Memoized blog post card component
-const BlogPostCard = React.memo(({ 
-  post, 
-  isLiked, 
-  isBookmarked, 
-  onToggleLike, 
-  onToggleBookmark 
-}: {
-  post: BlogPost;
-  isLiked: boolean;
-  isBookmarked: boolean;
-  onToggleLike: (id: number) => void;
-  onToggleBookmark: (id: number) => void;
-}) => {
-  const handleLike = useCallback(() => onToggleLike(post.id), [post.id, onToggleLike]);
-  const handleBookmark = useCallback(() => onToggleBookmark(post.id), [post.id, onToggleBookmark]);
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5 }}
-      className="h-full"
-    >
-      <GlassCard className="h-full p-6 hover:shadow-lg transition-all duration-300">
-        <div className="flex flex-col h-full">
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-3">
-              <Badge variant="secondary" className="text-xs">
-                {post.category}
-              </Badge>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLike}
-                  className={clsx(
-                    "p-1 h-8 w-8 transition-colors",
-                    isLiked && "text-red-500 hover:text-red-600"
-                  )}
-                >
-                  <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleBookmark}
-                  className={clsx(
-                    "p-1 h-8 w-8 transition-colors",
-                    isBookmarked && "text-blue-500 hover:text-blue-600"
-                  )}
-                >
-                  <Bookmark className="h-4 w-4" fill={isBookmarked ? "currentColor" : "none"} />
-                </Button>
-              </div>
-            </div>
-            <h3 className="text-xl font-bold mb-3 line-clamp-2 hover:text-primary transition-colors">
-              <Link to={`/knowledge/blog/${post.id}`}>
-                {post.title}
-              </Link>
-            </h3>
-            <p className="text-muted-foreground mb-4 line-clamp-3">
-              {post.excerpt}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {post.tags.map(tag => (
-                <Badge key={tag} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center space-x-4">
-              <span className="flex items-center">
-                <User className="h-4 w-4 mr-1" />
-                {post.author}
-              </span>
-              <span className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                {new Date(post.date).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <span className="flex items-center">
-                <Clock className="h-4 w-4 mr-1" />
-                {post.readTime}
-              </span>
-              <span className="flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
-                {post.views}
-              </span>
-            </div>
-          </div>
-        </div>
-      </GlassCard>
-    </motion.div>
-  );
-});
-
-BlogPostCard.displayName = 'BlogPostCard';
-
 const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -170,26 +51,8 @@ const BlogPage = () => {
   const [bookmarked, setBookmarked] = useState<number[]>([]);
   const [liked, setLiked] = useState<number[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-
-  // Debounced search term for performance
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
-
-  // Memoized callback functions
-  const toggleLike = useCallback((postId: number) => {
-    setLiked(prev => 
-      prev.includes(postId) 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-  }, []);
-
-  const toggleBookmark = useCallback((postId: number) => {
-    setBookmarked(prev => 
-      prev.includes(postId) 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-  }, []);
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // Demo blog posts data
   const demoPosts = [
@@ -237,12 +100,12 @@ const BlogPage = () => {
     }
   ];
 
-  // Basic filtering and sorting with debounced search
+  // Basic filtering and sorting
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = posts.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                           post.excerpt.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                           post.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
+      const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
       const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => post.tags.includes(tag));
       return matchesSearch && matchesCategory && matchesTags;
@@ -273,7 +136,16 @@ const BlogPage = () => {
     });
 
     return filtered;
-  }, [posts, debouncedSearchTerm, selectedCategory, selectedTags, sortBy, sortOrder]);
+  }, [posts, searchTerm, selectedCategory, selectedTags, sortBy, sortOrder]);
+
+  // Get all unique tags for tag filtering
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    posts.forEach(post => {
+      post.tags.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags).sort();
+  }, [posts]);
 
   // Categories
   const categories = [
@@ -296,6 +168,22 @@ const BlogPage = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const toggleLike = (postId: number) => {
+    setLiked(prev => 
+      prev.includes(postId) 
+        ? prev.filter(id => id !== postId)
+        : [...prev, postId]
+    );
+  };
+
+  const toggleBookmark = (postId: number) => {
+    setBookmarked(prev => 
+      prev.includes(postId) 
+        ? prev.filter(id => id !== postId)
+        : [...prev, postId]
+    );
   };
 
   useEffect(() => {
@@ -349,8 +237,8 @@ const BlogPage = () => {
       {/* Enhanced Hero Section */}
       <section className="w-full relative py-16 md:py-24 flex flex-col items-center overflow-hidden">
         {/* Enhanced gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-blue-500 to-teal-500 dark:from-violet-400 dark:via-blue-400 dark:to-teal-400" style={{ opacity: 0.08 }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/20 to-background/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-blue-500 to-teal-500 dark:from-violet-400 dark:via-blue-400 dark:to-teal-400" style={{ opacity: 0.1 }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background" style={{ opacity: 0.8 }} />
         
         {/* Content */}
         <motion.div 
@@ -472,7 +360,7 @@ const BlogPage = () => {
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <div className="w-48 h-48 md:w-64 md:h-64 rounded-3xl bg-gradient-to-br from-violet-500/20 via-blue-500/20 to-teal-500/20 flex items-center justify-center relative overflow-hidden group-hover:shadow-2xl transition-shadow duration-500">
+                    <div className="w-48 h-48 md:w-64 md:h-64 rounded-3xl bg-gradient-to-br from-violet-500 via-blue-500 to-teal-500 flex items-center justify-center relative overflow-hidden group-hover:shadow-2xl transition-shadow duration-500" style={{ opacity: 0.2 }}>
                       <motion.span 
                         className="text-8xl md:text-9xl relative z-10"
                         animate={{ rotate: [0, 5, -5, 0] }}
@@ -501,7 +389,7 @@ const BlogPage = () => {
       )}
 
       {/* Search and Filters */}
-      <section className="w-full flex justify-center sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border shadow-sm">
+      <section className="w-full flex justify-center sticky top-0 z-30 bg-background backdrop-blur border-b border-border shadow-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
         <div className="w-full max-w-5xl px-4 py-4">
           <div className="flex flex-col md:flex-row gap-4 items-center mb-4">
             <div className="relative flex-1 w-full">
@@ -510,7 +398,8 @@ const BlogPage = () => {
                 placeholder="Search articles, tags, or content..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 transition-all duration-300 bg-card/80 border border-border rounded-lg focus:ring-2 focus:ring-primary"
+                className="pl-10 transition-all duration-300 bg-card border border-border rounded-lg focus:ring-2 focus:ring-primary"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
               />
               {searchTerm && (
                 <Button
@@ -528,7 +417,8 @@ const BlogPage = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 text-sm border border-border rounded-lg bg-card/90 focus:ring-2 focus:ring-primary"
+                className="px-3 py-2 text-sm border border-border rounded-lg bg-card focus:ring-2 focus:ring-primary"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
               >
                 <option value="date">Sort by Date</option>
                 <option value="views">Sort by Views</option>
@@ -590,15 +480,186 @@ const BlogPage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            {paginatedPosts.map((post) => (
-              <BlogPostCard
-                key={post.id}
-                post={post}
-                isLiked={liked.includes(post.id)}
-                isBookmarked={bookmarked.includes(post.id)}
-                onToggleLike={toggleLike}
-                onToggleBookmark={toggleBookmark}
-              />
+            {paginatedPosts.map((post, idx) => (
+              <motion.div 
+                key={post.id} 
+                className="w-full"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: idx * 0.1,
+                  ease: "easeOut"
+                }}
+                whileHover={{ y: -8 }}
+              >
+                <GlassCard className="group h-full overflow-hidden relative transition-all duration-500 hover:shadow-2xl bg-card border border-border">
+                  {/* Cover */}
+                  <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center" style={{ opacity: 0.1 }}>
+                    <motion.div
+                      className="text-6xl filter drop-shadow-lg"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {post.category === 'consciousness' && '🧠'}
+                      {post.category === 'neuroscience' && '🔬'}
+                      {post.category === 'theory' && '⚡'}
+                      {!['consciousness', 'neuroscience', 'theory'].includes(post.category) && '📝'}
+                    </motion.div>
+                    
+                    {post.readingProgress && post.readingProgress > 0 && (
+                      <motion.div 
+                        className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full flex items-center backdrop-blur"
+                        style={{ backgroundColor: 'rgba(59, 130, 246, 0.9)' }}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.3 + idx * 0.1 }}
+                      >
+                        <Clock className="w-3 h-3 mr-1" />
+                        {post.readingProgress}%
+                      </motion.div>
+                    )}
+                    
+                    {post.likes && post.likes > 50 && (
+                      <motion.div
+                        className="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center backdrop-blur"
+                        style={{ backgroundColor: 'rgba(239, 68, 68, 0.9)' }}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.4 + idx * 0.1 }}
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        <Heart className="w-3 h-3 mr-1" />
+                        Hot
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs capitalize border-2 transition-colors"
+                      >
+                        {post.category}
+                      </Badge>
+                      <div className="flex items-center text-xs text-muted-foreground">
+                        <Eye className="w-3 h-3 mr-1" />
+                        {post.views.toLocaleString()}
+                      </div>
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-300 leading-tight">
+                      {post.title}
+                    </h3>
+                    
+                    {/* Excerpt */}
+                    <p className="text-muted-foreground text-sm line-clamp-3 mb-4 leading-relaxed flex-1" style={{ opacity: 0.9 }}>
+                      {post.excerpt}
+                    </p>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {post.tags.slice(0, 2).map((tag) => (
+                        <Badge 
+                          key={tag} 
+                          variant="secondary" 
+                          className="text-xs hover:bg-primary hover:text-primary-foreground cursor-pointer transition-colors"
+                          onClick={() => {
+                            if (!selectedTags.includes(tag)) {
+                              setSelectedTags(prev => [...prev, tag]);
+                            }
+                          }}
+                          style={{ backgroundColor: 'rgba(156, 163, 175, 0.5)' }}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                      {post.tags.length > 2 && (
+                        <Badge variant="secondary" className="text-xs" style={{ backgroundColor: 'rgba(156, 163, 175, 0.5)' }}>
+                          +{post.tags.length - 2}
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    {/* Metadata */}
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mb-4">
+                      <div className="flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        <span className="truncate">{post.author}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>{formatDate(post.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{post.readTime}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Actions */}
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors group-hover:text-primary" 
+                          onClick={() => setPreviewPost(post)}
+                        >
+                          <span>Preview</span>
+                          <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
+                      
+                      <div className="flex items-center gap-1">
+                        <motion.button
+                          className={clsx(
+                            "p-2 rounded-full transition-colors hover:bg-muted",
+                            liked.includes(post.id) ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                          )}
+                          onClick={() => toggleLike(post.id)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          style={{ backgroundColor: liked.includes(post.id) ? 'rgba(239, 68, 68, 0.1)' : 'transparent' }}
+                        >
+                          <Heart className={clsx(
+                            "w-4 h-4 transition-all",
+                            liked.includes(post.id) && "fill-current"
+                          )} />
+                        </motion.button>
+                        
+                        <motion.button
+                          className={clsx(
+                            "p-2 rounded-full transition-colors hover:bg-muted",
+                            bookmarked.includes(post.id) ? "text-primary" : "text-muted-foreground hover:text-primary"
+                          )}
+                          onClick={() => toggleBookmark(post.id)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          style={{ backgroundColor: bookmarked.includes(post.id) ? 'rgba(59, 130, 246, 0.1)' : 'transparent' }}
+                        >
+                          <Bookmark className={clsx(
+                            "w-4 h-4 transition-all",
+                            bookmarked.includes(post.id) && "fill-current"
+                          )} />
+                        </motion.button>
+
+                        <motion.button
+                          className="p-2 rounded-full text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </GlassCard>
+              </motion.div>
             ))}
           </motion.div>
 
@@ -683,7 +744,8 @@ const BlogPage = () => {
       <AnimatePresence>
         {previewPost && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/70"
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -698,12 +760,13 @@ const BlogPage = () => {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
             >
               {/* Header */}
-              <div className="relative h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <div className="relative h-48 bg-gradient-to-br from-primary to-accent flex items-center justify-center" style={{ opacity: 0.2 }}>
                 <span className="text-6xl">📝</span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-4 right-4 bg-background/80 hover:bg-background"
+                  className="absolute top-4 right-4 bg-background hover:bg-background"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
                   onClick={() => setPreviewPost(null)}
                 >
                   <X className="w-4 h-4" />
@@ -755,7 +818,7 @@ const BlogPage = () => {
                   <p className="text-lg leading-relaxed text-muted-foreground">
                     {previewPost.excerpt}
                   </p>
-                  <div className="mt-6 p-4 bg-muted/30 rounded-lg text-sm text-muted-foreground border-l-4 border-primary">
+                  <div className="mt-6 p-4 bg-muted rounded-lg text-sm text-muted-foreground border-l-4 border-primary" style={{ backgroundColor: 'rgba(156, 163, 175, 0.3)' }}>
                     <p className="font-medium mb-2">📖 Article Preview</p>
                     <p>This is a preview of the article. The full content would include detailed analysis, examples, and comprehensive insights into the {previewPost.category} topic and related areas.</p>
                   </div>

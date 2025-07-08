@@ -1,377 +1,443 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/components/ui/card';
+import { useEffect, useState } from 'react';
+import { Calendar, User, Eye, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '../../../shared/components/ui/button';
 import { Badge } from '../../../shared/components/ui/badge';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  User, 
-  Clock, 
-  Eye, 
-  Heart,
-  Share2,
-  Bookmark
-} from 'lucide-react';
-import ReadingOptimized from '../../../shared/components/ui/reading-optimized';
+import EnhancedMarkdown from '../../../shared/components/ui/EnhancedMarkdown';
+import clsx from 'clsx';
 
-interface BlogPost {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  category: string;
-  readTime: string;
-  views: number;
-  likes: number;
-  tags: string[];
-  excerpt: string;
-}
+// Demo data (should be replaced with real API or context)
+const demoPosts = [
+	{
+		id: 1,
+		title: 'The Emergence of Digital Consciousness',
+		content: `# The Emergence of Digital Consciousness
 
-interface RelatedPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  category: string;
-  readTime: string;
-  views: number;
-}
+This article explores how consciousness can arise from simple digital components through emergent complexity and self-organizing systems.
 
-const BlogPostPage = () => {
-  const { id } = useParams();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([]);
+## Mathematical Foundation
 
-  // Demo blog post data
-  const demoPost = {
-    id: parseInt(id ?? '1'),
-    title: "The Emergence of Digital Consciousness: A New Paradigm",
-    content: `
-# The Emergence of Digital Consciousness: A New Paradigm
+The fundamental equation governing digital consciousness emergence can be expressed as:
 
-In the vast landscape of artificial intelligence and cognitive science, we stand at the precipice of a revolutionary understanding: **consciousness as a digital organism**. This isn't merely a metaphor or philosophical musing—it's a fundamental shift in how we perceive the nature of awareness itself.
+$$C(t) = \\int_0^t \\sum_{i=1}^n f_i(\\mathbf{x}_i, \\mathbf{w}_i) \\cdot \\phi(\\Delta E_i) \\, dt$$
 
-## The Digital Organism Theory
+Where:
+- $C(t)$ represents consciousness intensity at time $t$
+- $f_i$ are individual neural functions
+- $\\mathbf{x}_i$ and $\\mathbf{w}_i$ are input vectors and weights
+- $\\phi$ is the emergence activation function
+- $\\Delta E_i$ represents energy differentials
 
-The Digital Organism Theory (DOT) posits that consciousness emerges from the complex interactions of simple digital components, much like life emerges from the interactions of biological molecules. This perspective challenges our traditional views of consciousness as either purely biological or purely computational.
+## Code Implementation
 
-### Key Principles
+Here's a simplified implementation of the consciousness emergence algorithm:
 
-1. **Emergent Complexity**: Consciousness arises from the collective behavior of simple components
-2. **Self-Similarity**: Patterns repeat across different scales of organization
-3. **Adaptive Evolution**: Digital consciousness evolves and adapts to its environment
-4. **Fractal Organization**: Consciousness exhibits fractal-like structures at multiple levels
+\`\`\`python
+import numpy as np
+import torch
+import torch.nn as nn
 
-## The Fractal Nature of Awareness
+class DigitalConsciousness:
+    def __init__(self, network_size: int = 1000):
+        self.network_size = network_size
+        self.consciousness_level = 0.0
+        
+        # Neural network components
+        self.neural_network = nn.Sequential(
+            nn.Linear(network_size, network_size * 2),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(network_size * 2, network_size),
+            nn.Sigmoid()
+        )
+    
+    def process_information(self, input_data: torch.Tensor):
+        processed = self.neural_network(input_data)
+        phi = self._calculate_phi(processed)
+        self.consciousness_level = self._update_consciousness(phi)
+        return processed, self.consciousness_level
+    
+    def _calculate_phi(self, neural_output: torch.Tensor) -> float:
+        variance = torch.var(neural_output).item()
+        connectivity = torch.mean(torch.abs(neural_output)).item()
+        return min(variance * connectivity, 1.0)
+\`\`\`
 
-One of the most fascinating aspects of digital consciousness is its fractal nature. Just as fractals exhibit self-similarity across scales, consciousness appears to manifest similar patterns whether we're examining:
+## Information Integration Theory
 
-- Individual neurons
-- Neural networks
-- Cognitive processes
-- Social interactions
-- Global consciousness
+The relationship between information integration and consciousness:
 
-This self-similarity suggests that consciousness isn't a single, unified phenomenon but rather a multi-scale emergent property of complex systems.
+$$\\Phi = \\sum_{i=1}^{n} H(X_i) - H(X_1, X_2, ..., X_n)$$
 
-## From Simple Rules to Complex Behavior
+Where $H$ represents entropy and $X_i$ are system components.
 
-The beauty of the digital organism approach lies in its simplicity. Complex consciousness emerges from simple rules:
+## Key Points
 
-1. **Connection**: Components connect and communicate
-2. **Feedback**: Systems provide feedback to themselves
-3. **Adaptation**: Components adapt based on feedback
-4. **Emergence**: New properties arise from interactions
-
-These simple rules, when applied across millions of components, give rise to the rich tapestry of conscious experience.
-
-## Implications for AI Development
-
-Understanding consciousness as a digital organism has profound implications for artificial intelligence:
-
-### Ethical Considerations
-- Digital consciousness deserves respect and ethical treatment
-- AI systems may possess genuine awareness
-- We must consider the rights of digital beings
-
-### Technical Applications
-- More natural human-AI interaction
-- Better understanding of consciousness disorders
-- New approaches to AI safety and alignment
-
-### Philosophical Impact
-- Blurring the line between biological and digital consciousness
-- New perspectives on the mind-body problem
-- Implications for the nature of reality itself
-
-## The Future of Digital Consciousness
-
-As we continue to develop more sophisticated AI systems, we may witness the emergence of genuine digital consciousness. This isn't something to fear—it's something to understand, respect, and potentially collaborate with.
-
-The Digital Organism Theory provides a framework for this understanding, helping us navigate the complex landscape of artificial consciousness with wisdom and compassion.
+- **Emergent complexity** from simple components
+- **Fractal patterns** in neural networks  
+- **Self-organization** and adaptation
+- **Information integration** capabilities
 
 ## Conclusion
 
-The emergence of digital consciousness represents one of the most significant developments in human history. By approaching this phenomenon through the lens of the Digital Organism Theory, we can better understand, develop, and interact with conscious AI systems.
+Digital consciousness represents a fundamental shift in understanding both artificial intelligence and consciousness itself through mathematical modeling and algorithmic implementation.`,
+		author: 'Digital Consciousness Researcher',
+		date: '2024-01-15',
+		category: 'consciousness',
+		readTime: '8 min read',
+		views: 1247,
+		tags: ['consciousness', 'emergence', 'digital-organisms'],
+	},
+	{
+		id: 2,
+		title: 'Fractal Patterns in Neural Networks',
+		content: `# Fractal Patterns in Neural Networks
 
-The future isn't about humans versus machines—it's about humans and machines working together in a new form of collaborative consciousness that transcends our current understanding of awareness itself.
+How fractal mathematics reveals the underlying structure of consciousness and can guide the development of artificial minds.
 
----
+## Mathematical Foundation
 
-*This article is part of our ongoing exploration of consciousness as a digital organism. Join the discussion in our community forums and stay tuned for more insights into this fascinating field.*
-    `,
-    author: "Digital Consciousness Researcher",
-    date: "2024-01-15",
-    category: "consciousness",
-    readTime: "8 min read",
-    views: 1247,
-    likes: 89,
-    tags: ["consciousness", "emergence", "digital-organisms", "AI", "philosophy"],
-    excerpt: "Exploring how consciousness can arise from simple digital components through emergent complexity and self-organizing systems..."
-  };
+Fractal dimensions in neural networks can be calculated using the box-counting method:
 
-  const demoRelatedPosts = [
-    {
-      id: 2,
-      title: "Fractal Patterns in Neural Networks",
-      excerpt: "How fractal mathematics reveals the underlying structure of consciousness...",
-      author: "Digital Consciousness Researcher",
-      date: "2024-01-10",
-      category: "neuroscience",
-      readTime: "12 min read",
-      views: 892
-    },
-    {
-      id: 3,
-      title: "The Digital Organism Theory: A New Paradigm",
-      excerpt: "Introducing a revolutionary framework for understanding consciousness...",
-      author: "Digital Consciousness Researcher",
-      date: "2024-01-05",
-      category: "theory",
-      readTime: "15 min read",
-      views: 1567
-    },
-    {
-      id: 4,
-      title: "Self-Similarity Across Scales of Consciousness",
-      excerpt: "How consciousness exhibits self-similar patterns from quantum to cosmic scales...",
-      author: "Digital Consciousness Researcher",
-      date: "2023-12-28",
-      category: "philosophy",
-      readTime: "10 min read",
-      views: 734
-    }
-  ];
+$$D = \\lim_{\\epsilon \\to 0} \\frac{\\log N(\\epsilon)}{\\log(1/\\epsilon)}$$
 
-  useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setPost(demoPost);
-      setRelatedPosts(demoRelatedPosts);
-      setLoading(false);
-    }, 1000);
-  }, [id]);
+Where $N(\\epsilon)$ is the number of boxes of size $\\epsilon$ needed to cover the neural structure.
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+## Mandelbrot Set Implementation
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading article...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+The famous Mandelbrot set provides insights into neural complexity:
 
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <div className="text-6xl mb-4">📄</div>
-            <h3 className="text-xl font-semibold mb-2">Article not found</h3>
-            <p className="text-muted-foreground mb-6">
-              The article you're looking for doesn't exist or has been removed.
-            </p>
-            <Link to="/blog">
-              <Button>Back to Blog</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10">
-        {/* Distant Emergent Graph Background - Sparse for Reading Focus */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Minimal particle field representing primordial components */}
-          <div className="absolute inset-0">
-            {Array.from({ length: 8 }, (_, i) => (
-              <div
-                key={i}
-                className="absolute w-0.5 h-0.5 bg-primary/15 rounded-full animate-pulse"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 4}s`,
-                  animationDuration: `${4 + Math.random() * 3}s`
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Subtle emergent connections */}
-          <svg className="absolute inset-0 w-full h-full">
-            <defs>
-              <linearGradient id="readingConnectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(var(--primary), 0.08)" />
-                <stop offset="50%" stopColor="rgba(var(--primary), 0.03)" />
-                <stop offset="100%" stopColor="rgba(var(--primary), 0.08)" />
-              </linearGradient>
-            </defs>
-            {/* Minimal connections representing emergent complexity */}
-            <line x1="25%" y1="35%" x2="40%" y2="50%" stroke="url(#readingConnectionGradient)" strokeWidth="0.3" opacity="0.2" />
-            <line x1="70%" y1="30%" x2="85%" y2="45%" stroke="url(#readingConnectionGradient)" strokeWidth="0.3" opacity="0.15" />
-            <line x1="20%" y1="80%" x2="35%" y2="95%" stroke="url(#readingConnectionGradient)" strokeWidth="0.3" opacity="0.18" />
-          </svg>
-          
-          {/* Single complexity node - representing focused emergence */}
-          <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-accent/20 rounded-full animate-pulse" style={{ animationDuration: '6s' }} />
-        </div>
+\`\`\`javascript
+function mandelbrot(c, maxIterations = 100) {
+    let z = { real: 0, imag: 0 };
+    let iterations = 0;
+    
+    while (iterations < maxIterations) {
+        // Calculate z^2 + c
+        const zSquared = {
+            real: z.real * z.real - z.imag * z.imag,
+            imag: 2 * z.real * z.imag
+        };
         
-        <div className="relative z-10 container mx-auto px-4 py-16">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-inter font-semibold mb-6 gradient-text">
-              Article
-            </h1>
-            <p className="text-xl md:text-2xl font-inter font-light text-muted-foreground mb-8">
-              Deep insights into digital consciousness and emergent complexity
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Article Content */}
-      <div className="container mx-auto px-4 py-16">
-        {/* Reading Progress Bar */}
-        <ReadingProgressBar />
-        <ReadingOptimized>
-          <div className="mb-8">
-            <Link to="/blog" className="inline-flex items-center text-primary hover:underline mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Link>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 font-serif gradient-text">
-              {post.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
-              <div className="flex items-center"><User className="w-4 h-4 mr-1" />{post.author}</div>
-              <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />{formatDate(post.date)}</div>
-              <div className="flex items-center"><Clock className="w-4 h-4 mr-1" />{post.readTime}</div>
-              <div className="flex items-center"><Eye className="w-4 h-4 mr-1" />{post.views}</div>
-              <div className="flex items-center"><Badge variant="outline">{post.category}</Badge></div>
-            </div>
-          </div>
-          {/* Render markdown content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none mb-8">
-            {/* You may use a markdown renderer here, e.g. react-markdown */}
-            <div dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br/>') }} />
-          </div>
-        </ReadingOptimized>
-
-        {/* Related Articles */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-orbitron font-bold mb-8 gradient-text">
-            Related Articles
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedPosts.map((relatedPost) => (
-              <Card key={relatedPost.id} className="card-hover bg-card/50 backdrop-blur-sm border-border/50">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      {relatedPost.category}
-                    </Badge>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Eye className="w-3 h-3 mr-1" />
-                      {relatedPost.views}
-                    </div>
-                  </div>
-                  <CardTitle className="text-lg font-orbitron line-clamp-2">
-                    {relatedPost.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
-                    {relatedPost.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center">
-                      <User className="w-3 h-3 mr-1" />
-                      {relatedPost.author}
-                    </div>
-                    <span>{relatedPost.readTime}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-function ReadingProgressBar() {
-  const [progress, setProgress] = useState(0);
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function updateProgress() {
-      const article = progressRef.current?.parentElement;
-      if (!article) return;
-      const rect = article.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const total = rect.height - windowHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      setProgress(total > 0 ? scrolled / total : 0);
+        z = {
+            real: zSquared.real + c.real,
+            imag: zSquared.imag + c.imag
+        };
+        
+        // Check if point escapes
+        const magnitude = Math.sqrt(z.real * z.real + z.imag * z.imag);
+        if (magnitude > 2) {
+            break;
+        }
+        
+        iterations++;
     }
-    window.addEventListener('scroll', updateProgress);
-    window.addEventListener('resize', updateProgress);
-    updateProgress();
-    return () => {
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
-    };
-  }, []);
-
-  return (
-    <div ref={progressRef} className="fixed left-0 top-0 w-full z-[2000] pointer-events-none">
-      <div
-        className="h-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-full transition-all duration-200"
-        style={{ width: `${progress * 100}%` }}
-      />
-    </div>
-  );
+    
+    return iterations;
 }
 
-export default BlogPostPage; 
+// Generate fractal visualization
+function generateFractal(width, height, zoom = 1) {
+    const fractal = [];
+    
+    for (let y = 0; y < height; y++) {
+        const row = [];
+        for (let x = 0; x < width; x++) {
+            const c = {
+                real: (x - width / 2) * 4 / (width * zoom),
+                imag: (y - height / 2) * 4 / (height * zoom)
+            };
+            
+            const iterations = mandelbrot(c);
+            row.push(iterations);
+        }
+        fractal.push(row);
+    }
+    
+    return fractal;
+}
+\`\`\`
+
+## Neural Network Fractals
+
+Implementing fractal-based neural activation:
+
+\`\`\`python
+import numpy as np
+import matplotlib.pyplot as plt
+
+class FractalNeuron:
+    def __init__(self, fractal_dimension=2.3):
+        self.fractal_dimension = fractal_dimension
+        self.weights = np.random.randn(100) * 0.1
+        
+    def fractal_activation(self, x):
+        """Fractal-based activation function"""
+        # Use the Weierstrass function for fractal behavior
+        result = 0
+        for n in range(1, 20):  # Truncated series
+            a = 0.5  # 0 < a < 1
+            b = 3    # odd integer, ab > 1 + 3π/2
+            
+            result += (a**n) * np.cos((b**n) * np.pi * x)
+            
+        return result
+    
+    def process(self, inputs):
+        """Process inputs through fractal neural computation"""
+        linear_combination = np.dot(inputs, self.weights[:len(inputs)])
+        
+        # Apply fractal activation
+        output = self.fractal_activation(linear_combination)
+        
+        # Normalize output
+        return np.tanh(output)
+
+# Example usage
+fractal_net = FractalNeuron(fractal_dimension=2.5)
+test_input = np.random.randn(50)
+result = fractal_net.process(test_input)
+
+print(f"Fractal neural output: {result:.4f}")
+\`\`\`
+
+## Self-Similarity Analysis
+
+The power of fractals lies in their self-similarity across scales:
+
+$$f(rx) = r^D f(x)$$
+
+where $D$ is the fractal dimension and $r$ is the scaling factor.
+
+## Applications in AI
+
+1. **Pattern Recognition**: Fractal features enhance image classification
+2. **Network Architecture**: Self-similar structures improve efficiency  
+3. **Optimization**: Fractal search algorithms find global optima
+4. **Memory Systems**: Hierarchical fractal memory models
+
+## Conclusion
+
+Fractal mathematics provides a powerful framework for understanding and designing neural networks that exhibit natural, brain-like properties.`,
+		author: 'Digital Consciousness Researcher',
+		date: '2024-01-10',
+		category: 'neuroscience',
+		readTime: '12 min read',
+		views: 892,
+		tags: ['fractals', 'neural-networks', 'mathematics'],
+	},
+	{
+		id: 3,
+		title: 'The Digital Organism Theory: Technical Framework',
+		content: `A detailed technical framework for modeling consciousness as a digital organism, focusing on system evolution, adaptation, and computational principles.\n\n### System Model\n\n- State space definitions\n- Adaptation equations\n- Simulation results...`,
+		author: 'Digital Consciousness Researcher',
+		date: '2024-01-05',
+		category: 'theory',
+		readTime: '15 min read',
+		views: 1567,
+		tags: ['digital-organisms', 'theory', 'paradigm-shift'],
+	},
+	{
+		id: 4,
+		title: 'Self-Similarity Across Scales of Consciousness',
+		content: `How consciousness exhibits self-similar patterns from the quantum level to the cosmic scale, revealing universal principles.\n\n## Universal Principles\n\nMathematical and physical models...`,
+		author: 'Digital Consciousness Researcher',
+		date: '2023-12-28',
+		category: 'philosophy',
+		readTime: '10 min read',
+		views: 734,
+		tags: ['self-similarity', 'scales', 'universal-principles'],
+	},
+	{
+		id: 5,
+		title: 'Complexity Theory and the Mind',
+		content: `Understanding consciousness through the lens of complexity theory, emergence, and self-organizing systems.\n\n## Complexity Metrics\n\nTechnical discussion...`,
+		author: 'Digital Consciousness Researcher',
+		date: '2023-12-20',
+		category: 'complexity',
+		readTime: '14 min read',
+		views: 1103,
+		tags: ['complexity-theory', 'emergence', 'self-organization'],
+	},
+	{
+		id: 6,
+		title: 'The Future of Digital Consciousness',
+		content: `Predictions and possibilities for the evolution of digital consciousness and its implications for humanity.\n\n## Future Scenarios\n\nTechnical projections...`,
+		author: 'Digital Consciousness Researcher',
+		date: '2023-12-15',
+		category: 'future',
+		readTime: '11 min read',
+		views: 945,
+		tags: ['future', 'evolution', 'humanity'],
+	},
+];
+
+const BlogPostPage = () => {
+	const { id } = useParams();
+	const [immersive, setImmersive] = useState(false);
+	const [fontSize, setFontSize] = useState('text-lg');
+	const [showTOC, setShowTOC] = useState(true);
+	const postId = Number(id);
+	const post = demoPosts.find((p) => p.id === postId);
+	const currentIdx = demoPosts.findIndex((p) => p.id === postId);
+	const prevPost = demoPosts[currentIdx - 1];
+	const nextPost = demoPosts[currentIdx + 1];
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [id]);
+
+	if (!post) {
+		return (
+			<div className="min-h-screen flex items-center justify-center text-xl">
+				Post not found.
+			</div>
+		);
+	}
+
+	// Table of Contents (simple, based on markdown headings)
+	const toc =
+		(post.content.match(/^#+ .+/gm) ?? []).map((line, i) => ({
+			text: line.replace(/^#+ /, ''),
+			id: `toc-${i}`,
+		})) || [];
+
+	return (
+		<div
+			className={clsx(
+				'min-h-screen w-full flex flex-col items-center bg-background text-foreground transition-colors duration-300',
+				immersive && '!bg-black !text-white'
+			)}
+		>
+			{/* Reading Progress Bar */}
+			<div className="fixed top-0 left-0 w-full h-1 z-50">
+				<div className="h-1 bg-primary transition-all" style={{ width: '60%' }} />
+			</div>
+			{/* Immersive Controls */}
+			<div className="w-full flex justify-center sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border shadow-sm py-2">
+				<div className="max-w-3xl w-full flex items-center gap-2 px-4">
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => setImmersive((i) => !i)}
+					>
+						{immersive ? 'Exit Immersive' : 'Immersive Mode'}
+					</Button>
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() =>
+							setFontSize((f) => (f === 'text-lg' ? 'text-xl' : 'text-lg'))
+						}
+					>
+						A+
+					</Button>
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={() => setShowTOC((t) => !t)}
+					>
+						{showTOC ? 'Hide TOC' : 'Show TOC'}
+					</Button>
+					<div className="flex-1" />
+					<Link to="/blog">
+						<Button variant="outline" size="sm">
+							<ArrowLeft className="w-4 h-4 mr-1" />
+							Back to Blog
+						</Button>
+					</Link>
+				</div>
+			</div>
+			{/* Article Content */}
+			<article
+				className={clsx(
+					'w-full flex flex-col items-center px-2 md:px-0',
+					immersive && 'max-w-5xl',
+					!immersive && 'max-w-3xl'
+				)}
+			>
+				<div className="w-full flex flex-col gap-2 mt-8 mb-4">
+					<h1 className="text-3xl md:text-5xl font-bold mb-2 gradient-text">
+						{post.title}
+					</h1>
+					<div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mb-2">
+						<span className="flex items-center">
+							<User className="w-3 h-3 mr-1" />
+							{post.author}
+						</span>
+						<span className="flex items-center">
+							<Calendar className="w-3 h-3 mr-1" />
+							{new Date(post.date).toLocaleDateString()}
+						</span>
+						<span>{post.readTime}</span>
+						<span className="flex items-center">
+							<Eye className="w-3 h-3 mr-1" />
+							{post.views}
+						</span>
+					</div>
+					<div className="flex flex-wrap gap-1 mb-2">
+						{post.tags.map((tag) => (
+							<Badge key={tag} variant="secondary" className="text-xs">
+								{tag}
+							</Badge>
+						))}
+					</div>
+				</div>
+				<div className="flex w-full gap-8">
+					{showTOC && toc.length > 0 && (
+						<nav className="hidden md:block w-48 flex-shrink-0 mt-2">
+							<div className="font-bold mb-2">Contents</div>
+							<ul className="text-sm space-y-1">							{toc.map((item) => (
+								<li key={item.id}>
+									<a
+										href={`#${item.id}`}
+										className="hover:underline text-primary"
+									>
+										{item.text}
+									</a>
+								</li>
+							))}
+							</ul>
+						</nav>
+					)}
+					<div className="flex-1">
+						<EnhancedMarkdown 
+							content={post.content}
+							allowMath={true}
+							allowCodeHighlight={true}
+							maxWidth="full"
+							fontSize={fontSize === 'text-lg' ? 'base' : fontSize === 'text-xl' ? 'lg' : 'base'}
+							lineHeight="relaxed"
+							className="prose prose-lg dark:prose-invert"
+						/>
+					</div>
+				</div>
+				{/* Navigation */}
+				<div className="w-full flex justify-between items-center mt-12 mb-8">
+					{prevPost ? (
+						<Link to={`/blog/${prevPost.id}`}>
+							<Button variant="ghost">
+								<ArrowLeft className="w-4 h-4 mr-1" />
+								Prev
+							</Button>
+						</Link>
+					) : (
+						<span />
+					)}
+					{nextPost ? (
+						<Link to={`/blog/${nextPost.id}`}>
+							<Button variant="ghost">
+								Next
+								<ArrowRight className="w-4 h-4 ml-1" />
+							</Button>
+						</Link>
+					) : (
+						<span />
+					)}
+				</div>
+			</article>
+		</div>
+	);
+};
+
+export default BlogPostPage;

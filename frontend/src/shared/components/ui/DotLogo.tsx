@@ -1,256 +1,325 @@
-import React from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
+import { motion } from 'framer-motion';
+import { useAppState } from '../../contexts/AppStateContext';
+import { withLogoOptimization } from './LogoOptimization';
 
+// Enhanced accessibility with preference detection - integrated with app state
+const usePrefersReducedMotion = () => {
+  const { state } = useAppState();
+  const [systemPreference, setSystemPreference] = useState(false);
+  
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setSystemPreference(mq.matches);
+    const handler = () => setSystemPreference(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  
+  // Respect both user preference and system preference
+  return state.userPreferences.reduceMotion || systemPreference;
+};
+
+// Enhanced performance with intersection observer - memoized for better performance
+const useIntersectionObserver = (options = {}) => {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const memoizedOptions = useMemo(() => options, [JSON.stringify(options)]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting);
+    }, memoizedOptions);
+
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [memoizedOptions]);
+
+  return [ref, isIntersecting] as const;
+};
+
+// Enhanced TypeScript interfaces with better validation
 interface DotLogoProps {
   size?: number;
   className?: string;
-  variant?: 'icon' | 'full';
+  variant?: 'icon' | 'full' | 'organism';
+  interactive?: boolean;
+  onHover?: () => void;
+  onClick?: () => void;
+  'aria-label'?: string;
+  testId?: string;
+  priority?: 'high' | 'low'; // For loading priority
+  errorFallback?: React.ReactNode;
 }
 
-const DotLogo: React.FC<DotLogoProps> = ({ size = 32, className = "", variant = "full" }) => {
-  if (variant === 'icon') {
+const DotLogo: React.FC<DotLogoProps> = memo(({ 
+  size = 32, 
+  className = "", 
+  variant = "full",
+  interactive = false,
+  onHover,
+  onClick,
+  'aria-label': ariaLabel,
+  testId,
+  priority = 'low',
+  errorFallback
+}) => {
+  const reducedMotion = usePrefersReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
+  const [logoRef, isVisible] = useIntersectionObserver({ 
+    threshold: 0.1,
+    rootMargin: priority === 'high' ? '50px' : '10px'
+  });
+  
+  // Performance optimization: simplified animation logic
+  const shouldAnimate = !reducedMotion && isVisible;
+  
+  // Memoized computed styles for better performance
+  const computedStyles = useMemo(() => ({
+    container: {
+      width: size,
+      height: size,
+    },
+    dot: {
+      width: size * 0.6,
+      height: size * 0.6,
+      background: '#2563eb', // Bright blue to match theme
+    },
+    highlight: {
+      width: size * 0.2,
+      height: size * 0.2,
+      top: '25%',
+      left: '25%',
+    },
+    letter: {
+      width: size * 0.8,
+      height: size,
+      fontSize: size * 0.7,
+      fontFamily: 'Inter, sans-serif',
+      fontWeight: 600,
+      color: 'var(--foreground)',
+    }
+  }), [size]);
+
+  // Enhanced interaction handlers with error boundaries
+  const handleMouseEnter = useCallback(() => {
+    try {
+      if (interactive) {
+        setIsHovered(true);
+        onHover?.();
+      }
+    } catch (error) {
+      console.warn('DotLogo: Error in hover handler:', error);
+    }
+  }, [interactive, onHover]);
+
+  const handleMouseLeave = useCallback(() => {
+    try {
+      if (interactive) {
+        setIsHovered(false);
+      }
+    } catch (error) {
+      console.warn('DotLogo: Error in leave handler:', error);
+    }
+  }, [interactive]);
+
+  const handleClick = useCallback(() => {
+    try {
+      if (interactive) {
+        onClick?.();
+      }
+    } catch (error) {
+      console.warn('DotLogo: Error in click handler:', error);
+    }
+  }, [interactive, onClick]);
+
+  // Memoized animation props
+  const animationProps = useMemo(() => {
+    const baseAnimation = isHovered 
+      ? { scale: [1, 1.1, 1] }
+      : shouldAnimate 
+        ? { scale: [1, 1.05, 1] }
+        : { scale: 1 };
+    
+    return {
+      whileHover: interactive ? { scale: 1.05 } : undefined,
+      whileTap: interactive ? { scale: 0.95 } : undefined,
+      transition: { type: "spring", stiffness: 400, damping: 17 },
+      animate: baseAnimation,
+      animationTransition: {
+        duration: isHovered ? 0.3 : 3,
+        repeat: shouldAnimate ? Infinity : 0,
+        ease: "easeInOut"
+      }
+    };
+  }, [interactive, isHovered, shouldAnimate]);
+
+  // Error boundary fallback
+  if (errorFallback && !size) {
+    return <>{errorFallback}</>;
+  }
+
+  // Organism variant - just the blue dot with optimizations
+  if (variant === 'organism') {
     return (
-      <div className={`relative inline-flex items-center justify-center ${className}`}>
-        <div
+      <motion.div
+        ref={logoRef}
+        data-testid={testId}
+        className={`relative inline-flex items-center justify-center cursor-pointer ${className}`}
+        role="img"
+        aria-label={ariaLabel || "Digital Organism"}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        whileHover={animationProps.whileHover}
+        whileTap={animationProps.whileTap}
+        transition={animationProps.transition}
+      >
+        <motion.div
           className="relative flex items-center justify-center"
-          style={{ width: size, height: size }}
+          style={computedStyles.container}
         >
-          {/* Outer emergence rings */}
-          <div
-            className="absolute inset-0 rounded-full border-2 opacity-30 animate-pulse"
-            style={{
-              borderColor: 'hsl(var(--primary))',
-              borderWidth: `${Math.max(1, size * 0.03)}px`,
-              animationDelay: '0s',
-              animationDuration: '3s',
-            }}
-          />
-          <div
-            className="absolute rounded-full border-2 opacity-50 animate-pulse"
-            style={{
-              width: size * 0.8,
-              height: size * 0.8,
-              top: '10%',
-              left: '10%',
-              borderColor: 'hsl(var(--primary))',
-              borderWidth: `${Math.max(1, size * 0.04)}px`,
-              animationDelay: '1s',
-              animationDuration: '3s',
-            }}
-          />
-          <div
-            className="absolute rounded-full border-2 opacity-70"
-            style={{
-              width: size * 0.6,
-              height: size * 0.6,
-              top: '20%',
-              left: '20%',
-              borderColor: 'hsl(var(--primary))',
-              borderWidth: `${Math.max(1, size * 0.05)}px`,
-            }}
-          />
-            {/* Central ultra-bright emergence dot */}
-          <div
-            className="relative z-20 rounded-full animate-pulse"
-            style={{
-              width: size * 0.28,
-              height: size * 0.28,
-              background: `
-                radial-gradient(circle at 25% 25%, 
-                  rgba(255,255,255,1) 0%, 
-                  rgba(255,255,255,1) 10%,
-                  rgba(255,255,255,0.98) 25%, 
-                  rgba(255,255,255,0.9) 35%,
-                  hsl(var(--primary)) 60%, 
-                  hsl(var(--accent)) 85%,
-                  rgba(255,255,255,0.2) 100%
-                )
-              `,
-              boxShadow: `
-                0 0 ${size * 0.08}px rgba(255,255,255,1),
-                0 0 ${size * 0.15}px rgba(255,255,255,1),
-                0 0 ${size * 0.25}px rgba(255,255,255,0.9),
-                0 0 ${size * 0.35}px rgba(255,255,255,0.7),
-                0 0 ${size * 0.45}px hsl(var(--primary)),
-                0 0 ${size * 0.6}px hsl(var(--accent)),
-                0 0 ${size * 0.8}px rgba(255,255,255,0.3),
-                inset 0 ${size * 0.02}px ${size * 0.06}px rgba(255,255,255,1),
-                inset 0 -${size * 0.01}px ${size * 0.03}px rgba(255,255,255,0.8)
-              `,
-              animationDuration: '1.5s',
-              filter: 'brightness(1.2) saturate(1.1)',
-            }}
-          />
-          
-          {/* Emergence sparkles */}
-          <div
-            className="absolute rounded-full opacity-80 animate-ping"
-            style={{
-              width: size * 0.08,
-              height: size * 0.08,
-              top: '15%',
-              right: '25%',
-              background: 'rgba(255,255,255,0.9)',
-              animationDelay: '0.5s',
-              animationDuration: '2s',
-            }}
-          />
-          <div
-            className="absolute rounded-full opacity-60 animate-ping"
-            style={{
-              width: size * 0.06,
-              height: size * 0.06,
-              bottom: '20%',
-              left: '30%',
-              background: 'hsl(var(--primary))',
-              animationDelay: '1.2s',
-              animationDuration: '2.5s',
-            }}
-          />
-        </div>
-      </div>
+          <motion.div
+            className="relative z-20 rounded-full"
+            style={computedStyles.dot}
+            animate={animationProps.animate}
+            transition={animationProps.animationTransition}
+          >
+            <div
+              className="absolute rounded-full bg-white opacity-30"
+              style={computedStyles.highlight}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
     );
   }
+  
+  // Icon variant - optimized with shared logic
+  if (variant === 'icon') {
+    return (
+      <motion.div
+        ref={logoRef}
+        data-testid={testId}
+        className={`relative inline-flex items-center justify-center cursor-pointer ${className}`}
+        role="img"
+        aria-label={ariaLabel || "DOT logo"}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        whileHover={animationProps.whileHover}
+        whileTap={animationProps.whileTap}
+        transition={animationProps.transition}
+      >
+        <motion.div
+          className="relative flex items-center justify-center"
+          style={computedStyles.container}
+        >
+          <motion.div
+            className="relative z-20 rounded-full"
+            style={computedStyles.dot}
+            animate={animationProps.animate}
+            transition={animationProps.animationTransition}
+          >
+            <div
+              className="absolute rounded-full bg-white opacity-30"
+              style={computedStyles.highlight}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    );
+  }
+  
+  // Full variant - D.O.T with optimized rendering
   return (
-    <div className={`relative inline-flex items-center ${className}`}>
+    <div 
+      ref={logoRef}
+      data-testid={testId}
+      className={`relative inline-flex items-center ${className}`} 
+      role="img" 
+      aria-label={ariaLabel || "DOT logo"}
+    >
+      {/* D letter */}
       <div
-        className="relative flex items-center justify-center font-bold gradient-text"
-        style={{
-          width: size * 0.7,
-          height: size,
-          fontSize: size * 0.8,
-          fontFamily: 'Orbitron, monospace',
-        }}
+        className="relative flex items-center justify-center font-bold"
+        style={computedStyles.letter}
       >
         D
       </div>
+      
+      {/* O as blue dot */}
       <div
-        className="relative mx-2 flex items-center justify-center"
-        style={{ width: size * 1.4, height: size * 1.4 }}
+        className="relative mx-1 flex items-center justify-center"
+        style={{ width: size * 0.8, height: size }}
       >
-        {/* Outer emergence rings */}
-        <div
-          className="absolute rounded-full border-2 opacity-30 animate-pulse"
+        <motion.div
+          className="relative z-20 rounded-full"
           style={{
-            width: size * 1.2,
-            height: size * 1.2,
-            top: '10%',
-            left: '10%',
-            borderColor: 'hsl(var(--primary))',
-            borderWidth: `${Math.max(1, size * 0.03)}px`,
-            animationDelay: '0s',
-            animationDuration: '4s',
+            width: size * 0.5,
+            height: size * 0.5,
+            background: '#2563eb', // Bright blue to match theme
           }}
-        />
-        <div
-          className="absolute rounded-full border-2 opacity-50 animate-pulse"
-          style={{
-            width: size,
-            height: size,
-            top: '20%',
-            left: '20%',
-            borderColor: 'hsl(var(--primary))',
-            borderWidth: `${Math.max(1, size * 0.04)}px`,
-            animationDelay: '1s',
-            animationDuration: '3s',
+          animate={shouldAnimate ? {
+            scale: [1, 1.05, 1],
+          } : {}}
+          transition={{ 
+            duration: 3, 
+            repeat: shouldAnimate ? Infinity : 0,
+            ease: "easeInOut" 
           }}
-        />
-        <div
-          className="absolute rounded-full border-2 opacity-70"
-          style={{
-            width: size * 0.7,
-            height: size * 0.7,
-            top: '35%',
-            left: '35%',
-            borderColor: 'hsl(var(--primary))',
-            borderWidth: `${Math.max(1, size * 0.05)}px`,
-          }}
-        />
-          {/* Central ultra-bright emergence dot */}
-        <div
-          className="relative z-20 rounded-full animate-pulse"
-          style={{
-            width: size * 0.32,
-            height: size * 0.32,
-            top: '34%',
-            left: '34%',
-            background: `
-              radial-gradient(circle at 25% 25%, 
-                rgba(255,255,255,1) 0%, 
-                rgba(255,255,255,1) 8%,
-                rgba(255,255,255,0.98) 20%, 
-                rgba(255,255,255,0.92) 30%,
-                hsl(var(--primary)) 50%, 
-                hsl(var(--accent)) 75%,
-                rgba(255,255,255,0.3) 100%
-              )
-            `,
-            boxShadow: `
-              0 0 ${size * 0.1}px rgba(255,255,255,1),
-              0 0 ${size * 0.18}px rgba(255,255,255,1),
-              0 0 ${size * 0.28}px rgba(255,255,255,0.9),
-              0 0 ${size * 0.4}px rgba(255,255,255,0.7),
-              0 0 ${size * 0.55}px hsl(var(--primary)),
-              0 0 ${size * 0.7}px hsl(var(--accent)),
-              0 0 ${size * 0.9}px rgba(255,255,255,0.4),
-              inset 0 ${size * 0.025}px ${size * 0.08}px rgba(255,255,255,1),
-              inset 0 -${size * 0.015}px ${size * 0.04}px rgba(255,255,255,0.9)
-            `,
-            animationDuration: '1.8s',
-            filter: 'brightness(1.3) saturate(1.15)',
-          }}
-        />
-        
-        {/* Emergence sparkles around the dot */}
-        <div
-          className="absolute rounded-full opacity-80 animate-ping"
-          style={{
-            width: size * 0.08,
-            height: size * 0.08,
-            top: '20%',
-            right: '35%',
-            background: 'rgba(255,255,255,0.9)',
-            animationDelay: '0.3s',
-            animationDuration: '2.5s',
-          }}
-        />
-        <div
-          className="absolute rounded-full opacity-70 animate-ping"
-          style={{
-            width: size * 0.06,
-            height: size * 0.06,
-            bottom: '25%',
-            left: '25%',
-            background: 'hsl(var(--primary))',
-            animationDelay: '1.5s',
-            animationDuration: '3s',
-          }}
-        />
-        <div
-          className="absolute rounded-full opacity-60 animate-ping"
-          style={{
-            width: size * 0.05,
-            height: size * 0.05,
-            top: '60%',
-            right: '20%',
-            background: 'hsl(var(--accent))',
-            animationDelay: '0.8s',
-            animationDuration: '2.2s',
-          }}
-        />
+        >
+          {/* Simple white highlight - matching homepage style */}
+          <div
+            className="absolute rounded-full bg-white opacity-30"
+            style={{
+              width: size * 0.15,
+              height: size * 0.15,
+              top: '25%',
+              left: '25%',
+            }}
+          />
+        </motion.div>
       </div>
+      
+      {/* T letter */}
       <div
-        className="relative flex items-center justify-center font-bold gradient-text"
-        style={{
-          width: size * 0.7,
-          height: size,
-          fontSize: size * 0.8,
-          fontFamily: 'Orbitron, monospace',
-        }}
+        className="relative flex items-center justify-center font-bold"
+        style={computedStyles.letter}
       >
         T
       </div>
     </div>
   );
+});
+
+// Display name for better debugging
+DotLogo.displayName = 'DotLogo';
+
+// Export the optimized version as default
+const OptimizedDotLogo = withLogoOptimization(DotLogo);
+
+// Export the base component for advanced usage
+export { DotLogo as DotLogoBase };
+
+// A4 container utility (for blog post content)
+export const A4_CONTAINER_STYLE: React.CSSProperties = {
+  maxWidth: '900px', // Increased width for more comfortable reading
+  minHeight: '1123px', // A4 height at 96dpi
+  margin: '0 auto',
+  background: 'var(--a4-bg, var(--background, #fff))', // Use theme background variable, fallback to white
+  borderRadius: '16px',
+  boxShadow: '0 4px 32px rgba(0,0,0,0.07)',
+  padding: '2.5rem 2.2rem',
+  boxSizing: 'border-box',
+  fontSize: '1.13rem',
+  lineHeight: 1.7,
+  fontFamily: 'Inter, system-ui, sans-serif',
+  color: 'var(--a4-fg, var(--foreground, #222))', // Use theme foreground variable, fallback to dark
+  overflowWrap: 'break-word',
 };
 
-export default DotLogo;
+export default OptimizedDotLogo;

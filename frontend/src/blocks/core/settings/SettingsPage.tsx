@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { CardContent, CardHeader, CardTitle } from '../../../shared/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '../../../shared/components/ui/card';
 import { Button } from '../../../shared/components/ui/button';
 import { Badge } from '../../../shared/components/ui/badge';
 import { Switch } from '../../../shared/components/ui/switch';
 import { Label } from '../../../shared/components/ui/label';
 import { Separator } from '../../../shared/components/ui/separator';
-import GlassCard from '../../../shared/components/ui/glass-card';
-import ReadingContainer from '../../../shared/components/ui/reading-container';
 import { 
   Settings, 
   Palette,
@@ -18,7 +16,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { useTheme } from '../../../shared/contexts/SimpleThemeContext';
-import StandardThemeToggle from '../../../shared/components/ui/StandardThemeToggle';
+import ModernThemeToggle from '../../../shared/components/ui/ModernThemeToggle';
 
 const SettingsPage: React.FC = () => {
   const { theme, getThemesByCategory } = useTheme();
@@ -158,7 +156,7 @@ const SettingsPage: React.FC = () => {
                   <div>
                 <Label className="text-sm font-medium mb-3 block">Theme Selection</Label>
                 <div className="space-y-4">
-                  <StandardThemeToggle />
+                  <ModernThemeToggle />
                   <p className="text-sm text-muted-foreground">
                     Choose from our collection of themes optimized for reading, productivity, and consciousness exploration.
                   </p>

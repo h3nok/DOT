@@ -18,8 +18,8 @@ const HomePage: React.FC = () => {
         const data = await PlatformMetricsService.getDashboardMetrics();
         setMetrics(data);
       } catch (error) {
-        console.error('Failed to load metrics:', error);
-        // Fallback to sample data for demo purposes
+        console.warn('Metrics service unavailable, using fallback data:', error);
+        // This fallback should rarely be used now that the service has its own fallback
         setMetrics({
           members: 1247,
           articles: 89,
@@ -34,14 +34,20 @@ const HomePage: React.FC = () => {
     loadMetrics();
   }, []);
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative">
       <HeroSection />
-      <DOTConcepts />
-      <CommunityInsights metrics={metrics} isLoading={isLoading} />
-      <FeaturesSection />
-      <ResearchHighlights />
-      <RecentArticles />
-      <TechnicalCallToAction />
+      
+      {/* Main Content Sections with subtle background */}
+      <div className="relative z-10 bg-background/95 backdrop-blur-sm">
+        <div className="space-y-20">
+          <DOTConcepts />
+          <CommunityInsights metrics={metrics} isLoading={isLoading} />
+          <FeaturesSection />
+          <ResearchHighlights />
+          <RecentArticles />
+          <TechnicalCallToAction />
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,16 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../../../shared/components/ui/button';
-import StandardThemeToggle from '../../../shared/components/ui/StandardThemeToggle';
+import ModernThemeToggle from '../../../shared/components/ui/ModernThemeToggle';
 import DotLogo from '../../../shared/components/ui/DotLogo';
 import { 
   Home, 
-  BookOpen, 
-  Users, 
-  Brain,
   FileText, 
   Heart,
-  Settings,
   Menu,
   X,
   LucideIcon
@@ -32,11 +28,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
     const navItems: NavItem[] = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/blog', label: 'Blog', icon: FileText },
-    { path: '/community', label: 'Community', icon: Users },
-    { path: '/learn', label: 'Learn', icon: BookOpen },
-    { path: '/profile', label: 'Profile', icon: Brain },
     { path: '/support', label: 'Support', icon: Heart },
-    { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
   const isActive = (path: string): boolean => {
@@ -78,7 +70,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
           <div className="flex items-center space-x-2">
             {/* Theme Toggle - Desktop */}
             <div className="hidden md:block">
-              <StandardThemeToggle />
+              <ModernThemeToggle />
             </div>
             
             {/* Mobile Menu Button */}
@@ -118,7 +110,7 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
               
               {/* Theme Toggle - Mobile */}
               <div className="px-4 py-3">
-                <StandardThemeToggle />
+                <ModernThemeToggle />
               </div>
             </div>
           </div>
