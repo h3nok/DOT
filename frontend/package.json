@@ -14,7 +14,7 @@
     "analyze": "pnpm build && open dist/stats.html",
     "analyze:server": "pnpm build && npx serve dist",
     "predeploy": "pnpm build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "cd .. && gh-pages -d frontend/dist",
     "deploy:github": "pnpm predeploy && pnpm deploy"
   },
   "dependencies": {
