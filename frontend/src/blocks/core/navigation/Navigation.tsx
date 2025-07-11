@@ -2,11 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../../../shared/components/ui/button';
 import ModernThemeToggle from '../../../shared/components/ui/ModernThemeToggle';
-import DotLogo from '../../../shared/components/ui/DotLogo';
 import { 
   Home, 
+  BookOpen, 
+  Users, 
+  Brain,
   FileText, 
   Heart,
+  Settings,
   Menu,
   X,
   LucideIcon
@@ -28,7 +31,11 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
     const navItems: NavItem[] = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/blog', label: 'Blog', icon: FileText },
+    { path: '/community', label: 'Community', icon: Users },
+    { path: '/learn', label: 'Learn', icon: BookOpen },
+    { path: '/profile', label: 'Profile', icon: Brain },
     { path: '/support', label: 'Support', icon: Heart },
+    { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
   const isActive = (path: string): boolean => {
@@ -37,12 +44,45 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
     }
     return location.pathname.startsWith(path);
   };  return (
-    <nav className="bg-card/50 backdrop-blur-sm border-b border-border/50" style={{zIndex: 100}}>
+    <nav className="bg-card/50 backdrop-blur-sm border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 hover:scale-105 transition-transform duration-200">
-            <DotLogo size={32} variant="full" />
+          <Link to="/" className="flex items-center space-x-1 hover:scale-105 transition-transform duration-200">
+            <div className="flex items-center text-xl font-bold">
+              {/* D */}
+              <span className="text-primary" style={{ 
+                fontFamily: 'Orbitron, Arial, sans-serif', 
+                fontWeight: 700,
+                fontSize: '22px'
+              }}>D</span>
+              
+              {/* Digital Organism O - Animated dot */}
+              <div className="mx-1 flex items-center justify-center animate-pulse-slow" style={{ 
+                width: 20, 
+                height: 20,
+                backgroundColor: '#00d4ff', // Bright cyan color that's always visible
+                borderRadius: '50%',
+                boxShadow: '0 0 12px #00d4ff, 0 0 24px #00d4ff',
+                border: '2px solid #ffffff', // White border for contrast
+                minWidth: '20px', // Ensure minimum width
+                flexShrink: 0 // Prevent shrinking
+              }}>
+                <div className="animate-pulse" style={{
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '50%'
+                }}></div>
+              </div>
+              
+              {/* T */}
+              <span className="text-primary" style={{ 
+                fontFamily: 'Orbitron, Arial, sans-serif', 
+                fontWeight: 700,
+                fontSize: '22px'
+              }}>T</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

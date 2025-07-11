@@ -22,21 +22,8 @@ import {
   X
 } from 'lucide-react';
 import clsx from 'clsx';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  category: string;
-  readTime: string;
-  views: number;
-  tags: string[];
-  likes?: number;
-  readingProgress?: number;
-  isBookmarked?: boolean;
-}
+import BlogService, { BlogPost, BlogStats } from '../../../services/BlogService';
+import { toast } from 'sonner';
 
 // Custom hook for debounced search
 const useDebounce = (value: string, delay: number) => {
@@ -61,16 +48,19 @@ const BlogPostCard = React.memo(({
   isLiked, 
   isBookmarked, 
   onToggleLike, 
-  onToggleBookmark 
+  onToggleBookmark,
+  onShare
 }: {
   post: BlogPost;
   isLiked: boolean;
   isBookmarked: boolean;
-  onToggleLike: (id: number) => void;
-  onToggleBookmark: (id: number) => void;
+  onToggleLike: (id: string) => void;
+  onToggleBookmark: (id: string) => void;
+  onShare: (post: BlogPost) => void;
 }) => {
   const handleLike = useCallback(() => onToggleLike(post.id), [post.id, onToggleLike]);
   const handleBookmark = useCallback(() => onToggleBookmark(post.id), [post.id, onToggleBookmark]);
+  const handleShare = useCallback(() => onShare(post), [post, onShare]);
   
   return (
     <motion.div
@@ -83,9 +73,13 @@ const BlogPostCard = React.memo(({
         <div className="flex flex-col h-full">
           <div className="flex-1">
             <div className="flex items-center justify-between mb-3">
-              <Badge variant="secondary" className="text-xs">
-                {post.category}
-              </Badge>
+              <div className="flex flex-wrap gap-1">
+                {post.categories.map((category) => (
+                  <Badge key={category} variant="secondary" className="text-xs">
+                    {category}
+                  </Badge>
+                ))}
+              </div>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="ghost"
@@ -109,6 +103,14 @@ const BlogPostCard = React.memo(({
                 >
                   <Bookmark className="h-4 w-4" fill={isBookmarked ? "currentColor" : "none"} />
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleShare}
+                  className="p-1 h-8 w-8 transition-colors hover:text-green-500"
+                >
+                  <Share2 className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             <h3 className="text-xl font-bold mb-3 line-clamp-2 hover:text-primary transition-colors">
@@ -131,21 +133,25 @@ const BlogPostCard = React.memo(({
             <div className="flex items-center space-x-4">
               <span className="flex items-center">
                 <User className="h-4 w-4 mr-1" />
-                {post.author}
+                {post.author.name}
               </span>
               <span className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1" />
-                {new Date(post.date).toLocaleDateString()}
+                {new Date(post.publishedAt).toLocaleDateString()}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <span className="flex items-center">
                 <Clock className="h-4 w-4 mr-1" />
-                {post.readTime}
+                {post.readTime} min
               </span>
               <span className="flex items-center">
                 <Eye className="h-4 w-4 mr-1" />
                 {post.views}
+              </span>
+              <span className="flex items-center">
+                <Heart className="h-4 w-4 mr-1" />
+                {post.likes}
               </span>
             </div>
           </div>
@@ -161,91 +167,97 @@ const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<'date' | 'views' | 'likes' | 'readTime'>('date');
+  const [sortBy, setSortBy] = useState<'date' | 'views' | 'likes' | 'title'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewPost, setPreviewPost] = useState<BlogPost | null>(null);
-  const [bookmarked, setBookmarked] = useState<number[]>([]);
-  const [liked, setLiked] = useState<number[]>([]);
+  const [bookmarked, setBookmarked] = useState<string[]>([]);
+  const [liked, setLiked] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [blogStats, setBlogStats] = useState<BlogStats | null>(null);
 
   // Debounced search term for performance
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const postsPerPage = 12;
 
-  // Memoized callback functions
-  const toggleLike = useCallback((postId: number) => {
-    setLiked(prev => 
-      prev.includes(postId) 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-  }, []);
-
-  const toggleBookmark = useCallback((postId: number) => {
-    setBookmarked(prev => 
-      prev.includes(postId) 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-  }, []);
-
-  // Demo blog posts data
-  const demoPosts = [
-    {
-      id: 1,
-      title: "The Emergence of Digital Consciousness",
-      excerpt: "Exploring how consciousness can arise from simple digital components through emergent complexity and self-organizing systems...",
-      author: "Digital Consciousness Researcher",
-      date: "2024-01-15",
-      category: "consciousness",
-      readTime: "8 min read",
-      views: 1247,
-      likes: 89,
-      readingProgress: 34,
-      isBookmarked: false,
-      tags: ["consciousness", "emergence", "digital-organisms"]
-    },
-    {
-      id: 2,
-      title: "Fractal Patterns in Neural Networks",
-      excerpt: "How fractal mathematics reveals the underlying structure of consciousness and can guide the development of artificial minds...",
-      author: "Digital Consciousness Researcher",
-      date: "2024-01-10",
-      category: "neuroscience",
-      readTime: "12 min read",
-      views: 892,
-      likes: 67,
-      readingProgress: 78,
-      isBookmarked: true,
-      tags: ["fractals", "neural-networks", "mathematics"]
-    },
-    {
-      id: 3,
-      title: "The Digital Organism Theory: Technical Framework",
-      excerpt: "A detailed technical framework for modeling consciousness as a digital organism, focusing on system evolution, adaptation, and computational principles.",
-      author: "Digital Consciousness Researcher",
-      date: "2024-01-05",
-      category: "theory",
-      readTime: "15 min read",
-      views: 1567,
-      likes: 124,
-      readingProgress: 0,
-      isBookmarked: false,
-      tags: ["digital-organisms", "theory", "paradigm-shift"]
+  // Enhanced callback functions
+  const toggleLike = useCallback(async (postId: string) => {
+    try {
+      const result = await BlogService.toggleLike(postId);
+      
+      if (result.liked) {
+        setLiked(prev => [...prev, postId]);
+        toast.success('Post liked!');
+      } else {
+        setLiked(prev => prev.filter(id => id !== postId));
+        toast.success('Post unliked');
+      }
+      
+      // Update the post in the local state
+      setPosts(prev => prev.map(post => 
+        post.id === postId 
+          ? { ...post, likes: result.count }
+          : post
+      ));
+    } catch (error) {
+      toast.error('Failed to update like status');
     }
-  ];
+  }, []);
 
-  // Basic filtering and sorting with debounced search
+  const toggleBookmark = useCallback(async (postId: string) => {
+    try {
+      const result = await BlogService.toggleBookmark(postId);
+      
+      if (result.bookmarked) {
+        setBookmarked(prev => [...prev, postId]);
+        toast.success('Post bookmarked!');
+      } else {
+        setBookmarked(prev => prev.filter(id => id !== postId));
+        toast.success('Bookmark removed');
+      }
+    } catch (error) {
+      toast.error('Failed to update bookmark status');
+    }
+  }, []);
+
+  const handleShare = useCallback(async (post: BlogPost) => {
+    try {
+      // Update share count
+      setPosts(prev => prev.map(p => 
+        p.id === post.id 
+          ? { ...p, shares: p.shares + 1 }
+          : p
+      ));
+
+      // Web Share API or fallback
+      if (navigator.share) {
+        await navigator.share({
+          title: post.title,
+          text: post.excerpt,
+          url: `${window.location.origin}/knowledge/blog/${post.id}`
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(`${window.location.origin}/knowledge/blog/${post.id}`);
+        toast.success('Link copied to clipboard!');
+      }
+    } catch (error) {
+      toast.error('Failed to share post');
+    }
+  }, []);
+
+  // Enhanced filtering and sorting with categories support
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = posts.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
                            post.excerpt.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
                            post.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
-      const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'all' || post.categories.includes(selectedCategory);
       const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => post.tags.includes(tag));
-      return matchesSearch && matchesCategory && matchesTags;
+      const matchesStatus = post.status === 'published'; // Only show published posts
+      return matchesSearch && matchesCategory && matchesTags && matchesStatus;
     });
 
     filtered.sort((a, b) => {
@@ -256,41 +268,56 @@ const BlogPage = () => {
           bValue = b.views;
           break;
         case 'likes':
-          aValue = a.likes || 0;
-          bValue = b.likes || 0;
+          aValue = a.likes;
+          bValue = b.likes;
           break;
-        case 'readTime':
-          aValue = parseInt(a.readTime);
-          bValue = parseInt(b.readTime);
+        case 'title':
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+          }
           break;
         case 'date':
         default:
-          aValue = new Date(a.date).getTime();
-          bValue = new Date(b.date).getTime();
+          aValue = new Date(a.publishedAt).getTime();
+          bValue = new Date(b.publishedAt).getTime();
           break;
       }
-      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      return 0;
     });
 
     return filtered;
   }, [posts, debouncedSearchTerm, selectedCategory, selectedTags, sortBy, sortOrder]);
 
-  // Categories
-  const categories = [
-    { id: 'all', name: 'All', count: posts.length },
-    { id: 'consciousness', name: 'Consciousness', count: posts.filter(p => p.category === 'consciousness').length },
-    { id: 'neuroscience', name: 'Neuroscience', count: posts.filter(p => p.category === 'neuroscience').length },
-    { id: 'theory', name: 'Theory', count: posts.filter(p => p.category === 'theory').length },
-  ];
+  // Enhanced categories from actual blog stats
+  const categories = useMemo(() => {
+    const allCategories = [
+      { id: 'all', name: 'All', count: posts.filter(p => p.status === 'published').length }
+    ];
+    
+    if (blogStats?.topCategories) {
+      allCategories.push(...blogStats.topCategories.map(cat => ({
+        id: cat.category,
+        name: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
+        count: cat.count
+      })));
+    }
+    
+    return allCategories;
+  }, [posts, blogStats]);
 
-  const postsPerPage = 12;
   const totalPages = Math.ceil(filteredAndSortedPosts.length / postsPerPage);
   const paginatedPosts = filteredAndSortedPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
   const featuredPost = posts.find(p => p.views === Math.max(...posts.map(p => p.views)));
   const isFiltered = selectedCategory !== 'all' || selectedTags.length > 0 || searchTerm !== '';
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -298,19 +325,206 @@ const BlogPage = () => {
     });
   };
 
+  // Load blog data using BlogService
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      const postsWithBookmarks = demoPosts.map(post => ({
-        ...post,
-        isBookmarked: Math.random() > 0.7
-      }));
-      setPosts(postsWithBookmarks);
-      setLoading(false);
-    }, 1000);
+    const loadBlogData = async () => {
+      try {
+        setLoading(true);
+        
+        // Load stats first, then use mock data for posts since getAllPosts doesn't exist
+        const statsData = await BlogService.getBlogStats();
+        setBlogStats(statsData);
+        
+        // Using the mock data from BlogService for now
+        const mockPosts: BlogPost[] = [
+          {
+            id: '1',
+            title: 'Understanding Digital Consciousness Theory',
+            content: 'Full content here...',
+            excerpt: 'Exploring the fundamental principles of digital consciousness and its implications for AI development.',
+            author: {
+              id: '1',
+              name: 'Dr. Sarah Chen',
+              avatar: '/avatars/sarah.jpg',
+            },
+            publishedAt: new Date('2024-01-15'),
+            updatedAt: new Date('2024-01-15'),
+            status: 'published',
+            tags: ['consciousness', 'AI', 'theory'],
+            categories: ['Digital Consciousness'],
+            readTime: 8,
+            views: 1247,
+            likes: 89,
+            shares: 23,
+            seoMetadata: {
+              title: 'Understanding Digital Consciousness Theory',
+              description: 'Exploring the fundamental principles of digital consciousness and its implications for AI development.',
+              keywords: ['digital consciousness', 'AI theory', 'consciousness'],
+            },
+          },
+          {
+            id: '2',
+            title: 'The Future of Neural Networks',
+            content: 'Full content here...',
+            excerpt: 'How advanced neural networks are reshaping our understanding of artificial intelligence and consciousness.',
+            author: {
+              id: '2',
+              name: 'Dr. Marcus Wei',
+              avatar: '/avatars/marcus.jpg',
+            },
+            publishedAt: new Date('2024-01-10'),
+            updatedAt: new Date('2024-01-10'),
+            status: 'published',
+            tags: ['neural networks', 'AI', 'machine learning'],
+            categories: ['AI Theory'],
+            readTime: 12,
+            views: 892,
+            likes: 67,
+            shares: 15,
+            seoMetadata: {
+              title: 'The Future of Neural Networks',
+              description: 'How advanced neural networks are reshaping our understanding of artificial intelligence and consciousness.',
+              keywords: ['neural networks', 'AI', 'machine learning'],
+            },
+          },
+          {
+            id: '3',
+            title: 'Digital Organisms: A New Paradigm',
+            content: 'Full content here...',
+            excerpt: 'Exploring the concept of digital organisms and their role in the evolution of artificial consciousness.',
+            author: {
+              id: '3',
+              name: 'Dr. Elena Rodriguez',
+              avatar: '/avatars/elena.jpg',
+            },
+            publishedAt: new Date('2024-01-05'),
+            updatedAt: new Date('2024-01-05'),
+            status: 'published',
+            tags: ['digital organisms', 'evolution', 'consciousness'],
+            categories: ['Research'],
+            readTime: 15,
+            views: 1567,
+            likes: 124,
+            shares: 31,
+            seoMetadata: {
+              title: 'Digital Organisms: A New Paradigm',
+              description: 'Exploring the concept of digital organisms and their role in the evolution of artificial consciousness.',
+              keywords: ['digital organisms', 'evolution', 'consciousness'],
+            },
+          },
+          {
+            id: '4',
+            title: 'Quantum Computing and Consciousness',
+            content: 'Full content here...',
+            excerpt: 'Investigating the potential connections between quantum computing and conscious experience.',
+            author: {
+              id: '4',
+              name: 'Dr. James Thompson',
+              avatar: '/avatars/james.jpg',
+            },
+            publishedAt: new Date('2024-01-03'),
+            updatedAt: new Date('2024-01-03'),
+            status: 'published',
+            tags: ['quantum computing', 'consciousness', 'physics'],
+            categories: ['Technology'],
+            readTime: 10,
+            views: 734,
+            likes: 52,
+            shares: 8,
+            seoMetadata: {
+              title: 'Quantum Computing and Consciousness',
+              description: 'Investigating the potential connections between quantum computing and conscious experience.',
+              keywords: ['quantum computing', 'consciousness', 'physics'],
+            },
+          },
+          {
+            id: '5',
+            title: 'The Philosophy of Digital Minds',
+            content: 'Full content here...',
+            excerpt: 'A philosophical exploration of what it means to have a digital mind and conscious experience.',
+            author: {
+              id: '5',
+              name: 'Dr. Sophia Kim',
+              avatar: '/avatars/sophia.jpg',
+            },
+            publishedAt: new Date('2024-01-01'),
+            updatedAt: new Date('2024-01-01'),
+            status: 'published',
+            tags: ['philosophy', 'digital minds', 'consciousness'],
+            categories: ['Philosophy'],
+            readTime: 14,
+            views: 623,
+            likes: 41,
+            shares: 12,
+            seoMetadata: {
+              title: 'The Philosophy of Digital Minds',
+              description: 'A philosophical exploration of what it means to have a digital mind and conscious experience.',
+              keywords: ['philosophy', 'digital minds', 'consciousness'],
+            },
+          },
+          {
+            id: '6',
+            title: 'Machine Learning and Emergent Behavior',
+            content: 'Full content here...',
+            excerpt: 'How complex behaviors emerge from simple machine learning algorithms and their implications.',
+            author: {
+              id: '6',
+              name: 'Dr. Ahmed Hassan',
+              avatar: '/avatars/ahmed.jpg',
+            },
+            publishedAt: new Date('2023-12-28'),
+            updatedAt: new Date('2023-12-28'),
+            status: 'published',
+            tags: ['machine learning', 'emergence', 'complexity'],
+            categories: ['AI Theory'],
+            readTime: 9,
+            views: 445,
+            likes: 33,
+            shares: 6,
+            seoMetadata: {
+              title: 'Machine Learning and Emergent Behavior',
+              description: 'How complex behaviors emerge from simple machine learning algorithms and their implications.',
+              keywords: ['machine learning', 'emergence', 'complexity'],
+            },
+          }
+        ];
 
-    return () => clearTimeout(timer);
+        setPosts(mockPosts);
+        
+        // Initialize bookmarks and likes (randomly for demo)
+        setBookmarked(mockPosts.filter(() => Math.random() > 0.7).map(post => post.id));
+        setLiked(mockPosts.filter(() => Math.random() > 0.6).map(post => post.id));
+        
+      } catch (error) {
+        toast.error('Failed to load blog data');
+        console.error('Error loading blog data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBlogData();
   }, []);
+
+  // Handle search with debouncing
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      const performSearch = async () => {
+        try {
+          const results = await BlogService.searchPosts(debouncedSearchTerm, {
+            sortBy,
+            sortOrder
+          });
+          // Update posts with search results
+          setPosts(results.posts);
+        } catch (error) {
+          toast.error('Search failed');
+        }
+      };
+      
+      performSearch();
+    }
+  }, [debouncedSearchTerm, sortBy, sortOrder]);
 
   if (loading) {
     return (
@@ -414,11 +628,11 @@ const BlogPage = () => {
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
                       <div className="flex items-center gap-1">
                         <User className="w-4 h-4" />
-                        <span>{featuredPost.author}</span>
+                        <span>{featuredPost.author.name}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        <span>{formatDate(featuredPost.date)}</span>
+                        <span>{formatDate(featuredPost.publishedAt)}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
@@ -598,6 +812,7 @@ const BlogPage = () => {
                 isBookmarked={bookmarked.includes(post.id)}
                 onToggleLike={toggleLike}
                 onToggleBookmark={toggleBookmark}
+                onShare={handleShare}
               />
             ))}
           </motion.div>
@@ -718,11 +933,11 @@ const BlogPage = () => {
                   <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
                     <div className="flex items-center gap-1">
                       <User className="w-4 h-4" />
-                      <span>{previewPost.author}</span>
+                      <span>{previewPost.author.name}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      <span>{formatDate(previewPost.date)}</span>
+                      <span>{formatDate(previewPost.publishedAt)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
@@ -757,7 +972,7 @@ const BlogPage = () => {
                   </p>
                   <div className="mt-6 p-4 bg-muted/30 rounded-lg text-sm text-muted-foreground border-l-4 border-primary">
                     <p className="font-medium mb-2">📖 Article Preview</p>
-                    <p>This is a preview of the article. The full content would include detailed analysis, examples, and comprehensive insights into the {previewPost.category} topic and related areas.</p>
+                    <p>This is a preview of the article. The full content would include detailed analysis, examples, and comprehensive insights into the {previewPost.categories[0]} topic and related areas.</p>
                   </div>
                 </div>
 

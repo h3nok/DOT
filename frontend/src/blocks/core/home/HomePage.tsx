@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PlatformMetricsService, { DashboardMetrics } from '../../../services/PlatformMetricsService';
+import { MetricsService, DashboardMetrics, ErrorService } from '../../../services';
 import HeroSection from './HeroSection';
 import DOTConcepts from './DOTConcepts';
 import CommunityInsights from './CommunityInsights';
-import FeaturesSection from './FeaturesSection';
+import FeaturesShowcase from './FeaturesShowcase';
+import PerformanceMetrics from './PerformanceMetrics';
+import TestimonialsSection from './TestimonialsSection';
 import ResearchHighlights from './ResearchHighlights';
 import RecentArticles from './RecentArticles';
 import TechnicalCallToAction from './TechnicalCallToAction';
@@ -15,11 +17,16 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const loadMetrics = async () => {
       try {
-        const data = await PlatformMetricsService.getDashboardMetrics();
+        const data = await MetricsService.getDashboardMetrics();
         setMetrics(data);
       } catch (error) {
-        console.warn('Metrics service unavailable, using fallback data:', error);
-        // This fallback should rarely be used now that the service has its own fallback
+        console.error('Failed to load metrics:', error);
+        ErrorService.logError(error as Error, {
+          component: 'HomePage',
+          action: 'load-metrics',
+        });
+        
+        // Fallback to sample data for demo purposes
         setMetrics({
           members: 1247,
           articles: 89,
@@ -34,20 +41,16 @@ const HomePage: React.FC = () => {
     loadMetrics();
   }, []);
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-background">
       <HeroSection />
-      
-      {/* Main Content Sections with subtle background */}
-      <div className="relative z-10 bg-background/95 backdrop-blur-sm">
-        <div className="space-y-20">
-          <DOTConcepts />
-          <CommunityInsights metrics={metrics} isLoading={isLoading} />
-          <FeaturesSection />
-          <ResearchHighlights />
-          <RecentArticles />
-          <TechnicalCallToAction />
-        </div>
-      </div>
+      <DOTConcepts />
+      <CommunityInsights metrics={metrics} isLoading={isLoading} />
+      <FeaturesShowcase />
+      <PerformanceMetrics metrics={metrics} isLoading={isLoading} />
+      <ResearchHighlights />
+      <RecentArticles />
+      <TestimonialsSection />
+      <TechnicalCallToAction />
     </div>
   );
 };

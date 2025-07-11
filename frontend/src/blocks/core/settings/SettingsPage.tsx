@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../shared/components/ui/card';
 import { Button } from '../../../shared/components/ui/button';
 import { Badge } from '../../../shared/components/ui/badge';
-import { Switch } from '../../../shared/components/ui/switch';
 import { Label } from '../../../shared/components/ui/label';
 import { Separator } from '../../../shared/components/ui/separator';
 import { 
@@ -17,6 +16,9 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../../shared/contexts/SimpleThemeContext';
 import ModernThemeToggle from '../../../shared/components/ui/ModernThemeToggle';
+import { useSettings } from '../../../forms/hooks/useSettings';
+import { type SettingsPageData } from '../../../forms/schemas/settingsPage';
+import { Select, Toggle } from '../../../forms/components';
 
 const SettingsPage: React.FC = () => {
   const { theme, getThemesByCategory } = useTheme();
@@ -28,87 +30,30 @@ const SettingsPage: React.FC = () => {
     Object.assign(allThemes, category);
   });
   const currentTheme = allThemes[theme];
-  
-  const [settings, setSettings] = useState({
-    notifications: {
-      email: true,
-      push: false,
-      marketing: false,
-      newArticles: true,
-      communityUpdates: true
+
+  const {
+    form,
+    isLoading,
+    isDirty,
+    saveStatus,
+    lastSaved,
+    isAutoSaving,
+    handleSave,
+    handleReset,
+  } = useSettings({
+    enableAutoSave: true,
+    onSave: async (data: SettingsPageData) => {
+      // Simulate API call
+      console.log('Saving settings:', data);
+      await new Promise(resolve => setTimeout(resolve, 1000));
     },
-    reading: {
-      autoOptimize: true,
-      fontSize: 'medium',
-      lineHeight: 'comfortable',
-      wordSpacing: 'normal'
+    onReset: () => {
+      console.log('Settings reset to defaults');
     },
-    privacy: {
-      profileVisibility: 'public',
-      activityTracking: true,
-      dataCollection: false
-    },
-    accessibility: {
-      reduceMotion: false,
-      highContrast: false,
-      keyboardNavigation: true
-    }
   });
-  const handleSettingChange = (category: string, setting: string, value: boolean | string) => {
-    setSettings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category as keyof typeof prev],
-        [setting]: value
-      }
-    }));
-  };
 
-  const saveSettings = () => {
-    // Implementation for saving settings
-    console.log('Settings saved:', settings);
-    // Add visual feedback
-    const button = document.querySelector('[data-save-button]') as HTMLButtonElement;
-    if (button) {
-      const originalText = button.textContent;
-      button.textContent = 'Saved!';
-      button.classList.add('bg-green-500', 'hover:bg-green-600');
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.classList.remove('bg-green-500', 'hover:bg-green-600');
-      }, 2000);
-    }
-  };
-
-  const resetSettings = () => {
-    // Implementation for resetting to defaults
-    setSettings({
-      notifications: {
-        email: true,
-        push: false,
-        marketing: false,
-        newArticles: true,
-        communityUpdates: true
-      },
-      reading: {
-        autoOptimize: true,
-        fontSize: 'medium',
-        lineHeight: 'comfortable',
-        wordSpacing: 'normal'
-      },
-      privacy: {
-        profileVisibility: 'public',
-        activityTracking: true,
-        dataCollection: false
-      },
-      accessibility: {
-        reduceMotion: false,
-        highContrast: false,
-        keyboardNavigation: true
-      }
-    });
-    console.log('Settings reset to defaults');
-  };
+  const { watch } = form;
+  const settings = watch();
 
   return (
     <div className="min-h-screen bg-background">
@@ -174,61 +119,52 @@ const SettingsPage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="auto-optimize">Auto-optimize for reading</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Automatically apply reading optimizations like improved line spacing and typography
-                  </p>
-                </div>                <Switch                  id="auto-optimize"
-                  checked={settings.reading.autoOptimize}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('reading', 'autoOptimize', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="auto-optimize"
+                label="Auto-optimize for reading"
+                description="Automatically apply reading optimizations like improved line spacing and typography"
+                checked={settings.reading?.autoOptimize || false}
+                onChange={(checked) => 
+                  form.setValue('reading.autoOptimize', checked, { shouldDirty: true })
+                }
+              />
               
               <Separator className="" />
               
               <div className="grid md:grid-cols-3 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Font Size</Label>
-                  <select 
-                    className="w-full mt-1 p-2 border rounded-lg bg-background"
-                    value={settings.reading.fontSize}
-                    onChange={(e) => handleSettingChange('reading', 'fontSize', e.target.value)}
-                  >
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                    <option value="extra-large">Extra Large</option>
-                  </select>
-                </div>
+                <Select
+                  name="reading.fontSize"
+                  control={form.control}
+                  label="Font Size"
+                  options={[
+                    { value: 'small', label: 'Small' },
+                    { value: 'medium', label: 'Medium' },
+                    { value: 'large', label: 'Large' },
+                    { value: 'extra-large', label: 'Extra Large' }
+                  ]}
+                />
                 
-                <div>
-                  <Label className="text-sm font-medium">Line Height</Label>
-                  <select 
-                    className="w-full mt-1 p-2 border rounded-lg bg-background"
-                    value={settings.reading.lineHeight}
-                    onChange={(e) => handleSettingChange('reading', 'lineHeight', e.target.value)}
-                  >
-                    <option value="compact">Compact</option>
-                    <option value="comfortable">Comfortable</option>
-                    <option value="relaxed">Relaxed</option>
-                  </select>
-                </div>
+                <Select
+                  name="reading.lineHeight"
+                  control={form.control}
+                  label="Line Height"
+                  options={[
+                    { value: 'compact', label: 'Compact' },
+                    { value: 'comfortable', label: 'Comfortable' },
+                    { value: 'relaxed', label: 'Relaxed' }
+                  ]}
+                />
                 
-                <div>
-                  <Label className="text-sm font-medium">Word Spacing</Label>
-                  <select 
-                    className="w-full mt-1 p-2 border rounded-lg bg-background"
-                    value={settings.reading.wordSpacing}
-                    onChange={(e) => handleSettingChange('reading', 'wordSpacing', e.target.value)}
-                  >
-                    <option value="tight">Tight</option>
-                    <option value="normal">Normal</option>
-                    <option value="loose">Loose</option>
-                  </select>
-                </div>
+                <Select
+                  name="reading.wordSpacing"
+                  control={form.control}
+                  label="Word Spacing"
+                  options={[
+                    { value: 'tight', label: 'Tight' },
+                    { value: 'normal', label: 'Normal' },
+                    { value: 'loose', label: 'Loose' }
+                  ]}
+                />
               </div>
             </CardContent>
           </Card>
@@ -241,21 +177,23 @@ const SettingsPage: React.FC = () => {
                 <span>Notifications</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">              {Object.entries({
+            <CardContent className="space-y-6">
+              {Object.entries({
                 email: 'Email notifications',
                 push: 'Push notifications',
                 marketing: 'Marketing communications',
                 newArticles: 'New articles and content',
                 communityUpdates: 'Community updates'
-              }).map(([key, label]) => (                <div key={key} className="flex items-center justify-between">
-                  <Label htmlFor={key}>{label}</Label>
-                  <Switch
-                    id={key}
-                    checked={settings.notifications[key as keyof typeof settings.notifications]}
-                    onCheckedChange={(checked: boolean) => handleSettingChange('notifications', key, checked)}
-                    className=""
-                  />
-                </div>
+              }).map(([key, label]) => (
+                <Toggle
+                  key={key}
+                  id={key}
+                  label={label}
+                  checked={settings.notifications?.[key as keyof typeof settings.notifications] || false}
+                  onChange={(checked) =>
+                    form.setValue(`notifications.${key}` as any, checked, { shouldDirty: true })
+                  }
+                />
               ))}
             </CardContent>
           </Card>
@@ -269,47 +207,38 @@ const SettingsPage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <Label className="text-sm font-medium">Profile Visibility</Label>
-                <select 
-                  className="w-full mt-1 p-2 border rounded-lg bg-background"
-                  value={settings.privacy.profileVisibility}
-                  onChange={(e) => handleSettingChange('privacy', 'profileVisibility', e.target.value)}
-                >
-                  <option value="public">Public</option>
-                  <option value="community">Community Members Only</option>
-                  <option value="private">Private</option>
-                </select>              </div>
+              <Select
+                name="privacy.profileVisibility"
+                control={form.control}
+                label="Profile Visibility"
+                options={[
+                  { value: 'public', label: 'Public' },
+                  { value: 'community', label: 'Community Members Only' },
+                  { value: 'private', label: 'Private' }
+                ]}
+              />
               
               <Separator className="" />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="activity-tracking">Activity tracking</Label>                  <p className="text-sm text-muted-foreground">
-                    Allow tracking of reading progress and learning analytics
-                  </p>
-                </div>
-                <Switch
-                  id="activity-tracking"
-                  checked={settings.privacy.activityTracking}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('privacy', 'activityTracking', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="activity-tracking"
+                label="Activity tracking"
+                description="Allow tracking of reading progress and learning analytics"
+                checked={settings.privacy?.activityTracking || false}
+                onChange={(checked) =>
+                  form.setValue('privacy.activityTracking', checked, { shouldDirty: true })
+                }
+              />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="data-collection">Enhanced data collection</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Help improve the platform with anonymous usage data
-                  </p>                </div>
-                <Switch
-                  id="data-collection"
-                  checked={settings.privacy.dataCollection}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('privacy', 'dataCollection', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="data-collection"
+                label="Enhanced data collection"
+                description="Help improve the platform with anonymous usage data"
+                checked={settings.privacy?.dataCollection || false}
+                onChange={(checked) =>
+                  form.setValue('privacy.dataCollection', checked, { shouldDirty: true })
+                }
+              />
             </CardContent>
           </Card>
 
@@ -322,63 +251,71 @@ const SettingsPage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>                  <Label htmlFor="reduce-motion">Reduce motion</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Minimize animations and transitions
-                  </p>
-                </div>
-                <Switch
-                  id="reduce-motion"
-                  checked={settings.accessibility.reduceMotion}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('accessibility', 'reduceMotion', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="reduce-motion"
+                label="Reduce motion"
+                description="Minimize animations and transitions"
+                checked={settings.accessibility?.reduceMotion || false}
+                onChange={(checked) =>
+                  form.setValue('accessibility.reduceMotion', checked, { shouldDirty: true })
+                }
+              />
               
-              <div className="flex items-center justify-between">                <div>
-                  <Label htmlFor="high-contrast">High contrast mode</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Increase contrast for better visibility
-                  </p>
-                </div>
-                <Switch
-                  id="high-contrast"
-                  checked={settings.accessibility.highContrast}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('accessibility', 'highContrast', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="high-contrast"
+                label="High contrast mode"
+                description="Increase contrast for better visibility"
+                checked={settings.accessibility?.highContrast || false}
+                onChange={(checked) =>
+                  form.setValue('accessibility.highContrast', checked, { shouldDirty: true })
+                }
+              />
               
-              <div className="flex items-center justify-between">                <div>
-                  <Label htmlFor="keyboard-nav">Enhanced keyboard navigation</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Improved keyboard accessibility features
-                  </p>
-                </div>
-                <Switch
-                  id="keyboard-nav"
-                  checked={settings.accessibility.keyboardNavigation}
-                  onCheckedChange={(checked: boolean) => handleSettingChange('accessibility', 'keyboardNavigation', checked)}
-                  className=""
-                />
-              </div>
+              <Toggle
+                id="keyboard-nav"
+                label="Enhanced keyboard navigation"
+                description="Improved keyboard accessibility features"
+                checked={settings.accessibility?.keyboardNavigation || false}
+                onChange={(checked) =>
+                  form.setValue('accessibility.keyboardNavigation', checked, { shouldDirty: true })
+                }
+              />
             </CardContent>
           </Card>
 
-          {/* Actions */}          <div className="flex flex-col sm:flex-row gap-4">
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button 
-              onClick={saveSettings} 
+              onClick={handleSave} 
               className="flex items-center space-x-2 flex-1"
+              disabled={!isDirty || isLoading}
               data-save-button
             >
               <Save className="w-4 h-4" />
-              <span>Save Settings</span>
+              <span>
+                {saveStatus === 'saving' ? 'Saving...' :
+                 saveStatus === 'saved' ? 'Saved!' :
+                 saveStatus === 'error' ? 'Error!' : 
+                 'Save Settings'}
+              </span>
             </Button>
-            <Button variant="outline" onClick={resetSettings} className="flex items-center space-x-2">
+            <Button variant="outline" onClick={handleReset} className="flex items-center space-x-2">
               <RotateCcw className="w-4 h-4" />
               <span>Reset to Defaults</span>
             </Button>
+          </div>
+
+          {/* Status indicators */}
+          <div className="text-sm text-muted-foreground space-y-1">
+            {isDirty && (
+              <p>You have unsaved changes</p>
+            )}
+            {isAutoSaving && (
+              <p>Auto-saving...</p>
+            )}
+            {lastSaved && (
+              <p>Last saved: {lastSaved.toLocaleTimeString()}</p>
+            )}
           </div>
         </div>
       </div>

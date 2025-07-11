@@ -23,6 +23,10 @@ importers:
       three:
         specifier: ^0.177.0
         version: 0.177.0
+    devDependencies:
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
 packages:
 
@@ -359,6 +363,11 @@ packages:
 
   tunnel-rat@0.1.2:
     resolution: {integrity: sha512-lR5VHmkPhzdhrM092lI2nACsLO4QubF0/yoOhzX7c+wIpbN1GjHNzCc91QlpxBi+cnx8vVJ+Ur6vL5cEoQPFpQ==}
+
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   use-sync-external-store@1.5.0:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
@@ -754,6 +763,8 @@ snapshots:
       - '@types/react'
       - immer
       - react
+
+  typescript@5.8.3: {}
 
   use-sync-external-store@1.5.0(react@19.1.0):
     dependencies:

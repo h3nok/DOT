@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../shared/components/ui/card';
 import { Button } from '../../shared/components/ui/button';
 import { Badge } from '../../shared/components/ui/badge';
-import { Input } from '../../shared/components/ui/input';
-import { Textarea } from '../../shared/components/ui/textarea';
 import { 
   Link, 
-  Database, 
-  Code, 
   Settings, 
-  Zap,
   CheckCircle,
   AlertCircle,
   Clock,
@@ -18,17 +13,43 @@ import {
   Trash2,
   ExternalLink
 } from 'lucide-react';
+import { useIntegrationForm } from '../../forms/hooks/useIntegrationForm';
+import { type IntegrationFormData } from '../../forms/schemas/integration';
+import { FormField, Form, FormSubmit, Select, Textarea } from '../../forms/components';
+
+interface Integration {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  lastSync: string;
+  dataPoints: number;
+  description?: string;
+  url?: string;
+  apiKey?: string;
+}
 
 const IntegrationPage = () => {
-  const [integrations, setIntegrations] = useState([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newIntegration, setNewIntegration] = useState({
-    name: '',
-    type: '',
-    url: '',
-    apiKey: '',
-    description: ''
+
+  const integrationFormHook = useIntegrationForm({
+    onSubmit: async (data: IntegrationFormData) => {
+      const integration: Integration = {
+        id: Date.now(),
+        ...data,
+        status: 'connecting',
+        lastSync: 'Just now',
+        dataPoints: 0
+      };
+      setIntegrations([...integrations, integration]);
+      setShowAddForm(false);
+    },
+    onError: (error) => {
+      console.error('Integration form error:', error);
+      alert('There was an error adding the integration. Please try again.');
+    }
   });
 
   const integrationTypes = [
@@ -40,7 +61,7 @@ const IntegrationPage = () => {
     { id: 'custom', name: 'Custom API', icon: '🔧', description: 'Connect to your own consciousness research tools' }
   ];
 
-  const demoIntegrations = [
+  const demoIntegrations: Integration[] = [
     {
       id: 1,
       name: 'OpenAI GPT-4',
@@ -78,25 +99,11 @@ const IntegrationPage = () => {
     }, 1000);
   }, []);
 
-  const handleAddIntegration = (e) => {
-    e.preventDefault();
-    const integration = {
-      id: Date.now(),
-      ...newIntegration,
-      status: 'connecting',
-      lastSync: 'Just now',
-      dataPoints: 0
-    };
-    setIntegrations([...integrations, integration]);
-    setNewIntegration({ name: '', type: '', url: '', apiKey: '', description: '' });
-    setShowAddForm(false);
-  };
-
-  const handleRemoveIntegration = (id) => {
+  const handleRemoveIntegration = (id: number) => {
     setIntegrations(integrations.filter(integration => integration.id !== id));
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'connected': return 'text-green-500';
       case 'connecting': return 'text-yellow-500';
@@ -105,7 +112,7 @@ const IntegrationPage = () => {
     }
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'connected': return <CheckCircle className="w-4 h-4" />;
       case 'connecting': return <Clock className="w-4 h-4" />;
@@ -342,7 +349,7 @@ const IntegrationPage = () => {
                       variant="outline" 
                       className="w-full"
                       onClick={() => {
-                        setNewIntegration(prev => ({ ...prev, type: type.id }));
+                        integrationFormHook.setValue('type', type.id);
                         setShowAddForm(true);
                       }}
                     >
@@ -364,66 +371,74 @@ const IntegrationPage = () => {
               <CardTitle>Add Integration</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleAddIntegration} className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Integration Name</label>
-                  <Input
-                    value={newIntegration.name}
-                    onChange={(e) => setNewIntegration(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="My OpenAI Integration"
-                    required
-                  />
-                </div>
+              <Form 
+                form={integrationFormHook.form} 
+                onSubmit={async (data: IntegrationFormData) => {
+                  const integration: Integration = {
+                    id: Date.now(),
+                    ...data,
+                    status: 'connecting',
+                    lastSync: 'Just now',
+                    dataPoints: 0
+                  };
+                  setIntegrations([...integrations, integration]);
+                  setShowAddForm(false);
+                }}
+              >
+                <FormField name="name" label="Integration Name" required>
+                  {(field) => (
+                    <input
+                      {...field}
+                      placeholder="My OpenAI Integration"
+                      className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                    />
+                  )}
+                </FormField>
                 
-                <div>
-                  <label className="text-sm font-medium">Type</label>
-                  <select
-                    value={newIntegration.type}
-                    onChange={(e) => setNewIntegration(prev => ({ ...prev, type: e.target.value }))}
-                    className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
-                    required
-                  >
-                    <option value="">Select integration type</option>
-                    {integrationTypes.map(type => (
-                      <option key={type.id} value={type.id}>{type.name}</option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  name="type"
+                  control={integrationFormHook.form.control}
+                  label="Type"
+                  options={integrationTypes.map(type => ({
+                    value: type.id,
+                    label: type.name
+                  }))}
+                  required
+                />
                 
-                <div>
-                  <label className="text-sm font-medium">API URL (optional)</label>
-                  <Input
-                    value={newIntegration.url}
-                    onChange={(e) => setNewIntegration(prev => ({ ...prev, url: e.target.value }))}
-                    placeholder="https://api.example.com"
-                  />
-                </div>
+                <FormField name="url" label="API URL (optional)">
+                  {(field) => (
+                    <input
+                      {...field}
+                      placeholder="https://api.example.com"
+                      className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                    />
+                  )}
+                </FormField>
                 
-                <div>
-                  <label className="text-sm font-medium">API Key</label>
-                  <Input
-                    type="password"
-                    value={newIntegration.apiKey}
-                    onChange={(e) => setNewIntegration(prev => ({ ...prev, apiKey: e.target.value }))}
-                    placeholder="Enter your API key"
-                    required
-                  />
-                </div>
+                <FormField name="apiKey" label="API Key">
+                  {(field) => (
+                    <input
+                      {...field}
+                      type="password"
+                      placeholder="Enter your API key"
+                      className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground"
+                    />
+                  )}
+                </FormField>
                 
-                <div>
-                  <label className="text-sm font-medium">Description</label>
-                  <Textarea
-                    value={newIntegration.description}
-                    onChange={(e) => setNewIntegration(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="What is this integration for?"
-                    rows={3}
-                  />
-                </div>
+                <Textarea
+                  name="description"
+                  control={integrationFormHook.form.control}
+                  label="Description"
+                  placeholder="What is this integration for?"
+                  rows={3}
+                />
                 
                 <div className="flex space-x-2">
-                  <Button type="submit" className="flex-1">
+                  <FormSubmit className="flex-1">
                     Add Integration
-                  </Button>
+                  </FormSubmit>
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -432,7 +447,7 @@ const IntegrationPage = () => {
                     Cancel
                   </Button>
                 </div>
-              </form>
+              </Form>
             </CardContent>
           </Card>
         </div>

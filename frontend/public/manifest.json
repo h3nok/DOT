@@ -1,0 +1,135 @@
+{
+  "name": "Digital Organism Theory Platform",
+  "short_name": "DOT Platform",
+  "description": "A collaborative research platform for digital consciousness and organism theory",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "research", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon-16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-dot-16.svg",
+      "sizes": "16x16",
+      "type": "image/svg+xml",
+      "purpose": "monochrome"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon-dot.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "DOT Platform Home - Desktop"
+    },
+    {
+      "src": "/screenshots/mobile-home.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "DOT Platform Home - Mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Community Discussions",
+      "short_name": "Community",
+      "description": "Join research discussions and collaborate",
+      "url": "/community",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Research Blog",
+      "short_name": "Blog",
+      "description": "Read and write research articles",
+      "url": "/blog",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Learning Paths",
+      "short_name": "Learn",
+      "description": "Explore digital organism theory concepts",
+      "url": "/learn",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "description": "Customize your experience",
+      "url": "/settings",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "dir": "ltr",
+  "iarc_rating_id": "",
+  "protocol_handlers": [
+    {
+      "protocol": "web+dot",
+      "url": "/share?content=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

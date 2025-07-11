@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CardContent, CardHeader, CardTitle } from '../../shared/components/ui/card';
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from '../../shared/components/ui/card';
 import { Button } from '../../shared/components/ui/button';
 import { Badge } from '../../shared/components/ui/badge';
 import { Input } from '../../shared/components/ui/input';
@@ -20,7 +20,20 @@ import {
 } from 'lucide-react';
 
 const CommunityPage = () => {
-  const [discussions, setDiscussions] = useState([]);
+  interface Discussion {
+    id: number;
+    title: string;
+    content: string;
+    author: string;
+    category: string;
+    replies: number;
+    views: number;
+    likes: number;
+    lastActivity: string;
+    tags: string[];
+  }
+
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -113,7 +126,7 @@ const CommunityPage = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const formatNumber = (num) => {
+  const formatNumber = (num: number) => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + 'k';
     }
@@ -345,7 +358,7 @@ const CommunityPage = () => {
                         {discussion.content}
                       </p>
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {discussion.tags.map((tag) => (
+                        {discussion.tags.map((tag: string) => (
                           <Badge key={tag} variant="secondary" className="text-xs">
                             {tag}
                           </Badge>

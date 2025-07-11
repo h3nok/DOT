@@ -7,7 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "analyze": "pnpm build && open dist/stats.html",
+    "analyze:server": "pnpm build && npx serve dist",
+    "predeploy": "pnpm build",
+    "deploy": "gh-pages -d dist",
+    "deploy:github": "pnpm predeploy && pnpm deploy"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
@@ -80,18 +88,25 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/katex": "^0.16.7",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/three": "^0.178.0",
     "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
+    "jsdom": "^26.1.0",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tw-animate-css": "^1.2.9",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
 }
