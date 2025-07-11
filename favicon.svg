@@ -1,0 +1,34 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="redDotGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#ff4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background with subtle gradient and rounded corners -->
+  <rect width="32" height="32" fill="url(#bgGrad)" rx="4"/>
+  
+  <!-- D -->
+  <text x="3" y="22" font-family="'Orbitron', 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" fill="#2563eb">D</text>
+  
+  <!-- Enhanced red dot (O) with gradient and glow -->
+  <circle cx="16" cy="16" r="8" fill="#ff4444" opacity="0.3" filter="url(#glow)"/>
+  <circle cx="16" cy="16" r="6" fill="url(#redDotGrad)" filter="url(#glow)"/>
+  <circle cx="16" cy="16" r="2.5" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- T -->
+  <text x="21" y="22" font-family="'Orbitron', 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" fill="#2563eb">T</text>
+</svg>
