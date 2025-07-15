@@ -399,6 +399,12 @@ const UserProfilePage = () => {
                       Account Settings
                     </Link>
                   </Button>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Link to="/settings" className="flex items-center">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Account Settings
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             </div>
