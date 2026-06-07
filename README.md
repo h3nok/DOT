@@ -23,10 +23,17 @@ Digital Organisms Theory examines the emergence of consciousness through the len
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies with `pnpm install`
-3. Start the development server with `pnpm dev`
+2. Install dependencies with `make install`
+3. Start the development servers with `make start`
 4. Open your browser to explore Digital Organisms Theory
+
+### Alternative Commands
+
+- Frontend only: `make start-frontend`
+- Backend only: `make start-backend`
+- Frontend build: `make build`
+- Frontend lint: `make lint`
 
 ## Philosophy
 
-The red dot in our logo represents the singular emergence of consciousness from the vast External Environment—a simple symbol for the profound journey from external chaos to internal awareness." 
+The red dot in our logo represents the singular emergence of consciousness from the vast External Environment—a simple symbol for the profound journey from external chaos to internal awareness."

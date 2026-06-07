@@ -115,6 +115,11 @@ temp/
 *.sqlite
 *.sqlite3
 
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+
 # Optional: Backup files
 *.bak
 *.backup 

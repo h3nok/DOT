@@ -1,23 +1,19 @@
 {
-  "name": "dot-platform",
-  "version": "1.0.0",
+  "name": "dot-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Personal site & portfolio workspace (frontend + backend orchestration)",
   "scripts": {
-    "dev": "cd frontend && pnpm dev",
-    "build": "cd frontend && pnpm build",
-    "preview": "cd frontend && pnpm preview",
-    "deploy": "cd frontend && pnpm build && cd .. && gh-pages -d frontend/dist",
-    "install:frontend": "cd frontend && pnpm install",
+    "dev": "node runner.js",
+    "dev:frontend": "pnpm --dir frontend dev",
+    "dev:backend": "cd backend && python src/main.py",
+    "build": "pnpm --dir frontend build",
+    "preview": "pnpm --dir frontend preview",
+    "lint": "pnpm --dir frontend lint",
+    "install:frontend": "pnpm --dir frontend install",
     "install:backend": "cd backend && pip install -r requirements.txt"
   },
-  "dependencies": {
-    "@react-three/drei": "^10.3.0",
-    "@react-three/fiber": "^9.1.2",
-    "react-syntax-highlighter": "^15.6.1",
-    "swiper": "^11.2.10",
-    "three": "^0.177.0"
-  },
-  "devDependencies": {
-    "gh-pages": "^6.3.0",
-    "typescript": "^5.8.3"
+  "engines": {
+    "node": ">=18"
   }
 }
