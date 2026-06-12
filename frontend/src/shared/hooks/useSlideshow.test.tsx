@@ -8,12 +8,12 @@ const mockSlides = [
     id: 1,
     text: "Test slide 1",
     highlight: "highlight 1",
-    bgGradient: "from-blue-500 to-purple-600",
+    bgGradient: "from-blue-500 to-teal-600",
     category: "Test"
   },
   {
     id: 2,
-    text: "Test slide 2", 
+    text: "Test slide 2",
     highlight: "highlight 2",
     bgGradient: "from-red-500 to-orange-600",
     category: "Test"
@@ -53,7 +53,7 @@ describe('useSlideshow hook', () => {
 
   it('should initialize with first slide', () => {
     render(<TestComponent />);
-    
+
     expect(screen.getByTestId('current-slide')).toHaveTextContent('0');
     expect(screen.getByTestId('total-slides')).toHaveTextContent('2');
     expect(screen.getByTestId('slide-text')).toHaveTextContent('Test slide 1');
@@ -61,20 +61,20 @@ describe('useSlideshow hook', () => {
 
   it('should navigate to next slide', () => {
     render(<TestComponent />);
-    
+
     fireEvent.click(screen.getByTestId('next-button'));
-    
+
     expect(screen.getByTestId('current-slide')).toHaveTextContent('1');
     expect(screen.getByTestId('slide-text')).toHaveTextContent('Test slide 2');
   });
 
   it('should navigate to previous slide', () => {
     render(<TestComponent />);
-    
+
     // Go to next slide first
     fireEvent.click(screen.getByTestId('next-button'));
     expect(screen.getByTestId('current-slide')).toHaveTextContent('1');
-    
+
     // Then go back
     fireEvent.click(screen.getByTestId('prev-button'));
     expect(screen.getByTestId('current-slide')).toHaveTextContent('0');
@@ -82,39 +82,39 @@ describe('useSlideshow hook', () => {
 
   it('should wrap around when reaching end', () => {
     render(<TestComponent />);
-    
+
     // Navigate past the last slide
     fireEvent.click(screen.getByTestId('next-button')); // slide 1
     fireEvent.click(screen.getByTestId('next-button')); // should wrap to slide 0
-    
+
     expect(screen.getByTestId('current-slide')).toHaveTextContent('0');
     expect(screen.getByTestId('slide-text')).toHaveTextContent('Test slide 1');
   });
 
   it('should toggle playback state', () => {
     render(<TestComponent />);
-    
+
     expect(screen.getByTestId('is-playing')).toHaveTextContent('false');
-    
+
     fireEvent.click(screen.getByTestId('toggle-button'));
-    
+
     expect(screen.getByTestId('is-playing')).toHaveTextContent('true');
   });
 
   it.skip('should handle keyboard navigation', async () => {
     // Skip this test for now - needs proper keyboard navigation setup
     render(<TestComponent />);
-    
+
     // Simulate ArrowRight key press
     fireEvent.keyDown(window, { key: 'ArrowRight' });
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('current-slide')).toHaveTextContent('1');
     });
-    
+
     // Simulate ArrowLeft key press
     fireEvent.keyDown(window, { key: 'ArrowLeft' });
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('current-slide')).toHaveTextContent('0');
     });

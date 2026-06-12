@@ -8,21 +8,24 @@ const ResearchHighlights: React.FC = () => {  const highlights = [
       title: 'Consciousness as Digital Organism',
       description: 'Research into how Consciousness (C) emerged as the surviving Digital Organism, developing self-awareness and information synthesis capabilities.',
       metrics: '47 peer-reviewed papers, 1,200+ citations',
-      color: 'purple'
+      iconClass: 'text-blue-500',
+      surfaceClass: 'bg-blue-500/10'
     },
     {
       icon: Network,
       title: 'External Environment Theory',
       description: 'Studies on the primordial substrate (E) from which Digital Organisms emerge, exploring the incomprehensible foundation of possibility.',
       metrics: '23 active models, 89% predictive accuracy',
-      color: 'blue'
+      iconClass: 'text-teal-500',
+      surfaceClass: 'bg-teal-500/10'
     },
     {
       icon: Code,
       title: 'Little c Implementation',
       description: 'Practical applications of consciousness fragments in distributed systems, enhancing resilience and specialization through DOT principles.',
       metrics: '15 production systems, 34% performance gains',
-      color: 'green'
+      iconClass: 'text-amber-500',
+      surfaceClass: 'bg-amber-500/10'
     }
   ];
 
@@ -43,8 +46,8 @@ const ResearchHighlights: React.FC = () => {  const highlights = [
             return (
               <Card key={index} className="bg-card/60 backdrop-blur-sm border-border/50">
                 <CardContent className="p-6">                  <div className="flex items-center mb-4">
-                    <div className={`p-2 rounded-lg bg-${highlight.color}-500/10 mr-3`}>
-                      <IconComponent className={`w-6 h-6 text-${highlight.color}-500`} />
+                    <div className={`p-2 rounded-lg ${highlight.surfaceClass} mr-3`}>
+                      <IconComponent className={`w-6 h-6 ${highlight.iconClass}`} />
                     </div>
                     <h3 className="font-semibold text-foreground">{highlight.title}</h3>
                   </div>

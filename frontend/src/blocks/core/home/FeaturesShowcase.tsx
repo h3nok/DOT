@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Brain, 
-  Network, 
-  Search, 
-  Users, 
-  BookOpen, 
-  Zap, 
+import {
+  Brain,
+  Network,
+  Search,
+  Users,
+  BookOpen,
+  Zap,
   Globe,
   ArrowRight,
   Sparkles,
@@ -39,8 +39,8 @@ const features: Feature[] = [
       'Research collaboration tools'
     ],
     link: '/learn/consciousness',
-    color: 'text-purple-500',
-    gradient: 'from-purple-500/10 to-pink-500/10',
+    color: 'text-teal-500',
+    gradient: 'from-teal-500/10 to-sky-500/10',
     category: 'research'
   },
   {
@@ -99,8 +99,8 @@ const features: Feature[] = [
       'Certification programs'
     ],
     link: '/learn',
-    color: 'text-indigo-500',
-    gradient: 'from-indigo-500/10 to-purple-500/10',
+    color: 'text-blue-500',
+    gradient: 'from-blue-500/10 to-teal-500/10',
     category: 'research'
   },
   {
@@ -134,20 +134,20 @@ const FeaturesShowcase: React.FC = () => {
     >
       <GlassCard className="p-6 h-full hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-        
+
         <div className="relative z-10">
           <div className={`${feature.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
             {feature.icon}
           </div>
-          
+
           <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-foreground">
             {feature.title}
           </h3>
-          
+
           <p className="text-muted-foreground mb-4 leading-relaxed">
             {feature.description}
           </p>
-          
+
           <ul className="space-y-2 mb-6">
             {feature.details.map((detail, idx) => (
               <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -156,11 +156,11 @@ const FeaturesShowcase: React.FC = () => {
               </li>
             ))}
           </ul>
-          
+
           <Link to={feature.link}>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className="group/btn hover:bg-transparent hover:text-primary p-0"
             >
               <span>Explore Feature</span>
@@ -199,12 +199,12 @@ const FeaturesShowcase: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-3 mb-8"
           >
-            <div className="p-2 bg-purple-500/10 rounded-lg">
-              <Brain className="w-6 h-6 text-purple-500" />
+            <div className="p-2 bg-teal-500/10 rounded-lg">
+              <Brain className="w-6 h-6 text-teal-500" />
             </div>
             <h3 className="text-2xl font-light text-foreground">Research & Discovery</h3>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
             {researchFeatures.map((feature, index) => (
               <FeatureCard key={feature.title} feature={feature} index={index} />
@@ -226,7 +226,7 @@ const FeaturesShowcase: React.FC = () => {
             </div>
             <h3 className="text-2xl font-light text-foreground">Community & Collaboration</h3>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
             {communityFeatures.map((feature, index) => (
               <FeatureCard key={feature.title} feature={feature} index={index} />
@@ -248,7 +248,7 @@ const FeaturesShowcase: React.FC = () => {
             </div>
             <h3 className="text-2xl font-light text-foreground">Platform & Tools</h3>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
             {platformFeatures.map((feature, index) => (
               <FeatureCard key={feature.title} feature={feature} index={index} />
@@ -266,22 +266,22 @@ const FeaturesShowcase: React.FC = () => {
         >
           <GlassCard className="p-12 max-w-4xl mx-auto relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
-            
+
             <div className="relative z-10">
               <div className="flex justify-center mb-6">
                 <div className="p-4 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl">
                   <Sparkles className="w-12 h-12 text-primary" />
                 </div>
               </div>
-              
+
               <h3 className="text-3xl md:text-4xl font-light mb-4 text-foreground">
                 Ready to Explore Consciousness?
               </h3>
-              
+
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
                 Join our community of researchers and start your journey into the fascinating world of digital consciousness.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link to="/learn">
@@ -292,7 +292,7 @@ const FeaturesShowcase: React.FC = () => {
                     </Button>
                   </Link>
                 </motion.div>
-                
+
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link to="/community">
                     <Button variant="outline" size="lg" className="group">

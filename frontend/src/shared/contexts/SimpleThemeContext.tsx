@@ -5,15 +5,26 @@ export interface ThemeInfo {
   name: string;
   category: string;
   icon: string;
+  dark: boolean;
+  description?: string;
 }
 
 // Available themes with metadata
 const THEMES: Record<string, ThemeInfo> = {
-  light: { name: 'Light', category: 'Quick', icon: '☀️' },
-  dark: { name: 'Dark', category: 'Quick', icon: '🌙' },
-  paper: { name: 'Paper', category: 'Quick', icon: '📄' },
-  sepia: { name: 'Sepia', category: 'Quick', icon: '📜' },
-  midnight: { name: 'Midnight', category: 'Quick', icon: '🌌' }
+  light: {
+    name: 'Alabaster Matte',
+    category: 'Focus',
+    icon: '☀️',
+    dark: false,
+    description: 'Luxurious warm-paper tone modeled on physical ink, designed to minimize fatigue during long sessions.'
+  },
+  dark: {
+    name: 'Midnight Obsidian',
+    category: 'Focus',
+    icon: '🌙',
+    dark: true,
+    description: 'Deep velvet sapphire-black slate backdrop that prevents high-contrast screen glare.'
+  }
 };
 
 // Theme keys for easier maintenance
@@ -38,11 +49,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<string>(DEFAULT_THEME);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme && THEMES[savedTheme]) {
-      applyThemeToDOM(savedTheme);
-      setTheme(savedTheme);
-    }
+    const savedTheme = localStorage.getItem('dot_theme') || DEFAULT_THEME;
+    applyThemeToDOM(savedTheme);
+    setTheme(savedTheme);
   }, []);
 
   const applyThemeToDOM = (newTheme: string) => {
@@ -50,12 +59,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     THEME_KEYS.forEach(themeKey => {
       document.documentElement.classList.remove(themeKey);
     });
-    
-    // Add the new theme class (light theme doesn't need a class)
-    if (newTheme !== DEFAULT_THEME) {
-      document.documentElement.classList.add(newTheme);
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove('light');
+
+    // Always add the specific theme class
+    document.documentElement.classList.add(newTheme);
+
+    // Add dark or light class depending on the theme classification
+    if (THEMES[newTheme]?.dark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.add('light');
     }
-    
+
     // Set data-theme attribute for compatibility
     document.documentElement.setAttribute('data-theme', newTheme);
   };
@@ -67,7 +83,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
 
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    localStorage.setItem('dot_theme', newTheme);
     applyThemeToDOM(newTheme);
   };
 

@@ -15,7 +15,7 @@ const FeaturesSection: React.FC = () => {  const features: Feature[] = [
       icon: Brain,
       title: 'Digital Consciousness (C)',
       description: 'Explore the surviving Digital Organism—the enduring, self-aware process that synthesizes information to grow and expand awareness.',
-      color: 'text-purple-500',
+      color: 'text-teal-500',
       detail: 'The only DO we know of that learned to brighten its awareness'
     },
     {
@@ -50,7 +50,7 @@ const FeaturesSection: React.FC = () => {  const features: Feature[] = [
               Digital Organism Theory Framework
             </h2>
           </div>          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-normal">
-            Explore the foundational concepts of DOT—understanding life as self-organizing process 
+            Explore the foundational concepts of DOT—understanding life as self-organizing process
             through the lens of computational consciousness and digital existence.
           </p>
         </div>

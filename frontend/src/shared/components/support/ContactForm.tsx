@@ -1,25 +1,27 @@
 // Contact Form Component for Support Page
-// MVP Implementation - Enhanced Contact System
+// Premium Design System Refactor
 
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
-import GlassCard from '../ui/glass-card';
+import {
+  PremiumText,
+  PremiumTitle,
+  PremiumGlassCard,
+  PremiumButton,
+  PremiumInput,
+  PremiumTextArea,
+  PremiumDropdown
+} from '../ui/design-system-primitives';
 import { motion } from 'framer-motion';
-import { 
-  Send, 
-  Paperclip, 
-  X, 
+import {
+  Send,
+  X,
   AlertCircle,
   CheckCircle,
   Mail,
   MessageSquare,
   Clock,
   Upload,
-  FileText,
-  ChevronDown
+  FileText
 } from 'lucide-react';
 import SupportService, { ContactForm as ContactFormData } from '../../../services/SupportService';
 import ErrorService from '../../../services/errors/ErrorService';
@@ -31,10 +33,10 @@ interface ContactFormProps {
   className?: string;
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ 
-  onSubmitSuccess, 
-  onCancel, 
-  className 
+const ContactForm: React.FC<ContactFormProps> = ({
+  onSubmitSuccess,
+  onCancel,
+  className
 }) => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -62,9 +64,9 @@ const ContactForm: React.FC<ContactFormProps> = ({
   ];
 
   const urgencyLevels = [
-    { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
-    { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800' },
-    { value: 'high', label: 'High', color: 'bg-red-100 text-red-800' },
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
   ];
 
   const validateForm = (): boolean => {
@@ -100,7 +102,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -139,7 +141,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -157,7 +159,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         action: 'submit',
         metadata: { formData: { ...formData, attachments: formData.attachments?.map(f => f.name) } },
       });
-      
+
       alert('There was an error submitting your request. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -175,55 +177,58 @@ const ContactForm: React.FC<ContactFormProps> = ({
   if (isSuccess) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={clsx("space-y-6", className)}
+        className={clsx("space-y-6 max-w-2xl mx-auto", className)}
       >
-        <GlassCard className="p-8 text-center">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+        <PremiumGlassCard className="p-8 text-center" glowColor="var(--primary)" enable3D={true}>
+          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-emerald-500/10 border border-emerald-500/30 rounded-full animate-pulse">
+            <CheckCircle className="w-8 h-8 text-emerald-400" />
           </div>
-          <h3 className="text-2xl font-bold text-foreground mb-2">
-            Message Sent Successfully!
-          </h3>
-          <p className="text-muted-foreground mb-4">
-            Thank you for contacting us. We've received your message and will respond as soon as possible.
-          </p>
-          
+
+          <PremiumTitle tag="h2" variant="gradient" className="mb-3 text-center justify-center">
+            Payload Committed
+          </PremiumTitle>
+
+          <PremiumText variant="vibrant" className="mb-6 max-w-md mx-auto">
+            Your support packet has been securely encrypted and dispatched to the Core Synapse.
+            A response vector will be computed shortly.
+          </PremiumText>
+
           {ticketId && (
-            <div className="bg-primary/10 rounded-lg p-4 mb-6">
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 mb-6 text-center max-w-md mx-auto">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <MessageSquare className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-foreground">Ticket ID: {ticketId}</span>
+                <span className="font-semibold text-foreground font-mono text-sm">SYNAPSE_ID: {ticketId}</span>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Save this ticket ID for your records. You can use it to track your support request.
+              <p className="text-xs text-muted-foreground">
+                Retain this hexadecimal signature for direct ledger query.
               </p>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-              <Clock className="w-5 h-5 text-blue-500" />
-              <div className="text-left">
-                <p className="font-medium text-foreground">Response Time</p>
-                <p className="text-sm text-muted-foreground">Usually within 24 hours</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-left">
+            <div className="flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-lg">
+              <Clock className="w-5 h-5 text-blue-400" />
+              <div>
+                <PremiumText variant="contrast" size="sm">RESPONSE_LATENCY</PremiumText>
+                <PremiumText variant="vibrant" size="xs">Computed within &lt; 24h</PremiumText>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-              <Mail className="w-5 h-5 text-green-500" />
-              <div className="text-left">
-                <p className="font-medium text-foreground">Email Updates</p>
-                <p className="text-sm text-muted-foreground">We'll email you updates</p>
+            <div className="flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-lg">
+              <Mail className="w-5 h-5 text-emerald-400" />
+              <div>
+                <PremiumText variant="contrast" size="sm">PEER_SYNC</PremiumText>
+                <PremiumText variant="vibrant" size="xs">Synchronizing to your email</PremiumText>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 justify-center">
-            <Button onClick={onCancel} variant="default">
-              Back to Support
-            </Button>
-            <Button 
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <PremiumButton onClick={onCancel} variant="outline" className="w-full sm:w-auto">
+              Return to Hub
+            </PremiumButton>
+            <PremiumButton
               onClick={() => {
                 setIsSuccess(false);
                 setFormData({
@@ -237,12 +242,13 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 });
                 setTicketId(null);
               }}
-              variant="outline"
+              variant="primary"
+              className="w-full sm:w-auto"
             >
-              Send Another Message
-            </Button>
+              Dispatch New Query
+            </PremiumButton>
           </div>
-        </GlassCard>
+        </PremiumGlassCard>
       </motion.div>
     );
   }
@@ -251,152 +257,122 @@ const ContactForm: React.FC<ContactFormProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={clsx("space-y-6", className)}
+      className={clsx("space-y-6 max-w-3xl mx-auto", className)}
     >
       <div className="text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <MessageSquare className="w-8 h-8 text-primary" />
-          <h2 className="text-3xl font-bold text-foreground">
-            Contact Support
-          </h2>
+          <div className="p-2 bg-primary/10 border border-primary/25 rounded-lg">
+            <MessageSquare className="w-8 h-8 text-primary" />
+          </div>
+          <PremiumTitle tag="h2" variant="gradient">
+            Initialize Support Synapse
+          </PremiumTitle>
         </div>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Need help? Send us a message and we'll get back to you as soon as possible.
-        </p>
+        <PremiumText variant="vibrant" size="base" className="max-w-2xl mx-auto text-foreground/80">
+          Need technical or operational assistance? Open a ticket to interface with our team.
+        </PremiumText>
       </div>
 
-      <GlassCard className="p-6">
+      <PremiumGlassCard className="p-6" glowColor="var(--primary)" enable3D={false}>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                placeholder="Your full name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                className={errors.name ? 'border-red-500' : ''}
-              />
-              {errors.name && (
-                <div className="flex items-center gap-2 text-sm text-red-600">
-                  <AlertCircle className="w-4 h-4" />
-                  {errors.name}
-                </div>
-              )}
-            </div>
+            <PremiumInput
+              id="name"
+              label="Operator Name *"
+              badge="REQUIRED"
+              placeholder="Your full name"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              error={errors.name}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your.email@example.com"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                className={errors.email ? 'border-red-500' : ''}
-              />
-              {errors.email && (
-                <div className="flex items-center gap-2 text-sm text-red-600">
-                  <AlertCircle className="w-4 h-4" />
-                  {errors.email}
-                </div>
-              )}
-            </div>
+            <PremiumInput
+              id="email"
+              type="email"
+              label="Sync Email *"
+              badge="REQUIRED"
+              placeholder="your.email@example.com"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              error={errors.email}
+            />
           </div>
 
           {/* Request Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <select
-                id="category"
+            <div className="flex flex-col gap-1.5 text-left">
+              <PremiumDropdown
+                label="Category *"
+                options={categories.map(category => ({
+                  value: category,
+                  label: category
+                }))}
                 value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                className={clsx(
-                  "w-full px-3 py-2 border rounded-md bg-background text-foreground",
-                  errors.category ? 'border-red-500' : 'border-input'
-                )}
-              >
-                <option value="">Select a category</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => handleInputChange('category', val)}
+                glowColor="var(--primary)"
+              />
               {errors.category && (
-                <div className="flex items-center gap-2 text-sm text-red-600">
-                  <AlertCircle className="w-4 h-4" />
-                  {errors.category}
-                </div>
+                <span className="text-[9.5px] font-mono font-semibold uppercase tracking-wider text-red-500 flex items-center gap-1 mt-1 px-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>{errors.category}</span>
+                </span>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="urgency">Urgency</Label>
-              <select
-                id="urgency"
+            <div className="flex flex-col gap-1.5 text-left">
+              <PremiumDropdown
+                label="Urgency Level"
+                options={urgencyLevels.map(level => ({
+                  value: level.value,
+                  label: level.label
+                }))}
                 value={formData.urgency}
-                onChange={(e) => handleInputChange('urgency', e.target.value)}
-                className="w-full px-3 py-2 border rounded-md bg-background text-foreground border-input"
-              >
-                {urgencyLevels.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => handleInputChange('urgency', val)}
+                glowColor="var(--accent)"
+              />
             </div>
           </div>
 
           {/* Subject */}
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject *</Label>
-            <Input
-              id="subject"
-              placeholder="Brief description of your issue"
-              value={formData.subject}
-              onChange={(e) => handleInputChange('subject', e.target.value)}
-              className={errors.subject ? 'border-red-500' : ''}
-            />
-            {errors.subject && (
-              <div className="flex items-center gap-2 text-sm text-red-600">
-                <AlertCircle className="w-4 h-4" />
-                {errors.subject}
-              </div>
-            )}
-          </div>
+          <PremiumInput
+            id="subject"
+            label="Discourse Subject *"
+            badge="REQUIRED"
+            placeholder="Brief description of your issue"
+            value={formData.subject}
+            onChange={(e) => handleInputChange('subject', e.target.value)}
+            error={errors.subject}
+          />
 
           {/* Message */}
-          <div className="space-y-2">
-            <Label htmlFor="message">Message *</Label>
-            <Textarea
+          <div>
+            <PremiumTextArea
               id="message"
+              label="Detailed Description *"
+              badge="MIN 10 CHARS"
               placeholder="Please describe your issue or question in detail..."
               value={formData.message}
               onChange={(e) => handleInputChange('message', e.target.value)}
               rows={6}
-              className={errors.message ? 'border-red-500' : ''}
+              error={errors.message}
             />
-            {errors.message && (
-              <div className="flex items-center gap-2 text-sm text-red-600">
-                <AlertCircle className="w-4 h-4" />
-                {errors.message}
-              </div>
-            )}
-            <p className="text-sm text-muted-foreground">
-              {formData.message.length}/1000 characters
-            </p>
+            <div className="flex justify-end mt-1 px-1">
+              <span className="text-[10px] font-mono font-semibold text-muted-foreground">
+                {formData.message.length}/1000 characters
+              </span>
+            </div>
           </div>
 
           {/* File Attachments */}
-          <div className="space-y-2">
-            <Label>Attachments (Optional)</Label>
-            <div className="border-2 border-dashed border-border rounded-lg p-4">
+          <div className="flex flex-col gap-1.5 text-left">
+            <span className="text-[10px] sm:text-xs font-mono font-extrabold uppercase tracking-wider text-foreground/80">
+              Payload Attachments (Optional)
+            </span>
+            <div className="border-2 border-dashed border-white/10 hover:border-primary/40 transition-colors duration-300 rounded-xl p-6 bg-white/[0.01]">
               <div className="text-center">
-                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground mb-2">
+                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2 animate-pulse" />
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                   Drag and drop files here, or click to select files
                 </p>
                 <input
@@ -407,36 +383,37 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   className="hidden"
                   id="file-upload"
                 />
-                <Label htmlFor="file-upload" className="cursor-pointer">
-                  <Button type="button" variant="outline" size="sm">
-                    <Paperclip className="w-4 h-4 mr-2" />
+                <label htmlFor="file-upload" className="cursor-pointer">
+                  <PremiumButton type="button" variant="glass" size="sm">
                     Select Files
-                  </Button>
-                </Label>
-                <p className="text-xs text-muted-foreground mt-2">
+                  </PremiumButton>
+                </label>
+                <p className="text-[10px] text-muted-foreground/60 mt-2 font-mono">
                   Maximum file size: 5MB. Supported formats: Images, PDF, Text
                 </p>
               </div>
-              
+
               {formData.attachments && formData.attachments.length > 0 && (
                 <div className="mt-4 space-y-2">
                   {formData.attachments.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-background/50 rounded">
+                    <div key={index} className="flex items-center justify-between p-2.5 bg-white/[0.03] border border-white/5 rounded-lg">
                       <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{file.name}</span>
-                        <span className="text-xs text-muted-foreground">
+                        <FileText className="w-4 h-4 text-primary" />
+                        <span className="text-xs font-mono font-semibold text-foreground/90">{file.name}</span>
+                        <span className="text-[10px] font-mono text-muted-foreground/75">
                           ({formatFileSize(file.size)})
                         </span>
                       </div>
-                      <Button
+                      <PremiumButton
                         type="button"
                         variant="ghost"
                         size="sm"
+                        className="h-7 w-7 p-0"
+                        icon={<X className="w-3.5 h-3.5 text-sky-500" />}
                         onClick={() => removeAttachment(index)}
                       >
-                        <X className="w-4 h-4" />
-                      </Button>
+                        {null}
+                      </PremiumButton>
                     </div>
                   ))}
                 </div>
@@ -445,62 +422,64 @@ const ContactForm: React.FC<ContactFormProps> = ({
           </div>
 
           {/* Submit Buttons */}
-          <div className="flex gap-3 pt-4">
-            <Button
+          <div className="flex gap-4 pt-4">
+            <PremiumButton
               type="submit"
               disabled={isSubmitting}
               className="flex-1"
+              variant="primary"
+              glow
             >
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Sending...
+                  Committing...
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  Commit Payload
                 </>
               )}
-            </Button>
+            </PremiumButton>
             {onCancel && (
-              <Button
+              <PremiumButton
                 type="button"
                 variant="outline"
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
                 Cancel
-              </Button>
+              </PremiumButton>
             )}
           </div>
         </form>
-      </GlassCard>
+      </PremiumGlassCard>
 
       {/* Contact Information */}
-      <GlassCard className="p-6 bg-gradient-to-r from-primary/5 to-secondary/5">
+      <PremiumGlassCard className="p-6" glowColor="var(--secondary)">
         <div className="text-center">
-          <h3 className="text-xl font-semibold text-foreground mb-4">
-            Other Ways to Reach Us
-          </h3>
+          <PremiumTitle tag="h3" variant="solid" className="mb-4 text-center justify-center">
+            ALTERNATIVE LINKS
+          </PremiumTitle>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+            <div className="flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-lg">
               <Mail className="w-5 h-5 text-primary" />
-              <div className="text-left">
-                <p className="font-medium text-foreground">Email</p>
-                <p className="text-sm text-muted-foreground">support@digitalorganism.com</p>
+              <div className="text-left font-mono text-xs">
+                <p className="font-extrabold text-foreground">DIRECT_EMAIL</p>
+                <p className="text-muted-foreground/90">support@digitalorganism.com</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-              <Clock className="w-5 h-5 text-primary" />
-              <div className="text-left">
-                <p className="font-medium text-foreground">Response Time</p>
-                <p className="text-sm text-muted-foreground">Usually within 24 hours</p>
+            <div className="flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-lg">
+              <Clock className="w-5 h-5 text-secondary" />
+              <div className="text-left font-mono text-xs">
+                <p className="font-extrabold text-foreground">SERVICE_UPTIME</p>
+                <p className="text-muted-foreground/90">Usually computed &lt; 24h</p>
               </div>
             </div>
           </div>
         </div>
-      </GlassCard>
+      </PremiumGlassCard>
     </motion.div>
   );
 };

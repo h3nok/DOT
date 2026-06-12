@@ -39,7 +39,6 @@ const fontSizeLabels = {
 const ReadingOptimized: React.FC<ReadingOptimizedProps> = ({
   children,
   maxWidth = '2xl',
-  fontSize = 'lg',
   className = '',
   onFocusModeChange,
 }) => {

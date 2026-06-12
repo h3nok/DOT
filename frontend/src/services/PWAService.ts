@@ -19,6 +19,16 @@ interface NotificationOptions {
   }>;
 }
 
+type ServiceWorkerNotificationOptions = globalThis.NotificationOptions & {
+  actions?: NotificationOptions['actions'];
+};
+
+type SyncCapableServiceWorkerRegistration = ServiceWorkerRegistration & {
+  sync: {
+    register(tag: string): Promise<void>;
+  };
+};
+
 interface BackgroundSyncData {
   type: 'blog-post' | 'settings' | 'comment' | 'integration';
   data: any;
@@ -47,13 +57,13 @@ class PWAService {
   private async init() {
     // Register service worker
     await this.registerServiceWorker();
-    
+
     // Set up event listeners
     this.setupEventListeners();
-    
+
     // Set up background sync
     this.setupBackgroundSync();
-    
+
     // Set up push notifications
     this.setupPushNotifications();
   }
@@ -63,9 +73,12 @@ class PWAService {
     if ('serviceWorker' in navigator) {
       try {
         console.log('[PWA] Registering service worker...');
-        
-        this.serviceWorkerRegistration = await navigator.serviceWorker.register('/sw.js', {
-          scope: '/'
+
+        const basePath = import.meta.env.BASE_URL || '/';
+        const normalizedBasePath = basePath.endsWith('/') ? basePath : `${basePath}/`;
+
+        this.serviceWorkerRegistration = await navigator.serviceWorker.register(`${normalizedBasePath}sw.js`, {
+          scope: normalizedBasePath
         });
 
         console.log('[PWA] Service worker registered:', this.serviceWorkerRegistration.scope);
@@ -98,7 +111,7 @@ class PWAService {
       event.preventDefault();
       this.installPrompt = event as any;
       console.log('[PWA] Install prompt ready');
-      
+
       // Dispatch custom event for UI components
       window.dispatchEvent(new CustomEvent('pwa-install-available'));
     });
@@ -107,10 +120,10 @@ class PWAService {
     window.addEventListener('appinstalled', () => {
       console.log('[PWA] App installed successfully');
       this.installPrompt = null;
-      
+
       // Track installation
       this.trackEvent('pwa_installed');
-      
+
       // Show welcome notification
       this.showNotification({
         title: 'Welcome to DOT Platform!',
@@ -124,7 +137,7 @@ class PWAService {
       this.isOnline = true;
       console.log('[PWA] Back online - syncing data...');
       this.processSyncQueue();
-      
+
       // Notify UI components
       window.dispatchEvent(new CustomEvent('connection-restored'));
     });
@@ -132,7 +145,7 @@ class PWAService {
     window.addEventListener('offline', () => {
       this.isOnline = false;
       console.log('[PWA] Gone offline - enabling offline mode');
-      
+
       // Notify UI components
       window.dispatchEvent(new CustomEvent('connection-lost'));
     });
@@ -154,9 +167,7 @@ class PWAService {
       return;
     }
 
-    // Check current permission
-    const permission = await Notification.requestPermission();
-    console.log('[PWA] Notification permission:', permission);
+    console.log('[PWA] Push notifications available; permission will be requested only after an explicit user action.');
   }
 
   // Public Methods
@@ -176,15 +187,15 @@ class PWAService {
     try {
       await this.installPrompt.prompt();
       const choice = await this.installPrompt.userChoice;
-      
+
       console.log('[PWA] Install choice:', choice.outcome);
       this.trackEvent('pwa_install_prompt', { outcome: choice.outcome });
-      
+
       if (choice.outcome === 'accepted') {
         this.installPrompt = null;
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('[PWA] Install prompt failed:', error);
@@ -203,15 +214,15 @@ class PWAService {
     if (!('serviceWorker' in navigator)) {
       return 'not-supported';
     }
-    
+
     if (this.isStandalone()) {
       return 'installed';
     }
-    
+
     if (this.canInstall()) {
       return 'installable';
     }
-    
+
     return 'unknown';
   }
 
@@ -227,7 +238,11 @@ class PWAService {
       return;
     }
 
-    const permission = await Notification.requestPermission();
+    let permission = Notification.permission;
+    if (permission === 'default') {
+      permission = await Notification.requestPermission();
+    }
+
     if (permission !== 'granted') {
       console.warn('[PWA] Notification permission denied');
       return;
@@ -235,13 +250,15 @@ class PWAService {
 
     try {
       if (this.serviceWorkerRegistration) {
-        await this.serviceWorkerRegistration.showNotification(options.title, {
+        const notificationOptions: ServiceWorkerNotificationOptions = {
           body: options.body,
           icon: options.icon || '/favicon.ico',
           tag: options.tag,
           requireInteraction: options.requireInteraction,
           actions: options.actions
-        });
+        };
+
+        await this.serviceWorkerRegistration.showNotification(options.title, notificationOptions);
       } else {
         new Notification(options.title, {
           body: options.body,
@@ -288,10 +305,10 @@ class PWAService {
       });
 
       console.log('[PWA] Push subscription created');
-      
+
       // Send subscription to server
       await this.sendSubscriptionToServer(subscription);
-      
+
       return subscription;
     } catch (error) {
       console.error('[PWA] Failed to subscribe to push:', error);
@@ -316,7 +333,8 @@ class PWAService {
   private async registerBackgroundSync(tag: string): Promise<void> {
     if (this.serviceWorkerRegistration && 'sync' in this.serviceWorkerRegistration) {
       try {
-        await this.serviceWorkerRegistration.sync.register(`${tag}-sync`);
+        const registration = this.serviceWorkerRegistration as SyncCapableServiceWorkerRegistration;
+        await registration.sync.register(`${tag}-sync`);
         console.log('[PWA] Background sync registered:', tag);
       } catch (error) {
         console.error('[PWA] Background sync registration failed:', error);

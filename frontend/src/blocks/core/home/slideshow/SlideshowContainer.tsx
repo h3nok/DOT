@@ -14,20 +14,20 @@ interface SlideshowContainerProps {
 // Memoized gradient and class mappings
 const CATEGORY_GRADIENTS = {
   "Critique": "from-red-500 via-orange-500 to-yellow-500",
-  "Paradigm Shift": "from-blue-500 via-purple-500 to-indigo-600",
+  "Paradigm Shift": "from-blue-500 via-teal-500 to-blue-600",
   "Core Insight": "from-amber-400 via-orange-500 to-red-500",
   "Definition": "from-emerald-400 via-teal-500 to-cyan-600",
   "Identity": "from-green-400 via-emerald-500 to-teal-600",
-  "Core Theory": "from-indigo-500 via-purple-600 to-pink-600",
-  "Mechanics": "from-cyan-400 via-blue-500 to-indigo-600",
-  "Framework": "from-violet-500 via-purple-600 to-fuchsia-600",
-  "Core Principle": "from-rose-400 via-pink-500 to-red-600",
-  "Welcome": "from-blue-400 via-indigo-500 to-purple-600"
+  "Core Theory": "from-blue-500 via-teal-600 to-sky-600",
+  "Mechanics": "from-cyan-400 via-blue-500 to-blue-600",
+  "Framework": "from-blue-500 via-teal-600 to-cyan-600",
+  "Core Principle": "from-sky-400 via-sky-500 to-red-600",
+  "Welcome": "from-blue-400 via-blue-500 to-teal-600"
 } as const;
 
 const CATEGORY_CLASSES = {
   "Critique": "category-critique",
-  "Paradigm Shift": "category-paradigm-shift", 
+  "Paradigm Shift": "category-paradigm-shift",
   "Core Insight": "category-core-insight",
   "Definition": "category-definition",
   "Identity": "category-identity",
@@ -73,7 +73,7 @@ const SlideshowContainer: React.FC<SlideshowContainerProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`relative w-full max-w-4xl mx-auto mb-16 h-60 md:h-72 lg:h-80 ${className}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

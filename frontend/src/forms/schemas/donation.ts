@@ -64,7 +64,7 @@ export const supportTiers: SupportTier[] = [
       'Monthly live sessions',
       'Name in acknowledgments'
     ],
-    color: 'bg-purple-500'
+    color: 'bg-teal-500'
   },
   {
     id: 'visionary',

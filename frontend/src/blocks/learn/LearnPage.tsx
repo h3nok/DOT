@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { CardContent, CardHeader, CardTitle } from '../../shared/components/ui/card';
-import { Button } from '../../shared/components/ui/button';
-import { Badge } from '../../shared/components/ui/badge';
-import { Progress } from '../../shared/components/ui/progress';
-import GlassCard from '../../shared/components/ui/glass-card';
+import {
+  PremiumText,
+  PremiumTitle,
+  PremiumGlassCard,
+  HighContrastBadge,
+  PremiumButton,
+  PremiumProgress
+} from '../../shared/components/ui/design-system-primitives';
 import ReadingContainer from '../../shared/components/ui/reading-container';
-import { 
-  BookOpen, 
-  Play, 
-  CheckCircle, 
-  Clock, 
-  Star,
+import {
+  BookOpen,
+  Play,
+  CheckCircle,
+  Clock,
   Target,
   ArrowRight,
   Lock,
@@ -127,12 +129,12 @@ const LearnPage: React.FC = () => {
     }, 1000);
   }, []);
 
-  const getDifficultyColor = (difficulty: string): string => {
+  const getDifficultyGlow = (difficulty: string): 'primary' | 'secondary' | 'accent' | 'success' | 'none' => {
     switch (difficulty.toLowerCase()) {
-      case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
-      case 'advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case 'beginner': return 'success';
+      case 'intermediate': return 'accent';
+      case 'advanced': return 'primary';
+      default: return 'none';
     }
   };
 
@@ -247,24 +249,25 @@ const LearnPage: React.FC = () => {
                 <BookOpen className="w-12 h-12 text-primary" />
               </div>
             </div>
-              <h1 className="text-4xl md:text-6xl font-inter font-semibold mb-6 gradient-text">
+
+            <PremiumTitle tag="h1" variant="gradient" className="font-orbitron text-center mb-6">
               Learn
-            </h1>
-            
-            <p className="text-xl font-inter font-light text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Explore consciousness as a digital organism through structured learning pathways. 
+            </PremiumTitle>
+
+            <PremiumText variant="vibrant" size="lg" className="font-inter max-w-3xl mx-auto mb-8">
+              Explore consciousness as a digital organism through structured learning pathways.
               From fundamentals to advanced applications, discover the emerging field of digital consciousness.
-            </p>
+            </PremiumText>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="flex items-center space-x-2">
+              <PremiumButton variant="primary" glow={true} className="flex items-center space-x-2">
                 <Target className="w-4 h-4" />
-                Start Learning
-              </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
+                <span>Start Learning</span>
+              </PremiumButton>
+              <PremiumButton variant="outline" className="flex items-center space-x-2">
                 <Users className="w-4 h-4" />
-                Join Study Group
-              </Button>
+                <span>Join Study Group</span>
+              </PremiumButton>
             </div>
           </div>
         </div>
@@ -272,81 +275,87 @@ const LearnPage: React.FC = () => {
       <div className="container mx-auto px-4 py-16">
         <ReadingContainer>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-inter font-medium mb-4 gradient-text">
+            <PremiumTitle tag="h2" variant="gradient" className="text-center mb-4">
               Learning Pathways
-            </h2>
-            <p className="font-inter font-light text-muted-foreground max-w-2xl mx-auto">
-              Choose your path through the fascinating world of digital consciousness. 
+            </PremiumTitle>
+            <PremiumText variant="vibrant" size="base" className="font-inter max-w-2xl mx-auto">
+              Choose your path through the fascinating world of digital consciousness.
               Each pathway builds upon the previous, creating a comprehensive understanding.
-            </p>
+            </PremiumText>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             {learningPathways.map((pathway) => (
-              <GlassCard key={pathway.id} className="card-hover">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-4">
+              <PremiumGlassCard key={pathway.id} enable3D={true} innerClassName="p-6 flex flex-col justify-between h-full">
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-center justify-between">
                     <div className="text-4xl">{pathway.image}</div>
-                    <Badge 
-                      variant="outline" 
-                      className={`${getDifficultyColor(pathway.difficulty)} text-white border-0`}
+                    <HighContrastBadge
+                      glowColor={getDifficultyGlow(pathway.difficulty)}
                     >
                       {pathway.difficulty}
-                    </Badge>
+                    </HighContrastBadge>
                   </div>
-                  <CardTitle className="font-inter font-medium text-xl mb-2">{pathway.title}</CardTitle>
-                  <p className="font-inter font-light text-muted-foreground text-sm">
-                    {pathway.description}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Progress */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>Progress</span>
-                        <span>{userProgress[pathway.id] || 0}%</span>
-                      </div>
-                      <Progress value={userProgress[pathway.id] || 0} className="h-2" />
-                    </div>
 
-                    {/* Stats */}
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {pathway.duration}
-                      </div>
-                      <div className="flex items-center">
-                        <BookOpen className="w-4 h-4 mr-1" />
-                        {pathway.completedModules}/{pathway.moduleCount} modules
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1">
-                      {pathway.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    {/* Action Button */}
-                    <Button className="w-full flex items-center justify-center space-x-2">
-                      {userProgress[pathway.id] > 0 ? (
-                        <>
-                          <Play className="w-4 h-4" />
-                          Continue Learning                        </>
-                      ) : (
-                        <>
-                          <ArrowRight className="w-4 h-4" />
-                          Start Pathway
-                        </>
-                      )}
-                    </Button>
+                  <div>
+                    <PremiumTitle tag="h3" variant="solid" className="font-orbitron text-lg mb-2">
+                      {pathway.title}
+                    </PremiumTitle>
+                    <PremiumText variant="vibrant" size="sm" className="font-inter">
+                      {pathway.description}
+                    </PremiumText>
                   </div>
-                </CardContent>
-              </GlassCard>
+
+                  {/* Progress */}
+                  <PremiumProgress
+                    value={userProgress[pathway.id] || 0}
+                    label="Pathway Progress"
+                    glowColor="var(--primary)"
+                  />
+
+                  {/* Stats */}
+                  <div className="flex items-center justify-between text-xs font-mono text-foreground/75 pt-1">
+                    <div className="flex items-center">
+                      <Clock className="w-3.5 h-3.5 mr-1 text-primary animate-pulse" />
+                      {pathway.duration}
+                    </div>
+                    <div className="flex items-center">
+                      <BookOpen className="w-3.5 h-3.5 mr-1 text-secondary" />
+                      {pathway.completedModules}/{pathway.moduleCount} modules
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {pathway.tags.map((tag) => (
+                      <HighContrastBadge key={tag} glowColor="none" className="text-[9px] py-0.5">
+                        {tag}
+                      </HighContrastBadge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-4 mt-auto">
+                  {/* Action Button */}
+                  <PremiumButton
+                    variant={userProgress[pathway.id] > 0 ? "primary" : "glass"}
+                    glow={userProgress[pathway.id] > 0}
+                    className="w-full flex items-center justify-center space-x-2 h-11"
+                  >
+                    {userProgress[pathway.id] > 0 ? (
+                      <>
+                        <Play className="w-4 h-4" />
+                        <span>Continue Learning</span>
+                      </>
+                    ) : (
+                      <>
+                        <ArrowRight className="w-4 h-4" />
+                        <span>Start Pathway</span>
+                      </>
+                    )}
+                  </PremiumButton>
+                </div>
+              </PremiumGlassCard>
             ))}
           </div>
         </ReadingContainer>
@@ -354,75 +363,96 @@ const LearnPage: React.FC = () => {
       <div className="container mx-auto px-4 py-16">
         <ReadingContainer>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-inter font-medium mb-4 gradient-text">
+            <PremiumTitle tag="h2" variant="gradient" className="text-center mb-4">
               Featured Modules
-            </h2>
-            <p className="font-inter font-light text-muted-foreground">
-              Jump into these popular modules to get started
-            </p>
+            </PremiumTitle>
+            <PremiumText variant="vibrant" size="sm" className="font-inter max-w-xl mx-auto">
+              Jump into these popular modules to get started on your cognitive journey.
+            </PremiumText>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {learningPathways[0].modules.slice(0, 6).map((module) => (
-              <GlassCard key={module.id} className="card-hover">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="font-inter font-medium mb-2">{module.title}</h3>
-                      <div className="flex items-center font-inter font-light text-sm text-muted-foreground mb-3">
-                        <Clock className="w-4 h-4 mr-1" />
+            {learningPathways[0]?.modules.slice(0, 6).map((module) => (
+              <PremiumGlassCard key={module.id} enable3D={true} innerClassName="p-6 flex flex-col justify-between h-full">
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 pr-2">
+                      <PremiumTitle tag="h3" variant="solid" className="font-orbitron text-base mb-2">
+                        {module.title}
+                      </PremiumTitle>
+                      <div className="flex items-center font-mono text-xs text-foreground/75 mb-4">
+                        <Clock className="w-3.5 h-3.5 mr-1 text-primary animate-pulse" />
                         {module.duration}
                       </div>
                     </div>
                     {module.completed ? (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <HighContrastBadge glowColor="success" className="flex items-center space-x-1 flex-shrink-0">
+                        <CheckCircle className="w-3 h-3" />
+                        <span>Done</span>
+                      </HighContrastBadge>
                     ) : (
-                      <Lock className="w-5 h-5 text-muted-foreground" />
+                      <HighContrastBadge glowColor="none" className="flex items-center space-x-1 flex-shrink-0 opacity-60">
+                        <Lock className="w-3 h-3" />
+                        <span>Locked</span>
+                      </HighContrastBadge>
                     )}
                   </div>
-                    <Button 
-                    variant={module.completed ? "outline" : "default"}
-                    className="w-full"
+                </div>
+
+                <div className="pt-4 mt-auto">
+                  <PremiumButton
+                    variant={module.completed ? "primary" : "glass"}
+                    glow={module.completed}
+                    className="w-full flex items-center justify-center space-x-2 h-10"
                     disabled={!module.completed}
                   >
-                    {module.completed ? 'Review' : 'Locked'}
-                  </Button>
-                </CardContent>
-              </GlassCard>
+                    <span>{module.completed ? 'Review Module' : 'Locked'}</span>
+                  </PremiumButton>
+                </div>
+              </PremiumGlassCard>
             ))}
           </div>
         </ReadingContainer>
-      </div>      {/* Achievements */}
+      </div>
+
+      {/* Achievements */}
       <div className="container mx-auto px-4 py-16">
         <ReadingContainer>
-          <GlassCard className="">
-            <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center space-x-2">
-                <Award className="w-6 h-6 text-primary" />
-                <span className="font-inter font-medium">Your Achievements</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-6 text-center">
-                <div>
-                  <div className="text-3xl font-inter font-medium text-primary mb-2">4</div>
-                  <div className="font-inter font-light text-muted-foreground">Modules Completed</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-inter font-medium text-primary mb-2">12</div>
-                  <div className="font-inter font-light text-muted-foreground">Hours Learned</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-inter font-medium text-primary mb-2">3</div>
-                  <div className="font-inter font-light text-muted-foreground">Badges Earned</div>
-                </div>
+          <PremiumGlassCard enable3D={true} innerClassName="p-8">
+            <div className="flex flex-col items-center justify-center mb-8">
+              <div className="p-3 rounded-full bg-primary/20 mb-4 animate-pulse">
+                <Award className="w-8 h-8 text-primary" />
               </div>
-            </CardContent>
-          </GlassCard>
+              <PremiumTitle tag="h2" variant="gradient" className="text-center">
+                Your Achievements
+              </PremiumTitle>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-foreground/10">
+              <div className="pt-4 md:pt-0">
+                <div className="text-5xl font-mono font-bold text-primary mb-2 tracking-wider">4</div>
+                <PremiumText variant="vibrant" size="sm" className="font-inter">
+                  Modules Completed
+                </PremiumText>
+              </div>
+              <div className="pt-4 md:pt-0 md:pl-4">
+                <div className="text-5xl font-mono font-bold text-secondary mb-2 tracking-wider">12</div>
+                <PremiumText variant="vibrant" size="sm" className="font-inter">
+                  Hours Learned
+                </PremiumText>
+              </div>
+              <div className="pt-4 md:pt-0 md:pl-4">
+                <div className="text-5xl font-mono font-bold text-accent mb-2 tracking-wider">3</div>
+                <PremiumText variant="vibrant" size="sm" className="font-inter">
+                  Badges Earned
+                </PremiumText>
+              </div>
+            </div>
+          </PremiumGlassCard>
         </ReadingContainer>
       </div>
     </div>
   );
 };
 
-export default LearnPage; 
+export default LearnPage;

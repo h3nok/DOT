@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../shared/components/ui/card';
 import { Button } from '../../shared/components/ui/button';
-import { Badge } from '../../shared/components/ui/badge';
-import { 
-  Link, 
-  Settings, 
+import {
+  Link,
+  Settings,
   CheckCircle,
   AlertCircle,
   Clock,
@@ -232,18 +231,18 @@ const IntegrationPage = () => {
                 <Link className="w-12 h-12 text-primary" />
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-orbitron font-bold mb-6 gradient-text">
               Knowledge Integration
             </h1>
-            
+
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Connect your consciousness research tools and knowledge bases. 
+              Connect your consciousness research tools and knowledge bases.
               Integrate AI models, databases, and research platforms to build a comprehensive understanding.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
+              <Button
                 onClick={() => setShowAddForm(true)}
                 className="flex items-center space-x-2"
               >
@@ -312,7 +311,7 @@ const IntegrationPage = () => {
                       <div>{integration.dataPoints.toLocaleString()}</div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 mt-4">
                     <Button variant="outline" size="sm" className="flex items-center space-x-1">
                       <RefreshCw className="w-3 h-3" />
@@ -345,8 +344,8 @@ const IntegrationPage = () => {
                     <div className="text-4xl mb-4">{type.icon}</div>
                     <h3 className="font-semibold mb-2">{type.name}</h3>
                     <p className="text-sm text-muted-foreground mb-4">{type.description}</p>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full"
                       onClick={() => {
                         integrationFormHook.setValue('type', type.id);
@@ -371,8 +370,8 @@ const IntegrationPage = () => {
               <CardTitle>Add Integration</CardTitle>
             </CardHeader>
             <CardContent>
-              <Form 
-                form={integrationFormHook.form} 
+              <Form
+                form={integrationFormHook.form}
                 onSubmit={async (data: IntegrationFormData) => {
                   const integration: Integration = {
                     id: Date.now(),
@@ -394,7 +393,7 @@ const IntegrationPage = () => {
                     />
                   )}
                 </FormField>
-                
+
                 <Select
                   name="type"
                   control={integrationFormHook.form.control}
@@ -405,7 +404,7 @@ const IntegrationPage = () => {
                   }))}
                   required
                 />
-                
+
                 <FormField name="url" label="API URL (optional)">
                   {(field) => (
                     <input
@@ -415,7 +414,7 @@ const IntegrationPage = () => {
                     />
                   )}
                 </FormField>
-                
+
                 <FormField name="apiKey" label="API Key">
                   {(field) => (
                     <input
@@ -426,7 +425,7 @@ const IntegrationPage = () => {
                     />
                   )}
                 </FormField>
-                
+
                 <Textarea
                   name="description"
                   control={integrationFormHook.form.control}
@@ -434,14 +433,14 @@ const IntegrationPage = () => {
                   placeholder="What is this integration for?"
                   rows={3}
                 />
-                
+
                 <div className="flex space-x-2">
                   <FormSubmit className="flex-1">
                     Add Integration
                   </FormSubmit>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
+                  <Button
+                    type="button"
+                    variant="outline"
                     onClick={() => setShowAddForm(false)}
                   >
                     Cancel
@@ -456,4 +455,4 @@ const IntegrationPage = () => {
   );
 };
 
-export default IntegrationPage; 
+export default IntegrationPage;

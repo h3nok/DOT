@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation((callback) => ({
+globalThis.IntersectionObserver = vi.fn().mockImplementation((_callback) => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
@@ -10,7 +10,7 @@ global.IntersectionObserver = vi.fn().mockImplementation((callback) => ({
 }));
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation((callback) => ({
+globalThis.ResizeObserver = vi.fn().mockImplementation((_callback) => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),

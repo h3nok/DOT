@@ -18,6 +18,8 @@ interface EnhancedMarkdownProps {
   allowMath?: boolean;
   allowCodeHighlight?: boolean;
   codeTheme?: 'auto' | 'light' | 'dark';
+  bionicMode?: boolean;
+  anchors?: string[];
 }
 
 const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
@@ -28,18 +30,20 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
   lineHeight = 'relaxed',
   allowMath = true,
   allowCodeHighlight = true,
-  codeTheme = 'auto'
+  codeTheme = 'auto',
+  bionicMode = false,
+  anchors = []
 }) => {
   const { theme } = useTheme();
-  
+
   // Determine if we should use dark theme
-  const isDark = theme === 'dark' || theme === 'midnight' || 
+  const isDark = theme === 'dark' || theme === 'midnight' ||
     (codeTheme === 'auto' && theme.includes('dark'));
 
   // Max width classes
   const maxWidthClasses = {
     sm: 'max-w-sm',
-    md: 'max-w-md', 
+    md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
     '2xl': 'max-w-2xl',
@@ -55,7 +59,7 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
     xl: 'text-xl'
   };
 
-  // Line height classes  
+  // Line height classes
   const lineHeightClasses = {
     normal: 'leading-normal',
     relaxed: 'leading-relaxed',
@@ -81,6 +85,118 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
 
   const { remarkPlugins, rehypePlugins } = getPlugins();
 
+  // Bionic fixation & semantic highlighting helper functions for cognitive retention
+  const formatWordToBionic = (word: string, key: string | number): React.ReactNode => {
+    if (word.length <= 1) return word;
+    if (word.startsWith('&') || word.includes('<') || word.includes('/') || word.includes('\\') || word.includes('{') || word.includes('}')) return word;
+
+    // Split punctuation
+    const match = word.match(/^([^\w]*)([\w'-]+)([^\w]*)$/);
+    if (!match) return word;
+
+    const [, leading, core, trailing] = match;
+    if (!core) return word;
+
+    let bionicLength = 1;
+    if (core.length > 1) {
+      if (core.length <= 3) bionicLength = 1;
+      else if (core.length === 4) bionicLength = 2;
+      else bionicLength = Math.ceil(core.length * 0.45); // ~40-50% fixation anchors
+    }
+
+    const boldPart = core.slice(0, bionicLength);
+    const restPart = core.slice(bionicLength);
+
+    return (
+      <span key={key} className="inline-block">
+        {leading}
+        <strong className="font-extrabold text-foreground tracking-wide">{boldPart}</strong>
+        <span className="font-light opacity-85">{restPart}</span>
+        {trailing}
+      </span>
+    );
+  };
+
+  const renderBionicText = (text: string): React.ReactNode => {
+    const parts = text.split(/(\s+)/);
+    return (
+      <>
+        {parts.map((part, idx) => {
+          if (part.trim() === '') return part; // preserve space
+          return formatWordToBionic(part, idx);
+        })}
+      </>
+    );
+  };
+
+  const processProseText = (text: string): React.ReactNode => {
+    if (!anchors || anchors.length === 0) {
+      return bionicMode ? renderBionicText(text) : text;
+    }
+
+    // Find first matching anchor in text
+    let firstMatch: { text: string; index: number } | null = null;
+    for (const anchor of anchors) {
+      const idx = text.indexOf(anchor);
+      if (idx !== -1) {
+        if (!firstMatch || idx < firstMatch.index) {
+          firstMatch = { text: anchor, index: idx };
+        }
+      }
+    }
+
+    if (!firstMatch) {
+      return bionicMode ? renderBionicText(text) : text;
+    }
+
+    const before = text.slice(0, firstMatch.index);
+    const matchText = firstMatch.text;
+    const after = text.slice(firstMatch.index + matchText.length);
+
+    return (
+      <>
+        {before ? (bionicMode ? renderBionicText(before) : before) : null}
+        <span className="bg-amber-500/20 dark:bg-amber-400/20 border-b-2 border-amber-500/70 dark:border-amber-400/60 px-1 py-0.5 rounded inline-flex items-center gap-1 cursor-help group transition-all relative">
+          <span className="font-bold text-amber-700 dark:text-amber-300">{matchText}</span>
+          <span className="inline-block text-[11px] leading-none animate-pulse">🧠</span>
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1 bg-neutral-900 border border-white/10 text-white text-[9px] font-mono rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity shadow-2xl whitespace-nowrap z-50">
+            Sovereign Knowledge Anchor
+          </span>
+        </span>
+        {after ? processProseText(after) : null}
+      </>
+    );
+  };
+
+  const applyBionicToChildren = (children: React.ReactNode): React.ReactNode => {
+    return React.Children.map(children, (child) => {
+      if (typeof child === 'string') {
+        return processProseText(child);
+      }
+      if (React.isValidElement(child)) {
+        const type = (child.type as any)?.displayName || (child.type as any)?.name || child.type;
+
+        // Skip code-heavy / non-prose nodes
+        if (
+          type === 'code' ||
+          type === 'pre' ||
+          type === 'span' && (child.props as any)?.className?.includes('katex') ||
+          type === 'a' && (child.props as any)?.className?.includes('font-mono')
+        ) {
+          return child;
+        }
+
+        if (child.props && (child.props as any).children) {
+          return React.cloneElement(child, {
+            ...child.props,
+            children: applyBionicToChildren((child.props as any).children)
+          } as any);
+        }
+      }
+      return child;
+    });
+  };
+
   // Custom components for rendering
   const components = {
     // Enhanced code blocks with syntax highlighting
@@ -98,7 +214,7 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
                   {language}
                 </div>
               )}
-              
+
               <SyntaxHighlighter
                 style={isDark ? oneDark : oneLight}
                 language={language}
@@ -121,7 +237,7 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
 
       // Inline code
       return (
-        <code 
+        <code
           className="px-1.5 py-0.5 bg-muted text-muted-foreground rounded font-mono text-sm border border-border"
           {...props}
         >
@@ -154,32 +270,32 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
 
     // Enhanced paragraphs
     p: ({ children }: any) => (
-      <p className="mb-4 text-foreground/90">
-        {children}
+      <p className="mb-4 text-foreground/90 leading-relaxed">
+        {bionicMode || (anchors && anchors.length > 0) ? applyBionicToChildren(children) : children}
       </p>
     ),
 
     // Enhanced lists
     ul: ({ children }: any) => (
-      <ul className="mb-4 pl-6 space-y-1 list-disc text-foreground/90">
+      <ul className="mb-4 pl-6 space-y-1.5 list-disc text-foreground/90">
         {children}
       </ul>
     ),
     ol: ({ children }: any) => (
-      <ol className="mb-4 pl-6 space-y-1 list-decimal text-foreground/90">
+      <ol className="mb-4 pl-6 space-y-1.5 list-decimal text-foreground/90">
         {children}
       </ol>
     ),
     li: ({ children }: any) => (
-      <li className="text-foreground/90">
-        {children}
+      <li className="text-foreground/90 leading-relaxed">
+        {bionicMode || (anchors && anchors.length > 0) ? applyBionicToChildren(children) : children}
       </li>
     ),
 
     // Enhanced blockquotes
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-4 border-primary pl-4 my-6 italic text-muted-foreground bg-muted/30 py-2 rounded-r">
-        {children}
+      <blockquote className="border-l-4 border-primary pl-4 my-6 italic text-muted-foreground bg-muted/30 py-2 rounded-r leading-relaxed">
+        {bionicMode || (anchors && anchors.length > 0) ? applyBionicToChildren(children) : children}
       </blockquote>
     ),
 
@@ -219,7 +335,7 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
 
     // Enhanced links
     a: ({ href, children }: any) => (
-      <a 
+      <a
         href={href}
         className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
         target={href?.startsWith('http') ? '_blank' : '_self'}

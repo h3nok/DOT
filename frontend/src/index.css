@@ -1,0 +1,81 @@
+/* Custom Keyframes and Global Animation Overrides */
+
+@keyframes flowScroll {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+/* Glassmorphic responsive scrollbar utilities */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--border) 30%, transparent);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--primary) 50%, transparent);
+}
+
+/* Holographic breathing glow animation */
+@keyframes holographicGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px color-mix(in oklch, var(--primary) 30%, transparent)) drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 50%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px color-mix(in oklch, var(--primary) 60%, transparent)) drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 80%, transparent));
+  }
+}
+
+.animate-holo-glow {
+  animation: holographicGlow 4s ease-in-out infinite;
+}
+
+/* Shimmer light-sweep effect for high-tech premium buttons/capsules */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  40%, 100% {
+    transform: translateX(150%) skewX(-20deg);
+  }
+}
+
+.shimmer-sweep-element {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.08) 70%,
+    transparent 100%
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+}
+
+/* Subtle breathing border/pulse animation for the Sovereign Digital Twin capsule */
+@keyframes borderPulse {
+  0%, 100% {
+    border-color: rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.03);
+  }
+  50% {
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+  }
+}
+
+.animate-border-pulse {
+  animation: borderPulse 4s ease-in-out infinite;
+}

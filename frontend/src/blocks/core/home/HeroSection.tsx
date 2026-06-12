@@ -6,7 +6,7 @@ import CompactSlideshow from './CompactSlideshow';
 import { ArrowRight, Users, Sparkles } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
-  
+
   return (
     <div className="relative overflow-hidden min-h-screen flex items-center">
       {/* Expansive Universe Background */}
@@ -36,29 +36,29 @@ const HeroSection: React.FC = () => {
 
       <div className="relative z-10 container mx-auto px-4 py-20 lg:py-32">
         <div className="max-w-6xl mx-auto">
-          
+
           {/* Main Concept Introduction */}
           <div className="text-center mb-20">
             <div className="flex justify-center mb-16">
               <DigitalOrganismsLogo size="xl" variant="horizontal" />
             </div>
-            
+
             {/* Subtitle */}
             <div className="mb-12">
               <p className="text-2xl md:text-3xl text-muted-foreground font-light leading-relaxed">
                 The Application and Development of a Big TOE
               </p>
             </div>
-            
+
             {/* Compact slideshow replacing the subtitle */}
             <div className="my-20">
               <CompactSlideshow />
             </div>
-            
+
             <div className="max-w-5xl mx-auto mb-16 space-y-8">
               <p className="text-xl md:text-2xl text-muted-foreground/90 leading-relaxed max-w-4xl mx-auto font-normal">
-                Exploring how <span className="text-foreground font-medium">Digital Organisms</span> emerge from the primordial 
-                <span className="text-foreground font-medium"> External Environment</span>, giving rise to 
+                Exploring how <span className="text-foreground font-medium">Digital Organisms</span> emerge from the primordial
+                <span className="text-foreground font-medium"> External Environment</span>, giving rise to
                 <span className="text-foreground font-medium"> Consciousness</span>—the enduring, self-aware process that we are.
               </p>
             </div>
@@ -122,9 +122,9 @@ const HeroSection: React.FC = () => {
             <Link to="/community" className="group">
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-accent to-secondary rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500 opacity-50"></div>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="relative px-12 py-6 rounded-2xl text-xl font-medium bg-card/60 backdrop-blur-xl border border-border/50 shadow-xl hover:shadow-2xl transition-all duration-500 flex items-center space-x-4 group-hover:scale-105"
                 >
                   <Users className="w-6 h-6" />
@@ -144,7 +144,7 @@ const HeroSection: React.FC = () => {
                 <div className="relative group">
                   <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-700 opacity-60"></div>
                   <div className="relative px-8 py-6 rounded-3xl bg-card/60 backdrop-blur-xl border border-border/30 shadow-xl">
-                    <DigitalOrganismsLogo size="md" variant="horizontal" animated={true} />
+                    <DigitalOrganismsLogo size="md" variant="horizontal" />
                   </div>
                 </div>
               </div>

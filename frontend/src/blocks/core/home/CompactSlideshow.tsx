@@ -9,16 +9,16 @@ const HELP_DISPLAY_DURATION = 4000;
 // Memoized gradient and class mappings
 const CATEGORY_GRADIENTS = {
   "Critique": "from-red-500 via-orange-500 to-yellow-500",
-  "Paradigm Shift": "from-blue-500 via-purple-500 to-indigo-600",
+  "Paradigm Shift": "from-blue-500 via-teal-500 to-blue-600",
   "Core Insight": "from-amber-400 via-orange-500 to-red-500",
   "Definition": "from-emerald-400 via-teal-500 to-cyan-600",
   "Identity": "from-green-400 via-emerald-500 to-teal-600",
-  "Core Theory": "from-indigo-500 via-purple-600 to-pink-600",
-  "Reality": "from-pink-500 via-rose-500 to-red-600",
+  "Core Theory": "from-blue-500 via-teal-600 to-sky-600",
+  "Reality": "from-sky-500 via-sky-500 to-red-600",
   "Practice": "from-teal-400 via-cyan-500 to-blue-600",
   "Mechanics": "from-cyan-400 via-sky-500 to-blue-500",
-  "Framework": "from-purple-600 via-violet-600 to-indigo-700",
-  "Core Principle": "from-rose-400 via-pink-500 to-fuchsia-600",
+  "Framework": "from-teal-600 via-blue-600 to-blue-700",
+  "Core Principle": "from-sky-400 via-sky-500 to-cyan-600",
   "Welcome": "from-blue-400 via-cyan-500 to-sky-600"
 } as const;
 
@@ -58,21 +58,21 @@ const slideVariants = {
 // Performance monitoring hook for development
 const usePerformanceMonitor = () => {
   const renderCount = useRef(0);
-  
+
   useEffect(() => {
     renderCount.current += 1;
     if (import.meta.env.DEV) {
       console.debug(`CompactSlideshow renders: ${renderCount.current}`);
     }
   });
-  
+
   return renderCount.current;
 };
 
 // Debounced resize handler for responsive optimizations
 const useDebounceResize = (callback: () => void, delay: number = 250) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   useEffect(() => {
     const handleResize = () => {
       if (timeoutRef.current) {
@@ -80,7 +80,7 @@ const useDebounceResize = (callback: () => void, delay: number = 250) => {
       }
       timeoutRef.current = setTimeout(callback, delay);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -94,12 +94,12 @@ const useDebounceResize = (callback: () => void, delay: number = 250) => {
 const CompactSlideshow: React.FC = () => {
   // Performance monitoring in development
   usePerformanceMonitor();
-  
+
   // Responsive optimization
-  const [isLargeScreen, setIsLargeScreen] = useState(() => 
+  const [isLargeScreen, setIsLargeScreen] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth >= 1024 : true
   );
-  
+
   useDebounceResize(useCallback(() => {
     setIsLargeScreen(window.innerWidth >= 1024);
   }, []));
@@ -166,14 +166,14 @@ const CompactSlideshow: React.FC = () => {
       id: 7,
       text: "You are Little c:",
       highlight: "fragment of Consciousness immersed in a virtual reality frame (RF)",
-      bgGradient: "from-indigo-500/20 to-purple-600/20",
+      bgGradient: "from-blue-500/20 to-teal-600/20",
       category: "Core Theory"
     },
     {
       id: 8,
       text: "Reality is data",
       highlight: "structured information processed by Little c",
-      bgGradient: "from-violet-500/20 to-purple-700/20",
+      bgGradient: "from-blue-500/20 to-teal-700/20",
       category: "Reality"
     },
     {
@@ -187,14 +187,14 @@ const CompactSlideshow: React.FC = () => {
       id: 10,
       text: "DOT is not a belief",
       highlight: "it is a model of reality",
-      bgGradient: "from-purple-700/20 to-indigo-900/20",
+      bgGradient: "from-teal-700/20 to-blue-900/20",
       category: "Framework"
     },
     {
       id: 11,
       text: "In DOT, Love (without any connotations)",
       highlight: "is a necessity",
-      bgGradient: "from-rose-500/20 to-pink-600/20",
+      bgGradient: "from-sky-500/20 to-sky-600/20",
       category: "Core Principle"
     },
     {
@@ -272,13 +272,13 @@ const CompactSlideshow: React.FC = () => {
   useEffect(() => {
     if (state.isFocused && !state.hasShownHelp) {
       updateState({ showKeyboardHelp: true, hasShownHelp: true });
-      
+
       // Hide the help after 4 seconds
       helpTimerRef.current = setTimeout(() => {
         updateState({ showKeyboardHelp: false });
       }, HELP_DISPLAY_DURATION);
     }
-    
+
     return () => {
       if (helpTimerRef.current) {
         clearTimeout(helpTimerRef.current);
@@ -342,10 +342,10 @@ const CompactSlideshow: React.FC = () => {
           break;
         case 'Escape':
           event.preventDefault();
-          updateState({ 
-            isPlaying: false, 
-            isFocused: false, 
-            showKeyboardHelp: false 
+          updateState({
+            isPlaying: false,
+            isFocused: false,
+            showKeyboardHelp: false
           });
           break;
         case '1':
@@ -402,7 +402,7 @@ const CompactSlideshow: React.FC = () => {
   }, [cleanupTimers]);
 
   return (
-    <div 
+    <div
       className="slideshow-container relative w-full max-w-4xl mx-auto mb-16"
       onMouseEnter={() => updateState({ isHovered: true })}
       onMouseLeave={() => updateState({ isHovered: false })}
@@ -425,11 +425,11 @@ const CompactSlideshow: React.FC = () => {
       <div className="relative animate-float">
         {/* Enhanced background glow */}
         <div className="absolute -inset-6 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-[2rem] blur-xl opacity-40 animate-pulse"></div>
-        
+
         {/* Main floating card */}
         <div className={`slideshow-float slideshow-enter relative ${
-          isLargeScreen 
-            ? 'h-60 md:h-72 lg:h-80' 
+          isLargeScreen
+            ? 'h-60 md:h-72 lg:h-80'
             : 'h-52 md:h-60 lg:h-72'
         } overflow-hidden bg-card/80 backdrop-blur-3xl rounded-[1.5rem] border border-border/20 shadow-2xl`}>
           {/* Dynamic background gradient */}
@@ -440,7 +440,7 @@ const CompactSlideshow: React.FC = () => {
             animate={{ opacity: 0.2, scale: 1 }}
             transition={{ duration: 1.2 }}
           />
-          
+
           {/* Enhanced grid pattern */}
           <div className="absolute inset-0 opacity-5" style={{
             backgroundImage: `
@@ -499,7 +499,7 @@ const CompactSlideshow: React.FC = () => {
 
           {/* Category indicator with enhanced design and modern gradients */}
           <div className="absolute top-4 left-6 z-30">
-            <motion.div 
+            <motion.div
               className={`slideshow-button category-indicator-glow ${getCategoryClass(slides[state.currentSlide].category)} bg-gradient-to-r ${getCategoryGradient(slides[state.currentSlide].category)} backdrop-blur-xl rounded-full px-4 py-2 border border-white/20 shadow-lg flex items-center space-x-2 category-pulse`}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -509,9 +509,9 @@ const CompactSlideshow: React.FC = () => {
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
               }}
             >
-              <motion.div 
+              <motion.div
                 className="w-2 h-2 rounded-full bg-white/90 shadow-lg"
-                animate={{ 
+                animate={{
                   scale: [1, 1.3, 1],
                   boxShadow: [
                     '0 0 0 0 rgba(255, 255, 255, 0.4)',
@@ -529,7 +529,7 @@ const CompactSlideshow: React.FC = () => {
 
           {/* Progress indicator */}
           <div className="absolute top-4 right-16 z-30">
-            <motion.div 
+            <motion.div
               className="slideshow-button bg-background/90 backdrop-blur-xl rounded-full px-3 py-2 border border-border/30 shadow-lg"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -574,14 +574,14 @@ const CompactSlideshow: React.FC = () => {
             >
               <motion.div
                 className={`${
-                  isLargeScreen 
-                    ? 'text-2xl md:text-3xl lg:text-5xl' 
+                  isLargeScreen
+                    ? 'text-2xl md:text-3xl lg:text-5xl'
                     : 'text-xl md:text-2xl lg:text-4xl'
                 } font-light text-foreground mb-6 leading-tight max-w-4xl`}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ 
+                style={{
                   fontFamily: 'Inter, "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
                   fontWeight: '300',
                   letterSpacing: '-0.025em',
@@ -593,14 +593,14 @@ const CompactSlideshow: React.FC = () => {
               </motion.div>
               <motion.div
                 className={`${
-                  isLargeScreen 
-                    ? 'text-lg md:text-xl lg:text-2xl' 
+                  isLargeScreen
+                    ? 'text-lg md:text-xl lg:text-2xl'
                     : 'text-base md:text-lg lg:text-xl'
                 } text-primary font-medium italic leading-relaxed max-w-5xl slideshow-text-highlight`}
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                style={{ 
+                style={{
                   fontFamily: slides[state.currentSlide].highlight.includes('∝') ? 'JetBrains Mono, "SF Mono", Consolas, monospace' : 'Inter, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
                   fontWeight: '500',
                   letterSpacing: '-0.01em',
@@ -652,8 +652,8 @@ const CompactSlideshow: React.FC = () => {
                     goToSlide(index);
                   }}
                   className={`w-2 h-2 rounded-full transition-all duration-500 relative ${
-                    index === state.currentSlide 
-                      ? 'bg-primary scale-150 shadow-lg shadow-primary/60 progress-dot-active' 
+                    index === state.currentSlide
+                      ? 'bg-primary scale-150 shadow-lg shadow-primary/60 progress-dot-active'
                       : 'bg-muted-foreground/40 hover:bg-muted-foreground/70 hover:scale-125'
                   }`}
                   title={`Slide ${index + 1}: ${slides[index].text} (Press ${index + 1} to jump here)`}
@@ -662,7 +662,7 @@ const CompactSlideshow: React.FC = () => {
                   aria-label={`Go to slide ${index + 1}: ${slides[index].text}`}
                 >
                   {index === state.currentSlide && (
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 bg-primary rounded-full"
                       initial={{ scale: 0 }}
                       animate={{ scale: [1, 1.5, 1] }}

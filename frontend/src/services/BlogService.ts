@@ -2,6 +2,7 @@
 // MVP Implementation - Production Ready Blog System
 
 import ErrorService from './errors/ErrorService';
+import { blogPostsData } from '../content/blog/postsData';
 
 export interface BlogPost {
   id: string;
@@ -157,7 +158,7 @@ class BlogService {
       });
 
       const response = await fetch(`${this.baseUrl}/search?${params}`);
-      
+
       if (!response.ok) {
         throw new Error(`Search failed: ${response.statusText}`);
       }
@@ -169,7 +170,7 @@ class BlogService {
         action: 'searchPosts',
         metadata: { query, filters, page, limit },
       });
-      
+
       // Return fallback data for demo
       return this.getMockSearchResults(query, filters, page, limit);
     }
@@ -178,7 +179,7 @@ class BlogService {
   static async getPost(id: string): Promise<BlogPost> {
     try {
       const response = await fetch(`${this.baseUrl}/posts/${id}`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch post: ${response.statusText}`);
       }
@@ -197,7 +198,7 @@ class BlogService {
   static async getRelatedPosts(postId: string, limit: number = 5): Promise<BlogPost[]> {
     try {
       const response = await fetch(`${this.baseUrl}/posts/${postId}/related?limit=${limit}`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch related posts: ${response.statusText}`);
       }
@@ -209,7 +210,7 @@ class BlogService {
         action: 'getRelatedPosts',
         metadata: { postId, limit },
       });
-      
+
       // Return fallback data
       return this.getMockRelatedPosts(postId, limit);
     }
@@ -262,7 +263,7 @@ class BlogService {
     try {
       const post = await this.getPost(postId);
       const url = `${window.location.origin}/blog/${postId}`;
-      
+
       const shareUrls = {
         twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(url)}`,
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
@@ -294,7 +295,7 @@ class BlogService {
   static async getBlogStats(): Promise<BlogStats> {
     try {
       const response = await fetch(`${this.baseUrl}/stats`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch blog stats: ${response.statusText}`);
       }
@@ -305,7 +306,7 @@ class BlogService {
         component: 'BlogService',
         action: 'getBlogStats',
       });
-      
+
       // Return fallback data
       return this.getMockStats();
     }
@@ -315,7 +316,7 @@ class BlogService {
   static async getCategories(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrl}/categories`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch categories: ${response.statusText}`);
       }
@@ -326,7 +327,7 @@ class BlogService {
         component: 'BlogService',
         action: 'getCategories',
       });
-      
+
       return ['Digital Consciousness', 'AI Theory', 'Research', 'Philosophy', 'Technology'];
     }
   }
@@ -334,7 +335,7 @@ class BlogService {
   static async getTags(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrl}/tags`);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch tags: ${response.statusText}`);
       }
@@ -345,7 +346,7 @@ class BlogService {
         component: 'BlogService',
         action: 'getTags',
       });
-      
+
       return ['consciousness', 'AI', 'neural networks', 'philosophy', 'cognition', 'digital theory'];
     }
   }
@@ -368,75 +369,92 @@ class BlogService {
 
   // Mock data for development/fallback
   private static getMockSearchResults(
-    query: string, 
-    filters: BlogFilters, 
-    page: number, 
+    query: string,
+    filters: BlogFilters,
+    page: number,
     limit: number
   ): BlogSearchResults {
-    const mockPosts: BlogPost[] = [
-      {
-        id: '1',
-        title: 'Understanding Digital Consciousness Theory',
-        content: 'Full content here...',
-        excerpt: 'Exploring the fundamental principles of digital consciousness and its implications for AI development.',
-        author: {
-          id: '1',
-          name: 'Dr. Sarah Chen',
-          avatar: '/avatars/sarah.jpg',
-        },
-        publishedAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-15'),
-        status: 'published',
-        tags: ['consciousness', 'AI', 'theory'],
-        categories: ['Digital Consciousness'],
-        readTime: 8,
-        views: 1247,
-        likes: 89,
-        shares: 23,
-        seoMetadata: {
-          title: 'Understanding Digital Consciousness Theory',
-          description: 'Exploring the fundamental principles of digital consciousness and its implications for AI development.',
-          keywords: ['digital consciousness', 'AI theory', 'consciousness'],
-        },
-      },
-      // Add more mock posts...
-    ];
+    const mockPosts: BlogPost[] = blogPostsData.map(post => ({
+      ...post,
+      publishedAt: new Date(post.publishedAt),
+      updatedAt: new Date(post.updatedAt),
+    } as unknown as BlogPost));
+
+    const filtered = mockPosts.filter(post => {
+      const matchesSearch = !query ||
+        post.title.toLowerCase().includes(query.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(query.toLowerCase()) ||
+        post.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+      const matchesCategory = !filters.category || filters.category === 'all' || post.categories.includes(filters.category);
+      return matchesSearch && matchesCategory;
+    });
 
     return {
-      posts: mockPosts.slice((page - 1) * limit, page * limit),
-      total: mockPosts.length,
+      posts: filtered.slice((page - 1) * limit, page * limit),
+      total: filtered.length,
       page,
       limit,
-      hasMore: page * limit < mockPosts.length,
+      hasMore: page * limit < filtered.length,
     };
   }
 
   private static getMockRelatedPosts(postId: string, limit: number): BlogPost[] {
-    // Return mock related posts
-    return this.getMockSearchResults('', {}, 1, limit).posts;
+    const mockPosts: BlogPost[] = blogPostsData.map(post => ({
+      ...post,
+      publishedAt: new Date(post.publishedAt),
+      updatedAt: new Date(post.updatedAt),
+    } as unknown as BlogPost));
+
+    // Simple related logic: share at least one tag or category (and not the same post)
+    const currentPost = mockPosts.find(p => p.id === postId);
+    if (!currentPost) return mockPosts.slice(0, limit);
+
+    const related = mockPosts.filter(p => {
+      if (p.id === postId) return false;
+      const sharedTag = p.tags.some(t => currentPost.tags.includes(t));
+      const sharedCategory = p.categories.some(c => currentPost.categories.includes(c));
+      return sharedTag || sharedCategory;
+    });
+
+    return related.length > 0 ? related.slice(0, limit) : mockPosts.filter(p => p.id !== postId).slice(0, limit);
   }
 
   private static getMockStats(): BlogStats {
+    const mockPosts = blogPostsData;
+    const totalViews = mockPosts.reduce((acc, p) => acc + p.views, 0);
+    const totalLikes = mockPosts.reduce((acc, p) => acc + p.likes, 0);
+
+    // Group categories
+    const categoriesMap: Record<string, number> = {};
+    mockPosts.forEach(p => {
+      p.categories.forEach(c => {
+        categoriesMap[c] = (categoriesMap[c] || 0) + 1;
+      });
+    });
+    const topCategories = Object.entries(categoriesMap).map(([category, count]) => ({
+      category,
+      count
+    })).sort((a, b) => b.count - a.count);
+
+    // Group tags
+    const tagsMap: Record<string, number> = {};
+    mockPosts.forEach(p => {
+      p.tags.forEach(t => {
+        tagsMap[t] = (tagsMap[t] || 0) + 1;
+      });
+    });
+    const popularTags = Object.entries(tagsMap).map(([tag, count]) => ({
+      tag,
+      count
+    })).sort((a, b) => b.count - a.count);
+
     return {
-      totalPosts: 47,
-      totalViews: 12847,
-      totalLikes: 892,
-      totalAuthors: 8,
-      topCategories: [
-        { category: 'Digital Consciousness', count: 15 },
-        { category: 'AI Theory', count: 12 },
-        { category: 'Research', count: 10 },
-        { category: 'Philosophy', count: 6 },
-        { category: 'Technology', count: 4 },
-      ],
-      popularTags: [
-        { tag: 'consciousness', count: 23 },
-        { tag: 'AI', count: 19 },
-        { tag: 'neural networks', count: 15 },
-        { tag: 'philosophy', count: 12 },
-        { tag: 'cognition', count: 9 },
-        { tag: 'digital theory', count: 8 },
-      ],
+      totalPosts: mockPosts.length,
+      totalViews,
+      totalLikes,
+      totalAuthors: 1, // Only H. Ghebrechristos
+      topCategories,
+      popularTags,
     };
   }
 }

@@ -4,10 +4,10 @@ import { Button } from '../../../shared/components/ui/button';
 import { Input } from '../../../shared/components/ui/input';
 import { Label } from '../../../shared/components/ui/label';
 import { Badge } from '../../../shared/components/ui/badge';
-import { 
-  Save, 
-  Eye, 
-  ArrowLeft, 
+import {
+  Save,
+  Eye,
+  ArrowLeft,
   FileText,
   Tag,
   Calendar
@@ -45,7 +45,7 @@ const BlogEditorPage = () => {
                 </h1>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -178,7 +178,7 @@ const BlogEditorPage = () => {
                 </CardHeader>
                 <CardContent>
                   <ReadingContainer>
-                    <div className="prose prose-lg max-w-none animate-fade-in">
+                    <div className="prose psky-lg max-w-none animate-fade-in">
                       <h1>{watchedValues.title || 'Untitled Post'}</h1>
                       {watchedValues.excerpt && (
                         <p className="text-muted-foreground italic">{watchedValues.excerpt}</p>
@@ -202,7 +202,7 @@ const BlogEditorPage = () => {
                           ))}
                         </div>
                       )}
-                      <EnhancedMarkdown 
+                      <EnhancedMarkdown
                         content={watchedValues.content || '*Start writing your content...*'}
                         allowMath={true}
                         allowCodeHighlight={true}

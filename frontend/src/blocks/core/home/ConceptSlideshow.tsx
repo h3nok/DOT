@@ -26,7 +26,7 @@ const ConceptSlideshow: React.FC = () => {
       visual: (
         <div className="relative w-64 h-64 mx-auto">
           <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/30 to-purple-400/30 backdrop-blur-sm"
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/30 to-teal-400/30 backdrop-blur-sm"
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           />
@@ -44,7 +44,7 @@ const ConceptSlideshow: React.FC = () => {
           </motion.div>
         </div>
       ),
-      bgGradient: "from-blue-900/20 via-purple-900/10 to-background"
+      bgGradient: "from-blue-900/20 via-teal-900/10 to-background"
     },
     {
       id: 2,
@@ -63,11 +63,11 @@ const ConceptSlideshow: React.FC = () => {
               <motion.div
                 key={i}
                 className="w-full h-full bg-gradient-to-br from-primary/60 to-accent/60 rounded-sm"
-                animate={{ 
+                animate={{
                   scale: [0.8, 1, 0.8],
                   opacity: [0.4, 1, 0.4]
                 }}
-                transition={{ 
+                transition={{
                   duration: 2,
                   repeat: Infinity,
                   delay: i * 0.2
@@ -78,7 +78,7 @@ const ConceptSlideshow: React.FC = () => {
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
               className="w-12 h-12 bg-white rounded-full shadow-xl border-4 border-primary/20"
-              animate={{ 
+              animate={{
                 boxShadow: [
                   "0 0 20px rgba(59, 130, 246, 0.3)",
                   "0 0 40px rgba(59, 130, 246, 0.6)",
@@ -123,7 +123,7 @@ const ConceptSlideshow: React.FC = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-xl">
                 <motion.div
                   className="w-8 h-8 bg-white rounded-full"
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.3, 1],
                     opacity: [0.8, 1, 0.8]
                   }}
@@ -140,11 +140,11 @@ const ConceptSlideshow: React.FC = () => {
                     transformOrigin: '0 0',
                     transform: `rotate(${i * 45}deg) translateX(40px) translateY(-4px)`
                   }}
-                  animate={{ 
+                  animate={{
                     opacity: [0.2, 1, 0.2],
                     scale: [0.5, 1, 0.5]
                   }}
-                  transition={{ 
+                  transition={{
                     duration: 1.5,
                     repeat: Infinity,
                     delay: i * 0.2
@@ -166,7 +166,7 @@ const ConceptSlideshow: React.FC = () => {
         <div className="relative w-64 h-64 mx-auto">
           <motion.div
             className="absolute left-1/4 top-1/4 w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg"
-            animate={{ 
+            animate={{
               y: [0, -10, 0],
               rotateX: [0, 10, 0]
             }}
@@ -174,15 +174,15 @@ const ConceptSlideshow: React.FC = () => {
           />
           <motion.div
             className="absolute right-1/4 top-1/4 w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg"
-            animate={{ 
+            animate={{
               y: [0, 10, 0],
               rotateY: [0, -10, 0]
             }}
             transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
           />
           <motion.div
-            className="absolute left-1/4 bottom-1/4 w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg"
-            animate={{ 
+            className="absolute left-1/4 bottom-1/4 w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg shadow-lg"
+            animate={{
               x: [0, 10, 0],
               rotateZ: [0, 5, 0]
             }}
@@ -190,7 +190,7 @@ const ConceptSlideshow: React.FC = () => {
           />
           <motion.div
             className="absolute right-1/4 bottom-1/4 w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-lg shadow-lg"
-            animate={{ 
+            animate={{
               x: [0, -10, 0],
               rotateX: [0, -5, 0]
             }}
@@ -231,7 +231,7 @@ const ConceptSlideshow: React.FC = () => {
             {/* AI/Digital Corner */}
             <motion.div
               className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl p-4 border border-blue-500/30"
-              animate={{ 
+              animate={{
                 y: [0, -5, 0],
                 boxShadow: [
                   "0 0 10px rgba(59, 130, 246, 0.2)",
@@ -252,7 +252,7 @@ const ConceptSlideshow: React.FC = () => {
             {/* Biology Corner */}
             <motion.div
               className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl p-4 border border-green-500/30"
-              animate={{ 
+              animate={{
                 y: [0, 5, 0],
                 boxShadow: [
                   "0 0 10px rgba(34, 197, 94, 0.2)",
@@ -272,8 +272,8 @@ const ConceptSlideshow: React.FC = () => {
 
             {/* Consciousness Corner */}
             <motion.div
-              className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl p-4 border border-purple-500/30"
-              animate={{ 
+              className="bg-gradient-to-br from-teal-500/20 to-sky-500/20 rounded-xl p-4 border border-teal-500/30"
+              animate={{
                 x: [0, 5, 0],
                 boxShadow: [
                   "0 0 10px rgba(147, 51, 234, 0.2)",
@@ -284,17 +284,17 @@ const ConceptSlideshow: React.FC = () => {
               transition={{ duration: 3, repeat: Infinity, delay: 1 }}
             >
               <div className="text-center">
-                <div className="w-8 h-8 bg-purple-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                <div className="w-8 h-8 bg-teal-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                   <span className="text-white text-xs font-bold">🧠</span>
                 </div>
-                <div className="text-xs text-purple-300">Mind</div>
+                <div className="text-xs text-teal-300">Mind</div>
               </div>
             </motion.div>
 
             {/* Systems Corner */}
             <motion.div
               className="bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl p-4 border border-orange-500/30"
-              animate={{ 
+              animate={{
                 x: [0, -5, 0],
                 boxShadow: [
                   "0 0 10px rgba(249, 115, 22, 0.2)",
@@ -331,7 +331,7 @@ const ConceptSlideshow: React.FC = () => {
           </motion.div>
         </div>
       ),
-      bgGradient: "from-indigo-900/20 via-purple-900/10 to-background"
+      bgGradient: "from-blue-900/20 via-teal-900/10 to-background"
     }
   ];
 
@@ -397,13 +397,13 @@ const ConceptSlideshow: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       />
-      
+
       <div className="relative z-10 container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          
+
           {/* Slideshow Header */}
           <div className="text-center mb-12">
-            <motion.h2 
+            <motion.h2
               className="text-4xl md:text-5xl font-light text-foreground mb-4"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -411,7 +411,7 @@ const ConceptSlideshow: React.FC = () => {
             >
               Digital Organism Theory
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-xl text-muted-foreground"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -423,7 +423,7 @@ const ConceptSlideshow: React.FC = () => {
 
           {/* Main Slideshow Area */}
           <div className="relative min-h-[600px] bg-card/30 backdrop-blur-xl rounded-3xl border border-border/30 shadow-2xl overflow-hidden">
-            
+
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={currentSlide}
@@ -440,7 +440,7 @@ const ConceptSlideshow: React.FC = () => {
               >
                 {/* Content Side */}
                 <div className="flex-1 lg:pr-12 text-center lg:text-left">
-                  <motion.h3 
+                  <motion.h3
                     className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground mb-4"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -448,7 +448,7 @@ const ConceptSlideshow: React.FC = () => {
                   >
                     {slides[currentSlide].title}
                   </motion.h3>
-                  <motion.p 
+                  <motion.p
                     className="text-xl md:text-2xl text-primary mb-8 font-medium"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -456,7 +456,7 @@ const ConceptSlideshow: React.FC = () => {
                   >
                     {slides[currentSlide].subtitle}
                   </motion.p>
-                  <motion.p 
+                  <motion.p
                     className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -488,8 +488,8 @@ const ConceptSlideshow: React.FC = () => {
                     key={index}
                     onClick={() => goToSlide(index)}
                     className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === currentSlide 
-                        ? 'bg-primary scale-125 shadow-lg shadow-primary/50' 
+                      index === currentSlide
+                        ? 'bg-primary scale-125 shadow-lg shadow-primary/50'
                         : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
                     }`}
                   />

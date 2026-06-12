@@ -1,17 +1,20 @@
 // FAQ Component for Support Page
-// MVP Implementation - Enhanced FAQ System
+// Premium Design System Refactor
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import GlassCard from '../ui/glass-card';
+import {
+  PremiumText,
+  PremiumTitle,
+  PremiumGlassCard,
+  HighContrastBadge,
+  PremiumButton,
+  PremiumInput
+} from '../ui/design-system-primitives';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  ChevronDown, 
-  ChevronUp, 
-  ThumbsUp, 
+import {
+  ChevronDown,
+  ChevronUp,
+  ThumbsUp,
   ThumbsDown,
   Filter,
   X,
@@ -31,15 +34,15 @@ interface FAQSectionProps {
 // Custom hook for debounced search
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
-  
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
-    
+
     return () => clearTimeout(handler);
   }, [value, delay]);
-  
+
   return debouncedValue;
 };
 
@@ -55,7 +58,7 @@ const FAQItemComponent: React.FC<{
 
   const handleRate = async (helpful: boolean) => {
     if (hasRated) return;
-    
+
     try {
       await SupportService.rateFAQ(faq.id, helpful);
       setHasRated(true);
@@ -70,117 +73,128 @@ const FAQItemComponent: React.FC<{
     }
   };
 
+  const getCategoryGlow = (cat: string): "primary" | "secondary" | "accent" | "success" | "none" => {
+    switch (cat.toLowerCase()) {
+      case 'general': return 'success';
+      case 'account': return 'secondary';
+      case 'billing': return 'accent';
+      case 'technical': return 'primary';
+      default: return 'none';
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       className="mb-4"
     >
-      <GlassCard className="overflow-hidden">
+      <PremiumGlassCard className="overflow-hidden p-0" enable3D={false} glowColor={isExpanded ? "var(--primary)" : undefined}>
         <div
           className={clsx(
-            "p-6 cursor-pointer transition-all duration-200",
-            isExpanded ? "bg-primary/5" : "hover:bg-primary/3"
+            "p-6 cursor-pointer transition-all duration-300 select-none text-left w-full",
+            isExpanded ? "bg-primary/5" : "hover:bg-primary/[0.02]"
           )}
           onClick={onToggle}
         >
           <div className="flex items-center justify-between">
             <div className="flex-1 pr-4">
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+              <PremiumTitle tag="h3" variant="solid" className="mb-2 tracking-wide font-bold normal-case text-foreground text-left">
                 {faq.question}
-              </h3>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs">
+              </PremiumTitle>
+              <div className="flex flex-wrap items-center gap-3">
+                <HighContrastBadge glowColor={getCategoryGlow(faq.category)}>
                   {faq.category}
-                </Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <ThumbsUp className="w-4 h-4" />
-                  <span>{faq.helpfulCount}</span>
-                  <ThumbsDown className="w-4 h-4 ml-2" />
-                  <span>{faq.notHelpfulCount}</span>
+                </HighContrastBadge>
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+                  <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="font-semibold text-foreground/80">{faq.helpfulCount}</span>
+                  <ThumbsDown className="w-3.5 h-3.5 text-sky-400 ml-2" />
+                  <span className="font-semibold text-foreground/80">{faq.notHelpfulCount}</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center justify-center h-8 w-8 rounded-full bg-white/[0.04] border border-white/5 group-hover:border-white/10 transition-colors">
               {isExpanded ? (
-                <ChevronUp className="w-5 h-5 text-primary" />
+                <ChevronUp className="w-4 h-4 text-primary animate-pulse" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
               )}
             </div>
           </div>
         </div>
-        
+
         <AnimatePresence>
           {isExpanded && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
             >
-              <div className="px-6 pb-6 border-t border-border/50">
-                <div className="pt-4">
-                  <div className="prose prose-sm max-w-none text-foreground">
+              <div className="px-6 pb-6 border-t border-white/5 bg-black/[0.05]">
+                <div className="pt-5 text-left">
+                  <div className="text-xs sm:text-sm text-foreground/90 leading-relaxed font-sans opacity-95">
                     <p>{faq.answer}</p>
                   </div>
-                  
-                  <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/30">
-                    <span className="text-sm text-muted-foreground">
-                      Was this helpful?
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleRate(true);
-                      }}
-                      disabled={hasRated}
-                      className={clsx(
-                        "h-8 px-3",
-                        userRating === true && "text-green-600 bg-green-50"
-                      )}
-                    >
-                      <ThumbsUp className="w-4 h-4 mr-1" />
-                      Yes
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleRate(false);
-                      }}
-                      disabled={hasRated}
-                      className={clsx(
-                        "h-8 px-3",
-                        userRating === false && "text-red-600 bg-red-50"
-                      )}
-                    >
-                      <ThumbsDown className="w-4 h-4 mr-1" />
-                      No
-                    </Button>
-                    {hasRated && (
-                      <span className="text-sm text-muted-foreground ml-2">
-                        Thank you for your feedback!
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 pt-4 border-t border-white/5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-muted-foreground">
+                        Was this helpful?
                       </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {faq.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
+                      <PremiumButton
+                        variant={userRating === true ? "primary" : "glass"}
+                        size="sm"
+                        notched={false}
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          handleRate(true);
+                        }}
+                        disabled={hasRated}
+                        className="h-8 px-3.5"
+                      >
+                        <ThumbsUp className="w-3.5 h-3.5 mr-1" />
+                        Yes
+                      </PremiumButton>
+                      <PremiumButton
+                        variant={userRating === false ? "primary" : "glass"}
+                        size="sm"
+                        notched={false}
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          handleRate(false);
+                        }}
+                        disabled={hasRated}
+                        className="h-8 px-3.5"
+                      >
+                        <ThumbsDown className="w-3.5 h-3.5 mr-1" />
+                        No
+                      </PremiumButton>
+                      {hasRated && (
+                        <span className="text-xs font-mono text-emerald-400 ml-2 animate-pulse">
+                          Feedback committed.
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 self-start sm:self-auto">
+                      {faq.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20 transition-all select-none cursor-pointer"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </GlassCard>
+      </PremiumGlassCard>
     </motion.div>
   );
 };
@@ -204,7 +218,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
           SupportService.searchFAQ(''),
           SupportService.getFAQCategories(),
         ]);
-        
+
         setFaqs(faqData);
         setCategories(categoryData);
       } catch (error) {
@@ -246,13 +260,13 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
   // Memoized filtered FAQs
   const filteredFAQs = useMemo(() => {
     return faqs.filter(faq => {
-      const matchesSearch = !searchQuery || 
+      const matchesSearch = !searchQuery ||
         faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
         faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
         faq.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
+
       const matchesCategory = !selectedCategory || faq.category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
   }, [faqs, searchQuery, selectedCategory]);
@@ -267,9 +281,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
   };
 
   const handleFAQRate = (faqId: string, helpful: boolean) => {
-    setFaqs(prevFaqs => 
-      prevFaqs.map(faq => 
-        faq.id === faqId 
+    setFaqs(prevFaqs =>
+      prevFaqs.map(faq =>
+        faq.id === faqId
           ? {
               ...faq,
               helpfulCount: helpful ? faq.helpfulCount + 1 : faq.helpfulCount,
@@ -288,64 +302,64 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-4xl mx-auto">
         {[...Array(5)].map((_, i) => (
-          <GlassCard key={i} className="p-6">
+          <PremiumGlassCard key={i} className="p-6">
             <div className="animate-pulse">
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-muted rounded w-3/4 mb-3"></div>
               <div className="h-3 bg-muted rounded w-1/2"></div>
             </div>
-          </GlassCard>
+          </PremiumGlassCard>
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <HelpCircle className="w-8 h-8 text-primary" />
-          <h2 className="text-3xl font-bold text-foreground">
-            Frequently Asked Questions
-          </h2>
+          <div className="p-2 bg-primary/10 border border-primary/25 rounded-lg">
+            <HelpCircle className="w-8 h-8 text-primary animate-pulse" />
+          </div>
+          <PremiumTitle tag="h2" variant="gradient">
+            KNOWLEDGE BASE DIRECTORY
+          </PremiumTitle>
         </div>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Find answers to common questions about the Digital Organism Theory platform. 
-          Can't find what you're looking for? 
+        <PremiumText variant="vibrant" size="base" className="max-w-2xl mx-auto text-foreground/80">
+          Find instant resolutions to common queries regarding the DOT network protocols. Still lost?
           <button
             onClick={onContactClick}
-            className="text-primary hover:underline ml-1"
+            className="text-primary hover:underline ml-1.5 font-bold font-mono text-xs tracking-wider"
           >
-            Contact our support team
+            RESOLVE VIA OPERATOR SYNAPSE &gt;
           </button>
-        </p>
+        </PremiumText>
       </div>
 
       {/* Search and Filters */}
       <div className="space-y-4">
         <div className="flex gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
+          <div className="flex-1 w-full">
+            <PremiumInput
+              id="searchFAQ"
               placeholder="Search frequently asked questions..."
               value={searchQuery}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-              className="pl-10"
             />
           </div>
-          <Button
+          <PremiumButton
             variant="outline"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 h-10 select-none shrink-0"
+            icon={<Filter className="w-4 h-4" />}
           >
-            <Filter className="w-4 h-4" />
             Filters
-          </Button>
+          </PremiumButton>
         </div>
 
-        {/* Filters */}
+        {/* Filters Panel */}
         <AnimatePresence>
           {showFilters && (
             <motion.div
@@ -354,57 +368,61 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <GlassCard className="p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-sm font-medium text-foreground">
-                    Categories:
+              <PremiumGlassCard className="p-5" glowColor="var(--primary)">
+                <div className="flex flex-wrap items-center gap-2 text-left mb-4">
+                  <span className="text-xs font-mono font-extrabold uppercase tracking-wider text-foreground/80 mr-2">
+                    CATEGORIES:
                   </span>
-                  <Button
-                    variant={selectedCategory === null ? "default" : "outline"}
+                  <PremiumButton
+                    variant={selectedCategory === null ? "primary" : "outline"}
                     size="sm"
+                    notched={false}
                     onClick={() => handleCategorySelect(null)}
+                    className="h-8 py-0 px-3 text-[10px]"
                   >
-                    All
-                  </Button>
+                    ALL
+                  </PremiumButton>
                   {categories.map(category => (
-                    <Button
+                    <PremiumButton
                       key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
+                      variant={selectedCategory === category ? "primary" : "outline"}
                       size="sm"
+                      notched={false}
                       onClick={() => handleCategorySelect(category)}
+                      className="h-8 py-0 px-3 text-[10px]"
                     >
                       {category}
-                    </Button>
+                    </PremiumButton>
                   ))}
                 </div>
-                
+
                 {(searchQuery || selectedCategory) && (
-                  <div className="flex items-center gap-2 pt-2 border-t border-border/30">
-                    <span className="text-sm text-muted-foreground">
-                      Active filters:
+                  <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/5 text-left">
+                    <span className="text-[10px] font-mono font-bold text-muted-foreground/70 uppercase">
+                      Active Filters:
                     </span>
                     {searchQuery && (
-                      <Badge variant="secondary" className="text-xs">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/5 border border-white/10 text-primary">
                         Search: "{searchQuery}"
-                      </Badge>
+                      </span>
                     )}
                     {selectedCategory && (
-                      <Badge variant="secondary" className="text-xs">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/5 border border-white/10 text-secondary">
                         Category: {selectedCategory}
-                      </Badge>
+                      </span>
                     )}
-                    <Button
+                    <PremiumButton
                       variant="ghost"
                       size="sm"
                       onClick={clearFilters}
-                      className="h-6 px-2 text-xs"
+                      className="h-6 px-2 text-[10px] hover:text-sky-500 font-bold ml-auto"
+                      icon={<X className="w-3 h-3" />}
                     >
-                      <X className="w-3 h-3 mr-1" />
                       Clear
-                    </Button>
+                    </PremiumButton>
                   </div>
                 )}
-              </GlassCard>
+              </PremiumGlassCard>
             </motion.div>
           )}
         </AnimatePresence>
@@ -413,41 +431,40 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
       {/* FAQ Results */}
       <div className="space-y-4">
         {filteredFAQs.length === 0 ? (
-          <GlassCard className="p-12 text-center">
-            <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              No FAQs found
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery || selectedCategory 
-                ? "Try adjusting your search terms or filters" 
-                : "No frequently asked questions are available at the moment"
-              }
-            </p>
-            {(searchQuery || selectedCategory) && (
-              <Button onClick={clearFilters} className="mr-3">
-                Clear filters
-              </Button>
-            )}
-            <Button variant="outline" onClick={onContactClick}>
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Contact Support
-            </Button>
-          </GlassCard>
+          <PremiumGlassCard className="p-12 text-center" glowColor="var(--primary)">
+            <BookOpen className="w-16 h-16 text-muted-foreground/55 mx-auto mb-4 animate-bounce" />
+            <PremiumTitle tag="h3" variant="gradient" className="mb-2 tracking-wider text-center justify-center">
+              NO DIRECT MATCHES
+            </PremiumTitle>
+            <PremiumText variant="vibrant" size="sm" className="mb-6 max-w-sm mx-auto opacity-75">
+              No matching knowledge protocols were found matching your query details. Try resetting filters or forwarding to live support.
+            </PremiumText>
+
+            <div className="flex justify-center gap-3">
+              {(searchQuery || selectedCategory) && (
+                <PremiumButton onClick={clearFilters} variant="outline">
+                  Reset Filters
+                </PremiumButton>
+              )}
+              <PremiumButton variant="primary" glow onClick={onContactClick} icon={<MessageSquare className="w-4 h-4" />}>
+                Contact Support
+              </PremiumButton>
+            </div>
+          </PremiumGlassCard>
         ) : (
           <>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                Showing {filteredFAQs.length} {filteredFAQs.length === 1 ? 'question' : 'questions'}
-              </p>
+            <div className="flex items-center justify-between px-1 font-mono text-[10px] sm:text-xs">
+              <span className="text-muted-foreground">
+                Showing <strong className="text-foreground">{filteredFAQs.length}</strong> matching entries
+              </span>
               {filteredFAQs.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Star className="w-4 h-4" />
-                  <span>Click questions to expand</span>
-                </div>
+                <span className="text-muted-foreground/60 flex items-center gap-1 select-none">
+                  <Star className="w-3.5 h-3.5 text-primary" />
+                  <span>Interactive accordion list</span>
+                </span>
               )}
             </div>
-            
+
             {filteredFAQs.map((faq) => (
               <FAQItemComponent
                 key={faq.id}
@@ -462,24 +479,22 @@ const FAQSection: React.FC<FAQSectionProps> = ({ onContactClick }) => {
       </div>
 
       {/* Help Section */}
-      <GlassCard className="p-6 bg-gradient-to-r from-primary/5 to-secondary/5">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold text-foreground mb-2">
-            Still need help?
-          </h3>
-          <p className="text-muted-foreground mb-4">
-            Our support team is here to help you with any questions or issues.
-          </p>
-          <Button onClick={onContactClick} className="mr-3">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Contact Support
-          </Button>
-          <Button variant="outline">
-            <BookOpen className="w-4 h-4 mr-2" />
-            View Documentation
-          </Button>
+      <PremiumGlassCard className="p-8 text-center bg-gradient-to-r from-primary/5 to-secondary/5 mt-12" glowColor="var(--secondary)">
+        <PremiumTitle tag="h3" variant="gradient" className="mb-2 text-center justify-center">
+          PERSISTENT KNOWLEDGE INQUIRIES
+        </PremiumTitle>
+        <PremiumText variant="vibrant" size="sm" className="mb-6 max-w-lg mx-auto opacity-75">
+          Can't locate structural specifications? Connect dynamically to our support node or consult our cryptographic documentation.
+        </PremiumText>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <PremiumButton onClick={onContactClick} variant="primary" glow icon={<MessageSquare className="w-4 h-4" />}>
+            Open Operator Synapse
+          </PremiumButton>
+          <PremiumButton variant="glass" icon={<BookOpen className="w-4 h-4" />}>
+            Platform Ledger Docs
+          </PremiumButton>
         </div>
-      </GlassCard>
+      </PremiumGlassCard>
     </div>
   );
 };

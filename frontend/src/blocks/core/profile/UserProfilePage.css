@@ -1,0 +1,118 @@
+@keyframes rotate-mesh {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(37, 99, 235, 0.4)); opacity: 0.7; }
+  50% { filter: drop-shadow(0 0 16px rgba(37, 99, 235, 0.9)); opacity: 1; }
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes float-vector {
+  0% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+}
+@keyframes orbit-ring-cw {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes orbit-ring-ccw {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes orbit-ring-cw-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(180deg); }
+}
+@keyframes orbit-ring-ccw-slow {
+  0% { transform: rotate(180deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes float-anchor {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.2px); }
+}
+@keyframes float-anchor-delayed {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1.5px) scale(1.05); }
+}
+@keyframes beacon-ping {
+  0% { transform: scale(0.65); opacity: 0.95; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+@keyframes star-breathing {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.18); filter: brightness(1.35); }
+}
+@keyframes packet-flow {
+  0% { stroke-dashoffset: 40; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes map-packet-flow {
+  0% { offset-distance: 0%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+.animate-rotate-slow {
+  animation: rotate-mesh 25s linear infinite;
+}
+.animate-glow-amber {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.orbit-ring-ccw {
+  animation: orbit-ring-ccw 18s linear infinite;
+  transform-origin: center;
+}
+.orbit-ring-cw {
+  animation: orbit-ring-cw 22s linear infinite;
+  transform-origin: center;
+}
+.orbit-ring-ccw-slow {
+  animation: orbit-ring-ccw-slow 35s linear infinite;
+  transform-origin: center;
+}
+.orbit-ring-cw-slow {
+  animation: orbit-ring-cw-slow 40s linear infinite;
+  transform-origin: center;
+}
+.animate-float-anchor {
+  animation: float-anchor 3.5s ease-in-out infinite;
+  transform-origin: 50px 51px;
+}
+.animate-float-anchor-delayed {
+  animation: float-anchor-delayed 3.5s ease-in-out infinite;
+  animation-delay: 0.8s;
+  transform-origin: 50px 46px;
+}
+.animate-beacon-wave {
+  animation: beacon-ping 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  transform-origin: 50px 51px;
+}
+.animate-star-glow-1 {
+  animation: star-breathing 3.5s ease-in-out infinite;
+  transform-origin: 50px 16px;
+}
+.packet-flow-line {
+  stroke-dasharray: 6, 14;
+  animation: packet-flow 1.8s linear infinite;
+}
+.packet-transit-map {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+.particle-transit {
+  animation: float-vector 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Syntax highlighting for JSON Schema Explorer */
+.json-key { color: #cbd5e1; font-weight: 600; }
+.json-string { color: #34d399; }
+.json-boolean { color: #fbbf24; font-weight: bold; }
+.json-number { color: #38bdf8; }
+.json-null { color: #64748b; font-style: italic; }

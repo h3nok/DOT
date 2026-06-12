@@ -1,0 +1,29 @@
+# Blueprint — Single Source of Truth
+
+This folder is the north star for the project. Read in order.
+
+| #   | Doc                                                | What it answers                                                                           |
+| --- | -------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| 00  | [Attention Manifesto](00-ATTENTION-MANIFESTO.md)   | **Why** — how attention is captured, and the laws (L1–L12) we invert it with. The soul.   |
+| 01  | [North Star](01-NORTH-STAR.md)                     | **What** — vision, info architecture, and the 5 Attention OS primitives (P1–P5).          |
+| 02  | [Architecture](02-ARCHITECTURE.md)                 | **How** — frontend, backend, invite/auth, analytics-without-surveillance, scale to 100M+. |
+| 03  | [Cleanup & Structure](03-CLEANUP-AND-STRUCTURE.md) | **From here to there** — target layout + safe, staged refactor.                           |
+| 04  | [Knowledge & Publication OS](04-KNOWLEDGE-AND-PUBLICATION.md) | **Next product layer** — uploads, connected sources, AI summaries, and book publishing. |
+| —   | [ADRs](adr/)                                       | Locked decisions with trade-offs.                                                         |
+
+## How to use this
+
+- Building a feature? Confirm it serves the manifesto laws and uses Attention OS primitives.
+- Making a decision with lasting trade-offs? Write an ADR (`adr/0000-template.md`).
+- AI agents: start at `../../AGENTS.md`, which points back here.
+
+## Decision log
+
+| ADR                                                | Decision                                                  | Status   |
+| -------------------------------------------------- | --------------------------------------------------------- | -------- |
+| [0001](adr/0001-member-funded-invite-only.md)      | Member-funded, invite-only — never ad-funded              | Accepted |
+| [0002](adr/0002-modular-monolith-then-services.md) | Modular monolith now, services on demand; SQLite→Postgres | Accepted |
+| [0003](adr/0003-server-enforced-invites.md)        | Server-enforced signed single-use invite tokens           | Accepted |
+| [0004](adr/0004-attention-os-primitives.md)        | Attention OS primitives — no feed, counters, or push      | Accepted |
+| [0005](adr/0005-single-frontend-entry.md)          | Single canonical frontend entry & structure               | Accepted |
+| [0006](adr/0006-member-owned-knowledge-publication.md) | Member-owned Knowledge & Publication OS               | Accepted |

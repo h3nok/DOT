@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '../../shared/components/ui/card';
-import { Button } from '../../shared/components/ui/button';
-import { Badge } from '../../shared/components/ui/badge';
-import { Input } from '../../shared/components/ui/input';
-import GlassCard from '../../shared/components/ui/glass-card';
+import {
+  PremiumText,
+  PremiumTitle,
+  PremiumGlassCard,
+  HighContrastBadge,
+  PremiumButton,
+  PremiumInput,
+  PremiumDropdown,
+  PremiumMetric
+} from '../../shared/components/ui/design-system-primitives';
 import ReadingContainer from '../../shared/components/ui/reading-container';
-import { 
-  MessageCircle, 
-  Users, 
-  TrendingUp, 
-  Clock, 
+import {
+  MessageCircle,
+  Users,
+  Clock,
   User,
-  Search,
   Filter,
   Plus,
   Heart,
@@ -113,10 +116,11 @@ const CommunityPage = () => {
 
   useEffect(() => {
     // Simulate loading
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setDiscussions(demoDiscussions);
       setLoading(false);
     }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   const filteredDiscussions = discussions.filter(discussion => {
@@ -133,14 +137,32 @@ const CommunityPage = () => {
     return num.toString();
   };
 
+  const getCategoryGlow = (cat: string): "primary" | "secondary" | "accent" | "success" | "none" => {
+    switch (cat) {
+      case 'consciousness': return 'primary';
+      case 'digital-organisms': return 'secondary';
+      case 'emergence': return 'accent';
+      case 'philosophy': return 'success';
+      default: return 'none';
+    }
+  };
+
+  const getCategoryColorCode = (cat: string): string => {
+    switch (cat) {
+      case 'consciousness': return 'var(--primary)';
+      case 'digital-organisms': return 'var(--secondary)';
+      case 'emergence': return 'var(--accent)';
+      case 'philosophy': return 'var(--secondary)';
+      default: return 'var(--foreground)';
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading community...</p>
-          </div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <PremiumText variant="vibrant" size="base">Decrypting community sub-network...</PremiumText>
         </div>
       </div>
     );
@@ -237,182 +259,214 @@ const CommunityPage = () => {
           <div className="reality-shift"></div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 py-16">
+        <div className="relative z-10 container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex justify-center mb-6">
-              <div className="p-4 rounded-full bg-primary/20">
+              <div className="p-4 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 animate-pulse">
                 <Users className="w-12 h-12 text-primary" />
               </div>
             </div>
-              <h1 className="text-4xl md:text-6xl font-inter font-semibold mb-6 gradient-text">
-              Community
-            </h1>
-            
-            <p className="text-xl font-inter font-light text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Join fellow explorers in discussing consciousness, digital organisms, and the emergence of complexity. 
-              Share insights, ask questions, and build connections.
-            </p>
+
+            <PremiumTitle tag="h1" variant="gradient" className="mb-6 tracking-widest text-center justify-center">
+              Stay Community Node
+            </PremiumTitle>
+
+            <PremiumText variant="vibrant" size="lg" className="mb-8 max-w-3xl mx-auto text-foreground/80">
+              Join fellow operators and explorers in analyzing consciousness protocols, digital organisms,
+              and the emergence of cybernetic intelligence. Share logs, sync frameworks, and link synapses.
+            </PremiumText>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="flex items-center space-x-2">
-                <Plus className="w-4 h-4" />
+              <PremiumButton variant="primary" glow shimmer icon={<Plus className="w-4 h-4" />}>
                 Start Discussion
-              </Button>
-              <Button variant="outline" className="flex items-center space-x-2">
-                <MessageCircle className="w-4 h-4" />
+              </PremiumButton>
+              <PremiumButton variant="glass" glow icon={<MessageCircle className="w-4 h-4" />}>
                 Browse Topics
-              </Button>
+              </PremiumButton>
             </div>
           </div>
         </div>
-      </div>      {/* Community Stats */}
+      </div>
+
+      {/* Community Stats */}
       <div className="container mx-auto px-4 py-8">
         <ReadingContainer>
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <GlassCard className="text-center">
-              <CardContent className="p-6">
-                <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-inter font-medium">1,247</div>
-                <div className="font-inter font-light text-muted-foreground">Members</div>
-              </CardContent>
-            </GlassCard>
-            <GlassCard className="text-center">
-              <CardContent className="p-6">
-                <MessageCircle className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-inter font-medium">456</div>
-                <div className="font-inter font-light text-muted-foreground">Discussions</div>
-              </CardContent>
-            </GlassCard>
-            <GlassCard className="text-center">
-              <CardContent className="p-6">
-                <TrendingUp className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-inter font-medium">2,891</div>
-                <div className="font-inter font-light text-muted-foreground">Replies</div>
-              </CardContent>
-            </GlassCard>
-            <GlassCard className="text-center">
-              <CardContent className="p-6">
-                <Clock className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-inter font-medium">24/7</div>
-                <div className="font-inter font-light text-muted-foreground">Active</div>
-              </CardContent>
-            </GlassCard>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <PremiumMetric
+              value="1,247"
+              label="SYNAPSE PEERS"
+              badge="MEMBERS"
+              trend={{ direction: 'up', amount: '12.4%' }}
+              glowColor="var(--primary)"
+            />
+            <PremiumMetric
+              value="456"
+              label="CONSCIOUS DISCUSSIONS"
+              badge="THREADS"
+              trend={{ direction: 'up', amount: '8.1%' }}
+              glowColor="var(--secondary)"
+            />
+            <PremiumMetric
+              value="2,891"
+              label="RESONANCE LINKS"
+              badge="REPLIES"
+              trend={{ direction: 'up', amount: '24.2%' }}
+              glowColor="var(--accent)"
+            />
+            <PremiumMetric
+              value="24/7"
+              label="UPTIME RATIO"
+              badge="ACTIVE"
+              glowColor="var(--secondary)"
+            />
           </div>
         </ReadingContainer>
       </div>
 
       {/* Discussions */}
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  placeholder="Search discussions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+          <div className="flex flex-col md:flex-row gap-4 mb-8 items-end">
+            <div className="flex-1 w-full">
+              <PremiumInput
+                label="QUERY DISCOURSE REGISTRY"
+                badge="SEARCH"
+                placeholder="Type keywords or tags to filter..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-end">
+              <div className="w-full sm:w-64 text-left">
+                <PremiumDropdown
+                  label="FILTER BY METADATA CATEGORY"
+                  options={categories.map(cat => ({
+                    value: cat.id,
+                    label: cat.id === 'all' ? 'All Discussions' : `${cat.name} (${cat.count})`
+                  }))}
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  glowColor="var(--secondary)"
                 />
               </div>
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-border rounded-md bg-background text-foreground"
+              <PremiumButton
+                variant="outline"
+                className="w-full sm:w-auto h-10 shrink-0"
+                icon={<Filter className="w-4 h-4" />}
               >
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.name} ({category.count})
-                  </option>
-                ))}
-              </select>
-              <Button variant="outline" className="flex items-center space-x-2">
-                <Filter className="w-4 h-4" />
-                Filter
-              </Button>
+                Filters
+              </PremiumButton>
             </div>
           </div>
 
           {/* Discussion List */}
-          <div className="space-y-4">
-            {filteredDiscussions.map((discussion) => (
-              <Card key={discussion.id} className="card-hover bg-card/50 backdrop-blur-sm border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-xs">
+          <div className="space-y-6">
+            {filteredDiscussions.map((discussion) => {
+              const categoryGlow = getCategoryGlow(discussion.category);
+              const categoryColor = getCategoryColorCode(discussion.category);
+
+              return (
+                <PremiumGlassCard
+                  key={discussion.id}
+                  enable3D={true}
+                  glowColor={categoryColor}
+                  className="w-full"
+                >
+                  <div className="flex flex-col justify-between h-full">
+                    {/* Top Row: Meta and Badges */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-white/5">
+                      <div className="flex items-center gap-2">
+                        <HighContrastBadge glowColor={categoryGlow}>
                           {discussion.category}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          by {discussion.author}
+                        </HighContrastBadge>
+                        <HighContrastBadge glowColor="none" className="lowercase">
+                          @{discussion.author}
+                        </HighContrastBadge>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{discussion.lastActivity}</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <PremiumTitle tag="h3" variant="solid" className="mb-2 group-hover:text-primary transition-colors cursor-pointer text-left">
+                      {discussion.title}
+                    </PremiumTitle>
+
+                    {/* Content */}
+                    <PremiumText variant="vibrant" size="sm" className="mb-4 text-left opacity-85 leading-relaxed">
+                      {discussion.content}
+                    </PremiumText>
+
+                    {/* Tags List */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {discussion.tags.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/5 border border-white/10 text-muted-foreground select-none hover:text-foreground hover:border-white/20 transition-all cursor-pointer"
+                        >
+                          #{tag}
                         </span>
+                      ))}
+                    </div>
+
+                    {/* Bottom Metadata & Tactical Actions */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-white/5 mt-auto">
+                      <div className="flex items-center space-x-6 text-[11px] font-mono text-muted-foreground">
+                        <div className="flex items-center gap-1.5" title="Replies in network">
+                          <MessageCircle className="w-4 h-4 text-primary/75" />
+                          <span className="font-extrabold text-foreground">{formatNumber(discussion.replies)}</span>
+                          <span className="opacity-40">replies</span>
+                        </div>
+                        <div className="flex items-center gap-1.5" title="Viewer nodes">
+                          <User className="w-4 h-4 text-secondary/75" />
+                          <span className="font-extrabold text-foreground">{formatNumber(discussion.views)}</span>
+                          <span className="opacity-40">nodes</span>
+                        </div>
+                        <div className="flex items-center gap-1.5" title="Likes/Approvals">
+                          <Heart className="w-4 h-4 text-sky-500/75 animate-pulse" />
+                          <span className="font-extrabold text-foreground">{formatNumber(discussion.likes)}</span>
+                          <span className="opacity-40">approvals</span>
+                        </div>
                       </div>
-                      <h3 className="text-lg font-semibold mb-2 hover:text-primary cursor-pointer">
-                        {discussion.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                        {discussion.content}
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {discussion.tags.map((tag: string) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
+
+                      <div className="flex items-center space-x-2 self-end sm:self-auto">
+                        <PremiumButton variant="glass" size="sm" notched={false} className="h-8 w-8 p-0" icon={<Heart className="w-3.5 h-3.5" />} title="Approve payload">
+                          {null}
+                        </PremiumButton>
+                        <PremiumButton variant="glass" size="sm" notched={false} className="h-8 w-8 p-0" icon={<Share2 className="w-3.5 h-3.5" />} title="Sync/Share node">
+                          {null}
+                        </PremiumButton>
+                        <PremiumButton variant="glass" size="sm" notched={false} className="h-8 w-8 p-0" icon={<Bookmark className="w-3.5 h-3.5" />} title="Archive synapse">
+                          {null}
+                        </PremiumButton>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <MessageCircle className="w-4 h-4 mr-1" />
-                        {formatNumber(discussion.replies)}
-                      </div>
-                      <div className="flex items-center">
-                        <User className="w-4 h-4 mr-1" />
-                        {formatNumber(discussion.views)}
-                      </div>
-                      <div className="flex items-center">
-                        <Heart className="w-4 h-4 mr-1" />
-                        {formatNumber(discussion.likes)}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {discussion.lastActivity}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="sm">
-                        <Heart className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Share2 className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Bookmark className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                </PremiumGlassCard>
+              );
+            })}
           </div>
 
+          {/* Empty State */}
           {filteredDiscussions.length === 0 && (
-            <div className="text-center py-12">
-              <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No discussions found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your search terms or filters.
-              </p>
-              <Button>Start a Discussion</Button>
-            </div>
+            <PremiumGlassCard className="text-center py-16 max-w-lg mx-auto mt-12" glowColor="var(--primary)">
+              <MessageCircle className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
+              <PremiumTitle tag="h3" variant="gradient" className="mb-2 tracking-widest text-center justify-center">
+                Query Result Blank
+              </PremiumTitle>
+              <PremiumText variant="vibrant" size="sm" className="mb-6 max-w-sm mx-auto opacity-75">
+                No active discourse matches your parameters. Clear your keywords or expand category definitions.
+              </PremiumText>
+              <div className="flex justify-center">
+                <PremiumButton variant="primary" glow onClick={() => setSearchTerm('')}>
+                  Flush Query
+                </PremiumButton>
+              </div>
+            </PremiumGlassCard>
           )}
         </div>
       </div>
@@ -420,4 +474,4 @@ const CommunityPage = () => {
   );
 };
 
-export default CommunityPage; 
+export default CommunityPage;

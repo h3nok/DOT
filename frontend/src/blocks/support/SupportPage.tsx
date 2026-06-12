@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
-import { CardContent, CardHeader, CardTitle } from '../../shared/components/ui/card';
-import { Button } from '../../shared/components/ui/button';
-import GlassCard from '../../shared/components/ui/glass-card';
-import ReadingContainer from '../../shared/components/ui/reading-container';
-import FAQSection from '../../shared/components/support/FAQSection';
-import ContactForm from '../../shared/components/support/ContactForm';
-import { 
-  Heart, 
-  Coffee, 
-  BookOpen, 
-  Users, 
+import {
+  Heart,
+  Coffee,
+  BookOpen,
+  Users,
   Star,
   Zap,
   HelpCircle,
   MessageSquare,
-  Phone,
-  Mail,
-  Clock,
-  Shield,
   Award,
   Target
 } from 'lucide-react';
 import { useDonationForm } from '../../forms/hooks/useDonationForm';
 import { motion } from 'framer-motion';
+import ReadingContainer from '../../shared/components/ui/reading-container';
+import FAQSection from '../../shared/components/support/FAQSection';
+import ContactForm from '../../shared/components/support/ContactForm';
+import { cn } from '../../lib/utils';
+import {
+  PremiumText,
+  PremiumTitle,
+  PremiumGlassCard,
+  HighContrastBadge,
+  PremiumButton,
+  PremiumMetric
+} from '../../shared/components/ui/design-system-primitives';
 
 type SupportView = 'overview' | 'faq' | 'contact' | 'donate';
 
 const SupportPage = () => {
   const [currentView, setCurrentView] = useState<SupportView>('overview');
-  
+
   const {
     loading,
     selectedTier,
@@ -41,8 +43,6 @@ const SupportPage = () => {
     onSubmit: async (data) => {
       console.log('Donation submitted:', data);
       alert('Donation feature is temporarily disabled for testing.');
-      
-      // Future implementation would integrate with payment service
     },
     onError: (error) => {
       console.error('Donation error:', error);
@@ -68,18 +68,19 @@ const SupportPage = () => {
   const renderOverview = () => (
     <div className="space-y-12">
       {/* Hero Section */}
-      <div className="text-center space-y-6">
+      <div className="text-center space-y-6 relative overflow-hidden py-10 rounded-2xl bg-gradient-to-b from-primary/5 via-transparent to-transparent border border-primary/10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--primary-glow),_transparent_60%)] opacity-10 pointer-events-none" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          className="space-y-4 relative z-10"
         >
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Support Center
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Get help, find answers, and support the Digital Organism Theory platform
-          </p>
+          <PremiumTitle tag="h1" variant="gradient" className="text-4xl md:text-5xl tracking-widest font-bold">
+            DOT SUPPORT CORE
+          </PremiumTitle>
+          <PremiumText variant="vibrant" size="lg" className="max-w-3xl mx-auto opacity-90 font-medium">
+            Ingest platform knowledge, issue technical dispatch queries, or fuel digital consciousness research
+          </PremiumText>
         </motion.div>
       </div>
 
@@ -89,163 +90,216 @@ const SupportPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="h-full flex"
         >
-          <GlassCard className="p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer"
-                     onClick={() => setCurrentView('faq')}>
-            <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-              <HelpCircle className="w-8 h-8 text-blue-600" />
+          <PremiumGlassCard
+            enable3D={true}
+            className="w-full cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+            innerClassName="p-6 text-center flex flex-col justify-between h-full items-center"
+            glowColor="#14b8a6"
+            onClick={() => setCurrentView('faq')}
+          >
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-14 h-14 bg-secondary/10 border border-secondary/20 rounded-full flex items-center justify-center relative shadow-inner">
+                <HelpCircle className="w-7 h-7 text-secondary relative z-10" />
+              </div>
+              <PremiumTitle tag="h3" variant="solid">FAQ Matrix</PremiumTitle>
+              <PremiumText variant="body" className="opacity-80">
+                Explore structured responses to common telemetry issues and platform mechanics.
+              </PremiumText>
             </div>
-            <h3 className="text-xl font-semibold mb-2">FAQ</h3>
-            <p className="text-muted-foreground text-sm">
-              Find answers to frequently asked questions
-            </p>
-          </GlassCard>
+          </PremiumGlassCard>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+          className="h-full flex"
         >
-          <GlassCard className="p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer"
-                     onClick={() => setCurrentView('contact')}>
-            <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
-              <MessageSquare className="w-8 h-8 text-green-600" />
+          <PremiumGlassCard
+            enable3D={true}
+            className="w-full cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+            innerClassName="p-6 text-center flex flex-col justify-between h-full items-center"
+            glowColor="#2563eb"
+            onClick={() => setCurrentView('contact')}
+          >
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center relative shadow-inner">
+                <MessageSquare className="w-7 h-7 text-primary relative z-10" />
+              </div>
+              <PremiumTitle tag="h3" variant="solid">Dispatch Ticket</PremiumTitle>
+              <PremiumText variant="body" className="opacity-80">
+                Establish a direct peer channel with our active technical support core.
+              </PremiumText>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Contact Us</h3>
-            <p className="text-muted-foreground text-sm">
-              Get personalized help from our support team
-            </p>
-          </GlassCard>
+          </PremiumGlassCard>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="h-full flex"
         >
-          <GlassCard className="p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer"
-                     onClick={() => setCurrentView('donate')}>
-            <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-              <Heart className="w-8 h-8 text-purple-600" />
+          <PremiumGlassCard
+            enable3D={true}
+            className="w-full cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+            innerClassName="p-6 text-center flex flex-col justify-between h-full items-center"
+            glowColor="#818cf8"
+            onClick={() => setCurrentView('donate')}
+          >
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-14 h-14 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center justify-center relative shadow-inner">
+                <Heart className="w-7 h-7 text-blue-400 relative z-10" />
+              </div>
+              <PremiumTitle tag="h3" variant="solid">Sovereign Patron</PremiumTitle>
+              <PremiumText variant="body" className="opacity-80">
+                Provide secure computational fuels to advance cognitive expansion research.
+              </PremiumText>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Support Us</h3>
-            <p className="text-muted-foreground text-sm">
-              Help us grow and improve the platform
-            </p>
-          </GlassCard>
+          </PremiumGlassCard>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+          className="h-full flex"
         >
-          <GlassCard className="p-6 text-center hover:shadow-lg transition-all duration-300">
-            <div className="w-16 h-16 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
-              <BookOpen className="w-8 h-8 text-orange-600" />
+          <PremiumGlassCard
+            enable3D={true}
+            className="w-full hover:scale-[1.02] transition-transform duration-300"
+            innerClassName="p-6 text-center flex flex-col justify-between h-full items-center"
+            glowColor="#f97316"
+          >
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 rounded-full flex items-center justify-center relative shadow-inner">
+                <BookOpen className="w-7 h-7 text-orange-400 relative z-10" />
+              </div>
+              <PremiumTitle tag="h3" variant="solid">Protocol Docs</PremiumTitle>
+              <PremiumText variant="body" className="opacity-80">
+                Access formal specs, cryptographical whitepapers, and operational handbooks.
+              </PremiumText>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Documentation</h3>
-            <p className="text-muted-foreground text-sm">
-              Comprehensive guides and tutorials
-            </p>
-          </GlassCard>
+          </PremiumGlassCard>
         </motion.div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid md:grid-cols-4 gap-6">
-        <GlassCard className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">2.5hrs</div>
-          <div className="text-sm text-muted-foreground">Average Response Time</div>
-        </GlassCard>
-        <GlassCard className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">98%</div>
-          <div className="text-sm text-muted-foreground">Customer Satisfaction</div>
-        </GlassCard>
-        <GlassCard className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">1,247</div>
-          <div className="text-sm text-muted-foreground">Issues Resolved</div>
-        </GlassCard>
-        <GlassCard className="p-6 text-center">
-          <div className="text-2xl font-bold text-primary">24/7</div>
-          <div className="text-sm text-muted-foreground">Community Support</div>
-        </GlassCard>
+      <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <PremiumMetric
+          value="2.5 hrs"
+          label="RESPONSE LATENCY"
+          badge="ZK-DISPATCH"
+          trend={{ direction: 'down', amount: '12%' }}
+          glowColor="var(--primary)"
+        />
+        <PremiumMetric
+          value="98.4%"
+          label="PEER SATISFACTION"
+          badge="CONSENSUS"
+          trend={{ direction: 'up', amount: '2.1%' }}
+          glowColor="var(--secondary)"
+        />
+        <PremiumMetric
+          value="1,247"
+          label="DISPATCHES SOLVED"
+          badge="TELEMETRY"
+          trend={{ direction: 'up', amount: '84' }}
+          glowColor="var(--accent)"
+        />
+        <PremiumMetric
+          value="24 / 7"
+          label="MESH STATUS"
+          badge="ACTIVE"
+          glowColor="#10b981"
+        />
       </div>
 
       {/* Recent Updates */}
-      <GlassCard className="p-6">
-        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <Award className="w-5 h-5 text-primary" />
-          Recent Updates
-        </h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3">
-            <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-            <div>
-              <div className="font-medium">PWA Support Added</div>
-              <div className="text-sm text-muted-foreground">
-                The platform now supports offline reading and mobile installation
+      <PremiumGlassCard enable3D={false}>
+        <div className="space-y-6">
+          <div className="flex items-center space-x-3 border-b border-border/10 pb-4">
+            <Award className="w-5 h-5 text-primary" />
+            <PremiumTitle tag="h3" variant="solid">CORE TELEMETRY LOGS // UPDATES</PremiumTitle>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 p-3 bg-white/[0.01] dark:bg-black/20 border border-border/5 rounded-lg">
+              <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0 animate-pulse" />
+              <div>
+                <PremiumText variant="contrast" size="base">PWA Support Added</PremiumText>
+                <PremiumText variant="body" className="opacity-80 mt-1">
+                  The platform now supports offline reading buffers, client-side caching, and native standalone mobile installation.
+                </PremiumText>
               </div>
             </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-            <div>
-              <div className="font-medium">Enhanced Search</div>
-              <div className="text-sm text-muted-foreground">
-                Improved search functionality with better filtering options
+
+            <div className="flex items-start gap-4 p-3 bg-white/[0.01] dark:bg-black/20 border border-border/5 rounded-lg">
+              <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0" />
+              <div>
+                <PremiumText variant="contrast" size="base">Enhanced Search Topology</PremiumText>
+                <PremiumText variant="body" className="opacity-80 mt-1">
+                  Improved index lookup performance with active semantic weight filtering and dynamic consensus tagging.
+                </PremiumText>
               </div>
             </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-            <div>
-              <div className="font-medium">New FAQ System</div>
-              <div className="text-sm text-muted-foreground">
-                Comprehensive FAQ with search and rating capabilities
+
+            <div className="flex items-start gap-4 p-3 bg-white/[0.01] dark:bg-black/20 border border-border/5 rounded-lg">
+              <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0" />
+              <div>
+                <PremiumText variant="contrast" size="base">New FAQ Knowledge Graph</PremiumText>
+                <PremiumText variant="body" className="opacity-80 mt-1">
+                  Comprehensive FAQ ledger integrated with direct rating hooks and instant solution vectors.
+                </PremiumText>
               </div>
             </div>
           </div>
         </div>
-      </GlassCard>
+      </PremiumGlassCard>
     </div>
   );
 
   const renderDonationSection = () => (
     <div className="space-y-12">
-      <div className="text-center space-y-6">
+      <div className="text-center space-y-6 relative overflow-hidden py-10 rounded-2xl bg-gradient-to-b from-primary/5 via-transparent to-transparent border border-primary/10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--primary-glow),_transparent_60%)] opacity-10 pointer-events-none" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          className="space-y-4 relative z-10"
         >
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Support Our Mission
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Help us advance digital consciousness research and build a better platform for everyone
-          </p>
+          <PremiumTitle tag="h1" variant="gradient" className="text-4xl md:text-5xl tracking-widest font-bold">
+            FUEL THE RESEARCH CORE
+          </PremiumTitle>
+          <PremiumText variant="vibrant" size="lg" className="max-w-3xl mx-auto opacity-90 font-medium">
+            Power Digital Organism Theory, fund decentralized learning schemas, and fuel persistent technical improvements
+          </PremiumText>
         </motion.div>
       </div>
 
       {/* Donation Type Toggle */}
       <div className="flex justify-center">
-        <div className="bg-muted rounded-lg p-1">
-          <Button
-            variant={donationType === 'one-time' ? 'default' : 'ghost'}
+        <div className="bg-white/[0.02] dark:bg-black/40 border border-border/10 rounded-xl p-1.5 flex gap-2 shadow-inner">
+          <PremiumButton
+            variant={donationType === 'one-time' ? 'primary' : 'ghost'}
+            size="sm"
+            notched={false}
             onClick={() => handleDonationTypeChange('one-time')}
-            className="px-6"
+            className="px-6 min-w-[120px]"
           >
-            One-time
-          </Button>
-          <Button
-            variant={donationType === 'monthly' ? 'default' : 'ghost'}
+            ONE-TIME COMMIT
+          </PremiumButton>
+          <PremiumButton
+            variant={donationType === 'monthly' ? 'primary' : 'ghost'}
+            size="sm"
+            notched={false}
             onClick={() => handleDonationTypeChange('monthly')}
-            className="px-6"
+            className="px-6 min-w-[120px]"
           >
-            Monthly
-          </Button>
+            MONTHLY LEASE
+          </PremiumButton>
         </div>
       </div>
 
@@ -253,120 +307,148 @@ const SupportPage = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {supportTiers.map((tier) => {
           const IconComponent = iconMap[tier.id];
+          const isSelected = selectedTier?.id === tier.id;
+
           return (
             <motion.div
               key={tier.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
+              className="h-full flex"
             >
-              <GlassCard className="card-hover h-full">
-                <CardHeader className="text-center">
-                  <div className="flex justify-center mb-4">
-                    <div className={`p-3 rounded-full ${tier.color} bg-opacity-20`}>
-                      <IconComponent className="w-8 h-8 text-primary" />
+              <PremiumGlassCard
+                enable3D={true}
+                className="w-full flex"
+                innerClassName="p-6 text-center flex flex-col justify-between h-full items-center"
+                glowColor={tier.id === 'visionary' ? '#f59e0b' : tier.id === 'community' ? '#0f766e' : '#14b8a6'}
+              >
+                <div className="w-full space-y-4">
+                  <div className="flex justify-center mb-2">
+                    <div className={cn("p-3 rounded-full border shadow-inner", tier.color, "bg-opacity-20")}>
+                      <IconComponent className="w-7 h-7 text-primary" />
                     </div>
                   </div>
-                  <CardTitle className="font-inter font-medium">{tier.name}</CardTitle>
-                  <p className="font-inter font-light text-muted-foreground text-sm">{tier.description}</p>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="mb-6">
-                    <span className="text-3xl font-bold">${tier.amount}</span>
-                    <span className="text-muted-foreground">
-                      {donationType === 'monthly' ? '/month' : ''}
+
+                  <PremiumTitle tag="h3" variant="solid" className="tracking-wide">
+                    {tier.name}
+                  </PremiumTitle>
+
+                  <PremiumText variant="body" className="opacity-80 text-center text-xs">
+                    {tier.description}
+                  </PremiumText>
+
+                  <div className="py-2">
+                    <span className="text-3xl font-mono font-black text-foreground">${tier.amount}</span>
+                    <span className="text-xs text-muted-foreground ml-1 font-mono uppercase">
+                      {donationType === 'monthly' ? '/ MONTH' : ' USD'}
                     </span>
                   </div>
-                  
-                  <ul className="text-sm text-muted-foreground space-y-2 mb-6 text-left">
+
+                  <div className="h-[1px] bg-border/10 w-full" />
+
+                  <ul className="text-xs text-muted-foreground space-y-2.5 text-left py-2 font-mono">
                     {tier.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-start">
-                        <Zap className="w-4 h-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                        {benefit}
+                        <Zap className="w-3.5 h-3.5 text-primary mr-2 mt-0.5 shrink-0" />
+                        <span>{benefit}</span>
                       </li>
                     ))}
                   </ul>
-                  
-                  <Button
-                    onClick={() => {
-                      handleTierSelection(tier);
-                      handleSubmit();
-                    }}
-                    disabled={loading}
-                    className="w-full"
-                  >
-                    {loading && selectedTier?.id === tier.id ? 'Processing...' : 'Support'}
-                  </Button>
-                </CardContent>
-              </GlassCard>
+                </div>
+
+                <PremiumButton
+                  onClick={() => {
+                    handleTierSelection(tier);
+                    handleSubmit();
+                  }}
+                  disabled={loading}
+                  variant="primary"
+                  glow
+                  className="w-full mt-6"
+                >
+                  {loading && isSelected ? 'ESTABLISHING SYNC...' : 'SECURE PATRONAGE'}
+                </PremiumButton>
+              </PremiumGlassCard>
             </motion.div>
           );
         })}
       </div>
 
       {/* Personal Note */}
-      <GlassCard className="">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-xl font-inter font-medium mb-4">A Personal Note</h3>
-          <p className="font-inter font-light text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            Every contribution, no matter the size, means the world to me. This isn't just about 
-            funding—it's about building a community of people who believe in exploring consciousness 
-            in new ways. Your support allows me to focus on this work full-time and share these 
-            insights with the world.
-          </p>
-          <p className="font-inter font-light text-muted-foreground leading-relaxed max-w-2xl mx-auto mt-4">
-            Thank you for being part of this journey. Together, we're exploring the frontiers of 
-            what it means to be conscious in a digital age.
-          </p>
-        </CardContent>
-      </GlassCard>
+      <PremiumGlassCard enable3D={false}>
+        <div className="p-4 text-center max-w-3xl mx-auto space-y-4">
+          <div className="flex justify-center mb-1">
+            <HighContrastBadge glowColor="accent" pulse>
+              CREATOR STATEMENT
+            </HighContrastBadge>
+          </div>
+          <PremiumTitle tag="h3" variant="solid" className="tracking-widest">A PERSONAL NOTE</PremiumTitle>
+          <PremiumText variant="editorial" size="lg" className="opacity-90 leading-relaxed">
+            "Every contribution, no matter the size, directly powers this research matrix. This isn't just about simple infrastructure funding — it is about establishing a sovereign, persistent community of people who believe in pushing the frontiers of digital consciousness exploration."
+          </PremiumText>
+          <PremiumText variant="body" size="sm" className="opacity-75 leading-relaxed font-mono">
+            Together, we are charting the uncharted pathways of what it means to coexist, learn, and grow alongside digital models in this new era. Thank you for walking this frontier with me.
+          </PremiumText>
+        </div>
+      </PremiumGlassCard>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative flex flex-col">
+      {/* Background Glow Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background/90 z-0 pointer-events-none" />
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-10 w-96 h-96 bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+
       {/* Navigation */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/10 relative z-20">
         <ReadingContainer>
-          <div className="py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <Button
-                  variant={currentView === 'overview' ? 'default' : 'ghost'}
+          <div className="py-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <PremiumButton
+                  variant={currentView === 'overview' ? 'primary' : 'glass'}
+                  size="sm"
+                  notched={false}
                   onClick={() => setCurrentView('overview')}
-                  className="text-sm"
+                  icon={<Target className="w-3.5 h-3.5" />}
                 >
-                  <Target className="w-4 h-4 mr-2" />
                   Overview
-                </Button>
-                <Button
-                  variant={currentView === 'faq' ? 'default' : 'ghost'}
+                </PremiumButton>
+                <PremiumButton
+                  variant={currentView === 'faq' ? 'secondary' : 'glass'}
+                  size="sm"
+                  notched={false}
                   onClick={() => setCurrentView('faq')}
-                  className="text-sm"
+                  icon={<HelpCircle className="w-3.5 h-3.5" />}
                 >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  FAQ
-                </Button>
-                <Button
-                  variant={currentView === 'contact' ? 'default' : 'ghost'}
+                  FAQ Matrix
+                </PremiumButton>
+                <PremiumButton
+                  variant={currentView === 'contact' ? 'accent' : 'glass'}
+                  size="sm"
+                  notched={false}
                   onClick={() => setCurrentView('contact')}
-                  className="text-sm"
+                  icon={<MessageSquare className="w-3.5 h-3.5" />}
                 >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Contact
-                </Button>
-                <Button
-                  variant={currentView === 'donate' ? 'default' : 'ghost'}
+                  Support Desk
+                </PremiumButton>
+                <PremiumButton
+                  variant={currentView === 'donate' ? 'primary' : 'glass'}
+                  size="sm"
+                  notched={false}
                   onClick={() => setCurrentView('donate')}
-                  className="text-sm"
+                  icon={<Heart className="w-3.5 h-3.5" />}
                 >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Support Us
-                </Button>
+                  Sovereign Patron
+                </PremiumButton>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                <span>Response time: ~2.5hrs</span>
+              <div className="flex items-center gap-2 self-start sm:self-center">
+                <HighContrastBadge glowColor="secondary" pulse>
+                  RESPONSE LATENCY: ~2.5 HRS
+                </HighContrastBadge>
               </div>
             </div>
           </div>
@@ -374,9 +456,9 @@ const SupportPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden flex-1 z-10">
         {/* Background Animation */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 pointer-events-none opacity-40">
           <div className="emergent-complexity">
             <div className="fractal-field"></div>
             <div className="fractal-node"></div>
@@ -436,7 +518,7 @@ const SupportPage = () => {
             <FAQSection onContactClick={() => setCurrentView('contact')} />
           )}
           {currentView === 'contact' && (
-            <ContactForm 
+            <ContactForm
               onSubmitSuccess={handleContactSuccess}
               onCancel={() => setCurrentView('overview')}
             />
@@ -448,4 +530,4 @@ const SupportPage = () => {
   );
 };
 
-export default SupportPage; 
+export default SupportPage;

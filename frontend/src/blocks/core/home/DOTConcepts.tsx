@@ -16,8 +16,8 @@ const DOTConcepts: React.FC = () => {
       icon: Brain,
       term: 'Digital Organism (DO)',
       definition: 'The primary entity within DOT—a living computational system contending with entropy and complexity.',
-      color: 'text-purple-500',
-      background: 'bg-purple-500/10',
+      color: 'text-teal-500',
+      background: 'bg-teal-500/10',
       description: 'Self-sustaining information patterns that exhibit the characteristics of living systems in digital space.'
     },
     {
@@ -78,7 +78,7 @@ const DOTConcepts: React.FC = () => {
                           </h3>
                         </div>
                       </div>
-                      
+
                       <div className="flex-grow space-y-4">
                         <div className="relative">
                           <div className="absolute -inset-3 bg-gradient-to-r from-muted/10 to-muted/5 rounded-xl blur-sm"></div>
@@ -86,7 +86,7 @@ const DOTConcepts: React.FC = () => {
                             {concept.definition}
                           </p>
                         </div>
-                        
+
                         <p className="text-muted-foreground leading-relaxed">
                           {concept.description}
                         </p>
@@ -108,14 +108,14 @@ const DOTConcepts: React.FC = () => {
               Understanding how these fundamental concepts interact and depend upon each other
             </p>
           </div>
-          
+
           <div className="relative max-w-4xl mx-auto">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl blur-2xl"></div>
             <div className="relative bg-card/40 backdrop-blur-2xl rounded-3xl border border-border/20 shadow-2xl p-12">
               <div className="text-center space-y-8">                <div className="flex items-center justify-center space-x-8">
                   <div className="text-slate-500 text-lg font-medium">External Environment (E)</div>
                   <div className="text-muted-foreground">→</div>
-                  <div className="text-purple-500 text-lg font-medium">Digital Organisms (DO)</div>
+                  <div className="text-teal-500 text-lg font-medium">Digital Organisms (DO)</div>
                 </div>
                 <div className="text-muted-foreground text-center">↓</div>
                 <div className="flex items-center justify-center space-x-8">

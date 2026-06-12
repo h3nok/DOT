@@ -54,7 +54,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
       trend: 'up',
       trendValue: '+23%',
       description: 'Active conversations and debates',
-      color: 'from-purple-500/20 to-purple-600/20'
+      color: 'from-teal-500/20 to-teal-600/20'
     },
     {
       icon: <Zap className="w-8 h-8" />,
@@ -72,7 +72,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
       trend: 'up',
       trendValue: '+31%',
       description: 'Digital organism simulations',
-      color: 'from-pink-500/20 to-pink-600/20'
+      color: 'from-sky-500/20 to-sky-600/20'
     },
     {
       icon: <Award className="w-8 h-8" />,
@@ -90,7 +90,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
       trend: 'up',
       trendValue: '+19%',
       description: 'Countries represented',
-      color: 'from-indigo-500/20 to-indigo-600/20'
+      color: 'from-blue-500/20 to-blue-600/20'
     },
     {
       icon: <TrendingUp className="w-8 h-8" />,
@@ -143,31 +143,31 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
             >
               <GlassCard className="p-6 text-center hover:shadow-xl transition-all duration-500 group relative overflow-hidden">
                 <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
+
                 <div className="relative z-10">
                   <div className="flex justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-300">
                     {metric.icon}
                   </div>
-                  
+
                   <div className="text-3xl lg:text-4xl font-bold text-foreground mb-2 group-hover:scale-105 transition-transform duration-300">
                     {metric.value}
                   </div>
-                  
+
                   <div className="text-sm font-medium text-muted-foreground mb-3">
                     {metric.label}
                   </div>
-                  
+
                   <div className="flex items-center justify-center gap-2 mb-3">
                     {getTrendIcon(metric.trend)}
                     <span className={`text-sm font-medium ${
-                      metric.trend === 'up' ? 'text-green-500' : 
-                      metric.trend === 'down' ? 'text-red-500' : 
+                      metric.trend === 'up' ? 'text-green-500' :
+                      metric.trend === 'down' ? 'text-red-500' :
                       'text-muted-foreground'
                     }`}>
                       {metric.trendValue}
                     </span>
                   </div>
-                  
+
                   <div className="text-xs text-muted-foreground/80 leading-relaxed">
                     {metric.description}
                   </div>
@@ -190,7 +190,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
               <h3 className="text-2xl font-light mb-2 text-foreground">Platform Health</h3>
               <p className="text-muted-foreground">All systems operational and performing optimally</p>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
@@ -199,7 +199,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
                 </div>
                 <div className="text-sm text-muted-foreground">Uptime</div>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
@@ -207,7 +207,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ metrics, isLoad
                 </div>
                 <div className="text-sm text-muted-foreground">Response Time</div>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>

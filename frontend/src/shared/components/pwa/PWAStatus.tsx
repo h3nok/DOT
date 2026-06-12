@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Wifi, WifiOff, RotateCcw } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Download, WifiOff, RotateCcw } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import PWAService, { type NotificationOptions } from '../../../services/PWAService';
@@ -9,6 +10,7 @@ interface PWAStatusProps {
 }
 
 export const PWAStatus: React.FC<PWAStatusProps> = ({ className = '' }) => {
+  const location = useLocation();
   const [installationStatus, setInstallationStatus] = useState<'unknown' | 'installable' | 'installed' | 'not-supported'>('unknown');
   const [isOnline, setIsOnline] = useState(true);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
@@ -71,7 +73,7 @@ export const PWAStatus: React.FC<PWAStatusProps> = ({ className = '' }) => {
   const handleUpdate = () => {
     PWAService.updateServiceWorker();
     setShowUpdatePrompt(false);
-    
+
     // Show notification that update will take effect on next reload
     PWAService.showNotification({
       title: 'Update Downloaded',
@@ -88,27 +90,23 @@ export const PWAStatus: React.FC<PWAStatusProps> = ({ className = '' }) => {
     setShowUpdatePrompt(false);
   };
 
-  // Don't render anything if PWA is not supported
-  if (installationStatus === 'not-supported') {
+  // Don't render anything if PWA is not supported, we are on the Home Page, or there is nothing actionable.
+  const isHomePage = location.pathname === '/' || location.pathname === '/DOT' || location.pathname === '/DOT/';
+  const hasActionableStatus = !isOnline || showInstallPrompt || showUpdatePrompt || installationStatus === 'installed';
+
+  if (isHomePage || installationStatus === 'not-supported' || !hasActionableStatus) {
     return null;
   }
 
   return (
     <div className={`pwa-status ${className}`}>
       {/* Connection Status */}
-      <div className="flex items-center space-x-2 mb-4">
-        {isOnline ? (
-          <div className="flex items-center text-green-600 text-sm">
-            <Wifi className="w-4 h-4 mr-1" />
-            <span>Online</span>
-          </div>
-        ) : (
-          <div className="flex items-center text-amber-600 text-sm">
-            <WifiOff className="w-4 h-4 mr-1" />
-            <span>Offline - Limited functionality</span>
-          </div>
-        )}
-      </div>
+      {!isOnline && (
+        <div className="flex items-center space-x-2 mb-4 text-amber-600 text-sm">
+          <WifiOff className="w-4 h-4 mr-1" />
+          <span>Offline - Limited functionality</span>
+        </div>
+      )}
 
       {/* Install Prompt */}
       {showInstallPrompt && installationStatus === 'installable' && (
