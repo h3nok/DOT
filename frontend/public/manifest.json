@@ -1,13 +1,13 @@
 {
-  "name": "Digital Organism Theory Platform",
-  "short_name": "DOT Platform",
-  "description": "A collaborative research platform for digital consciousness and organism theory",
-  "start_url": "/",
+  "name": "Stay Press - Book Room",
+  "short_name": "Stay Press",
+  "description": "A grassroots reading and knowledge platform designed around focus, not ads, feeds, or behavioral extraction.",
+  "start_url": "/DOT/book",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#6366f1",
+  "background_color": "#f7f7f4",
+  "theme_color": "#0a0a0a",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/DOT/",
   "lang": "en",
   "categories": ["education", "research", "productivity"],
   "icons": [
@@ -46,22 +46,34 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "DOT Platform Home - Desktop"
+      "label": "Stay Press Book Room - Desktop"
     },
     {
       "src": "/screenshots/mobile-home.png",
       "sizes": "375x667",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "DOT Platform Home - Mobile"
+      "label": "Stay Press Book Room - Mobile"
     }
   ],
   "shortcuts": [
     {
-      "name": "Community Discussions",
-      "short_name": "Community",
-      "description": "Join research discussions and collaborate",
-      "url": "/community",
+      "name": "Book Room",
+      "short_name": "Book",
+      "description": "Read the founding book and inspect its sources",
+      "url": "/DOT/book",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+      "name": "Founding Invite",
+      "short_name": "Invite",
+      "description": "Request access to the founding reader circle",
+      "url": "/DOT/invite",
       "icons": [
         {
           "src": "/favicon.svg",
@@ -71,10 +83,10 @@
       ]
     },
     {
-      "name": "Research Blog",
-      "short_name": "Blog",
-      "description": "Read and write research articles",
-      "url": "/blog",
+      "name": "Cockpit",
+      "short_name": "Home",
+      "description": "Return to the platform cockpit",
+      "url": "/DOT/",
       "icons": [
         {
           "src": "/favicon.svg",
@@ -84,23 +96,10 @@
       ]
     },
     {
-      "name": "Learning Paths",
-      "short_name": "Learn",
-      "description": "Explore digital organism theory concepts",
-      "url": "/learn",
-      "icons": [
-        {
-          "src": "/favicon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Settings",
-      "short_name": "Settings",
-      "description": "Customize your experience",
-      "url": "/settings",
+      "name": "Design System",
+      "short_name": "System",
+      "description": "Inspect the platform interface primitives",
+      "url": "/DOT/ui",
       "icons": [
         {
           "src": "/favicon.svg",

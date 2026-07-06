@@ -6,6 +6,35 @@
   }
 }
 
+/* Particle flowing along an SVG offset-path from start to end. */
+@keyframes particleFlow {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.7;
+  }
+  88% {
+    opacity: 0.7;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Subtle brightness pulse for hovered/active edges. */
+@keyframes edgeGlow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.4);
+  }
+}
+
 /* Glassmorphic responsive scrollbar utilities */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -24,11 +53,18 @@
 
 /* Holographic breathing glow animation */
 @keyframes holographicGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px color-mix(in oklch, var(--primary) 30%, transparent)) drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 50%, transparent));
+  0%,
+  100% {
+    filter: drop-shadow(
+        0 0 10px color-mix(in oklch, var(--primary) 30%, transparent)
+      )
+      drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 50%, transparent));
   }
   50% {
-    filter: drop-shadow(0 0 25px color-mix(in oklch, var(--primary) 60%, transparent)) drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 80%, transparent));
+    filter: drop-shadow(
+        0 0 25px color-mix(in oklch, var(--primary) 60%, transparent)
+      )
+      drop-shadow(0 0 5px color-mix(in oklch, var(--primary) 80%, transparent));
   }
 }
 
@@ -41,7 +77,8 @@
   0% {
     transform: translateX(-150%) skewX(-20deg);
   }
-  40%, 100% {
+  40%,
+  100% {
     transform: translateX(150%) skewX(-20deg);
   }
 }
@@ -66,13 +103,14 @@
 
 /* Subtle breathing border/pulse animation for the Sovereign Digital Twin capsule */
 @keyframes borderPulse {
-  0%, 100% {
-    border-color: rgba(37, 99, 235, 0.15);
-    box-shadow: 0 0 12px rgba(37, 99, 235, 0.03);
+  0%,
+  100% {
+    border-color: color-mix(in oklch, var(--foreground) 14%, transparent);
+    box-shadow: 0 0 12px color-mix(in oklch, var(--foreground) 3%, transparent);
   }
   50% {
-    border-color: rgba(37, 99, 235, 0.4);
-    box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+    border-color: color-mix(in oklch, var(--foreground) 32%, transparent);
+    box-shadow: 0 0 20px color-mix(in oklch, var(--foreground) 10%, transparent);
   }
 }
 

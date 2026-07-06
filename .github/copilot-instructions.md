@@ -10,7 +10,10 @@ See `AGENTS.md` for the full guide.
 
 ## Always
 
-- Before non-trivial work, read `docs/blueprint/00-ATTENTION-MANIFESTO.md`, `01-NORTH-STAR.md`, `02-ARCHITECTURE.md`, and relevant ADRs in `docs/blueprint/adr/`.
+- Before non-trivial work, read `docs/blueprint/00-ATTENTION-MANIFESTO.md`,
+  `01-NORTH-STAR.md`, `02-ARCHITECTURE.md`,
+  `04-KNOWLEDGE-AND-PUBLICATION.md`, `05-FASTAPI-ORCHESTRATOR.md`,
+  `06-IMPLEMENTATION-ROADMAP.md`, and relevant ADRs in `docs/blueprint/adr/`.
 - For every change, state **which manifesto law (L1–L12) it serves and that it violates none.**
 - Build member screens by composing the five `attention-os/` primitives (Focus Modes, Reader, Single-Focus Nav, Intention/Attention-Budget, Presence). Don't reinvent them.
 
@@ -28,7 +31,10 @@ If a task seems to need any of the above, stop and flag it; it requires a supers
 ## Repo facts
 
 - Frontend entry is `src/AppOptimized.tsx` (not `App.tsx` — consolidating per ADR-0005). pnpm; React 19 + Vite + TS + Tailwind v4 + shadcn/Radix.
-- Backend is Flask + SQLite today, migrating to Postgres for the real invite system (ADR-0002/0003).
+- Backend is Flask + SQLite for the current prototype shell. The Knowledge &
+  Publication OS now has a dedicated FastAPI orchestrator scaffold under
+  `backend/orchestrator/` with Postgres, Redis, MinIO, Alembic, and Dramatiq
+  (ADR-0008).
 - Don't edit dead/duplicate files — verify live imports first.
 
 ## Quality & security

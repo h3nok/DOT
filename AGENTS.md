@@ -15,7 +15,10 @@ philosophy is binding law, not vibes.
 1. `docs/blueprint/00-ATTENTION-MANIFESTO.md` — the laws (L1–L12). The soul.
 2. `docs/blueprint/01-NORTH-STAR.md` — vision, IA, the 5 Attention OS primitives.
 3. `docs/blueprint/02-ARCHITECTURE.md` — how it's built to scale to 100M+.
-4. `docs/blueprint/adr/` — decisions already locked.
+4. `docs/blueprint/04-KNOWLEDGE-AND-PUBLICATION.md` — source-backed reading and publishing.
+5. `docs/blueprint/05-FASTAPI-ORCHESTRATOR.md` — orchestrator service contract.
+6. `docs/blueprint/06-IMPLEMENTATION-ROADMAP.md` — current build order and acceptance gates.
+7. `docs/blueprint/adr/` — decisions already locked.
 
 ## The prime directive
 
@@ -45,7 +48,9 @@ Budget (P4), Presence & Ambient Signals (P5). Don't reinvent these; extend them.
 - Project root is `DOT/` (this folder). Frontend: `frontend/`, backend: `backend/`.
 - **Frontend entry is `src/AppOptimized.tsx`**, not `src/App.tsx` (consolidating — ADR-0005).
 - Package manager: **pnpm**. Stack: React 19 + Vite 6 + TS + Tailwind v4 + shadcn/Radix.
-- Backend: Flask today (SQLite), migrating to Postgres for the real invite system (ADR-0002/0003).
+- Backend: Flask today (SQLite) for the prototype shell; the Knowledge & Publication OS
+  is specified as a dedicated FastAPI orchestrator with Postgres/Redis/object storage
+  (ADR-0008).
 - Existing attention prototype lives in `blocks/core/invite/InviteGatewayPage.tsx` + `services/SoundscapeService.ts`.
 
 ## Commands
@@ -62,6 +67,14 @@ pnpm exec vitest run  # vitest non-watch test run
 source ../.venv/bin/activate
 pip install -r requirements.txt
 python src/main.py
+
+# FastAPI orchestrator (repo root)
+make install-orchestrator
+make orchestrator-services-up
+make migrate-orchestrator
+make start-orchestrator
+make start-orchestrator-worker
+make test-orchestrator
 ```
 
 ## Working rules

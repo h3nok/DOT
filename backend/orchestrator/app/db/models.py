@@ -1,0 +1,588 @@
+from __future__ import annotations
+
+import datetime
+import uuid
+
+import sqlalchemy
+import sqlalchemy.orm
+
+
+def make_id(prefix: str) -> str:
+    return f"{prefix}_{uuid.uuid4().hex}"
+
+
+class Base(sqlalchemy.orm.DeclarativeBase):
+    pass
+
+
+class TimestampMixin:
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+    updated_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        onupdate=sqlalchemy.func.now(),
+    )
+
+
+class OrchestratorRun(Base):
+    __tablename__ = "orchestrator_runs"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint(
+            "owner_id",
+            "workflow_type",
+            "idempotency_key",
+            name="uq_orchestrator_run_idempotency_scope",
+        ),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("run")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    workflow_type: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True, nullable=False
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="queued"
+    )
+    idempotency_key: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), index=True
+    )
+    requested_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    input_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    output_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    error_code: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+    started_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    completed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    steps: sqlalchemy.orm.Mapped[list[OrchestratorStep]] = sqlalchemy.orm.relationship(
+        back_populates="run",
+        cascade="all, delete-orphan",
+    )
+
+
+class OrchestratorStep(Base):
+    __tablename__ = "orchestrator_steps"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("step")
+    )
+    run_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("orchestrator_runs.id"), index=True
+    )
+    step_name: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), nullable=False
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="queued"
+    )
+    attempt_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    locked_until: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    input_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    output_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    error_code: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    started_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    completed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    run: sqlalchemy.orm.Mapped[OrchestratorRun] = sqlalchemy.orm.relationship(
+        back_populates="steps"
+    )
+
+
+class PublicationProject(Base, TimestampMixin):
+    __tablename__ = "publication_projects"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("owner_id", "slug", name="uq_publication_project_owner_slug"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("pub")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    type: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="book"
+    )
+    title: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    slug: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="draft"
+    )
+    visibility: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="private"
+    )
+
+    sections: sqlalchemy.orm.Mapped[list[PublicationSection]] = sqlalchemy.orm.relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+        order_by="PublicationSection.section_order",
+    )
+    releases: sqlalchemy.orm.Mapped[list[PublicationRelease]] = sqlalchemy.orm.relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+
+class PublicationSection(Base, TimestampMixin):
+    __tablename__ = "publication_sections"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("sec")
+    )
+    project_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("publication_projects.id"), index=True
+    )
+    parent_id: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("publication_sections.id"), index=True
+    )
+    section_order: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    title: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    body_ref: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512)
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="draft"
+    )
+
+    project: sqlalchemy.orm.Mapped[PublicationProject] = sqlalchemy.orm.relationship(
+        back_populates="sections"
+    )
+    revisions: sqlalchemy.orm.Mapped[list[PublicationRevision]] = sqlalchemy.orm.relationship(
+        back_populates="section",
+        cascade="all, delete-orphan",
+    )
+
+
+class PublicationRevision(Base):
+    __tablename__ = "publication_revisions"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("rev")
+    )
+    section_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("publication_sections.id"), index=True
+    )
+    editor_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), nullable=False
+    )
+    body_ref: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512), nullable=False
+    )
+    message: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(sqlalchemy.Text)
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+
+    section: sqlalchemy.orm.Mapped[PublicationSection] = sqlalchemy.orm.relationship(
+        back_populates="revisions"
+    )
+
+
+class PublicationRelease(Base):
+    __tablename__ = "publication_releases"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("project_id", "version", name="uq_publication_release_version"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("rel")
+    )
+    project_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("publication_projects.id"), index=True
+    )
+    version: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False
+    )
+    slug: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="rendering"
+    )
+    manifest_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512), nullable=False
+    )
+    rendered_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    published_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    revoked_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    project: sqlalchemy.orm.Mapped[PublicationProject] = sqlalchemy.orm.relationship(
+        back_populates="releases"
+    )
+
+
+class FootprintAccount(Base, TimestampMixin):
+    __tablename__ = "footprint_accounts"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint(
+            "owner_id",
+            "platform",
+            "handle",
+            name="uq_footprint_account_owner_platform_handle",
+        ),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("acct")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    platform: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True, nullable=False
+    )
+    handle: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    display_name: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256)
+    )
+    profile_url: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(1024)
+    )
+    external_id: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), index=True
+    )
+    auth_mode: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="manual"
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="active"
+    )
+    sync_cursor: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    last_synced_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    revoked_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+
+class FootprintNode(Base, TimestampMixin):
+    __tablename__ = "footprint_nodes"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint(
+            "owner_id",
+            "platform",
+            "external_id",
+            name="uq_footprint_node_owner_platform_external",
+        ),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("node")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    kind: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True, nullable=False
+    )
+    label: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512), nullable=False
+    )
+    platform: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True
+    )
+    external_id: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), index=True
+    )
+    source_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    properties: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    visibility: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="private"
+    )
+    confidence: sqlalchemy.orm.Mapped[float] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Float, nullable=False, default=1.0
+    )
+    first_seen_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+    last_seen_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    outgoing_edges: sqlalchemy.orm.Mapped[list[FootprintEdge]] = sqlalchemy.orm.relationship(
+        back_populates="source_node",
+        cascade="all, delete-orphan",
+        foreign_keys="FootprintEdge.source_node_id",
+    )
+    incoming_edges: sqlalchemy.orm.Mapped[list[FootprintEdge]] = sqlalchemy.orm.relationship(
+        back_populates="target_node",
+        cascade="all, delete-orphan",
+        foreign_keys="FootprintEdge.target_node_id",
+    )
+
+
+class FootprintEdge(Base, TimestampMixin):
+    __tablename__ = "footprint_edges"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint(
+            "owner_id",
+            "source_node_id",
+            "target_node_id",
+            "relation",
+            "platform",
+            name="uq_footprint_edge_owner_relation",
+        ),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("edge")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    source_node_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("footprint_nodes.id"), index=True, nullable=False
+    )
+    target_node_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("footprint_nodes.id"), index=True, nullable=False
+    )
+    relation: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True, nullable=False
+    )
+    platform: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True
+    )
+    weight: sqlalchemy.orm.Mapped[float] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Float, nullable=False, default=1.0
+    )
+    confidence: sqlalchemy.orm.Mapped[float] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Float, nullable=False, default=1.0
+    )
+    evidence_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    first_seen_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+    last_seen_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    source_node: sqlalchemy.orm.Mapped[FootprintNode] = sqlalchemy.orm.relationship(
+        back_populates="outgoing_edges",
+        foreign_keys=[source_node_id],
+    )
+    target_node: sqlalchemy.orm.Mapped[FootprintNode] = sqlalchemy.orm.relationship(
+        back_populates="incoming_edges",
+        foreign_keys=[target_node_id],
+    )
+
+
+class FootprintImport(Base):
+    __tablename__ = "footprint_imports"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("imp")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    account_id: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("footprint_accounts.id"), index=True
+    )
+    run_id: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("orchestrator_runs.id"), index=True
+    )
+    connector: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True, nullable=False
+    )
+    import_mode: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="manual"
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="queued"
+    )
+    requested_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    source_ref: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    summary: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+    completed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+    account: sqlalchemy.orm.Mapped[FootprintAccount | None] = sqlalchemy.orm.relationship()
+    run: sqlalchemy.orm.Mapped[OrchestratorRun | None] = sqlalchemy.orm.relationship()
+
+
+class SourceObject(Base, TimestampMixin):
+    __tablename__ = "source_objects"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("owner_id", "object_store_key", name="uq_source_object_owner_key"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("src")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    filename: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False
+    )
+    object_store_key: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512), nullable=False
+    )
+    size_bytes: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    mime_type: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), nullable=False, default="application/octet-stream"
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="pending"
+    )
+
+    versions: sqlalchemy.orm.Mapped[list[SourceVersion]] = sqlalchemy.orm.relationship(
+        back_populates="source_object",
+        cascade="all, delete-orphan",
+        order_by="SourceVersion.version_num.desc()",
+    )
+
+
+class SourceVersion(Base):
+    __tablename__ = "source_versions"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("source_object_id", "version_num", name="uq_source_version_num"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("sver")
+    )
+    source_object_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("source_objects.id"), index=True, nullable=False
+    )
+    version_num: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=1
+    )
+    content_hash: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    extracted_text_ref: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(512)
+    )
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), index=True, nullable=False, default="processing"
+    )
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+
+    source_object: sqlalchemy.orm.Mapped[SourceObject] = sqlalchemy.orm.relationship(
+        back_populates="versions"
+    )
+    chunks: sqlalchemy.orm.Mapped[list[KnowledgeChunk]] = sqlalchemy.orm.relationship(
+        back_populates="source_version",
+        cascade="all, delete-orphan",
+        order_by="KnowledgeChunk.chunk_index",
+    )
+
+
+class KnowledgeChunk(Base):
+    __tablename__ = "knowledge_chunks"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("source_version_id", "chunk_index", name="uq_knowledge_chunk_index"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("chk")
+    )
+    source_version_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("source_versions.id"), index=True, nullable=False
+    )
+    chunk_index: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    text: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text, nullable=False
+    )
+    token_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+
+    source_version: sqlalchemy.orm.Mapped[SourceVersion] = sqlalchemy.orm.relationship(
+        back_populates="chunks"
+    )
+    anchors: sqlalchemy.orm.Mapped[list[SourceAnchor]] = sqlalchemy.orm.relationship(
+        back_populates="chunk",
+        cascade="all, delete-orphan",
+    )
+
+
+class SourceAnchor(Base):
+    __tablename__ = "source_anchors"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("anch")
+    )
+    chunk_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("knowledge_chunks.id"), index=True, nullable=False
+    )
+    anchor_type: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False
+    )
+    locator: sqlalchemy.orm.Mapped[dict] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.JSON, nullable=False
+    )
+
+    chunk: sqlalchemy.orm.Mapped[KnowledgeChunk] = sqlalchemy.orm.relationship(
+        back_populates="anchors"
+    )
+

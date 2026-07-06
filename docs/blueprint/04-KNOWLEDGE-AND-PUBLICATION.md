@@ -96,40 +96,122 @@ Core units:
 
 The first real customer delivery is Habte's profile plus book/publication workspace.
 
+### K6 — Digital Footprint Graph
+
+The member-owned graph of identities, platform accounts, sources, publications, posts,
+topics, projects, people, organizations, and trusted circles.
+
+The graph answers:
+
+- where a member's public and private work lives;
+- how posts, sources, projects, and claims connect;
+- what came from Substack, Bluesky, Mastodon, GitHub, RSS, uploads, or manual archives;
+- which identities are explicitly linked through `same_as`;
+- which nodes are public, private, shared, stale, revoked, or manually verified.
+
+The detailed integration and graph-navigation spec lives in
+`07-DIGITAL-FOOTPRINT-GRAPH.md`.
+
+## 3A. Product UI decisions from the AI Platform review
+
+The existing AI Platform React layers contain useful patterns for the first DOT scaffold,
+but the product language and attention model must change.
+
+### Publication Studio
+
+Use a split workspace, not a dashboard:
+
+- Left rail: project outline, parts, chapters, source collections.
+- Center: section editor or Calm Reader preview.
+- Right inspector: citations, claim support, release validation, run status, revision
+  history, and export.
+
+The workspace should support deep writing sessions. Avoid KPI cards, broad admin panels,
+activity feeds, and notification rails.
+
+### Knowledge Vault
+
+Use a guided source intake flow:
+
+1. Choose source: upload, paste text, URL capture, or later connector.
+2. Declare scope: private, shared by invite, publication source, or archive-only.
+3. Check: file type, size, readability, rights, duplicate detection, and safety concerns.
+4. Review: show a plain-language recommendation before ingestion.
+5. Process: background run with clear status and retry/cancel affordances.
+6. Done: open in reader, add to project, ask over this source, or export/delete.
+
+This should be personal and rights-aware, not enterprise governance language.
+
+### Source Assistant
+
+The assistant is a panel inside a task, not the default home screen. It must always show
+its active scope: selected source, selected collection, selected project, or selected
+release. Unsupported answers are explicit, and cited answers use source anchor chips.
+
+### Citation UI
+
+Inline citation chips should open source previews with title, excerpt, locator, confidence
+or reliability, and link-to-source/read-position actions. The UI should make provenance
+visible without turning reading into a debugging console.
+
+### Footprint Graph
+
+The footprint graph is the primary navigation surface for digital identity and the future
+social platform. It shows identities, platforms, sources, posts, topics, projects, people,
+and circles as connected nodes. It must remain member-controlled: no opaque feed ranking,
+no inferred public identity merge without consent, and no graph edges that cannot point
+back to provenance.
+
 ## 4. Architecture slice
 
 ```mermaid
 flowchart LR
-  Upload[Uploads & connectors] --> Ingest[Ingestion service]
-  Ingest --> Store[Object store]
-  Ingest --> Meta[Postgres metadata]
-  Ingest --> Queue[Processing queue]
+  Member[Member interior] --> Orchestrator[FastAPI Orchestrator]
+  Orchestrator --> Upload[Uploads & connectors]
+  Upload --> Store[Encrypted object store]
+  Orchestrator --> Meta[Postgres metadata + run state]
+  Orchestrator --> Queue[Workflow queue]
   Queue --> Extract[Text extraction]
-  Extract --> Chunks[Chunking + provenance]
+  Extract --> Chunks[Chunking + source ledger]
   Chunks --> Index[Private semantic index]
+  Index --> Assistant[Source-backed AI]
   Chunks --> Reader[Calm Reader]
-  Index --> Assistant[AI Knowledge Assistant]
   Reader --> Studio[Publication Studio]
   Assistant --> Studio
+  Studio --> Publisher[Release publisher]
+  Publisher --> Public[Static public reading pages]
+  Orchestrator --> Graph[Digital footprint graph]
+  Graph --> Social[Trusted circles + graph navigation]
 ```
 
-Target backend modules:
+The detailed service contract for this slice lives in `05-FASTAPI-ORCHESTRATOR.md`.
+Implementation starts as a FastAPI service with durable workflow runs, Postgres/pgvector,
+Redis-backed workers, encrypted object storage, and a static release publisher.
+
+Target orchestrator modules:
 
 - `sources`: uploads, connectors, source metadata, permissions.
 - `ingestion`: extraction, chunking, OCR later, background processing.
 - `knowledge`: chunks, embeddings, source ledger, citations.
 - `assistant`: scoped retrieval, summaries, question answering.
 - `publication`: books, chapters, revisions, public pages, exports.
+- `graph`: footprint accounts, graph nodes, graph edges, graph imports/status, graph
+  snapshots, identity links.
+- `connectors`: Substack/RSS, Bluesky/AT Protocol, Mastodon/ActivityPub, GitHub, and
+  future platform adapters.
+- `runs`: workflow state, idempotency, retries, cancellation.
+- `export_delete`: data export, deletion, retention, and key cleanup.
+- `audit`: member-visible event ledger without private content.
 
 ## 5. Data model sketch
 
 ```text
 knowledge_sources
   id, owner_id, title, source_type, origin_uri, visibility, rights_status,
-  import_method, object_key, created_at, processed_at, deleted_at
+  import_method, object_key, encryption_key_id, created_at, processed_at, deleted_at
 
 knowledge_chunks
-  id, source_id, owner_id, sequence, text, locator, token_count,
+  id, source_id, owner_id, sequence, text_ciphertext_ref, locator, token_count,
   checksum, created_at
 
 knowledge_embeddings
@@ -142,10 +224,34 @@ publication_projects
   id, owner_id, type, title, slug, status, visibility, created_at, updated_at
 
 publication_sections
-  id, project_id, parent_id, order, title, body, status, created_at, updated_at
+  id, project_id, parent_id, order, title, body_ref, status, created_at, updated_at
 
 publication_revisions
-  id, section_id, editor_id, body_snapshot, message, created_at
+  id, section_id, editor_id, body_ref, message, created_at
+
+publication_releases
+  id, project_id, version, slug, status, manifest_key, rendered_at,
+  published_at, revoked_at
+
+orchestrator_runs
+  id, owner_id, workflow_type, status, idempotency_key, input_ref,
+  output_ref, error_code, created_at, started_at, completed_at
+
+footprint_accounts
+  id, owner_id, platform, handle, profile_url, auth_mode, status,
+  sync_cursor, last_synced_at, revoked_at
+
+footprint_nodes
+  id, owner_id, kind, label, platform, external_id, source_ref, properties,
+  visibility, confidence, first_seen_at, last_seen_at
+
+footprint_edges
+  id, owner_id, source_node_id, target_node_id, relation, platform,
+  weight, confidence, evidence_ref, first_seen_at, last_seen_at
+
+footprint_imports
+  id, owner_id, account_id, run_id, connector, import_mode, status,
+  requested_by, source_ref, summary, created_at, completed_at
 ```
 
 ## 6. Priority order
@@ -156,7 +262,9 @@ The first customer page must be readable and calm before adding more product pow
 
 ### Priority 2 — Publication Studio MVP for Habte's book
 
-Build a private book project editor and public reading route.
+Build a private book project editor and public reading route backed by the FastAPI
+orchestrator. Publication is the first full end-to-end workflow because it proves the
+system can move from private draft to immutable public release.
 
 MVP:
 
@@ -166,6 +274,8 @@ MVP:
 - Draft/published status.
 - Public read route.
 - Export-friendly structure.
+- Release manifest written to object storage/CDN.
+- Orchestrator run status for validation and publish jobs.
 
 ### Priority 3 — Knowledge Vault upload MVP
 
@@ -179,6 +289,7 @@ MVP:
 - Show processing status.
 - Read source in Calm Reader.
 - Delete/export source.
+- Create source ledger anchors for future citations.
 
 ### Priority 4 — Source-backed AI summaries
 
@@ -196,7 +307,22 @@ MVP:
 Add social/cloud connectors only after upload + publication + source ledger are reliable.
 Connectors should be explicit, revocable, scoped, and inspectable.
 
-## 7. Manifesto mapping
+## 7. End-to-end operating model
+
+The system has five durable loops:
+
+1. **Ingest:** member adds a source, the orchestrator stores it, extracts text, chunks it,
+   embeds it, and records provenance.
+2. **Read:** the Calm Reader opens a source or chapter with annotations and source anchors,
+   without feed rails or engagement loops.
+3. **Assist:** the AI assistant answers or summarizes only over selected sources and
+   returns citations or unsupported-claim markers.
+4. **Publish:** the Publication Studio validates a project, freezes a release, renders
+   public assets, and serves them from the CDN.
+5. **Leave:** export/delete workflows package or remove member data without staff
+   intervention.
+
+## 8. Manifesto mapping
 
 - L2 Natural completion: reading and publishing have clear ends.
 - L3 No feed: knowledge is sought, organized, and authored.

@@ -1,5 +1,13 @@
 # DOT Platform Architecture
 
+> Legacy DOT-era block architecture reference. The current product and target system
+> source of truth is `docs/blueprint/`, especially `02-ARCHITECTURE.md`,
+> `04-KNOWLEDGE-AND-PUBLICATION.md`, and `05-FASTAPI-ORCHESTRATOR.md`.
+>
+> If this document conflicts with the blueprint, follow the blueprint. In particular,
+> member-facing surfaces must not add feeds, vanity counters, red badges, or
+> engagement-ranking mechanics.
+
 ## Overview
 
 The DOT (Digital Organism Theory) platform uses a **block-based architecture** that organizes code into logical, feature-based modules. This architecture promotes maintainability, scalability, and clear separation of concerns.

@@ -30,6 +30,8 @@ const THEMES: Record<string, ThemeInfo> = {
 // Theme keys for easier maintenance
 const THEME_KEYS = Object.keys(THEMES);
 const DEFAULT_THEME = 'light';
+const resolveTheme = (theme: string | null | undefined) =>
+  theme && THEMES[theme] ? theme : DEFAULT_THEME;
 
 // Context value interface
 interface ThemeContextValue {
@@ -49,12 +51,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<string>(DEFAULT_THEME);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('dot_theme') || DEFAULT_THEME;
+    const savedTheme = resolveTheme(localStorage.getItem('dot_theme'));
+    localStorage.setItem('dot_theme', savedTheme);
     applyThemeToDOM(savedTheme);
     setTheme(savedTheme);
   }, []);
 
   const applyThemeToDOM = (newTheme: string) => {
+    newTheme = resolveTheme(newTheme);
+
     // Remove all existing theme classes
     THEME_KEYS.forEach(themeKey => {
       document.documentElement.classList.remove(themeKey);
@@ -79,8 +84,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const applyTheme = (newTheme: string) => {
     if (!THEMES[newTheme]) {
       console.warn(`Theme "${newTheme}" not found. Using default theme.`);
-      newTheme = DEFAULT_THEME;
     }
+    newTheme = resolveTheme(newTheme);
 
     setTheme(newTheme);
     localStorage.setItem('dot_theme', newTheme);

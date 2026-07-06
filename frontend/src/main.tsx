@@ -15,9 +15,12 @@ import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/jetbrains-mono/500.css'
 
 import './index.css'
+import './App.css'
+import './organism/organism.css'
 import App from './AppOptimized'
 import { ThemeProvider } from './shared/contexts/SimpleThemeContext'
 import { AppProviders } from './shared/contexts'
+import { OrganismProvider } from './organism'
 // Import PWA service for initialization
 import PWAService from './services/PWAService'
 
@@ -28,7 +31,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppProviders>
       <ThemeProvider>
-        <App />
+        <OrganismProvider>
+          <App />
+        </OrganismProvider>
       </ThemeProvider>
     </AppProviders>
   </StrictMode>,

@@ -36,8 +36,8 @@ must say when sources do not support an answer.
 
 ## Alternatives considered
 
-| Option | Pros | Cons | Verdict |
-| ------ | ---- | ---- | ------- |
-| Chatbot-first knowledge assistant | Fast demo | Hallucination/provenance risk; weak ownership model | Rejected |
-| Feed-first social knowledge platform | Familiar growth pattern | Violates Attention Manifesto | Rejected |
-| Publication + vault + provenance first | Trustworthy, durable, book-ready | More backend work up front | **Accepted** |
+| Option                                 | Pros                             | Cons                                                | Verdict      |
+| -------------------------------------- | -------------------------------- | --------------------------------------------------- | ------------ |
+| Chatbot-first knowledge assistant      | Fast demo                        | Hallucination/provenance risk; weak ownership model | Rejected     |
+| Feed-first social knowledge platform   | Familiar growth pattern          | Violates Attention Manifesto                        | Rejected     |
+| Publication + vault + provenance first | Trustworthy, durable, book-ready | More backend work up front                          | **Accepted** |

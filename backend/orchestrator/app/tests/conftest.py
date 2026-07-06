@@ -1,0 +1,57 @@
+import collections.abc
+import pathlib
+
+import fastapi.testclient
+import pytest
+import sqlalchemy.ext.asyncio
+import sqlalchemy.pool
+
+import app.db.models
+import app.db.session
+import app.main
+import app.settings
+
+
+@pytest.fixture()
+async def session_factory() -> collections.abc.AsyncGenerator[
+    sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession], None
+]:
+    engine: sqlalchemy.ext.asyncio.AsyncEngine = sqlalchemy.ext.asyncio.create_async_engine(
+        "sqlite+aiosqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=sqlalchemy.pool.StaticPool,
+    )
+    async with engine.begin() as connection:
+        await connection.run_sync(app.db.models.Base.metadata.create_all)
+
+    factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession] = (
+        sqlalchemy.ext.asyncio.async_sessionmaker(engine, expire_on_commit=False)
+    )
+    yield factory
+
+    async with engine.begin() as connection:
+        await connection.run_sync(app.db.models.Base.metadata.drop_all)
+    await engine.dispose()
+
+
+@pytest.fixture()
+def client(
+    session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: pathlib.Path,
+) -> collections.abc.Generator[fastapi.testclient.TestClient, None, None]:
+    monkeypatch.setenv("ORCHESTRATOR_OBJECT_STORE_BACKEND", "filesystem")
+    monkeypatch.setenv("ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT", str(tmp_path / "objects"))
+    app.settings.get_settings.cache_clear()
+    fastapi_app = app.main.create_app()
+
+    async def override_session() -> collections.abc.AsyncGenerator[
+        sqlalchemy.ext.asyncio.AsyncSession, None
+    ]:
+        async with session_factory() as session:
+            yield session
+
+    fastapi_app.dependency_overrides[app.db.session.get_session] = override_session
+    with fastapi.testclient.TestClient(fastapi_app) as test_client:
+        yield test_client
+    app.settings.get_settings.cache_clear()

@@ -1,0 +1,232 @@
+/* ============================================================================
+   Organism Theme — the living visual language.
+
+   A calm, attention-respecting "vital signs" skin. Everything is scoped under
+   [data-organism="on"] so it is fully opt-in and removes itself when disabled,
+   and it degrades to a still (but still tinted) state under reduced motion.
+
+   The bridge (OrganismThemeBridge) writes the raw channels below every frame;
+   this file composes them into the living accent, the breathing aura, and the
+   synaptic flash. No animation here ever moves layout — only colour, opacity,
+   and a sub-pixel scale.
+   ========================================================================== */
+
+:root {
+  /* Vital channels — defaults keep the site neutral before JS boots. */
+  --organism-hue: 200; /* degrees */
+  --organism-chroma: 0.055; /* oklch chroma, 0..~0.16 */
+  --organism-luma: 0.6; /* 0 = night, 1 = midday */
+  --organism-arousal: 0; /* 0..1 user activity */
+  --organism-synapsis: 0; /* 0..1 orchestrator activity */
+  --organism-pulse: 0; /* 0..1 transient synaptic flash */
+  --organism-calm: 0; /* 0..1 reading quiescence; 1 = still & quiet */
+  --organism-breath: 8s; /* breathing cadence */
+  --organism-glow: 1px; /* living-border glow radius — a whisper, not a beacon */
+  --organism-intensity: 0.85; /* global dial */
+
+  /* A ready-to-use living accent the UI can opt into anywhere. */
+  --organism-accent: oklch(
+    calc(0.52 + 0.16 * var(--organism-luma)) var(--organism-chroma)
+      var(--organism-hue)
+  );
+  --organism-accent-strong: oklch(
+    calc(0.6 + 0.12 * var(--organism-luma))
+      calc(var(--organism-chroma) * 1.3) var(--organism-hue)
+  );
+  --organism-accent-soft: oklch(
+    calc(0.55 + 0.14 * var(--organism-luma)) var(--organism-chroma)
+      var(--organism-hue) / 0.22
+  );
+}
+
+[data-organism="on"] body {
+  background: var(--background);
+}
+
+/* The membrane canvas host: fixed, behind everything, inert to the pointer. */
+.organism-membrane {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  contain: strict;
+}
+.organism-membrane canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Lift the page content above the membrane (z-index:0) without disturbing the
+   fixed overlays (HUD, appearance control) that are also children of .App. */
+[data-organism="on"] .App {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+[data-organism="on"] .App > main {
+  position: relative;
+  z-index: 2;
+}
+
+/* Breathing aura removed for A2UI aesthetic */
+
+/* ---- Synaptic flash ----------------------------------------------------- */
+/* A faint nerve-light from the top edge when the orchestrator fires. */
+[data-organism="on"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120vmax 46vmax at 50% -12%,
+    oklch(
+        0.72 calc(0.14 + var(--organism-chroma)) calc(var(--organism-hue) + 60) /
+          calc(0.12 * var(--organism-pulse) * var(--organism-intensity))
+      ),
+    transparent 60%
+  );
+  opacity: var(--organism-pulse);
+  transition: opacity 140ms ease-out;
+}
+
+/* ---- Opt-in "living" treatment for components --------------------------- */
+[data-organism="on"] .organism-alive {
+  border-color: var(--organism-accent-soft);
+  box-shadow: 0 0 calc(2px + var(--organism-glow)) var(--organism-accent-soft);
+  transition:
+    box-shadow 400ms ease,
+    border-color 400ms ease;
+}
+
+[data-organism="on"] .organism-text-accent {
+  color: var(--organism-accent-strong);
+  transition: color 600ms ease;
+}
+
+/* A standalone "pulse dot" — the red DOT, now a living heartbeat. */
+[data-organism="on"] .organism-pulse-dot {
+  background: var(--organism-accent-strong);
+  box-shadow:
+    0 0 calc(3px + var(--organism-glow))
+    var(--organism-accent-soft);
+  animation: organism-heartbeat var(--organism-breath) ease-in-out infinite;
+}
+
+@keyframes organism-heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.08);
+  }
+  28% {
+    transform: scale(1);
+  }
+}
+
+/* ---- Orbital breathing — nodes inhale / exhale on the radial ------------ */
+@keyframes orbitBreathe {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: var(--orbit-dx, 0px) var(--orbit-dy, 0px);
+  }
+}
+
+/* ---- Gravity well — radial pulse rings from the nucleus ----------------- */
+@keyframes gravityPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Ambient gravity field breathing behind the nucleus. */
+@keyframes gravityBreathe {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* ---- Node halo animations —————————————————————————————— */
+/* Slow counter-rotation for drillable (world) nodes. */
+@keyframes ringRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Compass-sweep gradient for page nodes. */
+@keyframes compassSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Extra pulse for surface nodes (publications, circle). */
+@keyframes surfaceRingPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.85;
+  }
+}
+
+/* ---- Node halo utility classes ----------------------------------------- */
+[data-organism="on"] .node-halo-drillable {
+  animation: ringRotate 28s linear infinite;
+}
+
+[data-organism="on"] .node-halo-page {
+  animation: compassSweep 18s linear infinite;
+}
+
+[data-organism="on"] .node-halo-surface {
+  animation: surfaceRingPulse var(--organism-breath) ease-in-out infinite;
+}
+
+/* ---- Mood accents (pure CSS, no JS needed) ------------------------------ */
+/* Strain quiets the body: the aura desaturates and slows. */
+[data-organism-mood="strained"] body::before {
+  filter: saturate(0.55);
+}
+[data-organism-mood="dormant"] body::before {
+  filter: brightness(0.8);
+}
+
+/* ---- Reduced motion: keep the physiology, still the movement ------------ */
+@media (prefers-reduced-motion: reduce) {
+  [data-organism="on"] body::before,
+  [data-organism="on"] .organism-pulse-dot {
+    animation: none;
+  }
+  [data-organism="on"] body::after {
+    transition: none;
+  }
+}

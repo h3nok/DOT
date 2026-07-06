@@ -6,7 +6,8 @@ Project documentation for the personal site & portfolio workspace.
 
 | Document                                                         | Purpose                                            |
 | ---------------------------------------------------------------- | -------------------------------------------------- |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                               | Frontend/backend block-based architecture overview |
+| [blueprint/](blueprint/)                                         | Current source of truth for product and architecture decisions |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                               | Legacy block-based architecture reference; blueprint supersedes conflicts |
 | [THEME_ARCHITECTURE_DECISION.md](THEME_ARCHITECTURE_DECISION.md) | Theming approach and rationale                     |
 | [DONATION_SETUP.md](DONATION_SETUP.md)                           | Stripe donations configuration                     |
 | [DOMAIN_RESERVATION_GUIDE.md](DOMAIN_RESERVATION_GUIDE.md)       | Domain reservation notes                           |
@@ -14,8 +15,11 @@ Project documentation for the personal site & portfolio workspace.
 
 ## Planning
 
-The active development plan lives at the repo root:
-[PERSONAL_SITE_SPRINT_PLAN.md](../PERSONAL_SITE_SPRINT_PLAN.md)
+The active implementation roadmap lives in the blueprint:
+[blueprint/06-IMPLEMENTATION-ROADMAP.md](blueprint/06-IMPLEMENTATION-ROADMAP.md)
+
+The root-level [PERSONAL_SITE_SPRINT_PLAN.md](../PERSONAL_SITE_SPRINT_PLAN.md) is retained
+as a legacy personal-site plan and does not supersede the blueprint.
 
 ## Archive
 

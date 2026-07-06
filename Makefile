@@ -1,21 +1,36 @@
-.PHONY: help install install-frontend install-backend start start-frontend start-backend build lint
+.PHONY: help install install-frontend install-backend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator test-orchestrator migrate-orchestrator seed-profile-delivery orchestrator-services-up orchestrator-services-down
 
 help:
 	@echo "Available targets:"
-	@echo "  make install           Install frontend and backend dependencies"
+	@echo "  make install           Install frontend, Flask, and orchestrator dependencies"
+	@echo "  make install-orchestrator Install FastAPI orchestrator dependencies"
+	@echo "  make dev               Start the full local stack"
 	@echo "  make start             Start frontend (Vite) and backend (Flask)"
 	@echo "  make start-frontend    Start frontend only"
 	@echo "  make start-backend     Start backend only"
+	@echo "  make start-orchestrator Start FastAPI orchestrator only"
+	@echo "  make start-orchestrator-worker Start Dramatiq orchestrator worker"
+	@echo "  make orchestrator-services-up Start local Postgres, Redis, and MinIO"
+	@echo "  make orchestrator-services-down Stop local orchestrator services"
+	@echo "  make migrate-orchestrator Apply orchestrator migrations"
+	@echo "  make seed-profile-delivery Seed one published profile delivery release"
+	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
 
-install: install-frontend install-backend
+install: install-frontend install-backend install-orchestrator
 
 install-frontend:
 	pnpm --dir frontend install
 
 install-backend:
 	./.venv/bin/python3 -m pip install -r backend/requirements.txt
+
+install-orchestrator:
+	./.venv/bin/python3 -m pip install -r backend/orchestrator/requirements.txt
+
+dev:
+	./scripts/dev-stack.sh
 
 start:
 	node runner.js
@@ -26,8 +41,32 @@ start-frontend:
 start-backend:
 	cd backend && ../.venv/bin/python3 src/main.py
 
+start-orchestrator:
+	cd backend/orchestrator && ../../.venv/bin/python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+start-orchestrator-worker:
+	cd backend/orchestrator && ../../.venv/bin/python3 -m dramatiq app.workers.tasks
+
+orchestrator-services-up:
+	docker compose -f docker-compose.orchestrator.yml up -d
+
+orchestrator-services-down:
+	docker compose -f docker-compose.orchestrator.yml down
+
+migrate-orchestrator:
+	cd backend/orchestrator && ../../.venv/bin/alembic upgrade head
+
+seed-profile-delivery:
+	cd backend/orchestrator && ../../.venv/bin/python3 scripts/seed_profile_delivery.py
+
 build:
 	pnpm --dir frontend build
 
 lint:
 	pnpm --dir frontend lint
+
+lint-orchestrator:
+	cd backend/orchestrator && ../../.venv/bin/ruff check app migrations
+
+test-orchestrator:
+	cd backend/orchestrator && ../../.venv/bin/pytest

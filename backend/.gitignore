@@ -1,0 +1,4 @@
+data/profiles/
+database/auth.db
+src/data/profiles/
+src/database/auth.db

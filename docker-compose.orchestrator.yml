@@ -1,0 +1,50 @@
+services:
+  orchestrator-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: dot-orchestrator-postgres
+    environment:
+      POSTGRES_DB: dot_orchestrator
+      POSTGRES_USER: dot
+      POSTGRES_PASSWORD: dot
+    ports:
+      - "${ORCHESTRATOR_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - orchestrator-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dot -d dot_orchestrator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  orchestrator-redis:
+    image: redis:7-alpine
+    container_name: dot-orchestrator-redis
+    ports:
+      - "${ORCHESTRATOR_REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  orchestrator-minio:
+    image: minio/minio:latest
+    container_name: dot-orchestrator-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: dotminio
+      MINIO_ROOT_PASSWORD: dotminio123
+    ports:
+      - "${ORCHESTRATOR_MINIO_PORT:-9000}:9000"
+      - "${ORCHESTRATOR_MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - orchestrator-minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  orchestrator-postgres-data:
+  orchestrator-minio-data:

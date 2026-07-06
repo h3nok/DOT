@@ -10,34 +10,56 @@
 
 1. **Humane at scale.** No design that only works because we're small (e.g. no global feed ranking we'd later be tempted to "optimize for engagement").
 2. **Privacy by default.** No third-party trackers, no ad SDKs, no behavioral profiling. Analytics are aggregate and privacy-preserving (Law L9).
-3. **Stateless services, horizontally scalable.** Any instance can serve any request; state lives in datastores and caches, not process memory.
-4. **Cost-honest.** Member-funded, so infra must be efficient; cache aggressively, push static to the edge.
-5. **Reversible.** Members can export and delete their data (Law L7).
+3. **Blind infrastructure.** Cloud-provider encryption at rest is not enough for member data. Content that can identify members, questions, notes, private graph state, and knowledge artifacts must be encrypted before it reaches managed storage whenever product requirements allow it.
+4. **Stateless services, horizontally scalable.** Any instance can serve any request; state lives in datastores and caches, not process memory.
+5. **Cost-honest.** Member-funded, so infra must be efficient; cache aggressively, push static to the edge.
+6. **Reversible.** Members can export and delete their data (Law L7).
 
 ## 2. System shape (target)
 
 ```
-                    ┌────────────────────────── Edge / CDN ──────────────────────────┐
-                    │  Static public profile (SSG/prerender) · images · cached assets │
-                    └───────────────┬─────────────────────────────────────────────────┘
-                                    │ (dynamic, authenticated)
-                          ┌─────────▼──────────┐        ┌───────────────────────┐
-   Web client (SPA/SSG) ─►│   API Gateway /    │───────►│  Auth service          │ sessions/JWT,
-   (React 19 + Vite)      │   BFF (stateless)  │        │  Invite service        │ invite tokens
-                          └─────────┬──────────┘        └───────────┬───────────┘
-                                    │                                │
-              ┌─────────────────────┼────────────────────┐          │
-              ▼                     ▼                    ▼           ▼
-     ┌───────────────┐   ┌──────────────────┐  ┌────────────────┐  ┌──────────────┐
-     │ Profile/Content│   │ Member service   │  │ Presence svc   │  │ Postgres     │
-     │ service        │   │ (intentions,     │  │ (ephemeral,    │  │ (primary,    │
-     │                │   │  attention budget)│  │  Redis pub/sub)│  │  partitioned)│
-     └───────┬────────┘   └────────┬─────────┘  └───────┬────────┘  └──────┬───────┘
-             │                     │                    │                  │
-             ▼                     ▼                    ▼                  ▼
-        Object store          Redis cache         Redis/streams      Read replicas
-        (media, MDX)          (hot data)          (presence)         (scale reads)
+Edge / CDN
+  - Static public profile (SSG/prerender)
+  - Images and cached assets
+        |
+        | dynamic authenticated traffic
+        v
+Web client (React 19 + Vite SPA/SSG)
+        |
+        v
+API Gateway / BFF (stateless)
+  |---------------------> Auth + Invite service
+  |                         - sessions/JWT
+  |                         - invite tokens
+  |
+  |--> Profile/Content service --> Object store (media, MDX)
+  |--> Member service -----------> Redis cache + Postgres
+  |--> Presence service ---------> Redis pub/sub or streams
+  |--> Postgres primary ---------> Read replicas
 ```
+
+Knowledge and publication workflows add one bounded service behind the same gateway:
+
+```
+ Web / Member Interior
+        |
+        v
+ API Gateway / BFF ---> Auth + Invite
+        |
+        v
+ FastAPI Orchestrator
+   |-- Sources / ingestion / knowledge index
+   |-- Source-backed AI assistant
+   |-- Publication Studio + release publisher
+   |-- Digital footprint graph + connector imports/status
+   |-- Export/delete workflows
+   `-- Workers + queue + object store + Postgres/pgvector
+```
+
+The orchestrator is specified in `05-FASTAPI-ORCHESTRATOR.md` and locked by ADR-0008.
+It is the first intentional service split because ingestion, model calls, publishing, and
+data-rights jobs are long-running workflows with different operational needs than the
+prototype app shell.
 
 ## 3. Frontend architecture
 
@@ -60,6 +82,9 @@ frontend/src/
 ├── blocks/              # feature screens assembled FROM attention-os primitives
 │   ├── profile/         # public profile (home, work, writing) — Phase 0/2
 │   ├── invite/          # The Door (existing InviteGatewayPage refactors to here)
+│   ├── publication/     # Publication Studio, release review, public read preview
+│   ├── knowledge/       # Knowledge Vault, source reader, scoped assistant
+│   ├── graph/           # Digital footprint graph and graph navigation
 │   └── member/          # /home /read /focus /people /me
 ├── content/             # site.config.ts, MDX posts & projects
 ├── services/            # API clients (typed), SoundscapeService, etc.
@@ -68,6 +93,30 @@ frontend/src/
 
 > **Rule:** member screens are _composed from_ `attention-os/` primitives. A screen that
 > needs a feed, a counter, or a notification badge is a manifesto violation — escalate.
+
+### Frontend reuse decisions
+
+The AI Platform React/UI layer is a reference library, not a package dependency. DOT should
+copy/adapt selected source patterns into DOT-native modules and replace imported UI with
+`frontend/src/shared/components/ui` primitives.
+
+Reuse these decisions:
+
+- Adapter-driven streaming assistant components, narrowed to a source-scoped assistant.
+- Citation/evidence chips and confidence indicators for source-backed claims.
+- Split workspace layout for Publication Studio, implemented with DOT's existing
+  `react-resizable-panels` dependency and Attention OS reader/editor primitives.
+- Graph navigation for the member footprint: identities, platform accounts, sources,
+  publications, topics, projects, and circles as selectable nodes with inspectable edges.
+- Guided source-intake workflow: choose source, validate, review, process, done.
+- Detail sheets for source metadata, revision history, processing state, and destructive
+  actions.
+- CSS-variable design tokens, semantic status colors, compact badges, icon-first controls,
+  and restrained motion.
+
+Do not import or preserve the old product shell: no `@costco/ui` runtime dependency, no
+enterprise admin dashboard, no value-stream/team vocabulary, no gamification, and no
+always-on general chat surface.
 
 ## 4. Backend architecture (owner: real backend, scale to 100M)
 
@@ -82,13 +131,18 @@ into services when load demands.
   - **Member** — profile, intentions, attention budget, data export/delete.
   - **Content** — profile content, writing, media metadata (MDX/object store).
   - **Presence** — ephemeral who's-here, via Redis pub/sub; never persisted long-term.
+  - **FastAPI Orchestrator** — Knowledge Vault, ingestion, source-backed AI, Publication Studio,
+    immutable releases, digital footprint graph, social connector imports/status, exports,
+    deletions, and connector syncs. This is a separate bounded service from the first
+    implementation of the knowledge/publication/graph layer.
 - **Datastore:** **PostgreSQL** as primary (migrate off SQLite), read replicas for read scale, table partitioning + UUIDv7 keys for large tables. Redis for hot cache + presence + rate limiting. Object storage (S3/GCS/R2) for media and rendered MDX.
 - **Statelessness:** services hold no session state in memory; horizontal autoscaling behind the gateway.
 - **Caching:** edge cache for public profile; Redis for member hot paths; HTTP cache headers everywhere.
 
-> Language note: the repo is Python/Flask today. Keep Flask for the foundation phase to
-> move fast; ADR-0002 records the decision and the trigger conditions for moving to a
-> higher-throughput stack (e.g. FastAPI/async, or Go) if/when profiling demands it.
+> Language note: the repo is Python/Flask today. Keep Flask for the current prototype and
+> app shell while the real Knowledge & Publication OS starts as a dedicated FastAPI
+> orchestrator (ADR-0008). Do not keep expanding Flask into ingestion, AI, publishing, or
+> export/delete workflow ownership.
 
 ## 5. Invite-only & auth (the access model)
 
@@ -105,6 +159,18 @@ into services when load demands.
 - Self-hostable, cookieless analytics (e.g. Plausible/Umami-style) for public-profile traffic only.
 - The success metrics in Manifesto §5 are computed from these aggregates.
 
+## 6A. Privacy and encryption model
+
+- **Guest questions:** default to zero retention. Do not store raw guest prompts, IP-derived profiles, user-agent fingerprints, or chat transcripts. Any abuse controls must use short-lived, salted rate-limit keys with tight TTLs.
+- **Application-layer encryption:** private member content, personal graph memory, notes, uploaded knowledge, and private agent state are encrypted in the application before writing to Postgres, Redis, object storage, backups, or logs.
+- **Cloud-provider blindness:** managed database/object-store encryption at rest remains enabled, but it is a second layer only. The provider should see ciphertext, object sizes, timestamps, and operational metadata, not readable member content.
+- **Key ownership:** use tenant/member-scoped data encryption keys wrapped by keys controlled through KMS or external key management. Rotate keys, version ciphertext, and keep decrypt permission out of analytics, logging, and support paths.
+- **Blind identity indexes:** never index private rows directly by email, phone, or raw external identity. Use keyed hashes/HMACs for lookup fields and keep the pepper outside the database.
+- **LLM/orchestrator boundary:** the orchestrator may answer guest questions only from public profile/graph context unless the member explicitly unlocks private context. Prompts and retrieved context are not used for model training and are redacted from logs.
+- **Processing-window honesty:** ingestion, embedding, and assistant workers necessarily handle plaintext in memory. The blindness guarantee is about _persistence and provider visibility_, not about workers never seeing content. Workers decrypt with short-lived key grants scoped to the run, never write plaintext to disk, swap, logs, or traces, and drop keys when the run completes.
+- **Embeddings are derived plaintext:** vectors can be inverted or approximated back to the content they encode, so embeddings carry the same sensitivity as the text itself. They are owner-scoped, excluded from analytics and cross-member use, deleted with their source, and encrypted at rest to the extent search allows. pgvector requires plaintext vectors server-side for ANN search — this is a documented trade-off accepted for MVP, not an oversight; revisit if the threat model tightens.
+- **Search trade-off:** encrypted content limits server-side search. Prefer local/client indexes, encrypted per-member indexes, or explicit opt-in derived indexes instead of decrypting all content centrally.
+
 ## 7. Performance budget (humane = fast)
 
 - Public profile: LCP < 2.0s on 4G, CLS < 0.05, initial JS < 150KB gz.
@@ -115,6 +181,8 @@ into services when load demands.
 
 - **Public profile:** static build → CDN/edge (current GitHub Pages works for Phase 0; move to a CDN that also fronts the API for Phase 1+).
 - **API/services:** containerized, autoscaling (Cloud Run / ECS / Fly / K8s — ADR later), behind the gateway.
+- **FastAPI orchestrator:** separate stateless API container plus independently scaled
+  worker containers for ingestion, assistant, publishing, export/delete, and connector jobs.
 - **Data:** managed Postgres + managed Redis + object storage.
 - **Secrets:** never in repo; env/secret manager. (Note: `backend/src/main.py` currently hardcodes a SECRET_KEY — flagged for ADR-0003 / immediate fix when backend work starts.)
 
@@ -126,6 +194,8 @@ into services when load demands.
 - [ ] Split hottest module out of the monolith into its own service.
 - [ ] Edge-cache everything cacheable; stale-while-revalidate.
 - [ ] Async job queue for non-interactive work (email, exports).
+- [ ] Scale orchestrator workers by queue depth and workflow type.
+- [ ] Move vector search out of pgvector only if retrieval latency/quality demands it.
 
 ## 10. Security baseline (OWASP-aware)
 
@@ -135,3 +205,5 @@ into services when load demands.
 - Rate limiting + lockout on auth and invite endpoints.
 - Rotate the hardcoded dev secret; load secrets from environment.
 - Principle of least privilege for service credentials.
+- Encrypt private data before persistence; never rely on managed database encryption alone for high-trust member data.
+- Keep raw guest questions and orchestrator prompts out of logs, analytics, traces, and model-training pipelines.

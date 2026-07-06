@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
 // Mock IntersectionObserver
 globalThis.IntersectionObserver = vi.fn().mockImplementation((_callback) => ({
@@ -17,7 +17,7 @@ globalThis.ResizeObserver = vi.fn().mockImplementation((_callback) => ({
 }));
 
 // Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query) => ({
     matches: false,
@@ -33,7 +33,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 // Mock Canvas for Three.js tests
 HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation((type) => {
-  if (type === 'webgl' || type === 'webgl2') {
+  if (type === "webgl" || type === "webgl2") {
     return {
       canvas: {},
       drawingBufferWidth: 1024,
