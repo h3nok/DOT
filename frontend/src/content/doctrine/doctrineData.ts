@@ -45,7 +45,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "Beneath everything is an incomprehensible substrate of pure possibility. We do not explain it; we locate ourselves inside it.",
     weight: 1,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "stabilization", type: "leads-to", strength: 0.9 },
@@ -67,7 +67,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "Consciousness is the first pattern that stabilized itself within the substrate and held.",
     weight: 0.95,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "substrate", type: "depends-on", strength: 0.9 },
@@ -90,7 +90,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "We are individuated Selves — distinct individuals — of the one stabilized field. We know our address, not our origin.",
     weight: 0.95,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "stabilization", type: "depends-on", strength: 0.9 },
@@ -113,7 +113,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "Coherence is integration: a Self becoming less fragmented, more whole, more truly connected. At its limit, it is Love.",
     weight: 0.85,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "fragmentation", type: "contrasts", strength: 0.9 },
@@ -135,7 +135,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "Fragmentation is a Self scattering — losing integration, defending separateness, dissolving toward noise.",
     weight: 0.8,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "coherence", type: "contrasts", strength: 0.9 },
@@ -156,7 +156,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "To hold form against dissolution is the founding act of consciousness — and the meaning of courage.",
     weight: 0.9,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "stabilization", type: "depends-on", strength: 0.85 },
@@ -178,7 +178,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "Love is not sentiment. It is the maximally integrated state of individuals — the collapse of defended separateness.",
     weight: 0.85,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "coherence", type: "depends-on", strength: 0.9 },
@@ -199,7 +199,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "little c is the name for an individuated Self of consciousness — one dot in the field.",
     weight: 0.7,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "self", type: "defines", strength: 0.9 },
@@ -218,7 +218,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "DOT takes self-organization as given and begins its claim after stabilization. This boundary is deliberate — and open.",
     weight: 0.6,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "stabilization", type: "depends-on", strength: 0.8 },
@@ -237,7 +237,7 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "The open seams, stated plainly: origin, mechanism, and the limits of the simulation framing.",
     weight: 0.6,
-    status: "released",
+    status: "draft",
     version: 1,
     related: [
       { to: "substrate", type: "contrasts", strength: 0.5 },

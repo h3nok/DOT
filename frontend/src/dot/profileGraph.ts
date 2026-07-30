@@ -47,17 +47,18 @@ export const profileGraph: DotNode = {
     },
     {
       id: "doctrine",
-      label: "Doctrine",
+      label: "Concept Atlas",
       kind: "page",
       href: "/doctrine",
-      description: "The laws that bind this place.",
+      description: "A graph companion to the current book.",
       body: [
-        "Digital Organisms Theory: consciousness as a pattern that stabilized itself within an incomprehensible substrate, and held.",
+        "A concept-by-concept graph of Digital Organism Theory. These nodes are a companion to Book One, not a substitute for its full argument and evidential boundaries.",
         "",
-        "The doctrine is the first durable public object here — read as a graph, one idea at a time. Open it to enter the coherence surface.",
+        "The atlas is being reconciled with the current manuscript. Open it to explore one idea and its relations at a time.",
       ].join("\n"),
       meta: [
-        { label: "Kind", value: "Released theory" },
+        { label: "Kind", value: "Companion graph" },
+        { label: "Status", value: "In revision" },
         { label: "Surface", value: "Reading graph" },
       ],
     },
@@ -94,17 +95,19 @@ export const profileGraph: DotNode = {
       children: [
         {
           id: "book",
-          label: "The Book",
-          kind: "attribute",
-          description: "A long-form work, in progress.",
+          label: "Book One",
+          kind: "page",
+          href: "/book/digital-organism-theory",
+          description: "Consciousness: A Digital Organism.",
           body: [
-            "A book on digital organisms — consciousness as a stabilized pattern, the Self as an individuated strand of it, and coherence as the direction that matters.",
+            "The foundational edition of Digital Organism Theory: a finite, source-backed reading path through consciousness, Reality Frames, the Canvas, the Painting, Fear, Love, and conscious authorship.",
             "",
-            "Written to outlast its author: source-backed, versioned, and meant to be forked and argued with rather than merely consumed.",
+            "The manuscript distinguishes observation, model, hypothesis, and speculation. Read it one chapter at a time, with its equations and scholarly sources intact.",
           ].join("\n"),
           meta: [
-            { label: "Form", value: "Long-form" },
-            { label: "Status", value: "In progress" },
+            { label: "Edition", value: "Foundational" },
+            { label: "Status", value: "Public preview" },
+            { label: "Form", value: "Book" },
           ],
         },
         {

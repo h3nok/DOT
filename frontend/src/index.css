@@ -117,3 +117,146 @@
 .animate-border-pulse {
   animation: borderPulse 4s ease-in-out infinite;
 }
+
+/* Book One — a finite, still reading surface. */
+.book-surface {
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      var(--organism-accent-soft),
+      transparent 28rem
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--background) 96%, transparent),
+      var(--background)
+    );
+}
+
+.book-prose {
+  font-family: "Playfair Display", Georgia, serif;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  color: color-mix(in oklch, var(--foreground) 90%, transparent);
+}
+
+.book-prose p,
+.book-prose li {
+  font-size: 1.08rem;
+  line-height: 1.9;
+}
+
+.book-prose p {
+  margin-bottom: 1.45rem;
+  max-width: none;
+}
+
+.book-prose h1,
+.book-prose h2,
+.book-prose h3,
+.book-prose h4 {
+  font-family: "Inter", sans-serif;
+  letter-spacing: -0.018em;
+}
+
+.book-prose h2 {
+  margin-top: 3.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.6rem;
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+
+.book-prose h3 {
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 650;
+  color: var(--foreground);
+}
+
+.book-prose h4 {
+  margin-top: 2rem;
+  margin-bottom: 0.85rem;
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--foreground);
+}
+
+.book-prose ul,
+.book-prose ol {
+  margin: 0 0 1.5rem 1.35rem;
+}
+
+.book-prose ul {
+  list-style: disc;
+}
+
+.book-prose ol {
+  list-style: decimal;
+}
+
+.book-prose li {
+  margin-bottom: 0.55rem;
+  padding-left: 0.25rem;
+}
+
+.book-prose strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.book-prose blockquote {
+  margin-block: 2.25rem;
+  border-left-width: 1px;
+  border-left-color: var(--organism-accent-soft);
+  background: transparent;
+  padding-block: 0;
+  font-size: 1.12rem;
+}
+
+.book-prose .katex-display {
+  margin-block: 2.25rem;
+  overflow-x: auto;
+  border-block: 1px solid var(--border);
+  padding-block: 1.5rem;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.book-prose a[href*="#reference-"] {
+  margin-left: 0.08em;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+  text-decoration: none;
+  vertical-align: super;
+}
+
+.book-prose a {
+  color: var(--foreground);
+  text-decoration-line: underline;
+  text-decoration-color: var(--organism-accent-soft);
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease;
+}
+
+.book-prose a:hover {
+  color: var(--organism-accent-strong);
+}
+
+.book-prose hr {
+  margin-block: 3rem;
+  border-color: var(--border);
+}
+
+@media (max-width: 640px) {
+  .book-prose p,
+  .book-prose li {
+    font-size: 1rem;
+    line-height: 1.82;
+  }
+
+  .book-prose h2 {
+    margin-top: 2.75rem;
+    font-size: 1.4rem;
+  }
+}

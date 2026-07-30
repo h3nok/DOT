@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, BookOpen, Loader2, Plus, Send, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { BloomSurface } from "./BloomSurface";
 import { useOrganismPulse, staggerChild } from "../organism";
 import {
@@ -53,6 +54,7 @@ export const Publications: React.FC<PublicationsProps> = ({
   reducedMotion = false,
   onClose,
 }) => {
+  const navigate = useNavigate();
   const { items, loading, create, update, release, remove } =
     usePublications(owner);
   const pulse = useOrganismPulse();
@@ -318,22 +320,41 @@ export const Publications: React.FC<PublicationsProps> = ({
         ) : undefined
       }
     >
-      {loading ? (
-        <div className="flex items-center justify-center py-10 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-        </div>
-      ) : items.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <BookOpen className="h-7 w-7 text-muted-foreground/60" />
-          <p className="text-sm italic text-muted-foreground">
-            {isOwner
-              ? "Nothing published yet. Begin your first work."
-              : "No published work yet. Check back soon."}
-          </p>
-        </div>
-      ) : (
-        <ul className="space-y-2.5">
-          {items.map((pub) => (
+      <ul className="space-y-2.5">
+        <motion.li variants={staggerChild} custom={reducedMotion}>
+          <button
+            type="button"
+            onClick={() => navigate("/book/digital-organism-theory")}
+            className="group flex w-full items-start gap-4 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.04] px-4 py-4 text-left transition-colors hover:bg-foreground/[0.08]"
+          >
+            <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">
+              <BookOpen className="h-4 w-4 text-foreground" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-start justify-between gap-3">
+                <span className="font-serif text-lg font-semibold leading-tight text-foreground">
+                  Consciousness: A Digital Organism
+                </span>
+                <span className="shrink-0 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
+                  Book One
+                </span>
+              </span>
+              <span className="mt-1 block text-sm italic leading-relaxed text-muted-foreground">
+                Foundational edition · six chapters, equations, and sources.
+              </span>
+            </span>
+          </button>
+        </motion.li>
+
+        {loading && (
+          <li className="flex items-center justify-center py-5 text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="sr-only">Loading other publications</span>
+          </li>
+        )}
+
+        {!loading &&
+          items.map((pub) => (
             <motion.li
               key={pub.id}
               variants={staggerChild}
@@ -362,8 +383,7 @@ export const Publications: React.FC<PublicationsProps> = ({
               </button>
             </motion.li>
           ))}
-        </ul>
-      )}
+      </ul>
     </BloomSurface>
   );
 };

@@ -24,6 +24,9 @@ const PublicationStudioPage = React.lazy(
 const PublicationReaderPage = React.lazy(
   () => import("./blocks/publication/PublicationReaderPage"),
 );
+const BookOnePage = React.lazy(
+  () => import("./blocks/publication/BookOnePage"),
+);
 
 const LoadingSpinner = () => (
   <div className="flex h-[60vh] items-center justify-center">
@@ -102,6 +105,11 @@ const App: React.FC = () => {
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/studio/:projectId" element={<PublicationStudioPage />} />
                 <Route path="/read/:ownerId/:slug" element={<PublicationReaderPage />} />
+                <Route path="/book/digital-organism-theory" element={<BookOnePage />} />
+                <Route
+                  path="/book/digital-organism-theory/:sectionSlug"
+                  element={<BookOnePage />}
+                />
               </Routes>
             </Suspense>
           </main>

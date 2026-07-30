@@ -445,6 +445,17 @@ const DoctrinePage = () => {
         <span>Back</span>
       </Link>
 
+      <Link
+        to="/book/digital-organism-theory"
+        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-[color:var(--surface-muted)] backdrop-blur-2xl transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
+        style={{
+          borderColor: "var(--surface-hairline)",
+          background: "var(--surface-panel)",
+        }}
+      >
+        Draft companion · read Book One
+      </Link>
+
       {/* Reading controls — quiet until hovered or focused */}
       <div
         className="fixed right-4 top-4 z-40 flex items-center gap-1 rounded-full border p-1 opacity-55 backdrop-blur-2xl transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100"

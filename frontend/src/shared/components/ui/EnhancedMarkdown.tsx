@@ -22,6 +22,23 @@ interface EnhancedMarkdownProps {
   anchors?: string[];
 }
 
+const markdownNodeText = (node: React.ReactNode): string => {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(markdownNodeText).join('');
+  if (React.isValidElement(node)) {
+    return markdownNodeText((node.props as { children?: React.ReactNode }).children);
+  }
+  return '';
+};
+
+const markdownHeadingId = (children: React.ReactNode): string => {
+  const text = markdownNodeText(children).trim().toLowerCase();
+  return text
+    .replace(/[’']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
 const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
   content,
   className = '',
@@ -248,22 +265,22 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
 
     // Enhanced headings with proper spacing and hierarchy
     h1: ({ children }: any) => (
-      <h1 className="text-3xl font-bold mb-6 mt-8 text-foreground border-b border-border pb-2">
+      <h1 id={markdownHeadingId(children)} className="scroll-mt-24 text-3xl font-bold mb-6 mt-8 text-foreground border-b border-border pb-2">
         {children}
       </h1>
     ),
     h2: ({ children }: any) => (
-      <h2 className="text-2xl font-semibold mb-4 mt-6 text-foreground">
+      <h2 id={markdownHeadingId(children)} className="scroll-mt-24 text-2xl font-semibold mb-4 mt-6 text-foreground">
         {children}
       </h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="text-xl font-semibold mb-3 mt-5 text-foreground">
+      <h3 id={markdownHeadingId(children)} className="scroll-mt-24 text-xl font-semibold mb-3 mt-5 text-foreground">
         {children}
       </h3>
     ),
     h4: ({ children }: any) => (
-      <h4 className="text-lg font-medium mb-2 mt-4 text-foreground">
+      <h4 id={markdownHeadingId(children)} className="scroll-mt-24 text-lg font-medium mb-2 mt-4 text-foreground">
         {children}
       </h4>
     ),

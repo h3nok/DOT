@@ -16,9 +16,32 @@ Digital Organisms Theory examines the emergence of consciousness through the len
 
 - Interactive philosophical exploration
 - Dynamic concept slideshow
+- Finite Book One reader with native equations and linked scholarly references
+- Versioned publication manifests with stable section and concept identifiers
 - Cosmic, theme-aware interface
 - Modern, accessible design
 - Community engagement platform
+
+## Book One
+
+The public foundational edition is available at:
+
+```text
+/book/digital-organism-theory
+```
+
+The Word manuscript remains the editorial source of truth. To rebuild the web
+release from a revised manuscript:
+
+```bash
+python3 scripts/import_dot_book.py \
+  --input "/path/to/Digital Organism Theory.docx"
+```
+
+The importer writes a deterministic release manifest and one finite Markdown
+unit per chapter under `frontend/public/publications/`. It preserves DOT model
+equations as TeX, links numbered citations to the reference section, and emits
+stable section/concept identifiers for Stay's graph layer.
 
 ## Getting Started
 

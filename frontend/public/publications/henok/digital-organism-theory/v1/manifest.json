@@ -1,0 +1,198 @@
+{
+  "schema_version": "publication.release.v2",
+  "generated_at": "2026-07-30T00:00:00Z",
+  "source": {
+    "format": "docx",
+    "sha256": "0dc91ad9eeda2870b77ca86e03b158dea343702bffa531769a71b73ef080fc26"
+  },
+  "project": {
+    "id": "dot-book-one",
+    "owner_id": "henok",
+    "type": "book",
+    "series_title": "Digital Organism Theory",
+    "title": "Consciousness: A Digital Organism",
+    "subtitle": "The Development and Application of a Big Theory of Everything",
+    "author": "Henok Ghebrechristos",
+    "slug": "digital-organism-theory",
+    "visibility": "public"
+  },
+  "release": {
+    "id": "dot-book-one-foundational-v1",
+    "version": 1,
+    "status": "foundational-preview",
+    "label": "Foundational edition",
+    "published_at": null,
+    "updated_at": "2026-07-30"
+  },
+  "extent": {
+    "chapters": 6,
+    "words": 21862,
+    "equations": 14,
+    "references": 23
+  },
+  "reader_contract": {
+    "finite": true,
+    "autoplay": false,
+    "claim_levels": [
+      "Observation",
+      "Model",
+      "Hypothesis",
+      "Speculation"
+    ]
+  },
+  "sections": [
+    {
+      "id": "dot-book-one-preface",
+      "order": 0,
+      "slug": "preface",
+      "kind": "preface",
+      "number": null,
+      "title": "The Observer Belongs in the Inquiry",
+      "subtitle": null,
+      "part": "The Proposed Architecture",
+      "content_path": "sections/preface.md",
+      "word_count": 1255,
+      "reading_time_minutes": 6,
+      "related_concepts": [
+        "subjective-data",
+        "fear",
+        "love"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-digital-organism",
+      "order": 1,
+      "slug": "the-digital-organism",
+      "kind": "chapter",
+      "number": 1,
+      "title": "The Digital Organism",
+      "subtitle": "Consciousness, subjectivity, and the architecture of persistence",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/the-digital-organism.md",
+      "word_count": 4004,
+      "reading_time_minutes": 18,
+      "related_concepts": [
+        "digital-organism",
+        "big-c",
+        "little-c",
+        "reality-frame",
+        "canvas",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-decoupling-principle",
+      "order": 2,
+      "slug": "the-decoupling-principle",
+      "kind": "chapter",
+      "number": 2,
+      "title": "The Decoupling Principle",
+      "subtitle": "Where awareness meets the body",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/the-decoupling-principle.md",
+      "word_count": 2313,
+      "reading_time_minutes": 11,
+      "related_concepts": [
+        "little-c",
+        "body-interface",
+        "rendering-latency",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-architecture-of-continuity",
+      "order": 3,
+      "slug": "architecture-of-continuity",
+      "kind": "chapter",
+      "number": 3,
+      "title": "Architecture of Continuity",
+      "subtitle": "Engineered continuity, immersion, and learning",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/architecture-of-continuity.md",
+      "word_count": 2244,
+      "reading_time_minutes": 10,
+      "related_concepts": [
+        "continuity",
+        "reality-frame",
+        "reality-stream",
+        "big-c"
+      ]
+    },
+    {
+      "id": "dot-book-one-reality-frames",
+      "order": 4,
+      "slug": "reality-frames",
+      "kind": "chapter",
+      "number": 4,
+      "title": "Reality Frames",
+      "subtitle": "Rules, consequence, and the structure of experience",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/reality-frames.md",
+      "word_count": 2619,
+      "reading_time_minutes": 12,
+      "related_concepts": [
+        "reality-frame",
+        "reality-stream",
+        "world-invariants",
+        "agency",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-canvas",
+      "order": 5,
+      "slug": "the-canvas",
+      "kind": "chapter",
+      "number": 5,
+      "title": "The Canvas",
+      "subtitle": "The persistent substrate of experience",
+      "part": "The Human Instance",
+      "content_path": "sections/the-canvas.md",
+      "word_count": 2999,
+      "reading_time_minutes": 14,
+      "related_concepts": [
+        "canvas",
+        "painting",
+        "character",
+        "fear"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-painting",
+      "order": 6,
+      "slug": "the-painting",
+      "kind": "chapter",
+      "number": 6,
+      "title": "The Painting",
+      "subtitle": "From inherited conditioning to conscious authorship",
+      "part": "The Human Instance",
+      "content_path": "sections/the-painting.md",
+      "word_count": 5859,
+      "reading_time_minutes": 27,
+      "related_concepts": [
+        "painting",
+        "character",
+        "culture",
+        "fear",
+        "love"
+      ]
+    },
+    {
+      "id": "dot-book-one-references",
+      "order": 7,
+      "slug": "references",
+      "kind": "references",
+      "number": null,
+      "title": "References",
+      "subtitle": null,
+      "part": "Notes and Sources",
+      "content_path": "sections/references.md",
+      "word_count": 569,
+      "reading_time_minutes": 3,
+      "related_concepts": [
+        "sources",
+        "evidence"
+      ]
+    }
+  ]
+}
