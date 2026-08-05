@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import typing
+
 import pydantic
 
 
@@ -12,9 +14,13 @@ class TwinAskRequest(pydantic.BaseModel):
 
 
 class Citation(pydantic.BaseModel):
+    #: The citable id. A graph node id, or a chunk id when the twin answered
+    #: from a document in the member's vault.
     node_id: str
     kind: str
     label: str
+    #: Where in the source the passage sits, so a citation can be opened.
+    locator: dict[str, typing.Any] | None = None
 
 
 class TwinAskResponse(pydantic.BaseModel):

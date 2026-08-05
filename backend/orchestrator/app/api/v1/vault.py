@@ -11,6 +11,7 @@ import app.auth.dependencies
 import app.db.session
 import app.domains.graph.schemas
 import app.domains.graph.service
+import app.domains.knowledge.service
 import app.integrations.object_store
 
 router = fastapi.APIRouter(
@@ -110,6 +111,28 @@ async def register_node(
 
     app.auth.dependencies.ensure_write_scope(owner)
     safe_key: str = _require_own_key(payload.key, owner)
+    metadata: dict[str, typing.Any] = dict(payload.metadata or {})
+
+    # Ingest inline: a file the twin cannot read yet is a file the member has to
+    # wonder about. Bounded by the upload limit, so this stays a short request.
+    try:
+        result = await app.domains.knowledge.service.ingest_object(
+            session,
+            owner,
+            object_store_key=safe_key,
+            filename=payload.filename,
+            mime_type=str(metadata.get("content_type") or ""),
+            size_bytes=int(metadata.get("size") or 0),
+        )
+        metadata["ingest_status"] = result.status
+        metadata["chunk_count"] = result.chunk_count
+        if result.source_version_id:
+            metadata["source_version_id"] = result.source_version_id
+    except app.domains.knowledge.service.IngestError as exc:
+        metadata["ingest_status"] = app.domains.knowledge.service.STATUS_FAILED
+        metadata["ingest_error"] = str(exc)
+        metadata["chunk_count"] = 0
+
     return await app.domains.graph.service.create_node(
         session,
         owner,
@@ -119,7 +142,7 @@ async def register_node(
             platform="vault",
             external_id=safe_key,
             source_ref={"object_store_key": safe_key},
-            properties=payload.metadata or {},
+            properties=metadata,
             visibility="private",
         ),
     )

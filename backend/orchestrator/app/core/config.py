@@ -57,6 +57,12 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     TWIN_TIMEOUT_SECONDS: float = 30.0
     TOOL_RUNTIME_SECRET: str = ""
 
+    # Retrieval. Without an embedding key the twin still answers, using keyword
+    # scoring only; it never silently returns nothing.
+    EMBEDDING_MODEL: str = "gemini-embedding-001"
+    EMBEDDING_DIMENSIONS: int = 768
+    EMBEDDING_BATCH_SIZE: int = 32
+
     # Support plane (ADR-0001, ADR-0012). Absent keys disable the surface rather
     # than falling back to a placeholder.
     STRIPE_SECRET_KEY: str = ""

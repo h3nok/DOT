@@ -663,6 +663,17 @@ class KnowledgeChunk(Base):
     token_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Integer, nullable=False, default=0
     )
+    #: Stored as JSON floats rather than a vector type so the same schema runs on
+    #: SQLite and Postgres. Retrieval is always tenant-scoped, so the candidate
+    #: set stays small enough to score in process until pgvector is warranted.
+    embedding: sqlalchemy.orm.Mapped[list[float] | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.JSON, nullable=True
+    )
+    #: Which model produced the vector. Mixing models in one index is silently
+    #: wrong, so retrieval compares only within a single model.
+    embedding_model: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), nullable=True
+    )
 
     source_version: sqlalchemy.orm.Mapped[SourceVersion] = sqlalchemy.orm.relationship(
         back_populates="chunks"

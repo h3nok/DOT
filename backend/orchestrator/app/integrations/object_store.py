@@ -73,6 +73,15 @@ class FilesystemObjectStore:
         except OSError as exc:
             raise ObjectStoreError(f"Could not read object: {key}") from exc
 
+    async def get_bytes(self, key: str) -> bytes:
+        path: pathlib.Path = self._path_for(key)
+        try:
+            return path.read_bytes()
+        except FileNotFoundError as exc:
+            raise ObjectNotFoundError(f"Object not found: {key}") from exc
+        except OSError as exc:
+            raise ObjectStoreError(f"Could not read object: {key}") from exc
+
 
 class S3ObjectStore:
     def __init__(
@@ -135,6 +144,16 @@ class S3ObjectStore:
                 response = await s3.get_object(Bucket=self.bucket, Key=key)
                 body = await response["Body"].read()
                 return body.decode("utf-8")
+        except botocore.exceptions.ClientError as exc:
+            if exc.response["Error"]["Code"] == "NoSuchKey":
+                raise ObjectNotFoundError(f"Object not found: {key}") from exc
+            raise ObjectStoreError(f"Could not read object: {key}") from exc
+
+    async def get_bytes(self, key: str) -> bytes:
+        try:
+            async with self.session.client("s3", endpoint_url=self.endpoint_url) as s3:
+                response = await s3.get_object(Bucket=self.bucket, Key=key)
+                return await response["Body"].read()
         except botocore.exceptions.ClientError as exc:
             if exc.response["Error"]["Code"] == "NoSuchKey":
                 raise ObjectNotFoundError(f"Object not found: {key}") from exc
