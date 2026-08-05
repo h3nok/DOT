@@ -49,9 +49,9 @@ async def create_intent(
             cadence=payload.cadence,
             email=str(payload.email) if payload.email else None,
         )
-    except ValueError as exc: ValueError:
+    except ValueError as exc:
         raise fastapi.HTTPException(status_code=400, detail=str(exc)) from exc
-    except support_service.SupportUnavailableError as exc: support_service.SupportUnavailableError:
+    except support_service.SupportUnavailableError as exc:
         raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
     return schemas.SupportIntentResponse(**result)
 
@@ -68,9 +68,9 @@ async def stripe_webhook(
     body: bytes = await request.body()
     try:
         event: dict[str, Any] = support_service.verify_webhook(body, stripe_signature)
-    except support_service.WebhookVerificationError as exc: support_service.WebhookVerificationError:
+    except support_service.WebhookVerificationError as exc:
         raise fastapi.HTTPException(status_code=400, detail="Invalid signature.") from exc
-    except support_service.SupportUnavailableError as exc: support_service.SupportUnavailableError:
+    except support_service.SupportUnavailableError as exc:
         raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
     changed: bool = await support_service.apply_event(session, event)
     return {"applied": changed}

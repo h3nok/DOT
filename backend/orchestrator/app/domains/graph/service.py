@@ -525,7 +525,7 @@ async def assert_public_feed_target(feed_url: str) -> None:
     try:
         default_port: int = 443 if parsed.scheme == "https" else 80
         addresses: list[tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]] = await asyncio_getaddrinfo(host, parsed.port or default_port)
-    except socket.gaierror as exc: socket.gaierror:
+    except socket.gaierror as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="RSS feed host could not be resolved.",
@@ -587,7 +587,7 @@ async def fetch_feed_xml(feed_url: str) -> str:
         "dot-orchestrator-rss",
         timeout=20.0,
         max_connections=10,
-    ) as client: httpx.AsyncClient:
+    ) as client:
         for redirect_count in range(MAX_FEED_REDIRECTS + 1):
             validate_feed_url(current_url)
             await assert_public_feed_target(current_url)
@@ -600,7 +600,7 @@ async def fetch_feed_xml(feed_url: str) -> str:
                         current_url,
                         headers={"Accept": FEED_ACCEPT_HEADER},
                         follow_redirects=False,
-                    ) as response: httpx.Response:
+                    ) as response:
                         if response.status_code in {301, 302, 303, 307, 308}:
                             location = response.headers.get("location")
                             if not location:
@@ -622,13 +622,13 @@ async def fetch_feed_xml(feed_url: str) -> str:
                         _validate_feed_response_headers(response)
                         try:
                             response.raise_for_status()
-                        except httpx.HTTPStatusError as exc: httpx.HTTPStatusError:
+                        except httpx.HTTPStatusError as exc:
                             raise fastapi.HTTPException(
                                 status_code=fastapi.status.HTTP_502_BAD_GATEWAY,
                                 detail="RSS feed request failed.",
                             ) from exc
                         return await _read_limited_feed_response(response)
-                except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as exc: httpx.ConnectError | httpx.ConnectTimeout | httpx.ReadTimeout:
+                except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as exc:
                     last_exc = exc
                     if attempt < 2:
                         continue
@@ -714,7 +714,7 @@ async def process_import(
     try:
         fallback_title: str = account.display_name or account.handle if account else "Imported feed"
         feed: app.integrations.connectors.rss.RssFeed = app.integrations.connectors.rss.parse_feed(xml_text, fallback_title=fallback_title)
-    except Exception as exc: Exception:
+    except Exception as exc:
         await _mark_import_failed(session, footprint_import, error_code="feed_parse_failed")
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,

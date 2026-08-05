@@ -216,7 +216,7 @@ async def set_section_body(
         await app.integrations.object_store.get_object_store().put_bytes(
             key, body_text.encode("utf-8")
         )
-    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+    except app.integrations.object_store.ObjectStoreError as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Section body could not be persisted.",
@@ -486,7 +486,7 @@ async def create_release(
             project, release, sections, now, body_keys
         )
         await app.integrations.object_store.get_object_store().put_json(manifest_key, manifest)
-    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+    except app.integrations.object_store.ObjectStoreError as exc:
         await session.rollback()
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -537,12 +537,12 @@ async def get_release_manifest(
 
     try:
         return await app.integrations.object_store.get_object_store().get_json(release.manifest_key)
-    except app.integrations.object_store.ObjectNotFoundError as exc: app.integrations.object_store.ObjectNotFoundError:
+    except app.integrations.object_store.ObjectNotFoundError as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Manifest not found.",
         ) from exc
-    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+    except app.integrations.object_store.ObjectStoreError as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Release manifest could not be read.",
@@ -594,12 +594,12 @@ async def get_public_delivery_manifest(
 
     try:
         return await app.integrations.object_store.get_object_store().get_json(release.manifest_key)
-    except app.integrations.object_store.ObjectNotFoundError as exc: app.integrations.object_store.ObjectNotFoundError:
+    except app.integrations.object_store.ObjectNotFoundError as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Delivery manifest not found.",
         ) from exc
-    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+    except app.integrations.object_store.ObjectStoreError as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Delivery manifest could not be read.",

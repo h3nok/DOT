@@ -52,7 +52,7 @@ def parse_model_output(raw: str) -> ModelOutput:
         raise BoundaryViolation("Model output exceeded the boundary size limit.")
     try:
         payload: typing.Any = json.loads(raw)
-    except json.JSONDecodeError as exc: json.JSONDecodeError:
+    except json.JSONDecodeError as exc:
         raise BoundaryViolation("Model output was not valid JSON.") from exc
     if not isinstance(payload, dict):
         raise BoundaryViolation("Model output was not a JSON object.")

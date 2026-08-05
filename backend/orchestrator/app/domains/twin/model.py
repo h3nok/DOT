@@ -47,19 +47,19 @@ class GeminiModelClient:
         }
         url: str = f"{GEMINI_ENDPOINT}/{self._model}:generateContent"
         try:
-            async with httpx.AsyncClient(timeout=self._timeout) as client: httpx.AsyncClient:
+            async with httpx.AsyncClient(timeout=self._timeout) as client:
                 response: httpx.Response = await client.post(
                     url, json=payload, headers={"x-goog-api-key": self._api_key}
                 )
                 response.raise_for_status()
                 data: dict[str, typing.Any] = response.json()
-        except httpx.HTTPError as exc: httpx.HTTPError:
+        except httpx.HTTPError as exc:
             # Deliberately excludes the response body, which may echo content.
             raise ModelUnavailableError("Twin model request failed.") from exc
 
         try:
             return data["candidates"][0]["content"]["parts"][0]["text"]
-        except (KeyError, IndexError, TypeError) as exc: KeyError | IndexError | TypeError:
+        except (KeyError, IndexError, TypeError) as exc:
             raise ModelUnavailableError("Twin model returned no usable candidate.") from exc
 
 

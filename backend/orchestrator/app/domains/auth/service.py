@@ -77,7 +77,7 @@ async def _send_code_email(email: str, code: str) -> bool:
         return True
     from_addr: str = os.environ.get("EMAIL_FROM", "DOT <onboarding@resend.dev>")
     try:
-        async with httpx.AsyncClient(timeout=10) as client: httpx.AsyncClient:
+        async with httpx.AsyncClient(timeout=10) as client:
             r: httpx.Response = await client.post(
                 "https://api.resend.com/emails",
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
@@ -97,7 +97,7 @@ async def _send_code_email(email: str, code: str) -> bool:
                 },
             )
         return r.status_code in (200, 201)
-    except httpx.HTTPError as exc: httpx.HTTPError:
+    except httpx.HTTPError as exc:
         logger.error("[OTP] Resend send failed: %s", exc)
         return False
 

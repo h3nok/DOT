@@ -6,7 +6,7 @@ import fastapi
 import pydantic
 import sqlalchemy.ext.asyncio
 
-from DOT.backend.orchestrator.app.db.models import FootprintNode
+from app.db.models import FootprintNode
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.schemas

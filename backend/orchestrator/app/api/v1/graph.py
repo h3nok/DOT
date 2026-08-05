@@ -4,7 +4,7 @@ import typing
 import fastapi
 import sqlalchemy.ext.asyncio
 
-from DOT.backend.orchestrator.app.db.models import FootprintAccount, FootprintEdge, FootprintImport, FootprintNode
+from app.db.models import FootprintAccount, FootprintEdge, FootprintImport, FootprintNode
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.profile

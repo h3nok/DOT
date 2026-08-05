@@ -1,8 +1,6 @@
 import asyncio
 
-from sqlalchemy.ext.asyncio.session import AsyncSession
-
-from DOT.backend.orchestrator.app.db.models import FootprintImport
+from app.db.models import FootprintImport
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.service
@@ -19,7 +17,7 @@ def smoke_workflow(message: str = "ok") -> dict[str, str]:
 async def _process_footprint_import(import_id: str, owner_id: str) -> dict[str, str]:
     owner = app.auth.dependencies.OwnerContext(owner_id=owner_id, actor_id="orchestrator-worker")
     # Workers are tenants too — bind before touching tenant tables (ADR-0011).
-    async with app.db.session.tenant_session(owner_id) as session: AsyncSession:
+    async with app.db.session.tenant_session(owner_id) as session:
         footprint_import: FootprintImport = await app.domains.graph.service.process_import(
             session,
             owner,

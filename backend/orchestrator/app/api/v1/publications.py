@@ -65,7 +65,7 @@ async def get_section_body(
         text: str = await app.integrations.object_store.get_object_store().get_text(body_key)
     except app.integrations.object_store.ObjectNotFoundError:
         raise fastapi.HTTPException(status_code=404, detail="Body not found.") from None
-    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+    except app.integrations.object_store.ObjectStoreError as exc:
         raise fastapi.HTTPException(status_code=503, detail="Body could not be read.") from exc
     return fastapi.Response(
         content=text,

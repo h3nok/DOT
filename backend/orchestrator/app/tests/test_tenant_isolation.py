@@ -5,6 +5,7 @@ These assert the boundary itself, not the endpoints that sit behind it.
 
 from importlib.machinery import ModuleSpec
 from pathlib import Path
+from types import ModuleType
 
 import fastapi.testclient
 import pytest
@@ -77,7 +78,7 @@ def test_vault_upload_requires_authentication(client: fastapi.testclient.TestCli
 async def test_query_guard_blocks_unscoped_tenant_query(
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
 ) -> None:
-    async with session_factory() as session: sqlalchemy.ext.asyncio.AsyncSession:
+    async with session_factory() as session:
         with pytest.raises(app.core.tenancy.TenantScopeError):
             await session.execute(sqlalchemy.select(app.db.models.FootprintNode))
 
@@ -85,8 +86,8 @@ async def test_query_guard_blocks_unscoped_tenant_query(
 async def test_query_guard_allows_scoped_tenant_query(
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
 ) -> None:
-    async with session_factory() as session: sqlalchemy.ext.asyncio.AsyncSession:
-        result: sqlalchemy.Result[app.core.tenancy._GUARDED_STATEMENTS[app.db.models.FootprintNode]] = await session.execute(
+    async with session_factory() as session:
+        result = await session.execute(
             sqlalchemy.select(app.db.models.FootprintNode).where(
                 app.db.models.FootprintNode.owner_id == "owner-alice"
             )
@@ -97,7 +98,7 @@ async def test_query_guard_allows_scoped_tenant_query(
 async def test_owner_shard_is_derived_on_flush(
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
 ) -> None:
-    async with session_factory() as session: sqlalchemy.ext.asyncio.AsyncSession:
+    async with session_factory() as session:
         node = app.db.models.FootprintNode(owner_id="owner-alice", kind="note", label="n")
         session.add(node)
         await session.commit()

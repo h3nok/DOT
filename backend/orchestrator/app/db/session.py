@@ -16,7 +16,7 @@ AsyncSessionLocal: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyn
 
 
 async def get_session() -> collections.abc.AsyncGenerator[sqlalchemy.ext.asyncio.AsyncSession, None]:
-    async with AsyncSessionLocal() as session: sqlalchemy.ext.asyncio.AsyncSession:
+    async with AsyncSessionLocal() as session:
         yield session
 
 
@@ -34,11 +34,11 @@ async def get_tenant_session(
 async def tenant_session(owner_id: str) -> collections.abc.AsyncGenerator[sqlalchemy.ext.asyncio.AsyncSession, None]:
     """Tenant-bound session for workers and scripts, which have no request."""
 
-    async with AsyncSessionLocal() as session: sqlalchemy.ext.asyncio.AsyncSession:
+    async with AsyncSessionLocal() as session:
         await app.core.tenancy.bind_tenant(session, owner_id)
         yield session
 
 
 async def check_database() -> None:
-    async with engine.connect() as connection: sqlalchemy.ext.asyncio.AsyncConnection:
+    async with engine.connect() as connection:
         await connection.execute(sqlalchemy.text("select 1"))

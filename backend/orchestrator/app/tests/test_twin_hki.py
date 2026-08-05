@@ -9,8 +9,8 @@ import json
 import fastapi.testclient
 import pytest
 
-from DOT.backend.orchestrator.app.db.models import FootprintNode
-from DOT.backend.orchestrator.app.domains.twin.schemas import TwinAskResponse
+from app.db.models import FootprintNode
+from app.domains.twin.schemas import TwinAskResponse
 import app.domains.twin.boundary as boundary
 import app.domains.twin.registry as registry
 

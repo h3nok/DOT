@@ -31,13 +31,13 @@ async def session_factory() -> collections.abc.AsyncGenerator[
     )
     # SQLite cannot enforce RLS, so the tests run behind the same query guard the
     # application uses as its backstop (ADR-0011 L4).
-    async with engine.begin() as connection: sqlalchemy.ext.asyncio.AsyncConnection:
+    async with engine.begin() as connection:
         await connection.run_sync(app.db.models.Base.metadata.create_all)
 
     factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession] = sqlalchemy.ext.asyncio.async_sessionmaker(engine, expire_on_commit=False)
     yield factory
 
-    async with engine.begin() as connection: sqlalchemy.ext.asyncio.AsyncConnection:
+    async with engine.begin() as connection:
         await connection.run_sync(app.db.models.Base.metadata.drop_all)
     await engine.dispose()
 
@@ -56,10 +56,10 @@ def client(
     async def override_session() -> collections.abc.AsyncGenerator[
         sqlalchemy.ext.asyncio.AsyncSession, None
     ]:
-        async with session_factory() as session: sqlalchemy.ext.asyncio.AsyncSession:
+        async with session_factory() as session:
             yield session
 
     fastapi_app.dependency_overrides[app.db.session.get_session] = override_session
-    with fastapi.testclient.TestClient(fastapi_app) as test_client: fastapi.testclient.TestClient:
+    with fastapi.testclient.TestClient(fastapi_app) as test_client:
         yield test_client
     app.settings.get_settings.cache_clear()

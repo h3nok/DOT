@@ -65,7 +65,7 @@ async def create_intent(
             },
             idempotency_key=models.new_idempotency_key(),
         )
-    except Exception as exc: Exception:  # noqa: BLE001 - provider errors are opaque by design
+    except Exception as exc:  # noqa: BLE001 - provider errors are opaque by design
         raise SupportUnavailableError("Support provider rejected the request.") from exc
 
     session.add(
@@ -101,7 +101,7 @@ def verify_webhook(payload: bytes, signature: str) -> dict[str, typing.Any]:
         return client.Webhook.construct_event(
             payload, signature, settings.STRIPE_WEBHOOK_SECRET
         )
-    except Exception as exc: Exception:  # noqa: BLE001 - any failure means discard
+    except Exception as exc:  # noqa: BLE001 - any failure means discard
         raise WebhookVerificationError("Webhook signature did not verify.") from exc
 
 
