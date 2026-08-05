@@ -62,6 +62,10 @@ Useful setup flags:
 - `SKIP_SYSTEM_PACKAGES=1 make setup` if you manage system tools yourself
 - `SKIP_INFRA=1 make setup` to install dependencies without starting Docker services
 
+On Linux, setup starts Docker with `systemctl` or `service` when available. If
+your user is not in the `docker` group yet, setup can use `sudo docker` for the
+current run and add your user to the group for future shells.
+
 ### Alternative Commands
 
 - Frontend only: `make start-frontend`

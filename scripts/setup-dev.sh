@@ -11,6 +11,7 @@ ASSUME_YES="${ASSUME_YES:-0}"
 SKIP_SYSTEM_PACKAGES="${SKIP_SYSTEM_PACKAGES:-0}"
 SKIP_INFRA="${SKIP_INFRA:-0}"
 SKIP_SEED="${SKIP_SEED:-0}"
+DOCKER_NEEDS_SUDO=0
 
 export ORCHESTRATOR_POSTGRES_PORT="${ORCHESTRATOR_POSTGRES_PORT:-5432}"
 export ORCHESTRATOR_REDIS_PORT="${ORCHESTRATOR_REDIS_PORT:-6379}"
@@ -35,6 +36,18 @@ fail() {
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
+}
+
+docker_cli() {
+  if [ "$DOCKER_NEEDS_SUDO" = "1" ]; then
+    run_sudo docker "$@"
+  else
+    docker "$@"
+  fi
+}
+
+docker_compose() {
+  docker_cli compose "$@"
 }
 
 confirm() {
@@ -147,10 +160,21 @@ install_debian_node() {
   fi
 }
 
+install_debian_docker() {
+  run_sudo apt-get install -y docker.io
+
+  if docker compose version >/dev/null 2>&1 || run_sudo docker compose version >/dev/null 2>&1; then
+    return 0
+  fi
+
+  run_sudo apt-get install -y docker-compose-plugin || run_sudo apt-get install -y docker-compose-v2 || true
+}
+
 install_linux_packages() {
   if command_exists apt-get; then
     run_sudo apt-get update
-    run_sudo apt-get install -y ca-certificates curl gnupg python3 python3-venv python3-pip docker.io docker-compose-plugin
+    run_sudo apt-get install -y ca-certificates curl gnupg python3 python3-venv python3-pip
+    install_debian_docker
     install_debian_node
   elif command_exists dnf; then
     run_sudo dnf install -y python3 python3-pip nodejs npm docker docker-compose-plugin
@@ -246,42 +270,91 @@ prepare_env_files() {
   copy_env_if_missing "$ROOT_DIR/frontend/.env.example" "$ROOT_DIR/frontend/.env.local"
 }
 
+linux_docker_user() {
+  printf '%s' "${SUDO_USER:-${USER:-$(id -un)}}"
+}
+
+offer_docker_group_membership() {
+  [ "$(uname -s)" = "Linux" ] || return 0
+
+  local docker_user
+  docker_user="$(linux_docker_user)"
+  [ -n "$docker_user" ] || return 0
+  [ "$docker_user" != "root" ] || return 0
+  id "$docker_user" >/dev/null 2>&1 || return 0
+  id -nG "$docker_user" | tr ' ' '\n' | grep -qx docker && return 0
+
+  if confirm "Add $docker_user to the docker group for future non-sudo Docker use?"; then
+    run_sudo usermod -aG docker "$docker_user"
+    say "Added $docker_user to the docker group. Open a new login shell after setup for non-sudo Docker."
+  else
+    say "Continuing with sudo for Docker during this setup."
+  fi
+}
+
+docker_is_reachable() {
+  if docker info >/dev/null 2>&1; then
+    DOCKER_NEEDS_SUDO=0
+    return 0
+  fi
+
+  if [ "$(uname -s)" = "Linux" ] && run_sudo docker info >/dev/null 2>&1; then
+    DOCKER_NEEDS_SUDO=1
+    offer_docker_group_membership
+    say "Using sudo for Docker during this setup."
+    return 0
+  fi
+
+  return 1
+}
+
+start_docker_service() {
+  if [ "$(uname -s)" = "Darwin" ] && command_exists open; then
+    say "Starting Docker Desktop."
+    open -a Docker >/dev/null 2>&1 || true
+    return 0
+  fi
+
+  if [ "$(uname -s)" != "Linux" ]; then
+    return 0
+  fi
+
+  if command_exists systemctl && systemctl list-units >/dev/null 2>&1; then
+    say "Starting Docker service with systemctl."
+    run_sudo systemctl enable --now docker || run_sudo systemctl start docker || true
+  elif command_exists service; then
+    say "Starting Docker service."
+    run_sudo service docker start || true
+  fi
+}
+
 ensure_docker_running() {
   section "Checking Docker"
 
   command_exists docker || fail "Docker is required"
-  docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is required"
+  docker compose version >/dev/null 2>&1 || run_sudo docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is required"
 
-  if docker info >/dev/null 2>&1; then
+  if docker_is_reachable; then
     say "Docker daemon is running."
     return 0
   fi
 
-  if [ "$(uname -s)" = "Darwin" ] && command_exists open; then
-    say "Starting Docker Desktop."
-    open -a Docker >/dev/null 2>&1 || true
-  elif command_exists systemctl; then
-    say "Starting Docker service."
-    run_sudo systemctl enable --now docker || run_sudo systemctl start docker || true
-  fi
+  start_docker_service
 
   local attempt
   for attempt in $(seq 1 60); do
-    if docker info >/dev/null 2>&1; then
+    if docker_is_reachable; then
       say "Docker daemon is running."
       return 0
     fi
     sleep 2
   done
 
-  if [ "$(uname -s)" = "Linux" ] && ! id -nG "$USER" | tr ' ' '\n' | grep -qx docker; then
-    if confirm "Add $USER to the docker group? You will need to log out and back in."; then
-      run_sudo usermod -aG docker "$USER"
-      fail "Added $USER to docker group. Log out and back in, then rerun make setup."
-    fi
+  if [ "$(uname -s)" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+    fail "Docker is installed but not reachable. In WSL, start Docker Desktop and enable WSL integration for this Ubuntu distro, then rerun make setup."
   fi
 
-  fail "Docker is installed but the daemon is not reachable"
+  fail "Docker is installed but the daemon is not reachable. Start Docker manually, then rerun make setup."
 }
 
 wait_for_tcp() {
@@ -314,8 +387,8 @@ prepare_infra() {
   ensure_docker_running
 
   section "Starting local infrastructure"
-  docker compose -f "$COMPOSE_FILE" pull
-  docker compose -f "$COMPOSE_FILE" up -d
+  docker_compose -f "$COMPOSE_FILE" pull
+  docker_compose -f "$COMPOSE_FILE" up -d
 
   wait_for_tcp "Postgres" "127.0.0.1" "$ORCHESTRATOR_POSTGRES_PORT"
   wait_for_tcp "Redis" "127.0.0.1" "$ORCHESTRATOR_REDIS_PORT"
