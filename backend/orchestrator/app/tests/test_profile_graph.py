@@ -10,7 +10,7 @@ OTHER = "member_profile_b"
 TREE: dict = {
     "graph": {
         "id": "self",
-        "label": "Habte",
+        "label": "Henok",
         "kind": "self",
         "description": "Root of the tree.",
         "children": [
@@ -49,7 +49,7 @@ def test_put_then_get_round_trips_the_tree(client: fastapi.testclient.TestClient
 
     graph = body["graph"]
     assert graph["id"] == "self"
-    assert graph["label"] == "Habte"
+    assert graph["label"] == "Henok"
     assert [child["id"] for child in graph["children"]] == ["writing", "work"]
     assert graph["children"][0]["surface"] == "publications"
     assert graph["children"][0]["children"][0]["label"] == "Digital Organism Theory"
@@ -80,7 +80,7 @@ def test_one_owner_cannot_see_another_tree(client: fastapi.testclient.TestClient
 
 def test_republish_replaces_rather_than_appends(client: fastapi.testclient.TestClient) -> None:
     _put(client, OWNER, TREE)
-    _put(client, OWNER, {"graph": {"id": "self", "label": "Habte", "kind": "self"}})
+    _put(client, OWNER, {"graph": {"id": "self", "label": "Henok", "kind": "self"}})
 
     graph = client.get("/v1/graph/profile", params={"owner_id": OWNER}).json()["graph"]
     assert graph["children"] is None

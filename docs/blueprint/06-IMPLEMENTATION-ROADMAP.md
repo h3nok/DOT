@@ -183,7 +183,7 @@ Acceptance:
 
 ### Increment 3 - Publication Studio MVP
 
-Goal: publish Habte's book/work from private drafts to immutable public pages.
+Goal: publish Henok's book/work from private drafts to immutable public pages.
 
 Scope:
 

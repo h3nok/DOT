@@ -20,9 +20,9 @@ export interface Project {
 
 export const siteConfig = {
   name: "Henok Ghebrechristos",
-  tagline: "Writer · Digital Organisms Theory",
+  tagline: "PhD in Computer Science · Digital Organisms Theory",
   description:
-    "Public profile and publication workspace for Henok Ghebrechristos, writer of Digital Organisms Theory — source-backed writing, trust, and member-owned knowledge.",
+    "Public profile and publication workspace for Henok Ghebrechristos, PhD in Computer Science, writer of Digital Organisms Theory — source-backed writing, trust, and member-owned knowledge.",
   url: "",
   email: "",
   bio: "A specialized Venture Builder & Systems Architect focused on AI Agent Sandboxing (HKI), Complex Evolution Simulators (DOT), HIPAA Dispatch Platforms (Avia/MedRoute), and Crypto Escrow Markets (Sullix). Developing continuous biological engines and trustless labor platforms.",

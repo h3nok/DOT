@@ -16,25 +16,26 @@ import app.domains.publication
 import app.domains.publication.schemas
 import app.domains.publication.service
 
-OWNER_ID: str = os.environ.get("PROFILE_DELIVERY_OWNER_ID", "habte")
-PROJECT_SLUG: str = os.environ.get("PROFILE_DELIVERY_SLUG", "habte-profile")
+OWNER_ID: str = os.environ.get("PROFILE_DELIVERY_OWNER_ID", "henok")
+PROJECT_SLUG: str = os.environ.get("PROFILE_DELIVERY_SLUG", "henok-profile")
+DISPLAY_NAME = "Henok Ghebrechristos, PhD"
 
 PROFILE_SECTIONS: list[dict[str, str]] = [
     {
         "title": "Public Identity Anchor",
-        "body_ref": "profile-delivery://habte/public-identity-anchor",
+        "body_ref": f"profile-delivery://{OWNER_ID}/public-identity-anchor",
     },
     {
         "title": "Publication Engine",
-        "body_ref": "profile-delivery://habte/publication-engine",
+        "body_ref": f"profile-delivery://{OWNER_ID}/publication-engine",
     },
     {
         "title": "Founding Access",
-        "body_ref": "profile-delivery://habte/founding-access",
+        "body_ref": f"profile-delivery://{OWNER_ID}/founding-access",
     },
     {
         "title": "Trust Contract",
-        "body_ref": "profile-delivery://habte/trust-contract",
+        "body_ref": f"profile-delivery://{OWNER_ID}/trust-contract",
     },
 ]
 
@@ -59,10 +60,14 @@ async def get_or_create_project(
             session,
             owner,
             app.domains.publication.schemas.PublicationProjectCreate(
-                title="Habte Profile Delivery",
+                title="Henok Ghebrechristos Profile Delivery",
                 slug=PROJECT_SLUG,
                 type="profile",
                 visibility="public",
+                meta={
+                    "display_name": DISPLAY_NAME,
+                    "credential": "PhD in Computer Science",
+                },
             ),
         )
 

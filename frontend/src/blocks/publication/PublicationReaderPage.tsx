@@ -21,7 +21,7 @@ import {
 } from "../../services/OrchestratorPublicationService";
 
 const SITE_URL =
-  import.meta.env.VITE_SITE_URL ?? "https://habteghebrechristos.com";
+  import.meta.env.VITE_SITE_URL ?? "https://henokghebrechristos.com";
 
 type Manifest = PublicationReleaseManifest;
 type Section = PublicationReleaseManifestSection;

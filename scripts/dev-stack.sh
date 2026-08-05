@@ -20,9 +20,9 @@ export ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT="${ORCHESTRATOR_LOCAL_OBJECT_STORE_R
 
 export VITE_API_BASE_URL="${VITE_API_BASE_URL:-/api}"
 export VITE_ORCHESTRATOR_URL="${VITE_ORCHESTRATOR_URL:-http://127.0.0.1:8000}"
-export VITE_ORCHESTRATOR_OWNER_ID="${VITE_ORCHESTRATOR_OWNER_ID:-habte}"
-export VITE_PROFILE_DELIVERY_OWNER_ID="${VITE_PROFILE_DELIVERY_OWNER_ID:-habte}"
-export VITE_PROFILE_DELIVERY_SLUG="${VITE_PROFILE_DELIVERY_SLUG:-habte-profile}"
+export VITE_ORCHESTRATOR_OWNER_ID="${VITE_ORCHESTRATOR_OWNER_ID:-henok}"
+export VITE_PROFILE_DELIVERY_OWNER_ID="${VITE_PROFILE_DELIVERY_OWNER_ID:-henok}"
+export VITE_PROFILE_DELIVERY_SLUG="${VITE_PROFILE_DELIVERY_SLUG:-henok-profile}"
 
 PIDS=()
 
@@ -134,7 +134,7 @@ Full dev stack is running.
 Frontend:             http://localhost:5173
 Frontend owner mode:  http://localhost:5173/?owner=1
 Orchestrator API:     http://127.0.0.1:8000/docs
-Profile release:      http://localhost:5173/read/habte/habte-profile
+Profile release:      http://localhost:5173/read/henok/henok-profile
 MinIO console:        http://127.0.0.1:${ORCHESTRATOR_MINIO_CONSOLE_PORT}
 
 Press Ctrl-C to stop app processes. Docker services stay up; run

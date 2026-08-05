@@ -94,7 +94,7 @@ Core units:
 - Public reading page.
 - Export targets: web, PDF, EPUB later.
 
-The first real customer delivery is Habte's profile plus book/publication workspace.
+The first real customer delivery is Henok's profile plus book/publication workspace.
 
 ### K6 — Digital Footprint Graph
 
@@ -260,7 +260,7 @@ footprint_imports
 
 The first customer page must be readable and calm before adding more product power.
 
-### Priority 2 — Publication Studio MVP for Habte's book
+### Priority 2 — Publication Studio MVP for Henok's book
 
 Build a private book project editor and public reading route backed by the FastAPI
 orchestrator. Publication is the first full end-to-end workflow because it proves the

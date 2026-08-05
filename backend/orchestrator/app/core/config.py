@@ -47,7 +47,7 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     AWS_REGION: str = "us-east-1"
 
     SENTRY_DSN: str = ""
-    FRONTEND_URL: str = "https://habteghebrechristos.com"
+    FRONTEND_URL: str = "https://henokghebrechristos.com"
 
     # Twin plane (ADR-0010). TOOL_RUNTIME_SECRET signs tool manifests; without it
     # the registry refuses to dispatch anything.

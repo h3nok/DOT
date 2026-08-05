@@ -11,7 +11,7 @@ def create_ready_project(
     project = client.post(
         "/v1/publications/projects",
         headers=OWNER_HEADERS,
-        json={"title": "Habte Book", "visibility": visibility},
+        json={"title": "Henok Book", "visibility": visibility},
     ).json()
     section_response: httpx.Response = client.post(
         f"/v1/publications/projects/{project['id']}/sections",
@@ -32,7 +32,7 @@ def test_publication_project_is_owner_scoped(client: fastapi.testclient.TestClie
     create_response: httpx.Response = client.post(
         "/v1/publications/projects",
         headers=OWNER_HEADERS,
-        json={"title": "Habte Book"},
+        json={"title": "Henok Book"},
     )
     assert create_response.status_code == 201
     project_id = create_response.json()["id"]
@@ -48,7 +48,7 @@ def test_publication_release_requires_valid_sections(client: fastapi.testclient.
     project = client.post(
         "/v1/publications/projects",
         headers=OWNER_HEADERS,
-        json={"title": "Habte Book"},
+        json={"title": "Henok Book"},
     ).json()
 
     invalid_release: httpx.Response = client.post(
@@ -95,7 +95,7 @@ def test_publication_release_writes_immutable_manifest(
     assert manifest_response.status_code == 200
     assert manifest_response.json()["schema_version"] == "publication.release.v1"
     assert manifest_response.json()["project"]["id"] == project["id"]
-    assert manifest_response.json()["project"]["slug"] == "habte-book"
+    assert manifest_response.json()["project"]["slug"] == "henok-book"
     assert manifest_response.json()["release"]["id"] == release["id"]
     assert manifest_response.json()["release"]["manifest_key"] == release["manifest_key"]
     manifest_sections = manifest_response.json()["sections"]
@@ -107,7 +107,7 @@ def test_publication_release_writes_immutable_manifest(
     assert snapshot["title"] == "Chapter 1"
     assert snapshot["status"] == "draft"
     # Bodies are snapshotted into the immutable release namespace.
-    assert snapshot["body_ref"].startswith("releases/owner_1/habte-book/v1/sections/")
+    assert snapshot["body_ref"].startswith("releases/owner_1/henok-book/v1/sections/")
     body_response: httpx.Response = client.get(
         f"/v1/publications/delivery/body/{snapshot['body_ref']}"
     )
@@ -117,7 +117,7 @@ def test_publication_release_writes_immutable_manifest(
 
 def test_publication_release_is_idempotent(client: fastapi.testclient.TestClient) -> None:
     project, _section = create_ready_project(client)
-    headers: dict[str, str] = {**OWNER_HEADERS, "Idempotency-Key": "publish-habte-book-v1"}
+    headers: dict[str, str] = {**OWNER_HEADERS, "Idempotency-Key": "publish-henok-book-v1"}
 
     first_response: httpx.Response = client.post(
         f"/v1/publications/projects/{project['id']}/releases",
@@ -155,7 +155,7 @@ def test_publication_delivery_manifest_is_public_by_owner_and_slug(
     assert release_response.status_code == 201
 
     manifest_response: httpx.Response = client.get(
-        "/v1/publications/delivery/owner_1/habte-book/manifest"
+        "/v1/publications/delivery/owner_1/henok-book/manifest"
     )
 
     assert manifest_response.status_code == 200
@@ -175,7 +175,7 @@ def test_publication_delivery_manifest_hides_private_projects(
     assert release_response.status_code == 201
 
     manifest_response: httpx.Response = client.get(
-        "/v1/publications/delivery/owner_1/habte-book/manifest"
+        "/v1/publications/delivery/owner_1/henok-book/manifest"
     )
 
     assert manifest_response.status_code == 404
@@ -207,10 +207,10 @@ def test_section_body_upload_and_release_snapshot(
         json={
             "title": "Meta Book",
             "visibility": "public",
-            "meta": {"author": "Habte", "reader_contract": {"finite": True}},
+            "meta": {"author": "Henok", "reader_contract": {"finite": True}},
         },
     ).json()
-    assert project["meta"]["author"] == "Habte"
+    assert project["meta"]["author"] == "Henok"
 
     section = client.post(
         f"/v1/publications/projects/{project['id']}/sections",
@@ -240,7 +240,7 @@ def test_section_body_upload_and_release_snapshot(
     manifest = client.get(
         f"/v1/publications/delivery/owner_1/{project['slug']}/manifest"
     ).json()
-    assert manifest["project"]["meta"]["author"] == "Habte"
+    assert manifest["project"]["meta"]["author"] == "Henok"
     manifest_section = manifest["sections"][0]
     assert manifest_section["meta"]["kind"] == "preface"
     assert manifest_section["body_ref"].startswith(

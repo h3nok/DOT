@@ -594,7 +594,7 @@ Initial targets:
 8. Connector framework, starting with read-only imports and explicit revocation.
 
 Do not start with connectors or a general chatbot. The first usable product is a calm book
-workspace that can publish Habte's work and then attach sources behind it.
+workspace that can publish Henok's work and then attach sources behind it.
 
 ## 14. Definition of done
 

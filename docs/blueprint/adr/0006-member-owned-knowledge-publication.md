@@ -9,14 +9,14 @@
 The product is evolving from a profile/invite gateway into a calmer internet: a place
 where members consolidate their documents and connected sources, read and summarize them,
 and publish durable work without being pulled into feeds or surveillance loops. The first
-customer delivery is Habte's own profile and book/publication workspace.
+customer delivery is Henok's own profile and book/publication workspace.
 
 ## Decision
 
 Build a **member-owned Knowledge & Publication OS** as the next major product subsystem.
 The system prioritizes:
 
-1. Publication Studio for Habte's book.
+1. Publication Studio for Henok's book.
 2. Manual document upload and private Knowledge Vault.
 3. Source ledger with citations/provenance before AI answers.
 4. Scoped AI summaries and Q&A over selected sources.

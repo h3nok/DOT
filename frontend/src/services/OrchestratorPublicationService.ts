@@ -158,9 +158,9 @@ export const ORCHESTRATOR_URL =
   import.meta.env.VITE_ORCHESTRATOR_URL || "http://127.0.0.1:8000";
 
 export const PROFILE_DELIVERY_OWNER_ID =
-  import.meta.env.VITE_PROFILE_DELIVERY_OWNER_ID || "habte";
+  import.meta.env.VITE_PROFILE_DELIVERY_OWNER_ID || "henok";
 export const PROFILE_DELIVERY_SLUG =
-  import.meta.env.VITE_PROFILE_DELIVERY_SLUG || "habte-profile";
+  import.meta.env.VITE_PROFILE_DELIVERY_SLUG || "henok-profile";
 export const ORCHESTRATOR_OWNER_ID =
   import.meta.env.VITE_ORCHESTRATOR_OWNER_ID || PROFILE_DELIVERY_OWNER_ID;
 

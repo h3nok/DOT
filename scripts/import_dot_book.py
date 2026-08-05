@@ -163,12 +163,12 @@ def parse_args() -> argparse.Namespace:
         help="Publish through the orchestrator API (project → sections → release).",
     )
     parser.add_argument("--orchestrator-url", default="http://127.0.0.1:8000")
-    parser.add_argument("--owner-id", default="habte")
+    parser.add_argument("--owner-id", default="henok")
     return parser.parse_args()
 
 
 def pandoc_markdown(source: pathlib.Path) -> str:
-    with tempfile.TemporaryDirectory(prefix="dot-book-") as temp_dir: str: str:
+    with tempfile.TemporaryDirectory(prefix="dot-book-") as temp_dir:
         output: pathlib.Path = pathlib.Path(temp_dir) / "book.md"
         subprocess.run(
             [
@@ -370,7 +370,7 @@ def push_to_orchestrator(
     }
     slug = manifest["project"]["slug"]
 
-    with httpx.Client(base_url=base_url, headers=headers, timeout=30) as client: Client: Client:
+    with httpx.Client(base_url=base_url, headers=headers, timeout=30) as client:
         projects: Response = client.get("/v1/publications/projects")
         projects.raise_for_status()
         project: Any | None = next((p for p in projects.json() if p["slug"] == slug), None)

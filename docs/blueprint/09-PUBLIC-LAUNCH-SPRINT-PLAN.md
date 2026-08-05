@@ -131,12 +131,12 @@ Exit criteria:
 
 ### Sprint 3 — Public Reading GA (**Gate A ships**)
 
-**Theme:** the first public deliverable — Habte's book readable by anyone, calmly.
+**Theme:** the first public deliverable — Henok's book readable by anyone, calmly.
 
 Scope:
 
 - Publish the real book end-to-end: Studio → sections/revisions → validate → release →
-  `/read/habte/<book-slug>` in production (dogfood; fix what breaks).
+  `/read/henok/<book-slug>` in production (dogfood; fix what breaks).
 - Delivery hardening: CDN/cache headers on manifest reads, release revocation honored by
   the reader, version pinning (`?v=`), graceful 404/revoked states.
 - Reader polish: SEO + OpenGraph metadata per release, sitemap for published releases,

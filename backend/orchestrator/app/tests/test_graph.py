@@ -6,11 +6,11 @@ OTHER_OWNER_HEADERS: dict[str, str] = {"X-Owner-Id": "owner_2"}
 SUBSTACK_RSS = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Habte Notes</title>
-    <link>https://habte.substack.com</link>
+    <title>Henok Notes</title>
+    <link>https://henok.substack.com</link>
     <item>
       <title>Graph-aware publishing</title>
-      <link>https://habte.substack.com/p/graph-aware-publishing</link>
+    <link>https://henok.substack.com/p/graph-aware-publishing</link>
       <guid>post-1</guid>
       <pubDate>Sat, 13 Jun 2026 12:00:00 GMT</pubDate>
       <description><![CDATA[How member-owned graph navigation changes publishing.]]></description>
@@ -19,7 +19,7 @@ SUBSTACK_RSS = """<?xml version="1.0" encoding="UTF-8"?>
     </item>
     <item>
       <title>Substack as a graph source</title>
-      <link>https://habte.substack.com/p/substack-source</link>
+    <link>https://henok.substack.com/p/substack-source</link>
       <guid>post-2</guid>
       <pubDate>Sat, 13 Jun 2026 13:00:00 GMT</pubDate>
       <description>RSS imports should be explicit and inspectable.</description>
@@ -66,8 +66,8 @@ def test_graph_snapshot_is_owner_scoped(client: fastapi.testclient.TestClient) -
         headers=OWNER_HEADERS,
         json={
             "platform": "substack",
-            "handle": "habte",
-            "profile_url": "https://habte.substack.com",
+            "handle": "henok",
+            "profile_url": "https://henok.substack.com",
             "auth_mode": "rss",
         },
     )
@@ -103,9 +103,9 @@ def test_graph_snapshot_is_owner_scoped(client: fastapi.testclient.TestClient) -
 def test_graph_account_create_is_idempotent(client: fastapi.testclient.TestClient) -> None:
     payload = {
         "platform": "substack",
-        "handle": "habte",
-        "display_name": "Habte Notes",
-        "profile_url": "https://habte.substack.com",
+        "handle": "henok",
+        "display_name": "Henok Notes",
+        "profile_url": "https://henok.substack.com",
         "auth_mode": "rss",
     }
     first_response: httpx.Response = client.post(
@@ -114,13 +114,13 @@ def test_graph_account_create_is_idempotent(client: fastapi.testclient.TestClien
     second_response: httpx.Response = client.post(
         "/v1/graph/accounts",
         headers=OWNER_HEADERS,
-        json={**payload, "display_name": "Habte Research"},
+        json={**payload, "display_name": "Henok Research"},
     )
 
     assert first_response.status_code == 201
     assert second_response.status_code == 201
     assert second_response.json()["id"] == first_response.json()["id"]
-    assert second_response.json()["display_name"] == "Habte Research"
+    assert second_response.json()["display_name"] == "Henok Research"
 
     accounts_response: httpx.Response = client.get("/v1/graph/accounts", headers=OWNER_HEADERS)
     assert accounts_response.status_code == 200
@@ -156,8 +156,8 @@ def test_graph_import_creates_run_and_is_idempotent(client: fastapi.testclient.T
         headers=OWNER_HEADERS,
         json={
             "platform": "substack",
-            "handle": "habte",
-            "profile_url": "https://habte.substack.com",
+            "handle": "henok",
+            "profile_url": "https://henok.substack.com",
             "auth_mode": "rss",
         },
     )
@@ -167,7 +167,7 @@ def test_graph_import_creates_run_and_is_idempotent(client: fastapi.testclient.T
         "connector": "substack",
         "import_mode": "rss",
         "account_id": account_response.json()["id"],
-        "source_ref": {"feed_url": "https://habte.substack.com/feed"},
+        "source_ref": {"feed_url": "https://henok.substack.com/feed"},
     }
 
     first_response: httpx.Response = client.post("/v1/graph/imports", headers=headers, json=payload)
@@ -195,7 +195,7 @@ def test_graph_import_list_is_owner_scoped(client: fastapi.testclient.TestClient
         json={
             "connector": "substack",
             "import_mode": "rss",
-            "source_ref": {"feed_url": "https://habte.substack.com/feed"},
+            "source_ref": {"feed_url": "https://henok.substack.com/feed"},
         },
     )
     other_import_response: httpx.Response = client.post(
@@ -238,9 +238,9 @@ def test_graph_import_processes_substack_rss(client: fastapi.testclient.TestClie
         headers=OWNER_HEADERS,
         json={
             "platform": "substack",
-            "handle": "habte",
-            "display_name": "Habte Notes",
-            "profile_url": "https://habte.substack.com",
+            "handle": "henok",
+            "display_name": "Henok Notes",
+            "profile_url": "https://henok.substack.com",
             "auth_mode": "rss",
         },
     )
@@ -252,7 +252,7 @@ def test_graph_import_processes_substack_rss(client: fastapi.testclient.TestClie
             "connector": "substack",
             "import_mode": "rss",
             "account_id": account_response.json()["id"],
-            "source_ref": {"feed_url": "https://habte.substack.com/feed"},
+            "source_ref": {"feed_url": "https://henok.substack.com/feed"},
         },
     )
     assert import_response.status_code == 201
@@ -336,7 +336,7 @@ def test_graph_import_process_is_owner_scoped(client: fastapi.testclient.TestCli
         json={
             "connector": "substack",
             "import_mode": "rss",
-            "source_ref": {"feed_url": "https://habte.substack.com/feed"},
+            "source_ref": {"feed_url": "https://henok.substack.com/feed"},
         },
     )
     assert import_response.status_code == 201
