@@ -704,3 +704,82 @@ class SourceAnchor(Base):
         back_populates="anchors"
     )
 
+
+# ── Twin conversations ────────────────────────────────────────────────────────
+
+class TwinConversation(Base, TimestampMixin, TenantMixin):
+    __tablename__ = "twin_conversations"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("conv")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    #: Whose twin is being addressed. A member can hold a conversation with
+    #: someone else's public footprint, so this is not always `owner_id`.
+    subject_owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    title: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(256), nullable=False, default="New conversation"
+    )
+    #: Denormalised so the conversation list sorts without touching messages.
+    last_message_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = (
+        sqlalchemy.orm.mapped_column(sqlalchemy.DateTime(timezone=True), index=True)
+    )
+    message_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+
+    messages: sqlalchemy.orm.Mapped[list[TwinMessage]] = sqlalchemy.orm.relationship(
+        back_populates="conversation",
+        cascade="all, delete-orphan",
+        order_by="TwinMessage.seq",
+    )
+
+
+class TwinMessage(Base):
+    __tablename__ = "twin_messages"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("conversation_id", "seq", name="uq_twin_message_seq"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("msg")
+    )
+    conversation_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("twin_conversations.id"), index=True, nullable=False
+    )
+    #: Turn order within the thread. Both turns of an exchange commit in one
+    #: transaction and share a timestamp, so created_at cannot order them, and
+    #: replaying them out of order feeds the twin its own answer as the question.
+    seq: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    #: "member" or "twin".
+    role: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), nullable=False
+    )
+    content: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text, nullable=False, default=""
+    )
+    #: The passages this answer was grounded in, stored verbatim. Re-deriving
+    #: them later would show what the twin *would* cite now, not what it did.
+    citations: sqlalchemy.orm.Mapped[list[dict] | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.JSON, nullable=True
+    )
+    refusal_code: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), index=True
+    )
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+
+    conversation: sqlalchemy.orm.Mapped[TwinConversation] = sqlalchemy.orm.relationship(
+        back_populates="messages"
+    )
+
+

@@ -53,22 +53,48 @@ def _refuse(code: str) -> schemas.TwinAskResponse:
     )
 
 
+#: How many prior turns the twin sees. Far enough back to follow a thread,
+#: short enough that the context stays dominated by retrieved material.
+HISTORY_TURNS = 6
+
+
+def _render_history(history: typing.Sequence[tuple[str, str]]) -> str:
+    if not history:
+        return ""
+    lines: list[str] = [
+        f"{'Member' if role == 'member' else 'You'}: {content}" for role, content in history
+    ]
+    body: str = "\n".join(lines)
+    # Prior turns are wrapped too: a member could have pasted an instruction into
+    # an earlier message and it would replay here as if the twin had said it.
+    return f"{boundary.wrap_untrusted([{'kind': 'history', 'text': body}])}\n\n"
+
+
+def retrieval_query(question: str, history: typing.Sequence[tuple[str, str]]) -> str:
+    """Follow-ups like "what about the second one" carry no searchable terms."""
+
+    prior: list[str] = [content for role, content in history if role == "member"]
+    return " ".join([*prior[-1:], question])
+
+
 async def ask(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     requester: app.auth.dependencies.OwnerContext,
     payload: schemas.TwinAskRequest,
     client: model.ModelClient | None = None,
+    history: typing.Sequence[tuple[str, str]] = (),
 ) -> schemas.TwinAskResponse:
     graph_owner_id: str = payload.owner_id or requester.owner_id
 
     passages: list[retriever.Passage] = await retriever.retrieve_passages(
-        session, requester, graph_owner_id, payload.question
+        session, requester, graph_owner_id, retrieval_query(payload.question, history)
     )
     if not passages:
         return _refuse(REFUSAL_NO_CONTEXT)
 
     fragments: list[dict[str, typing.Any]] = retriever.passages_to_fragments(passages)
     user_message: str = (
+        f"{_render_history(history)}"
         f"{boundary.wrap_untrusted(fragments)}\n\n"
         f"Question: {payload.question}\n"
         "Answer using only the context above."

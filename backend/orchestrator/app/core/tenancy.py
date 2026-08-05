@@ -31,6 +31,7 @@ TENANT_TABLES: frozenset[str] = frozenset(
         "footprint_edges",
         "footprint_imports",
         "source_objects",
+        "twin_conversations",
     }
 )
 
@@ -43,6 +44,7 @@ TENANT_CHILD_TABLES: dict[str, tuple[str, str, str]] = {
     "source_versions": ("source_objects", "source_object_id", "id"),
     "knowledge_chunks": ("source_versions", "source_version_id", "id"),
     "source_anchors": ("knowledge_chunks", "chunk_id", "id"),
+    "twin_messages": ("twin_conversations", "conversation_id", "id"),
 }
 
 OWNER_COLUMN = "owner_id"
