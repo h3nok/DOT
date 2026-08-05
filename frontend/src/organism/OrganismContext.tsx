@@ -24,6 +24,8 @@ import { useMetabolism } from "./signals/useMetabolism";
 import { useSynapticActivity } from "./signals/useSynapticActivity";
 
 const OrganismContext = createContext<OrganismContextValue | null>(null);
+const BACKEND_SIGNALS_ENABLED =
+  import.meta.env.VITE_ORGANISM_BACKEND_SIGNALS === "1";
 
 function loadConfig(): OrganismConfig {
   if (typeof window === "undefined") return DEFAULT_CONFIG;
@@ -72,9 +74,10 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // --- Signal sources ---------------------------------------------------
   const live = config.enabled;
+  const backendSignals = live && BACKEND_SIGNALS_ENABLED;
   const circadian = useCircadian();
-  const metabolism = useMetabolism(live);
-  const synaptic = useSynapticActivity(live);
+  const metabolism = useMetabolism(backendSignals);
+  const synaptic = useSynapticActivity(backendSignals);
   useArousal(vitals, { active: live, reducedMotion });
 
   // Fold the low-frequency (state-based) signals into the shared ref.

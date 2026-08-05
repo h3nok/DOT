@@ -26,8 +26,6 @@ export const Invite: React.FC<InviteProps> = ({
 }) => {
   const { createInvite } = useAuth();
   const pulse = useOrganismPulse();
-  const [email, setEmail] = useState("");
-  const [note, setNote] = useState("");
   const [link, setLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -37,10 +35,7 @@ export const Invite: React.FC<InviteProps> = ({
     e.preventDefault();
     setError(null);
     setBusy(true);
-    const result = await createInvite({
-      email: email.trim() || undefined,
-      note: note.trim() || undefined,
-    });
+    const result = await createInvite();
     setBusy(false);
     if (!result.ok || !result.link) {
       setError(result.error ?? "Could not create invitation.");
@@ -104,8 +99,7 @@ export const Invite: React.FC<InviteProps> = ({
             type="button"
             onClick={() => {
               setLink(null);
-              setEmail("");
-              setNote("");
+              setError(null);
             }}
             className="mt-4 w-full text-center text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -114,31 +108,11 @@ export const Invite: React.FC<InviteProps> = ({
         </div>
       ) : (
         <form onSubmit={mint}>
-          <label className="mb-3 block">
-            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              Their email{" "}
-              <span className="normal-case opacity-60">(optional)</span>
-            </span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="someone@example.com"
-              className="w-full rounded-xl border border-border/60 bg-background/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-[color:var(--organism-accent-soft)]"
-            />
-          </label>
-          <label className="block">
-            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              A note <span className="normal-case opacity-60">(optional)</span>
-            </span>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={3}
-              placeholder="Why you're inviting them."
-              className="w-full resize-y rounded-xl border border-border/60 bg-background/60 px-3 py-2.5 text-sm leading-6 outline-none transition-colors focus:border-[color:var(--organism-accent-soft)]"
-            />
-          </label>
+          <p className="text-sm leading-7 text-muted-foreground">
+            Create one signed link, then share it directly. The current
+            orchestrator stores the token and expiry, not recipient addresses or
+            private notes.
+          </p>
           {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
           <button
             type="submit"

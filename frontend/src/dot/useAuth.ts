@@ -33,6 +33,7 @@ interface InviteResult {
   error?: string;
   link?: string;
   token?: string;
+  expiresAt?: string;
 }
 
 async function post(path: string, body?: unknown) {
@@ -114,7 +115,20 @@ export function useAuth() {
         error: payload?.detail || "Could not create invitation.",
       };
     }
-    return { ok: true, token: payload?.token };
+    const token = typeof payload?.token === "string" ? payload.token : undefined;
+    if (!token) {
+      return { ok: false, error: "The invitation response was incomplete." };
+    }
+
+    const url = new URL(import.meta.env.BASE_URL || "/", window.location.origin);
+    url.searchParams.set("invite", token);
+
+    return {
+      ok: true,
+      token,
+      link: url.toString(),
+      expiresAt: payload?.expires_at,
+    };
   }, []);
 
   return {

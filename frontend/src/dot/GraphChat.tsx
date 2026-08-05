@@ -53,7 +53,7 @@ export const GraphChat: React.FC<GraphChatProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.25 }}
-            className="pointer-events-auto flex flex-wrap items-center justify-center gap-2"
+            className="pointer-events-auto flex w-full max-w-full flex-wrap items-center justify-center gap-2"
           >
             {suggestions.map((prompt, i) => (
               <motion.button
@@ -65,7 +65,7 @@ export const GraphChat: React.FC<GraphChatProps> = ({
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ delay: 0.04 * i, type: "spring", stiffness: 400, damping: 25 }}
-                className="organism-alive rounded-full border border-white/10 dark:border-white/5 bg-background/40 px-3.5 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-xl shadow-lg transition-colors hover:border-[color:var(--organism-accent-soft)] hover:text-foreground hover:bg-background/60"
+                className="organism-alive max-w-[calc(100vw-2rem)] basis-[calc(50%-0.25rem)] truncate rounded-full border border-white/10 bg-background/40 px-3.5 py-1.5 text-center text-xs font-medium text-foreground/80 shadow-lg backdrop-blur-xl transition-colors hover:border-[color:var(--organism-accent-soft)] hover:bg-background/60 hover:text-foreground sm:basis-auto dark:border-white/5"
               >
                 {prompt}
               </motion.button>

@@ -22,11 +22,6 @@ import { OrganismProvider } from "./organism";
 import "./organism/organism.css";
 import { AppProviders } from "./shared/contexts";
 import { ThemeProvider } from "./shared/contexts/SimpleThemeContext";
-// Import PWA service for initialization
-import PWAService from "./services/PWAService";
-
-// Initialize PWA service
-PWAService; // This will trigger the singleton initialization
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

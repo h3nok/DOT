@@ -23,6 +23,7 @@ import { NodeStage } from "./NodeStage";
 import { SignIn } from "./SignIn";
 import { SupportSurface } from "./SupportSurface";
 import { SynapticEdge } from "./SynapticEdge";
+import { TwinSurface } from "./TwinSurface";
 import { VaultSurface } from "./VaultSurface";
 import { runAgent } from "./agent";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
@@ -65,7 +66,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const [signInOpen, setSignInOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [platformSurface, setPlatformSurface] = useState<
-    "publications" | "circle" | "vault" | "support" | null
+    "publications" | "circle" | "vault" | "support" | "twin" | null
   >(null);
   const invited = useInviteArrival();
   const { root, create, edit, remove, reset, status } = useEditableGraph(
@@ -149,7 +150,10 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const chatReserve = editing ? 24 : 168;
   const usableH = Math.max(0, size.h - topReserve - chatReserve);
   const cy = topReserve + usableH / 2;
-  const radius = Math.max(150, Math.min(330, Math.min(size.w, usableH) * 0.4));
+  const labelGutter = size.w < 640 ? 220 : 180;
+  const horizontalLimit = Math.max(72, (size.w - labelGutter) / 2);
+  const proportionalRadius = Math.min(size.w, usableH) * 0.4;
+  const radius = Math.min(330, horizontalLimit, proportionalRadius);
 
   // The avatar *is* the hub: measure where its centre falls inside the nucleus
   // block so the block can be offset to put that centre exactly on (cx, cy).
@@ -196,6 +200,12 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   };
 
   const activate = (node: DotNode) => {
+    // The centre is the member's twin, so tapping it opens a conversation
+    // rather than a page about them. Editing still opens the node itself.
+    if (node.kind === "self" && node.id === root.id && !editing) {
+      setPlatformSurface("twin");
+      return;
+    }
     // Publications live in the Studio (authoring) and the Reader (released
     // work), not in a bloom, so that node navigates rather than opening one.
     if (node.surface === "publications" && !editing) {
@@ -307,7 +317,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   return (
     <div
       ref={stageRef}
-      className="relative h-[calc(100vh-1px)] w-full overflow-hidden"
+      className="relative h-[calc(100vh-1px)] w-screen max-w-full overflow-hidden"
     >
       {/* Back affordance when drilled below the root. */}
       <AnimatePresence>
@@ -512,8 +522,8 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
       {/* Nucleus. */}
       <motion.div
         ref={nucleusRef}
-        className="absolute z-10 -translate-x-1/2"
-        style={{ left: cx, top: cy }}
+        className="absolute z-10"
+        style={{ left: cx, top: cy, translateX: "-50%" }}
         initial={
           motionSafe ? { scale: 0, opacity: 0, y: -coreOffset - 40 } : false
         }
@@ -839,6 +849,25 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             origin={{ x: cx, y: cy }}
             reducedMotion={reducedMotion}
             onClose={() => setPlatformSurface(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* The twin — the nucleus is not a node *about* the member, it is the
+          member's twin, so tapping the centre opens a conversation. */}
+      <AnimatePresence>
+        {platformSurface === "twin" && (
+          <TwinSurface
+            self={root}
+            origin={{ x: cx, y: cy }}
+            reducedMotion={reducedMotion}
+            onClose={() => setPlatformSurface(null)}
+            onOpenNode={(nodeId) => {
+              if (!findNode(root, nodeId)) return;
+              setPlatformSurface(null);
+              setSelectedId(nodeId);
+              setDetailId(nodeId);
+            }}
           />
         )}
       </AnimatePresence>

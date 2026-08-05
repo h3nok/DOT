@@ -482,8 +482,10 @@ class PWAService {
   }
 }
 
-// Export singleton instance
-export default PWAService.getInstance();
+// Export the service class. Call `PWAService.getInstance()` only from an
+// explicit install/offline flow; importing this module must not register push,
+// analytics, or service-worker behavior on public reading/profile surfaces.
+export default PWAService;
 
 // Type exports for use in other components
 export type { NotificationOptions, BackgroundSyncData };

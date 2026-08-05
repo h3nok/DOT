@@ -115,12 +115,12 @@ function BookLanding({ manifest }: { manifest: DotBookOneManifest }) {
     >
       <section className="grid items-center gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-20">
         <div>
-          <div className="mb-6 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+          <div className="mb-6 flex max-w-full flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <span className="inline-flex max-w-full items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:tracking-[0.24em]">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--organism-accent-strong)] shadow-[0_0_22px_var(--organism-accent-soft)]" />
               {manifest.project.series_title}
             </span>
-            <span className="rounded-full border border-border/60 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="max-w-full truncate rounded-full border border-border/60 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:tracking-[0.16em]">
               {manifest.release.label}
             </span>
           </div>

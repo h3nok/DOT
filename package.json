@@ -10,6 +10,7 @@
     "build": "pnpm --dir frontend build",
     "preview": "pnpm --dir frontend preview",
     "lint": "pnpm --dir frontend lint",
+    "typecheck": "pnpm --dir frontend typecheck",
     "install:frontend": "pnpm --dir frontend install",
     "install:backend": "cd backend && pip install -r requirements.txt"
   },
