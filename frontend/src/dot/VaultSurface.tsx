@@ -19,6 +19,10 @@ export interface SelectedFile {
   status: "ready" | "uploading" | "success" | "error";
   error?: string;
   url?: string;
+  /** What the twin could make of the file: "ready", "unsupported", "failed". */
+  ingest?: string;
+  /** How many passages the twin can now cite from it. */
+  passages?: number;
 }
 
 interface VaultSurfaceProps {
@@ -31,6 +35,36 @@ const formatFileSize = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+/**
+ * Stored and readable are different outcomes. A file the twin cannot parse is
+ * kept safely and still cannot be cited, and saying "Ready" for both is how a
+ * member ends up asking about a document the twin has never read.
+ */
+const IngestNote: React.FC<{ ingest?: string; passages?: number }> = ({
+  ingest,
+  passages,
+}) => {
+  if (ingest === "unsupported") {
+    return (
+      <span className="font-medium text-muted-foreground">
+        Stored — not readable yet
+      </span>
+    );
+  }
+  if (ingest === "failed") {
+    return (
+      <span className="font-medium text-destructive/90">
+        Stored — could not be read
+      </span>
+    );
+  }
+  return (
+    <span className="font-medium text-[color:var(--organism-accent-strong)]">
+      {passages ? `Readable — ${passages} passages` : "Readable"}
+    </span>
+  );
 };
 
 export const VaultSurface: React.FC<VaultSurfaceProps> = ({
@@ -79,16 +113,27 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
 
       if (!putRes.ok) throw new Error("Failed to upload file");
 
-      // 3. Register node
-      await api("/v1/vault/nodes", {
+      // 3. Register node. The response carries what ingest made of the file,
+      // so the queue can report readability rather than just "uploaded".
+      const nodeRes = await api<{
+        properties?: { ingest_status?: string; chunk_count?: number } | null;
+      }>("/v1/vault/nodes", {
         method: "POST",
         body: { key: urlData.key, filename: fileRec.file.name },
       });
 
+      const properties = nodeRes.data?.properties ?? {};
       pulse(1); // The organism feels the new knowledge
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === fileRec.id ? { ...f, status: "success" } : f,
+          f.id === fileRec.id
+            ? {
+                ...f,
+                status: "success",
+                ingest: properties.ingest_status,
+                passages: properties.chunk_count,
+              }
+            : f,
         ),
       );
     } catch (err: any) {
@@ -140,7 +185,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
     <BloomSurface
       kicker="knowledge vault"
       title="The Vault"
-      description="Upload files and data. The graph will ingest them."
+      description="Upload what you know. Whatever the twin can read becomes something it can cite."
       origin={origin}
       reducedMotion={reducedMotion}
       zIndex={55}
@@ -238,12 +283,10 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                         <span className="opacity-40">•</span>
                         {f.status === "uploading" ? (
                           <span className="animate-pulse font-medium text-[color:var(--organism-accent-soft)]">
-                            Processing...
+                            Reading...
                           </span>
                         ) : f.status === "success" ? (
-                          <span className="font-medium text-[color:var(--organism-accent-strong)]">
-                            Ready
-                          </span>
+                          <IngestNote ingest={f.ingest} passages={f.passages} />
                         ) : (
                           <span className="text-[10px] font-semibold uppercase tracking-wider">
                             {f.file.name.split(".").pop()}

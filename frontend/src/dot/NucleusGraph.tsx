@@ -523,50 +523,52 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
       <motion.div
         ref={nucleusRef}
         className="absolute z-10"
-        style={{ left: cx, top: cy, translateX: "-50%" }}
+        style={{ left: cx, top: cy }}
         initial={
           motionSafe ? { scale: 0, opacity: 0, y: -coreOffset - 40 } : false
         }
         animate={{ scale: 1, opacity: 1, y: -coreOffset }}
         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
       >
-        <GraphNode
-          node={center}
-          variant="center"
-          reducedMotion={reducedMotion}
-          onActivate={activate}
-        />
-        {/* The flagship, one tap from the front door rather than two drills in. */}
-        {!editing && chain.length === 1 && (
-          <motion.div
-            className="mt-5 flex justify-center"
-            initial={motionSafe ? { opacity: 0, y: 6 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.5 }}
-          >
-            <button
-              type="button"
-              onClick={() => navigate("/book/digital-organism-theory")}
-              className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+        <div className="-translate-x-1/2">
+          <GraphNode
+            node={center}
+            variant="center"
+            reducedMotion={reducedMotion}
+            onActivate={activate}
+          />
+          {/* The flagship, one tap from the front door rather than two drills in. */}
+          {!editing && chain.length === 1 && (
+            <motion.div
+              className="mt-5 flex justify-center"
+              initial={motionSafe ? { opacity: 0, y: 6 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1, duration: 0.5 }}
             >
-              <BookOpen className="h-3.5 w-3.5" />
-              Read Book One
-              <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </button>
-          </motion.div>
-        )}
-        {editing && (
-          <div className="mt-4 flex justify-center">
-            <button
-              type="button"
-              onClick={() => openAdd(center)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add to {center.label}
-            </button>
-          </div>
-        )}
+              <button
+                type="button"
+                onClick={() => navigate("/book/digital-organism-theory")}
+                className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+                Read Book One
+                <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </button>
+            </motion.div>
+          )}
+          {editing && (
+            <div className="mt-4 flex justify-center">
+              <button
+                type="button"
+                onClick={() => openAdd(center)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add to {center.label}
+              </button>
+            </div>
+          )}
+        </div>
       </motion.div>
 
       {/* Attribute nodes — staggered entrance, orbital breathing, depth-aware exit. */}
@@ -614,26 +616,24 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
                   damping: 24,
                   delay: entranceDelay,
                 }}
-                style={{
-                  translateX: "-50%",
-                  translateY: "-50%",
-                }}
                 onMouseEnter={() => setHoveredId(child.id)}
                 onMouseLeave={() =>
                   setHoveredId((h) => (h === child.id ? null : h))
                 }
               >
-                <GraphNode
-                  node={child}
-                  variant="leaf"
-                  active={selectedId === child.id}
-                  reducedMotion={reducedMotion}
-                  editing={editing}
-                  onActivate={activate}
-                  onAddChild={openAdd}
-                  onEdit={openEdit}
-                  onRemove={(node) => remove(node.id)}
-                />
+                <div className="-translate-x-1/2 -translate-y-1/2">
+                  <GraphNode
+                    node={child}
+                    variant="leaf"
+                    active={selectedId === child.id}
+                    reducedMotion={reducedMotion}
+                    editing={editing}
+                    onActivate={activate}
+                    onAddChild={openAdd}
+                    onEdit={openEdit}
+                    onRemove={(node) => remove(node.id)}
+                  />
+                </div>
               </motion.div>
             );
           })}
