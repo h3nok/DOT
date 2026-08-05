@@ -83,6 +83,7 @@ const NucleusFace: React.FC<{ node: DotNode; reducedMotion: boolean }> = ({
 
     {/* The Core Avatar / User Representation */}
     <div
+      data-nucleus-core
       className="relative z-10 flex h-[96px] w-[96px] sm:h-[112px] sm:w-[112px] items-center justify-center rounded-full bg-background/70 backdrop-blur-md border border-border transition-transform duration-700 ease-out group-hover:scale-[1.02]"
       style={{ boxShadow: "var(--premium-shadow)" }}
     >

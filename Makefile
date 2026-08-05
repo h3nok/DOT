@@ -1,13 +1,13 @@
-.PHONY: help install install-frontend install-backend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator test-orchestrator migrate-orchestrator seed-profile-delivery orchestrator-services-up orchestrator-services-down
+.PHONY: help install install-frontend install-orchestrator dev start start-frontend start-orchestrator start-orchestrator-worker build lint lint-orchestrator test-orchestrator migrate-orchestrator seed-profile-delivery orchestrator-services-up orchestrator-services-down
 
 help:
 	@echo "Available targets:"
-	@echo "  make install           Install frontend, Flask, and orchestrator dependencies"
+	@echo "  make install           Install frontend and orchestrator dependencies"
 	@echo "  make install-orchestrator Install FastAPI orchestrator dependencies"
-	@echo "  make dev               Start the full local stack"
-	@echo "  make start             Start frontend (Vite) and backend (Flask)"
+	@echo "  make dev               Start the full local stack (infra + APIs + worker + frontend)"
+	@echo "  make start             Alias of make dev"
 	@echo "  make start-frontend    Start frontend only"
-	@echo "  make start-backend     Start backend only"
+	@echo "  make start-orchestrator Start FastAPI orchestrator only"
 	@echo "  make start-orchestrator Start FastAPI orchestrator only"
 	@echo "  make start-orchestrator-worker Start Dramatiq orchestrator worker"
 	@echo "  make orchestrator-services-up Start local Postgres, Redis, and MinIO"
@@ -18,13 +18,10 @@ help:
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
 
-install: install-frontend install-backend install-orchestrator
+install: install-frontend install-orchestrator
 
 install-frontend:
 	pnpm --dir frontend install
-
-install-backend:
-	./.venv/bin/python3 -m pip install -r backend/requirements.txt
 
 install-orchestrator:
 	./.venv/bin/python3 -m pip install -r backend/orchestrator/requirements.txt
@@ -32,14 +29,10 @@ install-orchestrator:
 dev:
 	./scripts/dev-stack.sh
 
-start:
-	node runner.js
+start: dev
 
 start-frontend:
 	pnpm --dir frontend dev
-
-start-backend:
-	cd backend && ../.venv/bin/python3 src/main.py
 
 start-orchestrator:
 	cd backend/orchestrator && ../../.venv/bin/python3 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000

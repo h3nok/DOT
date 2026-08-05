@@ -98,16 +98,21 @@ def test_publication_release_writes_immutable_manifest(
     assert manifest_response.json()["project"]["slug"] == "habte-book"
     assert manifest_response.json()["release"]["id"] == release["id"]
     assert manifest_response.json()["release"]["manifest_key"] == release["manifest_key"]
-    assert manifest_response.json()["sections"] == [
-        {
-            "id": section["id"],
-            "parent_id": None,
-            "order": 0,
-            "title": "Chapter 1",
-            "body_ref": "objects/drafts/chapter-1.md",
-            "status": "draft",
-        }
-    ]
+    manifest_sections = manifest_response.json()["sections"]
+    assert len(manifest_sections) == 1
+    snapshot = manifest_sections[0]
+    assert snapshot["id"] == section["id"]
+    assert snapshot["parent_id"] is None
+    assert snapshot["order"] == 0
+    assert snapshot["title"] == "Chapter 1"
+    assert snapshot["status"] == "draft"
+    # Bodies are snapshotted into the immutable release namespace.
+    assert snapshot["body_ref"].startswith("releases/owner_1/habte-book/v1/sections/")
+    body_response: httpx.Response = client.get(
+        f"/v1/publications/delivery/body/{snapshot['body_ref']}"
+    )
+    assert body_response.status_code == 200
+    assert body_response.headers["cache-control"] == "public, max-age=86400, immutable"
 
 
 def test_publication_release_is_idempotent(client: fastapi.testclient.TestClient) -> None:
@@ -191,3 +196,65 @@ def test_publication_delivery_manifest_requires_published_release(
     )
 
     assert manifest_response.status_code == 404
+
+
+def test_section_body_upload_and_release_snapshot(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    project = client.post(
+        "/v1/publications/projects",
+        headers=OWNER_HEADERS,
+        json={
+            "title": "Meta Book",
+            "visibility": "public",
+            "meta": {"author": "Habte", "reader_contract": {"finite": True}},
+        },
+    ).json()
+    assert project["meta"]["author"] == "Habte"
+
+    section = client.post(
+        f"/v1/publications/projects/{project['id']}/sections",
+        headers=OWNER_HEADERS,
+        json={
+            "title": "Preface",
+            "meta": {"kind": "preface", "part": "Opening", "word_count": 3},
+        },
+    ).json()
+    assert section["meta"]["kind"] == "preface"
+
+    upload: httpx.Response = client.put(
+        f"/v1/publications/sections/{section['id']}/body",
+        headers={**OWNER_HEADERS, "Content-Type": "text/markdown"},
+        content="# Preface\n\nThe observer belongs in the inquiry.",
+    )
+    assert upload.status_code == 200
+    assert upload.json()["body_ref"].startswith("drafts/")
+
+    release: httpx.Response = client.post(
+        f"/v1/publications/projects/{project['id']}/releases",
+        headers=OWNER_HEADERS,
+        json={},
+    )
+    assert release.status_code == 201
+
+    manifest = client.get(
+        f"/v1/publications/delivery/owner_1/{project['slug']}/manifest"
+    ).json()
+    assert manifest["project"]["meta"]["author"] == "Habte"
+    manifest_section = manifest["sections"][0]
+    assert manifest_section["meta"]["kind"] == "preface"
+    assert manifest_section["body_ref"].startswith(
+        f"releases/owner_1/{project['slug']}/v1/sections/"
+    )
+
+    body: httpx.Response = client.get(
+        f"/v1/publications/delivery/body/{manifest_section['body_ref']}"
+    )
+    assert body.status_code == 200
+    assert "observer belongs in the inquiry" in body.text
+
+    # Draft namespace must never be publicly readable.
+    draft_leak: httpx.Response = client.get(
+        f"/v1/publications/delivery/body/{upload.json()['body_ref']}"
+    )
+    assert draft_leak.status_code == 404

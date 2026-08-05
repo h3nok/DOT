@@ -3,7 +3,7 @@
 This folder is the north star for the project. Read in order.
 
 | #   | Doc                                                                  | What it answers                                                                              |
-| --- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| --- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --- | --- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | --- | --- | ------------ | --------------------------------- |
 | 00  | [Attention Manifesto](00-ATTENTION-MANIFESTO.md)                     | **Why** — how attention is captured, and the laws (L1–L12) we invert it with. The soul.      |
 | 01  | [North Star](01-NORTH-STAR.md)                                       | **What** — vision, info architecture, and the 5 Attention OS primitives (P1–P5).             |
 | 02  | [Architecture](02-ARCHITECTURE.md)                                   | **How** — frontend, backend, invite/auth, analytics-without-surveillance, scale to 100M+.    |
@@ -13,7 +13,7 @@ This folder is the north star for the project. Read in order.
 | 06  | [Implementation Roadmap](06-IMPLEMENTATION-ROADMAP.md)               | **Build order** — increments, acceptance gates, and current next actions.                    |
 | 07  | [Digital Footprint Graph](07-DIGITAL-FOOTPRINT-GRAPH.md)             | **Graph layer** — social integrations, footprint graph, graph navigation, connector posture. |
 | 08  | [Doctrine & Coherence Surface](08-DOCTRINE-AND-COHERENCE-SURFACE.md) | **Reading/teaching layer** — doctrine content model + generative, focus-oriented graph UI.   |
-| —   | [ADRs](adr/)                                                         | Locked decisions with trade-offs.                                                            |
+| 09  | [Public Launch Sprint Plan](09-PUBLIC-LAUNCH-SPRINT-PLAN.md)         | **Launch execution** — six sprints and two gates from local-only to public use.              |     | 10  | [Digital Twin Platform](10-DIGITAL-TWIN-PLATFORM.md) | **Consolidation** — one twin service, tenant isolation, HKI-conformant agent, scale plan. |     | —   | [ADRs](adr/) | Locked decisions with trade-offs. |
 
 ## How to use this
 
@@ -35,3 +35,7 @@ This folder is the north star for the project. Read in order.
 | [0006](adr/0006-member-owned-knowledge-publication.md)             | Member-owned Knowledge & Publication OS                   | Accepted |
 | [0007](adr/0007-blind-infrastructure-and-app-layer-encryption.md)  | Blind infrastructure & application-layer encryption       | Accepted |
 | [0008](adr/0008-fastapi-orchestrator-for-knowledge-publication.md) | FastAPI orchestrator for knowledge/publication workflows  | Accepted |
+| [0009](adr/0009-retire-flask-single-twin-service.md)               | Retire the Flask prototype; one twin service              | Accepted |
+| [0010](adr/0010-twin-agent-hki-conformance.md)                     | The twin agent runs under HKI conformance                 | Accepted |
+| [0011](adr/0011-tenant-isolation-row-level-security.md)            | Tenant isolation by row-level security, not convention    | Accepted |
+| [0012](adr/0012-member-funded-support-plane.md)                    | A member-funded support plane (amends 0009)               | Accepted |

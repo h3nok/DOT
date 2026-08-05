@@ -5,7 +5,7 @@ import pathlib
 import typing
 
 import aioboto3
-from botocore.exceptions import ClientError
+import botocore.exceptions
 
 import app.settings
 
@@ -64,6 +64,15 @@ class FilesystemObjectStore:
         except (OSError, json.JSONDecodeError) as exc:
             raise ObjectStoreError(f"Could not read object: {key}") from exc
 
+    async def get_text(self, key: str) -> str:
+        path: pathlib.Path = self._path_for(key)
+        try:
+            return path.read_text(encoding="utf-8")
+        except FileNotFoundError as exc:
+            raise ObjectNotFoundError(f"Object not found: {key}") from exc
+        except OSError as exc:
+            raise ObjectStoreError(f"Could not read object: {key}") from exc
+
 
 class S3ObjectStore:
     def __init__(
@@ -74,16 +83,16 @@ class S3ObjectStore:
         aws_access_key_id: str | None,
         aws_secret_access_key: str | None,
     ) -> None:
-        self.bucket = bucket
+        self.bucket: str = bucket
         self.session = aioboto3.Session(
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
             region_name=region_name,
         )
-        self.endpoint_url = endpoint_url
+        self.endpoint_url: str | None = endpoint_url
 
     async def put_json(self, key: str, payload: dict[str, typing.Any]) -> None:
-        body = json.dumps(payload, indent=2, sort_keys=True)
+        body: str = json.dumps(payload, indent=2, sort_keys=True)
         try:
             async with self.session.client("s3", endpoint_url=self.endpoint_url) as s3:
                 await s3.put_object(
@@ -113,16 +122,27 @@ class S3ObjectStore:
                 response = await s3.get_object(Bucket=self.bucket, Key=key)
                 body = await response["Body"].read()
                 return json.loads(body.decode("utf-8"))
-        except ClientError as exc:
+        except botocore.exceptions.ClientError as exc:
             if exc.response["Error"]["Code"] == "NoSuchKey":
                 raise ObjectNotFoundError(f"Object not found: {key}") from exc
             raise ObjectStoreError(f"Could not read object: {key}") from exc
         except (OSError, json.JSONDecodeError) as exc:
             raise ObjectStoreError(f"Could not read object: {key}") from exc
 
+    async def get_text(self, key: str) -> str:
+        try:
+            async with self.session.client("s3", endpoint_url=self.endpoint_url) as s3:
+                response = await s3.get_object(Bucket=self.bucket, Key=key)
+                body = await response["Body"].read()
+                return body.decode("utf-8")
+        except botocore.exceptions.ClientError as exc:
+            if exc.response["Error"]["Code"] == "NoSuchKey":
+                raise ObjectNotFoundError(f"Object not found: {key}") from exc
+            raise ObjectStoreError(f"Could not read object: {key}") from exc
+
 
 def get_object_store() -> FilesystemObjectStore | S3ObjectStore:
-    settings = app.settings.get_settings()
+    settings: app.settings.Settings = app.settings.get_settings()
     
     if settings.object_store_backend == "s3":
         return S3ObjectStore(

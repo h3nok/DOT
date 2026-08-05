@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { visualizer } from "rollup-plugin-visualizer";
+import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
+import { visualizer } from "rollup-plugin-visualizer";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -39,13 +39,8 @@ export default defineConfig({
     headers: {
       "Service-Worker-Allowed": "/",
     },
-    // Proxy API calls to the Flask backend (the twin/agent endpoint) in dev.
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:5000",
-        changeOrigin: true,
-      },
-    },
+    // No dev proxy: the frontend calls the orchestrator directly at
+    // VITE_ORCHESTRATOR_URL, which is the only backend (ADR-0009).
   },
   // Ensure manifest.json and service worker are copied
   publicDir: "public",

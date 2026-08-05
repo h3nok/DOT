@@ -1,9 +1,17 @@
+import { AnimatePresence, motion } from "framer-motion";
+import {
+    AlertTriangle,
+    CheckCircle,
+    FileText,
+    Loader2,
+    Upload,
+    X,
+} from "lucide-react";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { motion, AnimatePresence } from "framer-motion";
-import { Upload, FileText, X, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
-import { BloomSurface } from "./BloomSurface";
 import { useOrganismPulse } from "../organism";
+import { BloomSurface } from "./BloomSurface";
+import { api, ORCHESTRATOR_BASE } from "./orchestrator";
 
 export interface SelectedFile {
   id: string;
@@ -32,75 +40,80 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
 }) => {
   const [files, setFiles] = useState<SelectedFile[]>([]);
   const pulse = useOrganismPulse();
-  
+
   const uploadFile = async (fileRec: SelectedFile) => {
     try {
-      setFiles((prev) => prev.map((f) => f.id === fileRec.id ? { ...f, status: "uploading" } : f));
-      
-      // 1. Get presigned URL
-      const urlRes = await fetch("/api/v1/vault/upload-url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Owner-Id": "habte" // Assuming local auth
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileRec.id ? { ...f, status: "uploading" } : f,
+        ),
+      );
+
+      // 1. Get presigned URL. The session identifies the owner; the upload is
+      // written under that owner's prefix and nowhere else.
+      const urlRes = await api<{ url: string; key: string }>(
+        "/v1/vault/upload-url",
+        {
+          method: "POST",
+          body: {
+            filename: fileRec.file.name,
+            content_type: fileRec.file.type,
+            size: fileRec.file.size,
+          },
         },
-        body: JSON.stringify({
-          filename: fileRec.file.name,
-          content_type: fileRec.file.type,
-          size: fileRec.file.size
-        })
-      });
-      
-      if (!urlRes.ok) throw new Error("Failed to get upload URL");
-      const urlData = await urlRes.json();
-      
+      );
+
+      if (!urlRes.ok || !urlRes.data)
+        throw new Error("Failed to get upload URL");
+      const urlData = urlRes.data;
+
       // 2. PUT file to object store proxy
-      const putRes = await fetch(urlData.url, {
+      const putRes = await fetch(`${ORCHESTRATOR_BASE}${urlData.url}`, {
         method: "PUT",
+        credentials: "include",
         headers: {
-          "Content-Type": "application/octet-stream"
+          "Content-Type": "application/octet-stream",
         },
-        body: fileRec.file
+        body: fileRec.file,
       });
-      
+
       if (!putRes.ok) throw new Error("Failed to upload file");
-      
+
       // 3. Register node
-      await fetch("/api/v1/vault/nodes", {
+      await api("/v1/vault/nodes", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Owner-Id": "habte"
-        },
-        body: JSON.stringify({
-          key: urlData.key,
-          filename: fileRec.file.name
-        })
+        body: { key: urlData.key, filename: fileRec.file.name },
       });
-      
+
       pulse(1); // The organism feels the new knowledge
-      setFiles((prev) => prev.map((f) => f.id === fileRec.id ? { ...f, status: "success" } : f));
-      
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileRec.id ? { ...f, status: "success" } : f,
+        ),
+      );
     } catch (err: any) {
-      setFiles((prev) => prev.map((f) => f.id === fileRec.id ? { ...f, status: "error", error: err.message } : f));
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileRec.id
+            ? { ...f, status: "error", error: err.message }
+            : f,
+        ),
+      );
     }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const newFiles = acceptedFiles.map((file) => ({
-        id: `${file.name}-${Date.now()}`,
-        file,
-        status: "ready" as const,
-      }));
-      
-      setFiles((prev) => [...newFiles, ...prev]);
-      
-      // Trigger uploads
-      newFiles.forEach((file) => uploadFile(file));
-    },
-    []
-  );
+  const handleDrop = useCallback((acceptedFiles: File[]) => {
+    const newFiles = acceptedFiles.map((file) => ({
+      id: `${file.name}-${Date.now()}`,
+      file,
+      status: "ready" as const,
+    }));
+
+    setFiles((prev) => [...newFiles, ...prev]);
+
+    // Trigger uploads
+    newFiles.forEach((file) => uploadFile(file));
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,
@@ -109,9 +122,13 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
   const StatusIcon = ({ status }: { status: SelectedFile["status"] }) => {
     switch (status) {
       case "uploading":
-        return <Loader2 className="h-4 w-4 text-[color:var(--organism-accent-soft)] animate-spin" />;
+        return (
+          <Loader2 className="h-4 w-4 text-[color:var(--organism-accent-soft)] animate-spin" />
+        );
       case "success":
-        return <CheckCircle className="h-4 w-4 text-[color:var(--organism-accent-strong)]" />;
+        return (
+          <CheckCircle className="h-4 w-4 text-[color:var(--organism-accent-strong)]" />
+        );
       case "error":
         return <AlertTriangle className="h-4 w-4 text-destructive" />;
       default:
@@ -155,8 +172,11 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
               {isDragActive ? "Drop files here" : "Drag & drop files here"}
             </p>
             <p className="text-xs text-muted-foreground">
-              or <span className="font-medium text-[color:var(--organism-accent-soft)] hover:underline">browse</span> to
-              select from your device
+              or{" "}
+              <span className="font-medium text-[color:var(--organism-accent-soft)] hover:underline">
+                browse
+              </span>{" "}
+              to select from your device
             </p>
           </div>
         </div>
@@ -173,7 +193,11 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                   layout
                   initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.95,
+                    transition: { duration: 0.15 },
+                  }}
                   key={f.id}
                   className={`group relative flex overflow-hidden items-center gap-3 rounded-xl border px-4 py-3 shadow-sm transition-colors ${
                     f.status === "error"
@@ -187,7 +211,11 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                     <motion.div
                       initial={{ width: "0%" }}
                       animate={{ width: "100%" }}
-                      transition={{ duration: 2, ease: "easeInOut", repeat: Infinity }}
+                      transition={{
+                        duration: 2,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                      }}
                       className="absolute bottom-0 left-0 h-[2px] bg-[color:var(--organism-accent-soft)]/50"
                     />
                   )}
@@ -201,7 +229,9 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                       {f.file.name}
                     </p>
                     {f.error ? (
-                      <p className="mt-0.5 text-xs font-medium text-destructive/90">{f.error}</p>
+                      <p className="mt-0.5 text-xs font-medium text-destructive/90">
+                        {f.error}
+                      </p>
                     ) : (
                       <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                         {formatFileSize(f.file.size)}
@@ -211,7 +241,9 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                             Processing...
                           </span>
                         ) : f.status === "success" ? (
-                          <span className="font-medium text-[color:var(--organism-accent-strong)]">Ready</span>
+                          <span className="font-medium text-[color:var(--organism-accent-strong)]">
+                            Ready
+                          </span>
                         ) : (
                           <span className="text-[10px] font-semibold uppercase tracking-wider">
                             {f.file.name.split(".").pop()}

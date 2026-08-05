@@ -87,6 +87,14 @@ export const profileGraph: DotNode = {
       body: "Drop files and data here to feed the organism's memory.",
     },
     {
+      id: "support",
+      label: "Support",
+      kind: "attribute",
+      surface: "support",
+      description: "How this stays unowned.",
+      body: "DOT takes no advertising, which leaves one honest way to pay for it: the people it serves. Give once or hold it open monthly — either way, nothing about you is stored beyond a one-way hash.",
+    },
+    {
       id: "writing",
       label: "Writing",
       kind: "attribute",

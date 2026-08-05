@@ -11,6 +11,7 @@ import {
   DEFAULT_CONFIG,
   DEFAULT_VITALS,
   ORGANISM_STORAGE_KEY,
+  resolvePreset,
   type OrganismConfig,
   type OrganismContextValue,
   type OrganismMood,
@@ -29,9 +30,11 @@ function loadConfig(): OrganismConfig {
   try {
     const raw = window.localStorage.getItem(ORGANISM_STORAGE_KEY);
     if (!raw) return DEFAULT_CONFIG;
+    const saved = JSON.parse(raw) as Partial<OrganismConfig>;
     return {
       ...DEFAULT_CONFIG,
-      ...(JSON.parse(raw) as Partial<OrganismConfig>),
+      ...saved,
+      preset: resolvePreset(saved.preset),
     };
   } catch {
     return DEFAULT_CONFIG;
@@ -114,6 +117,14 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
       // Leave attributes in place on unmount; the provider lives for the app.
     };
   }, [config.enabled, config.intensity, mood]);
+
+  // The member's reading choices are theirs, not the route's: publish them as
+  // variables the reading surfaces consume.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.reading = config.readingFont;
+    root.style.setProperty("--reading-scale", config.readingScale.toFixed(2));
+  }, [config.readingFont, config.readingScale]);
 
   const setConfig = useCallback((patch: Partial<OrganismConfig>) => {
     setConfigState((prev) => {

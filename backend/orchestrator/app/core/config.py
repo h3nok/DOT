@@ -16,11 +16,14 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     SERVICE_PORT: int = 8000
     LOG_LEVEL: str = "INFO"
     ENVIRONMENT: str = "development"
+    # Vite walks forward from 5173 when a port is taken, so allow its usual range.
     CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "http://localhost:5000",
-        "http://127.0.0.1:5000",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        "http://localhost:5175",
+        "http://127.0.0.1:5175",
     ]
 
     AUTH_ENABLED: bool = True
@@ -42,6 +45,23 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     AWS_ACCESS_KEY_ID: str | None = None
     AWS_SECRET_ACCESS_KEY: str | None = None
     AWS_REGION: str = "us-east-1"
+
+    SENTRY_DSN: str = ""
+    FRONTEND_URL: str = "https://habteghebrechristos.com"
+
+    # Twin plane (ADR-0010). TOOL_RUNTIME_SECRET signs tool manifests; without it
+    # the registry refuses to dispatch anything.
+    TWIN_ENABLED: bool = True
+    TWIN_MODEL: str = "gemini-2.5-flash"
+    TWIN_API_KEY: str = ""
+    TWIN_TIMEOUT_SECONDS: float = 30.0
+    TOOL_RUNTIME_SECRET: str = ""
+
+    # Support plane (ADR-0001, ADR-0012). Absent keys disable the surface rather
+    # than falling back to a placeholder.
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_PUBLISHABLE_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
 
     model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",

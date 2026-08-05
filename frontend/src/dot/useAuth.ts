@@ -1,26 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 
-/**
- * useAuth — OTP sign-in for the owner.
- *
- * Talks to the Flask OTP routes (`/api/otp/*`). The flow is two steps: request
- * a code to an email, then verify the 6-digit code, which sets a signed,
- * httpOnly session cookie. The hook tracks the current session so the graph can
- * unlock authoring for the owner and the profile graph can publish to the
- * server. Cookies travel via the same-origin dev proxy, so no token is exposed
- * in the bundle.
- */
+// All auth routes now live in the orchestrator at /v1/auth/*.
+// The Flask /api/otp/* routes are no longer used.
+const ORCHESTRATOR_BASE = (
+  import.meta.env.VITE_ORCHESTRATOR_URL || "http://127.0.0.1:8000"
+).replace(/\/$/, "");
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api").replace(
-  /\/$/,
-  "",
-);
+const AUTH_BASE = `${ORCHESTRATOR_BASE}/v1/auth`;
 
 export interface AuthUser {
-  id: number;
-  email: string;
+  id: string;
+  display_name: string | null;
+  role: string;
   is_owner: boolean;
-  name?: string | null;
 }
 
 interface RequestResult {
@@ -44,7 +36,7 @@ interface InviteResult {
 }
 
 async function post(path: string, body?: unknown) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${AUTH_BASE}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -60,12 +52,12 @@ export function useAuth() {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/otp/session`, {
+      const res = await fetch(`${AUTH_BASE}/session`, {
         credentials: "include",
         cache: "no-store",
       });
       const payload = await res.json().catch(() => ({}));
-      setUser(payload?.data?.user ?? null);
+      setUser(payload?.user ?? null);
     } catch {
       setUser(null);
     } finally {
@@ -81,20 +73,28 @@ export function useAuth() {
     async (email: string): Promise<RequestResult> => {
       const { res, payload } = await post("/otp/request", { email });
       if (!res.ok) {
-        return { ok: false, error: payload?.error || "Could not send code." };
+        return { ok: false, error: payload?.detail || "Could not send code." };
       }
-      return { ok: true, devCode: payload?.data?.dev_code };
+      return { ok: true, devCode: payload?.dev_code };
     },
     [],
   );
 
   const verifyCode = useCallback(
-    async (email: string, code: string): Promise<VerifyResult> => {
-      const { res, payload } = await post("/otp/verify", { email, code });
+    async (
+      email: string,
+      code: string,
+      displayName?: string,
+    ): Promise<VerifyResult> => {
+      const { res, payload } = await post("/otp/verify", {
+        email,
+        code,
+        display_name: displayName,
+      });
       if (!res.ok) {
-        return { ok: false, error: payload?.error || "Could not verify." };
+        return { ok: false, error: payload?.detail || "Could not verify." };
       }
-      const verified: AuthUser | undefined = payload?.data?.user;
+      const verified: AuthUser | undefined = payload?.user;
       if (verified) setUser(verified);
       return { ok: true, user: verified };
     },
@@ -102,30 +102,20 @@ export function useAuth() {
   );
 
   const logout = useCallback(async () => {
-    await post("/otp/logout").catch(() => undefined);
+    await post("/logout").catch(() => undefined);
     setUser(null);
   }, []);
 
-  const createInvite = useCallback(
-    async (input?: {
-      email?: string;
-      note?: string;
-    }): Promise<InviteResult> => {
-      const { res, payload } = await post("/invite/create", input ?? {});
-      if (!res.ok) {
-        return {
-          ok: false,
-          error: payload?.error || "Could not create invitation.",
-        };
-      }
+  const createInvite = useCallback(async (): Promise<InviteResult> => {
+    const { res, payload } = await post("/invites");
+    if (!res.ok) {
       return {
-        ok: true,
-        link: payload?.data?.link,
-        token: payload?.data?.token,
+        ok: false,
+        error: payload?.detail || "Could not create invitation.",
       };
-    },
-    [],
-  );
+    }
+    return { ok: true, token: payload?.token };
+  }, []);
 
   return {
     user,

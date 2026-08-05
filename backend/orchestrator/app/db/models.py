@@ -27,7 +27,112 @@ class TimestampMixin:
     )
 
 
-class OrchestratorRun(Base):
+class TenantMixin:
+    """Marks a table as tenant-owned and carries its partition key (ADR-0011).
+
+    `owner_shard` is derived from `owner_id` on flush; it exists so hot tables can
+    be partitioned and later routed to per-shard databases without a data move.
+    """
+
+    owner_shard: sqlalchemy.orm.Mapped[int | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.SmallInteger()
+    )
+
+
+# ── Auth models ───────────────────────────────────────────────────────────────
+
+class Member(Base, TimestampMixin):
+    __tablename__ = "members"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("mbr")
+    )
+    # SHA-256 hex of the lowercased email — never store plaintext email.
+    email_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), unique=True, nullable=False, index=True
+    )
+    # Display name is optional and member-controlled.
+    display_name: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128)
+    )
+    # active | suspended
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="active", index=True
+    )
+    role: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="member"
+    )
+    invited_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("members.id"), index=True
+    )
+    last_signed_in_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+
+
+class OtpCode(Base):
+    __tablename__ = "otp_codes"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("otp")
+    )
+    email_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), nullable=False, index=True
+    )
+    # bcrypt hash of the 6-digit code — never store plaintext.
+    code_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), nullable=False
+    )
+    expires_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True), nullable=False
+    )
+    attempts: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0
+    )
+    used_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+
+
+class InviteCode(Base):
+    __tablename__ = "invite_codes"
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("inv")
+    )
+    # Cryptographically random token stored as-is; the URL carries it.
+    token_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), unique=True, nullable=False, index=True
+    )
+    issued_by: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("members.id"), nullable=False, index=True
+    )
+    # Null until accepted.
+    accepted_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.ForeignKey("members.id")
+    )
+    expires_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True), nullable=False
+    )
+    accepted_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    revoked_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    created_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True),
+        server_default=sqlalchemy.func.now(),
+        nullable=False,
+    )
+
+
+class OrchestratorRun(Base, TenantMixin):
     __tablename__ = "orchestrator_runs"
     __table_args__ = (
         sqlalchemy.UniqueConstraint(
@@ -117,7 +222,7 @@ class OrchestratorStep(Base):
     )
 
 
-class PublicationProject(Base, TimestampMixin):
+class PublicationProject(Base, TimestampMixin, TenantMixin):
     __tablename__ = "publication_projects"
     __table_args__ = (
         sqlalchemy.UniqueConstraint("owner_id", "slug", name="uq_publication_project_owner_slug"),
@@ -144,6 +249,7 @@ class PublicationProject(Base, TimestampMixin):
     visibility: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), nullable=False, default="private"
     )
+    meta: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
 
     sections: sqlalchemy.orm.Mapped[list[PublicationSection]] = sqlalchemy.orm.relationship(
         back_populates="project",
@@ -180,6 +286,7 @@ class PublicationSection(Base, TimestampMixin):
     status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), index=True, nullable=False, default="draft"
     )
+    meta: sqlalchemy.orm.Mapped[dict | None] = sqlalchemy.orm.mapped_column(sqlalchemy.JSON)
 
     project: sqlalchemy.orm.Mapped[PublicationProject] = sqlalchemy.orm.relationship(
         back_populates="sections"
@@ -256,7 +363,7 @@ class PublicationRelease(Base):
     )
 
 
-class FootprintAccount(Base, TimestampMixin):
+class FootprintAccount(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_accounts"
     __table_args__ = (
         sqlalchemy.UniqueConstraint(
@@ -303,7 +410,7 @@ class FootprintAccount(Base, TimestampMixin):
     )
 
 
-class FootprintNode(Base, TimestampMixin):
+class FootprintNode(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_nodes"
     __table_args__ = (
         sqlalchemy.UniqueConstraint(
@@ -361,7 +468,7 @@ class FootprintNode(Base, TimestampMixin):
     )
 
 
-class FootprintEdge(Base, TimestampMixin):
+class FootprintEdge(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_edges"
     __table_args__ = (
         sqlalchemy.UniqueConstraint(
@@ -418,7 +525,7 @@ class FootprintEdge(Base, TimestampMixin):
     )
 
 
-class FootprintImport(Base):
+class FootprintImport(Base, TenantMixin):
     __tablename__ = "footprint_imports"
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
@@ -460,7 +567,7 @@ class FootprintImport(Base):
     run: sqlalchemy.orm.Mapped[OrchestratorRun | None] = sqlalchemy.orm.relationship()
 
 
-class SourceObject(Base, TimestampMixin):
+class SourceObject(Base, TimestampMixin, TenantMixin):
     __tablename__ = "source_objects"
     __table_args__ = (
         sqlalchemy.UniqueConstraint("owner_id", "object_store_key", name="uq_source_object_owner_key"),

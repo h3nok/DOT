@@ -1,36 +1,38 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
-  Check,
-  LogIn,
-  Pencil,
-  Plus,
-  RotateCcw,
-  UserPlus,
+    ArrowLeft,
+    ArrowRight,
+    BookOpen,
+    Check,
+    LogIn,
+    Pencil,
+    Plus,
+    RotateCcw,
+    UserPlus,
 } from "lucide-react";
-import { hasChildren, type DotNode } from "./types";
-import { radialSlots } from "./layout";
-import { GraphNode } from "./GraphNode";
-import { SynapticEdge } from "./SynapticEdge";
-import { NodeEditor } from "./NodeEditor";
-import { NodeStage } from "./NodeStage";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useOrganismPulse } from "../organism";
+import { CircleSurface } from "./Circle";
 import { GraphChat } from "./GraphChat";
-import { SignIn } from "./SignIn";
+import { GraphNode } from "./GraphNode";
 import { Invite } from "./Invite";
 import { InviteWelcome } from "./InviteWelcome";
-import { useInviteArrival } from "./useInviteArrival";
-import { Publications } from "./Publications";
-import { CircleSurface } from "./Circle";
+import { NodeEditor } from "./NodeEditor";
+import { NodeStage } from "./NodeStage";
+import { SignIn } from "./SignIn";
+import { SupportSurface } from "./SupportSurface";
+import { SynapticEdge } from "./SynapticEdge";
 import { VaultSurface } from "./VaultSurface";
-import { acceptInvite } from "./useCircle";
 import { runAgent } from "./agent";
-import { useEditableGraph } from "./useEditableGraph";
-import { useOwnerMode } from "./useOwnerMode";
-import { useAuth } from "./useAuth";
-import { useOrganismPulse } from "../organism";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
+import { radialSlots } from "./layout";
+import { hasChildren, type DotNode } from "./types";
+import { useAuth } from "./useAuth";
+import { acceptInvite } from "./useCircle";
+import { useEditableGraph } from "./useEditableGraph";
+import { useInviteArrival } from "./useInviteArrival";
+import { useOwnerMode } from "./useOwnerMode";
 
 interface NucleusGraphProps {
   /** Seed root of the graph; user edits are layered on top and persisted. */
@@ -63,7 +65,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const [signInOpen, setSignInOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [platformSurface, setPlatformSurface] = useState<
-    "publications" | "circle" | "vault" | null
+    "publications" | "circle" | "vault" | "support" | null
   >(null);
   const invited = useInviteArrival();
   const { root, create, edit, remove, reset, status } = useEditableGraph(
@@ -111,7 +113,20 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
 
   // An extra ghost slot in edit mode lets you add a child to the centre.
   const slotCount = children.length + (editing ? 1 : 0);
-  const slots = useMemo(() => radialSlots(slotCount), [slotCount]);
+  // The ring is centred on the nucleus core, so the only wedge it must avoid is
+  // the one directly below it, where the name and essence line hang.
+  const slots = useMemo(() => {
+    if (slotCount <= 0) return [];
+    if (slotCount === 1) return radialSlots(1, -90);
+    const gapDeg = 88;
+    const span = 360 - gapDeg;
+    const start = 90 + gapDeg / 2;
+    return Array.from({ length: slotCount }, (_, i) => {
+      const angleDeg = start + (span / slotCount) * (i + 0.5);
+      const a = (angleDeg * Math.PI) / 180;
+      return { ux: Math.cos(a), uy: Math.sin(a), angleDeg };
+    });
+  }, [slotCount]);
 
   // Responsive geometry.
   const stageRef = useRef<HTMLDivElement>(null);
@@ -128,27 +143,48 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   }, []);
 
   const cx = size.w / 2;
-  const cy = size.h / 2;
-  const radius = Math.max(120, Math.min(340, Math.min(size.w, size.h) * 0.34));
+  // Reserve the top band for the toolbar and the bottom band for the chat bar
+  // and its chips, so no node or label can ever collide with them.
+  const topReserve = 72;
+  const chatReserve = editing ? 24 : 168;
+  const usableH = Math.max(0, size.h - topReserve - chatReserve);
+  const cy = topReserve + usableH / 2;
+  const radius = Math.max(150, Math.min(330, Math.min(size.w, usableH) * 0.4));
+
+  // The avatar *is* the hub: measure where its centre falls inside the nucleus
+  // block so the block can be offset to put that centre exactly on (cx, cy).
+  const nucleusRef = useRef<HTMLDivElement>(null);
+  const [coreOffset, setCoreOffset] = useState(72);
+  useEffect(() => {
+    const host = nucleusRef.current;
+    const core = host?.querySelector("[data-nucleus-core]");
+    if (!host || !core) return;
+    const hostTop = host.getBoundingClientRect().top;
+    const box = core.getBoundingClientRect();
+    setCoreOffset(box.top + box.height / 2 - hostTop);
+  }, [center.id, size.w, size.h]);
 
   const positions = slots.map((s) => ({
     x: cx + s.ux * radius,
     y: cy + s.uy * radius,
   }));
 
-  const drill = useCallback((node: DotNode) => {
-    setSelectedId(null);
-    setDetailId(null);
-    setAnswer(null);
-    setHoveredId(null);
-    setDrilling(true);
-    // Let the exit animation play before switching the graph level.
-    const delay = reducedMotion ? 0 : 80;
-    setTimeout(() => {
-      setPath((p) => [...p, node.id]);
-      setDrilling(false);
-    }, delay);
-  }, [reducedMotion]);
+  const drill = useCallback(
+    (node: DotNode) => {
+      setSelectedId(null);
+      setDetailId(null);
+      setAnswer(null);
+      setHoveredId(null);
+      setDrilling(true);
+      // Let the exit animation play before switching the graph level.
+      const delay = reducedMotion ? 0 : 80;
+      setTimeout(() => {
+        setPath((p) => [...p, node.id]);
+        setDrilling(false);
+      }, delay);
+    },
+    [reducedMotion],
+  );
 
   const follow = (node: DotNode) => {
     if (!node.href) return;
@@ -160,7 +196,13 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   };
 
   const activate = (node: DotNode) => {
-    // A node that fronts a live platform surface (the library, the circle)
+    // Publications live in the Studio (authoring) and the Reader (released
+    // work), not in a bloom, so that node navigates rather than opening one.
+    if (node.surface === "publications" && !editing) {
+      navigate(node.href ?? "/studio");
+      return;
+    }
+    // A node that fronts a live platform surface (the circle, the vault)
     // opens it instead of static reading content.
     if (node.surface && !editing) {
       setPlatformSurface(node.surface);
@@ -265,7 +307,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   return (
     <div
       ref={stageRef}
-      className="relative h-[calc(100vh-1px)] w-full overflow-hidden digital-grid bg-background"
+      className="relative h-[calc(100vh-1px)] w-full overflow-hidden"
     >
       {/* Back affordance when drilled below the root. */}
       <AnimatePresence>
@@ -409,7 +451,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               top: 0,
               borderRadius: "50%",
               background: "var(--primary)",
-              opacity: arrived ? 0.45 : 0,
+              opacity: arrived ? 0.16 : 0,
               filter: "blur(120px)",
               transition: "opacity 1200ms ease",
             }}
@@ -434,7 +476,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               top: 0,
               borderRadius: "50%",
               background: "var(--organism-accent-soft)",
-              opacity: arrived ? 0.3 : 0,
+              opacity: arrived ? 0.14 : 0,
               filter: "blur(160px)",
               transition: "opacity 1600ms ease 300ms",
             }}
@@ -469,10 +511,13 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
 
       {/* Nucleus. */}
       <motion.div
-        className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
+        ref={nucleusRef}
+        className="absolute z-10 -translate-x-1/2"
         style={{ left: cx, top: cy }}
-        initial={motionSafe ? { scale: 0, opacity: 0, translateY: "-100%" } : false}
-        animate={{ scale: 1, opacity: 1, translateY: "-50%" }}
+        initial={
+          motionSafe ? { scale: 0, opacity: 0, y: -coreOffset - 40 } : false
+        }
+        animate={{ scale: 1, opacity: 1, y: -coreOffset }}
         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
       >
         <GraphNode
@@ -481,6 +526,25 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
           reducedMotion={reducedMotion}
           onActivate={activate}
         />
+        {/* The flagship, one tap from the front door rather than two drills in. */}
+        {!editing && chain.length === 1 && (
+          <motion.div
+            className="mt-5 flex justify-center"
+            initial={motionSafe ? { opacity: 0, y: 6 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.5 }}
+          >
+            <button
+              type="button"
+              onClick={() => navigate("/book/digital-organism-theory")}
+              className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              Read Book One
+              <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </button>
+          </motion.div>
+        )}
         {editing && (
           <div className="mt-4 flex justify-center">
             <button
@@ -740,18 +804,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
-      {/* Publication library — durable, released work. */}
-      <AnimatePresence>
-        {platformSurface === "publications" && (
-          <Publications
-            isOwner={isOwner}
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onClose={() => setPlatformSurface(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Circle — the networking surface, personal-first. */}
       <AnimatePresence>
         {platformSurface === "circle" && (
@@ -773,6 +825,17 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
       <AnimatePresence>
         {platformSurface === "vault" && (
           <VaultSurface
+            origin={{ x: cx, y: cy }}
+            reducedMotion={reducedMotion}
+            onClose={() => setPlatformSurface(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Support — how the movement is funded, since it takes no advertising. */}
+      <AnimatePresence>
+        {platformSurface === "support" && (
+          <SupportSurface
             origin={{ x: cx, y: cy }}
             reducedMotion={reducedMotion}
             onClose={() => setPlatformSurface(null)}

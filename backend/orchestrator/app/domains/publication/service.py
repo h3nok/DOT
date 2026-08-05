@@ -30,6 +30,7 @@ async def create_project(
         title=payload.title,
         slug=payload.slug or slugify(payload.title),
         visibility=payload.visibility,
+        meta=payload.meta,
     )
     session.add(project)
     await session.commit()
@@ -99,6 +100,7 @@ async def create_section(
         section_order=payload.order,
         title=payload.title,
         body_ref=payload.body_ref,
+        meta=payload.meta,
     )
     session.add(section)
     if payload.body_ref:
@@ -201,6 +203,38 @@ async def create_revision(
     return revision
 
 
+async def set_section_body(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    owner: app.auth.dependencies.OwnerContext,
+    section_id: str,
+    body_text: str,
+) -> app.db.models.PublicationSection:
+    """Store draft body text in the object store and point the section at it."""
+    section: app.db.models.PublicationSection = await get_section(session, owner, section_id)
+    key: str = f"drafts/{section.project_id}/sections/{section.id}.md"
+    try:
+        await app.integrations.object_store.get_object_store().put_bytes(
+            key, body_text.encode("utf-8")
+        )
+    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Section body could not be persisted.",
+        ) from exc
+    section.body_ref = key
+    session.add(
+        app.db.models.PublicationRevision(
+            section_id=section.id,
+            editor_id=owner.actor_id,
+            body_ref=key,
+            message="Section body uploaded.",
+        )
+    )
+    await session.commit()
+    await session.refresh(section)
+    return section
+
+
 async def validate_project(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     owner: app.auth.dependencies.OwnerContext,
@@ -259,6 +293,7 @@ def build_release_manifest(
     release: app.db.models.PublicationRelease,
     sections: list[app.db.models.PublicationSection],
     generated_at: datetime.datetime,
+    body_keys: dict[str, str] | None = None,
 ) -> dict[str, typing.Any]:
     return {
         "schema_version": "publication.release.v1",
@@ -271,6 +306,7 @@ def build_release_manifest(
             "slug": project.slug,
             "status": project.status,
             "visibility": project.visibility,
+            "meta": project.meta,
         },
         "release": {
             "id": release.id,
@@ -289,12 +325,45 @@ def build_release_manifest(
                 "parent_id": section.parent_id,
                 "order": section.section_order,
                 "title": section.title,
-                "body_ref": section.body_ref,
+                "body_ref": (body_keys or {}).get(section.id, section.body_ref),
                 "status": section.status,
+                "meta": section.meta,
             }
             for section in sections
         ],
     }
+
+
+async def _resolve_section_body(section: app.db.models.PublicationSection) -> str:
+    """Return the draft body text: fetch from the store for key refs, else inline."""
+    ref: str = section.body_ref or ""
+    if ref.startswith(("drafts/", "releases/")):
+        return await app.integrations.object_store.get_object_store().get_text(ref)
+    return ref
+
+
+async def snapshot_release_bodies(
+    owner_id: str,
+    project_slug: str,
+    version: int,
+    sections: list[app.db.models.PublicationSection],
+) -> dict[str, str]:
+    """Copy section bodies into the immutable release namespace.
+
+    Returns a map of section id → release-scoped body key. After this, a
+    release is fully self-contained: mutating drafts can never change it.
+    """
+    store: app.integrations.object_store.FilesystemObjectStore | app.integrations.object_store.S3ObjectStore = app.integrations.object_store.get_object_store()
+    body_keys: dict[str, str] = {}
+    for section in sections:
+        body_text: str = await _resolve_section_body(section)
+        key: str = (
+            f"releases/{owner_id}/{project_slug}/v{version}/sections/"
+            f"{section.section_order:03d}-{section.id}.md"
+        )
+        await store.put_bytes(key, body_text.encode("utf-8"))
+        body_keys[section.id] = key
+    return body_keys
 
 
 async def get_idempotent_release(
@@ -409,10 +478,15 @@ async def create_release(
     project.status = "published"
     session.add(run)
 
-    manifest: dict[str, typing.Any] = build_release_manifest(project, release, sections, now)
     try:
+        body_keys: dict[str, str] = await snapshot_release_bodies(
+            owner.owner_id, project.slug, version, sections
+        )
+        manifest: dict[str, typing.Any] = build_release_manifest(
+            project, release, sections, now, body_keys
+        )
         await app.integrations.object_store.get_object_store().put_json(manifest_key, manifest)
-    except app.integrations.object_store.ObjectStoreError as exc:
+    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
         await session.rollback()
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -463,12 +537,12 @@ async def get_release_manifest(
 
     try:
         return await app.integrations.object_store.get_object_store().get_json(release.manifest_key)
-    except app.integrations.object_store.ObjectNotFoundError as exc:
+    except app.integrations.object_store.ObjectNotFoundError as exc: app.integrations.object_store.ObjectNotFoundError:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Manifest not found.",
         ) from exc
-    except app.integrations.object_store.ObjectStoreError as exc:
+    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Release manifest could not be read.",
@@ -520,13 +594,36 @@ async def get_public_delivery_manifest(
 
     try:
         return await app.integrations.object_store.get_object_store().get_json(release.manifest_key)
-    except app.integrations.object_store.ObjectNotFoundError as exc:
+    except app.integrations.object_store.ObjectNotFoundError as exc: app.integrations.object_store.ObjectNotFoundError:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Delivery manifest not found.",
         ) from exc
-    except app.integrations.object_store.ObjectStoreError as exc:
+    except app.integrations.object_store.ObjectStoreError as exc: app.integrations.object_store.ObjectStoreError:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Delivery manifest could not be read.",
         ) from exc
+
+
+async def list_public_releases(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+) -> list[tuple[app.db.models.PublicationProject, app.db.models.PublicationRelease]]:
+    """Return all published public releases for sitemap generation."""
+    result: sqlalchemy.Result[
+        tuple[app.db.models.PublicationProject, app.db.models.PublicationRelease]
+    ] = await session.execute(
+        sqlalchemy.select(app.db.models.PublicationProject, app.db.models.PublicationRelease)
+        .join(
+            app.db.models.PublicationRelease,
+            app.db.models.PublicationRelease.project_id == app.db.models.PublicationProject.id,
+        )
+        .where(
+            app.db.models.PublicationProject.status == "published",
+            app.db.models.PublicationProject.visibility == "public",
+            app.db.models.PublicationRelease.status == "published",
+            app.db.models.PublicationRelease.revoked_at.is_(None),
+        )
+        .order_by(app.db.models.PublicationRelease.published_at.desc())
+    )
+    return list(result.all())

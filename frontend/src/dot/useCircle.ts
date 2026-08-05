@@ -1,49 +1,41 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { api } from "./orchestrator";
+
 /**
  * useCircle — the networking client, personal-first.
  *
- * Reads the owner's circle from `/api/circle`. The circle begins with just the
- * owner and grows one accepted invitation at a time, so for a fresh profile it
- * is intentionally quiet. Reads are public (the profile can show "a circle of
- * N"); joining happens through the invite-accept flow.
+ * A circle is the set of members who joined through your invitations. It is
+ * yours and nobody else's: the server only ever returns the signed-in member's
+ * own circle, so this hook reads nothing until there is a session. It begins
+ * empty and grows one accepted invitation at a time.
  */
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api").replace(
-  /\/$/,
-  "",
-);
-
 export interface CircleMember {
-  name: string;
-  note?: string | null;
-  joined_at?: string | null;
+  display_name: string | null;
+  joined_at: string | null;
 }
 
 export interface Circle {
-  owner: string;
+  owner_id: string;
   count: number;
   members: CircleMember[];
 }
 
-export function useCircle(owner = "self") {
+export function useCircle(enabled = true) {
   const [circle, setCircle] = useState<Circle | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
 
   const refresh = useCallback(async () => {
-    try {
-      const res = await fetch(
-        `${API_BASE}/circle?owner=${encodeURIComponent(owner)}`,
-        { credentials: "include", cache: "no-store" },
-      );
-      const payload = await res.json().catch(() => ({}));
-      if (res.ok && payload?.success) setCircle(payload.data as Circle);
-    } catch {
-      /* keep prior */
-    } finally {
+    if (!enabled) {
+      setCircle(null);
       setLoading(false);
+      return;
     }
-  }, [owner]);
+    const result = await api<Circle>("/v1/auth/circle");
+    if (result.ok && result.data) setCircle(result.data);
+    setLoading(false);
+  }, [enabled]);
 
   useEffect(() => {
     void refresh();
@@ -54,16 +46,9 @@ export function useCircle(owner = "self") {
 
 /** Accept an invitation the visitor arrived with (requires a session). */
 export async function acceptInvite(token: string): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_BASE}/invite/accept`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ token }),
-    });
-    const payload = await res.json().catch(() => ({}));
-    return res.ok && Boolean(payload?.success);
-  } catch {
-    return false;
-  }
+  const result = await api<{ accepted: boolean }>("/v1/auth/invites/accept", {
+    method: "POST",
+    body: { token },
+  });
+  return result.ok;
 }

@@ -5,7 +5,7 @@ import datetime
 import ipaddress
 import socket
 import typing
-from urllib.parse import urljoin, urlparse
+import urllib.parse
 
 import fastapi
 import httpx
@@ -19,21 +19,21 @@ import app.domains.graph.schemas
 import app.integrations.connectors.rss
 
 FOOTPRINT_IMPORT_WORKFLOW = "footprint_import"
-RSS_CONNECTORS = {"rss", "substack"}
+RSS_CONNECTORS: set[str] = {"rss", "substack"}
 MAX_FEED_BYTES = 2_000_000
 MAX_FEED_REDIRECTS = 3
 FEED_ACCEPT_HEADER = (
     "application/rss+xml, application/atom+xml, application/xml, text/xml, "
     "text/plain;q=0.6, */*;q=0.2"
 )
-ALLOWED_FEED_CONTENT_TYPES = {
+ALLOWED_FEED_CONTENT_TYPES: set[str] = {
     "application/rss+xml",
     "application/atom+xml",
     "application/xml",
     "text/xml",
     "text/plain",
 }
-RETRYABLE_FEED_STATUSES = {429, 502, 503, 504}
+RETRYABLE_FEED_STATUSES: set[int] = {429, 502, 503, 504}
 
 
 async def create_account(
@@ -48,7 +48,7 @@ async def create_account(
             app.db.models.FootprintAccount.handle == payload.handle,
         )
     )
-    existing = result.scalar_one_or_none()
+    existing: app.db.models.FootprintAccount | None = result.scalar_one_or_none()
     if existing is not None:
         if payload.display_name is not None:
             existing.display_name = payload.display_name
@@ -96,6 +96,22 @@ async def list_accounts(
     return list(result.scalars().all())
 
 
+async def _get_owned_run(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    owner_id: str,
+    run_id: str,
+) -> app.db.models.OrchestratorRun | None:
+    """Load a run by id within its tenant. Never fetch a tenant row by id alone."""
+
+    result: sqlalchemy.Result[tuple[app.db.models.OrchestratorRun]] = await session.execute(
+        sqlalchemy.select(app.db.models.OrchestratorRun).where(
+            app.db.models.OrchestratorRun.id == run_id,
+            app.db.models.OrchestratorRun.owner_id == owner_id,
+        )
+    )
+    return result.scalar_one_or_none()
+
+
 async def get_account(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     owner: app.auth.dependencies.OwnerContext,
@@ -107,7 +123,7 @@ async def get_account(
             app.db.models.FootprintAccount.owner_id == owner.owner_id,
         )
     )
-    account = result.scalar_one_or_none()
+    account: app.db.models.FootprintAccount | None = result.scalar_one_or_none()
     if account is None:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
@@ -127,7 +143,7 @@ async def get_import(
             app.db.models.FootprintImport.owner_id == owner.owner_id,
         )
     )
-    footprint_import = result.scalar_one_or_none()
+    footprint_import: app.db.models.FootprintImport | None = result.scalar_one_or_none()
     if footprint_import is None:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
@@ -192,7 +208,7 @@ async def get_node(
             app.db.models.FootprintNode.owner_id == owner.owner_id,
         )
     )
-    node = result.scalar_one_or_none()
+    node: app.db.models.FootprintNode | None = result.scalar_one_or_none()
     if node is None:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
@@ -235,9 +251,9 @@ async def create_edge(
             detail="Footprint edge must connect two distinct nodes.",
         )
 
-    source = await get_node(session, owner, payload.source_node_id)
-    target = await get_node(session, owner, payload.target_node_id)
-    now = datetime.datetime.now(datetime.UTC)
+    source: app.db.models.FootprintNode = await get_node(session, owner, payload.source_node_id)
+    target: app.db.models.FootprintNode = await get_node(session, owner, payload.target_node_id)
+    now: datetime.datetime = datetime.datetime.now(datetime.UTC)
     edge = app.db.models.FootprintEdge(
         owner_id=owner.owner_id,
         source_node_id=source.id,
@@ -275,8 +291,8 @@ async def upsert_node(
             app.db.models.FootprintNode.external_id == external_id,
         )
     )
-    node = result.scalar_one_or_none()
-    now = datetime.datetime.now(datetime.UTC)
+    node: app.db.models.FootprintNode | None = result.scalar_one_or_none()
+    now: datetime.datetime = datetime.datetime.now(datetime.UTC)
     if node is None:
         node = app.db.models.FootprintNode(
             owner_id=owner_id,
@@ -326,8 +342,8 @@ async def upsert_edge(
             app.db.models.FootprintEdge.platform == platform,
         )
     )
-    edge = result.scalar_one_or_none()
-    now = datetime.datetime.now(datetime.UTC)
+    edge: app.db.models.FootprintEdge | None = result.scalar_one_or_none()
+    now: datetime.datetime = datetime.datetime.now(datetime.UTC)
     if edge is None:
         edge = app.db.models.FootprintEdge(
             owner_id=owner_id,
@@ -385,7 +401,7 @@ async def create_import(
     if payload.account_id:
         account = await get_account(session, owner, payload.account_id)
 
-    scoped_key = (
+    scoped_key: str | None = (
         f"{FOOTPRINT_IMPORT_WORKFLOW}:{payload.connector}:{idempotency_key.strip()}"
         if idempotency_key and idempotency_key.strip()
         else None
@@ -406,7 +422,7 @@ async def create_import(
             )
             .order_by(app.db.models.FootprintImport.created_at.desc())
         )
-        existing_import = existing_result.scalars().first()
+        existing_import: app.db.models.FootprintImport | None = existing_result.scalars().first()
         if existing_import is not None:
             return existing_import
 
@@ -453,9 +469,9 @@ def resolve_feed_url(
     account: app.db.models.FootprintAccount | None,
 ) -> str:
     source_ref = footprint_import.source_ref or {}
-    feed_url = str(source_ref.get("feed_url") or "").strip()
+    feed_url: str = str(source_ref.get("feed_url") or "").strip()
     if not feed_url and account and account.profile_url:
-        feed_url = f"{account.profile_url.rstrip('/')}/feed"
+        feed_url: str = f"{account.profile_url.rstrip('/')}/feed"
 
     validate_feed_url(feed_url)
     return feed_url
@@ -463,7 +479,7 @@ def resolve_feed_url(
 
 def _is_blocked_network_address(value: str) -> bool:
     try:
-        address = ipaddress.ip_address(value)
+        address: ipaddress.IPv4Address | ipaddress.IPv6Address = ipaddress.ip_address(value)
     except ValueError:
         return False
 
@@ -478,8 +494,8 @@ def _is_blocked_network_address(value: str) -> bool:
 
 
 def validate_feed_url(feed_url: str) -> None:
-    parsed = urlparse(feed_url)
-    host = parsed.hostname
+    parsed: urllib.parse.ParseResult = urllib.parse.urlparse(feed_url)
+    host: str | None = parsed.hostname
     if parsed.scheme not in {"http", "https"} or not parsed.netloc or not host:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
@@ -498,8 +514,8 @@ def validate_feed_url(feed_url: str) -> None:
 
 
 async def assert_public_feed_target(feed_url: str) -> None:
-    parsed = urlparse(feed_url)
-    host = parsed.hostname
+    parsed: urllib.parse.ParseResult = urllib.parse.urlparse(feed_url)
+    host: str | None = parsed.hostname
     if not host:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
@@ -507,16 +523,16 @@ async def assert_public_feed_target(feed_url: str) -> None:
         )
 
     try:
-        default_port = 443 if parsed.scheme == "https" else 80
-        addresses = await asyncio_getaddrinfo(host, parsed.port or default_port)
-    except socket.gaierror as exc:
+        default_port: int = 443 if parsed.scheme == "https" else 80
+        addresses: list[tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]] = await asyncio_getaddrinfo(host, parsed.port or default_port)
+    except socket.gaierror as exc: socket.gaierror:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="RSS feed host could not be resolved.",
         ) from exc
 
-    resolved_hosts = {address[4][0] for address in addresses}
-    has_blocked_address = any(
+    resolved_hosts: set[str] = {address[4][0] for address in addresses}
+    has_blocked_address: bool = any(
         _is_blocked_network_address(address) for address in resolved_hosts
     )
     if not resolved_hosts or has_blocked_address:
@@ -536,7 +552,7 @@ async def asyncio_getaddrinfo(
 def _validate_feed_response_headers(response: httpx.Response) -> None:
     content_length = response.headers.get("content-length")
     try:
-        declared_length = int(content_length) if content_length else None
+        declared_length: int | None = int(content_length) if content_length else None
     except ValueError:
         declared_length = None
     if declared_length and declared_length > MAX_FEED_BYTES:
@@ -566,12 +582,12 @@ async def _read_limited_feed_response(response: httpx.Response) -> str:
 
 
 async def fetch_feed_xml(feed_url: str) -> str:
-    current_url = feed_url
+    current_url: str = feed_url
     async with app.core.http_client.create_service_client(
         "dot-orchestrator-rss",
         timeout=20.0,
         max_connections=10,
-    ) as client:
+    ) as client: httpx.AsyncClient:
         for redirect_count in range(MAX_FEED_REDIRECTS + 1):
             validate_feed_url(current_url)
             await assert_public_feed_target(current_url)
@@ -584,7 +600,7 @@ async def fetch_feed_xml(feed_url: str) -> str:
                         current_url,
                         headers={"Accept": FEED_ACCEPT_HEADER},
                         follow_redirects=False,
-                    ) as response:
+                    ) as response: httpx.Response:
                         if response.status_code in {301, 302, 303, 307, 308}:
                             location = response.headers.get("location")
                             if not location:
@@ -597,7 +613,7 @@ async def fetch_feed_xml(feed_url: str) -> str:
                                     status_code=fastapi.status.HTTP_502_BAD_GATEWAY,
                                     detail="RSS feed redirected too many times.",
                                 )
-                            current_url = urljoin(current_url, location)
+                            current_url: str = urllib.parse.urljoin(current_url, location)
                             break
 
                         if response.status_code in RETRYABLE_FEED_STATUSES and attempt < 2:
@@ -606,13 +622,13 @@ async def fetch_feed_xml(feed_url: str) -> str:
                         _validate_feed_response_headers(response)
                         try:
                             response.raise_for_status()
-                        except httpx.HTTPStatusError as exc:
+                        except httpx.HTTPStatusError as exc: httpx.HTTPStatusError:
                             raise fastapi.HTTPException(
                                 status_code=fastapi.status.HTTP_502_BAD_GATEWAY,
                                 detail="RSS feed request failed.",
                             ) from exc
                         return await _read_limited_feed_response(response)
-                except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as exc:
+                except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as exc: httpx.ConnectError | httpx.ConnectTimeout | httpx.ReadTimeout:
                     last_exc = exc
                     if attempt < 2:
                         continue
@@ -647,7 +663,7 @@ async def _mark_import_failed(
     footprint_import.completed_at = datetime.datetime.now(datetime.UTC)
     footprint_import.summary = {"error_code": error_code}
     if footprint_import.run_id:
-        run = await session.get(app.db.models.OrchestratorRun, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, footprint_import.owner_id, footprint_import.run_id)
         if run is not None:
             run.status = "failed"
             run.error_code = error_code
@@ -662,8 +678,8 @@ async def process_import(
     *,
     feed_xml: str | None = None,
 ) -> app.db.models.FootprintImport:
-    footprint_import = await get_import(session, owner, import_id)
-    connector = footprint_import.connector.lower()
+    footprint_import: app.db.models.FootprintImport = await get_import(session, owner, import_id)
+    connector: str = footprint_import.connector.lower()
     if connector not in RSS_CONNECTORS and footprint_import.import_mode.lower() != "rss":
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
@@ -672,15 +688,11 @@ async def process_import(
 
     account = None
     if footprint_import.account_id:
-        account = await session.get(app.db.models.FootprintAccount, footprint_import.account_id)
-        if account is None or account.owner_id != owner.owner_id:
-            raise fastapi.HTTPException(
-                status_code=fastapi.status.HTTP_404_NOT_FOUND,
-                detail="Footprint account not found.",
-            )
+        # Scope the lookup itself rather than fetching by id and checking after.
+        account: app.db.models.FootprintAccount = await get_account(session, owner, footprint_import.account_id)
 
     if footprint_import.run_id:
-        run = await session.get(app.db.models.OrchestratorRun, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, owner.owner_id, footprint_import.run_id)
         if run is not None:
             run.status = "running"
             run.started_at = run.started_at or datetime.datetime.now(datetime.UTC)
@@ -688,39 +700,39 @@ async def process_import(
         await session.commit()
 
     try:
-        feed_url = resolve_feed_url(footprint_import, account)
+        feed_url: str = resolve_feed_url(footprint_import, account)
     except fastapi.HTTPException:
         await _mark_import_failed(session, footprint_import, error_code="feed_url_rejected")
         raise
 
     try:
-        xml_text = feed_xml if feed_xml is not None else await fetch_feed_xml(feed_url)
+        xml_text: str = feed_xml if feed_xml is not None else await fetch_feed_xml(feed_url)
     except fastapi.HTTPException:
         await _mark_import_failed(session, footprint_import, error_code="feed_fetch_failed")
         raise
 
     try:
-        fallback_title = account.display_name or account.handle if account else "Imported feed"
-        feed = app.integrations.connectors.rss.parse_feed(xml_text, fallback_title=fallback_title)
-    except Exception as exc:
+        fallback_title: str = account.display_name or account.handle if account else "Imported feed"
+        feed: app.integrations.connectors.rss.RssFeed = app.integrations.connectors.rss.parse_feed(xml_text, fallback_title=fallback_title)
+    except Exception as exc: Exception:
         await _mark_import_failed(session, footprint_import, error_code="feed_parse_failed")
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="RSS feed could not be parsed.",
         ) from exc
 
-    platform = connector if connector != "rss" else account.platform if account else "rss"
+    platform: str = connector if connector != "rss" else account.platform if account else "rss"
     generated_node_ids: set[str] = set()
     generated_edge_ids: set[str] = set()
 
-    account_label = account.display_name or account.handle if account else feed.title
-    account_external_id = (
+    account_label: str = account.display_name or account.handle if account else feed.title
+    account_external_id: str = (
         account.external_id
         or f"account:{account.id}"
         if account
         else app.integrations.connectors.rss.stable_external_id("account", feed_url)
     )
-    account_node = await upsert_node(
+    account_node: app.db.models.FootprintNode = await upsert_node(
         session,
         owner.owner_id,
         kind="platform_account",
@@ -741,7 +753,7 @@ async def process_import(
     )
     generated_node_ids.add(account_node.id)
 
-    publication_node = await upsert_node(
+    publication_node: app.db.models.FootprintNode = await upsert_node(
         session,
         owner.owner_id,
         kind="publication",
@@ -753,7 +765,7 @@ async def process_import(
         visibility="public",
     )
     generated_node_ids.add(publication_node.id)
-    edge = await upsert_edge(
+    edge: app.db.models.FootprintEdge = await upsert_edge(
         session,
         owner.owner_id,
         source_node_id=account_node.id,
@@ -766,7 +778,7 @@ async def process_import(
 
     topic_count = 0
     for item in feed.items:
-        post_node = await upsert_node(
+        post_node: app.db.models.FootprintNode = await upsert_node(
             session,
             owner.owner_id,
             kind="post",
@@ -786,7 +798,7 @@ async def process_import(
             visibility="public",
         )
         generated_node_ids.add(post_node.id)
-        authored_edge = await upsert_edge(
+        authored_edge: app.db.models.FootprintEdge = await upsert_edge(
             session,
             owner.owner_id,
             source_node_id=account_node.id,
@@ -795,7 +807,7 @@ async def process_import(
             platform=platform,
             evidence_ref={"import_id": footprint_import.id, "url": item.link},
         )
-        published_edge = await upsert_edge(
+        published_edge: app.db.models.FootprintEdge = await upsert_edge(
             session,
             owner.owner_id,
             source_node_id=post_node.id,
@@ -807,7 +819,7 @@ async def process_import(
         generated_edge_ids.update({authored_edge.id, published_edge.id})
 
         for topic in app.integrations.connectors.rss.normalize_topics(item.tags):
-            topic_node = await upsert_node(
+            topic_node: app.db.models.FootprintNode = await upsert_node(
                 session,
                 owner.owner_id,
                 kind="topic",
@@ -821,7 +833,7 @@ async def process_import(
             )
             topic_count += 1
             generated_node_ids.add(topic_node.id)
-            topic_edge = await upsert_edge(
+            topic_edge: app.db.models.FootprintEdge = await upsert_edge(
                 session,
                 owner.owner_id,
                 source_node_id=post_node.id,
@@ -833,7 +845,7 @@ async def process_import(
             )
             generated_edge_ids.add(topic_edge.id)
 
-    now = datetime.datetime.now(datetime.UTC)
+    now: datetime.datetime = datetime.datetime.now(datetime.UTC)
     footprint_import.status = "succeeded"
     footprint_import.completed_at = now
     footprint_import.summary = {
@@ -852,7 +864,7 @@ async def process_import(
             "item_count": len(feed.items),
         }
     if footprint_import.run_id:
-        run = await session.get(app.db.models.OrchestratorRun, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, footprint_import.owner_id, footprint_import.run_id)
         if run is not None:
             run.status = "succeeded"
             run.completed_at = now
@@ -875,11 +887,11 @@ async def get_snapshot(
     node_limit: int = 250,
     edge_limit: int = 500,
 ) -> app.domains.graph.schemas.FootprintGraphSnapshot:
-    accounts = await list_accounts(session, owner)
-    nodes = await list_nodes(session, owner, platform=platform, kind=kind, limit=node_limit)
-    edges = await list_edges(session, owner, platform=platform, relation=relation, limit=edge_limit)
-    node_ids = {node.id for node in nodes}
-    visible_edges = [
+    accounts: list[app.db.models.FootprintAccount] = await list_accounts(session, owner)
+    nodes: list[app.db.models.FootprintNode] = await list_nodes(session, owner, platform=platform, kind=kind, limit=node_limit)
+    edges: list[app.db.models.FootprintEdge] = await list_edges(session, owner, platform=platform, relation=relation, limit=edge_limit)
+    node_ids: set[str] = {node.id for node in nodes}
+    visible_edges: list[app.db.models.FootprintEdge] = [
         edge
         for edge in edges
         if edge.source_node_id in node_ids and edge.target_node_id in node_ids

@@ -14,7 +14,7 @@
 export type DotNodeKind = "self" | "attribute" | "page" | "external";
 
 /** Platform surfaces a node can open instead of a plain reading panel. */
-export type DotSurface = "publications" | "circle" | "vault";
+export type DotSurface = "publications" | "circle" | "vault" | "support";
 
 export interface DotNode {
   /** Stable identity, unique among its siblings. */

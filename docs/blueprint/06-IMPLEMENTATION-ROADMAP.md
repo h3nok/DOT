@@ -405,6 +405,9 @@ Every implementation increment must include:
 
 ## 6. Current next actions
 
+Launch execution now lives in `09-PUBLIC-LAUNCH-SPRINT-PLAN.md` (six sprints, two public
+gates). The list below remains valid for local development:
+
 1. Start local services with `make orchestrator-services-up`.
 2. Apply migrations with `make migrate-orchestrator`.
 3. Start the API with `make start-orchestrator`.

@@ -17,9 +17,18 @@ const TAU = Math.PI * 2;
 export const OrganismThemeBridge: React.FC = () => {
   const { vitals, config, reducedMotion } = useOrganism();
 
+  const tint = config.tint;
+
   useEffect(() => {
     if (!config.enabled) return;
     const root = document.documentElement;
+
+    // A pinned tint is the member's choice and outranks the circadian arc;
+    // synaptic firing still bends it, so the organism stays legible.
+    const hueOf = (v: VitalSigns) =>
+      tint === "auto"
+        ? hueFor(v)
+        : circularMix(tint, 290, v.synapsis * 0.3 + v.synapticPulse * 0.25);
 
     // Eased display values so we never snap between frames.
     const shown = {
@@ -36,7 +45,7 @@ export const OrganismThemeBridge: React.FC = () => {
       // One settled frame for reduced-motion users: full physiology, no motion.
       v.calm = v.calmTarget; // snap; nothing animates here anyway
       // Reading desaturates the field a touch so text contrast stays stable.
-      const hue = hueFor(v);
+      const hue = hueOf(v);
       const chroma =
         0.13 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * v.calm);
@@ -76,7 +85,7 @@ export const OrganismThemeBridge: React.FC = () => {
       // (1 - calm) gates everything "alive": motion, excitement, glow.
       const alive = 1 - calm;
 
-      const targetHue = hueFor(v);
+      const targetHue = hueOf(v);
       // Shortest-path hue interpolation around the 360° wheel.
       const dh = ((targetHue - shown.hue + 540) % 360) - 180;
       shown.hue = (shown.hue + dh * k + 360) % 360;
@@ -137,7 +146,7 @@ export const OrganismThemeBridge: React.FC = () => {
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [vitals, config.enabled, config.intensity, reducedMotion]);
+  }, [vitals, config.enabled, config.intensity, tint, reducedMotion]);
 
   return null;
 };

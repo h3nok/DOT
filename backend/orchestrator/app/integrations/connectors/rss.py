@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+import collections.abc
 import dataclasses
+import datetime
 import email.utils
 import hashlib
+import html
 import re
 import xml.etree.ElementTree as ET
-import collections.abc
-import datetime
-import html
 
 
 @dataclasses.dataclass(frozen=True)
@@ -46,7 +46,7 @@ def _children(element: ET.Element, name: str) -> list[ET.Element]:
 
 
 def _first_child(element: ET.Element, name: str) -> ET.Element | None:
-    children: list[Element[str]] = _children(element, name)
+    children: list[ET.Element] = _children(element, name)
     return children[0] if children else None
 
 

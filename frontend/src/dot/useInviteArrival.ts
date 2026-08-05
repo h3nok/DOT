@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { api } from "./orchestrator";
+
 /**
  * useInviteArrival — resolve an invitation the visitor arrived with.
  *
  * DOT is invite-only. When someone opens a link like `/DOT/?invite=<token>`,
  * this reads the token, validates it server-side (the client is never trusted),
- * and surfaces who invited them and any note — so the graph can welcome them
- * with a bloom instead of a gate. Dismissing strips the param from the URL so a
- * refresh stays quiet.
+ * and surfaces who invited them — so the graph can welcome them with a bloom
+ * instead of a gate. The server never returns who the invite was addressed to;
+ * a link in the wrong hands must not leak a stranger's address. Dismissing
+ * strips the param from the URL so a refresh stays quiet.
  */
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api").replace(
-  /\/$/,
-  "",
-);
-
 export interface InviteArrival {
-  from?: string | null;
-  to?: string | null;
-  note?: string | null;
+  valid: boolean;
+  invited_by?: string | null;
+  expires_at?: string | null;
 }
 
 function readToken(): string | null {
@@ -34,25 +32,19 @@ export function useInviteArrival() {
 
   useEffect(() => {
     if (!token) return;
-    let cancelled = false;
+    const controller = new AbortController();
     (async () => {
-      try {
-        const res = await fetch(
-          `${API_BASE}/invite/check?token=${encodeURIComponent(token)}`,
-          { credentials: "include", cache: "no-store" },
-        );
-        const payload = await res.json().catch(() => ({}));
-        if (cancelled) return;
-        if (res.ok && payload?.success) {
-          setArrival(payload.data as InviteArrival);
-          setOpen(true);
-        }
-      } catch {
-        /* a bad link simply doesn't open a welcome */
-      }
+      const result = await api<InviteArrival>(
+        `/v1/auth/invites/check?token=${encodeURIComponent(token)}`,
+        { signal: controller.signal },
+      );
+      // A spent or unknown link simply doesn't open a welcome.
+      if (!result.ok || !result.data?.valid) return;
+      setArrival(result.data);
+      setOpen(true);
     })();
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [token]);
 

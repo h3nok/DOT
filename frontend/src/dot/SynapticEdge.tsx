@@ -36,6 +36,9 @@ interface SynapticEdgeProps {
  * A positive offset bows the curve clockwise (looking from start → end).
  */
 const CURVE_OFFSET = 0.12;
+/** Edges leave the nucleus at the avatar's rim and stop at the node's halo. */
+const TRIM_START = 68;
+const TRIM_END = 20;
 export const SynapticEdge: React.FC<SynapticEdgeProps> = ({
   cx,
   cy,
@@ -46,24 +49,39 @@ export const SynapticEdge: React.FC<SynapticEdgeProps> = ({
   active = false,
   reducedMotion = false,
 }) => {
-  // Compute the quadratic Bézier control point by offsetting the midpoint
-  // perpendicular to the line. Alternate the direction by index so edges
-  // don't all bow the same way.
-  const d = useMemo(() => {
-    const mx = (cx + px) / 2;
-    const my = (cy + py) / 2;
+  // Trim the straight span at both ends, then bow the remaining arc with a
+  // quadratic Bézier control point offset perpendicular to the line.
+  const geometry = useMemo(() => {
     const dx = px - cx;
     const dy = py - cy;
     const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const trimStart = Math.min(TRIM_START, len * 0.4);
+    const trimEnd = Math.min(TRIM_END, len * 0.15);
+    const sx = cx + ux * trimStart;
+    const sy = cy + uy * trimStart;
+    const ex = px - ux * trimEnd;
+    const ey = py - uy * trimEnd;
+
+    const mx = (sx + ex) / 2;
+    const my = (sy + ey) / 2;
+    const span = Math.hypot(ex - sx, ey - sy) || 1;
     // Perpendicular unit vector, alternating direction.
     const sign = index % 2 === 0 ? 1 : -1;
-    const perpX = (-dy / len) * sign;
-    const perpY = (dx / len) * sign;
-    const offset = len * CURVE_OFFSET;
+    const perpX = (-uy) * sign;
+    const perpY = ux * sign;
+    const offset = span * CURVE_OFFSET;
     const ctrlX = mx + perpX * offset;
     const ctrlY = my + perpY * offset;
 
-    return `M ${cx} ${cy} Q ${ctrlX} ${ctrlY} ${px} ${py}`;
+    return {
+      d: `M ${sx} ${sy} Q ${ctrlX} ${ctrlY} ${ex} ${ey}`,
+      sx,
+      sy,
+      ex,
+      ey,
+    };
   }, [cx, cy, px, py, index]);
 
   const lit = hovered || active;
@@ -74,7 +92,7 @@ export const SynapticEdge: React.FC<SynapticEdgeProps> = ({
       {/* The arc: one line, one relation. Drawing in is the `connect`
           gesture; brightening is the whole hover treatment. */}
       <motion.path
-        d={d}
+        d={geometry.d}
         fill="none"
         stroke="var(--attention-line, var(--organism-accent))"
         strokeWidth={strokeWidth}
@@ -87,18 +105,18 @@ export const SynapticEdge: React.FC<SynapticEdgeProps> = ({
         }}
       />
 
-      {/* Static accent dots at connection points */}
+      {/* Accent dots at the trimmed endpoints — the synapse terminals. */}
       <circle
-        cx={cx}
-        cy={cy}
-        r={2.5}
+        cx={geometry.sx}
+        cy={geometry.sy}
+        r={1.8}
         fill="var(--primary)"
-        opacity={lit ? 0.9 : 0.5}
+        opacity={lit ? 0.8 : 0.35}
         style={{ transition: "opacity 300ms ease" }}
       />
       <circle
-        cx={px}
-        cy={py}
+        cx={geometry.ex}
+        cy={geometry.ey}
         r={2}
         fill="var(--organism-accent-strong)"
         opacity={lit ? 0.7 : 0.3}

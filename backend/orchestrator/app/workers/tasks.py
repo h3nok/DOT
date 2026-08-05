@@ -1,12 +1,15 @@
 import asyncio
 
+from sqlalchemy.ext.asyncio.session import AsyncSession
+
+from DOT.backend.orchestrator.app.db.models import FootprintImport
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.service
-from app.workers.broker import dramatiq
+import app.workers.broker
 
 
-@dramatiq.actor(queue_name="orchestrator-smoke")
+@app.workers.broker.dramatiq.actor(queue_name="orchestrator-smoke")
 def smoke_workflow(message: str = "ok") -> dict[str, str]:
     """Minimal worker task used to verify worker/broker wiring."""
 
@@ -15,8 +18,9 @@ def smoke_workflow(message: str = "ok") -> dict[str, str]:
 
 async def _process_footprint_import(import_id: str, owner_id: str) -> dict[str, str]:
     owner = app.auth.dependencies.OwnerContext(owner_id=owner_id, actor_id="orchestrator-worker")
-    async with app.db.session.AsyncSessionLocal() as session:
-        footprint_import = await app.domains.graph.service.process_import(
+    # Workers are tenants too — bind before touching tenant tables (ADR-0011).
+    async with app.db.session.tenant_session(owner_id) as session: AsyncSession:
+        footprint_import: FootprintImport = await app.domains.graph.service.process_import(
             session,
             owner,
             import_id,
@@ -24,7 +28,7 @@ async def _process_footprint_import(import_id: str, owner_id: str) -> dict[str, 
         return {"status": footprint_import.status, "import_id": footprint_import.id}
 
 
-@dramatiq.actor(queue_name="footprint-imports")
+@app.workers.broker.dramatiq.actor(queue_name="footprint-imports")
 def process_footprint_import(import_id: str, owner_id: str) -> dict[str, str]:
     """Process a queued footprint import into graph nodes and edges."""
 

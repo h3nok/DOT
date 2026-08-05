@@ -1,3 +1,4 @@
+import { api, PROFILE_OWNER_ID } from "./orchestrator";
 import type { DotNode } from "./types";
 
 /**
@@ -8,15 +9,20 @@ import type { DotNode } from "./types";
  * blooms the matching content page from the centre. Anything else is answered —
  * by the backend twin when reachable, and by a calm local fallback otherwise.
  *
- * Backend integration: POSTs to `${VITE_TWIN_URL || VITE_API_BASE_URL || /api}
- * /twin/ask`. The endpoint is zero-retention by design (see backend twin route).
+ * The twin at `/v1/twin/ask` only answers from nodes it actually retrieved and
+ * returns the node ids behind every answer (ADR-0010). An answer with no
+ * citations is not shown as a twin answer. Asking requires a session; visitors
+ * without one get the local fallback rather than an open model endpoint.
  */
-
-const TWIN_BASE =
-  import.meta.env.VITE_TWIN_URL || import.meta.env.VITE_API_BASE_URL || "/api";
 
 export interface AgentNode {
   id: string;
+  label: string;
+}
+
+export interface AgentCitation {
+  node_id: string;
+  kind: string;
   label: string;
 }
 
@@ -27,6 +33,7 @@ export type AgentResult =
       title: string;
       text: string;
       source: "backend" | "local";
+      citations?: AgentCitation[];
     };
 
 interface Indexed {
@@ -123,27 +130,28 @@ export function resolveNode(root: DotNode, query: string): AgentResult | null {
   };
 }
 
+interface TwinAskResponse {
+  answer: string;
+  citations: AgentCitation[];
+  grounded: boolean;
+  refusal_code: string | null;
+}
+
 async function askBackend(question: string): Promise<AgentResult | null> {
-  try {
-    const res = await fetch(`${TWIN_BASE.replace(/\/$/, "")}/twin/ask`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-      body: JSON.stringify({ question }),
-    });
-    if (!res.ok) return null;
-    const payload = await res.json();
-    const data = payload?.data;
-    if (!data?.answer) return null;
-    return {
-      kind: "answer",
-      title: data.title ?? "Answer",
-      text: data.answer,
-      source: "backend",
-    };
-  } catch {
-    return null;
-  }
+  const result = await api<TwinAskResponse>("/v1/twin/ask", {
+    method: "POST",
+    body: { question, owner_id: PROFILE_OWNER_ID },
+  });
+  const data = result.data;
+  // A refusal is a real outcome, not an error: fall back rather than invent.
+  if (!result.ok || !data || !data.grounded || !data.answer) return null;
+  return {
+    kind: "answer",
+    title: "Answer",
+    text: data.answer,
+    source: "backend",
+    citations: data.citations,
+  };
 }
 
 function answerLocally(root: DotNode, query: string): AgentResult {

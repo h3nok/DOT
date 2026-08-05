@@ -71,6 +71,18 @@ class PWAService {
   // Service Worker Registration
   private async registerServiceWorker(): Promise<void> {
     if ("serviceWorker" in navigator) {
+      // In dev the SW serves stale cached bundles across code changes —
+      // unregister any existing one and skip registration entirely.
+      if (import.meta.env.DEV) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+        if (registrations.length > 0) {
+          console.log("[PWA] Dev mode: unregistered stale service worker(s)");
+        }
+        return;
+      }
       try {
         console.log("[PWA] Registering service worker...");
 

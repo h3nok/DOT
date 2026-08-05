@@ -1,3 +1,33 @@
+export interface PublicationSectionMeta {
+  slug?: string;
+  kind?: string;
+  number?: number | null;
+  subtitle?: string | null;
+  part?: string;
+  word_count?: number;
+  reading_time_minutes?: number;
+  related_concepts?: string[];
+}
+
+export interface PublicationProjectMeta {
+  series_title?: string;
+  subtitle?: string;
+  author?: string;
+  label?: string;
+  source?: { format?: string; sha256?: string };
+  extent?: {
+    chapters?: number;
+    words?: number;
+    equations?: number;
+    references?: number;
+  };
+  reader_contract?: {
+    finite?: boolean;
+    autoplay?: boolean;
+    claim_levels?: string[];
+  };
+}
+
 export interface PublicationReleaseManifestSection {
   id: string;
   parent_id: string | null;
@@ -5,6 +35,7 @@ export interface PublicationReleaseManifestSection {
   title: string;
   body_ref: string | null;
   status: string;
+  meta?: PublicationSectionMeta | null;
 }
 
 export interface PublicationReleaseManifest {
@@ -18,6 +49,7 @@ export interface PublicationReleaseManifest {
     slug: string;
     status: string;
     visibility: string;
+    meta?: PublicationProjectMeta | null;
   };
   release: {
     id: string;
@@ -213,7 +245,9 @@ export async function fetchPublicationProject(
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/projects/${encodeURIComponent(projectId)}`),
+    orchestratorUrl(
+      `/v1/publications/projects/${encodeURIComponent(projectId)}`,
+    ),
     {
       cache: "no-store",
       headers: ownerHeaders(ownerId),
@@ -230,7 +264,9 @@ export async function fetchPublicationSections(
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead[]> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/projects/${encodeURIComponent(projectId)}/sections`),
+    orchestratorUrl(
+      `/v1/publications/projects/${encodeURIComponent(projectId)}/sections`,
+    ),
     {
       cache: "no-store",
       headers: ownerHeaders(ownerId),
@@ -248,7 +284,9 @@ export async function updatePublicationProject(
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/projects/${encodeURIComponent(projectId)}`),
+    orchestratorUrl(
+      `/v1/publications/projects/${encodeURIComponent(projectId)}`,
+    ),
     {
       method: "PATCH",
       cache: "no-store",
@@ -271,7 +309,9 @@ export async function createPublicationSection(
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/projects/${encodeURIComponent(projectId)}/sections`),
+    orchestratorUrl(
+      `/v1/publications/projects/${encodeURIComponent(projectId)}/sections`,
+    ),
     {
       method: "POST",
       cache: "no-store",
@@ -294,7 +334,9 @@ export async function updatePublicationSection(
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/sections/${encodeURIComponent(sectionId)}`),
+    orchestratorUrl(
+      `/v1/publications/sections/${encodeURIComponent(sectionId)}`,
+    ),
     {
       method: "PATCH",
       cache: "no-store",
@@ -317,7 +359,9 @@ export async function createPublicationRevision(
   signal?: AbortSignal,
 ): Promise<PublicationRevisionRead> {
   const response = await fetch(
-    orchestratorUrl(`/v1/publications/sections/${encodeURIComponent(sectionId)}/revisions`),
+    orchestratorUrl(
+      `/v1/publications/sections/${encodeURIComponent(sectionId)}/revisions`,
+    ),
     {
       method: "POST",
       cache: "no-store",
@@ -420,4 +464,18 @@ export async function fetchProfileDeliveryManifest(
     PROFILE_DELIVERY_SLUG,
     { signal },
   );
+}
+
+/** Fetch the plain-text body for a section whose body_ref is a storage key. */
+export async function fetchSectionBody(
+  bodyRef: string,
+): Promise<string | null> {
+  const response = await fetch(
+    orchestratorUrl(
+      `/v1/publications/delivery/body/${encodeURIComponent(bodyRef)}`,
+    ),
+    { cache: "force-cache" },
+  );
+  if (!response.ok) return null;
+  return response.text();
 }

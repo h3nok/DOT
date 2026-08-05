@@ -1,7 +1,7 @@
-import { Loader2, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import { BloomSurface } from "./BloomSurface";
+import { Loader2, Users } from "lucide-react";
 import { staggerChild } from "../organism";
+import { BloomSurface } from "./BloomSurface";
 import { useCircle, type CircleMember } from "./useCircle";
 
 /**
@@ -15,7 +15,6 @@ import { useCircle, type CircleMember } from "./useCircle";
 
 interface CircleSurfaceProps {
   ownerName: string;
-  owner?: string;
   isOwner: boolean;
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
@@ -55,17 +54,12 @@ const MemberRow: React.FC<{ member: CircleMember; reducedMotion: boolean }> = ({
         color: "var(--organism-accent-strong)",
       }}
     >
-      {initialOf(member.name)}
+      {initialOf(member.display_name ?? "")}
     </span>
     <div className="min-w-0 flex-1">
       <p className="truncate text-sm font-medium text-foreground">
-        {member.name}
+        {member.display_name ?? "A member"}
       </p>
-      {member.note && (
-        <p className="truncate text-xs italic text-muted-foreground">
-          “{member.note}”
-        </p>
-      )}
     </div>
     {member.joined_at && (
       <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -77,14 +71,14 @@ const MemberRow: React.FC<{ member: CircleMember; reducedMotion: boolean }> = ({
 
 export const CircleSurface: React.FC<CircleSurfaceProps> = ({
   ownerName,
-  owner = "self",
   isOwner,
   origin,
   reducedMotion = false,
   onInvite,
   onClose,
 }) => {
-  const { circle, loading } = useCircle(owner);
+  // A circle is private to the member who holds it, so only the owner reads it.
+  const { circle, loading } = useCircle(Boolean(isOwner));
   const count = circle?.count ?? 0;
 
   return (
@@ -126,7 +120,7 @@ export const CircleSurface: React.FC<CircleSurfaceProps> = ({
         <ul className="space-y-2.5">
           {circle?.members.map((m, i) => (
             <MemberRow
-              key={`${m.name}-${i}`}
+              key={`${m.display_name ?? "member"}-${i}`}
               member={m}
               reducedMotion={reducedMotion}
             />

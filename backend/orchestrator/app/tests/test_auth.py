@@ -1,12 +1,12 @@
 import time
 
+import fastapi
+import fastapi.testclient
 import jwt
 import pytest
-from fastapi import Depends, FastAPI
-from fastapi.testclient import TestClient
 
-from app.auth.dependencies import ALGORITHM, OwnerContext, require_owner
-from app.core.config import Settings
+import app.auth.dependencies
+import app.core.config
 
 TEST_SECRET = "test-secret-for-dot-orchestrator"
 
@@ -34,16 +34,16 @@ def make_token(
             "exp": now + exp_offset,
         },
         secret,
-        algorithm=ALGORITHM,
+        algorithm=app.auth.dependencies.ALGORITHM,
     )
 
 
 @pytest.fixture()
-def jwt_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
-    app = FastAPI()
+def jwt_client(monkeypatch: pytest.MonkeyPatch) -> fastapi.testclient.TestClient:
+    test_app = fastapi.FastAPI()
 
-    @app.get("/protected")
-    async def protected(owner: OwnerContext = Depends(require_owner)):
+    @test_app.get("/protected")
+    async def protected(owner: app.auth.dependencies.OwnerContext = fastapi.Depends(app.auth.dependencies.require_owner)):
         return {
             "owner_id": owner.owner_id,
             "actor_id": owner.actor_id,
@@ -51,18 +51,18 @@ def jwt_client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
             "scopes": list(owner.scopes),
         }
 
-    jwt_settings = Settings(
+    jwt_settings = app.core.config.Settings(
         AUTH_MODE="jwt",
         SERVICE_AUTH_SECRET=TEST_SECRET,
         JWT_ISSUER="dot-bff",
         JWT_AUDIENCE="dot-orchestrator",
     )
-    monkeypatch.setattr("app.auth.dependencies.get_settings", lambda: jwt_settings)
-    return TestClient(app)
+    monkeypatch.setattr("app.settings.get_settings", lambda: jwt_settings)
+    return fastapi.testclient.TestClient(test_app)
 
 
-def test_jwt_auth_accepts_valid_token(jwt_client: TestClient) -> None:
-    token = make_token(owner_id="owner_abc", subject="actor_123")
+def test_jwt_auth_accepts_valid_token(jwt_client: fastapi.testclient.TestClient) -> None:
+    token: str = make_token(owner_id="owner_abc", subject="actor_123")
 
     response = jwt_client.get("/protected", headers={"Authorization": f"Bearer {token}"})
 
@@ -71,14 +71,14 @@ def test_jwt_auth_accepts_valid_token(jwt_client: TestClient) -> None:
     assert response.json()["actor_id"] == "actor_123"
 
 
-def test_jwt_auth_rejects_missing_token(jwt_client: TestClient) -> None:
+def test_jwt_auth_rejects_missing_token(jwt_client: fastapi.testclient.TestClient) -> None:
     response = jwt_client.get("/protected")
 
     assert response.status_code == 401
 
 
-def test_jwt_auth_rejects_wrong_audience(jwt_client: TestClient) -> None:
-    token = make_token(audience="wrong-audience")
+def test_jwt_auth_rejects_wrong_audience(jwt_client: fastapi.testclient.TestClient) -> None:
+    token: str = make_token(audience="wrong-audience")
 
     response = jwt_client.get("/protected", headers={"Authorization": f"Bearer {token}"})
 

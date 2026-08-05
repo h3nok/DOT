@@ -1,21 +1,44 @@
-from collections.abc import AsyncGenerator
+import contextlib
+import collections.abc
 
-from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+import fastapi
+import sqlalchemy
+import sqlalchemy.ext.asyncio
 
-from app.settings import get_settings
+import app.auth.dependencies
+import app.core.tenancy
+import app.settings
 
-settings = get_settings()
+settings: app.settings.Settings = app.settings.get_settings()
 
-engine = create_async_engine(settings.database_url, pool_pre_ping=True)
-AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
+engine: sqlalchemy.ext.asyncio.AsyncEngine = sqlalchemy.ext.asyncio.create_async_engine(settings.database_url, pool_pre_ping=True)
+AsyncSessionLocal: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession] = sqlalchemy.ext.asyncio.async_sessionmaker(engine, expire_on_commit=False)
 
 
-async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncSessionLocal() as session:
+async def get_session() -> collections.abc.AsyncGenerator[sqlalchemy.ext.asyncio.AsyncSession, None]:
+    async with AsyncSessionLocal() as session: sqlalchemy.ext.asyncio.AsyncSession:
+        yield session
+
+
+async def get_tenant_session(
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(app.auth.dependencies.require_owner),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(get_session),
+) -> sqlalchemy.ext.asyncio.AsyncSession:
+    """Session bound to the caller's tenant for the life of the transaction."""
+
+    await app.core.tenancy.bind_tenant(session, owner.owner_id)
+    return session
+
+
+@contextlib.asynccontextmanager
+async def tenant_session(owner_id: str) -> collections.abc.AsyncGenerator[sqlalchemy.ext.asyncio.AsyncSession, None]:
+    """Tenant-bound session for workers and scripts, which have no request."""
+
+    async with AsyncSessionLocal() as session: sqlalchemy.ext.asyncio.AsyncSession:
+        await app.core.tenancy.bind_tenant(session, owner_id)
         yield session
 
 
 async def check_database() -> None:
-    async with engine.connect() as connection:
-        await connection.execute(text("select 1"))
+    async with engine.connect() as connection: sqlalchemy.ext.asyncio.AsyncConnection:
+        await connection.execute(sqlalchemy.text("select 1"))

@@ -69,23 +69,83 @@ export interface VitalSigns {
   mood: OrganismMood;
 }
 
-/** User-selectable character of the living background. */
-export type OrganismPreset = "plexus" | "calm" | "cosmos" | "off";
+/**
+ * User-selectable character of the living background.
+ *
+ * Each field is a distinct *composition*, not a density dial on the same
+ * effect. They exist because a background has a job: hold the page together
+ * and stay out of the reading. None of them scatter arbitrary links across the
+ * viewport — every mark has a rule behind it.
+ */
+export type OrganismPreset = "aurora" | "constellation" | "lattice" | "off";
 
 export interface OrganismPresetSpec {
   label: string;
-  /** Scales cell population (0 = no cells, aura only). */
+  /** One line the appearance panel shows under the name. */
+  hint: string;
+  /** Scales point population (0 = no points — aurora is pure light). */
   density: number;
   /** Scales drift/animation speed. */
   speed: number;
+  /** Link reach as a fraction of the viewport's short edge. */
+  linkFactor: number;
+  /** Overall opacity multiplier — part of the field's character. */
+  alpha: number;
 }
 
 export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
-  plexus: { label: "Plexus", density: 1, speed: 1 },
-  calm: { label: "Calm", density: 0.45, speed: 0.5 },
-  cosmos: { label: "Cosmos", density: 1.7, speed: 1.35 },
-  off: { label: "Off", density: 0, speed: 0 },
+  aurora: {
+    label: "Aurora",
+    hint: "Soft drifting light. No structure — kindest to reading.",
+    density: 0,
+    speed: 0.6,
+    linkFactor: 0,
+    alpha: 1,
+  },
+  constellation: {
+    label: "Constellation",
+    hint: "Sparse points, each joined only to its nearest neighbour.",
+    density: 1,
+    speed: 1,
+    linkFactor: 0.16,
+    alpha: 1,
+  },
+  lattice: {
+    label: "Lattice",
+    hint: "The graph substrate: an even grid, gently warped.",
+    density: 1,
+    speed: 0.75,
+    linkFactor: 0,
+    alpha: 0.9,
+  },
+  off: {
+    label: "Off",
+    hint: "A plain background. The colour physiology stays.",
+    density: 0,
+    speed: 0,
+    linkFactor: 0,
+    alpha: 0,
+  },
 };
+
+/** Fields renamed in the background redesign; old saved configs still resolve. */
+const LEGACY_PRESETS: Record<string, OrganismPreset> = {
+  plexus: "constellation",
+  cosmos: "constellation",
+  calm: "aurora",
+};
+
+export function resolvePreset(value: unknown): OrganismPreset {
+  if (typeof value !== "string") return DEFAULT_CONFIG.preset;
+  if (value in ORGANISM_PRESETS) return value as OrganismPreset;
+  return LEGACY_PRESETS[value] ?? DEFAULT_CONFIG.preset;
+}
+
+/** Accent hue source: follow the circadian arc, or pin a hue in degrees. */
+export type OrganismTint = "auto" | number;
+
+/** Reading surface typography the member owns. */
+export type ReadingFont = "serif" | "sans";
 
 export interface OrganismConfig {
   /** Master switch. When false the organism is fully inert and removes itself. */
@@ -94,10 +154,18 @@ export interface OrganismConfig {
   intensity: number;
   /** Character of the living background — see {@link ORGANISM_PRESETS}. */
   preset: OrganismPreset;
-  /** Render the animated plexus membrane backdrop. */
+  /** Render the animated membrane backdrop. */
   showMembrane: boolean;
   /** Render the diagnostic vital-signs instrument. */
   showHud: boolean;
+  /** Accent hue: `"auto"` follows the time of day, a number pins it. */
+  tint: OrganismTint;
+  /** Hold the field still without disabling it (motion sensitivity, focus). */
+  stillness: boolean;
+  /** Body-text family on reading surfaces. */
+  readingFont: ReadingFont;
+  /** Body-text scale multiplier on reading surfaces [0.9..1.3]. */
+  readingScale: number;
 }
 
 export interface OrganismContextValue {
@@ -140,9 +208,13 @@ export const DEFAULT_VITALS: VitalSigns = {
 export const DEFAULT_CONFIG: OrganismConfig = {
   enabled: true,
   intensity: 0.85,
-  preset: "plexus",
+  preset: "constellation",
   showMembrane: true,
   showHud: false,
+  tint: "auto",
+  stillness: false,
+  readingFont: "serif",
+  readingScale: 1,
 };
 
 export const ORGANISM_STORAGE_KEY = "dot_organism";

@@ -1,26 +1,53 @@
+import re
 import typing
 import uuid
-import datetime
 
 import fastapi
 import pydantic
+import sqlalchemy.ext.asyncio
 
+from DOT.backend.orchestrator.app.db.models import FootprintNode
 import app.auth.dependencies
+import app.db.session
+import app.domains.graph.schemas
+import app.domains.graph.service
 import app.integrations.object_store
 
-router = fastapi.APIRouter(prefix="/v1/vault", tags=["vault"])
+router = fastapi.APIRouter(
+    prefix="/v1/vault",
+    tags=["vault"],
+    # Binds every request in this router to the caller's tenant (ADR-0011).
+    dependencies=[fastapi.Depends(app.db.session.get_tenant_session)],
+)
+
+MAX_UPLOAD_BYTES = 64 * 1024 * 1024
+_SAFE_EXT: re.Pattern[str] = re.compile(r"^[A-Za-z0-9]{1,12}$")
 
 
 class UploadUrlRequest(pydantic.BaseModel):
-    filename: str
-    content_type: str
-    size: int
+    filename: str = pydantic.Field(min_length=1, max_length=512)
+    content_type: str = pydantic.Field(min_length=1, max_length=255)
+    size: int = pydantic.Field(ge=0, le=MAX_UPLOAD_BYTES)
 
 
 class UploadUrlResponse(pydantic.BaseModel):
     url: str
     key: str
-    
+
+
+def _vault_prefix(owner_id: str) -> str:
+    return f"vault/{owner_id}/"
+
+
+def _require_own_key(key: str, owner: app.auth.dependencies.OwnerContext) -> str:
+    """Reject keys outside the caller's vault prefix, and any traversal attempt."""
+
+    if ".." in key or key.startswith("/") or "\\" in key:
+        raise fastapi.HTTPException(status_code=400, detail="Invalid object key.")
+    if not key.startswith(_vault_prefix(owner.owner_id)):
+        raise fastapi.HTTPException(status_code=403, detail="Object key is outside your vault.")
+    return key
+
 
 @router.post("/upload-url", response_model=UploadUrlResponse)
 async def generate_upload_url(
@@ -30,69 +57,69 @@ async def generate_upload_url(
     ),
 ) -> UploadUrlResponse:
     app.auth.dependencies.ensure_write_scope(owner)
-    
-    ext = payload.filename.split(".")[-1] if "." in payload.filename else ""
-    file_id = str(uuid.uuid4())
-    key = f"vault/{owner.owner_id}/{file_id}.{ext}" if ext else f"vault/{owner.owner_id}/{file_id}"
-    
-    # In a full S3 setup, we would call s3.generate_presigned_url('put_object', Params={'Bucket': bucket, 'Key': key})
-    # Since we support local FilesystemObjectStore, we provide a proxy route.
-    
-    # Let's assume the API is hosted at localhost:8000 for local, and behind a proxy in prod.
-    # The frontend is configured to proxy /api -> orchestrator.
-    url = f"/api/v1/vault/upload/{key}"
-    
-    return UploadUrlResponse(url=url, key=key)
+
+    raw_ext: str = payload.filename.rsplit(".", 1)[-1] if "." in payload.filename else ""
+    ext: str = raw_ext.lower() if _SAFE_EXT.match(raw_ext) else ""
+    file_id: str = uuid.uuid4().hex
+    key: str = f"{_vault_prefix(owner.owner_id)}{file_id}" + (f".{ext}" if ext else "")
+
+    # Filesystem store has no presigned URLs, so uploads proxy back through this
+    # service. The S3 path should be swapped for a real presigned PUT.
+    return UploadUrlResponse(url=f"/api/v1/vault/upload/{key}", key=key)
 
 
 @router.put("/upload/{key:path}")
 async def upload_file(
     key: str,
     request: fastapi.Request,
-):
-    """
-    Local proxy for putting files into the object store. 
-    This acts as a replacement for a direct-to-S3 presigned URL when using local filesystem.
-    """
-    store = app.integrations.object_store.get_object_store()
-    
-    # Read the raw body
-    body = await request.body()
-    
-    # Write to store
-    if hasattr(store, "put_bytes"):
-        # For S3 we could pass content type, but local doesn't care
-        await store.put_bytes(key, body)
-    else:
-        raise fastapi.HTTPException(status_code=500, detail="Object store does not support put_bytes")
-        
-    return {"message": "Success", "key": key}
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+) -> dict[str, str]:
+    app.auth.dependencies.ensure_write_scope(owner)
+    safe_key: str = _require_own_key(key, owner)
+
+    declared: str = request.headers.get("content-length", "")
+    if declared.isdigit() and int(declared) > MAX_UPLOAD_BYTES:
+        raise fastapi.HTTPException(status_code=413, detail="Upload exceeds the size limit.")
+
+    body: bytes = await request.body()
+    if len(body) > MAX_UPLOAD_BYTES:
+        raise fastapi.HTTPException(status_code=413, detail="Upload exceeds the size limit.")
+
+    store: app.integrations.object_store.FilesystemObjectStore | app.integrations.object_store.S3ObjectStore = app.integrations.object_store.get_object_store()
+    await store.put_bytes(safe_key, body)
+    return {"key": safe_key}
 
 
 class RegisterNodeRequest(pydantic.BaseModel):
-    key: str
-    filename: str
-    metadata: typing.Optional[dict[str, typing.Any]] = None
+    key: str = pydantic.Field(min_length=1, max_length=1024)
+    filename: str = pydantic.Field(min_length=1, max_length=512)
+    metadata: dict[str, typing.Any] | None = None
 
-@router.post("/nodes")
+
+@router.post("/nodes", response_model=app.domains.graph.schemas.FootprintNodeRead, status_code=201)
 async def register_node(
     payload: RegisterNodeRequest,
     owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
         app.auth.dependencies.require_owner
     ),
-):
-    """
-    Registers an uploaded file in the vault. 
-    For MVP, we just return the node info. In a full graph implementation, 
-    this would insert a DotNode into the database.
-    """
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> FootprintNode:
+    """Land an uploaded file in the member's footprint graph as a source node."""
+
     app.auth.dependencies.ensure_write_scope(owner)
-    
-    # We could insert into a DB here.
-    # For now, just return success so the frontend knows it's processed.
-    return {
-        "id": f"node_{uuid.uuid4().hex[:8]}",
-        "key": payload.key,
-        "filename": payload.filename,
-        "status": "ready"
-    }
+    safe_key: str = _require_own_key(payload.key, owner)
+    return await app.domains.graph.service.create_node(
+        session,
+        owner,
+        app.domains.graph.schemas.FootprintNodeCreate(
+            kind="source",
+            label=payload.filename,
+            platform="vault",
+            external_id=safe_key,
+            source_ref={"object_store_key": safe_key},
+            properties=payload.metadata or {},
+            visibility="private",
+        ),
+    )

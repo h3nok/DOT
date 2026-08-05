@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
-import type { InviteArrival } from "./useInviteArrival";
 import { BloomSurface } from "./BloomSurface";
+import type { InviteArrival } from "./useInviteArrival";
 
 /**
  * InviteWelcome — the door opening for a guest who arrived by invitation.
@@ -29,7 +29,7 @@ export const InviteWelcome: React.FC<InviteWelcomeProps> = ({
   onEnter,
   onClose,
 }) => {
-  const inviter = arrival?.from?.split("@")[0] ?? ownerName;
+  const inviter = arrival?.invited_by ?? ownerName;
 
   return (
     <BloomSurface
@@ -42,11 +42,6 @@ export const InviteWelcome: React.FC<InviteWelcomeProps> = ({
       size="sm"
       onClose={onClose}
     >
-      {arrival?.note && (
-        <blockquote className="mb-5 border-l-2 border-[color:var(--organism-accent-soft)] pl-4 text-[15px] italic leading-7 text-foreground/85">
-          “{arrival.note}”
-        </blockquote>
-      )}
       <p className="text-sm leading-7 text-muted-foreground">
         This is {ownerName}'s living profile — a graph you can explore, where
         every dot opens into its own world. Wander it, or ask it anything.

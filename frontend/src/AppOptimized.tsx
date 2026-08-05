@@ -105,6 +105,10 @@ const App: React.FC = () => {
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/studio/:projectId" element={<PublicationStudioPage />} />
                 <Route path="/read/:ownerId/:slug" element={<PublicationReaderPage />} />
+                <Route
+                  path="/read/:ownerId/:slug/:sectionSlug"
+                  element={<PublicationReaderPage />}
+                />
                 <Route path="/book/digital-organism-theory" element={<BookOnePage />} />
                 <Route
                   path="/book/digital-organism-theory/:sectionSlug"

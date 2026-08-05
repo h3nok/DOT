@@ -14,6 +14,13 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ vars.GCP_REGION }}
+  AR_REPO: ${{ vars.AR_REPO }} # Artifact Registry repo name, e.g. dot-orchestrator
+  API_SERVICE: dot-orchestrator-api
+  WORKER_SERVICE: dot-orchestrator-worker
+
 jobs:
   frontend:
     name: Frontend quality gates
@@ -76,5 +83,164 @@ jobs:
       - name: Lint
         run: ruff check app migrations
 
+      - name: Migration check (offline, no DB)
+        run: alembic check
+
       - name: Test
         run: pytest
+
+  deploy:
+    name: Deploy orchestrator to Cloud Run
+    needs: [frontend, orchestrator]
+    # Only deploy from main; skip on PRs.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    # Workload Identity Federation — no long-lived service account keys in secrets.
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: backend/orchestrator
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push image
+        run: |
+          IMAGE=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/orchestrator:${{ github.sha }}
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Run migrations via Cloud Run job
+        # One-off job runs alembic upgrade head before the new revision goes live.
+        run: |
+          gcloud run jobs create dot-migrate-${{ github.run_number }} \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --set-secrets DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
+            --command python3 \
+            --args "-m,alembic,upgrade,head" \
+            --max-retries 1 \
+            --task-timeout 120s \
+            --project ${{ env.GCP_PROJECT_ID }}
+          gcloud run jobs execute dot-migrate-${{ github.run_number }} \
+            --region ${{ env.GCP_REGION }} \
+            --wait \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Deploy API to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.API_SERVICE }} \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 8000 \
+            --min-instances 0 \
+            --max-instances 4 \
+            --memory 512Mi \
+            --cpu 1 \
+            --set-secrets \
+              ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
+              ORCHESTRATOR_REDIS_URL=ORCHESTRATOR_REDIS_URL:latest,\
+              ORCHESTRATOR_SERVICE_AUTH_SECRET=ORCHESTRATOR_SERVICE_AUTH_SECRET:latest,\
+              ORCHESTRATOR_CORS_ORIGINS=ORCHESTRATOR_CORS_ORIGINS:latest,\
+              ORCHESTRATOR_OBJECT_STORE_BUCKET=ORCHESTRATOR_OBJECT_STORE_BUCKET:latest,\
+              ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
+              ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
+              ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
+              ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
+            --set-env-vars \
+              ORCHESTRATOR_ENVIRONMENT=production,\
+              ORCHESTRATOR_AUTH_MODE=jwt,\
+              ORCHESTRATOR_AUTH_ENABLED=true,\
+              ORCHESTRATOR_OBJECT_STORE_BACKEND=s3,\
+              ORCHESTRATOR_AWS_REGION=auto \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Deploy worker to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.WORKER_SERVICE }} \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --no-allow-unauthenticated \
+            --port 8080 \
+            --min-instances 0 \
+            --max-instances 2 \
+            --memory 512Mi \
+            --cpu 1 \
+            --command python3 \
+            --args "-m,dramatiq,app.workers.tasks" \
+            --set-secrets \
+              ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
+              ORCHESTRATOR_REDIS_URL=ORCHESTRATOR_REDIS_URL:latest,\
+              ORCHESTRATOR_SERVICE_AUTH_SECRET=ORCHESTRATOR_SERVICE_AUTH_SECRET:latest,\
+              ORCHESTRATOR_OBJECT_STORE_BUCKET=ORCHESTRATOR_OBJECT_STORE_BUCKET:latest,\
+              ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
+              ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
+              ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
+              ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
+            --set-env-vars \
+              ORCHESTRATOR_ENVIRONMENT=production,\
+              ORCHESTRATOR_AUTH_MODE=jwt,\
+              ORCHESTRATOR_AUTH_ENABLED=true,\
+              ORCHESTRATOR_OBJECT_STORE_BACKEND=s3,\
+              ORCHESTRATOR_AWS_REGION=auto \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+  smoke:
+    name: Post-deploy smoke test
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Get API URL
+        id: api_url
+        run: |
+          URL=$(gcloud run services describe ${{ env.API_SERVICE }} \
+            --region ${{ env.GCP_REGION }} \
+            --project ${{ env.GCP_PROJECT_ID }} \
+            --format "value(status.url)")
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Health check
+        run: |
+          STATUS=$(curl -sf -o /dev/null -w "%{http_code}" "${{ steps.api_url.outputs.url }}/health/ready")
+          [ "$STATUS" = "200" ] || (echo "Health check failed: $STATUS" && exit 1)
+
+      - name: Sitemap check
+        run: |
+          STATUS=$(curl -sf -o /dev/null -w "%{http_code}" "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
+          [ "$STATUS" = "200" ] || (echo "Sitemap check failed: $STATUS" && exit 1)
+
+      - name: Cache-Control header check
+        run: |
+          HEADERS=$(curl -sI "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
+          echo "$HEADERS" | grep -i "cache-control" || (echo "Missing Cache-Control header" && exit 1)
