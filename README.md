@@ -46,9 +46,21 @@ stable section/concept identifiers for Stay's graph layer.
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies with `make install`
+2. Bootstrap local development with `make setup`
 3. Start the development servers with `make start`
 4. Open your browser to explore Digital Organisms Theory
+
+`make setup` supports macOS and Linux. It checks or installs the local toolchain
+(Python 3.12+, Node 20+, pnpm, Docker, Docker Compose), creates the Python
+virtual environment, installs frontend and orchestrator dependencies, prepares
+local env files from examples, starts Postgres/Redis/MinIO with Docker Compose,
+applies orchestrator migrations, and seeds local profile delivery data.
+
+Useful setup flags:
+
+- `ASSUME_YES=1 make setup` for non-interactive package installs
+- `SKIP_SYSTEM_PACKAGES=1 make setup` if you manage system tools yourself
+- `SKIP_INFRA=1 make setup` to install dependencies without starting Docker services
 
 ### Alternative Commands
 

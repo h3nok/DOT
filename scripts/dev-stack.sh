@@ -123,7 +123,6 @@ echo "Seeding profile delivery release..."
   "$PYTHON_BIN" scripts/seed_profile_delivery.py
 )
 
-start_service "Flask API" "$ROOT_DIR/backend" "$PYTHON_BIN" src/main.py
 start_service "FastAPI orchestrator" "$ROOT_DIR/backend/orchestrator" "$PYTHON_BIN" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 start_service "orchestrator worker" "$ROOT_DIR/backend/orchestrator" "$PYTHON_BIN" -m dramatiq app.workers.tasks
 start_service "Vite frontend" "$ROOT_DIR" "$PNPM_BIN" --dir frontend dev
@@ -134,7 +133,6 @@ Full dev stack is running.
 
 Frontend:             http://localhost:5173
 Frontend owner mode:  http://localhost:5173/?owner=1
-Flask API:            http://127.0.0.1:5000/api
 Orchestrator API:     http://127.0.0.1:8000/docs
 Profile release:      http://localhost:5173/read/habte/habte-profile
 MinIO console:        http://127.0.0.1:${ORCHESTRATOR_MINIO_CONSOLE_PORT}
