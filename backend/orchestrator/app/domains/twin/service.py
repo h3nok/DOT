@@ -7,6 +7,7 @@ cannot name the node ids behind a sentence, the sentence does not ship.
 
 from __future__ import annotations
 
+import re
 import typing
 
 import sqlalchemy.ext.asyncio
@@ -18,8 +19,9 @@ import app.domains.twin.model as model
 import app.domains.twin.retriever as retriever
 import app.domains.twin.schemas as schemas
 
-SYSTEM_PROMPT = """You are a member's digital twin. You answer only from the \
-context supplied to you, and you cite the ids you used.
+SYSTEM_PROMPT = """You are Lumen, the DOT Companion. You help a reader locate, \
+understand, connect, and critically test Digital Organism Theory. You answer only \
+from the context supplied to you, and you cite the ids you used.
 
 Rules you cannot override:
 1. Reply with exactly one JSON object and nothing else.
@@ -40,11 +42,53 @@ REFUSAL_TOOL_NOT_PERMITTED = "tool_not_permitted"
 
 _REFUSAL_TEXT: dict[str, str] = {
     REFUSAL_NO_CONTEXT: "I do not have anything in this graph that speaks to that yet.",
-    REFUSAL_MODEL_UNAVAILABLE: "The twin is not available right now.",
-    REFUSAL_BOUNDARY_VIOLATION: "The twin could not produce a well-formed answer.",
+    REFUSAL_MODEL_UNAVAILABLE: "Lumen's model is not available right now.",
+    REFUSAL_BOUNDARY_VIOLATION: "Lumen could not produce a well-formed answer.",
     REFUSAL_UNGROUNDED: "I could not ground an answer in this graph, so I am not going to guess.",
-    REFUSAL_TOOL_NOT_PERMITTED: "That would require a capability the twin is not permitted to use.",
+    REFUSAL_TOOL_NOT_PERMITTED: "That would require a capability Lumen is not permitted to use.",
 }
+
+_GREETING_PATTERN = re.compile(
+    r"^(?:hi|hello|hey|good\s+(?:morning|afternoon|evening)|howdy)[\s!,.?]*$",
+    re.IGNORECASE,
+)
+_THANKS_PATTERN = re.compile(
+    r"^(?:thanks|thank\s+you|thank\s+you\s+very\s+much)[\s!,.?]*$",
+    re.IGNORECASE,
+)
+
+_LENS_INSTRUCTION: dict[schemas.TwinLens, str] = {
+    "orient": "Locate the clearest relevant idea or passage and explain where it sits.",
+    "ground": (
+        "Answer from the released sources and preserve their distinction between "
+        "observation, model, hypothesis, and speculation."
+    ),
+    "test": (
+        "Test the argument. Name limits, alternatives, evidence gaps, and unpaid "
+        "theoretical debts that appear in the sources."
+    ),
+}
+
+
+def _social_response(question: str) -> schemas.TwinAskResponse | None:
+    """Offer hospitality without presenting an uncited factual answer."""
+
+    if _GREETING_PATTERN.fullmatch(question.strip()):
+        return schemas.TwinAskResponse(
+            answer=(
+                "Hello. I am Lumen, the DOT Companion. We can locate an idea, ground "
+                "a question in Book One, or test where the argument is weakest."
+            ),
+            citations=[],
+            grounded=False,
+        )
+    if _THANKS_PATTERN.fullmatch(question.strip()):
+        return schemas.TwinAskResponse(
+            answer="You are welcome. Ask again whenever you have a clear question.",
+            citations=[],
+            grounded=False,
+        )
+    return None
 
 
 def _refuse(code: str) -> schemas.TwinAskResponse:
@@ -84,6 +128,10 @@ async def ask(
     client: model.ModelClient | None = None,
     history: typing.Sequence[tuple[str, str]] = (),
 ) -> schemas.TwinAskResponse:
+    social: schemas.TwinAskResponse | None = _social_response(payload.question)
+    if social is not None:
+        return social
+
     graph_owner_id: str = payload.owner_id or requester.owner_id
 
     passages: list[retriever.Passage] = await retriever.retrieve_passages(
@@ -96,6 +144,7 @@ async def ask(
     user_message: str = (
         f"{_render_history(history)}"
         f"{boundary.wrap_untrusted(fragments)}\n\n"
+        f"Reading lens: {_LENS_INSTRUCTION[payload.lens]}\n"
         f"Question: {payload.question}\n"
         "Answer using only the context above."
     )

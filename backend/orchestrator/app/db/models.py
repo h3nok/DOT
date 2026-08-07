@@ -41,6 +41,7 @@ class TenantMixin:
 
 # ── Auth models ───────────────────────────────────────────────────────────────
 
+
 class Member(Base, TimestampMixin):
     __tablename__ = "members"
 
@@ -65,8 +66,8 @@ class Member(Base, TimestampMixin):
     invited_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
         sqlalchemy.ForeignKey("members.id"), index=True
     )
-    last_signed_in_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.DateTime(timezone=True)
+    last_signed_in_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = (
+        sqlalchemy.orm.mapped_column(sqlalchemy.DateTime(timezone=True))
     )
 
 
@@ -570,7 +571,9 @@ class FootprintImport(Base, TenantMixin):
 class SourceObject(Base, TimestampMixin, TenantMixin):
     __tablename__ = "source_objects"
     __table_args__ = (
-        sqlalchemy.UniqueConstraint("owner_id", "object_store_key", name="uq_source_object_owner_key"),
+        sqlalchemy.UniqueConstraint(
+            "owner_id", "object_store_key", name="uq_source_object_owner_key"
+        ),
     )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
@@ -594,6 +597,10 @@ class SourceObject(Base, TimestampMixin, TenantMixin):
     status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), index=True, nullable=False, default="pending"
     )
+    #: Uploads are private; only released canon is ever widened. Fails closed.
+    visibility: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), index=True, nullable=False, default="private"
+    )
 
     versions: sqlalchemy.orm.Mapped[list[SourceVersion]] = sqlalchemy.orm.relationship(
         back_populates="source_object",
@@ -605,7 +612,9 @@ class SourceObject(Base, TimestampMixin, TenantMixin):
 class SourceVersion(Base):
     __tablename__ = "source_versions"
     __table_args__ = (
-        sqlalchemy.UniqueConstraint("source_object_id", "version_num", name="uq_source_version_num"),
+        sqlalchemy.UniqueConstraint(
+            "source_object_id", "version_num", name="uq_source_version_num"
+        ),
     )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
@@ -645,7 +654,9 @@ class SourceVersion(Base):
 class KnowledgeChunk(Base):
     __tablename__ = "knowledge_chunks"
     __table_args__ = (
-        sqlalchemy.UniqueConstraint("source_version_id", "chunk_index", name="uq_knowledge_chunk_index"),
+        sqlalchemy.UniqueConstraint(
+            "source_version_id", "chunk_index", name="uq_knowledge_chunk_index"
+        ),
     )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
@@ -657,9 +668,7 @@ class KnowledgeChunk(Base):
     chunk_index: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Integer, nullable=False, default=0
     )
-    text: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.Text, nullable=False
-    )
+    text: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text, nullable=False)
     token_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Integer, nullable=False, default=0
     )
@@ -707,6 +716,7 @@ class SourceAnchor(Base):
 
 # ── Twin conversations ────────────────────────────────────────────────────────
 
+
 class TwinConversation(Base, TimestampMixin, TenantMixin):
     __tablename__ = "twin_conversations"
 
@@ -725,8 +735,8 @@ class TwinConversation(Base, TimestampMixin, TenantMixin):
         sqlalchemy.String(256), nullable=False, default="New conversation"
     )
     #: Denormalised so the conversation list sorts without touching messages.
-    last_message_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = (
-        sqlalchemy.orm.mapped_column(sqlalchemy.DateTime(timezone=True), index=True)
+    last_message_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True), index=True
     )
     message_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Integer, nullable=False, default=0
@@ -781,5 +791,3 @@ class TwinMessage(Base):
     conversation: sqlalchemy.orm.Mapped[TwinConversation] = sqlalchemy.orm.relationship(
         back_populates="messages"
     )
-
-

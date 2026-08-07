@@ -1,4 +1,5 @@
 import { api, PROFILE_OWNER_ID } from "./orchestrator";
+import { answerFromBook } from "./bookCompanion";
 import type { DotNode } from "./types";
 
 /**
@@ -9,10 +10,10 @@ import type { DotNode } from "./types";
  * blooms the matching content page from the centre. Anything else is answered —
  * by the backend twin when reachable, and by a calm local fallback otherwise.
  *
- * The twin at `/v1/twin/ask` only answers from nodes it actually retrieved and
- * returns the node ids behind every answer (ADR-0010). An answer with no
- * citations is not shown as a twin answer. Asking requires a session; visitors
- * without one get the local fallback rather than an open model endpoint.
+ * The public companion endpoint only answers from passages it actually
+ * retrieved and returns the ids behind every answer (ADR-0010). If that path is
+ * unavailable, the shipped Book One release provides a local, extractive answer
+ * with direct passage links. Visitors never need an account to ask.
  */
 
 export interface AgentNode {
@@ -24,7 +25,10 @@ export interface AgentCitation {
   node_id: string;
   kind: string;
   label: string;
+  locator?: Record<string, unknown> | null;
 }
+
+export type AgentLens = "orient" | "ground" | "test";
 
 export type AgentResult =
   | { kind: "open"; node: DotNode; trail: AgentNode[] }
@@ -137,24 +141,31 @@ interface TwinAskResponse {
   refusal_code: string | null;
 }
 
-async function askBackend(question: string): Promise<AgentResult | null> {
-  const result = await api<TwinAskResponse>("/v1/twin/ask", {
+async function askBackend(
+  question: string,
+  lens: AgentLens,
+): Promise<AgentResult | null> {
+  const result = await api<TwinAskResponse>("/v1/twin/public/ask", {
     method: "POST",
-    body: { question, owner_id: PROFILE_OWNER_ID },
+    body: { question, owner_id: PROFILE_OWNER_ID, lens, history: [] },
   });
   const data = result.data;
   // A refusal is a real outcome, not an error: fall back rather than invent.
   if (!result.ok || !data || !data.grounded || !data.answer) return null;
   return {
     kind: "answer",
-    title: "Answer",
+    title: lens === "test" ? "Test against Book One" : "From Book One",
     text: data.answer,
     source: "backend",
     citations: data.citations,
   };
 }
 
-function answerLocally(root: DotNode, query: string): AgentResult {
+async function answerLocally(
+  root: DotNode,
+  query: string,
+  lens: AgentLens,
+): Promise<AgentResult> {
   const q = query.toLowerCase();
   if (/who|about|yourself|you\b/.test(q) && root.body) {
     return {
@@ -172,11 +183,22 @@ function answerLocally(root: DotNode, query: string): AgentResult {
       source: "local",
     };
   }
-  const names = (root.children ?? []).map((c) => c.label).join(", ");
+
+  const grounded = await answerFromBook(query, lens);
+  if (grounded) {
+    return {
+      kind: "answer",
+      title: "Lumen · Book One",
+      text: grounded.answer,
+      source: "local",
+      citations: grounded.citations,
+    };
+  }
+
   return {
     kind: "answer",
-    title: "Try a node",
-    text: `I navigate this graph. Ask me to open one of: ${names}. Or ask about the work, the doctrine, or the writing.`,
+    title: "Lumen",
+    text: "I could not locate a Book One passage that supports an answer to that question. Try naming a concept such as Little c, the Canvas, Intent, Fear, or a Reality Frame.",
     source: "local",
   };
 }
@@ -189,11 +211,12 @@ function answerLocally(root: DotNode, query: string): AgentResult {
 export async function runAgent(
   root: DotNode,
   query: string,
+  lens: AgentLens = "orient",
 ): Promise<AgentResult> {
   const trimmed = query.trim();
-  const node = resolveNode(root, trimmed);
+  const node = lens === "orient" ? resolveNode(root, trimmed) : null;
   if (node) return node;
-  const backend = await askBackend(trimmed);
+  const backend = await askBackend(trimmed, lens);
   if (backend) return backend;
-  return answerLocally(root, trimmed);
+  return await answerLocally(root, trimmed, lens);
 }

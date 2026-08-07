@@ -1,11 +1,11 @@
 import collections.abc
 import pathlib
 
-from fastapi import FastAPI
 import fastapi.testclient
 import pytest
 import sqlalchemy.ext.asyncio
 import sqlalchemy.pool
+from fastapi import FastAPI
 
 import app.api.v1.auth as _auth_router_module
 import app.core.tenancy
@@ -34,7 +34,9 @@ async def session_factory() -> collections.abc.AsyncGenerator[
     async with engine.begin() as connection:
         await connection.run_sync(app.db.models.Base.metadata.create_all)
 
-    factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession] = sqlalchemy.ext.asyncio.async_sessionmaker(engine, expire_on_commit=False)
+    factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession] = (
+        sqlalchemy.ext.asyncio.async_sessionmaker(engine, expire_on_commit=False)
+    )
     yield factory
 
     async with engine.begin() as connection:
@@ -50,6 +52,10 @@ def client(
 ) -> collections.abc.Generator[fastapi.testclient.TestClient, None, None]:
     monkeypatch.setenv("ORCHESTRATOR_OBJECT_STORE_BACKEND", "filesystem")
     monkeypatch.setenv("ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT", str(tmp_path / "objects"))
+    # Sessions are signed, so the suite must not inherit (or require) a developer secret.
+    monkeypatch.setenv(
+        "ORCHESTRATOR_SERVICE_AUTH_SECRET", "test-session-signing-secret-at-least-32-bytes"
+    )
     app.settings.get_settings.cache_clear()
     fastapi_app: FastAPI = app.main.create_app()
 

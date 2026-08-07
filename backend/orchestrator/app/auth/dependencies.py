@@ -59,9 +59,6 @@ def _extract_bearer_token(request: fastapi.Request) -> str:
     return auth_header[7:]
 
 
-
-
-
 def _resolve_local_or_gateway_context(
     *,
     x_owner_id: str | None,
@@ -100,13 +97,19 @@ def _verify_jwt_token(token: str, settings: app.settings.Settings) -> OwnerConte
             options={"require": ["exp", "iss", "aud", "sub"]},
         )
     except jwt.ExpiredSignatureError:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Token expired.") from None
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Token expired."
+        ) from None
     except jwt.InvalidTokenError as exc:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {exc}") from None
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {exc}"
+        ) from None
 
     owner_id: str = str(payload.get("owner_id") or payload.get("sub") or "").strip()
     if not owner_id:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Token missing owner_id.")
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Token missing owner_id."
+        )
     actor_id: str = str(payload.get("sub") or owner_id).strip()
     scopes: tuple[str, ...] = tuple(str(s) for s in payload.get("scopes", []) if str(s).strip())
     return OwnerContext(
@@ -158,9 +161,17 @@ async def require_owner(
         ctx: OwnerContext | None = resolve_session_optional(request)
         if ctx is not None:
             return ctx
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Authentication required.")
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_401_UNAUTHORIZED, detail="Authentication required."
+        )
 
     if settings.AUTH_MODE in {"local_header", "gateway"}:
+        # A signed-in session is accepted here too, so a client that identifies
+        # itself only by cookie (as production must) also works in development.
+        if not (x_owner_id or "").strip():
+            session_context: OwnerContext | None = resolve_session_optional(request)
+            if session_context is not None:
+                return session_context
         return _resolve_local_or_gateway_context(x_owner_id=x_owner_id, x_actor_id=x_actor_id)
 
     raise fastapi.HTTPException(

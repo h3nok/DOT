@@ -524,7 +524,9 @@ async def assert_public_feed_target(feed_url: str) -> None:
 
     try:
         default_port: int = 443 if parsed.scheme == "https" else 80
-        addresses: list[tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]] = await asyncio_getaddrinfo(host, parsed.port or default_port)
+        addresses: list[
+            tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]
+        ] = await asyncio_getaddrinfo(host, parsed.port or default_port)
     except socket.gaierror as exc:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
@@ -663,7 +665,9 @@ async def _mark_import_failed(
     footprint_import.completed_at = datetime.datetime.now(datetime.UTC)
     footprint_import.summary = {"error_code": error_code}
     if footprint_import.run_id:
-        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, footprint_import.owner_id, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(
+            session, footprint_import.owner_id, footprint_import.run_id
+        )
         if run is not None:
             run.status = "failed"
             run.error_code = error_code
@@ -689,10 +693,14 @@ async def process_import(
     account = None
     if footprint_import.account_id:
         # Scope the lookup itself rather than fetching by id and checking after.
-        account: app.db.models.FootprintAccount = await get_account(session, owner, footprint_import.account_id)
+        account: app.db.models.FootprintAccount = await get_account(
+            session, owner, footprint_import.account_id
+        )
 
     if footprint_import.run_id:
-        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, owner.owner_id, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(
+            session, owner.owner_id, footprint_import.run_id
+        )
         if run is not None:
             run.status = "running"
             run.started_at = run.started_at or datetime.datetime.now(datetime.UTC)
@@ -713,7 +721,9 @@ async def process_import(
 
     try:
         fallback_title: str = account.display_name or account.handle if account else "Imported feed"
-        feed: app.integrations.connectors.rss.RssFeed = app.integrations.connectors.rss.parse_feed(xml_text, fallback_title=fallback_title)
+        feed: app.integrations.connectors.rss.RssFeed = app.integrations.connectors.rss.parse_feed(
+            xml_text, fallback_title=fallback_title
+        )
     except Exception as exc:
         await _mark_import_failed(session, footprint_import, error_code="feed_parse_failed")
         raise fastapi.HTTPException(
@@ -727,8 +737,7 @@ async def process_import(
 
     account_label: str = account.display_name or account.handle if account else feed.title
     account_external_id: str = (
-        account.external_id
-        or f"account:{account.id}"
+        account.external_id or f"account:{account.id}"
         if account
         else app.integrations.connectors.rss.stable_external_id("account", feed_url)
     )
@@ -864,7 +873,9 @@ async def process_import(
             "item_count": len(feed.items),
         }
     if footprint_import.run_id:
-        run: app.db.models.OrchestratorRun | None = await _get_owned_run(session, footprint_import.owner_id, footprint_import.run_id)
+        run: app.db.models.OrchestratorRun | None = await _get_owned_run(
+            session, footprint_import.owner_id, footprint_import.run_id
+        )
         if run is not None:
             run.status = "succeeded"
             run.completed_at = now
@@ -888,8 +899,12 @@ async def get_snapshot(
     edge_limit: int = 500,
 ) -> app.domains.graph.schemas.FootprintGraphSnapshot:
     accounts: list[app.db.models.FootprintAccount] = await list_accounts(session, owner)
-    nodes: list[app.db.models.FootprintNode] = await list_nodes(session, owner, platform=platform, kind=kind, limit=node_limit)
-    edges: list[app.db.models.FootprintEdge] = await list_edges(session, owner, platform=platform, relation=relation, limit=edge_limit)
+    nodes: list[app.db.models.FootprintNode] = await list_nodes(
+        session, owner, platform=platform, kind=kind, limit=node_limit
+    )
+    edges: list[app.db.models.FootprintEdge] = await list_edges(
+        session, owner, platform=platform, relation=relation, limit=edge_limit
+    )
     node_ids: set[str] = {node.id for node in nodes}
     visible_edges: list[app.db.models.FootprintEdge] = [
         edge

@@ -41,9 +41,7 @@ async def create_project(
 async def list_projects(
     session: sqlalchemy.ext.asyncio.AsyncSession, owner: app.auth.dependencies.OwnerContext
 ) -> list[app.db.models.PublicationProject]:
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationProject]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationProject]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationProject)
         .where(app.db.models.PublicationProject.owner_id == owner.owner_id)
         .order_by(app.db.models.PublicationProject.created_at.desc())
@@ -56,9 +54,7 @@ async def get_project(
     owner: app.auth.dependencies.OwnerContext,
     project_id: str,
 ) -> app.db.models.PublicationProject:
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationProject]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationProject]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationProject).where(
             app.db.models.PublicationProject.id == project_id,
             app.db.models.PublicationProject.owner_id == owner.owner_id,
@@ -123,9 +119,7 @@ async def list_sections(
     project_id: str,
 ) -> list[app.db.models.PublicationSection]:
     await get_project(session, owner, project_id)
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationSection]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationSection]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationSection)
         .where(app.db.models.PublicationSection.project_id == project_id)
         .order_by(app.db.models.PublicationSection.section_order.asc())
@@ -138,9 +132,7 @@ async def get_section(
     owner: app.auth.dependencies.OwnerContext,
     section_id: str,
 ) -> app.db.models.PublicationSection:
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationSection]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationSection]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationSection)
         .join(app.db.models.PublicationProject)
         .where(
@@ -241,9 +233,7 @@ async def validate_project(
     project_id: str,
 ) -> list[str]:
     await get_project(session, owner, project_id)
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationSection]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationSection]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationSection)
         .where(app.db.models.PublicationSection.project_id == project_id)
         .order_by(app.db.models.PublicationSection.section_order.asc())
@@ -264,9 +254,7 @@ async def list_release_sections(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     project_id: str,
 ) -> list[app.db.models.PublicationSection]:
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationSection]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationSection]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationSection)
         .where(app.db.models.PublicationSection.project_id == project_id)
         .order_by(
@@ -353,7 +341,10 @@ async def snapshot_release_bodies(
     Returns a map of section id → release-scoped body key. After this, a
     release is fully self-contained: mutating drafts can never change it.
     """
-    store: app.integrations.object_store.FilesystemObjectStore | app.integrations.object_store.S3ObjectStore = app.integrations.object_store.get_object_store()
+    store: (
+        app.integrations.object_store.FilesystemObjectStore
+        | app.integrations.object_store.S3ObjectStore
+    ) = app.integrations.object_store.get_object_store()
     body_keys: dict[str, str] = {}
     for section in sections:
         body_text: str = await _resolve_section_body(section)
@@ -504,9 +495,7 @@ async def list_releases(
     project_id: str,
 ) -> list[app.db.models.PublicationRelease]:
     await get_project(session, owner, project_id)
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationRelease]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationRelease]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationRelease)
         .where(app.db.models.PublicationRelease.project_id == project_id)
         .order_by(app.db.models.PublicationRelease.version.desc())
@@ -521,9 +510,7 @@ async def get_release_manifest(
     version: int,
 ) -> dict[str, typing.Any]:
     await get_project(session, owner, project_id)
-    result: sqlalchemy.Result[
-        tuple[app.db.models.PublicationRelease]
-    ] = await session.execute(
+    result: sqlalchemy.Result[tuple[app.db.models.PublicationRelease]] = await session.execute(
         sqlalchemy.select(app.db.models.PublicationRelease).where(
             app.db.models.PublicationRelease.project_id == project_id,
             app.db.models.PublicationRelease.version == version,
@@ -571,11 +558,11 @@ async def get_public_delivery_manifest(
             status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="Delivery not found."
         )
 
-    release_query: sqlalchemy.Select[tuple[app.db.models.PublicationRelease]] = (
-        sqlalchemy.select(app.db.models.PublicationRelease).where(
-            app.db.models.PublicationRelease.project_id == project.id,
-            app.db.models.PublicationRelease.status == "published",
-        )
+    release_query: sqlalchemy.Select[tuple[app.db.models.PublicationRelease]] = sqlalchemy.select(
+        app.db.models.PublicationRelease
+    ).where(
+        app.db.models.PublicationRelease.project_id == project.id,
+        app.db.models.PublicationRelease.status == "published",
     )
     if version is not None:
         release_query: sqlalchemy.Select[tuple[app.db.models.PublicationRelease]] = (

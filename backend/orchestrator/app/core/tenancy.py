@@ -53,7 +53,11 @@ SHARD_COLUMN = "owner_shard"
 #: Shard count is fixed for the life of the data; changing it rewrites placement.
 SHARD_COUNT = 4096
 
-_GUARDED_STATEMENTS: tuple[sqlalchemy.Select, sqlalchemy.Update, sqlalchemy.Delete] = (sqlalchemy.sql.Select, sqlalchemy.sql.Update, sqlalchemy.sql.Delete)
+_GUARDED_STATEMENTS: tuple[sqlalchemy.Select, sqlalchemy.Update, sqlalchemy.Delete] = (
+    sqlalchemy.sql.Select,
+    sqlalchemy.sql.Update,
+    sqlalchemy.sql.Delete,
+)
 
 
 class TenantScopeError(RuntimeError):
@@ -153,4 +157,3 @@ def _guard_tenant_scope(state: sqlalchemy.orm.ORMExecuteState) -> None:
     raise TenantScopeError(
         f"Query touches tenant table(s) {sorted(tables)} without an {OWNER_COLUMN} predicate."
     )
-

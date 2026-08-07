@@ -12,6 +12,15 @@ interface SectionEditorProps {
 }
 
 export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
+  const [title, setTitle] = useState(section?.title ?? "");
+  const [body, setBody] = useState(section?.body_ref ?? "");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setTitle(section?.title ?? "");
+    setBody(section?.body_ref ?? "");
+  }, [section?.id, section?.title, section?.body_ref]);
+
   if (!section) {
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground p-8 text-center">
@@ -22,15 +31,6 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
       </div>
     );
   }
-
-  const [title, setTitle] = useState(section.title);
-  const [body, setBody] = useState(section.body_ref || "");
-  const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    setTitle(section.title);
-    setBody(section.body_ref || "");
-  }, [section.id, section.title, section.body_ref]);
 
   const handleSave = async () => {
     try {

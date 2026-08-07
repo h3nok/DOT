@@ -2,6 +2,7 @@ import { ArrowUpRight, Layers, Link2, Pencil, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { hasChildren, type DotNode } from "./types";
 import { BloomSurface } from "./BloomSurface";
+import { RelationExits } from "../attention-os/focus/RelationExits";
 import { staggerChild } from "../organism";
 
 /**
@@ -23,6 +24,8 @@ interface NodeStageProps {
   onClose: () => void;
   onOpenChildren?: (node: DotNode) => void;
   onFollow?: (node: DotNode) => void;
+  /** Focus a related node by id, so movement happens in relation language. */
+  onFollowRelation?: (id: string) => void;
   onEdit?: (node: DotNode) => void;
   onAddChild?: (node: DotNode) => void;
 }
@@ -36,6 +39,7 @@ export const NodeStage: React.FC<NodeStageProps> = ({
   onClose,
   onOpenChildren,
   onFollow,
+  onFollowRelation,
   onEdit,
   onAddChild,
 }) => {
@@ -150,6 +154,19 @@ export const NodeStage: React.FC<NodeStageProps> = ({
             ? "No content yet. Use Edit to give this node substance."
             : "A quiet node, still finding its words."}
         </p>
+      )}
+
+      {!ephemeral && !editing && (
+        <RelationExits
+          reducedMotion={reducedMotion}
+          exits={(node.children ?? []).map((child) => ({
+            id: child.id,
+            label: child.label,
+            relation: child.relation,
+          }))}
+          onFollow={(id) => onFollowRelation?.(id)}
+          onStop={onClose}
+        />
       )}
     </BloomSurface>
   );

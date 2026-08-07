@@ -5,13 +5,36 @@ import typing
 
 import pydantic
 
+TwinLens = typing.Literal["orient", "ground", "test"]
+
+
+class TwinHistoryTurn(pydantic.BaseModel):
+    """A visitor turn replayed as untrusted, non-persistent context."""
+
+    model_config = pydantic.ConfigDict(extra="forbid")
+
+    role: typing.Literal["member", "twin"]
+    content: str = pydantic.Field(min_length=1, max_length=4_000)
+
 
 class TwinAskRequest(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
 
     question: str = pydantic.Field(min_length=1, max_length=2_000)
+    lens: TwinLens = "ground"
     #: Whose graph to ask. Defaults to the caller's own twin.
     owner_id: str | None = pydantic.Field(default=None, max_length=128)
+
+
+class TwinPublicAskRequest(pydantic.BaseModel):
+    """A visitor's question. The owner is required because there is no session."""
+
+    model_config = pydantic.ConfigDict(extra="forbid")
+
+    question: str = pydantic.Field(min_length=1, max_length=2_000)
+    owner_id: str = pydantic.Field(min_length=1, max_length=128)
+    lens: TwinLens = "ground"
+    history: list[TwinHistoryTurn] = pydantic.Field(default_factory=list, max_length=6)
 
 
 class Citation(pydantic.BaseModel):
@@ -36,6 +59,7 @@ class TwinMessageRequest(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
 
     question: str = pydantic.Field(min_length=1, max_length=2_000)
+    lens: TwinLens = "ground"
     #: Omit to start a new thread.
     conversation_id: str | None = pydantic.Field(default=None, max_length=64)
     #: Whose twin to address. Ignored when continuing an existing thread, which

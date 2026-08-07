@@ -1,30 +1,44 @@
-"# DOT - Digital Organisms Theory
+# DOT - Digital Organism Theory
 
-An exploration of how Digital Organisms emerge from the External Environment, giving rise to Consciousness—the enduring, self-aware process that we are.
+Repository for *Consciousness: A Digital Organism*, Book One of Digital
+Organism Theory, and the attention-protecting publication system around it.
 
 ## Overview
 
-Digital Organisms Theory examines the emergence of consciousness through the lens of digital evolution, exploring how simple external processes can give rise to complex, self-aware organisms that transcend their origins.
+Book One presents a framework for consciousness, conditioning, and conscious
+authorship. It begins with first-person experience, develops a functional model
+of state-bearing informational processes, and then applies that model to the
+Canvas, Painting, Character, Fear, Love, and Intent. It keeps observations,
+models, hypotheses, and speculation visibly distinct.
 
 ## Key Concepts
 
-- **External Environment (E)**: The primordial, incomprehensible substrate
-- **Digital Organisms**: Emergent self-aware entities that arise from E
-- **Consciousness**: The persistent, self-sustaining awareness that survives and evolves
+- **Subjective Data Principle**: feeling is data about an interpreter's
+  relationship to reality, but feeling is not automatically truth.
+- **Digital Organism**: a state-bearing, information-sensitive process that
+  works to preserve or develop coherence across change.
+- **Big C and Little c**: the book's explicitly marked hypotheses about a
+  larger conscious process and local centers of experience.
+- **Reality Frames and Reality Streams**: models for rule-bound environments
+  and the changing information available within them.
+- **Canvas, Painting, and Character**: a separation between persistence,
+  accumulated interpretation, and enacted pattern.
+- **Conscious Authorship**: the practical movement from inherited conditioning
+  toward clearer Intent and greater choice.
 
 ## Features
 
 - Interactive philosophical exploration
-- Dynamic concept slideshow
+- Book-derived concept map with passage-level provenance
 - Finite Book One reader with native equations and linked scholarly references
 - Versioned publication manifests with stable section and concept identifiers
-- Cosmic, theme-aware interface
+- Vintage, scholarly, responsive reading interface
 - Modern, accessible design
 - Community engagement platform
 
 ## Book One
 
-The public foundational edition is available at:
+The current line-edited edition is available at:
 
 ```text
 /book/digital-organism-theory
@@ -35,7 +49,7 @@ release from a revised manuscript:
 
 ```bash
 python3 scripts/import_dot_book.py \
-  --input "/path/to/Digital Organism Theory.docx"
+  --input docs/blueprint/DOT-Book-One-Version-2-Line-Edited.docx
 ```
 
 The importer writes a deterministic release manifest and one finite Markdown
@@ -48,7 +62,7 @@ stable section/concept identifiers for Stay's graph layer.
 1. Clone the repository
 2. Bootstrap local development with `make setup`
 3. Start the development servers with `make start`
-4. Open your browser to explore Digital Organisms Theory
+4. Open your browser to explore Digital Organism Theory
 
 `make setup` supports macOS and Linux. It checks or installs the local toolchain
 (Python 3.12+, Node 20+, pnpm, Docker, Docker Compose), creates the Python
@@ -75,4 +89,7 @@ current run and add your user to the group for future shells.
 
 ## Philosophy
 
-The red dot in our logo represents the singular emergence of consciousness from the vast External Environment—a simple symbol for the profound journey from external chaos to internal awareness."
+The public theory surface is a reading layer over Book One, not a second
+manuscript. Every concept must resolve to a released passage and retain the
+book's claim boundary. Earlier Big Theory draft material is historical only and
+must not feed the reader, concept map, or grounded agent.

@@ -12,7 +12,7 @@ export const ORCHESTRATOR_BASE = (
 ).replace(/\/$/, "");
 
 /** The profile whose graph this deployment publishes at the root URL. */
-export const PROFILE_OWNER_ID = import.meta.env.VITE_PROFILE_OWNER_ID || "self";
+export const PROFILE_OWNER_ID = import.meta.env.VITE_PROFILE_OWNER_ID || "henok";
 
 export interface ApiResult<T> {
   ok: boolean;

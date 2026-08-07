@@ -25,4 +25,18 @@ describe("BookMarkdown", () => {
       "noopener noreferrer",
     );
   });
+
+  it("places a contextual reader element after its matching heading", () => {
+    render(
+      <BookMarkdown
+        content={["## The Experience Loop", "", "The loop begins here."].join("\n")}
+        afterHeading={{
+          "the-experience-loop": <div data-testid="experience-loop">Interactive model</div>,
+        }}
+      />,
+    );
+
+    const heading = screen.getByRole("heading", { name: "The Experience Loop" });
+    expect(heading.nextElementSibling).toBe(screen.getByTestId("experience-loop"));
+  });
 });

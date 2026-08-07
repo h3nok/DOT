@@ -54,9 +54,11 @@ document is the reason.
 
 ---
 
-## 4. Core concepts (content model)
+## 4. Book-derived concepts (content model)
 
-The doctrine is a graph of **nodes** connected by typed **relations**.
+The concept map is a graph of **nodes** connected by typed **relations**. It is
+a reading layer over the current released book, not a second manuscript
+(ADR-0018).
 
 ### 4.1 Node
 
@@ -64,28 +66,28 @@ A node is one idea, claim, definition, or practice.
 
 ```
 DoctrineNode
-  id            stable slug, e.g. "substrate", "stabilization", "little-c"
+  id            stable slug, e.g. "subjective-data", "big-c", "canvas"
   kind          "foundation" | "claim" | "definition" | "practice" | "question"
   title         short, plain
   oneLine       a single sentence the node can be reduced to
   body          argued prose (markdown)
-  status        "draft" | "released"
-  version       integer, increments on released revision
+  status        "released"
+  version       the source book edition
+  source        required edition + section + heading + claim level
   relatedIds    typed edges to other nodes
-  sources       optional citations / source trail
-  releasedAt    timestamp when locked
 ```
 
 Node kinds:
 
-- **foundation** — the load-bearing spine (substrate, stabilization, thread).
+- **foundation** — a load-bearing structure explicitly developed in the book.
 - **claim** — an assertable, arguable statement.
 - **definition** — a precise term (little c, coherence, fragmentation).
 - **practice** — something a reader can _do_ to increase coherence.
 - **question** — an open seam, explicitly unresolved.
 
-The `question` kind is required, not decorative. The doctrine must show its open
-edges. A theory that hides its unknowns is propaganda.
+The `question` kind is required, not decorative. It carries the limits and unpaid
+debts the book names. A node may summarize or connect passages; it may not
+introduce a claim the released book does not make.
 
 ### 4.2 Relation
 
@@ -102,24 +104,28 @@ graph; it must never be derived from traffic or engagement.
 
 ---
 
-## 5. The three foundations (initial content)
+## 5. The Book One spine
 
-The first released foundations, written as argued prose:
+The first map follows the structure actually argued in Book One:
 
-1. **The Substrate (E).** Reality rests on an incomprehensible substrate of
-   possibility. We do not explain it; we locate ourselves inside it.
-2. **Stabilization.** Consciousness is the first pattern that stabilized itself
-   within the substrate and held. Emergence is assumed (complex systems theory),
-   not re-derived. The claim begins after stabilization.
-3. **The Thread (little c).** We are individuated threads of that stabilized
-   field. We do not know where, when, or how we emerge — only that we are inside
-   the substrate, and that a thread moves toward fragmentation or coherence.
+1. **The Subjective Data Principle.** Feeling is data, but not automatically
+   truth. The observer belongs in the inquiry.
+2. **Digital Organism.** A state-bearing, information-sensitive process that
+   works to preserve or develop coherence across change. This is a model
+   definition, not a proof of sentience.
+3. **Big C and Little c.** The larger conscious process and local experiencer
+   are hypotheses, and must render as such.
+4. **Reality Frame, Reality Stream, and Intent.** The book's model of lawful
+   environment, situated experience, and committed direction.
+5. **The Experience Loop.** Reality Stream is interpreted through the Painting;
+   Intent becomes action; consequence updates the Canvas.
+6. **Canvas, Painting, Character, Fear, and Love.** The human instance and the
+   movement from inherited conditioning toward conscious authorship.
+7. **Limits and Unpaid Debts.** The tests, measures, and distinctions the theory
+   does not yet possess.
 
-A fourth, the **Stance**, ties the ethic to the metaphysics: to hold form
-against dissolution is the founding act of consciousness and the meaning of
-courage. Love is maximal coherence; fear is the defense of separateness.
-
-These are the seed nodes of the graph.
+These are derived entry points into the released text. The older Substrate /
+Stabilization draft is historical material, not a source for the public map.
 
 ---
 
@@ -213,11 +219,12 @@ Practice nodes turn doctrine into something a reader can do.
 
 The doctrine must outlast its author.
 
-- Every released node is **immutable and versioned** via the orchestrator's
-  release pipeline. Revisions create new versions; history is inspectable.
-- Nodes carry **provenance**: author, version, released timestamp, source trail.
-- Doctrine is **forkable**: disagreement should branch openly, not schism in bad
-  faith.
+- Every released node is **immutable and edition-bound**. A new book edition
+  generates a new map version; history remains inspectable.
+- Nodes carry **required provenance**: edition, section, heading, and declared
+  claim level.
+- Commentary and forks branch openly, but they are separate surfaces and may
+  never render as Book One or as its concept map.
 - Authority is **stewardship of integrity**, not ownership of truth. Stewards
   maintain the record; they do not control belief.
 
@@ -243,5 +250,6 @@ than inventing parallel systems.
 - Focus mode visibly recedes the field and holds one idea.
 - Reduced-motion and keyboard navigation work.
 - Light and dark themes both render legibly.
-- Released nodes are immutable, versioned, and show provenance.
-- A second contributor can publish a node through the orchestrator.
+- Released nodes are immutable, edition-bound, and show resolvable provenance.
+- No concept node exists without a passage in the live book edition.
+- Contributor commentary is visibly separate from the Book One map.

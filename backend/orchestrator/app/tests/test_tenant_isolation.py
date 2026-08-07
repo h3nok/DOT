@@ -106,7 +106,9 @@ async def test_owner_shard_is_derived_on_flush(
 
 
 def test_owner_shard_is_stable_and_bounded() -> None:
-    assert app.core.tenancy.owner_shard("owner-alice") == app.core.tenancy.owner_shard("owner-alice")
+    assert app.core.tenancy.owner_shard("owner-alice") == app.core.tenancy.owner_shard(
+        "owner-alice"
+    )
     assert 0 <= app.core.tenancy.owner_shard("owner-alice") < app.core.tenancy.SHARD_COUNT
 
 

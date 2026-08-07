@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import fastapi.testclient
+import pytest
 
 OWNER = "member_profile_a"
 OTHER = "member_profile_b"
@@ -116,3 +117,80 @@ def test_graph_nested_past_the_depth_limit_is_rejected(
     for index in range(12):
         node = {"id": f"n{index}", "label": f"n{index}", "children": [node]}
     assert _put(client, OWNER, {"graph": node}).status_code == 400
+
+
+# ── Contract enforcement: the client is never trusted ──────────────────────────
+
+
+def _tree(**node: object) -> dict:
+    return {"graph": {"id": "self", "label": "Root", "children": [dict(node)]}}
+
+
+def test_duplicate_sibling_ids_are_a_validation_error_not_a_crash(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    """Colliding ids used to reach the unique index and surface as a 500."""
+
+    payload = {
+        "graph": {
+            "id": "self",
+            "label": "Root",
+            "children": [
+                {"id": "twin", "label": "First"},
+                {"id": "twin", "label": "Second"},
+            ],
+        }
+    }
+    assert _put(client, OWNER, payload).status_code == 422
+
+
+def test_ids_may_not_contain_path_separators(client: fastapi.testclient.TestClient) -> None:
+    """Ids become segments of the stored external_id path."""
+
+    assert _put(client, OWNER, _tree(id="a/b", label="Sneaky")).status_code == 422
+
+
+@pytest.mark.parametrize(
+    "href",
+    [
+        "javascript:alert(1)",
+        "JavaScript:alert(1)",
+        "data:text/html;base64,PHNjcmlwdD4=",
+        "vbscript:msgbox(1)",
+        "//evil.example.com",
+    ],
+)
+def test_unsafe_hrefs_are_rejected(client: fastapi.testclient.TestClient, href: str) -> None:
+    assert _put(client, OWNER, _tree(id="x", label="X", href=href)).status_code == 422
+
+
+@pytest.mark.parametrize(
+    "href",
+    ["/doctrine", "https://example.com/post", "mailto:hi@example.com", "tel:+15550000000"],
+)
+def test_safe_hrefs_are_accepted(client: fastapi.testclient.TestClient, href: str) -> None:
+    assert _put(client, OWNER, _tree(id="x", label="X", href=href)).status_code == 200
+
+
+def test_images_must_not_be_inline_payloads(client: fastapi.testclient.TestClient) -> None:
+    unsafe = _tree(id="x", label="X", image="data:image/svg+xml,<svg onload=alert(1)>")
+    assert _put(client, OWNER, unsafe).status_code == 422
+
+
+def test_unknown_kind_or_surface_fails_closed(client: fastapi.testclient.TestClient) -> None:
+    assert _put(client, OWNER, _tree(id="x", label="X", kind="admin")).status_code == 422
+    assert _put(client, OWNER, _tree(id="x", label="X", surface="billing")).status_code == 422
+
+
+def test_relations_round_trip(client: fastapi.testclient.TestClient) -> None:
+    """Navigation is offered in relation language, so it has to survive a publish."""
+
+    payload = _tree(id="coherence", label="Coherence", relation="contrasts")
+    assert _put(client, OWNER, payload).status_code == 200
+
+    graph = client.get("/v1/graph/profile", params={"owner_id": OWNER}).json()["graph"]
+    assert graph["children"][0]["relation"] == "contrasts"
+
+
+def test_unknown_relation_fails_closed(client: fastapi.testclient.TestClient) -> None:
+    assert _put(client, OWNER, _tree(id="x", label="X", relation="vibes")).status_code == 422

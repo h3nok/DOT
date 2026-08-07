@@ -11,8 +11,9 @@
  * components) gives it a body, and the organism theme gives that body life.
  */
 
-export type DotNodeKind = "self" | "attribute" | "page" | "external";
+import type { DotRelation } from "../attention-os/focus/relations";
 
+export type DotNodeKind = "self" | "attribute" | "page" | "external";
 /** Platform surfaces a node can open instead of a plain reading panel. */
 export type DotSurface =
   | "publications"
@@ -44,6 +45,9 @@ export interface DotNode {
    *  centre of the graph, framed by the fingerprint; elsewhere it can mark a
    *  node with an image. */
   image?: string;
+  /** How this node relates to its parent. Navigation is offered in these terms
+   *  rather than as a menu, so every move has a stated reason (doc 12 §4). */
+  relation?: DotRelation;
   /** Child attributes. Focusing this node re-centres the graph on it. */
   children?: DotNode[];
 }

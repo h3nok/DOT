@@ -113,7 +113,9 @@ class S3ObjectStore:
         except Exception as exc:
             raise ObjectStoreError(f"Could not write object: {key}") from exc
 
-    async def put_bytes(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> None:
+    async def put_bytes(
+        self, key: str, data: bytes, content_type: str = "application/octet-stream"
+    ) -> None:
         try:
             async with self.session.client("s3", endpoint_url=self.endpoint_url) as s3:
                 await s3.put_object(
@@ -162,7 +164,7 @@ class S3ObjectStore:
 
 def get_object_store() -> FilesystemObjectStore | S3ObjectStore:
     settings: app.settings.Settings = app.settings.get_settings()
-    
+
     if settings.object_store_backend == "s3":
         return S3ObjectStore(
             bucket=settings.object_store_bucket,

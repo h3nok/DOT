@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -6,11 +6,19 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
+  Compass,
+  Feather,
   List,
   Loader2,
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import {
+  findPath,
+  nextStep,
+  previousStep,
+  type ReadingPath,
+} from "../../attention-os/reader/readingPaths";
 import {
   DOT_BOOK_ONE_ROUTE,
   bookSectionRoute,
@@ -20,6 +28,8 @@ import {
   type BookReleaseSection,
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
+import BookLanding from "./BookLanding";
+import ExperienceLoop from "./ExperienceLoop";
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -31,6 +41,13 @@ function formatWordCount(words: number): string {
   return new Intl.NumberFormat(undefined, {
     maximumFractionDigits: 0,
   }).format(words);
+}
+
+function conceptLabel(concept: string): string {
+  return concept
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function LoadingState() {
@@ -104,196 +121,75 @@ function BookContents({
   );
 }
 
-function BookLanding({ manifest }: { manifest: DotBookOneManifest }) {
-  const firstSection = manifest.sections[0];
-  const groups = groupBookSectionsByPart(manifest.sections);
-
-  return (
-    <main
-      id="book-main"
-      className="mx-auto w-full max-w-6xl px-5 pb-24 pt-16 sm:px-8 sm:pt-24"
-    >
-      <section className="grid items-center gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-20">
-        <div>
-          <div className="mb-6 flex max-w-full flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <span className="inline-flex max-w-full items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:tracking-[0.24em]">
-              <span className="h-2.5 w-2.5 rounded-full bg-[var(--organism-accent-strong)] shadow-[0_0_22px_var(--organism-accent-soft)]" />
-              {manifest.project.series_title}
-            </span>
-            <span className="max-w-full truncate rounded-full border border-border/60 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground sm:tracking-[0.16em]">
-              {manifest.release.label}
-            </span>
-          </div>
-
-          <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            Book One · Chapters 1–{manifest.extent.chapters}
-          </p>
-          <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] text-foreground sm:text-6xl lg:text-7xl">
-            {manifest.project.title}
-          </h1>
-          <p className="mt-6 text-base text-muted-foreground">
-            By {manifest.project.author}
-          </p>
-
-          <blockquote className="mt-10 max-w-2xl border-l border-[var(--organism-accent-soft)] pl-6 font-serif text-xl leading-relaxed text-foreground/80 sm:text-2xl">
-            “I offer DOT as a construction, not a revelation.”
-          </blockquote>
-
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              to={bookSectionRoute(firstSection)}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--organism-accent-soft)] bg-foreground/[0.07] px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.11]"
-            >
-              Begin with the preface
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to="/doctrine"
-              className="text-sm text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
-            >
-              Open the companion concept graph
-            </Link>
-          </div>
-        </div>
-
-        <aside className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
-          <span
-            className="absolute h-[88%] w-[88%] rounded-full border border-[var(--organism-accent-soft)] opacity-30"
-            aria-hidden="true"
-          />
-          <span
-            className="absolute h-[62%] w-[62%] rounded-full border border-border/60"
-            aria-hidden="true"
-          />
-          <div className="relative flex h-44 w-44 flex-col items-center justify-center rounded-full border border-[var(--organism-accent-soft)] bg-background/70 text-center shadow-[0_0_80px_var(--organism-accent-soft)] backdrop-blur-xl">
-            <span className="h-4 w-4 rounded-full bg-[var(--organism-accent-strong)]" />
-            <span className="mt-4 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
-              The observer
-            </span>
-            <span className="mt-1 font-serif text-lg text-foreground">
-              belongs inside
-            </span>
-          </div>
-        </aside>
-      </section>
-
-      <section className="mt-24 grid gap-8 border-y border-border/60 py-10 md:grid-cols-[0.7fr_1.3fr]">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            The epistemic contract
-          </p>
-          <p className="mt-3 max-w-sm font-serif text-2xl leading-snug text-foreground">
-            Feeling must be treated as data, but feeling is not automatically
-            truth.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 sm:grid-cols-4">
-          {manifest.reader_contract.claim_levels.map((level) => (
-            <div key={level} className="bg-background px-4 py-5">
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                {level}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-20" aria-labelledby="contents-title">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Finite reading path
-            </p>
-            <h2
-              id="contents-title"
-              className="mt-2 font-serif text-4xl font-semibold text-foreground"
-            >
-              Contents
-            </h2>
-          </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            {formatWordCount(manifest.extent.words)} words ·{" "}
-            {manifest.extent.equations} equations ·{" "}
-            {manifest.extent.references} sources
-          </p>
-        </div>
-
-        <div className="grid gap-10 lg:grid-cols-3">
-          {groups.map((group) => (
-            <section key={group.part}>
-              <h3 className="mb-3 border-b border-border/60 pb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {group.part}
-              </h3>
-              <ol className="space-y-2">
-                {group.sections.map((section) => (
-                  <li key={section.id}>
-                    <Link
-                      to={bookSectionRoute(section)}
-                      className="group flex items-start justify-between gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-foreground/[0.04]"
-                    >
-                      <span>
-                        <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-                          {sectionLabel(section)}
-                        </span>
-                        <span className="mt-1 block font-serif text-lg leading-tight text-foreground group-hover:text-[var(--organism-accent-strong)]">
-                          {section.title}
-                        </span>
-                      </span>
-                      <ArrowRight className="mt-3 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
-}
-
 function BookReader({
   manifest,
   section,
   content,
   onOpenContents,
+  path,
 }: {
   manifest: DotBookOneManifest;
   section: BookReleaseSection;
   content: string;
   onOpenContents: () => void;
+  path: ReadingPath | null;
 }) {
+  const bySlug = (slug: string | undefined) =>
+    slug ? (manifest.sections.find((entry) => entry.slug === slug) ?? null) : null;
+
   const index = manifest.sections.findIndex((candidate) => candidate.id === section.id);
-  const previous = index > 0 ? manifest.sections[index - 1] : null;
-  const next = index < manifest.sections.length - 1 ? manifest.sections[index + 1] : null;
+
+  // A chosen path reorders the encounter; without one the book's own order stands.
+  const previous = path
+    ? bySlug(previousStep(path, section.slug)?.slug)
+    : index > 0
+      ? manifest.sections[index - 1]
+      : null;
+  const next = path
+    ? bySlug(nextStep(path, section.slug)?.slug)
+    : index < manifest.sections.length - 1
+      ? manifest.sections[index + 1]
+      : null;
+
+  const step = (target: BookReleaseSection) =>
+    path ? `${bookSectionRoute(target)}?path=${path.id}` : bookSectionRoute(target);
 
   return (
     <>
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,760px)] lg:justify-center lg:gap-16">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,700px)] lg:justify-center lg:gap-20">
         <aside className="hidden lg:block">
           <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
             <Link
-              to={DOT_BOOK_ONE_ROUTE}
+              to={DOT_BOOK_ONE_ROUTE + "#edition-map"}
               className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              About this edition
+              Edition map
             </Link>
             <BookContents manifest={manifest} currentSlug={section.slug} />
           </div>
         </aside>
 
-        <article id="book-main" className="min-w-0">
-          <button
-            type="button"
-            onClick={onOpenContents}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-border/60 px-3.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground lg:hidden"
-          >
-            <List className="h-3.5 w-3.5" />
-            Contents
-          </button>
+        <article id="book-main" className="book-reader min-w-0">
+          <div className="mb-8 flex items-center gap-4 lg:hidden">
+            <Link
+              to={DOT_BOOK_ONE_ROUTE + "#edition-map"}
+              className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              Edition map
+            </Link>
+            <button
+              type="button"
+              onClick={onOpenContents}
+              className="inline-flex min-h-11 items-center gap-2 border-l border-border/60 pl-4 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <List className="h-3.5 w-3.5" />
+              Contents
+            </button>
+          </div>
 
-          <header className="border-b border-border/60 pb-10">
+          <header className="book-chapter-header border-b pb-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                 {sectionLabel(section)} · {section.part}
@@ -311,19 +207,34 @@ function BookReader({
                 {section.subtitle}
               </p>
             )}
-            <div className="mt-7 flex flex-wrap gap-2">
-              {manifest.reader_contract.claim_levels.map((level) => (
-                <span
-                  key={level}
-                  className="rounded-full border border-border/50 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground"
-                >
-                  {level}
-                </span>
-              ))}
+            <Link
+              to="/doctrine/limits-and-debts"
+              className="mt-7 inline-flex items-center gap-2 border-l-2 border-[var(--book-cinnabar)] pl-3 font-mono text-[9px] uppercase tracking-[0.13em] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Epistemic boundary · claims retain the manuscript's labels
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </Link>
+            <div className="book-reader-rule mt-8 flex items-center justify-center gap-3 text-[var(--book-muted)]" aria-hidden="true">
+              <Feather className="h-4 w-4" />
+              <Compass className="h-4 w-4" />
+              <Feather className="h-4 w-4 -scale-x-100" />
             </div>
           </header>
 
-          <BookMarkdown content={content} />
+          <BookMarkdown
+            content={content}
+            afterHeading={
+              section.slug === "the-canvas"
+                ? {
+                    "the-experience-loop": (
+                      <div className="book-reader-experience-loop">
+                        <ExperienceLoop initialStep="Reality Stream" />
+                      </div>
+                    ),
+                  }
+                : undefined
+            }
+          />
 
           <footer className="border-t border-border/60 pt-8">
             {section.kind === "references" && (
@@ -345,11 +256,48 @@ function BookReader({
               </div>
             )}
 
+            <div className="book-reflection mb-10 border-y px-1 py-8 sm:py-10">
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                Before you continue
+              </p>
+              <h2 className="mt-3 max-w-xl font-serif text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
+                What is one idea you want to carry from this section?
+              </h2>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
+                Let the answer settle before choosing the next path.
+              </p>
+            </div>
+
+            {section.related_concepts.length > 0 ? (
+              <div className="mb-10 border-b border-border/60 pb-8">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Ideas to carry
+                </p>
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                  {section.related_concepts.map((concept) => (
+                    <span
+                      key={concept}
+                      className="book-concept text-sm text-muted-foreground"
+                    >
+                      {conceptLabel(concept)}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  to="/doctrine"
+                  className="mt-4 inline-flex items-center gap-2 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[var(--organism-accent-strong)]"
+                >
+                  Explore these ideas in the concept graph
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            ) : null}
+
             <div className="flex items-stretch justify-between gap-4">
               {previous ? (
                 <Link
-                  to={bookSectionRoute(previous)}
-                  className="group flex max-w-[48%] items-center gap-3 rounded-2xl border border-border/60 px-4 py-4 text-left transition-colors hover:bg-foreground/[0.04]"
+                  to={step(previous)}
+                  className="book-path-link group flex max-w-[48%] items-center gap-3 rounded-lg border px-4 py-4 text-left transition-colors"
                 >
                   <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-1" />
                   <span>
@@ -367,12 +315,12 @@ function BookReader({
 
               {next ? (
                 <Link
-                  to={bookSectionRoute(next)}
-                  className="group flex max-w-[48%] items-center justify-end gap-3 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.04] px-4 py-4 text-right transition-colors hover:bg-foreground/[0.08]"
+                  to={step(next)}
+                  className="book-path-link book-path-link-primary group flex max-w-[48%] items-center justify-end gap-3 rounded-lg border px-4 py-4 text-right transition-colors"
                 >
                   <span>
                     <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                      Continue
+                      {path ? path.label : "Continue"}
                     </span>
                     <span className="mt-1 block text-sm font-semibold leading-tight text-foreground">
                       {next.title}
@@ -383,7 +331,7 @@ function BookReader({
               ) : (
                 <Link
                   to={DOT_BOOK_ONE_ROUTE}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.04] px-4 py-4 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.08]"
+                  className="book-path-link book-path-link-primary inline-flex items-center gap-2 rounded-lg border px-4 py-4 text-sm font-semibold text-foreground transition-colors"
                 >
                   Return to the book
                   <ArrowRight className="h-4 w-4" />
@@ -400,11 +348,28 @@ function BookReader({
 export default function BookOnePage() {
   const { sectionSlug } = useParams<{ sectionSlug?: string }>();
   const location = useLocation();
+  // A reader who chose a path keeps it while they walk it.
+  const activePath = useMemo(
+    () => findPath(new URLSearchParams(location.search).get("path") ?? ""),
+    [location.search],
+  );
   const navigate = useNavigate();
   const [manifest, setManifest] = useState<DotBookOneManifest | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contentsOpen, setContentsOpen] = useState(false);
+  const contentsPanelRef = useRef<HTMLElement | null>(null);
+  const contentsReturnFocusRef = useRef<HTMLElement | null>(null);
+
+  const openContents = () => {
+    contentsReturnFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    setContentsOpen(true);
+  };
+
+  const closeContents = () => setContentsOpen(false);
 
   const section = useMemo(
     () =>
@@ -463,8 +428,21 @@ export default function BookOnePage() {
   }, [manifest, section]);
 
   useEffect(() => {
-    if (!content || !sectionSlug) {
-      if (!sectionSlug) window.scrollTo({ top: 0, behavior: "auto" });
+    if (!sectionSlug) {
+      const frame = window.requestAnimationFrame(() => {
+        const target = location.hash
+          ? document.getElementById(location.hash.slice(1))
+          : null;
+        if (target) {
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    if (!content) {
       return;
     }
     const target = location.hash
@@ -475,22 +453,47 @@ export default function BookOnePage() {
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
-  }, [content, location.hash, sectionSlug]);
+  }, [content, location.hash, manifest, sectionSlug]);
 
   useEffect(() => {
     if (!contentsOpen) return;
 
     const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setContentsOpen(false);
+    const returnFocus = contentsReturnFocusRef.current;
+    const handleDialogKeys = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setContentsOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const panel = contentsPanelRef.current;
+      if (!panel) return;
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute("disabled"));
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("keydown", handleDialogKeys);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("keydown", handleDialogKeys);
+      returnFocus?.focus();
     };
   }, [contentsOpen]);
 
@@ -519,14 +522,15 @@ export default function BookOnePage() {
       >
         Skip to book
       </a>
-      <header className="sticky top-0 z-30 border-b border-border/50 bg-background/85 backdrop-blur-xl">
+      <header className="book-chrome sticky top-0 z-30 border-b backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="book-dot-link inline-flex items-center gap-2 text-xs font-medium transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Stay
+            <span className="book-dot-link-mark" aria-hidden="true" />
+            <span>DOT</span>
           </Link>
           <Link
             to={DOT_BOOK_ONE_ROUTE}
@@ -543,7 +547,7 @@ export default function BookOnePage() {
           {section ? (
             <button
               type="button"
-              onClick={() => setContentsOpen(true)}
+              onClick={openContents}
               className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
             >
               <List className="h-3.5 w-3.5" />
@@ -560,26 +564,29 @@ export default function BookOnePage() {
           manifest={manifest}
           section={section}
           content={content}
-          onOpenContents={() => setContentsOpen(true)}
+          onOpenContents={openContents}
+          path={activePath}
         />
       ) : (
         <BookLanding manifest={manifest} />
       )}
 
       {contentsOpen && (
-        <div
-          className="fixed inset-0 z-50 flex justify-end"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="book-contents-title"
-        >
+        <div className="fixed inset-0 z-50 flex justify-end">
           <button
             type="button"
             aria-label="Close contents"
-            onClick={() => setContentsOpen(false)}
+            tabIndex={-1}
+            onClick={closeContents}
             className="absolute inset-0 bg-background/70 backdrop-blur-sm"
           />
-          <aside className="relative h-full w-full max-w-sm overflow-y-auto border-l border-border/60 bg-background px-6 py-7 shadow-2xl">
+          <aside
+            ref={contentsPanelRef}
+            className="relative h-full w-full max-w-sm overflow-y-auto border-l border-border/60 bg-background px-6 py-7 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="book-contents-title"
+          >
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -594,7 +601,7 @@ export default function BookOnePage() {
               </div>
               <button
                 type="button"
-                onClick={() => setContentsOpen(false)}
+                onClick={closeContents}
                 aria-label="Close contents"
                 autoFocus
                 className="rounded-full border border-border/60 p-2 text-muted-foreground transition-colors hover:text-foreground"
@@ -605,7 +612,7 @@ export default function BookOnePage() {
             <BookContents
               manifest={manifest}
               currentSlug={section?.slug}
-              onNavigate={() => setContentsOpen(false)}
+              onNavigate={closeContents}
             />
           </aside>
         </div>

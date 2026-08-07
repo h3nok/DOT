@@ -210,9 +210,7 @@ def test_graph_import_list_is_owner_scoped(client: fastapi.testclient.TestClient
     assert owner_import_response.status_code == 201
     assert other_import_response.status_code == 201
 
-    owner_list_response: httpx.Response = client.get(
-        "/v1/graph/imports", headers=OWNER_HEADERS
-    )
+    owner_list_response: httpx.Response = client.get("/v1/graph/imports", headers=OWNER_HEADERS)
     other_list_response: httpx.Response = client.get(
         "/v1/graph/imports", headers=OTHER_OWNER_HEADERS
     )

@@ -9,50 +9,29 @@ export interface CaseStudy {
 export const caseStudiesData: Record<string, CaseStudy> = {
   dot: {
     slug: "dot",
-    problem: "Traditional artificial life simulations and cellular automata (like Conway's Game of Life) are restricted to rigid grid cells and simplified deterministic state transitions. They fail to reflect the continuous, scale-free, and emergent complexity observed in physical biology and self-organizing consciousness.",
-    approach: "We engineered Digital Organisms Theory (DOT) as a continuous-space biological engine. The architecture leverages high-performance **Web Workers** for concurrent particle calculations, **Three.js (WebGL)** for hardware-accelerated interactive visualizations, and an emergent neural network activation model. Organisms sense environmental resources, adapt weights, and form aggregate structures.",
-    outcome: "Achieved the emergence of spontaneous collective behaviors, which we term 'Little c' (individual conscious agents) self-organizing into a larger, coherent 'Greater C' conscious structure. The system remains stable across large scale counts, proving continuous-space models can exhibit biological adaptation and system-level homeostasis.",
-    fullContent: `# Case Study: Digital Organisms Theory (DOT)
+    problem: "Accounts of consciousness often exclude first-person experience or blur observations, models, hypotheses, and speculation into one undifferentiated claim.",
+    approach: "Digital Organism Theory develops a bounded framework around the Subjective Data Principle, Digital Organisms, Big C, Little c, Reality Frames, the Canvas, the Painting, and Intent. Each claim retains an explicit epistemic level and a traceable Book One source.",
+    outcome: "Produced a line-edited Book One, an immutable source-verified web edition, and a concept map that resolves every public concept to the passage from which it derives. The work names its open debts instead of presenting its hypotheses as proof.",
+    fullContent: `# Digital Organism Theory: Book One
 
-Exploring emergent complexity and artificial life through continuous-space biological simulations.
+A source-backed framework for consciousness, conditioning, and conscious authorship.
 
 ---
 
-## 1. Executive Summary
-Digital Organisms Theory (DOT) represents a paradigm shift in modeling self-organizing systems. By moving away from discrete, grid-locked cellular automata, DOT introduces a mathematical framework where agents operate in a continuous spatial coordinate system, enabling fluid, lifelike interactions.
+## 1. The Inquiry
+Book One begins from a methodological claim: the observer belongs in the inquiry. First-person experience is treated as data without being treated as automatic truth.
 
-## 2. Problem Statement
-Discrete models fail to capture:
-* **Continuous Flow**: Organisms in nature do not move in locked grid steps.
-* **Scale-Free Complexity**: True biological systems self-organize across multiple scales (microscopic organelles to macroscopic systems).
-* **Adaptive Feedback Loops**: Most simulations have pre-baked rules rather than allowing neural-network-driven weight adaptations based on sensory inputs.
+## 2. The Proposed Architecture
+The book defines a Digital Organism as a state-bearing, information-sensitive process that works to preserve or develop coherence across change. It then develops Big C, Little c, Reality Frames, Reality Streams, and the body-as-interface as models or hypotheses, not settled findings.
 
-## 3. Architecture & Design
-The system is constructed with three decoupled layers:
+## 3. The Human Instance
+The Canvas, Painting, and Character distinguish persistence, accumulated interpretation, and enacted pattern. Fear gates possibility; Love and Intent support the movement toward conscious authorship.
 
-\`\`\`mermaid
-graph TD
-    A[Sensing Layer: Resources & Energy] --> B[Processing Layer: Web Workers]
-    B --> C[Visualizer Layer: Three.js/WebGL]
-    C --> A
-\`\`\`
+## 4. Claim Boundaries
+The edition separates Observation, Model, Hypothesis, and Speculation. Open questions about sentience, implementation, persistence, and causal mechanism remain visible as unpaid theoretical debts.
 
-### Concurrent Calculation via Web Workers
-To maintain a high framerate (60fps) during dense population scales, all biological processing, collision detections, and neural weight updates are delegated to background **Web Workers**. This prevents main-thread blockages:
-
-\`\`\`javascript
-// Web Worker message dispatcher
-const worker = new Worker('/workers/biology.js');
-worker.postMessage({
-  type: 'UPDATE_BIOLOGY',
-  organisms: rawOrganisms,
-  resources: resourceGrid
-});
-\`\`\`
-
-## 4. Key Outcomes & Discoveries
-* **Spontaneous Aggregation**: Individual agents ('Little c') naturally aggregated around energy gradients, forming stable, symbiotic colonies ('Greater C').
-* **Homeostasis**: Under extreme environmental stressors (simulated toxicity or resource depletion), colonies dynamically adjusted consumption rates to preserve aggregate integrity.
+## 5. Publication Contract
+The Word manuscript is the editorial source. Edition v2 is immutable and checksum-verified. The public concept map and grounded agent are derived reading layers, and every concept must point back to a released Book One passage.
 `
   },
   sullix: {

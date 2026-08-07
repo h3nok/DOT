@@ -20,6 +20,7 @@ export interface DotBookOneManifest {
   generated_at: string;
   source: {
     format: "docx";
+    name?: string;
     sha256: string;
   };
   project: {
@@ -36,7 +37,7 @@ export interface DotBookOneManifest {
   release: {
     id: string;
     version: number;
-    status: "foundational-preview";
+    status: string;
     label: string;
     published_at: string | null;
     updated_at: string;
@@ -58,7 +59,7 @@ export interface DotBookOneManifest {
 export const DOT_BOOK_ONE_ROUTE = "/book/digital-organism-theory";
 
 const DOT_BOOK_ONE_ASSET_ROOT =
-  "publications/henok/digital-organism-theory/v1";
+  "publications/henok/digital-organism-theory/v2";
 
 const publicAssetUrl = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith("/")

@@ -115,7 +115,7 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         lastUpdated: Date.now(),
       };
 
-    case 'TOGGLE_BOOKMARK':
+    case 'TOGGLE_BOOKMARK': {
       const isBookmarked = state.reading.bookmarks.includes(action.payload);
       return {
         ...state,
@@ -127,8 +127,9 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         },
         lastUpdated: Date.now(),
       };
+    }
 
-    case 'ADD_TO_HISTORY':
+    case 'ADD_TO_HISTORY': {
       // Remove existing entry if it exists, then add new one at the beginning
       const filteredHistory = state.reading.readingHistory.filter(
         item => item.id !== action.payload.id
@@ -147,6 +148,7 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         },
         lastUpdated: Date.now(),
       };
+    }
 
     case 'REMOVE_FROM_HISTORY':
       return {
@@ -185,7 +187,7 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         lastUpdated: Date.now(),
       };
 
-    case 'INCREMENT_STREAK':
+    case 'INCREMENT_STREAK': {
       const newStreak = state.reading.readingGoals.currentStreak + 1;
       const longestStreak = Math.max(newStreak, state.reading.readingGoals.longestStreak);
       return {
@@ -200,6 +202,7 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         },
         lastUpdated: Date.now(),
       };
+    }
 
     case 'RESET_STREAK':
       return {

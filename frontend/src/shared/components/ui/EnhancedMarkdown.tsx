@@ -217,7 +217,7 @@ const EnhancedMarkdown: React.FC<EnhancedMarkdownProps> = ({
   // Custom components for rendering
   const components = {
     // Enhanced code blocks with syntax highlighting
-    code({ node, inline, className, children, ...props }: any) {
+    code({ node: _node, inline, className, children, ...props }: any) {
       const match = /language-(\w+)/.exec(className || '');
       const language = match ? match[1] : '';
 

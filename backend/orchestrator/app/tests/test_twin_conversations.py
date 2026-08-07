@@ -299,16 +299,14 @@ def test_a_follow_up_carries_the_previous_question_into_retrieval() -> None:
 
 def test_conversation_endpoints_require_a_session(client: fastapi.testclient.TestClient) -> None:
     assert client.get("/v1/twin/conversations").status_code in (401, 403)
-    assert (
-        client.post("/v1/twin/conversations/messages", json={"question": "hi"}).status_code
-        in (401, 403)
+    assert client.post("/v1/twin/conversations/messages", json={"question": "hi"}).status_code in (
+        401,
+        403,
     )
 
 
 def test_an_unknown_conversation_is_a_404_not_a_500(
     client: fastapi.testclient.TestClient,
 ) -> None:
-    response = client.get(
-        "/v1/twin/conversations/conv_missing", headers={"X-Owner-Id": "owner_1"}
-    )
+    response = client.get("/v1/twin/conversations/conv_missing", headers={"X-Owner-Id": "owner_1"})
     assert response.status_code in (401, 403, 404)

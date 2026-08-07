@@ -220,7 +220,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         lastUpdated: Date.now(),
       };
 
-    case 'ADD_TO_HISTORY':
+    case 'ADD_TO_HISTORY': {
       const existingIndex = state.reading.readingHistory.findIndex(item => item.id === action.payload.id);
       const newHistory = existingIndex >= 0 
         ? state.reading.readingHistory.map((item, index) => 
@@ -235,6 +235,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         reading: { ...state.reading, readingHistory: newHistory },
         lastUpdated: Date.now(),
       };
+    }
 
     case 'RESET_STATE':
       return initialState;

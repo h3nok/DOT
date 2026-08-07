@@ -20,12 +20,12 @@ export interface Project {
 
 export const siteConfig = {
   name: "Henok Ghebrechristos",
-  tagline: "PhD in Computer Science · Digital Organisms Theory",
+  tagline: "PhD in Computer Science · Digital Organism Theory",
   description:
-    "Public profile and publication workspace for Henok Ghebrechristos, PhD in Computer Science, writer of Digital Organisms Theory — source-backed writing, trust, and member-owned knowledge.",
+    "Public profile and publication workspace for Henok Ghebrechristos, writer of Consciousness: A Digital Organism — source-backed writing, trust, and member-owned knowledge.",
   url: "",
   email: "",
-  bio: "A specialized Venture Builder & Systems Architect focused on AI Agent Sandboxing (HKI), Complex Evolution Simulators (DOT), HIPAA Dispatch Platforms (Avia/MedRoute), and Crypto Escrow Markets (Sullix). Developing continuous biological engines and trustless labor platforms.",
+  bio: "A writer and systems architect developing Digital Organism Theory alongside work in AI agent isolation, health transportation systems, and secure labor platforms.",
   social: {
     github: "https://github.com/hghebrechristos",
     linkedin: "https://linkedin.com/in/hghebrechristos",
@@ -46,7 +46,7 @@ export const siteConfig = {
       status: "In Development",
       tagline: "Social profile and source-backed publication engine.",
       description:
-        "Stay starts as a public founder profile and doctrine surface, then grows into an invite-only system for durable profiles, publication releases, private knowledge, and trusted circles without feeds, ads, or vanity counters.",
+        "Stay starts as a public founder profile, Book One reader, and source-derived concept map, then grows into an invite-only system for durable profiles, publication releases, private knowledge, and trusted circles without feeds, ads, or vanity counters.",
       stack: [
         "React",
         "Vite",
@@ -62,14 +62,19 @@ export const siteConfig = {
     },
     {
       slug: "dot",
-      name: "Digital Organisms Theory",
+      name: "Digital Organism Theory",
       role: "Creator & Systems Architect",
       period: "2024–Present",
       status: "Active Research",
-      tagline: "Continuous-space biological cellular automata.",
+      tagline: "A framework for consciousness and conscious authorship.",
       description:
-        "A continuous biological simulation platform modeling emergent life and collective consciousness. Utilizing high-performance concurrent Web Workers and hardware-accelerated WebGL visuals to simulate thousands of adaptive agents in real time.",
-      stack: ["React", "TypeScript", "Three.js", "WebGL", "Web Workers"],
+        "Book One develops a bounded model of consciousness, conditioning, Reality Frames, the Canvas, the Painting, and Intent while keeping observations, hypotheses, and open debts distinct.",
+      stack: [
+        "Book One",
+        "Systems Theory",
+        "Consciousness Studies",
+        "Source-backed Publishing",
+      ],
       links: {
         repo: "https://github.com/hghebrechristos/DOT",
         live: "/",

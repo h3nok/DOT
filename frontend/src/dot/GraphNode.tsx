@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
+  Clock3,
   Layers,
   Link2,
   Pencil,
@@ -48,13 +49,6 @@ const IconButton: React.FC<{
   </button>
 );
 
-function initialsOf(label: string): string {
-  const parts = label.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "·";
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
 /**
  * NucleusFace — the identity at the centre of the graph.
  *
@@ -67,37 +61,19 @@ const NucleusFace: React.FC<{ node: DotNode; reducedMotion: boolean }> = ({
   node,
   reducedMotion,
 }) => (
-  <div className="relative mb-8 mt-4 flex items-center justify-center group">
-    {/* The fingerprint ridges — quiet ground the identity rests on. */}
-    <div className="absolute inset-0 flex items-center justify-center">
-      <NucleusMark size={168} reducedMotion={reducedMotion} />
-    </div>
-
-    {/* One slow orbit — presence, not spectacle. */}
-    {!reducedMotion && (
-      <div
-        className="absolute w-[150px] h-[150px] rounded-full border border-primary/15 border-t-primary/50"
-        style={{ animation: "orbSpin 24s linear infinite" }}
-      />
-    )}
-
-    {/* The Core Avatar / User Representation */}
+  <div className="relative mb-7 mt-4 flex items-center justify-center">
     <div
       data-nucleus-core
-      className="relative z-10 flex h-[96px] w-[96px] sm:h-[112px] sm:w-[112px] items-center justify-center rounded-full bg-background/70 backdrop-blur-md border border-border transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-      style={{ boxShadow: "var(--premium-shadow)" }}
+      className="relative flex h-36 w-36 items-center justify-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
     >
+      <NucleusMark size={144} reducedMotion={reducedMotion} />
       {node.image ? (
         <img
           src={node.image}
           alt={node.label}
-          className="absolute inset-[6px] h-[calc(100%-12px)] w-[calc(100%-12px)] rounded-full object-cover"
+          className="absolute h-20 w-20 rounded-full border border-border object-cover"
         />
-      ) : (
-        <span className="absolute font-serif text-4xl font-semibold tracking-wide text-foreground">
-          {initialsOf(node.label)}
-        </span>
-      )}
+      ) : null}
     </div>
   </div>
 );
@@ -126,20 +102,30 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   const isCenter = variant === "center";
   const drillable = hasChildren(node);
   const kind = node.kind ?? "attribute";
+  const comingSoon = node.description?.trim().toLowerCase() === "coming soon";
 
   if (isCenter) {
     return (
-      <div className="pointer-events-none flex flex-col items-center text-center">
+      <button
+        type="button"
+        onClick={() => onActivate(node)}
+        aria-label={
+          editing
+            ? `Open ${node.label}`
+            : `Consult ${node.label}'s grounded knowledge`
+        }
+        className="group flex flex-col items-center text-center outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--organism-accent-strong)] focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+      >
         <NucleusFace node={node} reducedMotion={reducedMotion} />
-        <span className="font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <span className="max-w-[min(82vw,32rem)] text-balance font-serif text-2xl font-semibold text-foreground sm:text-3xl">
           {node.label}
         </span>
         {node.description && (
-          <span className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+          <span className="mt-2 font-mono text-[11px] uppercase text-muted-foreground">
             {node.description}
           </span>
         )}
-      </div>
+      </button>
     );
   }
 
@@ -147,7 +133,9 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   const ringSize = dotSize + 16;
   const outerRingSize = ringSize + 10;
 
-  const kindGlyph = drillable ? (
+  const kindGlyph = comingSoon ? (
+    <Clock3 className="h-3 w-3" />
+  ) : drillable ? (
     <Layers className="h-3 w-3" />
   ) : kind === "page" ? (
     <Link2 className="h-3 w-3" />
@@ -159,13 +147,17 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
     <div className="group flex select-none flex-col items-center gap-2">
       <motion.button
         type="button"
+        disabled={comingSoon && !editing}
         onClick={() => onActivate(node)}
         aria-label={
           node.description ? `${node.label} — ${node.description}` : node.label
         }
-        className="flex flex-col items-center gap-2 outline-none"
-        whileHover={reducedMotion ? undefined : { scale: 1.03 }}
-        whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+        className={cn(
+          "flex flex-col items-center gap-2 outline-none",
+          comingSoon && !editing && "cursor-default opacity-55",
+        )}
+        whileHover={reducedMotion || comingSoon ? undefined : { scale: 1.03 }}
+        whileTap={reducedMotion || comingSoon ? undefined : { scale: 0.98 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
         <span
@@ -178,7 +170,9 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
               "absolute rounded-full border bg-background/60 transition-colors duration-300",
               active
                 ? "border-primary"
-                : "border-border/50 group-hover:border-primary/50",
+                : comingSoon
+                  ? "border-border/40"
+                  : "border-border/50 group-hover:border-primary/50",
             )}
             style={{ width: outerRingSize, height: outerRingSize }}
           />
@@ -227,7 +221,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
             }}
           />
         </span>
-        <span className="flex items-center gap-1.5 text-[15px] font-medium tracking-tight text-foreground transition-colors duration-300">
+        <span className="flex items-center gap-1.5 text-[15px] font-medium text-foreground transition-colors duration-300">
           {node.label}
           {kindGlyph && (
             <span className="text-muted-foreground" aria-hidden="true">

@@ -2,6 +2,7 @@ import {
   ORCHESTRATOR_OWNER_ID,
   ORCHESTRATOR_URL,
 } from "./OrchestratorPublicationService";
+import { authedFetch } from "./orchestratorHttp";
 
 export interface FootprintAccountRead {
   id: string;
@@ -98,10 +99,6 @@ const orchestratorUrl = (path: string) => {
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 };
 
-const ownerHeaders = (ownerId = ORCHESTRATOR_OWNER_ID) => ({
-  "X-Owner-Id": ownerId,
-});
-
 async function readJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const detail = await response.text();
@@ -125,9 +122,8 @@ export async function fetchFootprintGraphSnapshot(
   if (options.kind) url.searchParams.set("kind", options.kind);
   if (options.relation) url.searchParams.set("relation", options.relation);
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-    headers: ownerHeaders(options.ownerId),
+  const response = await authedFetch(url.toString(), {
+    ownerId: options.ownerId,
     signal: options.signal,
   });
 
@@ -138,14 +134,10 @@ export async function createFootprintAccount(
   payload: FootprintAccountCreate,
   ownerId = ORCHESTRATOR_OWNER_ID,
 ): Promise<FootprintAccountRead> {
-  const response = await fetch(orchestratorUrl("/v1/graph/accounts"), {
+  const response = await authedFetch(orchestratorUrl("/v1/graph/accounts"), {
     method: "POST",
-    cache: "no-store",
-    headers: {
-      ...ownerHeaders(ownerId),
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    ownerId,
+    json: payload,
   });
 
   return readJson<FootprintAccountRead>(response);
@@ -165,9 +157,8 @@ export async function fetchFootprintImports(
   if (options.status) url.searchParams.set("status", options.status);
   if (options.limit) url.searchParams.set("limit", String(options.limit));
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-    headers: ownerHeaders(options.ownerId),
+  const response = await authedFetch(url.toString(), {
+    ownerId: options.ownerId,
     signal: options.signal,
   });
 
@@ -178,15 +169,11 @@ export async function createFootprintImport(
   payload: FootprintImportCreate,
   options: { ownerId?: string; idempotencyKey: string },
 ): Promise<FootprintImportRead> {
-  const response = await fetch(orchestratorUrl("/v1/graph/imports"), {
+  const response = await authedFetch(orchestratorUrl("/v1/graph/imports"), {
     method: "POST",
-    cache: "no-store",
-    headers: {
-      ...ownerHeaders(options.ownerId),
-      "Content-Type": "application/json",
-      "Idempotency-Key": options.idempotencyKey,
-    },
-    body: JSON.stringify(payload),
+    ownerId: options.ownerId,
+    idempotencyKey: options.idempotencyKey,
+    json: payload,
   });
 
   return readJson<FootprintImportRead>(response);
@@ -196,16 +183,12 @@ export async function processFootprintImport(
   importId: string,
   options: { ownerId?: string; feedXml?: string } = {},
 ): Promise<FootprintImportRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(`/v1/graph/imports/${encodeURIComponent(importId)}/process`),
     {
       method: "POST",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(options.ownerId),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ feed_xml: options.feedXml }),
+      ownerId: options.ownerId,
+      json: { feed_xml: options.feedXml },
     },
   );
 

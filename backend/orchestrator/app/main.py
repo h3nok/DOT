@@ -83,7 +83,9 @@ def create_app() -> fastapi.FastAPI:
     )
     _errors.install_error_handlers(fapp)
     fapp.state.limiter = limiter
-    fapp.add_exception_handler(slowapi.errors.RateLimitExceeded, slowapi._rate_limit_exceeded_handler)
+    fapp.add_exception_handler(
+        slowapi.errors.RateLimitExceeded, slowapi._rate_limit_exceeded_handler
+    )
     fapp.add_middleware(_security.SecurityHeadersMiddleware)
     fapp.add_middleware(_middleware.RequestIdMiddleware)
     fapp.add_middleware(
@@ -111,6 +113,7 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_publications_router.router)
     fapp.include_router(_runs_router.router)
     fapp.include_router(_support_router.router)
+    fapp.include_router(_twin_router.public_router)
     fapp.include_router(_twin_router.router)
     fapp.include_router(_vault_router.router)
     return fapp

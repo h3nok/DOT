@@ -20,5 +20,6 @@ pypdf>=5.0,<7.0
 aiosqlite>=0.20,<1.0
 pytest>=8.0,<9.0
 pytest-asyncio>=0.23,<1.0
-ruff>=0.6,<1.0
+# Pinned: a new ruff minor changes lint/format output and would break CI without a code change.
+ruff==0.16.1
 aioboto3>=13.0,<14.0

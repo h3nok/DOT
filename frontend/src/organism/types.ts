@@ -1,7 +1,7 @@
 /**
  * Organism Theme — type surface.
  *
- * The site is modelled as a living digital organism (DOT = Digital Organisms
+ * The site is modelled as a living digital organism (DOT = Digital Organism
  * Theory). Its appearance is its physiology: four "vital signs" are sampled
  * from real signal sources and fused into a single {@link VitalSigns} object
  * that drives the membrane, the ambient aura, and a living accent colour.

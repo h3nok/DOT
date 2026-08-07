@@ -18,6 +18,33 @@ router = fastapi.APIRouter(
 
 _limiter = slowapi.Limiter(key_func=slowapi.util.get_remote_address)
 
+# Released canon is public (ADR-0017), so a visitor must be able to be taught from
+# it. This router takes no tenant binding and never resolves to a member: the
+# context it builds can only ever see `public` visibility (retriever.allowed_visibilities).
+public_router = fastapi.APIRouter(prefix="/v1/twin", tags=["twin"])
+
+
+@public_router.post("/public/ask", response_model=app.domains.twin.schemas.TwinAskResponse)
+@_limiter.limit("10/minute")
+async def ask_public(
+    request: fastapi.Request,
+    payload: app.domains.twin.schemas.TwinPublicAskRequest,
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> app.domains.twin.schemas.TwinAskResponse:
+    """Ask about a published graph and canon. Public material only, always."""
+
+    visitor = app.auth.dependencies.OwnerContext(owner_id="visitor", actor_id="visitor")
+    return await app.domains.twin.service.ask(
+        session,
+        visitor,
+        app.domains.twin.schemas.TwinAskRequest(
+            question=payload.question,
+            owner_id=payload.owner_id,
+            lens=payload.lens,
+        ),
+        history=[(turn.role, turn.content) for turn in payload.history],
+    )
+
 
 @router.post("/ask", response_model=app.domains.twin.schemas.TwinAskResponse)
 @_limiter.limit("20/minute")
@@ -92,9 +119,7 @@ async def get_conversation(
 
     return app.domains.twin.schemas.TwinMessageList(
         conversation=app.domains.twin.conversation.to_conversation_schema(conversation),
-        messages=[
-            app.domains.twin.conversation.to_message_schema(message) for message in messages
-        ],
+        messages=[app.domains.twin.conversation.to_message_schema(message) for message in messages],
     )
 
 

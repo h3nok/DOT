@@ -11,6 +11,12 @@ import type { DotNode, DotNodeKind } from "./types";
  */
 
 export const GRAPH_STORAGE_KEY = "dot-profile-graph";
+const GRAPH_SEED_VERSION = 3;
+
+interface StoredGraph {
+  fingerprint: string;
+  graph: DotNode;
+}
 
 export interface NodeDraft {
   label: string;
@@ -104,21 +110,53 @@ export function draftToNode(draft: NodeDraft): DotNode {
   };
 }
 
+function isDotNode(value: unknown): value is DotNode {
+  if (!value || typeof value !== "object") return false;
+  const node = value as Record<string, unknown>;
+  if (typeof node.id !== "string" || typeof node.label !== "string") return false;
+  if (node.children === undefined) return true;
+  return Array.isArray(node.children) && node.children.every(isDotNode);
+}
+
+function graphFingerprint(node: DotNode): string {
+  const anatomy = `${node.id}(${(node.children ?? []).map((child) => graphAnatomy(child)).join(",")})`;
+  return `v${GRAPH_SEED_VERSION}:${anatomy}`;
+}
+
+function graphAnatomy(node: DotNode): string {
+  return `${node.id}(${(node.children ?? []).map(graphAnatomy).join(",")})`;
+}
+
 export function loadGraph(seed: DotNode): DotNode {
   if (typeof window === "undefined") return seed;
   try {
     const raw = window.localStorage.getItem(GRAPH_STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as DotNode;
+    if (!raw) return seed;
+    const parsed: unknown = JSON.parse(raw);
+    if (isDotNode(parsed)) return parsed.id === seed.id ? parsed : seed;
+    if (parsed && typeof parsed === "object") {
+      const stored = parsed as Partial<StoredGraph>;
+      if (
+        stored.fingerprint === graphFingerprint(seed) &&
+        isDotNode(stored.graph)
+      ) {
+        return stored.graph;
+      }
+    }
   } catch {
     /* fall through to seed */
   }
   return seed;
 }
 
-export function saveGraph(root: DotNode): void {
+export function saveGraph(root: DotNode, seed: DotNode): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(GRAPH_STORAGE_KEY, JSON.stringify(root));
+    const stored: StoredGraph = {
+      fingerprint: graphFingerprint(seed),
+      graph: root,
+    };
+    window.localStorage.setItem(GRAPH_STORAGE_KEY, JSON.stringify(stored));
   } catch {
     /* ignore quota / serialization errors */
   }

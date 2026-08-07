@@ -98,9 +98,7 @@ def verify_webhook(payload: bytes, signature: str) -> dict[str, typing.Any]:
         raise WebhookVerificationError("Webhook secret is not configured.")
     client: typing.Any = _client()
     try:
-        return client.Webhook.construct_event(
-            payload, signature, settings.STRIPE_WEBHOOK_SECRET
-        )
+        return client.Webhook.construct_event(payload, signature, settings.STRIPE_WEBHOOK_SECRET)
     except Exception as exc:  # noqa: BLE001 - any failure means discard
         raise WebhookVerificationError("Webhook signature did not verify.") from exc
 
@@ -163,10 +161,12 @@ async def apply_event(
 
 
 async def totals(session: sqlalchemy.ext.asyncio.AsyncSession) -> dict[str, int]:
-    result: sqlalchemy.Result[typing.Tuple[int, int]] = await session.execute(
+    result: sqlalchemy.Result[tuple[int, int]] = await session.execute(
         sqlalchemy.select(
             sqlalchemy.func.count(models.SupportContribution.id),
-            sqlalchemy.func.coalesce(sqlalchemy.func.sum(models.SupportContribution.amount_minor), 0),
+            sqlalchemy.func.coalesce(
+                sqlalchemy.func.sum(models.SupportContribution.amount_minor), 0
+            ),
         ).where(models.SupportContribution.status == "succeeded")
     )
     supporters, total_minor = result.one()

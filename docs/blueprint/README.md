@@ -3,7 +3,7 @@
 This folder is the north star for the project. Read in order.
 
 | #   | Doc                                                                  | What it answers                                                                              |
-| --- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --- | --- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | --- | --- | ------------ | --------------------------------- |
+| --- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | 00  | [Attention Manifesto](00-ATTENTION-MANIFESTO.md)                     | **Why** — how attention is captured, and the laws (L1–L12) we invert it with. The soul.      |
 | 01  | [North Star](01-NORTH-STAR.md)                                       | **What** — vision, info architecture, and the 5 Attention OS primitives (P1–P5).             |
 | 02  | [Architecture](02-ARCHITECTURE.md)                                   | **How** — frontend, backend, invite/auth, analytics-without-surveillance, scale to 100M+.    |
@@ -13,7 +13,11 @@ This folder is the north star for the project. Read in order.
 | 06  | [Implementation Roadmap](06-IMPLEMENTATION-ROADMAP.md)               | **Build order** — increments, acceptance gates, and current next actions.                    |
 | 07  | [Digital Footprint Graph](07-DIGITAL-FOOTPRINT-GRAPH.md)             | **Graph layer** — social integrations, footprint graph, graph navigation, connector posture. |
 | 08  | [Doctrine & Coherence Surface](08-DOCTRINE-AND-COHERENCE-SURFACE.md) | **Reading/teaching layer** — doctrine content model + generative, focus-oriented graph UI.   |
-| 09  | [Public Launch Sprint Plan](09-PUBLIC-LAUNCH-SPRINT-PLAN.md)         | **Launch execution** — six sprints and two gates from local-only to public use.              |     | 10  | [Digital Twin Platform](10-DIGITAL-TWIN-PLATFORM.md) | **Consolidation** — one twin service, tenant isolation, HKI-conformant agent, scale plan. |     | —   | [ADRs](adr/) | Locked decisions with trade-offs. |
+| 09  | [Public Launch Sprint Plan](09-PUBLIC-LAUNCH-SPRINT-PLAN.md)         | **Launch execution** — six sprints and two gates from local-only to public use.              |
+| 10  | [Digital Twin Platform](10-DIGITAL-TWIN-PLATFORM.md)                 | **Consolidation** — one twin service, tenant isolation, HKI-conformant agent, scale plan.    |
+| 11  | [Attention Membrane](11-ATTENTION-MEMBRANE.md)                       | **Running design doc** — Stay as the inbound/outbound filter: thesis, staging, open questions. |
+| 12  | [Field & Focus](12-FIELD-AND-FOCUS.md)                               | **Navigation law** — two states, the Thread, typed exits, and the profile ring as an argument. |
+| —   | [ADRs](adr/)                                                         | Locked decisions with trade-offs.                                                            |
 
 ## How to use this
 
@@ -39,3 +43,9 @@ This folder is the north star for the project. Read in order.
 | [0010](adr/0010-twin-agent-hki-conformance.md)                     | The twin agent runs under HKI conformance                 | Accepted |
 | [0011](adr/0011-tenant-isolation-row-level-security.md)            | Tenant isolation by row-level security, not convention    | Accepted |
 | [0012](adr/0012-member-funded-support-plane.md)                    | A member-funded support plane (amends 0009)               | Accepted |
+| [0013](adr/0013-inbound-provenance.md)                             | Inbound provenance — nothing arrives without a reason     | Proposed |
+| [0014](adr/0014-declarative-policy-no-engagement-ranking.md)       | Declarative policy, never learned engagement ranking      | Proposed |
+| [0015](adr/0015-no-paid-passage.md)                                | No paid passage — revenue invariant to delivery           | Proposed |
+| [0016](adr/0016-field-focus-navigation.md)                         | Navigation is Field, Focus, and a Thread — never a menu   | Proposed |
+| [0017](adr/0017-movement-platform-canon-and-applied.md)            | The platform is the movement — canon, theory, applied     | Proposed |
+| [0018](adr/0018-book-derived-knowledge-surfaces.md)                | First-party knowledge surfaces derive from the book       | Accepted |

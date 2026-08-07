@@ -12,9 +12,18 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { orderedRadialSlots } from "../attention-os/focus/radialOrder";
+import { ThreadLine } from "../attention-os/focus/ThreadLine";
+import {
+  appendStep,
+  clearThread,
+  walkBackTo,
+  type ThreadStep,
+} from "../attention-os/focus/threadPath";
 import { useOrganismPulse } from "../organism";
+import { AgentWorkspace } from "./AgentWorkspace";
+import type { AgentWorkspaceRequest } from "./AgentWorkspace";
 import { CircleSurface } from "./Circle";
-import { GraphChat } from "./GraphChat";
 import { GraphNode } from "./GraphNode";
 import { Invite } from "./Invite";
 import { InviteWelcome } from "./InviteWelcome";
@@ -25,9 +34,8 @@ import { SupportSurface } from "./SupportSurface";
 import { SynapticEdge } from "./SynapticEdge";
 import { TwinSurface } from "./TwinSurface";
 import { VaultSurface } from "./VaultSurface";
-import { runAgent } from "./agent";
+import { resolveNode } from "./agent";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
-import { radialSlots } from "./layout";
 import { hasChildren, type DotNode } from "./types";
 import { useAuth } from "./useAuth";
 import { acceptInvite } from "./useCircle";
@@ -82,8 +90,11 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
   const [editor, setEditor] = useState<EditorState | null>(null);
-  const [answer, setAnswer] = useState<DotNode | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [companionRequest, setCompanionRequest] = useState<
+    (AgentWorkspaceRequest & { id: number }) | null
+  >(null);
+  // The Thread: this session's path of attention. Never persisted (doc 12 §3).
+  const [thread, setThread] = useState<ThreadStep[]>([]);
 
   // Orchestrated entrance — the graph assembles itself.
   const [arrived, setArrived] = useState(false);
@@ -98,40 +109,22 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   }, [reducedMotion]);
 
   // First-run welcome whisper (visitors only, once).
-  const [welcomed, setWelcomed] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return window.localStorage.getItem("dot-welcomed") === "1";
-  });
-  const dismissWelcome = () => {
-    setWelcomed(true);
-    if (typeof window !== "undefined")
-      window.localStorage.setItem("dot-welcomed", "1");
-  };
-
   const chain = useMemo(() => resolveChain(root, path), [root, path]);
   const center = chain[chain.length - 1];
-  const children = center.children ?? [];
+  const children = useMemo(() => center.children ?? [], [center.children]);
 
   // An extra ghost slot in edit mode lets you add a child to the centre.
   const slotCount = children.length + (editing ? 1 : 0);
-  // The ring is centred on the nucleus core, so the only wedge it must avoid is
-  // the one directly below it, where the name and essence line hang.
-  const slots = useMemo(() => {
-    if (slotCount <= 0) return [];
-    if (slotCount === 1) return radialSlots(1, -90);
-    const gapDeg = 88;
-    const span = 360 - gapDeg;
-    const start = 90 + gapDeg / 2;
-    return Array.from({ length: slotCount }, (_, i) => {
-      const angleDeg = start + (span / slotCount) * (i + 0.5);
-      const a = (angleDeg * Math.PI) / 180;
-      return { ux: Math.cos(a), uy: Math.sin(a), angleDeg };
-    });
-  }, [slotCount]);
+  // Read clockwise from 12 o'clock; the bottom arc stays clear for the nucleus
+  // label and its one primary action (doc 12 §6.1).
+  const slots = useMemo(() => orderedRadialSlots(slotCount), [slotCount]);
 
   // Responsive geometry.
   const stageRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [size, setSize] = useState(() => ({
+    w: typeof window === "undefined" ? 0 : window.innerWidth,
+    h: typeof window === "undefined" ? 0 : window.innerHeight,
+  }));
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
@@ -150,34 +143,24 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const chatReserve = editing ? 24 : 168;
   const usableH = Math.max(0, size.h - topReserve - chatReserve);
   const cy = topReserve + usableH / 2;
-  const labelGutter = size.w < 640 ? 220 : 180;
+  const compact = size.w < 640;
+  const labelGutter = compact ? 116 : 180;
   const horizontalLimit = Math.max(72, (size.w - labelGutter) / 2);
   const proportionalRadius = Math.min(size.w, usableH) * 0.4;
-  const radius = Math.min(330, horizontalLimit, proportionalRadius);
-
-  // The avatar *is* the hub: measure where its centre falls inside the nucleus
-  // block so the block can be offset to put that centre exactly on (cx, cy).
-  const nucleusRef = useRef<HTMLDivElement>(null);
-  const [coreOffset, setCoreOffset] = useState(72);
-  useEffect(() => {
-    const host = nucleusRef.current;
-    const core = host?.querySelector("[data-nucleus-core]");
-    if (!host || !core) return;
-    const hostTop = host.getBoundingClientRect().top;
-    const box = core.getBoundingClientRect();
-    setCoreOffset(box.top + box.height / 2 - hostTop);
-  }, [center.id, size.w, size.h]);
+  const horizontalRadius = Math.min(330, horizontalLimit, proportionalRadius);
+  const verticalRadius = compact
+    ? Math.min(220, usableH * 0.38)
+    : horizontalRadius;
 
   const positions = slots.map((s) => ({
-    x: cx + s.ux * radius,
-    y: cy + s.uy * radius,
+    x: cx + s.ux * horizontalRadius,
+    y: cy + s.uy * verticalRadius,
   }));
 
   const drill = useCallback(
     (node: DotNode) => {
       setSelectedId(null);
       setDetailId(null);
-      setAnswer(null);
       setHoveredId(null);
       setDrilling(true);
       // Let the exit animation play before switching the graph level.
@@ -200,9 +183,17 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   };
 
   const activate = (node: DotNode) => {
-    // The centre is the member's twin, so tapping it opens a conversation
-    // rather than a page about them. Editing still opens the node itself.
+    // Every deliberate move is recorded on the thread, including ones that
+    // navigate away, so a member can always see the shape of this session.
+    if (!editing && node.id !== root.id) {
+      setThread((current) =>
+        appendStep(current, { id: node.id, label: node.label }),
+      );
+    }
+    // The centre opens Lumen, the shared conversational surface. Editing still
+    // opens the graph node itself.
     if (node.kind === "self" && node.id === root.id && !editing) {
+      setCompanionRequest(null);
       setPlatformSurface("twin");
       return;
     }
@@ -266,30 +257,29 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const closeStage = () => {
     setDetailId(null);
     setSelectedId(null);
-    setAnswer(null);
   };
 
-  const ask = async (query: string) => {
-    setBusy(true);
-    try {
-      const result = await runAgent(root, query);
-      if (result.kind === "open") {
-        setAnswer(null);
-        setSelectedId(result.node.id);
-        setDetailId(result.node.id);
-      } else {
-        setDetailId(null);
-        setSelectedId(null);
-        setAnswer({
-          id: `answer-${Date.now()}`,
-          label: result.title,
-          body: result.text,
-          kind: "attribute",
-        });
-      }
-    } finally {
-      setBusy(false);
+  const ask = ({ query, lens }: AgentWorkspaceRequest) => {
+    if (/\b(consult|lumen|companion)\b/i.test(query) && query.split(/\s+/).length < 5) {
+      setCompanionRequest(null);
+      setPlatformSurface("twin");
+      return;
     }
+
+    const navigationIntent =
+      /^(?:open|show|find|view|go to|take me to)\b/i.test(query.trim());
+    const navigation =
+      lens === "orient" && navigationIntent ? resolveNode(root, query) : null;
+    if (navigation?.kind === "open") {
+      setSelectedId(navigation.node.id);
+      setDetailId(navigation.node.id);
+      return;
+    }
+
+    setDetailId(null);
+    setSelectedId(null);
+    setCompanionRequest({ query, lens, id: Date.now() });
+    setPlatformSurface("twin");
   };
 
   const caption =
@@ -297,22 +287,8 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
     (selectedId && findNode(root, selectedId)) ||
     center;
   const detailNode = detailId ? findNode(root, detailId) : null;
-  const stageNode = answer ?? detailNode;
+  const stageNode = detailNode;
   const motionSafe = !reducedMotion;
-
-  // First-move suggestions: name the worlds around the centre, plus one
-  // question, so a visitor always has somewhere to begin.
-  const suggestions = useMemo(() => {
-    const worlds = children
-      .filter((c) => c.id !== "connect")
-      .slice(0, 3)
-      .map((c) => `Show me ${c.label}`);
-    const tail =
-      center.id === "self"
-        ? [`Who is ${center.label}?`]
-        : ["How do I reach you?"];
-    return [...worlds, ...tail].slice(0, 4);
-  }, [children, center]);
 
   return (
     <div
@@ -434,66 +410,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         </button>
       )}
 
-      {/* Gravity well — radial field behind the nucleus. */}
-      {size.w > 0 && (
-        <div
-          className="pointer-events-none absolute"
-          style={{ left: cx, top: cy, zIndex: 1 }}
-          aria-hidden="true"
-        >
-          {/* Inner orb — bright, floating. Fades in on entrance, then drifts. */}
-          <motion.div
-            animate={{
-              x: ["-50%", "-40%", "-60%", "-50%"],
-              y: ["-50%", "-60%", "-40%", "-50%"],
-              scale: [1, 1.1, 0.9, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              position: "absolute",
-              width: 380,
-              height: 380,
-              left: 0,
-              top: 0,
-              borderRadius: "50%",
-              background: "var(--primary)",
-              opacity: arrived ? 0.16 : 0,
-              filter: "blur(120px)",
-              transition: "opacity 1200ms ease",
-            }}
-          />
-          {/* Outer orb — faint, wide, counter-floating. */}
-          <motion.div
-            animate={{
-              x: ["-50%", "-60%", "-40%", "-50%"],
-              y: ["-50%", "-40%", "-60%", "-50%"],
-              scale: [1, 0.9, 1.1, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              position: "absolute",
-              width: 600,
-              height: 600,
-              left: 0,
-              top: 0,
-              borderRadius: "50%",
-              background: "var(--organism-accent-soft)",
-              opacity: arrived ? 0.14 : 0,
-              filter: "blur(160px)",
-              transition: "opacity 1600ms ease 300ms",
-            }}
-          />
-        </div>
-      )}
-
       {/* Synaptic edges from the nucleus to each attribute. */}
       {size.w > 0 && (
         <svg
@@ -521,16 +437,15 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
 
       {/* Nucleus. */}
       <motion.div
-        ref={nucleusRef}
         className="absolute z-10"
         style={{ left: cx, top: cy }}
         initial={
-          motionSafe ? { scale: 0, opacity: 0, y: -coreOffset - 40 } : false
+          motionSafe ? { scale: 0, opacity: 0, y: -40 } : false
         }
-        animate={{ scale: 1, opacity: 1, y: -coreOffset }}
-        transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 0.44, ease: "easeOut", delay: 0.2 }}
       >
-        <div className="-translate-x-1/2">
+        <div className="-translate-x-1/2 -translate-y-[88px]">
           <GraphNode
             node={center}
             variant="center"
@@ -548,10 +463,10 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               <button
                 type="button"
                 onClick={() => navigate("/book/digital-organism-theory")}
-                className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-4 py-2 text-xs font-medium text-foreground/90 backdrop-blur-md transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
               >
                 <BookOpen className="h-3.5 w-3.5" />
-                Read Book One
+                Begin — Chapter One
                 <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
               </button>
             </motion.div>
@@ -611,9 +526,8 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
                     : undefined
                 }
                 transition={{
-                  type: "spring",
-                  stiffness: 160,
-                  damping: 24,
+                  duration: 0.42,
+                  ease: "easeOut",
                   delay: entranceDelay,
                 }}
                 onMouseEnter={() => setHoveredId(child.id)}
@@ -682,12 +596,16 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
           <NodeStage
             node={stageNode}
             editing={editing}
-            ephemeral={Boolean(answer)}
+            ephemeral={false}
             reducedMotion={reducedMotion}
             origin={{ x: cx, y: cy }}
             onClose={closeStage}
             onOpenChildren={(node) => drill(node)}
             onFollow={(node) => follow(node)}
+            onFollowRelation={(id) => {
+              const next = findNode(root, id);
+              if (next) activate(next);
+            }}
             onEdit={(node) => openEdit(node)}
             onAddChild={(node) => openAdd(node)}
           />
@@ -695,39 +613,34 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
       </AnimatePresence>
 
       {/* The chat — talk to the organism; it navigates or answers. */}
-      {!editing && (
-        <GraphChat
-          onSubmit={async (q) => {
-            dismissWelcome();
-            await ask(q);
+      {!editing && !stageNode && !platformSurface && (
+        <AgentWorkspace
+          onSubmit={ask}
+          onOpenCompanion={() => {
+            setCompanionRequest(null);
+            setPlatformSurface("twin");
           }}
-          busy={busy}
-          suggestions={chain.length === 1 ? suggestions : []}
         />
       )}
 
-      {/* First-run welcome whisper — tells a visitor where to begin. */}
-      <AnimatePresence>
-        {!welcomed && !editing && chain.length === 1 && !stageNode && (
-          <motion.button
-            type="button"
-            onClick={dismissWelcome}
-            initial={motionSafe ? { opacity: 0, y: -8 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            exit={motionSafe ? { opacity: 0, y: -8 } : undefined}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="pointer-events-auto absolute inset-x-0 top-8 z-20 mx-auto flex max-w-md flex-col items-center gap-1 px-6 text-center"
-            aria-label="Dismiss welcome"
-          >
-            <span className="text-sm font-medium text-foreground/90">
-              {center.label}, as a living graph.
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Tap a dot to open it, or just ask below.
-            </span>
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* The Thread — where this session has been, and how to walk back. */}
+      {!editing && thread.length > 1 && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-[124px] z-20 flex justify-center px-6">
+          <ThreadLine
+            thread={thread}
+            reducedMotion={reducedMotion}
+            onWalkBack={(id) => {
+              setThread((current) => walkBackTo(current, id));
+              const node = findNode(root, id);
+              if (node) {
+                setSelectedId(node.id);
+                setDetailId(node.id);
+              }
+            }}
+            onClear={() => setThread(clearThread())}
+          />
+        </div>
+      )}
 
       {/* Authoring panel. */}
       <AnimatePresence>
@@ -807,7 +720,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
                 pulse(0.8); // a new connection — the organism feels it
               }
               invited.dismiss();
-              dismissWelcome();
             }}
             onClose={() => invited.dismiss()}
           />
@@ -853,15 +765,17 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
-      {/* The twin — the nucleus is not a node *about* the member, it is the
-          member's twin, so tapping the centre opens a conversation. */}
+      {/* Lumen is the conversational centre of DOT. */}
       <AnimatePresence>
         {platformSurface === "twin" && (
           <TwinSurface
-            self={root}
             origin={{ x: cx, y: cy }}
             reducedMotion={reducedMotion}
-            onClose={() => setPlatformSurface(null)}
+            initialRequest={companionRequest}
+            onClose={() => {
+              setCompanionRequest(null);
+              setPlatformSurface(null);
+            }}
             onOpenNode={(nodeId) => {
               if (!findNode(root, nodeId)) return;
               setPlatformSurface(null);

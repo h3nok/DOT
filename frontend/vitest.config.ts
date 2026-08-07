@@ -8,6 +8,27 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.{test,spec}.{ts,tsx}',
+        'src/test/**',
+        'src/**/*.d.ts',
+        'src/main.tsx',
+        'src/assets/**',
+      ],
+      // A ratchet, not a target: autoUpdate raises these as coverage grows, so
+      // coverage can rise silently but can never fall silently.
+      thresholds: {
+        autoUpdate: true,
+        statements: 4.13,
+        branches: 51.66,
+        functions: 37.5,
+        lines: 4.13,
+      },
+    },
   },
   resolve: {
     alias: {

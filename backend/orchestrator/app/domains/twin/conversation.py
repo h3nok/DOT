@@ -83,9 +83,7 @@ async def list_messages(
     *,
     limit: int = 200,
 ) -> tuple[app.db.models.TwinConversation, list[app.db.models.TwinMessage]]:
-    conversation: app.db.models.TwinConversation = await _load(
-        session, requester, conversation_id
-    )
+    conversation: app.db.models.TwinConversation = await _load(session, requester, conversation_id)
     result = await session.execute(
         sqlalchemy.select(app.db.models.TwinMessage)
         .where(app.db.models.TwinMessage.conversation_id == conversation_id)
@@ -120,9 +118,7 @@ async def delete_conversation(
     requester: app.auth.dependencies.OwnerContext,
     conversation_id: str,
 ) -> None:
-    conversation: app.db.models.TwinConversation = await _load(
-        session, requester, conversation_id
-    )
+    conversation: app.db.models.TwinConversation = await _load(session, requester, conversation_id)
     await session.delete(conversation)
     await session.commit()
 
@@ -161,7 +157,11 @@ async def send(
     answer: schemas.TwinAskResponse = await service.ask(
         session,
         requester,
-        schemas.TwinAskRequest(question=payload.question, owner_id=subject_owner_id),
+        schemas.TwinAskRequest(
+            question=payload.question,
+            owner_id=subject_owner_id,
+            lens=payload.lens,
+        ),
         client=client,
         history=history,
     )

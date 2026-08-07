@@ -7,6 +7,7 @@
  * any node with children becomes a surface of its own.
  */
 export { resolveNode, runAgent, type AgentResult } from "./agent";
+export { AgentWorkspace } from "./AgentWorkspace";
 export { BloomSurface } from "./BloomSurface";
 export { CircleSurface } from "./Circle";
 export { GraphChat } from "./GraphChat";
@@ -26,7 +27,7 @@ export { NodeEditor } from "./NodeEditor";
 export { NodeStage } from "./NodeStage";
 export { NucleusGraph } from "./NucleusGraph";
 export { NucleusMark } from "./NucleusMark";
-export { profileGraph } from "./profileGraph";
+export { dotGraph } from "./dotGraph";
 export { SignIn } from "./SignIn";
 export { SupportSurface } from "./SupportSurface";
 export { SynapticEdge } from "./SynapticEdge";

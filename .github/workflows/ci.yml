@@ -50,8 +50,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Typecheck debt inventory
-        continue-on-error: true
+      # Blocking: the repo is at zero type errors and must stay there.
+      - name: Typecheck
         run: pnpm exec tsc --noEmit
 
       - name: Test
@@ -83,15 +83,56 @@ jobs:
       - name: Lint
         run: ruff check app migrations
 
+      - name: Format check
+        run: ruff format --check app migrations
+
       - name: Migration check (offline, no DB)
         run: alembic check
 
       - name: Test
         run: pytest
 
+  security:
+    name: Security scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Frontend dependency audit
+        working-directory: frontend
+        run: pnpm audit --audit-level high
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Backend dependency audit
+        run: |
+          python -m pip install pip-audit
+          pip-audit -r backend/orchestrator/requirements.txt
+
   deploy:
     name: Deploy orchestrator to Cloud Run
-    needs: [frontend, orchestrator]
+    needs: [frontend, orchestrator, security]
     # Only deploy from main; skip on PRs.
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest

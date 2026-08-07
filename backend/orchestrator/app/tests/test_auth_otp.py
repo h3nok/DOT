@@ -1,14 +1,16 @@
 """Tests for the OTP auth domain: request, verify, session, logout, invite."""
+
 from __future__ import annotations
 
-import pytest
 import fastapi.testclient
+import pytest
 
 # Uses the shared `client` fixture from conftest.py (in-memory SQLite + session override).
 # No email provider in tests — dev_code is returned instead of sending email.
 
 
 # ── /v1/auth/otp/request ─────────────────────────────────────────────────────
+
 
 def test_request_otp_invalid_email(client: fastapi.testclient.TestClient) -> None:
     r = client.post("/v1/auth/otp/request", json={"email": "not-an-email"})
@@ -33,6 +35,7 @@ def test_request_otp_cooldown(client: fastapi.testclient.TestClient) -> None:
 
 # ── /v1/auth/otp/verify ──────────────────────────────────────────────────────
 
+
 def test_verify_wrong_code(client: fastapi.testclient.TestClient) -> None:
     client.post("/v1/auth/otp/request", json={"email": "v@example.com"})
     r = client.post("/v1/auth/otp/verify", json={"email": "v@example.com", "code": "000000"})
@@ -50,7 +53,9 @@ def test_verify_correct_code_sets_cookie(client: fastapi.testclient.TestClient) 
     assert body["user"]["role"] in ("member", "owner")
 
 
-def test_verify_expired_code_rejected(client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_verify_expired_code_rejected(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
     import app.domains.auth.service as svc
 
     # Force expiry to the past so the code is immediately stale.
@@ -75,6 +80,7 @@ def test_verify_code_single_use(client: fastapi.testclient.TestClient) -> None:
 
 # ── /v1/auth/session ─────────────────────────────────────────────────────────
 
+
 def test_session_no_cookie_returns_null_user(client: fastapi.testclient.TestClient) -> None:
     r = client.get("/v1/auth/session")
     assert r.status_code == 200
@@ -82,6 +88,7 @@ def test_session_no_cookie_returns_null_user(client: fastapi.testclient.TestClie
 
 
 # ── /v1/auth/logout ──────────────────────────────────────────────────────────
+
 
 def test_logout_clears_cookie(client: fastapi.testclient.TestClient) -> None:
     req = client.post("/v1/auth/otp/request", json={"email": "logout@example.com"})
@@ -91,3 +98,65 @@ def test_logout_clears_cookie(client: fastapi.testclient.TestClient) -> None:
     r = client.post("/v1/auth/logout")
     assert r.status_code == 200
     assert client.cookies.get("dot_session", "") == ""
+
+
+# ── Session-only clients ─────────────────────────────────────────────────────
+
+
+def _sign_in(client: fastapi.testclient.TestClient, email: str) -> None:
+    code = client.post("/v1/auth/otp/request", json={"email": email}).json()["dev_code"]
+    verified = client.post("/v1/auth/otp/verify", json={"email": email, "code": code})
+    assert verified.status_code == 200
+
+
+def test_a_session_alone_authenticates_a_write(client: fastapi.testclient.TestClient) -> None:
+    """Production identifies by cookie only; that path must work here too."""
+
+    _sign_in(client, "session-only@example.com")
+
+    response = client.put(
+        "/v1/graph/profile",
+        json={"graph": {"id": "self", "label": "Session Only", "kind": "self"}},
+    )
+    assert response.status_code == 200
+
+
+def test_the_session_cookie_is_locked_down_but_usable_over_local_http(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    """A Secure cookie is never returned over plain HTTP, so dev could not hold a session."""
+
+    code = client.post("/v1/auth/otp/request", json={"email": "flags@example.com"}).json()[
+        "dev_code"
+    ]
+    response = client.post("/v1/auth/otp/verify", json={"email": "flags@example.com", "code": code})
+
+    cookie: str = response.headers["set-cookie"]
+    assert "HttpOnly" in cookie
+    assert "SameSite=lax" in cookie
+    assert "Secure" not in cookie
+
+
+def test_the_session_cookie_is_secure_in_production(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import app.api.v1.auth as auth_api
+
+    monkeypatch.setattr(auth_api, "_cookie_secure", lambda: True)
+
+    code = client.post("/v1/auth/otp/request", json={"email": "prod@example.com"}).json()[
+        "dev_code"
+    ]
+    response = client.post("/v1/auth/otp/verify", json={"email": "prod@example.com", "code": code})
+
+    assert "Secure" in response.headers["set-cookie"]
+
+
+def test_without_a_session_or_owner_header_a_write_is_rejected(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    response = client.put(
+        "/v1/graph/profile",
+        json={"graph": {"id": "self", "label": "Anonymous", "kind": "self"}},
+    )
+    assert response.status_code == 401

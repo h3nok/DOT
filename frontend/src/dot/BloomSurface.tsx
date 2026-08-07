@@ -158,7 +158,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
         </header>
 
         <motion.div
-          className="mt-6 flex-1 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
+          className="mt-6 min-h-0 flex-1 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"

@@ -42,7 +42,7 @@ export const useSlideshow = (
     isFocused: false,
   });
 
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Navigation functions
   const nextSlide = useCallback(() => {

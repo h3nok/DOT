@@ -1,13 +1,6 @@
-import { NucleusGraph, profileGraph } from "../../../dot";
+import { NucleusGraph, dotGraph } from "../../../dot";
 
-/**
- * Home — the profile as a Dot.
- *
- * The whole page is one living graph: you at the centre, your attributes
- * radiating around you, on the organism background. Everything else (the book,
- * the work, the doctrine) is reached by drilling into a node, which becomes a
- * surface of its own. Edit the graph in `src/dot/profileGraph.ts`.
- */
+/** Home is the movement graph: canon first, with each limb one deliberate move away. */
 export default function HomePage() {
-  return <NucleusGraph root={profileGraph} />;
+  return <NucleusGraph root={dotGraph} />;
 }

@@ -24,7 +24,13 @@ function headingId(children: ReactNode): string {
     .replace(/^-|-$/g, "");
 }
 
-export function BookMarkdown({ content }: { content: string }) {
+export function BookMarkdown({
+  content,
+  afterHeading,
+}: {
+  content: string;
+  afterHeading?: Readonly<Record<string, ReactNode>>;
+}) {
   return (
     <div className="book-prose py-12">
       <ReactMarkdown
@@ -37,11 +43,17 @@ export function BookMarkdown({ content }: { content: string }) {
               {children}
             </h1>
           ),
-          h2: ({ children }) => (
-            <h2 id={headingId(children)} className="scroll-mt-24">
-              {children}
-            </h2>
-          ),
+          h2: ({ children }) => {
+            const id = headingId(children);
+            return (
+              <>
+                <h2 id={id} className="scroll-mt-24">
+                  {children}
+                </h2>
+                {afterHeading?.[id]}
+              </>
+            );
+          },
           h3: ({ children }) => (
             <h3 id={headingId(children)} className="scroll-mt-24">
               {children}

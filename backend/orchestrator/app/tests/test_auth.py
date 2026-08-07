@@ -43,7 +43,11 @@ def jwt_client(monkeypatch: pytest.MonkeyPatch) -> fastapi.testclient.TestClient
     test_app = fastapi.FastAPI()
 
     @test_app.get("/protected")
-    async def protected(owner: app.auth.dependencies.OwnerContext = fastapi.Depends(app.auth.dependencies.require_owner)):
+    async def protected(
+        owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+            app.auth.dependencies.require_owner
+        ),
+    ):
         return {
             "owner_id": owner.owner_id,
             "actor_id": owner.actor_id,

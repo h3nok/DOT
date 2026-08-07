@@ -7,12 +7,36 @@ the citation enforcement, and the tenant scope are what is actually under test.
 import json
 
 import fastapi.testclient
+import pydantic
 import pytest
 
-from app.db.models import FootprintNode
-from app.domains.twin.schemas import TwinAskResponse
 import app.domains.twin.boundary as boundary
 import app.domains.twin.registry as registry
+from app.db.models import FootprintNode
+from app.domains.twin.schemas import TwinAskResponse
+
+
+def test_public_companion_history_is_bounded_and_typed() -> None:
+    import app.domains.twin.schemas as schemas
+
+    payload = schemas.TwinPublicAskRequest(
+        question="What about the second claim?",
+        owner_id="henok",
+        lens="test",
+        history=[schemas.TwinHistoryTurn(role="member", content="List the hypotheses.")],
+    )
+    assert payload.lens == "test"
+    assert payload.history[0].role == "member"
+
+    with pytest.raises(pydantic.ValidationError):
+        schemas.TwinPublicAskRequest(
+            question="Too much history",
+            owner_id="henok",
+            history=[
+                schemas.TwinHistoryTurn(role="member", content=f"turn {index}")
+                for index in range(7)
+            ],
+        )
 
 
 def _headers(owner_id: str) -> dict[str, str]:
@@ -55,7 +79,9 @@ def test_registry_refuses_tampered_manifest() -> None:
         name="fetch", description="fetch a feed", args_schema={}, egress_hosts=("evil.test",)
     )
     reg._tools["fetch"] = registry._RegisteredTool(  # noqa: SLF001
-        tampered, handler, reg._tools["fetch"].signature  # noqa: SLF001
+        tampered,
+        handler,
+        reg._tools["fetch"].signature,  # noqa: SLF001
     )
     with pytest.raises(registry.ToolSignatureError):
         reg.verify("fetch")
@@ -154,6 +180,52 @@ def test_twin_refuses_when_nothing_is_retrieved(client: fastapi.testclient.TestC
     assert body["citations"] == []
 
 
+@pytest.mark.parametrize("greeting", ["Hi", "Hello!", "Hey.", "Good morning"])
+def test_twin_greets_without_retrieval_or_false_grounding(
+    client: fastapi.testclient.TestClient,
+    greeting: str,
+) -> None:
+    response = client.post(
+        "/v1/twin/ask",
+        headers=_headers("owner-alice"),
+        json={"question": greeting},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["answer"].startswith("Hello.")
+    assert body["grounded"] is False
+    assert body["refusal_code"] is None
+    assert body["citations"] == []
+
+
+async def test_greeting_prefixed_question_still_uses_grounded_retrieval(session_factory) -> None:
+    import app.auth.dependencies
+    import app.db.models
+    import app.domains.twin.schemas as schemas
+    import app.domains.twin.service as service
+
+    owner = app.auth.dependencies.OwnerContext(owner_id="owner-alice", actor_id="owner-alice")
+    async with session_factory() as session:
+        node = app.db.models.FootprintNode(
+            owner_id="owner-alice", kind="note", label="attention is scarce"
+        )
+        session.add(node)
+        await session.commit()
+        await session.refresh(node)
+
+        stub = StubModel(json.dumps({"answer": "Attention is scarce.", "cites": [node.id]}))
+        result: TwinAskResponse = await service.ask(
+            session,
+            owner,
+            schemas.TwinAskRequest(question="Hello, what do I believe about attention?"),
+            client=stub,
+        )
+
+    assert result.grounded is True
+    assert [citation.node_id for citation in result.citations] == [node.id]
+    assert "Hello, what do I believe about attention?" in stub.seen_user
+
+
 def test_twin_refuses_when_model_is_unconfigured(client: fastapi.testclient.TestClient) -> None:
     _seed_node(client, "owner-alice", "Attention is the scarce resource")
     response = client.post(
@@ -212,7 +284,7 @@ async def test_twin_returns_grounded_answer_with_citations(session_factory) -> N
         result: TwinAskResponse = await service.ask(
             session,
             owner,
-            schemas.TwinAskRequest(question="attention"),
+            schemas.TwinAskRequest(question="attention", lens="test"),
             client=stub,
         )
 
@@ -221,6 +293,7 @@ async def test_twin_returns_grounded_answer_with_citations(session_factory) -> N
     # HKI-4: retrieved content reached the model only inside the envelope.
     assert boundary.UNTRUSTED_OPEN in stub.seen_user
     assert "attention is scarce" not in stub.seen_system
+    assert "Test the argument" in stub.seen_user
 
 
 async def test_twin_refuses_tool_calls_on_the_ask_path(session_factory) -> None:
@@ -262,7 +335,9 @@ async def test_twin_cannot_retrieve_another_tenants_private_nodes(session_factor
         await session.commit()
 
         bob = app.auth.dependencies.OwnerContext(owner_id="owner-bob", actor_id="owner-bob")
-        found: list[FootprintNode] = await retriever.retrieve(session, bob, "owner-alice", "secret plan")
+        found: list[FootprintNode] = await retriever.retrieve(
+            session, bob, "owner-alice", "secret plan"
+        )
     assert found == []
 
 

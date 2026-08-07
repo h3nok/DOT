@@ -1,4 +1,4 @@
-# Digital Organisms Theory Platform - Real Metrics System
+# Digital Organism Theory Platform - Real Metrics System
 
 ## Overview
 
@@ -300,5 +300,5 @@ python src/scheduler/metrics_scheduler.py health
 
 ---
 
-**Built for Digital Organisms Theory Research Platform**  
+**Built for Digital Organism Theory Research Platform**
 Real metrics, real insights, real research impact. 🔬✨

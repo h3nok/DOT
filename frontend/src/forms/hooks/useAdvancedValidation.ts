@@ -163,7 +163,7 @@ export const advancedValidationSchemas = {
 
   // Phone number validation
   phoneNumber: z.string()
-    .regex(/^\+?[\d\s\-\(\)]{10,}$/, 'Please enter a valid phone number'),
+    .regex(/^\+?[\d\s\-()]{10,}$/, 'Please enter a valid phone number'),
 
   // Date range validation
   futureDate: z.date()

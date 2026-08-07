@@ -41,7 +41,7 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     OBJECT_STORE_ENDPOINT: str = "http://localhost:9000"
     OBJECT_STORE_BUCKET: str = "dot-orchestrator-local"
     LOCAL_OBJECT_STORE_ROOT: str = ".data/orchestrator-objects"
-    
+
     AWS_ACCESS_KEY_ID: str | None = None
     AWS_SECRET_ACCESS_KEY: str | None = None
     AWS_REGION: str = "us-east-1"

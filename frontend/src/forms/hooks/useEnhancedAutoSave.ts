@@ -49,8 +49,8 @@ export const useAutoSave = <T extends Record<string, any>>(
     savedData: null
   });
 
-  const autoSaveIntervalRef = useRef<number | null>(null);
-  const debounceTimeoutRef = useRef<number | null>(null);
+  const autoSaveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedDataRef = useRef<any>(null);
 
   const { watch, getValues, formState: { isValid } } = form;

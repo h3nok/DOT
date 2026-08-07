@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-import { sendMessage, isUnauthenticated } from "./twinChat";
+import {
+  clearEphemeralTurns,
+  isUnauthenticated,
+  loadEphemeralTurns,
+  saveEphemeralTurns,
+  sendMessage,
+  type TwinTurn,
+} from "./twinChat";
 
 /**
  * The chat client's job is to never leave the member without a reply and never
@@ -38,7 +45,7 @@ describe("twinChat.sendMessage", () => {
       }),
     );
 
-    const outcome = await sendMessage("hello", null);
+    const outcome = await sendMessage("hello", null, [], "ground", true);
 
     expect(outcome?.ephemeral).toBe(false);
     expect(outcome?.thread?.id).toBe("conv_1");
@@ -46,21 +53,31 @@ describe("twinChat.sendMessage", () => {
   });
 
   it("still answers a visitor with no session, without storing the thread", async () => {
-    vi.mocked(globalThis.fetch)
-      .mockResolvedValueOnce(jsonResponse(401, { detail: "no session" }))
-      .mockResolvedValueOnce(
-        jsonResponse(200, {
-          answer: "Public answer.",
-          citations: [],
-          grounded: true,
-          refusal_code: null,
-        }),
-      );
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        answer: "Public answer.",
+        citations: [],
+        grounded: true,
+        refusal_code: null,
+      }),
+    );
 
-    const outcome = await sendMessage("hello", null);
+    const outcome = await sendMessage(
+      "What is Little c?",
+      null,
+      [{ role: "member", content: "Tell me about consciousness." }],
+      "test",
+      false,
+    );
 
     expect(outcome?.ephemeral).toBe(true);
     expect(outcome?.turn.content).toBe("Public answer.");
+    const body = JSON.parse(calls()[0][1].body as string);
+    expect(body.owner_id).toBe("henok");
+    expect(body.lens).toBe("test");
+    expect(body.history).toEqual([
+      { role: "member", content: "Tell me about consciousness." },
+    ]);
   });
 
   it("reports a vanished thread rather than retrying into the same 404", async () => {
@@ -80,16 +97,43 @@ describe("twinChat.sendMessage", () => {
       }),
     );
 
-    await sendMessage("and the second one?", "conv_1");
+    await sendMessage("and the second one?", "conv_1", [], "ground", true);
     const body = JSON.parse(calls()[0][1].body as string);
 
     expect(body.conversation_id).toBe("conv_1");
     expect(body.owner_id).toBeUndefined();
   });
 
-  it("returns nothing when the service is unreachable", async () => {
+  it("falls back to the shipped book when the service is unreachable", async () => {
     vi.mocked(globalThis.fetch).mockRejectedValue(new Error("offline"));
-    expect(await sendMessage("hello", null)).toBeNull();
+    const outcome = await sendMessage(
+      "What is a Digital Organism?",
+      null,
+      [],
+      "ground",
+      false,
+    );
+    expect(outcome?.ephemeral).toBe(true);
+    expect(outcome?.turn.citations[0].kind).toBe("book");
+  });
+});
+
+describe("visitor session continuity", () => {
+  const turn: TwinTurn = {
+    id: "turn-1",
+    role: "member",
+    content: "What is Little c?",
+    citations: [],
+    refusal_code: null,
+  };
+
+  afterEach(() => clearEphemeralTurns());
+
+  it("restores and explicitly clears the tab-scoped conversation", () => {
+    saveEphemeralTurns([turn]);
+    expect(loadEphemeralTurns()).toEqual([turn]);
+    clearEphemeralTurns();
+    expect(loadEphemeralTurns()).toEqual([]);
   });
 });
 

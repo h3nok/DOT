@@ -42,19 +42,19 @@ export function useEditableGraph(seed: DotNode, owner = false) {
         if (remote?.graph) {
           hydratedRef.current = true;
           setRoot(remote.graph);
-          saveGraph(remote.graph);
+          saveGraph(remote.graph, seed);
           setUpdatedAt(remote.updatedAt);
         }
         setStatus("idle");
       })
       .catch(() => setStatus("idle"));
     return () => controller.abort();
-  }, []);
+  }, [seed]);
 
   // Cache every change locally for instant subsequent loads and offline use.
   useEffect(() => {
-    saveGraph(root);
-  }, [root]);
+    saveGraph(root, seed);
+  }, [root, seed]);
 
   // Publish owner edits to the server, debounced. Skips the reconciliation echo.
   useEffect(() => {

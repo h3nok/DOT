@@ -80,8 +80,7 @@ def _parse_date(value: str) -> datetime.datetime | None:
 
 def _rss_categories(item: ET.Element) -> tuple[str, ...]:
     values: list[str] = [
-        _clean_text(_text(category), max_length=80)
-        for category in _children(item, "category")
+        _clean_text(_text(category), max_length=80) for category in _children(item, "category")
     ]
     return tuple(sorted({value for value in values if value}))
 
@@ -95,7 +94,9 @@ def _atom_link(entry: ET.Element) -> str | None:
 
 
 def _parse_rss_channel(channel: ET.Element, fallback_title: str) -> RssFeed:
-    title: str = _clean_text(_text(_first_child(channel, "title")) or fallback_title, max_length=200)
+    title: str = _clean_text(
+        _text(_first_child(channel, "title")) or fallback_title, max_length=200
+    )
     link: str | None = _text(_first_child(channel, "link")) or None
     parsed_items: list[RssFeedItem] = []
 
@@ -138,8 +139,12 @@ def _parse_atom_feed(root: ET.Element, fallback_title: str) -> RssFeed:
         item_title: str = _clean_text(_text(_first_child(entry, "title")), max_length=300)
         item_link: str | None = _atom_link(entry)
         entry_id: str = _text(_first_child(entry, "id")) or item_link or item_title
-        summary: str = _text(_first_child(entry, "summary")) or _text(_first_child(entry, "content"))
-        updated: str = _text(_first_child(entry, "published")) or _text(_first_child(entry, "updated"))
+        summary: str = _text(_first_child(entry, "summary")) or _text(
+            _first_child(entry, "content")
+        )
+        updated: str = _text(_first_child(entry, "published")) or _text(
+            _first_child(entry, "updated")
+        )
         if not item_title and not item_link:
             continue
         parsed_items.append(
@@ -172,7 +177,9 @@ def parse_feed(xml_text: str, *, fallback_title: str = "Imported publication") -
     raise ValueError(f"Unsupported feed root: {root_name}.")
 
 
-def normalize_topics(values: collections.abc.Iterable[str], *, max_topics: int = 12) -> tuple[str, ...]:
+def normalize_topics(
+    values: collections.abc.Iterable[str], *, max_topics: int = 12
+) -> tuple[str, ...]:
     seen: set[str] = set()
     topics: list[str] = []
     for value in values:

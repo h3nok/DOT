@@ -23,7 +23,15 @@ CONTAINS = "contains"
 MAX_NODES = 512
 MAX_DEPTH = 8
 
-_PROPERTY_KEYS: tuple[str, ...] = ("surface", "href", "description", "body", "meta", "image")
+_PROPERTY_KEYS: tuple[str, ...] = (
+    "surface",
+    "relation",
+    "href",
+    "description",
+    "body",
+    "meta",
+    "image",
+)
 
 
 def _flatten(
@@ -166,6 +174,7 @@ async def read_profile_graph(
             label=record.label,
             kind=record.kind,
             surface=properties.get("surface"),
+            relation=properties.get("relation"),
             href=properties.get("href"),
             description=properties.get("description"),
             body=properties.get("body"),

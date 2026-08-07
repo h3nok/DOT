@@ -4,13 +4,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
-  Check,
+  BookOpen,
   ChevronLeft,
   ChevronRight,
   List,
   Moon,
-  Pencil,
-  RotateCcw,
   Sun,
   Type,
   X,
@@ -22,10 +20,9 @@ import {
 } from "../../content/doctrine/doctrineData";
 import { useTheme } from "../../shared/contexts/SimpleThemeContext";
 import { useSignalAccent } from "../../shared/hooks/useSignalAccent";
-import { useOwnerMode } from "../../dot/useOwnerMode";
 import OrchestratorNodeTools from "./OrchestratorNodeTools";
 
-// Coherence Surface — conforms to
+// Book One concept map — conforms to
 // docs/blueprint/08-DOCTRINE-AND-COHERENCE-SURFACE.md
 //
 // Resting surface = graph + single focus panel + quiet question input.
@@ -102,16 +99,7 @@ const relationLabel: Record<string, string> = {
   applies: "applies to",
 };
 
-const doctrineEditsStorageKey = "dot-doctrine-reading-edits";
 const readingPrefsStorageKey = "dot-doctrine-reading-prefs";
-
-interface EditableCardState {
-  thesis?: string;
-  synthesis?: [string, string];
-  reading?: string;
-}
-
-type DoctrineEditMap = Record<string, EditableCardState>;
 
 interface ReadingPrefs {
   scale: number;
@@ -128,16 +116,6 @@ const defaultPrefs: ReadingPrefs = { scale: 1, measure: 680, typewriter: true };
 
 const clamp = (value: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, value));
-
-const readStoredEdits = (): DoctrineEditMap => {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(doctrineEditsStorageKey);
-    return raw ? (JSON.parse(raw) as DoctrineEditMap) : {};
-  } catch {
-    return {};
-  }
-};
 
 const readStoredPrefs = (): ReadingPrefs => {
   if (typeof window === "undefined") return defaultPrefs;
@@ -251,7 +229,6 @@ const DoctrinePage = () => {
   const prefersReducedMotion = useReducedMotion();
   const isDark = theme === "dark";
   const accent = useSignalAccent();
-  const owner = useOwnerMode();
 
   const initialId =
     params.nodeId && getDoctrineNode(params.nodeId)
@@ -259,10 +236,6 @@ const DoctrinePage = () => {
       : doctrineNodes[0].id;
 
   const [focusId, setFocusId] = useState<string>(initialId);
-  const [edits, setEdits] = useState<DoctrineEditMap>(() =>
-    owner ? readStoredEdits() : {},
-  );
-  const [editing, setEditing] = useState(false);
   const [prefs, setPrefs] = useState<ReadingPrefs>(() => readStoredPrefs());
   const [progress, setProgress] = useState(0);
   const [showIndex, setShowIndex] = useState(false);
@@ -281,7 +254,7 @@ const DoctrinePage = () => {
 
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = `DOT — Doctrine — ${focusNode.title}`;
+    document.title = `DOT — Book One Concept Map — ${focusNode.title}`;
     return () => {
       document.title = previousTitle;
     };
@@ -294,27 +267,8 @@ const DoctrinePage = () => {
       getDoctrineNode(params.nodeId)
     ) {
       setFocusId(params.nodeId);
-      setEditing(false);
     }
   }, [focusId, params.nodeId]);
-
-  useEffect(() => {
-    if (owner) {
-      window.localStorage.setItem(
-        doctrineEditsStorageKey,
-        JSON.stringify(edits),
-      );
-    }
-  }, [edits, owner]);
-
-  useEffect(() => {
-    if (owner) {
-      setEdits(readStoredEdits());
-    } else {
-      setEditing(false);
-      setEdits({});
-    }
-  }, [owner]);
 
   useEffect(() => {
     window.localStorage.setItem(readingPrefsStorageKey, JSON.stringify(prefs));
@@ -328,39 +282,18 @@ const DoctrinePage = () => {
 
   const selectNode = (id: string) => {
     setFocusId(id);
-    setEditing(false);
     setShowIndex(false);
     navigate(`/doctrine/${id}`);
   };
 
-  const nodeEdits = owner ? (edits[focusNode.id] ?? {}) : {};
   const defaultSynthesis = useMemo(
     () => buildDefaultSynthesis(focusNode),
     [focusNode],
   );
 
-  const thesis = nodeEdits.thesis ?? focusNode.oneLine;
-  const synthesis = nodeEdits.synthesis ?? defaultSynthesis;
-  const argument =
-    nodeEdits.reading ?? getParagraphs(focusNode.body).join("\n\n");
-
-  const updateEdit = (
-    key: keyof EditableCardState,
-    value: string | [string, string],
-  ) => {
-    setEdits((current) => ({
-      ...current,
-      [focusNode.id]: { ...(current[focusNode.id] ?? {}), [key]: value },
-    }));
-  };
-
-  const resetNode = () => {
-    setEdits((current) => {
-      const next = { ...current };
-      delete next[focusNode.id];
-      return next;
-    });
-  };
+  const thesis = focusNode.oneLine;
+  const synthesis = defaultSynthesis;
+  const argument = getParagraphs(focusNode.body).join("\n\n");
 
   const surfaceStyle = useMemo(
     () => buildPalette(isDark, accent),
@@ -415,7 +348,7 @@ const DoctrinePage = () => {
       className="fixed inset-0 z-30 w-full overflow-hidden text-[color:var(--surface-fg)]"
       style={surfaceStyle}
     >
-      <h1 className="sr-only">DOT Doctrine — {focusNode.title}</h1>
+      <h1 className="sr-only">DOT Book One Concept Map — {focusNode.title}</h1>
 
       {/* Reading progress */}
       <div
@@ -453,7 +386,7 @@ const DoctrinePage = () => {
           background: "var(--surface-panel)",
         }}
       >
-        Draft companion · read Book One
+        Book One concept map · Edition v2
       </Link>
 
       {/* Reading controls — quiet until hovered or focused */}
@@ -509,26 +442,6 @@ const DoctrinePage = () => {
         >
           <Type className="h-4 w-4" />
         </button>
-        {owner ? (
-          <button
-            type="button"
-            onClick={() => setEditing((value) => !value)}
-            className={controlButton}
-            style={{
-              borderColor: "transparent",
-              color: editing ? "var(--surface-accent)" : undefined,
-            }}
-            aria-pressed={editing}
-            aria-label={editing ? "Finish editing" : "Edit this idea"}
-            title={editing ? "Finish editing" : "Edit this idea"}
-          >
-            {editing ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Pencil className="h-4 w-4" />
-            )}
-          </button>
-        ) : null}
         <button
           type="button"
           onClick={() => setShowIndex(true)}
@@ -601,30 +514,19 @@ const DoctrinePage = () => {
             </div>
 
             <p className="font-mono text-[0.7em] font-bold uppercase tracking-[0.32em] text-[color:var(--surface-accent)]">
-              {focusNode.kind}
+              {focusNode.kind} · {focusNode.source.claimLevel}
             </p>
             <h2 className="mt-3 font-serif text-[2.6em] font-black leading-[1.05] text-[color:var(--surface-fg)]">
               {focusNode.title}
             </h2>
 
             {/* Lead / thesis */}
-            {editing ? (
-              <textarea
-                value={thesis}
-                onChange={(event) => updateEdit("thesis", event.target.value)}
-                className="mt-6 w-full resize-none rounded-lg border bg-transparent p-3 font-serif text-[1.32em] italic leading-[1.6] outline-none"
-                style={{ borderColor: "var(--surface-hairline)" }}
-                rows={3}
-                aria-label="Edit the thesis"
-              />
-            ) : (
-              <p
-                className="mt-6 border-l-2 pl-5 font-serif text-[1.32em] italic leading-[1.6] text-[color:var(--surface-fg)]"
-                style={{ borderColor: "var(--surface-accent)" }}
-              >
-                {thesis}
-              </p>
-            )}
+            <p
+              className="mt-6 border-l-2 pl-5 font-serif text-[1.32em] italic leading-[1.6] text-[color:var(--surface-fg)]"
+              style={{ borderColor: "var(--surface-accent)" }}
+            >
+              {thesis}
+            </p>
 
             {/* Two-bullet synthesis */}
             <div
@@ -645,23 +547,9 @@ const DoctrinePage = () => {
                       className="mt-[0.6em] h-[0.45em] w-[0.45em] shrink-0 rounded-full"
                       style={{ background: "var(--surface-accent)" }}
                     />
-                    {editing ? (
-                      <textarea
-                        value={bullet}
-                        onChange={(event) => {
-                          const next = [...synthesis] as [string, string];
-                          next[bulletIndex] = event.target.value;
-                          updateEdit("synthesis", next);
-                        }}
-                        className="min-h-[3em] flex-1 resize-none rounded-md border bg-transparent px-2 py-1 text-[1em] leading-[1.6] outline-none"
-                        style={{ borderColor: "var(--surface-hairline)" }}
-                        aria-label={`Edit synthesis bullet ${bulletIndex + 1}`}
-                      />
-                    ) : (
-                      <p className="flex-1 text-[1.02em] leading-[1.7] text-[color:var(--surface-body)]">
-                        {bullet}
-                      </p>
-                    )}
+                    <p className="flex-1 text-[1.02em] leading-[1.7] text-[color:var(--surface-body)]">
+                      {bullet}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -669,37 +557,39 @@ const DoctrinePage = () => {
 
             {/* Argument */}
             <div className="mt-10">
-              {editing ? (
-                <textarea
-                  value={argument}
-                  onChange={(event) =>
-                    updateEdit("reading", event.target.value)
-                  }
-                  className="min-h-[40vh] w-full resize-y rounded-lg border bg-transparent p-4 text-[1.08em] leading-[1.95] outline-none"
-                  style={{ borderColor: "var(--surface-hairline)" }}
-                  aria-label="Edit the argument"
-                />
-              ) : (
-                <Typewriter
-                  key={`${focusNode.id}-${prefs.typewriter}`}
-                  text={argument}
-                  active={prefs.typewriter}
-                  className="font-serif text-[1.12em] leading-[1.95] tracking-[0.003em] text-[color:var(--surface-body)]"
-                />
-              )}
+              <Typewriter
+                key={`${focusNode.id}-${prefs.typewriter}`}
+                text={argument}
+                active={prefs.typewriter}
+                className="font-serif text-[1.12em] leading-[1.95] tracking-[0.003em] text-[color:var(--surface-body)]"
+              />
             </div>
 
-            {editing ? (
-              <button
-                type="button"
-                onClick={resetNode}
-                className="mt-8 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.82em] font-semibold text-[color:var(--surface-muted)] transition-colors hover:text-[color:var(--surface-fg)]"
-                style={{ borderColor: "var(--surface-hairline)" }}
-              >
-                <RotateCcw className="h-4 w-4" />
-                Reset this idea to the original
-              </button>
-            ) : null}
+            <Link
+              to={focusNode.source.href}
+              className="mt-10 flex items-center justify-between gap-4 rounded-lg border px-4 py-3 text-[0.86em] transition-colors hover:border-[color:var(--surface-accent)]"
+              style={{
+                borderColor: "var(--surface-hairline)",
+                background:
+                  "color-mix(in oklch, var(--surface-accent) 5%, transparent)",
+              }}
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <BookOpen
+                  className="h-4 w-4 shrink-0 text-[color:var(--surface-accent)]"
+                  aria-hidden="true"
+                />
+                <span className="min-w-0">
+                  <span className="block font-mono text-[0.72em] uppercase tracking-[0.18em] text-[color:var(--surface-muted)]">
+                    Derived from Book One
+                  </span>
+                  <span className="mt-0.5 block truncate font-semibold text-[color:var(--surface-fg)]">
+                    {focusNode.source.sectionTitle}
+                  </span>
+                </span>
+              </span>
+              <ChevronRight className="h-4 w-4 shrink-0 text-[color:var(--surface-muted)]" />
+            </Link>
 
             {/* Continue reading */}
             {focusNode.related.length > 0 ? (
@@ -857,7 +747,7 @@ const DoctrinePage = () => {
       </AnimatePresence>
 
       {/* Orchestrator presence + node-scoped tools (organism & activity aware) */}
-      <OrchestratorNodeTools node={focusNode} scrollProgress={progress} />
+      <OrchestratorNodeTools node={focusNode} />
     </div>
   );
 };

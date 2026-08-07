@@ -1,4 +1,5 @@
 """OTP sign-in and session management — orchestrator-native auth domain."""
+
 from __future__ import annotations
 
 import datetime
@@ -7,7 +8,6 @@ import logging
 import os
 import secrets
 import time
-from typing import Tuple
 
 import bcrypt
 import httpx
@@ -20,15 +20,16 @@ import app.settings
 
 logger: logging.Logger = logging.getLogger("dot_orchestrator.auth")
 
-_CODE_TTL_SECONDS = 10 * 60       # 10 minutes
+_CODE_TTL_SECONDS = 10 * 60  # 10 minutes
 _RESEND_COOLDOWN_SECONDS = 45
 _MAX_ATTEMPTS = 5
-_SESSION_TTL_SECONDS = 7 * 24 * 3600   # 7 days
-_INVITE_TTL_SECONDS = 14 * 24 * 3600   # 14 days
+_SESSION_TTL_SECONDS = 7 * 24 * 3600  # 7 days
+_INVITE_TTL_SECONDS = 14 * 24 * 3600  # 14 days
 _ALGORITHM = "HS256"
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
 
 def _hash_email(email: str) -> str:
     return hashlib.sha256(email.strip().lower().encode()).hexdigest()
@@ -104,6 +105,7 @@ async def _send_code_email(email: str, code: str) -> bool:
 
 # ── OTP request ───────────────────────────────────────────────────────────────
 
+
 async def request_otp(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
@@ -114,7 +116,9 @@ async def request_otp(
     # Enforce cooldown: reject if an unused code was issued within the window.
     recent: app.db.models.OtpCode | None = await session.scalar(
         sqlalchemy.select(app.db.models.OtpCode)
-        .where(app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None))
+        .where(
+            app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None)
+        )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
     )
@@ -122,23 +126,31 @@ async def request_otp(
         elapsed: float = (now - recent.created_at.replace(tzinfo=datetime.UTC)).total_seconds()
         if elapsed < _RESEND_COOLDOWN_SECONDS:
             wait = int(_RESEND_COOLDOWN_SECONDS - elapsed)
-            return {"ok": False, "error": f"Please wait {wait}s before requesting another code.", "status": 429}
+            return {
+                "ok": False,
+                "error": f"Please wait {wait}s before requesting another code.",
+                "status": 429,
+            }
 
     # Invalidate prior active codes.
     await session.execute(
         sqlalchemy.update(app.db.models.OtpCode)
-        .where(app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None))
+        .where(
+            app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None)
+        )
         .values(used_at=now)
     )
 
     code: str = f"{secrets.randbelow(1_000_000):06d}"
     code_hash = bcrypt.hashpw(code.encode(), bcrypt.gensalt()).decode()
 
-    session.add(app.db.models.OtpCode(
-        email_hash=email_hash,
-        code_hash=code_hash,
-        expires_at=now + datetime.timedelta(seconds=_CODE_TTL_SECONDS),
-    ))
+    session.add(
+        app.db.models.OtpCode(
+            email_hash=email_hash,
+            code_hash=code_hash,
+            expires_at=now + datetime.timedelta(seconds=_CODE_TTL_SECONDS),
+        )
+    )
     await session.commit()
 
     sent: bool = await _send_code_email(email, code)
@@ -152,6 +164,7 @@ async def request_otp(
 
 
 # ── OTP verify ────────────────────────────────────────────────────────────────
+
 
 async def verify_otp(
     session: sqlalchemy.ext.asyncio.AsyncSession,
@@ -225,6 +238,7 @@ async def verify_otp(
 
 # ── Invite issuance ───────────────────────────────────────────────────────────
 
+
 async def issue_invite(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     issued_by_id: str,
@@ -233,11 +247,13 @@ async def issue_invite(
     token_hash: str = _hash_token(raw_token)
     expires_at: datetime.datetime = _now_utc() + datetime.timedelta(seconds=_INVITE_TTL_SECONDS)
 
-    session.add(app.db.models.InviteCode(
-        token_hash=token_hash,
-        issued_by=issued_by_id,
-        expires_at=expires_at,
-    ))
+    session.add(
+        app.db.models.InviteCode(
+            token_hash=token_hash,
+            issued_by=issued_by_id,
+            expires_at=expires_at,
+        )
+    )
     await session.commit()
     return {"token": raw_token, "expires_at": expires_at.isoformat()}
 
@@ -299,7 +315,9 @@ async def list_circle(
 ) -> dict:
     """Members who joined through this member's invites."""
 
-    rows: sqlalchemy.Result[Tuple[app.db.models.InviteCode, app.db.models.Member]] = await session.execute(
+    rows: sqlalchemy.Result[
+        tuple[app.db.models.InviteCode, app.db.models.Member]
+    ] = await session.execute(
         sqlalchemy.select(app.db.models.InviteCode, app.db.models.Member)
         .join(app.db.models.Member, app.db.models.Member.id == app.db.models.InviteCode.accepted_by)
         .where(

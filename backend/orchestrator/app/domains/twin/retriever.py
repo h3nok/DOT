@@ -28,9 +28,33 @@ VECTOR_WEIGHT = 0.7
 _WORD: re.Pattern[str] = re.compile(r"[A-Za-z0-9']{3,}")
 _STOPWORDS: frozenset[str] = frozenset(
     {
-        "the", "and", "for", "with", "that", "this", "from", "what", "when",
-        "where", "which", "have", "has", "was", "were", "are", "you", "your",
-        "about", "into", "than", "then", "they", "their", "them", "how", "why",
+        "the",
+        "and",
+        "for",
+        "with",
+        "that",
+        "this",
+        "from",
+        "what",
+        "when",
+        "where",
+        "which",
+        "have",
+        "has",
+        "was",
+        "were",
+        "are",
+        "you",
+        "your",
+        "about",
+        "into",
+        "than",
+        "then",
+        "they",
+        "their",
+        "them",
+        "how",
+        "why",
     }
 )
 
@@ -171,6 +195,7 @@ async def _node_passages(
 async def _chunk_candidates(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     owner_id: str,
+    visibilities: tuple[str, ...],
 ) -> list[tuple[app.db.models.KnowledgeChunk, str, dict[str, typing.Any] | None]]:
     statement = (
         sqlalchemy.select(
@@ -192,6 +217,7 @@ async def _chunk_candidates(
         )
         .where(
             app.db.models.SourceObject.owner_id == owner_id,
+            app.db.models.SourceObject.visibility.in_(visibilities),
             app.db.models.SourceVersion.status == "ready",
         )
         .order_by(app.db.models.SourceVersion.created_at.desc().nullslast())
@@ -208,17 +234,17 @@ async def _chunk_passages(
     question: str,
     limit: int,
 ) -> list[Passage]:
-    """Vault chunks, scored by vector similarity when available.
+    """Document passages, scored by vector similarity when available.
 
-    Uploaded documents are private to the member who uploaded them. There is no
-    visibility column to widen this, so retrieval simply does not reach another
-    member's vault.
+    Uploaded documents are private to the member who uploaded them. Released
+    canon is the deliberate exception: a text a visitor is invited to read is one
+    the twin must be able to quote back with a citation. Visibility is resolved
+    server-side and fails closed — a stranger reaches public sources only.
     """
 
-    if requester.owner_id != graph_owner_id:
-        return []
+    visibilities: tuple[str, ...] = allowed_visibilities(requester, graph_owner_id)
 
-    candidates = await _chunk_candidates(session, graph_owner_id)
+    candidates = await _chunk_candidates(session, graph_owner_id, visibilities)
     if not candidates:
         return []
 

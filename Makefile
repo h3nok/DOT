@@ -1,6 +1,8 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator test-orchestrator migrate-orchestrator seed-profile-delivery orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery ingest-canon orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
+#: Whose canon and graph the local stack serves.
+OWNER ?= henok
 
 help:
 	@echo "Available targets:"
@@ -17,9 +19,15 @@ help:
 	@echo "  make orchestrator-services-down Stop local orchestrator services"
 	@echo "  make migrate-orchestrator Apply orchestrator migrations"
 	@echo "  make seed-profile-delivery Seed one published profile delivery release"
+	@echo "  make ingest-canon      Load Book One so the copilot can cite it"
 	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
+	@echo "  make typecheck         Typecheck frontend"
+	@echo "  make test              Test frontend"
+	@echo "  make verify            Run every gate (lint, types, tests, build, backend)"
+	@echo "  make format            Autoformat frontend and backend"
+	@echo "  make audit             Dependency vulnerability audit"
 
 setup:
 	bash ./scripts/setup-dev.sh
@@ -62,14 +70,38 @@ migrate-orchestrator:
 seed-profile-delivery:
 	cd backend/orchestrator && ../../.venv/bin/python3 scripts/seed_profile_delivery.py
 
+# Released canon becomes citable by the twin (ADR-0017). Safe to re-run.
+ingest-canon:
+	cd backend/orchestrator && ../../.venv/bin/python3 scripts/ingest_canon.py --owner $(OWNER)
+
 build:
 	pnpm --dir frontend build
 
 lint:
 	pnpm --dir frontend lint
 
+typecheck:
+	pnpm --dir frontend exec tsc --noEmit
+
+test:
+	pnpm --dir frontend exec vitest run
+
+# The definition of done. Agents and humans run the same gate.
+verify: lint typecheck test build lint-orchestrator test-orchestrator
+	@echo "All gates passed."
+
+audit:
+	-pnpm --dir frontend audit --audit-level high
+	-./.venv/bin/python3 -m pip_audit -r backend/orchestrator/requirements.txt
+
 lint-orchestrator:
 	cd backend/orchestrator && ../../.venv/bin/ruff check app migrations
+	cd backend/orchestrator && ../../.venv/bin/ruff format --check app migrations
+
+format:
+	pnpm --dir frontend exec eslint . --fix
+	cd backend/orchestrator && ../../.venv/bin/ruff check app migrations --fix
+	cd backend/orchestrator && ../../.venv/bin/ruff format app migrations
 
 test-orchestrator:
 	cd backend/orchestrator && ../../.venv/bin/pytest

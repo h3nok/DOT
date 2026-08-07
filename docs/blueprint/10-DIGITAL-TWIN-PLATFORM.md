@@ -7,6 +7,13 @@
 > Supersedes the split between `backend/src` (Flask prototype) and
 > `backend/orchestrator` (FastAPI). See ADR-0009, ADR-0010, ADR-0011.
 
+**Product identity:** the reader-facing companion is **Lumen, the DOT
+Companion**. “Twin” remains the internal runtime and API boundary. Visitors may
+consult Lumen without an account, but their scope is limited to released public
+canon and their conversation remains tab-local. Signed-in members may use
+server-managed sessions over the knowledge they are authorized to consult. In
+both modes, substantive answers must return to an explicit source passage.
+
 ---
 
 ## 1. What we are building

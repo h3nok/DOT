@@ -1,15 +1,15 @@
-from datetime import datetime
 import typing
+from datetime import datetime
 
 import fastapi
 import sqlalchemy.ext.asyncio
 
-from app.db.models import FootprintAccount, FootprintEdge, FootprintImport, FootprintNode
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.profile
 import app.domains.graph.schemas
 import app.domains.graph.service
+from app.db.models import FootprintAccount, FootprintEdge, FootprintImport, FootprintNode
 
 router = fastapi.APIRouter(
     prefix="/v1/graph",

@@ -1,10 +1,10 @@
 import asyncio
 
-from app.db.models import FootprintImport
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.service
 import app.workers.broker
+from app.db.models import FootprintImport
 
 
 @app.workers.broker.dramatiq.actor(queue_name="orchestrator-smoke")

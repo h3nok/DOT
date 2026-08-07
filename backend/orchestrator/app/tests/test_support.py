@@ -30,7 +30,7 @@ class _StubStripe:
 
     def __init__(self) -> None:
         self.calls: list[dict[str, typing.Any]] = []
-        self.PaymentIntent: Self = self  # noqa: N815 - mirrors the stripe module shape
+        self.PaymentIntent: _StubStripe = self  # noqa: N815 - mirrors the stripe module shape
 
     def create(self, **kwargs: typing.Any) -> _StubIntent:
         self.calls.append(kwargs)
@@ -133,7 +133,8 @@ def test_webhook_without_a_configured_secret_never_processes(
     settings: app.core.config.Settings = app.core.config.get_settings()
     monkeypatch.setattr(settings, "STRIPE_WEBHOOK_SECRET", "", raising=False)
     response = client.post(
-        "/v1/support/webhook", json={"type": "payment_intent.succeeded"},
+        "/v1/support/webhook",
+        json={"type": "payment_intent.succeeded"},
         headers={"Stripe-Signature": "t=1,v1=deadbeef"},
     )
     assert response.status_code == 400

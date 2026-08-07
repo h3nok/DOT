@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, Loader2, Sparkles } from "lucide-react";
+import { ArrowUp, Loader2, ScanSearch } from "lucide-react";
 
 /**
  * GraphChat — the way you talk to the organism.
@@ -23,7 +23,7 @@ interface GraphChatProps {
 export const GraphChat: React.FC<GraphChatProps> = ({
   onSubmit,
   busy = false,
-  placeholder = "Ask the graph, or name a world to open…",
+  placeholder = "Find an idea, or ask Lumen about Book One…",
   suggestions = [],
 }) => {
   const [value, setValue] = useState("");
@@ -99,7 +99,7 @@ export const GraphChat: React.FC<GraphChatProps> = ({
             }}
             aria-hidden="true"
           />
-          <Sparkles
+          <ScanSearch
             className="h-4 w-4 shrink-0"
             style={{ color: "var(--organism-accent)" }}
             aria-hidden="true"
@@ -110,7 +110,7 @@ export const GraphChat: React.FC<GraphChatProps> = ({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={placeholder}
-            aria-label="Ask the graph"
+            aria-label="Navigate or consult the knowledge graph"
             className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
           <button

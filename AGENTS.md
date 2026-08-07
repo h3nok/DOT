@@ -39,34 +39,43 @@ not a quiet implementation.
 
 ## Build member screens from primitives
 
-Member UI is composed from `frontend/src/attention-os/` primitives (North Star §5):
-Focus Modes (P1), Reader (P2), Single-Focus Navigation (P3), Intention & Attention
-Budget (P4), Presence & Ambient Signals (P5). Don't reinvent these; extend them.
+Member UI is *intended* to be composed from `frontend/src/attention-os/` primitives (North
+Star §5): Focus Modes (P1), Reader (P2), Single-Focus Navigation (P3), Intention &
+Attention Budget (P4), Presence & Ambient Signals (P5).
+
+**Reality check (verify before relying on this):** only **P2 (Reader)** exists today, as
+`attention-os/reader/BookMarkdown.tsx`. P1, P3, P4, and P5 are **not implemented**. Existing
+surfaces are ad-hoc components under `dot/` and `blocks/`. If you need a primitive that does
+not exist, either build it in `attention-os/` as a reusable module or say plainly that you
+did not — do not claim to have composed from primitives that are absent.
 
 ## Repo facts (save yourself time)
 
 - Project root is `DOT/` (this folder). Frontend: `frontend/`, backend: `backend/`.
 - **Frontend entry is `src/AppOptimized.tsx`**, not `src/App.tsx` (consolidating — ADR-0005).
 - Package manager: **pnpm**. Stack: React 19 + Vite 6 + TS + Tailwind v4 + shadcn/Radix.
-- Backend: Flask today (SQLite) for the prototype shell; the Knowledge & Publication OS
-  is specified as a dedicated FastAPI orchestrator with Postgres/Redis/object storage
-  (ADR-0008).
+- Backend: **one service** — the FastAPI orchestrator at `backend/orchestrator/`
+  (Postgres/Redis/object store). The Flask prototype is **gone** (ADR-0009); if a doc still
+  references `backend/src`, the doc is stale, not the code.
 - Existing attention prototype lives in `blocks/core/invite/InviteGatewayPage.tsx` + `services/SoundscapeService.ts`.
+- Legacy `services/api/BaseApiService.ts` targets the retired `/api` backend and reads auth
+  from `localStorage`. Do not build on it; use `services/Orchestrator*Service.ts`.
 
 ## Commands
 
 ```bash
+# The gate. Run this before claiming work is done — it is what CI runs.
+make verify       # frontend lint + typecheck + tests + build, backend lint/format + tests
+make format       # autofix frontend and backend formatting
+make audit        # dependency vulnerability audit
+
 # Frontend (run inside frontend/)
 pnpm install
 pnpm dev          # local dev server
-pnpm build        # production build (must pass before merge)
-pnpm lint         # eslint
-pnpm exec vitest run  # vitest non-watch test run
-
-# Backend (inside backend/, venv at ../.venv)
-source ../.venv/bin/activate
-pip install -r requirements.txt
-python src/main.py
+pnpm build        # production build
+pnpm lint         # eslint (covers .ts/.tsx)
+pnpm exec tsc --noEmit   # typecheck — must stay at zero errors
+pnpm exec vitest run     # tests
 
 # FastAPI orchestrator (repo root)
 make install-orchestrator
@@ -80,8 +89,13 @@ make test-orchestrator
 ## Working rules
 
 - **Read before editing.** Don't edit files that have no live imports — check first (many DOT-era duplicates exist).
-- **Quality gates:** `pnpm lint`, `pnpm test`, and `pnpm build` must be green before merge. Full `pnpm exec tsc --noEmit` is installed and reported in CI, but currently non-blocking while repo-wide TS debt is retired; touched files should not add new type errors.
-- **Security:** validate all input server-side (incl. invite tokens); never trust the client; no secrets in the repo; parameterized queries only.
+- **Quality gates:** `make verify` must be green before merge. Typecheck is **blocking** and the
+  repo is at zero type errors — keep it there.
+- **The laws are executable.** `frontend/src/test/manifesto-laws.test.ts` fails the build on
+  streaks, push notifications, vanity counters, infinite scroll, and third-party trackers.
+  Its `QUARANTINE` list is a ratchet for pre-existing violations: never add to it to make a
+  build pass, and delete entries as they are fixed.
+- **Security:** validate all input server-side (incl. invite tokens); never trust the client; no secrets in the repo; parameterized queries only. Never put auth material in `localStorage`.
 - **Performance is a feature:** respect the budgets in `02-ARCHITECTURE.md §7`. Lazy-load three.js/audio. Respect `prefers-reduced-motion`.
 - **Don't add change-log markdown files** unless asked. Architecture changes → an ADR.
 - **Small, reviewable changes.** Cleanup/deletion of legacy files happens in its own change, never bundled with features (ADR-0005).

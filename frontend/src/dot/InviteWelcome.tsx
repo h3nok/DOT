@@ -44,7 +44,7 @@ export const InviteWelcome: React.FC<InviteWelcomeProps> = ({
     >
       <p className="text-sm leading-7 text-muted-foreground">
         This is {ownerName}'s living profile — a graph you can explore, where
-        every dot opens into its own world. Wander it, or ask it anything.
+        every dot opens into its own world. Wander it, or consult the knowledge behind it.
       </p>
       <button
         type="button"

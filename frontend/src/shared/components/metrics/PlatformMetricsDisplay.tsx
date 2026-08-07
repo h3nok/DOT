@@ -131,7 +131,7 @@ const PlatformMetricsDisplay: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Platform Metrics</h2>
           <p className="text-gray-600 text-sm mt-1">
-            Real-time data from Digital Organisms Theory platform
+            Operational data from the Digital Organism Theory platform
           </p>
         </div>
         

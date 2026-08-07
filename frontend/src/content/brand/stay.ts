@@ -2,8 +2,8 @@
 //
 // Stay is the foundational technology of the DOT movement and its first use
 // case: a calm presence + publishing platform built to increase coherence,
-// not harvest attention. The brand carries the doctrine's core stance —
-// "to hold form against dissolution" — into a single, durable identity.
+// not harvest attention. Its public theory surfaces stay subordinate to the
+// released book and preserve the book's claim boundaries.
 
 export interface BrandPaletteSwatch {
   id: string;
@@ -21,17 +21,17 @@ export const stayBrand = {
     "Stay is the foundational technology of the DOT movement: a calm presence and publishing platform built to increase coherence — not to harvest attention.",
   // The first concrete use case Stay ships as.
   firstUseCase:
-    "A source-backed founder profile and doctrine surface that grows into durable profiles, immutable publication releases, private knowledge, and trusted circles — without feeds, ads, or vanity counters.",
+    "A source-backed founder profile, Book One reader, and concept map that grow into durable profiles, immutable publication releases, private knowledge, and trusted circles — without feeds, ads, or vanity counters.",
   voice: [
     "Calm, not loud. Stay never manufactures urgency.",
     "Plain and exact. It names what it will not claim.",
     "Durable over disposable. Memory, not inventory.",
     "Coherence over capture. No feeds, ranks, or vanity counts.",
   ],
-  // The mark reads as a Self that stays: one held dot inside a stabilized
-  // field. Duotone always — ink/paper plus a single signal accent.
+  // The mark keeps the observer visible inside a bounded Reality Frame.
+  // Duotone always: ink/paper plus a single signal accent.
   markMeaning:
-    "A held dot inside a stabilized ring — a Self that keeps its form against dissolution.",
+    "The observer held in view inside a bounded Reality Frame.",
   refusals: [
     "No ads or sponsored placement.",
     "No infinite feed or algorithmic ranking.",

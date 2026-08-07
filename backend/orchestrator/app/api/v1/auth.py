@@ -9,11 +9,18 @@ import app.db.models
 import app.db.session
 import app.domains.auth.schemas as schemas
 import app.domains.auth.service as auth_service
+import app.settings
 
 router = fastapi.APIRouter(prefix="/v1/auth", tags=["auth"])
 
 # Aggressive per-IP limits on OTP endpoints to prevent brute force.
 _limiter = app.core.security.make_limiter()
+
+
+def _cookie_secure() -> bool:
+    """A Secure cookie is never sent over plain HTTP, which is what local dev serves."""
+
+    return app.settings.get_settings().ENVIRONMENT in {"production", "staging"}
 
 
 @router.post("/otp/request", response_model=schemas.OtpRequestResponse)
@@ -46,9 +53,7 @@ async def verify_otp(
         raise fastapi.HTTPException(status_code=result["status"], detail=result["error"])
 
     response = fastapi.Response(
-        content=fastapi.responses.JSONResponse(
-            content={"user": result["user"]}
-        ).body,
+        content=fastapi.responses.JSONResponse(content={"user": result["user"]}).body,
         media_type="application/json",
     )
     # httpOnly session cookie — JS cannot read the token.
@@ -58,7 +63,7 @@ async def verify_otp(
         max_age=7 * 24 * 3600,
         httponly=True,
         samesite="lax",
-        secure=True,  # enforced in prod; Cloud Run always serves HTTPS
+        secure=_cookie_secure(),
     )
     return response
 
@@ -68,7 +73,9 @@ async def get_session(
     request: fastapi.Request,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.SessionResponse:
-    owner: app.auth.dependencies.OwnerContext | None = app.auth.dependencies.resolve_session_optional(request)
+    owner: app.auth.dependencies.OwnerContext | None = (
+        app.auth.dependencies.resolve_session_optional(request)
+    )
     if owner is None:
         return schemas.SessionResponse(user=None)
     member: app.db.models.Member | None = await session.get(app.db.models.Member, owner.owner_id)
@@ -87,7 +94,7 @@ async def get_session(
 @router.post("/logout")
 async def logout() -> fastapi.Response:
     response = fastapi.Response(content='{"ok":true}', media_type="application/json")
-    response.delete_cookie("dot_session", httponly=True, samesite="lax", secure=True)
+    response.delete_cookie("dot_session", httponly=True, samesite="lax", secure=_cookie_secure())
     return response
 
 

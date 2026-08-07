@@ -53,7 +53,7 @@ const DigitalOrganismsLogo: React.FC<DigitalOrganismsLogoProps> = ({
         </div>
         <div className={`${sizeClasses[size]} font-light text-foreground tracking-wide flex items-center justify-center`}>
           <BlueDot />
-          <span>rganisms</span>
+          <span>rganism</span>
         </div>
         <div className={`${sizeClasses[size]} font-light text-muted-foreground tracking-wide mt-2`}>
           Theory
@@ -62,14 +62,14 @@ const DigitalOrganismsLogo: React.FC<DigitalOrganismsLogoProps> = ({
     );
   }
 
-  // For horizontal layout, we'll show it in two lines: "Digital Organisms" and "Theory"
+  // For horizontal layout, show "Digital Organism" and "Theory" on two lines.
   return (
     <div className={`text-center ${className}`}>
       <div className={`${sizeClasses[size]} font-light text-foreground tracking-wide flex items-center justify-center`}>
         <span>Digital</span>
         <span className="ml-4 flex items-center">
           <BlueDot />
-          <span>rganisms</span>
+          <span>rganism</span>
         </span>
       </div>
       <div className={`${sizeClasses[size]} font-light text-muted-foreground tracking-wide mt-2`}>

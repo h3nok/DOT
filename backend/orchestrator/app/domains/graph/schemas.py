@@ -132,19 +132,71 @@ class ProfileMetaEntry(pydantic.BaseModel):
     value: str = pydantic.Field(max_length=256)
 
 
+#: Closed unions, mirrored from the frontend's `DotNode`. Unknown values fail closed.
+ProfileNodeKind = typing.Literal["self", "attribute", "page", "external"]
+ProfileSurface = typing.Literal["publications", "circle", "vault", "support", "twin"]
+#: How a node relates to its parent (doc 08 §4.2). Navigation is offered in these terms.
+ProfileRelation = typing.Literal["depends-on", "leads-to", "contrasts", "defines", "applies"]
+
+#: Ids become path segments in the stored `external_id`, so separators are excluded.
+_ID_PATTERN = r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$"
+_LINK_SCHEMES: tuple[str, ...] = ("http://", "https://", "mailto:", "tel:")
+_IMAGE_SCHEMES: tuple[str, ...] = ("https://",)
+
+
+def _safe_link(value: str | None, field: str, schemes: tuple[str, ...]) -> str | None:
+    """Allow internal paths and an explicit scheme list; reject everything else."""
+
+    if value is None:
+        return None
+    candidate: str = value.strip()
+    if not candidate:
+        return None
+    if candidate.startswith("//"):
+        raise ValueError(f"{field} must not be protocol-relative")
+    if candidate.startswith("/"):
+        return candidate
+    if candidate.lower().startswith(schemes):
+        return candidate
+    raise ValueError(f"{field} must be an internal path or one of: {', '.join(schemes)}")
+
+
 class ProfileNode(pydantic.BaseModel):
     """One node of the member's public tree. Recursive by design."""
 
-    id: str = pydantic.Field(min_length=1, max_length=128)
+    id: str = pydantic.Field(min_length=1, max_length=128, pattern=_ID_PATTERN)
     label: str = pydantic.Field(min_length=1, max_length=512)
-    kind: str | None = pydantic.Field(default=None, max_length=64)
-    surface: str | None = pydantic.Field(default=None, max_length=64)
+    kind: ProfileNodeKind | None = None
+    surface: ProfileSurface | None = None
+    relation: ProfileRelation | None = None
     href: str | None = pydantic.Field(default=None, max_length=1024)
     description: str | None = pydantic.Field(default=None, max_length=1024)
     body: str | None = pydantic.Field(default=None, max_length=100_000)
     meta: list[ProfileMetaEntry] | None = None
     image: str | None = pydantic.Field(default=None, max_length=1024)
     children: list["ProfileNode"] | None = None
+
+    @pydantic.field_validator("href")
+    @classmethod
+    def _check_href(cls, value: str | None) -> str | None:
+        return _safe_link(value, "href", _LINK_SCHEMES)
+
+    @pydantic.field_validator("image")
+    @classmethod
+    def _check_image(cls, value: str | None) -> str | None:
+        return _safe_link(value, "image", _IMAGE_SCHEMES)
+
+    @pydantic.field_validator("children")
+    @classmethod
+    def _check_sibling_ids(cls, value: list["ProfileNode"] | None) -> list["ProfileNode"] | None:
+        if value is None:
+            return None
+        seen: set[str] = set()
+        for child in value:
+            if child.id in seen:
+                raise ValueError(f"duplicate child id: {child.id}")
+            seen.add(child.id)
+        return value
 
 
 class ProfileGraphWrite(pydantic.BaseModel):

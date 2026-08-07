@@ -1,4 +1,5 @@
 """Security headers middleware and rate-limiter factory."""
+
 from __future__ import annotations
 
 import slowapi
@@ -8,6 +9,7 @@ import starlette.requests
 import starlette.responses
 
 # ── Rate limiter (Redis-backed in prod; memory-backed in dev) ─────────────────
+
 
 def make_limiter(redis_url: str | None = None) -> slowapi.Limiter:
     """Return a Limiter wired to Redis when a URL is provided."""
@@ -24,18 +26,16 @@ _SECURITY_HEADERS: dict[str, str] = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-    "Content-Security-Policy": (
-        "default-src 'none'; "
-        "frame-ancestors 'none'; "
-        "base-uri 'none';"
-    ),
+    "Content-Security-Policy": ("default-src 'none'; frame-ancestors 'none'; base-uri 'none';"),
 }
 
 
 class SecurityHeadersMiddleware(starlette.middleware.base.BaseHTTPMiddleware):
     """Attach security headers to every response."""
 
-    async def dispatch(self, request: starlette.requests.Request, call_next: object) -> starlette.responses.Response:
+    async def dispatch(
+        self, request: starlette.requests.Request, call_next: object
+    ) -> starlette.responses.Response:
         response: starlette.responses.Response = await call_next(request)
         for header, value in _SECURITY_HEADERS.items():
             response.headers[header] = value

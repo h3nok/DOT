@@ -237,9 +237,7 @@ def test_section_body_upload_and_release_snapshot(
     )
     assert release.status_code == 201
 
-    manifest = client.get(
-        f"/v1/publications/delivery/owner_1/{project['slug']}/manifest"
-    ).json()
+    manifest = client.get(f"/v1/publications/delivery/owner_1/{project['slug']}/manifest").json()
     assert manifest["project"]["meta"]["author"] == "Henok"
     manifest_section = manifest["sections"][0]
     assert manifest_section["meta"]["kind"] == "preface"

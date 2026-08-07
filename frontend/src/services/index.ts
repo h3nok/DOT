@@ -23,9 +23,6 @@ export type {
 export { default as ErrorService } from "./errors/ErrorService";
 export type { ErrorLog, ErrorContext } from "./errors/ErrorService";
 
-// PWA Services
-export { default as PWAService } from "./PWAService";
-
 // Orchestrator Services
 export {
   createPublicationRelease,

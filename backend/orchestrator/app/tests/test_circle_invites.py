@@ -79,9 +79,7 @@ def test_circle_lists_only_the_callers_own_members(
     owner_id: str = _sign_in(client, "owner3@example.com", "Owner")
     joiner_id: str = _sign_in(client, "joiner@example.com", "Joiner")
     token = client.post("/v1/auth/invites", headers={"X-Owner-Id": owner_id}).json()["token"]
-    client.post(
-        "/v1/auth/invites/accept", json={"token": token}, headers={"X-Owner-Id": joiner_id}
-    )
+    client.post("/v1/auth/invites/accept", json={"token": token}, headers={"X-Owner-Id": joiner_id})
 
     mine = client.get("/v1/auth/circle", headers={"X-Owner-Id": owner_id}).json()
     assert mine["count"] == 1

@@ -6,13 +6,13 @@ import fastapi
 import pydantic
 import sqlalchemy.ext.asyncio
 
-from app.db.models import FootprintNode
 import app.auth.dependencies
 import app.db.session
 import app.domains.graph.schemas
 import app.domains.graph.service
 import app.domains.knowledge.service
 import app.integrations.object_store
+from app.db.models import FootprintNode
 
 router = fastapi.APIRouter(
     prefix="/v1/vault",
@@ -88,7 +88,10 @@ async def upload_file(
     if len(body) > MAX_UPLOAD_BYTES:
         raise fastapi.HTTPException(status_code=413, detail="Upload exceeds the size limit.")
 
-    store: app.integrations.object_store.FilesystemObjectStore | app.integrations.object_store.S3ObjectStore = app.integrations.object_store.get_object_store()
+    store: (
+        app.integrations.object_store.FilesystemObjectStore
+        | app.integrations.object_store.S3ObjectStore
+    ) = app.integrations.object_store.get_object_store()
     await store.put_bytes(safe_key, body)
     return {"key": safe_key}
 

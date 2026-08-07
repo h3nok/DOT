@@ -1,3 +1,5 @@
+import { authedFetch } from "./orchestratorHttp";
+
 export interface PublicationSectionMeta {
   slug?: string;
   kind?: string;
@@ -181,10 +183,6 @@ const deliveryUrl = (ownerId: string, slug: string, version?: number) => {
   return url.toString();
 };
 
-const ownerHeaders = (ownerId = ORCHESTRATOR_OWNER_ID) => ({
-  "X-Owner-Id": ownerId,
-});
-
 async function readJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const detail = await response.text();
@@ -212,14 +210,10 @@ export async function createPublicationProject(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead> {
-  const response = await fetch(orchestratorUrl("/v1/publications/projects"), {
+  const response = await authedFetch(orchestratorUrl("/v1/publications/projects"), {
     method: "POST",
-    cache: "no-store",
-    headers: {
-      ...ownerHeaders(ownerId),
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    ownerId,
+    json: payload,
     signal,
   });
 
@@ -230,9 +224,8 @@ export async function fetchPublicationProjects(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead[]> {
-  const response = await fetch(orchestratorUrl("/v1/publications/projects"), {
-    cache: "no-store",
-    headers: ownerHeaders(ownerId),
+  const response = await authedFetch(orchestratorUrl("/v1/publications/projects"), {
+    ownerId,
     signal,
   });
 
@@ -244,13 +237,12 @@ export async function fetchPublicationProject(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}`,
     ),
     {
-      cache: "no-store",
-      headers: ownerHeaders(ownerId),
+      ownerId,
       signal,
     },
   );
@@ -263,13 +255,12 @@ export async function fetchPublicationSections(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead[]> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}/sections`,
     ),
     {
-      cache: "no-store",
-      headers: ownerHeaders(ownerId),
+      ownerId,
       signal,
     },
   );
@@ -283,18 +274,14 @@ export async function updatePublicationProject(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationProjectRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}`,
     ),
     {
       method: "PATCH",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(ownerId),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      ownerId,
+      json: payload,
       signal,
     },
   );
@@ -308,18 +295,14 @@ export async function createPublicationSection(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}/sections`,
     ),
     {
       method: "POST",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(ownerId),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      ownerId,
+      json: payload,
       signal,
     },
   );
@@ -333,18 +316,14 @@ export async function updatePublicationSection(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationSectionRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/sections/${encodeURIComponent(sectionId)}`,
     ),
     {
       method: "PATCH",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(ownerId),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      ownerId,
+      json: payload,
       signal,
     },
   );
@@ -358,18 +337,14 @@ export async function createPublicationRevision(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationRevisionRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/sections/${encodeURIComponent(sectionId)}/revisions`,
     ),
     {
       method: "POST",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(ownerId),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      ownerId,
+      json: payload,
       signal,
     },
   );
@@ -382,13 +357,12 @@ export async function fetchPublicationReleases(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationReleaseRead[]> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}/releases`,
     ),
     {
-      cache: "no-store",
-      headers: ownerHeaders(ownerId),
+      ownerId,
       signal,
     },
   );
@@ -401,14 +375,13 @@ export async function validatePublicationProject(
   ownerId = ORCHESTRATOR_OWNER_ID,
   signal?: AbortSignal,
 ): Promise<PublicationValidationRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}/validate`,
     ),
     {
       method: "POST",
-      cache: "no-store",
-      headers: ownerHeaders(ownerId),
+      ownerId,
       signal,
     },
   );
@@ -420,19 +393,15 @@ export async function createPublicationRelease(
   projectId: string,
   options: { idempotencyKey: string; slug?: string; ownerId?: string },
 ): Promise<PublicationReleaseRead> {
-  const response = await fetch(
+  const response = await authedFetch(
     orchestratorUrl(
       `/v1/publications/projects/${encodeURIComponent(projectId)}/releases`,
     ),
     {
       method: "POST",
-      cache: "no-store",
-      headers: {
-        ...ownerHeaders(options.ownerId),
-        "Content-Type": "application/json",
-        "Idempotency-Key": options.idempotencyKey,
-      },
-      body: JSON.stringify({ slug: options.slug }),
+      ownerId: options.ownerId,
+      idempotencyKey: options.idempotencyKey,
+      json: { slug: options.slug },
     },
   );
 

@@ -10,17 +10,15 @@ manifest for the public Stay reader.
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
 import json
+import os
+import pathlib
 import re
 import subprocess
 import tempfile
-import dataclasses
-import pathlib
 from typing import Any
-
-from httpx import Client, Response
-from httpx._models import Response
 
 BOOK_ROUTE = "/book/digital-organism-theory"
 
@@ -38,7 +36,16 @@ class SectionSpec:
     related_concepts: tuple[str, ...]
 
 
-SECTIONS: tuple[SectionSpec, SectionSpec, SectionSpec, SectionSpec, SectionSpec, SectionSpec, SectionSpec, SectionSpec] = (
+SECTIONS: tuple[
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+    SectionSpec,
+] = (
     SectionSpec(
         marker="**PREFACE**",
         next_marker="**CHAPTER 1**",
@@ -152,11 +159,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         default=pathlib.Path(
-            "frontend/public/publications/henok/digital-organism-theory/v1"
+            "frontend/public/publications/henok/digital-organism-theory/v2"
         ),
         type=pathlib.Path,
     )
-    parser.add_argument("--release-date", default="2026-07-30")
+    parser.add_argument("--release-date", default="2026-08-06")
+    parser.add_argument("--release-version", default=2, type=int)
+    parser.add_argument("--release-label", default="Line-edited edition")
+    parser.add_argument("--release-status", default="line-edited-preview")
+    parser.add_argument("--pandoc", default=os.environ.get("PANDOC", "pandoc"))
+    parser.add_argument("--pandoc-data-dir", type=pathlib.Path)
     parser.add_argument(
         "--push",
         action="store_true",
@@ -167,25 +179,31 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def pandoc_markdown(source: pathlib.Path) -> str:
+def pandoc_markdown(
+    source: pathlib.Path,
+    pandoc: str,
+    pandoc_data_dir: pathlib.Path | None,
+) -> str:
     with tempfile.TemporaryDirectory(prefix="dot-book-") as temp_dir:
         output: pathlib.Path = pathlib.Path(temp_dir) / "book.md"
-        subprocess.run(
-            [
-                "pandoc",
-                str(source),
-                "--from=docx",
-                "--to=gfm",
-                "--wrap=none",
-                f"--output={output}",
-            ],
-            check=True,
-        )
+        command = [
+            pandoc,
+            str(source),
+            "--from=docx",
+            "--to=gfm",
+            "--wrap=none",
+            f"--output={output}",
+        ]
+        if pandoc_data_dir is not None:
+            command.insert(1, f"--data-dir={pandoc_data_dir.resolve()}")
+        subprocess.run(command, check=True)
         return output.read_text(encoding="utf-8")
 
 
 def citation_links(match: re.Match[str]) -> str:
-    identifiers: list[str | Any] = [value.strip() for value in match.group(1).split(",")]
+    identifiers: list[str | Any] = [
+        value.strip() for value in match.group(1).split(",")
+    ]
     return "".join(
         f"[{identifier.translate(SUPERSCRIPT)}]"
         f"({BOOK_ROUTE}/references#reference-{identifier})"
@@ -213,6 +231,17 @@ def clean_markdown(raw: str, spec: SectionSpec) -> str:
     # to ordinary Markdown links so the public reader needs no raw-HTML mode.
     text: str = re.sub(r"<sup>([0-9,]+)</sup>", citation_links, text)
     text: str = re.sub(r"<u>(.*?)</u>", r"\1", text)
+
+    # GFM's writer protects TeX as code. The reader has remark-math/KaTeX, so
+    # restore ordinary dollar-delimited math after Pandoc has preserved the
+    # Word equation itself.
+    text: str = re.sub(
+        r"``` math\n(.*?)\n```",
+        lambda match: f"$$\n{match.group(1)}\n$$",
+        text,
+        flags=re.DOTALL,
+    )
+    text: str = re.sub(r"\$`([^`\n]+)`\$", r"$\1$", text)
 
     if spec.kind == "references":
         text: str = re.sub(
@@ -250,7 +279,7 @@ def main() -> None:
     sections_dir = output / "sections"
     sections_dir.mkdir(parents=True, exist_ok=True)
 
-    markdown: str = pandoc_markdown(source)
+    markdown: str = pandoc_markdown(source, args.pandoc, args.pandoc_data_dir)
     manifest_sections: list[dict[str, object]] = []
 
     for index, spec in enumerate(SECTIONS):
@@ -276,20 +305,19 @@ def main() -> None:
         )
 
     checksum: str = hashlib.sha256(source.read_bytes()).hexdigest()
-    total_words: int = sum(
-        int(section["word_count"]) for section in manifest_sections
-    )
-    equation_count: int = len(
-        re.findall(r"^\$\$.*\$\$$", markdown, flags=re.MULTILINE)
-    )
+    total_words: int = sum(int(section["word_count"]) for section in manifest_sections)
+    equation_count: int = len(re.findall(r"^``` math$", markdown, flags=re.MULTILINE))
     reference_count: int = len(
-        re.findall(r"^\*\*\d+\.\*\*", section_slice(markdown, SECTIONS[-1]), re.MULTILINE)
+        re.findall(
+            r"^\*\*\d+\.\*\*", section_slice(markdown, SECTIONS[-1]), re.MULTILINE
+        )
     )
     manifest = {
         "schema_version": "publication.release.v2",
         "generated_at": f"{args.release_date}T00:00:00Z",
         "source": {
             "format": "docx",
+            "name": source.name,
             "sha256": checksum,
         },
         "project": {
@@ -298,16 +326,16 @@ def main() -> None:
             "type": "book",
             "series_title": "Digital Organism Theory",
             "title": "Consciousness: A Digital Organism",
-            "subtitle": "The Development and Application of a Big Theory of Everything",
+            "subtitle": "A Framework for Consciousness, Conditioning, and Conscious Authorship",
             "author": "Henok Ghebrechristos",
             "slug": "digital-organism-theory",
             "visibility": "public",
         },
         "release": {
-            "id": "dot-book-one-foundational-v1",
-            "version": 1,
-            "status": "foundational-preview",
-            "label": "Foundational edition",
+            "id": f"dot-book-one-v{args.release_version}",
+            "version": args.release_version,
+            "status": args.release_status,
+            "label": args.release_label,
             "published_at": None,
             "updated_at": args.release_date,
         },
@@ -371,11 +399,13 @@ def push_to_orchestrator(
     slug = manifest["project"]["slug"]
 
     with httpx.Client(base_url=base_url, headers=headers, timeout=30) as client:
-        projects: Response = client.get("/v1/publications/projects")
+        projects = client.get("/v1/publications/projects")
         projects.raise_for_status()
-        project: Any | None = next((p for p in projects.json() if p["slug"] == slug), None)
+        project: Any | None = next(
+            (p for p in projects.json() if p["slug"] == slug), None
+        )
         if project is None:
-            created: Response = client.post(
+            created = client.post(
                 "/v1/publications/projects",
                 json={
                     "title": manifest["project"]["title"],
@@ -395,7 +425,7 @@ def push_to_orchestrator(
             ).raise_for_status()
             print(f"Using project {project['id']} ({slug})")
 
-        existing: Response = client.get(f"/v1/publications/projects/{project['id']}/sections")
+        existing = client.get(f"/v1/publications/projects/{project['id']}/sections")
         existing.raise_for_status()
         by_title: dict[Any, Any] = {s["title"]: s for s in existing.json()}
 
@@ -412,7 +442,7 @@ def push_to_orchestrator(
             }
             section: Any | None = by_title.get(spec_section["title"])
             if section is None:
-                created: Response = client.post(
+                created = client.post(
                     f"/v1/publications/projects/{project['id']}/sections",
                     json={
                         "title": spec_section["title"],
@@ -428,8 +458,10 @@ def push_to_orchestrator(
                     json={"order": spec_section["order"], "meta": section_meta},
                 ).raise_for_status()
 
-            body: str = (sections_dir / f"{spec_section['slug']}.md").read_text(encoding="utf-8")
-            upload: Response = client.put(
+            body: str = (sections_dir / f"{spec_section['slug']}.md").read_text(
+                encoding="utf-8"
+            )
+            upload = client.put(
                 f"/v1/publications/sections/{section['id']}/body",
                 content=body.encode("utf-8"),
                 headers={"Content-Type": "text/markdown"},
@@ -437,7 +469,7 @@ def push_to_orchestrator(
             upload.raise_for_status()
             print(f"  Section synced: {spec_section['title']}")
 
-        release: Response = client.post(
+        release = client.post(
             f"/v1/publications/projects/{project['id']}/releases",
             json={},
             headers={"Idempotency-Key": f"import-{source_sha[:16]}"},

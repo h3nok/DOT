@@ -40,7 +40,9 @@ async def get_public_delivery_manifest(
     version: typing.Annotated[int | None, fastapi.Query(ge=1)] = None,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> fastapi.Response:
-    data: dict[str, typing.Any] = await app.domains.publication.service.get_public_delivery_manifest(
+    data: dict[
+        str, typing.Any
+    ] = await app.domains.publication.service.get_public_delivery_manifest(
         session, owner_id, project_slug, version
     )
     # Immutable manifests are versioned; cache 1 h at edge, 24 h in CDN.
@@ -79,7 +81,9 @@ async def sitemap(
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
     settings: app.core.config.Settings = fastapi.Depends(app.core.config.get_settings),
 ) -> fastapi.Response:
-    rows: list[tuple[app.db.models.PublicationProject, app.db.models.PublicationRelease]] = await app.domains.publication.service.list_public_releases(session)
+    rows: list[
+        tuple[app.db.models.PublicationProject, app.db.models.PublicationRelease]
+    ] = await app.domains.publication.service.list_public_releases(session)
     urlset: _ET.Element = _ET.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
     base: str = settings.FRONTEND_URL.rstrip("/")
     for project, release in rows:
@@ -89,7 +93,10 @@ async def sitemap(
             _ET.SubElement(url, "lastmod").text = release.published_at.strftime("%Y-%m-%d")
         _ET.SubElement(url, "changefreq").text = "monthly"
         _ET.SubElement(url, "priority").text = "0.8"
-    xml_bytes: bytes = b'<?xml version="1.0" encoding="UTF-8"?>\n' + _ET.tostring(urlset, encoding="unicode").encode()
+    xml_bytes: bytes = (
+        b'<?xml version="1.0" encoding="UTF-8"?>\n'
+        + _ET.tostring(urlset, encoding="unicode").encode()
+    )
     return fastapi.Response(
         content=xml_bytes,
         media_type="application/xml",
@@ -172,7 +179,7 @@ async def create_section(
 
 @router.get(
     "/projects/{project_id}/sections",
-    response_model=list[app.domains.publication.schemas.PublicationSectionRead]
+    response_model=list[app.domains.publication.schemas.PublicationSectionRead],
 )
 async def list_sections(
     project_id: str,
@@ -219,8 +226,8 @@ async def set_section_body(
         raise fastapi.HTTPException(status_code=413, detail="Body exceeds 2 MB limit.")
     try:
         body_text: str = raw.decode("utf-8")
-    except UnicodeDecodeError:
-        raise fastapi.HTTPException(status_code=422, detail="Body must be UTF-8 text.")
+    except UnicodeDecodeError as err:
+        raise fastapi.HTTPException(status_code=422, detail="Body must be UTF-8 text.") from err
     return await app.domains.publication.service.set_section_body(
         session, owner, section_id, body_text
     )
@@ -256,7 +263,9 @@ async def validate_project(
     ),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> app.domains.publication.schemas.PublicationValidationRead:
-    errors: list[str] = await app.domains.publication.service.validate_project(session, owner, project_id)
+    errors: list[str] = await app.domains.publication.service.validate_project(
+        session, owner, project_id
+    )
     return app.domains.publication.schemas.PublicationValidationRead(
         valid=not errors, errors=errors
     )

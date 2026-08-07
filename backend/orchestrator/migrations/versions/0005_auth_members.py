@@ -7,8 +7,8 @@ Create Date: 2026-08-04
 
 import collections.abc
 
-import sqlalchemy as sa
 import alembic
+import sqlalchemy as sa
 
 revision: str = "0005_auth_members"
 down_revision: str | None = "0a354b662a63"
@@ -26,7 +26,9 @@ def upgrade() -> None:
         sa.Column("role", sa.String(32), nullable=False, server_default="member"),
         sa.Column("invited_by", sa.String(64), sa.ForeignKey("members.id"), nullable=True),
         sa.Column("last_signed_in_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=True),
     )
     alembic.op.create_index("ix_members_email_hash", "members", ["email_hash"], unique=True)
@@ -41,7 +43,9 @@ def upgrade() -> None:
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("attempts", sa.Integer, nullable=False, server_default="0"),
         sa.Column("used_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
     )
     alembic.op.create_index("ix_otp_codes_email_hash", "otp_codes", ["email_hash"])
 
@@ -54,9 +58,13 @@ def upgrade() -> None:
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("accepted_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("revoked_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
     )
-    alembic.op.create_index("ix_invite_codes_token_hash", "invite_codes", ["token_hash"], unique=True)
+    alembic.op.create_index(
+        "ix_invite_codes_token_hash", "invite_codes", ["token_hash"], unique=True
+    )
     alembic.op.create_index("ix_invite_codes_issued_by", "invite_codes", ["issued_by"])
 
 

@@ -1,5 +1,5 @@
 /**
- * Organism Theme — a living, ambient skin for DOT (Digital Organisms Theory).
+ * Organism Theme — a living, ambient skin for DOT (Digital Organism Theory).
  *
  * The site behaves like an organism whose physiology is driven by four real
  * signals: the local clock (circadian), your input (arousal), backend health

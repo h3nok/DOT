@@ -6,7 +6,7 @@ cd "$ROOT_DIR"
 
 PYTHON_BIN="${PYTHON_BIN:-$ROOT_DIR/.venv/bin/python3}"
 ALEMBIC_BIN="${ALEMBIC_BIN:-$ROOT_DIR/.venv/bin/alembic}"
-PNPM_BIN="${PNPM_BIN:-pnpm}"
+VITE_BIN="${VITE_BIN:-$ROOT_DIR/frontend/node_modules/.bin/vite}"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.orchestrator.yml"
 
 export ORCHESTRATOR_POSTGRES_PORT="${ORCHESTRATOR_POSTGRES_PORT:-5432}"
@@ -98,9 +98,9 @@ start_service() {
 }
 
 require_command docker
-require_command "$PNPM_BIN"
 require_file "$PYTHON_BIN" "missing Python venv at .venv; run make install-backend install-orchestrator first"
 require_file "$ALEMBIC_BIN" "missing Alembic in .venv; run make install-orchestrator first"
+require_file "$VITE_BIN" "missing frontend Vite binary; run make install-frontend first"
 require_file "$COMPOSE_FILE" "missing docker-compose.orchestrator.yml"
 require_file "$ROOT_DIR/frontend/node_modules" "missing frontend dependencies; run make install-frontend first"
 
@@ -125,7 +125,7 @@ echo "Seeding profile delivery release..."
 
 start_service "FastAPI orchestrator" "$ROOT_DIR/backend/orchestrator" "$PYTHON_BIN" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 start_service "orchestrator worker" "$ROOT_DIR/backend/orchestrator" "$PYTHON_BIN" -m dramatiq app.workers.tasks
-start_service "Vite frontend" "$ROOT_DIR" "$PNPM_BIN" --dir frontend dev
+start_service "Vite frontend" "$ROOT_DIR/frontend" "$VITE_BIN" dev
 
 cat <<EOF
 

@@ -4,17 +4,14 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Activity,
   ArrowUpRight,
-  GitBranch,
+  BookOpen,
   Hammer,
-  ListChecks,
-  Send,
   X,
 } from "lucide-react";
 import {
   fetchOrchestratorReadiness,
   type OrchestratorReadiness,
 } from "../../services/OrchestratorPublicationService";
-import { useOrganism } from "../../organism";
 import type { DoctrineNode } from "../../content/doctrine/doctrineData";
 
 // Orchestrator presence for the reading surface.
@@ -39,26 +36,12 @@ interface NodeTool {
 
 const NODE_TOOLS: NodeTool[] = [
   {
-    id: "publish",
-    label: "Publish revision",
-    hint: "Cut an immutable release of this idea",
-    icon: Send,
-    needsOrchestrator: true,
-    to: "/orchestrator",
-  },
-  {
-    id: "review",
-    label: "Request review",
-    hint: "Open this idea for a coherence review",
-    icon: ListChecks,
-    needsOrchestrator: true,
-  },
-  {
-    id: "trace",
-    label: "Trace sources",
-    hint: "Follow the source trail behind this claim",
-    icon: GitBranch,
+    id: "source",
+    label: "Open source passage",
+    hint: "Read the Book One passage behind this concept",
+    icon: BookOpen,
     needsOrchestrator: false,
+    to: "node-source",
   },
   {
     id: "open",
@@ -69,13 +52,6 @@ const NODE_TOOLS: NodeTool[] = [
     to: "/orchestrator",
   },
 ];
-
-const formatDuration = (seconds: number) => {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  if (m <= 0) return `${s}s`;
-  return `${m}m ${String(s).padStart(2, "0")}s`;
-};
 
 const statusColor = (status: Status) =>
   status === "ready"
@@ -95,56 +71,19 @@ const statusLabel: Record<Status, string> = {
 
 interface OrchestratorNodeToolsProps {
   node: DoctrineNode;
-  /** 0..1 scroll depth of the reading column, owned by the page. */
-  scrollProgress: number;
 }
 
 export const OrchestratorNodeTools = ({
   node,
-  scrollProgress,
 }: OrchestratorNodeToolsProps) => {
   const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
-  const { mood, vitals } = useOrganism();
 
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("checking");
   const [readiness, setReadiness] = useState<OrchestratorReadiness | null>(
     null,
   );
-
-  // Reading presence — screen time on this idea and deepest scroll reached.
-  const [seconds, setSeconds] = useState(0);
-  const [maxDepth, setMaxDepth] = useState(0);
-  const [arousal, setArousal] = useState(0);
-
-  // Reset session metrics when the idea changes.
-  useEffect(() => {
-    setSeconds(0);
-    setMaxDepth(0);
-  }, [node.id]);
-
-  useEffect(() => {
-    setMaxDepth((current) => Math.max(current, scrollProgress));
-  }, [scrollProgress]);
-
-  // Screen-time tick (only while the tab is visible).
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      if (document.visibilityState === "visible") {
-        setSeconds((value) => value + 1);
-      }
-    }, 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  // Sample organism arousal (~2Hz) for an activity-aware readout.
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setArousal(vitals.current?.arousal ?? 0);
-    }, 500);
-    return () => window.clearInterval(id);
-  }, [vitals]);
 
   // Poll orchestrator readiness so its presence is live.
   useEffect(() => {
@@ -179,11 +118,13 @@ export const OrchestratorNodeTools = ({
   }, []);
 
   const online = status === "ready" || status === "degraded";
-  const activity =
-    arousal > 0.35 ? "engaged" : arousal > 0.12 ? "reading" : "still";
-
   const runTool = (tool: NodeTool) => {
     if (tool.needsOrchestrator && status !== "ready") return;
+    if (tool.to === "node-source") {
+      navigate(node.source.href);
+      setOpen(false);
+      return;
+    }
     if (tool.to) {
       navigate(tool.to);
       setOpen(false);
@@ -316,35 +257,6 @@ export const OrchestratorNodeTools = ({
                   </p>
                 )}
               </div>
-
-              {/* Reading presence — organism / activity aware */}
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                {[
-                  { label: "Screen", value: formatDuration(seconds) },
-                  { label: "Depth", value: `${Math.round(maxDepth * 100)}%` },
-                  { label: "State", value: activity },
-                ].map((tile) => (
-                  <div
-                    key={tile.label}
-                    className="rounded-lg border p-3"
-                    style={{
-                      borderColor: "var(--surface-hairline)",
-                      background:
-                        "color-mix(in oklch, var(--surface-fg) 3%, transparent)",
-                    }}
-                  >
-                    <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-[color:var(--surface-muted)]">
-                      {tile.label}
-                    </p>
-                    <p className="mt-1 text-sm font-black capitalize text-[color:var(--surface-fg)]">
-                      {tile.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--surface-muted)]">
-                organism · {mood}
-              </p>
 
               {/* Node-scoped tools */}
               <div className="mt-6">

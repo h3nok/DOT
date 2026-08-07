@@ -70,6 +70,20 @@ def _error_json(
     return JSONResponse(status_code=status_code, content=body)
 
 
+def _serialisable_errors(errors: list[Any]) -> list[dict[str, Any]]:
+    """A validator raising ValueError puts the exception itself in `ctx`, which
+    JSONResponse cannot encode. Stringify it rather than crash the handler."""
+
+    cleaned: list[dict[str, Any]] = []
+    for error in errors:
+        item: dict[str, Any] = {key: value for key, value in error.items() if key != "ctx"}
+        context = error.get("ctx")
+        if context:
+            item["ctx"] = {key: str(value) for key, value in context.items()}
+        cleaned.append(item)
+    return cleaned
+
+
 def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ServiceError)
     async def service_error(request: Request, exc: ServiceError) -> JSONResponse:
@@ -92,5 +106,5 @@ def install_error_handlers(app: FastAPI) -> None:
             status.HTTP_422_UNPROCESSABLE_ENTITY,
             "VALIDATION_ERROR",
             "Request validation failed",
-            detail=exc.errors(),
+            detail=_serialisable_errors(exc.errors()),
         )

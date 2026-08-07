@@ -2,9 +2,9 @@ import type { CSSProperties } from "react";
 
 // Stay logo system — duotone, single signal accent.
 //
-// The mark is a held dot inside a stabilized ring: a Self that keeps its form.
-// Everything is monoline and currentColor-driven except the held center dot,
-// which carries the signal accent. Scales cleanly from favicon to billboard.
+// The mark keeps the observer visible inside a bounded Reality Frame.
+// Everything is monoline and currentColor-driven except the center dot, which
+// carries the signal accent. Scales cleanly from favicon to billboard.
 
 interface StayMarkProps {
   size?: number;
@@ -31,7 +31,7 @@ export const StayMark = ({
     aria-label={title}
     className={className}
   >
-    {/* Stabilized field — the substrate that holds */}
+    {/* The boundary of the current Reality Frame */}
     <circle
       cx="24"
       cy="24"
@@ -50,7 +50,7 @@ export const StayMark = ({
       strokeWidth="1.2"
       strokeDasharray="1.2 3.2"
     />
-    {/* The held dot — a Self that stays */}
+    {/* The observer kept in view */}
     <circle cx="24" cy="24" r="5.2" fill={accent} />
     <circle
       cx="24"

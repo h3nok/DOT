@@ -15,10 +15,8 @@ OTHER_OWNER_HEADERS: dict[str, str] = {"X-Owner-Id": "owner_2"}
 DOCUMENT: str = "\n\n".join(
     [
         "Attention is the scarce resource, not content.",
-        "A feed optimizes for time spent. A graph optimizes for understanding. "
-        * 30,
-        "Publication is the act of making a position checkable by someone else. "
-        * 30,
+        "A feed optimizes for time spent. A graph optimizes for understanding. " * 30,
+        "Publication is the act of making a position checkable by someone else. " * 30,
     ]
 )
 
