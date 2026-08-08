@@ -48,7 +48,7 @@ jobs:
         VITE_ORCHESTRATOR_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_SLUG: henok-profile
-        VITE_SITE_URL: https://henokghebrechristos.com
+        VITE_SITE_URL: https://dot.org
       run: |
         if [[ ! "$VITE_ORCHESTRATOR_URL" =~ ^https:// ]]; then
           echo "VITE_ORCHESTRATOR_URL must be configured as an HTTPS repository variable."
