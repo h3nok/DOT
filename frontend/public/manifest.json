@@ -1,22 +1,17 @@
 {
-  "name": "Stay Press - Book Room",
-  "short_name": "Stay Press",
-  "description": "A grassroots reading and knowledge platform designed around focus, not ads, feeds, or behavioral extraction.",
-  "start_url": "/DOT/book",
+  "name": "DOT — Digital Organism Theory",
+  "short_name": "DOT",
+  "description": "Read Consciousness: A Digital Organism, and trace every concept back to the passage it came from.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f7f7f4",
-  "theme_color": "#0a0a0a",
-  "orientation": "portrait-primary",
-  "scope": "/DOT/",
+  "theme_color": "#f7f7f4",
+  "orientation": "any",
   "lang": "en",
-  "categories": ["education", "research", "productivity"],
+  "dir": "ltr",
+  "categories": ["education", "books", "reference"],
   "icons": [
-    {
-      "src": "/favicon-16.svg",
-      "sizes": "16x16",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
     {
       "src": "/favicon-dot-16.svg",
       "sizes": "16x16",
@@ -24,15 +19,10 @@
       "purpose": "monochrome"
     },
     {
-      "src": "/favicon.svg",
+      "src": "/favicon-dot.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/favicon.ico",
-      "sizes": "32x32",
-      "type": "image/x-icon"
     },
     {
       "src": "/favicon-dot.ico",
@@ -40,95 +30,20 @@
       "type": "image/x-icon"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/desktop-home.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Stay Press Book Room - Desktop"
-    },
-    {
-      "src": "/screenshots/mobile-home.png",
-      "sizes": "375x667",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Stay Press Book Room - Mobile"
-    }
-  ],
   "shortcuts": [
     {
-      "name": "Book Room",
-      "short_name": "Book",
-      "description": "Read the founding book and inspect its sources",
-      "url": "/DOT/book",
-      "icons": [
-        {
-          "src": "/favicon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-      "name": "Founding Invite",
-      "short_name": "Invite",
-      "description": "Request access to the founding reader circle",
-      "url": "/DOT/invite",
-      "icons": [
-        {
-          "src": "/favicon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
+      "name": "Book One",
+      "short_name": "Book One",
+      "description": "Read the line-edited edition of Consciousness: A Digital Organism",
+      "url": "/book/digital-organism-theory"
     },
     {
-      "name": "Cockpit",
-      "short_name": "Home",
-      "description": "Return to the platform cockpit",
-      "url": "/DOT/",
-      "icons": [
-        {
-          "src": "/favicon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Design System",
-      "short_name": "System",
-      "description": "Inspect the platform interface primitives",
-      "url": "/DOT/ui",
-      "icons": [
-        {
-          "src": "/favicon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
+      "name": "Concept map",
+      "short_name": "Concepts",
+      "description": "Book One concepts, claim boundaries, and open debts",
+      "url": "/doctrine"
     }
   ],
   "related_applications": [],
-  "prefer_related_applications": false,
-  "dir": "ltr",
-  "iarc_rating_id": "",
-  "protocol_handlers": [
-    {
-      "protocol": "web+dot",
-      "url": "/share?content=%s"
-    }
-  ],
-  "share_target": {
-    "action": "/share",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "edge_side_panel": {
-    "preferred_width": 400
-  }
+  "prefer_related_applications": false
 }

@@ -39,6 +39,82 @@ def test_public_companion_history_is_bounded_and_typed() -> None:
         )
 
 
+def test_model_outage_returns_cited_released_prose() -> None:
+    import app.domains.twin.retriever as retriever
+    import app.domains.twin.service as service
+
+    response = service._extractive_fallback(  # noqa: SLF001 - contract-level fallback test
+        [
+            retriever.Passage(
+                id="chunk-1",
+                kind="chunk",
+                label="Book One · The Canvas",
+                text="The Canvas carries. The Painting interprets.",
+                score=1.0,
+                locator={"section": "the-canvas", "start": 10, "end": 59},
+            )
+        ],
+        "What is the Canvas?",
+    )
+
+    assert response.grounded is True
+    assert response.refusal_code is None
+    assert "The Canvas carries" in response.answer
+    assert response.citations[0].node_id == "chunk-1"
+    assert response.citations[0].locator == {
+        "section": "the-canvas",
+        "start": 10,
+        "end": 59,
+    }
+
+
+def test_exact_concept_and_section_title_outrank_loose_repetition() -> None:
+    import app.domains.twin.retriever as retriever
+
+    terms = retriever._terms("How does Book One define a Digital Organism?")  # noqa: SLF001
+    definition = retriever._keyword_score(  # noqa: SLF001
+        "A Digital Organism is a state-bearing process.",
+        "Chapter 1 · The Digital Organism",
+        terms,
+        definition_intent=True,
+    )
+    related = retriever._keyword_score(  # noqa: SLF001
+        "Digital systems affect an organism. Digital signals reach the organism.",
+        "Chapter 2 · The Decoupling Principle",
+        terms,
+    )
+
+    assert terms == ["digital", "organism"]
+    assert definition > related
+
+
+def test_extractive_citation_uses_the_matched_book_heading() -> None:
+    import app.domains.twin.retriever as retriever
+    import app.domains.twin.service as service
+
+    response = service._extractive_fallback(  # noqa: SLF001
+        [
+            retriever.Passage(
+                id="chunk-1",
+                kind="chunk",
+                label="Book One · The Digital Organism",
+                text=(
+                    "## Why Call It Digital?\n\nThe word digital needs care.\n\n"
+                    "A Digital Organism is defined by function: it carries state."
+                ),
+                score=1.0,
+                locator={"section": "the-digital-organism"},
+            )
+        ],
+        "How is a Digital Organism defined?",
+    )
+
+    citation = response.citations[0]
+    assert citation.label.endswith("Why Call It Digital?")
+    assert citation.locator is not None
+    assert citation.locator["heading"] == "why-call-it-digital"
+
+
 def _headers(owner_id: str) -> dict[str, str]:
     return {"X-Owner-Id": owner_id}
 

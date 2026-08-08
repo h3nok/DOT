@@ -15,8 +15,29 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
+    <!-- Restore the real URL after 404.html folded it into a query string, so a
+         shared or reloaded chapter link lands on the chapter. Must run before
+         the app boots and reads the location. -->
+    <script>
+      (function (l) {
+        if (l.search[1] !== "/") return;
+        var decoded = l.search
+          .slice(1)
+          .split("&")
+          .map(function (part) {
+            return part.replace(/~and~/g, "&");
+          })
+          .join("?");
+        window.history.replaceState(
+          null,
+          null,
+          l.pathname.slice(0, -1) + decoded + l.hash,
+        );
+      })(window.location);
+    </script>
+
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#f7f7f4" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="DOT" />

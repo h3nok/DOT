@@ -1,54 +1,74 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ExperienceLoop } from "./ExperienceLoop";
 
 describe("ExperienceLoop", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("selects states directly and keeps one active transition", () => {
     const { container } = render(<ExperienceLoop initialStep="Reality Stream" />);
 
-    expect(screen.getByRole("heading", { name: "Reality Stream" })).toBeVisible();
-    expect(container.querySelectorAll(".book-loop-flow-signal")).toHaveLength(1);
-    expect(container.querySelector('[data-connection="return-little-c"]')).toBeInTheDocument();
-    expect(
-      container.querySelector('[data-connection="return-reality-stream"]'),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Decision Space$/ })).not.toBeInTheDocument();
-    expect(screen.getByText("Decision Space")).toBeVisible();
-    expect(screen.getByText("available pre-Intent drafts")).toBeVisible();
-    expect(container.querySelectorAll(".book-loop-state")).toHaveLength(5);
-    expect(container.querySelectorAll(".book-loop-draft")).toHaveLength(4);
+    expect(screen.getByRole("heading", { name: "A moment reaches you" })).toBeVisible();
+    expect(screen.getByText("Consequence becomes context.")).toBeVisible();
+    expect(container.querySelectorAll(".book-experience-node")).toHaveLength(5);
+    expect(container.querySelector(".book-experience-orbit-line")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Intent$/ }));
+    fireEvent.click(screen.getByRole("button", { name: /DOT term: Intent$/ }));
 
-    expect(screen.getByRole("heading", { name: "Intent" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "You choose what to do" })).toBeVisible();
     expect(
       screen.getByText(
-        "Little c selects one visible pre-Intent draft. That movement from proposal to commitment is Intent.",
+        "React, wait, or ask what happened. More than one response is possible.",
       ),
     ).toBeVisible();
-    expect(container.querySelectorAll(".book-loop-state.is-active")).toHaveLength(1);
-    expect(container.querySelectorAll(".book-loop-flow-signal")).toHaveLength(1);
+    expect(screen.getByText(/options together are the Decision Space/)).toBeVisible();
+    expect(container.querySelectorAll(".book-experience-node.is-active")).toHaveLength(1);
+    expect(screen.getByText(/remain hypotheses/)).toBeVisible();
   });
 
-  it("stops at the endpoints and supports directional keyboard navigation", () => {
+  it("wraps around the loop and supports directional keyboard navigation", () => {
     render(<ExperienceLoop initialStep="Reality Stream" />);
     const loop = screen.getByRole("group", { name: "The Experience Loop" });
 
-    expect(screen.getByRole("button", { name: "Previous state" })).toBeDisabled();
-    expect(screen.getByRole("heading", { name: "Reality Stream" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "A moment reaches you" })).toBeVisible();
 
-    screen.getByRole("button", { name: /Reality Stream$/ }).focus();
+    act(() => {
+      screen.getByRole("button", { name: /DOT term: Reality Stream$/ }).focus();
+    });
     fireEvent.keyDown(loop, { key: "ArrowRight" });
-    expect(screen.getByRole("heading", { name: "Painting" })).toBeVisible();
-    expect(screen.getByRole("button", { name: /Painting$/ })).toHaveFocus();
+    expect(screen.getByRole("heading", { name: "Your history gives it meaning" })).toBeVisible();
+    expect(screen.getByRole("button", { name: /DOT term: Painting$/ })).toHaveFocus();
 
     fireEvent.keyDown(loop, { key: "End" });
-    expect(screen.getByRole("heading", { name: "Return" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Next state" })).toBeDisabled();
+    expect(screen.getByRole("heading", { name: "The result changes what comes next" })).toBeVisible();
     fireEvent.keyDown(loop, { key: "ArrowRight" });
-    expect(screen.getByRole("heading", { name: "Return" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "A moment reaches you" })).toBeVisible();
 
     fireEvent.keyDown(loop, { key: "Home" });
-    expect(screen.getByRole("heading", { name: "Reality Stream" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "A moment reaches you" })).toBeVisible();
+  });
+
+  it("never advances on its own", () => {
+    // The figure is embedded inside a chapter. The release's reader contract
+    // declares `autoplay: false` and ADR-0004 forbids autoplay outright, so
+    // the loop may only move when the reader moves it.
+    vi.useFakeTimers();
+    render(<ExperienceLoop initialStep="Reality Stream" />);
+
+    expect(screen.getByText('Your phone lights up: "Can we talk?"')).toBeVisible();
+
+    act(() => {
+      vi.advanceTimersByTime(60000);
+    });
+
+    expect(screen.getByRole("heading", { name: "A moment reaches you" })).toBeVisible();
+  });
+
+  it("offers no playback control, because there is nothing to pause", () => {
+    render(<ExperienceLoop initialStep="Reality Stream" />);
+
+    expect(screen.queryByRole("button", { name: /guided presentation/i })).toBeNull();
   });
 });

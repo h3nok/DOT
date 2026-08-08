@@ -13,6 +13,13 @@ import "@fontsource/jetbrains-mono/500.css";
 import "@fontsource/playfair-display/400.css";
 import "@fontsource/playfair-display/700.css";
 import "@fontsource/playfair-display/900.css";
+// Source Serif 4 sets long-form chapter prose. Playfair is a display face —
+// small x-height and high stroke contrast — which thins out badly across the
+// 3,000-word chapters it was carrying. It stays on headings, where it belongs.
+import "@fontsource/source-serif-4/400.css";
+import "@fontsource/source-serif-4/400-italic.css";
+import "@fontsource/source-serif-4/600.css";
+import "@fontsource/source-serif-4/700.css";
 
 import { HelmetProvider } from "react-helmet-async";
 import "./App.css";

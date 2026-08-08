@@ -66,7 +66,6 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     # Support plane (ADR-0001, ADR-0012). Absent keys disable the surface rather
     # than falling back to a placeholder.
     STRIPE_SECRET_KEY: str = ""
-    STRIPE_PUBLISHABLE_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
 
     model_config = pydantic_settings.SettingsConfigDict(

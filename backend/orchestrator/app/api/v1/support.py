@@ -5,7 +5,6 @@ from typing import Any
 import fastapi
 import sqlalchemy.ext.asyncio
 
-import app.core.config
 import app.core.security
 import app.db.session
 import app.domains.support.models as models
@@ -21,40 +20,55 @@ _limiter = app.core.security.make_limiter()
 
 @router.get("/options", response_model=schemas.SupportOptions)
 async def get_options() -> schemas.SupportOptions:
-    settings: app.core.config.Settings = app.core.config.get_settings()
     return schemas.SupportOptions(
         tiers=[
             schemas.SupportTier(id=tier, amount_minor=amount)
             for tier, amount in models.SUPPORT_TIERS.items()
         ],
+        purposes=[
+            schemas.SupportPurpose(id=purpose, label=label)
+            for purpose, label in models.SUPPORT_PURPOSES.items()
+        ],
         min_custom_minor=models.MIN_CUSTOM_AMOUNT,
         max_custom_minor=models.MAX_CUSTOM_AMOUNT,
-        publishable_key=(
-            settings.STRIPE_PUBLISHABLE_KEY if support_service.is_configured() else ""
-        ),
+        available=support_service.is_configured(),
     )
 
 
-@router.post("/intents", response_model=schemas.SupportIntentResponse)
+@router.post("/checkout-sessions", response_model=schemas.SupportCheckoutResponse)
 @_limiter.limit("10/minute")
-async def create_intent(
+async def create_checkout(
     request: fastapi.Request,
-    payload: schemas.SupportIntentRequest,
+    payload: schemas.SupportCheckoutRequest,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
-) -> schemas.SupportIntentResponse:
+) -> schemas.SupportCheckoutResponse:
     try:
-        result: dict[str, Any] = await support_service.create_intent(
+        result: dict[str, Any] = await support_service.create_checkout(
             session,
             tier=payload.tier,
             custom_amount_minor=payload.custom_amount_minor,
-            cadence=payload.cadence,
-            email=str(payload.email) if payload.email else None,
+            purpose=payload.purpose,
         )
     except ValueError as exc:
         raise fastapi.HTTPException(status_code=400, detail=str(exc)) from exc
     except support_service.SupportUnavailableError as exc:
         raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
-    return schemas.SupportIntentResponse(**result)
+    return schemas.SupportCheckoutResponse(**result)
+
+
+@router.get("/checkout-sessions/{session_id}", response_model=schemas.SupportCheckoutStatus)
+@_limiter.limit("20/minute")
+async def get_checkout_status(
+    request: fastapi.Request,
+    session_id: str,
+) -> schemas.SupportCheckoutStatus:
+    try:
+        result: dict[str, str] = await support_service.checkout_status(session_id)
+    except ValueError as exc:
+        raise fastapi.HTTPException(status_code=400, detail=str(exc)) from exc
+    except support_service.SupportUnavailableError as exc:
+        raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
+    return schemas.SupportCheckoutStatus(**result)
 
 
 @router.post("/webhook", include_in_schema=False)

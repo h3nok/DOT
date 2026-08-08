@@ -7,7 +7,6 @@ import {
   Check,
   ChevronLeft,
   Compass,
-  Feather,
   List,
   Loader2,
   X,
@@ -214,10 +213,8 @@ function BookReader({
               Epistemic boundary · claims retain the manuscript's labels
               <ArrowRight className="h-3 w-3" aria-hidden="true" />
             </Link>
-            <div className="book-reader-rule mt-8 flex items-center justify-center gap-3 text-[var(--book-muted)]" aria-hidden="true">
-              <Feather className="h-4 w-4" />
+            <div className="book-reader-rule mt-8 flex items-center justify-center text-[var(--book-muted)]" aria-hidden="true">
               <Compass className="h-4 w-4" />
-              <Feather className="h-4 w-4 -scale-x-100" />
             </div>
           </header>
 
@@ -299,7 +296,7 @@ function BookReader({
                   to={step(previous)}
                   className="book-path-link group flex max-w-[48%] items-center gap-3 rounded-lg border px-4 py-4 text-left transition-colors"
                 >
-                  <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-1" />
+                  <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground" />
                   <span>
                     <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
                       Previous
@@ -326,7 +323,7 @@ function BookReader({
                       {next.title}
                     </span>
                   </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 shrink-0" />
                 </Link>
               ) : (
                 <Link

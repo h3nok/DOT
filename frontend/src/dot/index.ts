@@ -39,8 +39,9 @@ export { useEditableGraph } from "./useEditableGraph";
 export { useInviteArrival } from "./useInviteArrival";
 export { useOwnerMode } from "./useOwnerMode";
 export {
-    formatAmount,
-    useSupport,
-    type SupportOptions,
-    type SupportTotals
+  formatAmount,
+  useSupport,
+  type SupportCheckout,
+  type SupportCheckoutStatus,
+  type SupportOptions,
 } from "./useSupport";

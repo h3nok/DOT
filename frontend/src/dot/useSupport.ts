@@ -18,26 +18,22 @@ export interface SupportTier {
 
 export interface SupportOptions {
   tiers: SupportTier[];
+  purposes: Array<{ id: string; label: string }>;
   min_custom_minor: number;
   max_custom_minor: number;
   currency: string;
-  /** Empty when support is not configured; the surface stays hidden. */
-  publishable_key: string;
+  available: boolean;
 }
 
-export interface SupportTotals {
-  supporters: number;
-  total_minor: number;
-  currency: string;
-}
-
-export interface SupportIntent {
-  client_secret: string;
+export interface SupportCheckout {
+  checkout_url: string;
   amount_minor: number;
   currency: string;
   tier: string;
-  cadence: string;
+  purpose: string;
 }
+
+export type SupportCheckoutStatus = "paid" | "processing" | "expired";
 
 export function formatAmount(minor: number, currency = "usd"): string {
   return new Intl.NumberFormat(undefined, {
@@ -49,16 +45,11 @@ export function formatAmount(minor: number, currency = "usd"): string {
 
 export function useSupport() {
   const [options, setOptions] = useState<SupportOptions | null>(null);
-  const [totals, setTotals] = useState<SupportTotals | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    const [optionsResult, totalsResult] = await Promise.all([
-      api<SupportOptions>("/v1/support/options"),
-      api<SupportTotals>("/v1/support/totals"),
-    ]);
+    const optionsResult = await api<SupportOptions>("/v1/support/options");
     if (optionsResult.ok && optionsResult.data) setOptions(optionsResult.data);
-    if (totalsResult.ok && totalsResult.data) setTotals(totalsResult.data);
     setLoading(false);
   }, []);
 
@@ -66,39 +57,46 @@ export function useSupport() {
     void refresh();
   }, [refresh]);
 
-  /** Ask the server to open a contribution. Returns an error string on failure. */
-  const createIntent = useCallback(
+  /** Open a server-priced, provider-hosted checkout. */
+  const createCheckout = useCallback(
     async (input: {
       tier: string;
+      purpose: string;
       customAmountMinor?: number;
-      cadence?: "one_time" | "recurring";
-      email?: string;
-    }): Promise<{ intent?: SupportIntent; error?: string }> => {
-      const result = await api<SupportIntent>("/v1/support/intents", {
+    }): Promise<{ checkout?: SupportCheckout; error?: string }> => {
+      const result = await api<SupportCheckout>("/v1/support/checkout-sessions", {
         method: "POST",
         body: {
           tier: input.tier,
+          purpose: input.purpose,
           custom_amount_minor:
             input.tier === "custom" ? input.customAmountMinor : undefined,
-          cadence: input.cadence ?? "one_time",
-          email: input.email || undefined,
         },
       });
       if (!result.ok || !result.data) {
         return { error: result.error ?? "Support is unavailable right now." };
       }
-      return { intent: result.data };
+      return { checkout: result.data };
+    },
+    [],
+  );
+
+  const getCheckoutStatus = useCallback(
+    async (sessionId: string): Promise<SupportCheckoutStatus | null> => {
+      const result = await api<{ status: SupportCheckoutStatus }>(
+        `/v1/support/checkout-sessions/${encodeURIComponent(sessionId)}`,
+      );
+      return result.ok && result.data ? result.data.status : null;
     },
     [],
   );
 
   return {
     options,
-    totals,
     loading,
-    /** Support is only offered when the server has a payment provider wired. */
-    available: Boolean(options?.publishable_key),
+    available: Boolean(options?.available),
     refresh,
-    createIntent,
+    createCheckout,
+    getCheckoutStatus,
   };
 }

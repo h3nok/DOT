@@ -27,6 +27,7 @@ import sqlalchemy.ext.asyncio
 import app.auth.dependencies
 import app.db.models
 import app.domains.knowledge.chunk
+import app.domains.knowledge.service
 
 #: The vocabulary the book declares in its reader contract.
 CLAIM_LEVELS: frozenset[str] = frozenset({"Observation", "Model", "Hypothesis", "Speculation"})
@@ -65,6 +66,7 @@ class CanonIngestResult:
     source_object_id: str
     source_version_id: str
     chunk_count: int
+    embedded_count: int
     unchanged: bool
 
 
@@ -141,17 +143,23 @@ async def ingest_section(
 
     previous: app.db.models.SourceVersion | None = await _latest_version(session, record.id)
     if previous is not None and previous.content_hash == digest:
-        count = await session.scalar(
-            sqlalchemy.select(sqlalchemy.func.count())
-            .select_from(app.db.models.KnowledgeChunk)
-            .where(app.db.models.KnowledgeChunk.source_version_id == previous.id)
+        existing_chunks = list(
+            (
+                await session.scalars(
+                    sqlalchemy.select(app.db.models.KnowledgeChunk)
+                    .where(app.db.models.KnowledgeChunk.source_version_id == previous.id)
+                    .order_by(app.db.models.KnowledgeChunk.chunk_index)
+                )
+            ).all()
         )
+        embedded = await app.domains.knowledge.service.embed_chunks(existing_chunks)
         await session.commit()
         return CanonIngestResult(
             section_slug=section.slug,
             source_object_id=record.id,
             source_version_id=previous.id,
-            chunk_count=int(count or 0),
+            chunk_count=len(existing_chunks),
+            embedded_count=embedded,
             unchanged=True,
         )
 
@@ -170,6 +178,7 @@ async def ingest_section(
     await session.flush()
 
     chunks = app.domains.knowledge.chunk.chunk_text(section.text)
+    stored_chunks: list[app.db.models.KnowledgeChunk] = []
     for chunk in chunks:
         stored = app.db.models.KnowledgeChunk(
             source_version_id=version.id,
@@ -179,6 +188,7 @@ async def ingest_section(
         )
         session.add(stored)
         await session.flush()
+        stored_chunks.append(stored)
 
         locator: dict[str, typing.Any] = {
             "edition": edition_slug,
@@ -202,12 +212,14 @@ async def ingest_section(
             )
         )
 
+    embedded = await app.domains.knowledge.service.embed_chunks(stored_chunks)
     await session.commit()
     return CanonIngestResult(
         section_slug=section.slug,
         source_object_id=record.id,
         source_version_id=version.id,
         chunk_count=len(chunks),
+        embedded_count=embedded,
         unchanged=False,
     )
 

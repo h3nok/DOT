@@ -6,6 +6,7 @@ import {
   type DotBookOneManifest,
 } from "../content/publications/dotBookOne";
 import { doctrineNodes } from "../content/doctrine/doctrineData";
+import { headingSlug as headingId } from "../attention-os/reader/headingSlug";
 import type { AgentLens } from "./agent";
 
 export interface CompanionHistoryTurn {
@@ -85,15 +86,6 @@ const SOCIAL_THANKS =
   /^(?:thanks|thank\s+you|thank\s+you\s+very\s+much)[\s!,.?]*$/i;
 
 let corpusPromise: Promise<BookPassage[]> | null = null;
-
-function headingId(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 function cleanMarkdown(value: string): string {
   return value

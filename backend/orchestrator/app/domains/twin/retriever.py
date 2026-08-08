@@ -47,7 +47,14 @@ _STOPWORDS: frozenset[str] = frozenset(
         "you",
         "your",
         "about",
+        "book",
+        "define",
+        "defined",
+        "definition",
+        "does",
         "into",
+        "one",
+        "say",
         "than",
         "then",
         "they",
@@ -164,6 +171,30 @@ def _normalized(scores: list[float]) -> list[float]:
     return [score / highest for score in scores]
 
 
+def _keyword_score(
+    text: str,
+    label: str,
+    terms: list[str],
+    *,
+    definition_intent: bool = False,
+) -> float:
+    """Favor exact concept phrases and section titles over loose repetition."""
+
+    if not terms:
+        return 0.0
+    normalized_text: str = text.lower()
+    normalized_label: str = label.lower()
+    score: float = float(sum(normalized_text.count(term) for term in terms))
+    score += 2.0 * sum(normalized_label.count(term) for term in terms)
+    phrase: str = " ".join(terms)
+    if len(terms) > 1:
+        score += 4.0 * normalized_text.count(phrase)
+        score += 6.0 * normalized_label.count(phrase)
+        if definition_intent:
+            score += 12.0 * normalized_text.count(f"{phrase} is")
+    return score
+
+
 async def _node_passages(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     requester: app.auth.dependencies.OwnerContext,
@@ -249,16 +280,30 @@ async def _chunk_passages(
         return []
 
     terms: list[str] = _terms(question)
+    definition_intent: bool = bool(
+        re.search(r"\b(?:defin\w*|what\s+is|what\s+does\b.+\bmean)", question, re.IGNORECASE)
+    )
     keyword: list[float] = [
-        float(sum(chunk.text.lower().count(term) for term in terms)) if terms else 0.0
-        for chunk, _, _ in candidates
+        _keyword_score(
+            chunk.text,
+            filename,
+            terms,
+            definition_intent=definition_intent,
+        )
+        for chunk, filename, _ in candidates
     ]
     scores: list[float] = _normalized(keyword)
 
-    query_vector: list[float] | None = await _embed_question(question)
-    if query_vector is not None:
+    query_embedding: tuple[list[float], str] | None = await _embed_question(question)
+    if query_embedding is not None:
+        query_vector, query_model = query_embedding
         vector_scores: list[float] = [
-            app.domains.knowledge.embedding.cosine_similarity(query_vector, chunk.embedding or [])
+            app.domains.knowledge.embedding.cosine_similarity(
+                query_vector,
+                chunk.embedding or [],
+            )
+            if chunk.embedding_model == query_model
+            else 0.0
             for chunk, _, _ in candidates
         ]
         # Vector similarity leads; keyword overlap keeps exact terms competitive.
@@ -290,7 +335,7 @@ async def _chunk_passages(
     ]
 
 
-async def _embed_question(question: str) -> list[float] | None:
+async def _embed_question(question: str) -> tuple[list[float], str] | None:
     """Embed the query, or None when no embedding model is configured."""
 
     client = app.domains.knowledge.embedding.get_embedding_client()
@@ -301,7 +346,7 @@ async def _embed_question(question: str) -> list[float] | None:
     except app.domains.knowledge.embedding.EmbeddingUnavailableError:
         # Degrade to keyword rather than failing the whole question.
         return None
-    return vectors[0] if vectors else None
+    return (vectors[0], client.model) if vectors else None
 
 
 async def retrieve_passages(

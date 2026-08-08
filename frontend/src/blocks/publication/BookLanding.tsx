@@ -120,7 +120,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
       <section className="book-frontispiece relative overflow-hidden border-b border-[var(--book-hairline)] px-5 sm:px-8">
         <div className="book-depth-field" aria-hidden="true" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 py-10 sm:py-14 lg:min-h-[min(44rem,calc(100svh-5rem))] lg:grid-cols-[minmax(0,0.82fr)_minmax(360px,0.95fr)] lg:items-center lg:py-16">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-3 py-8 sm:min-h-[min(40rem,calc(100svh-8rem))] sm:grid-cols-[minmax(0,0.84fr)_minmax(300px,0.95fr)] sm:items-center sm:gap-8 sm:py-10 md:grid-cols-[minmax(0,0.84fr)_minmax(320px,0.95fr)] md:gap-10 md:py-12 xl:grid-cols-[minmax(0,0.82fr)_minmax(360px,0.95fr)] xl:gap-14">
           <div className="book-hero-copy max-w-xl">
             <div className="book-hero-masthead">
               <span className="book-seal">
@@ -151,7 +151,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             </p>
             <p className="book-hero-byline">By {manifest.project.author}</p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-7 flex flex-wrap items-center gap-4">
               <Link to={bookSectionRoute(firstSection)} className="book-primary-action">
                 Begin reading
                 <ArrowRight className="h-4 w-4" />
@@ -166,7 +166,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           <DimensionalBookObject />
         </div>
 
-        <div className="book-edition-ribbon relative z-10 mx-auto grid max-w-7xl gap-px overflow-hidden border border-[var(--book-hairline)] bg-[var(--book-hairline)] sm:grid-cols-3">
+        <div className="book-edition-ribbon relative z-10 mx-auto grid max-w-7xl grid-cols-3 gap-px overflow-hidden border border-[var(--book-hairline)] bg-[var(--book-hairline)]">
           <div>
             <span>Extent</span>
             <strong>{formatWordCount(manifest.extent.words)} words</strong>
@@ -184,20 +184,22 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
       <section
         id="book-model"
-        className="book-model-threshold mx-auto mt-16 grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.7fr_1fr] lg:items-center"
+        className="book-model-threshold mx-auto mt-16 max-w-7xl px-5 sm:px-8"
       >
-        <div>
+        <div className="book-model-intro">
           <p className="book-overline">The core model</p>
           <h2 className="book-section-title">
             The Experience Loop
           </h2>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--book-muted)]">
-            The Painting filters what becomes visible across Decision Space.
-            Little c selects one possibility; Intent commits it to action.
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--book-muted)]">
+            Experience does not move straight through us. What we carry shapes
+            what we notice; what we do changes what we carry next.
           </p>
         </div>
 
-        <ExperienceLoop />
+        <div className="mt-8">
+          <ExperienceLoop />
+        </div>
       </section>
 
       <section className="book-vocab-section mx-auto mt-20 max-w-7xl px-5 sm:px-8" aria-labelledby="book-vocab-title">

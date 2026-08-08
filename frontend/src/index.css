@@ -785,6 +785,14 @@
   background: color-mix(in oklch, var(--book-gold) 10%, var(--book-paper));
 }
 
+.book-primary-action:focus-visible,
+.book-secondary-action:focus-visible,
+.book-path-card:focus-visible,
+.book-chapter-plane:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--book-dot) 78%, var(--book-ink));
+  outline-offset: 3px;
+}
+
 .book-secondary-action {
   display: inline-flex;
   min-height: 3.1rem;
@@ -824,9 +832,9 @@
 }
 
 .book-edition-ribbon {
-  margin-bottom: -2.8rem;
-  transform: translateY(50%);
-  box-shadow: 0 1.5rem 4rem color-mix(in oklch, black 18%, transparent);
+  margin-bottom: 0;
+  transform: none;
+  box-shadow: 0 1rem 2.8rem color-mix(in oklch, black 12%, transparent);
 }
 
 .book-edition-ribbon > div {
@@ -1174,7 +1182,7 @@
   stroke-linecap: round;
   stroke-width: 0.68;
   animation: none;
-  transition: stroke 220ms ease, stroke-width 220ms ease, filter 220ms ease;
+  transition: none;
 }
 
 .book-loop-edge-input {
@@ -1200,15 +1208,7 @@
 }
 
 .book-loop-flow-signal {
-  fill: none;
-  stroke: var(--book-dot-bright);
-  stroke-dasharray: 0.045 0.955;
-  stroke-linecap: round;
-  stroke-width: 2.2;
-  filter:
-    drop-shadow(0 0 0.18rem var(--book-paper))
-    drop-shadow(0 0 0.42rem color-mix(in oklch, var(--book-dot-bright) 76%, transparent));
-  animation: bookSignalTravel 2.6s linear infinite;
+  display: none;
 }
 
 .book-loop-core {
@@ -1233,7 +1233,7 @@
     0 1rem 2.4rem color-mix(in oklch, black 12%, transparent),
     0 0 2.8rem color-mix(in oklch, var(--book-dot) 18%, transparent);
   transform: translate(-50%, -50%);
-  animation: bookCoreLive 5.4s ease-in-out infinite;
+  animation: none;
 }
 
 .book-loop-agency-mark {
@@ -1242,7 +1242,7 @@
   filter:
     drop-shadow(0 0 0.35rem color-mix(in oklch, var(--book-dot-bright) 70%, transparent))
     drop-shadow(0 0 0.85rem color-mix(in oklch, var(--book-dot) 42%, transparent));
-  animation: bookAgencyBreathe 4.2s ease-in-out infinite;
+  animation: none;
 }
 
 .book-loop-core-copy {
@@ -1393,7 +1393,7 @@
   transform: translate(-50%, -50%);
   animation: none;
   backdrop-filter: blur(18px);
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition: none;
 }
 
 .book-loop-state::before {
@@ -1404,7 +1404,7 @@
 .book-loop-state:focus-visible {
   border-color: color-mix(in oklch, var(--book-ink) 28%, var(--book-hairline));
   outline: none;
-  transform: translate(-50%, -50%) translateY(-2px);
+  transform: translate(-50%, -50%);
 }
 
 .book-loop-state:focus-visible {
@@ -1419,7 +1419,7 @@
   box-shadow:
     0 0.9rem 2rem color-mix(in oklch, black 10%, transparent),
     0 0 1.8rem color-mix(in oklch, var(--book-dot) 20%, transparent);
-  animation: bookActiveNode 3.8s ease-in-out infinite;
+  animation: none;
 }
 
 .book-loop-state.is-active::after {
@@ -1695,6 +1695,1003 @@
   }
 }
 
+/* Experience Loop reading layer: ordinary language first, Book One terms in place. */
+.book-experience {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border-block: 1px solid color-mix(in oklch, var(--book-ink) 18%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-paper) 97%, var(--book-ink));
+  color: var(--book-ink);
+}
+
+.book-experience-header {
+  display: grid;
+  border-bottom: 1px solid var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 92%, var(--book-ink));
+}
+
+.book-experience-heading,
+.book-experience-frame {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: 0.25rem;
+  padding: 1rem 1.15rem;
+}
+
+.book-experience-heading > span,
+.book-experience-frame > span,
+.book-experience-frame > small,
+.book-experience-reader span,
+.book-experience-reader small,
+.book-experience-step-top,
+.book-experience-step small,
+.book-experience-decision span,
+.book-experience-decision small,
+.book-experience-return span,
+.book-experience-return small,
+.book-experience-inspector-head > span,
+.book-experience-inspector-head > small,
+.book-experience-book-language > span,
+.book-experience-controls > span {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0;
+}
+
+.book-experience-heading > span,
+.book-experience-frame > span,
+.book-experience-reader span,
+.book-experience-decision span,
+.book-experience-inspector-head > span,
+.book-experience-book-language > span {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--book-ink) 66%, var(--book-muted));
+}
+
+.book-experience-heading > strong {
+  max-width: 28rem;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.book-experience-frame {
+  border-top: 1px solid var(--book-hairline);
+}
+
+.book-experience-frame > strong {
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.book-experience-frame > small,
+.book-experience-reader small,
+.book-experience-step small,
+.book-experience-decision small,
+.book-experience-return span,
+.book-experience-return small,
+.book-experience-inspector-head > small {
+  font-size: 0.58rem;
+  line-height: 1.4;
+  color: color-mix(in oklch, var(--book-ink) 63%, var(--book-muted));
+}
+
+.book-experience-body {
+  min-width: 0;
+  padding: 1.15rem;
+}
+
+.book-experience-reader {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  border-bottom: 1px solid var(--book-hairline);
+  padding-bottom: 1rem;
+}
+
+.book-experience-reader-mark {
+  --organism-accent: var(--book-dot);
+  --organism-accent-strong: var(--book-dot-bright);
+  grid-row: 1;
+}
+
+.book-experience-reader > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.08rem;
+}
+
+.book-experience-reader strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.book-experience-reader p {
+  grid-column: 1 / -1;
+  margin: 0.6rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--book-muted);
+}
+
+.book-experience-path {
+  display: grid;
+  min-width: 0;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 1.15rem 0 0;
+  list-style: none;
+}
+
+.book-experience-path > li {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: 0.65rem;
+}
+
+.book-experience-step {
+  display: grid;
+  width: 100%;
+  min-height: 7.5rem;
+  align-content: space-between;
+  gap: 0.8rem;
+  border: 1px solid color-mix(in oklch, var(--book-ink) 16%, var(--book-hairline));
+  border-radius: 0.25rem;
+  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  padding: 0.85rem;
+  color: var(--book-ink);
+  text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.book-experience-step:hover {
+  border-color: color-mix(in oklch, var(--book-ink) 35%, var(--book-hairline));
+}
+
+.book-experience-step:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--book-dot) 76%, var(--book-ink));
+  outline-offset: 2px;
+}
+
+.book-experience-step.is-active {
+  border-color: color-mix(in oklch, var(--book-dot) 60%, var(--book-ink));
+  background: color-mix(in oklch, var(--book-dot) 8%, var(--book-paper));
+}
+
+.book-experience-step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.58rem;
+  color: color-mix(in oklch, var(--book-ink) 66%, var(--book-muted));
+}
+
+.book-experience-step-top svg {
+  width: 1rem;
+  height: 1rem;
+  color: color-mix(in oklch, var(--book-dot) 62%, var(--book-ink));
+}
+
+.book-experience-step > strong {
+  align-self: end;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.22;
+}
+
+.book-experience-arrow {
+  width: 1rem;
+  height: 1rem;
+  justify-self: center;
+  color: color-mix(in oklch, var(--book-ink) 42%, var(--book-muted));
+  transform: rotate(90deg);
+}
+
+.book-experience-decision {
+  display: grid;
+  gap: 0.16rem;
+  border-left: 2px solid color-mix(in oklch, var(--book-dot) 68%, var(--book-ink));
+  padding: 0.35rem 0 0.35rem 0.65rem;
+}
+
+.book-experience-decision strong {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.book-experience-return {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  border-block: 1px solid color-mix(in oklch, var(--book-dot) 30%, var(--book-hairline));
+  margin-top: 1.25rem;
+  background: color-mix(in oklch, var(--book-dot) 5%, var(--book-paper));
+  padding: 0.85rem;
+}
+
+.book-experience-return > svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  justify-self: center;
+  color: color-mix(in oklch, var(--book-dot) 68%, var(--book-ink));
+}
+
+.book-experience-return > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.book-experience-return strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 0.94rem;
+  line-height: 1.3;
+}
+
+.book-experience-return > small {
+  display: none;
+  text-transform: uppercase;
+}
+
+.book-experience-inspector {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+  border-top: 1px solid var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 91%, var(--book-ink));
+  padding: 1.15rem;
+}
+
+.book-experience-inspector-head,
+.book-experience-inspector-copy {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+}
+
+.book-experience-inspector-head {
+  gap: 0.35rem;
+}
+
+.book-experience-inspector-head h3 {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--book-ink);
+}
+
+.book-experience-inspector-copy {
+  gap: 0.75rem;
+}
+
+.book-experience-inspector-copy > p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.58;
+  color: color-mix(in oklch, var(--book-ink) 76%, var(--book-muted));
+}
+
+.book-experience-book-language {
+  border-left: 2px solid color-mix(in oklch, var(--book-dot) 44%, var(--book-hairline));
+  padding-left: 0.7rem;
+}
+
+.book-experience-book-language > span {
+  display: block;
+  margin-bottom: 0.18rem;
+}
+
+.book-experience-controls {
+  display: grid;
+  width: fit-content;
+  min-width: 8.25rem;
+  grid-template-columns: 2.6rem minmax(3rem, auto) 2.6rem;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--book-ink) 16%, var(--book-hairline));
+  border-radius: 0.25rem;
+  background: var(--book-paper);
+}
+
+.book-experience-controls button {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  color: var(--book-muted);
+}
+
+.book-experience-controls button:hover,
+.book-experience-controls button:focus-visible {
+  outline: none;
+  background: color-mix(in oklch, var(--book-dot) 8%, var(--book-paper));
+  color: var(--book-ink);
+}
+
+.book-experience-controls button:focus-visible {
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--book-dot) 65%, var(--book-ink));
+}
+
+.book-experience-controls button:disabled {
+  cursor: default;
+  opacity: 0.32;
+}
+
+.book-experience-controls button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.book-experience-controls > span {
+  font-size: 0.56rem;
+  text-align: center;
+  color: var(--book-muted);
+}
+
+.book-experience-limit {
+  margin: 0;
+  border-top: 1px solid var(--book-hairline);
+  padding: 0.8rem 1.15rem;
+  font-size: 0.7rem;
+  line-height: 1.55;
+  color: var(--book-muted);
+}
+
+.book-reader-experience-loop .book-experience {
+  margin: 0;
+}
+
+.book-prose .book-reader-experience-loop .book-experience-inspector h3,
+.book-prose .book-reader-experience-loop .book-experience-inspector p,
+.book-prose .book-reader-experience-loop .book-experience-limit {
+  margin: 0;
+}
+
+@media (min-width: 800px) {
+  .book-experience-header {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.42fr);
+  }
+
+  .book-experience-frame {
+    border-top: 0;
+    border-left: 1px solid var(--book-hairline);
+  }
+
+  .book-experience-body {
+    padding: 1.35rem;
+  }
+
+  .book-experience-reader {
+    grid-template-columns: 2.4rem minmax(10rem, auto) minmax(13rem, 1fr);
+  }
+
+  .book-experience-reader p {
+    grid-column: 3;
+    justify-self: end;
+    margin: 0;
+    text-align: right;
+  }
+
+  .book-experience-path {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.35rem;
+    padding-top: 1.4rem;
+    padding-bottom: 5.25rem;
+  }
+
+  .book-experience-path > li {
+    display: block;
+  }
+
+  .book-experience-step {
+    height: 11.5rem;
+    min-height: 0;
+    padding: 0.85rem;
+  }
+
+  .book-experience-arrow {
+    position: absolute;
+    top: 50%;
+    right: -1.18rem;
+    transform: translateY(-50%);
+  }
+
+  .book-experience-decision {
+    position: absolute;
+    top: calc(100% + 0.85rem);
+    left: 50%;
+    width: min(15rem, 190%);
+    transform: translateX(-50%);
+  }
+
+  .book-experience-return {
+    grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+    margin-top: 0;
+  }
+
+  .book-experience-return > small {
+    display: block;
+  }
+
+  .book-experience-inspector {
+    grid-template-columns: minmax(12rem, 0.78fr) minmax(0, 1.22fr);
+    gap: 1.5rem;
+    padding: 1.35rem;
+  }
+
+  .book-experience-controls {
+    justify-self: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-experience-step {
+    transition: none;
+  }
+}
+
+/* Experience Loop: the model is one animated field, not a stack of controls. */
+.book-model-intro {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.book-model-intro .book-section-title {
+  font-family: "Inter", sans-serif;
+  font-size: 2.55rem;
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.book-model-intro > p:last-child {
+  margin-inline: auto;
+}
+
+.book-experience {
+  position: relative;
+  display: block;
+  min-width: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: var(--book-ink);
+  font-family: "Inter", sans-serif;
+}
+
+.book-experience-node-copy small,
+.book-experience-node-icon small,
+.book-experience-core-step,
+.book-experience-core-term,
+.book-experience-possibility small,
+.book-experience-limit {
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0;
+}
+
+.book-experience-orbit {
+  position: relative;
+  width: min(100%, 70rem);
+  height: 34rem;
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+.book-experience-orbit-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.book-experience-field-ring,
+.book-experience-orbit-line {
+  vector-effect: non-scaling-stroke;
+  fill: none;
+}
+
+.book-experience-field-ring {
+  stroke: color-mix(in oklch, var(--book-ink) 8%, transparent);
+  stroke-width: 1;
+}
+
+.book-experience-field-ring-outer {
+  stroke-dasharray: 2 12;
+}
+
+.book-experience-field-ring-inner {
+  stroke: color-mix(in oklch, var(--book-dot) 12%, transparent);
+  stroke-dasharray: 1 9;
+}
+
+.book-experience-orbit-line {
+  stroke: color-mix(in oklch, var(--book-ink) 22%, var(--book-paper));
+  stroke-width: 1.35;
+}
+
+.book-experience-node {
+  --node-x: 50%;
+  --node-y: 50%;
+  position: absolute;
+  top: var(--node-y);
+  left: var(--node-x);
+  z-index: 3;
+  display: flex;
+  width: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--book-ink);
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.book-experience-node-0 {
+  --node-x: 50%;
+  --node-y: 7%;
+}
+
+.book-experience-node-1 {
+  --node-x: 84%;
+  --node-y: 32%;
+}
+
+.book-experience-node-2 {
+  --node-x: 73%;
+  --node-y: 77%;
+}
+
+.book-experience-node-3 {
+  --node-x: 27%;
+  --node-y: 77%;
+}
+
+.book-experience-node-4 {
+  --node-x: 16%;
+  --node-y: 32%;
+}
+
+.book-experience-node-icon {
+  position: relative;
+  display: grid;
+  width: 3.65rem;
+  height: 3.65rem;
+  flex: none;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--book-ink) 25%, var(--book-hairline));
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  box-shadow: 0 0.6rem 1.8rem color-mix(in oklch, black 8%, transparent);
+  transition: none;
+}
+
+.book-experience-node-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.book-experience-node-icon small {
+  position: absolute;
+  right: -0.16rem;
+  bottom: -0.16rem;
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid var(--book-hairline);
+  border-radius: 50%;
+  background: var(--book-paper);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--book-muted);
+}
+
+.book-experience-node-copy {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.book-experience-node-copy strong {
+  font-size: 0.68rem;
+  font-weight: 680;
+  line-height: 1.15;
+}
+
+.book-experience-node-copy small {
+  display: none;
+}
+
+.book-experience-node:hover .book-experience-node-icon {
+  border-color: color-mix(in oklch, var(--book-dot) 55%, var(--book-ink));
+  transform: none;
+}
+
+.book-experience-node:focus-visible {
+  outline: none;
+}
+
+.book-experience-node:focus-visible .book-experience-node-icon {
+  outline: 2px solid color-mix(in oklch, var(--book-dot) 75%, var(--book-ink));
+  outline-offset: 3px;
+}
+
+.book-experience-node.is-active .book-experience-node-icon {
+  border-color: color-mix(in oklch, var(--book-dot) 70%, var(--book-ink));
+  background: color-mix(in oklch, var(--book-dot) 14%, var(--book-paper));
+  color: color-mix(in oklch, var(--book-dot) 70%, var(--book-ink));
+}
+
+.book-experience-node.is-active .book-experience-node-icon small {
+  border-color: color-mix(in oklch, var(--book-dot) 45%, var(--book-hairline));
+  color: var(--book-ink);
+}
+
+.book-experience-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  width: min(13rem, 60%);
+  min-height: 18rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: color-mix(in oklch, var(--book-paper) 95%, transparent);
+  padding: 1.1rem 0.4rem;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.book-experience-core::before,
+.book-experience-core::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid color-mix(in oklch, var(--book-dot) 20%, transparent);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.book-experience-core::before {
+  width: 15.5rem;
+  height: 15.5rem;
+}
+
+.book-experience-core::after {
+  width: 12.5rem;
+  height: 12.5rem;
+  border-color: color-mix(in oklch, var(--book-ink) 8%, transparent);
+}
+
+.book-experience-core-mark {
+  --organism-accent: var(--book-dot);
+  --organism-accent-strong: var(--book-dot-bright);
+  width: 3.35rem !important;
+  height: 3.35rem !important;
+  flex: none;
+  filter: drop-shadow(0 0 0.55rem color-mix(in oklch, var(--book-dot) 38%, transparent));
+}
+
+.book-experience-core-step {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--book-dot) 62%, var(--book-ink));
+}
+
+.book-experience-example-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--book-dot) 62%, var(--book-ink));
+}
+
+.book-experience-decision-label {
+  max-width: 16rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  line-height: 1.4;
+  color: color-mix(in oklch, var(--book-dot) 62%, var(--book-ink));
+}
+
+.book-experience-core-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.62rem;
+  animation: none;
+}
+
+.book-experience-core h3,
+.book-prose .book-experience-core h3 {
+  max-width: 20rem;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 1.45rem;
+  font-weight: 680;
+  line-height: 1.15;
+  letter-spacing: 0;
+  color: var(--book-ink);
+  text-wrap: balance;
+}
+
+.book-experience-core-content > p,
+.book-prose .book-experience-core-content > p {
+  max-width: 19rem;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: color-mix(in oklch, var(--book-ink) 72%, var(--book-muted));
+}
+
+.book-experience-core-term {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--book-muted);
+}
+
+.book-experience-possibility {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: color-mix(in oklch, var(--book-ink) 72%, var(--book-muted));
+}
+
+.book-experience-possibility i {
+  width: 0.18rem;
+  height: 0.18rem;
+  border-radius: 50%;
+  background: var(--book-dot);
+}
+
+.book-experience-possibility small {
+  width: 100%;
+  font-size: 0.68rem;
+  font-weight: 650;
+  color: color-mix(in oklch, var(--book-dot) 62%, var(--book-ink));
+}
+
+.book-experience-controls {
+  display: flex;
+  width: auto;
+  min-width: 0;
+  align-items: center;
+  gap: 0.7rem;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.book-experience-controls button {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--book-ink) 18%, var(--book-hairline));
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  color: var(--book-ink);
+}
+
+.book-experience-controls button:hover,
+.book-experience-controls button:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklch, var(--book-dot) 60%, var(--book-ink));
+  background: color-mix(in oklch, var(--book-dot) 10%, var(--book-paper));
+}
+
+.book-experience-controls button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--book-dot) 20%, transparent);
+}
+
+.book-experience-controls > span {
+  min-width: 2.4rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: var(--book-muted);
+}
+
+.book-experience-memory {
+  display: grid;
+  width: min(100%, 48rem);
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  border-block: 1px solid color-mix(in oklch, var(--book-dot) 26%, var(--book-hairline));
+  margin: -0.25rem auto 0;
+  padding: 0.9rem 0.25rem;
+}
+
+.book-experience-memory > svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  justify-self: center;
+  color: color-mix(in oklch, var(--book-dot) 65%, var(--book-ink));
+}
+
+.book-experience-memory > div {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.book-experience-memory strong {
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.book-experience-memory span {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--book-muted);
+}
+
+.book-experience-limit,
+.book-prose .book-reader-experience-loop .book-experience-limit {
+  max-width: 48rem;
+  border: 0;
+  margin: 0.8rem auto 0;
+  padding: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--book-muted);
+}
+
+@media (min-width: 760px) {
+  .book-experience-orbit {
+    height: 42rem;
+  }
+
+  .book-experience-node {
+    width: 10.5rem;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .book-experience-node-copy {
+    display: grid;
+    gap: 0.12rem;
+  }
+
+  .book-experience-node-copy strong {
+    font-size: 0.95rem;
+    font-weight: 680;
+    line-height: 1.2;
+  }
+
+  .book-experience-node-copy small {
+    font-size: 0.72rem;
+    color: var(--book-muted);
+  }
+
+  .book-experience-node.is-active .book-experience-node-copy strong {
+    color: color-mix(in oklch, var(--book-dot) 68%, var(--book-ink));
+  }
+
+  .book-experience-node-icon {
+    width: 4.15rem;
+    height: 4.15rem;
+  }
+
+  .book-experience-core {
+    width: min(23rem, 42%);
+    min-height: 21rem;
+    gap: 0.75rem;
+    padding-inline: 1.25rem;
+  }
+
+  .book-experience-core::before {
+    width: 26rem;
+    height: 26rem;
+  }
+
+  .book-experience-core::after {
+    width: 21rem;
+    height: 21rem;
+  }
+
+  .book-experience-core-mark {
+    width: 3.9rem !important;
+    height: 3.9rem !important;
+  }
+
+  .book-experience-core h3,
+  .book-prose .book-experience-core h3 {
+    font-size: 1.85rem;
+  }
+
+  .book-experience-core-content > p,
+  .book-prose .book-experience-core-content > p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 759px) {
+  .book-model-intro {
+    text-align: left;
+  }
+
+  .book-model-intro .book-section-title {
+    font-size: 2rem;
+  }
+
+  .book-experience-orbit {
+    height: 40rem;
+  }
+
+  .book-experience-node-1 {
+    --node-x: 88%;
+  }
+
+  .book-experience-node-4 {
+    --node-x: 12%;
+  }
+
+  .book-experience-node-2,
+  .book-experience-node-3 {
+    --node-y: 86%;
+  }
+
+  .book-experience-node {
+    width: 5.25rem;
+    flex-direction: column;
+    gap: 0.28rem;
+  }
+
+  .book-experience-controls {
+    display: none;
+  }
+
+  .book-experience-memory {
+    margin-top: 0.25rem;
+  }
+}
+
+@keyframes bookExperienceContentIn {
+  from { opacity: 0; transform: translateY(0.35rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The figure no longer moves on its own. What remains is the 320ms settle
+     when the reader selects a state, and that is what this stills. */
+  .book-experience-core-content {
+    animation: none !important;
+  }
+}
+
 .book-vocab-grid {
   display: grid;
   gap: 0.75rem;
@@ -1735,7 +2732,7 @@
     color-mix(in oklch, var(--book-paper) 96%, transparent);
   padding: 1.2rem;
   box-shadow: 0 1rem 2.4rem color-mix(in oklch, black 8%, transparent);
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition: none;
 }
 
 .book-vocab-term::before {
@@ -1756,7 +2753,6 @@
   box-shadow:
     0 1.2rem 2.8rem color-mix(in oklch, black 12%, transparent),
     0 0 2.5rem color-mix(in oklch, var(--book-gold) 7%, transparent);
-  transform: translateY(-2px);
 }
 
 .book-vocab-term dt {
@@ -1796,7 +2792,7 @@
   padding-top: 1rem;
   font-size: 0.94rem;
   line-height: 1.68;
-  color: color-mix(in oklch, var(--book-ink) 78%, var(--book-muted));
+  color: color-mix(in oklch, var(--book-ink) 88%, var(--book-muted));
 }
 
 .book-path-card {
@@ -1811,7 +2807,7 @@
       color-mix(in oklch, var(--book-paper) 80%, transparent)
     );
   box-shadow: 0 1.2rem 3rem color-mix(in oklch, black 14%, transparent);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition: none;
 }
 
 .book-path-card:hover,
@@ -1979,9 +2975,7 @@
   border-bottom: 1px solid var(--book-hairline);
   background: transparent;
   padding: 1.15rem 0.25rem;
-  transition:
-    background-color 180ms ease,
-    padding 180ms ease;
+  transition: none;
 }
 
 .book-chapter-stack li:nth-child(2n) .book-chapter-plane {
@@ -1994,9 +2988,7 @@
 
 .book-chapter-plane:hover,
 .book-chapter-plane:focus-visible {
-  outline: none;
   background: linear-gradient(90deg, color-mix(in oklch, var(--book-gold) 7%, transparent), transparent 72%);
-  padding-inline: 0.8rem;
 }
 
 .book-chapter-label {
@@ -2032,7 +3024,7 @@
   max-width: 52rem;
   font-size: 0.88rem;
   line-height: 1.6;
-  color: var(--book-muted);
+  color: color-mix(in oklch, var(--book-ink) 82%, var(--book-muted));
 }
 
 .book-chapter-arrow {
@@ -2041,13 +3033,12 @@
   width: 1rem;
   height: 1rem;
   color: color-mix(in oklch, var(--book-gold) 58%, var(--book-muted));
-  transition: transform 180ms ease, color 180ms ease;
+  transition: none;
 }
 
 .book-chapter-plane:hover .book-chapter-arrow,
 .book-chapter-plane:focus-visible .book-chapter-arrow {
   color: var(--book-ink);
-  transform: translateX(0.25rem);
 }
 
 .book-ledger > div {
@@ -2293,6 +3284,12 @@
   content: "";
 }
 
+.book-reader-rule svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: color-mix(in oklch, var(--book-dot) 56%, var(--book-muted));
+}
+
 .book-reader-rule::after {
   background: linear-gradient(
     90deg,
@@ -2344,11 +3341,20 @@
 }
 
 .book-prose {
-  font-family: "Playfair Display", Georgia, serif;
+  /* A text serif, not a display serif. Playfair still sets every heading
+     below; it is the running text of a 3,000-word chapter that needs a larger
+     x-height and even stroke weight to hold up. */
+  font-family: "Source Serif 4", Charter, Georgia, serif;
   font-variant-numeric: oldstyle-nums proportional-nums;
   color: var(--book-ink, color-mix(in oklch, var(--foreground) 90%, transparent));
   hanging-punctuation: first last;
+  /* A hairline of white under the glyphs reads as ink pressed into paper. On a
+     dark ground the same rule is a halo around light text, so it is scoped. */
   text-shadow: 0 1px 0 color-mix(in oklch, white 20%, transparent);
+}
+
+.dark .book-prose {
+  text-shadow: none;
 }
 
 /* The member's reading choices, published by the organism provider. */
@@ -2359,14 +3365,23 @@
 
 .book-prose p,
 .book-prose li {
-  font-size: calc(1.1rem * var(--reading-scale, 1));
-  line-height: 1.92;
+  font-size: calc(1.125rem * var(--reading-scale, 1));
+  /* 1.92 was set for Playfair's small x-height. Source Serif 4 sits taller on
+     the line, so the same leading pulls the lines apart far enough that the
+     return sweep starts to cost you. */
+  line-height: 1.7;
 }
 
 .book-prose p {
   margin-bottom: 1.65rem;
-  max-width: none;
+  max-width: 68ch;
   text-wrap: pretty;
+}
+
+.book-prose ul,
+.book-prose ol,
+.book-prose blockquote {
+  max-width: 68ch;
 }
 
 .book-prose h1,
@@ -2384,10 +3399,6 @@
   font-weight: 650;
   line-height: 1.25;
   color: var(--book-ink);
-}
-
-.book-prose h2::first-letter {
-  color: var(--book-cinnabar);
 }
 
 .book-prose h3 {
@@ -2473,7 +3484,7 @@
 
 @media (max-width: 640px) {
   .book-hero-stage {
-    min-height: 17rem;
+    min-height: 11rem;
     margin-top: -0.5rem;
   }
 
@@ -2483,7 +3494,7 @@
   }
 
   .book-manuscript {
-    width: clamp(11rem, 58vw, 15rem);
+    width: clamp(9.5rem, 50vw, 12rem);
     transform: translate(-50%, -46%) rotateX(58deg) rotateZ(-17deg);
   }
 
@@ -2523,6 +3534,22 @@
   .book-edition-ribbon {
     margin-bottom: 0;
     transform: none;
+  }
+
+  .book-edition-ribbon > div {
+    min-height: 4.25rem;
+    padding: 0.75rem 0.6rem;
+  }
+
+  .book-edition-ribbon span {
+    font-size: 0.48rem;
+    letter-spacing: 0.1em;
+  }
+
+  .book-edition-ribbon strong {
+    margin-top: 0.2rem;
+    font-size: clamp(0.72rem, 3.4vw, 0.92rem);
+    line-height: 1.15;
   }
 
   .book-model-threshold {
@@ -2579,8 +3606,8 @@
 
   .book-prose p,
   .book-prose li {
-    font-size: calc(1.03rem * var(--reading-scale, 1));
-    line-height: 1.88;
+    font-size: calc(1.0625rem * var(--reading-scale, 1));
+    line-height: 1.65;
   }
 
   .book-prose h2 {

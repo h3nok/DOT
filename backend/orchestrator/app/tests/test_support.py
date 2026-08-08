@@ -16,11 +16,12 @@ import app.domains.support.models as models
 import app.domains.support.service as support_service
 
 
-class _StubIntent:
+class _StubCheckoutSession:
     def __init__(self, amount: int) -> None:
-        self.id: str = f"pi_{amount}"
-        self.client_secret: str = f"pi_{amount}_secret_test"
-        self.amount: int = amount
+        self.id: str = f"cs_test_{amount}"
+        self.url: str = f"https://checkout.stripe.test/{amount}"
+        self.payment_status: str = "paid"
+        self.status: str = "complete"
 
 
 class _StubStripe:
@@ -30,11 +31,28 @@ class _StubStripe:
 
     def __init__(self) -> None:
         self.calls: list[dict[str, typing.Any]] = []
-        self.PaymentIntent: _StubStripe = self  # noqa: N815 - mirrors the stripe module shape
+        self.checkout: _StubStripe = self
+        self.Session: _StubStripe = self  # noqa: N815 - mirrors the stripe module shape
 
-    def create(self, **kwargs: typing.Any) -> _StubIntent:
+    def create(self, **kwargs: typing.Any) -> _StubCheckoutSession:
         self.calls.append(kwargs)
-        return _StubIntent(kwargs["amount"])
+        amount = kwargs["line_items"][0]["price_data"]["unit_amount"]
+        return _StubCheckoutSession(amount)
+
+    def retrieve(self, session_id: str) -> _StubCheckoutSession:
+        return _StubCheckoutSession(int(session_id.rsplit("_", 1)[-1]))
+
+
+class _MemorySession:
+    def __init__(self) -> None:
+        self.added: list[models.SupportContribution] = []
+        self.committed = False
+
+    def add(self, contribution: models.SupportContribution) -> None:
+        self.added.append(contribution)
+
+    async def commit(self) -> None:
+        self.committed = True
 
 
 @pytest.fixture()
@@ -43,44 +61,83 @@ def stub_stripe(monkeypatch: pytest.MonkeyPatch) -> _StubStripe:
     settings: app.core.config.Settings = app.core.config.get_settings()
     monkeypatch.setattr(support_service, "stripe", stub)
     monkeypatch.setattr(settings, "STRIPE_SECRET_KEY", "sk_test_stub", raising=False)
-    monkeypatch.setattr(settings, "STRIPE_PUBLISHABLE_KEY", "pk_test_stub", raising=False)
     monkeypatch.setattr(settings, "STRIPE_WEBHOOK_SECRET", "whsec_stub", raising=False)
     return stub
+
+
+async def test_hosted_checkout_is_server_priced_and_records_its_purpose(
+    stub_stripe: _StubStripe,
+) -> None:
+    session = _MemorySession()
+
+    result = await support_service.create_checkout(  # type: ignore[arg-type]
+        session,
+        tier="seed",
+        custom_amount_minor=None,
+        purpose="lumen",
+    )
+
+    assert result["checkout_url"] == "https://checkout.stripe.test/500"
+    assert session.committed is True
+    assert session.added[0].amount_minor == models.SUPPORT_TIERS["seed"]
+    assert session.added[0].purpose == "lumen"
+    assert stub_stripe.calls[0]["mode"] == "payment"
+    assert "{CHECKOUT_SESSION_ID}" in stub_stripe.calls[0]["success_url"]
+
+
+async def test_provider_return_is_verified_before_thanking_the_supporter(
+    stub_stripe: _StubStripe,
+) -> None:
+    assert await support_service.checkout_status("cs_test_500") == {"status": "paid"}
 
 
 def test_options_lists_server_owned_tiers(client: fastapi.testclient.TestClient) -> None:
     body = client.get("/v1/support/options").json()
     assert {tier["id"] for tier in body["tiers"]} == set(models.SUPPORT_TIERS)
+    assert {purpose["id"] for purpose in body["purposes"]} == set(models.SUPPORT_PURPOSES)
     assert body["min_custom_minor"] == models.MIN_CUSTOM_AMOUNT
     assert body["max_custom_minor"] == models.MAX_CUSTOM_AMOUNT
 
 
-def test_unconfigured_support_publishes_no_key_and_refuses_intents(
+def test_unconfigured_support_stays_closed_and_refuses_checkout(
     client: fastapi.testclient.TestClient,
 ) -> None:
-    assert client.get("/v1/support/options").json()["publishable_key"] == ""
-    response = client.post("/v1/support/intents", json={"tier": "seed"})
+    assert client.get("/v1/support/options").json()["available"] is False
+    response = client.post(
+        "/v1/support/checkout-sessions", json={"tier": "seed", "purpose": "lumen"}
+    )
     assert response.status_code == 503
 
 
 def test_named_tier_charges_the_server_price(
     client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
 ) -> None:
-    response = client.post("/v1/support/intents", json={"tier": "steward"})
+    response = client.post(
+        "/v1/support/checkout-sessions",
+        json={"tier": "steward", "purpose": "lumen"},
+    )
     assert response.status_code == 200
     assert response.json()["amount_minor"] == models.SUPPORT_TIERS["steward"]
-    assert stub_stripe.calls[0]["amount"] == models.SUPPORT_TIERS["steward"]
+    assert (
+        stub_stripe.calls[0]["line_items"][0]["price_data"]["unit_amount"]
+        == models.SUPPORT_TIERS["steward"]
+    )
+    assert response.json()["checkout_url"].startswith("https://checkout.stripe.test/")
 
 
 def test_client_cannot_name_a_price_for_a_named_tier(
     client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
 ) -> None:
     response = client.post(
-        "/v1/support/intents", json={"tier": "seed", "custom_amount_minor": 100_000}
+        "/v1/support/checkout-sessions",
+        json={"tier": "seed", "purpose": "reader", "custom_amount_minor": 100_000},
     )
     # The custom amount is ignored outright; the tier price is what Stripe sees.
     assert response.json()["amount_minor"] == models.SUPPORT_TIERS["seed"]
-    assert stub_stripe.calls[0]["amount"] == models.SUPPORT_TIERS["seed"]
+    assert (
+        stub_stripe.calls[0]["line_items"][0]["price_data"]["unit_amount"]
+        == models.SUPPORT_TIERS["seed"]
+    )
 
 
 @pytest.mark.parametrize("amount", [1, models.MAX_CUSTOM_AMOUNT + 1, -500])
@@ -88,7 +145,12 @@ def test_custom_amounts_outside_the_range_are_rejected(
     client: fastapi.testclient.TestClient, stub_stripe: _StubStripe, amount: int
 ) -> None:
     response = client.post(
-        "/v1/support/intents", json={"tier": "custom", "custom_amount_minor": amount}
+        "/v1/support/checkout-sessions",
+        json={
+            "tier": "custom",
+            "purpose": "infrastructure",
+            "custom_amount_minor": amount,
+        },
     )
     assert response.status_code == 422
     assert stub_stripe.calls == []
@@ -97,16 +159,45 @@ def test_custom_amounts_outside_the_range_are_rejected(
 def test_unknown_tier_is_rejected(
     client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
 ) -> None:
-    assert client.post("/v1/support/intents", json={"tier": "free_money"}).status_code == 400
+    assert (
+        client.post(
+            "/v1/support/checkout-sessions",
+            json={"tier": "free_money", "purpose": "lumen"},
+        ).status_code
+        == 400
+    )
 
 
-def test_email_is_never_sent_or_stored_in_the_clear(
+def test_checkout_carries_the_selected_purpose_to_signed_provider_events(
     client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
 ) -> None:
-    client.post("/v1/support/intents", json={"tier": "seed", "email": "a@example.com"})
+    response = client.post(
+        "/v1/support/checkout-sessions",
+        json={"tier": "seed", "purpose": "reader"},
+    )
+    assert response.status_code == 200
     metadata = stub_stripe.calls[0]["metadata"]
-    assert "a@example.com" not in repr(stub_stripe.calls)
-    assert metadata["email_hash"] == models.hash_email("a@example.com")
+    assert metadata["purpose"] == "reader"
+    assert stub_stripe.calls[0]["payment_intent_data"]["metadata"] == metadata
+
+
+def test_unknown_purpose_is_rejected(
+    client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
+) -> None:
+    response = client.post(
+        "/v1/support/checkout-sessions",
+        json={"tier": "seed", "purpose": "personal_access"},
+    )
+    assert response.status_code == 400
+    assert stub_stripe.calls == []
+
+
+def test_checkout_return_is_verified_with_stripe(
+    client: fastapi.testclient.TestClient, stub_stripe: _StubStripe
+) -> None:
+    response = client.get("/v1/support/checkout-sessions/cs_test_500")
+    assert response.status_code == 200
+    assert response.json() == {"status": "paid"}
 
 
 def test_unsigned_webhook_is_rejected(

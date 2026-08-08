@@ -49,6 +49,40 @@ export function orderedRadialSlots(
   });
 }
 
+/** Degrees the crown spreads across, centred on 12 o'clock. */
+export const DEFAULT_CROWN_SPREAD_DEG = 120;
+
+function slotAt(angleDeg: number): RadialSlot {
+  const radians = (angleDeg * Math.PI) / 180;
+  return { ux: Math.cos(radians), uy: Math.sin(radians), angleDeg };
+}
+
+/**
+ * Slots arranged as a crown: spread evenly across an arc centred on 12 o'clock,
+ * still in clockwise reading order.
+ *
+ * The ring reserves a bottom arc sized for a one-line nucleus label. The root
+ * field's nucleus carries a masthead instead — mark, title, thesis, and the one
+ * action into the canon — which is several hundred pixels tall and as wide as
+ * the thesis. No bottom gap makes a *ring* clear of that, and a small ring
+ * distributed clockwise from 12 also sits lopsided, weighted to one side.
+ *
+ * A crown keeps the field above the masthead and symmetrical about it, which is
+ * what a small number of limbs needs. Deeper levels keep the ring: their centre
+ * is a mark and a short label, so it can be orbited.
+ */
+export function crownSlots(
+  count: number,
+  spreadDeg: number = DEFAULT_CROWN_SPREAD_DEG,
+): RadialSlot[] {
+  if (count <= 0) return [];
+  if (count === 1) return [slotAt(TOP)];
+  const step = spreadDeg / (count - 1);
+  return Array.from({ length: count }, (_, index) =>
+    slotAt(TOP - spreadDeg / 2 + index * step),
+  );
+}
+
 /** True when an angle falls inside the reserved bottom arc. */
 export function isInBottomGap(
   angleDeg: number,

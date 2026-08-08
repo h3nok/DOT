@@ -161,13 +161,52 @@ async function askBackend(
   };
 }
 
+/**
+ * "Who are you?" — a question about this surface rather than about the book.
+ *
+ * Anchored on purpose. The pattern this replaces tested for the bare substring
+ * `about`, so "What does DOT claim about Fear and Love?" — one of Lumen's own
+ * suggested prompts — never reached retrieval and came back as an uncited
+ * paragraph. A canned answer must only pre-empt the book when the question is
+ * genuinely not about the book.
+ */
+export function asksWhoIsSpeaking(question: string): boolean {
+  const q = question.trim().toLowerCase();
+  return (
+    /^(?:so\s+)?(?:who|what)\s+(?:are|is)\s+(?:you|this|dot)\s*[?.!]*$/.test(q) ||
+    /^tell\s+me\s+about\s+(?:yourself|you)\b/.test(q) ||
+    /^who\s+(?:made|built|wrote|runs|owns|is\s+behind)\b/.test(q)
+  );
+}
+
+/**
+ * "Do you keep my questions?" — a question about how this surface handles what
+ * a visitor types.
+ *
+ * The pattern this replaces tested for the bare word `data`, which is also the
+ * name of the book's founding claim: "What is the Subjective Data Principle?"
+ * was answered with the privacy notice. Anchor on what is being asked of *us*
+ * (store, retain, track) rather than on a noun the manuscript owns.
+ */
+export function asksHowDataIsHandled(question: string): boolean {
+  const q = question.trim().toLowerCase();
+  return (
+    /\bprivacy\s+(?:polic|notice|statement)/.test(q) ||
+    /\bdo(?:es)?\s+(?:you|this|dot|lumen)\s+\w*\s*(?:store|retain|keep|save|log|track|sell|share)\b/.test(
+      q,
+    ) ||
+    /\b(?:are|is)\s+(?:my|our|these)\s+\w+\s+(?:stored|retained|saved|logged|tracked|private)\b/.test(
+      q,
+    )
+  );
+}
+
 async function answerLocally(
   root: DotNode,
   query: string,
   lens: AgentLens,
 ): Promise<AgentResult> {
-  const q = query.toLowerCase();
-  if (/who|about|yourself|you\b/.test(q) && root.body) {
+  if (asksWhoIsSpeaking(query) && root.body) {
     return {
       kind: "answer",
       title: root.label,
@@ -175,7 +214,7 @@ async function answerLocally(
       source: "local",
     };
   }
-  if (/privacy|data|store|retain/.test(q)) {
+  if (asksHowDataIsHandled(query)) {
     return {
       kind: "answer",
       title: "Privacy",

@@ -104,15 +104,15 @@ describe("the movement graph seed", () => {
     expect(steward!.path.startsWith("dot/movement/")).toBe(true);
   });
 
-  it("declares a claim level on every applied entry", () => {
+  it("opens the applied limb onto the register that enforces claim levels", () => {
+    // ADR-0017 requires a declared claim level on every applied entry. That
+    // guarantee lives in content/applied/openSeams.test.ts, checked against the
+    // released reader contract; the limb's job is to route there. Asserting it
+    // here keeps the two from drifting apart into a rule nothing carries.
     const applied = dotGraph.children!.find((child) => child.id === "applied")!;
-    const undeclared = (applied.children ?? [])
-      .filter((child) => !child.meta?.some((entry) => entry.label === "Claim level"))
-      // "Studies" states that none exist yet, which is itself the honest disclosure.
-      .filter((child) => child.id !== "studies")
-      .map((child) => child.id);
 
-    expect(undeclared).toEqual([]);
+    expect(applied.href).toBe("/applied");
+    expect(applied.description).not.toBe("Coming soon");
   });
 
   it("states how every node relates to its parent", () => {

@@ -15,6 +15,8 @@ import pytest
 import app.auth.dependencies
 import app.db.models
 import app.domains.canon.service as canon
+import app.domains.knowledge.embedding
+import app.domains.knowledge.service as knowledge_service
 import app.domains.twin.retriever as retriever
 import app.domains.twin.schemas as twin_schemas
 import app.domains.twin.service as twin_service
@@ -51,6 +53,41 @@ class _StubModel:
     async def complete(self, *, system: str, user: str) -> str:
         self.seen_user = user
         return self.raw
+
+
+class _StubEmbeddingClient:
+    model = "test-embedding"
+
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        return [[float(index + 1), 1.0] for index, _ in enumerate(texts)]
+
+
+async def test_canon_chunks_gain_embeddings_when_a_model_becomes_available(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = [
+        app.db.models.KnowledgeChunk(
+            source_version_id="version",
+            chunk_index=index,
+            text=text,
+            token_count=4,
+        )
+        for index, text in enumerate(["The Canvas carries.", "The Painting interprets."])
+    ]
+    monkeypatch.setattr(
+        app.domains.knowledge.embedding,
+        "get_embedding_client",
+        lambda: _StubEmbeddingClient(),
+    )
+
+    embedded = await knowledge_service.embed_chunks(records)
+
+    assert embedded == 2
+    assert all(record.embedding for record in records)
+    assert {record.embedding_model for record in records} == {"test-embedding"}
+
+    # A safe canon re-run does not pay to regenerate vectors from the same model.
+    assert await knowledge_service.embed_chunks(records) == 0
 
 
 async def _ingest(session, section: canon.CanonSection = CANVAS) -> canon.CanonIngestResult:

@@ -48,6 +48,15 @@ export interface DotNode {
   /** How this node relates to its parent. Navigation is offered in these terms
    *  rather than as a menu, so every move has a stated reason (doc 12 §4). */
   relation?: DotRelation;
+  /** The single action under the nucleus (ADR-0017: "The Canon is the primary
+   *  entry"). A primary limb is promoted out of the ring and rendered as that
+   *  one action, so the same destination is never offered twice at two
+   *  different weights. At most one child per parent should carry it. */
+  primary?: boolean;
+  /** Declared but not built. Planned limbs stay in the anatomy and stay out of
+   *  the ring — ADR-0016 is explicit that "a quiet text link is the remedy,
+   *  never a ring node" — so the field shows only doors that open. */
+  planned?: boolean;
   /** Child attributes. Focusing this node re-centres the graph on it. */
   children?: DotNode[];
 }

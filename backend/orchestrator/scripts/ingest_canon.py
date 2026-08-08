@@ -78,8 +78,12 @@ async def main(owner_id: str, dry_run: bool) -> None:
         )
 
     written = sum(result.chunk_count for result in results if not result.unchanged)
+    embedded = sum(result.embedded_count for result in results)
     unchanged = sum(1 for result in results if result.unchanged)
-    print(f"\ningested {len(results)} sections · {written} new chunks · {unchanged} unchanged")
+    print(
+        f"\ningested {len(results)} sections · {written} new chunks · "
+        f"{embedded} embedded · {unchanged} unchanged"
+    )
     await app.db.session.engine.dispose()
 
 

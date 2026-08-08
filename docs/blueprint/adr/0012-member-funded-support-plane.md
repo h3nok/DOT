@@ -36,6 +36,13 @@ establish fact.**
 - **Prices are server-owned.** `SUPPORT_TIERS` lives in the service. A request
   names a tier, not a price. A custom amount is permitted only inside a declared
   range, enforced both at the schema boundary and in `resolve_amount`.
+- **Checkout is provider-hosted.** DOT creates a one-time Stripe Checkout
+  Session and redirects the supporter to Stripe. A return URL is never treated
+  as proof of payment; the UI verifies the session and the ledger still waits
+  for a signed webhook.
+- **Purpose is explicit.** A supporter may direct a contribution toward Lumen,
+  the Book One reader, or public infrastructure. The selected purpose is stored
+  as accounting context, never used to alter access or rank work for a member.
 - **The ledger has exactly one writer:** `POST /v1/support/webhook`, and it
   refuses any payload whose Stripe signature does not verify. If
   `STRIPE_WEBHOOK_SECRET` is unset the endpoint fails closed rather than
@@ -47,9 +54,9 @@ establish fact.**
 - **Email is stored as a SHA-256 blind index** (`email_hash`), matching the
   posture `Member.email_hash` already takes. Stripe receives the address because
   it must issue a receipt; the DOT database never does.
-- **No placeholder credentials.** When `STRIPE_SECRET_KEY` is absent, support is
-  simply not configured: `/v1/support/options` returns an empty publishable key
-  and the UI hides the surface.
+- **No placeholder credentials.** Unless both `STRIPE_SECRET_KEY` and
+  `STRIPE_WEBHOOK_SECRET` are configured, `/v1/support/options` reports support
+  unavailable and checkout remains closed.
 - **Only aggregates are public.** `/v1/support/totals` returns a supporter count
   and a sum. There is no endpoint that lists who gave, or that looks a supporter
   up by email — the prototype's `GET /donations/subscriptions/<email>` is not
@@ -70,5 +77,5 @@ takes. Rate limits stand in for tenancy here.
   claims it — never by matching plaintext email.
 - `stripe` becomes a runtime dependency of the orchestrator. It is imported
   defensively so the service still boots without it.
-- Recurring support currently records a cadence but leans on Stripe for the
-  subscription lifecycle; DOT stores the resulting events, not the schedule.
+- Recurring support is deliberately deferred. The UI offers one-time support
+  only until a real Stripe subscription lifecycle and cancellation path exist.

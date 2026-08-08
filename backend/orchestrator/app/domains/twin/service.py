@@ -97,6 +97,97 @@ def _refuse(code: str) -> schemas.TwinAskResponse:
     )
 
 
+def _heading_slug(value: str) -> str:
+    normalized: str = value.strip().lower().replace("’", "").replace("'", "")
+    return re.sub(r"^-|-$", "", re.sub(r"[^a-z0-9]+", "-", normalized))
+
+
+def _relevant_excerpt(text: str, question: str, limit: int = 900) -> tuple[str, str | None]:
+    paragraphs: list[str] = [part.strip() for part in re.split(r"\n\s*\n", text) if part.strip()]
+    if not paragraphs:
+        return "", None
+
+    terms: list[str] = retriever._terms(question)  # noqa: SLF001 - shared retrieval vocabulary
+    phrase: str = " ".join(terms)
+    definition_intent: bool = bool(re.search(r"\b(?:defin\w*|what\s+is)\b", question, re.I))
+
+    def score(paragraph: str) -> float:
+        lowered: str = paragraph.lower()
+        value: float = float(sum(lowered.count(term) for term in terms))
+        if len(terms) > 1:
+            value += 4.0 * lowered.count(phrase)
+            if definition_intent:
+                value += 10.0 * lowered.count(f"{phrase} is")
+        return value
+
+    best: int = max(range(len(paragraphs)), key=lambda index: score(paragraphs[index]))
+    selected: list[str] = []
+    heading: str | None = next(
+        (
+            paragraphs[index].lstrip("#").strip().rstrip("#").strip()
+            for index in range(best - 1, -1, -1)
+            if paragraphs[index].startswith("#")
+        ),
+        None,
+    )
+    if heading:
+        selected.append(heading)
+    selected.append(paragraphs[best])
+    if best + 1 < len(paragraphs) and (
+        paragraphs[best].endswith(":") or sum(len(part) for part in selected) < 420
+    ):
+        selected.append(paragraphs[best + 1])
+
+    excerpt: str = "\n\n".join(selected)
+    if len(excerpt) > limit:
+        excerpt = f"{excerpt[: limit - 3].rstrip()}..."
+    return excerpt, heading
+
+
+def _extractive_fallback(
+    passages: typing.Sequence[retriever.Passage], question: str = ""
+) -> schemas.TwinAskResponse:
+    """Return released prose when generation is unavailable.
+
+    This is intentionally passage-led rather than a synthetic answer. It keeps
+    public Book One consultation useful without asking another model to fill in
+    the missing runtime.
+    """
+
+    selected: list[retriever.Passage] = [
+        passage for passage in passages if passage.kind == "chunk" and passage.text.strip()
+    ][:2]
+    if not selected:
+        return _refuse(REFUSAL_MODEL_UNAVAILABLE)
+
+    rendered: list[str] = []
+    citations: list[schemas.Citation] = []
+    for passage in selected:
+        excerpt, heading = _relevant_excerpt(passage.text, question)
+        label: str = f"{passage.label} · {heading}" if heading else passage.label
+        locator: dict[str, typing.Any] | None = (
+            dict(passage.locator) if passage.locator is not None else None
+        )
+        if heading and locator is not None:
+            locator["heading"] = _heading_slug(heading)
+            locator["heading_title"] = heading
+        rendered.append(f"{passage.label}\n{excerpt}")
+        citations.append(
+            schemas.Citation(
+                node_id=passage.id,
+                kind=passage.kind,
+                label=label,
+                locator=locator,
+            )
+        )
+
+    return schemas.TwinAskResponse(
+        answer="The closest released passages say:\n\n" + "\n\n".join(rendered),
+        citations=citations,
+        grounded=True,
+    )
+
+
 #: How many prior turns the twin sees. Far enough back to follow a thread,
 #: short enough that the context stays dominated by retrieved material.
 HISTORY_TURNS = 6
@@ -153,7 +244,7 @@ async def ask(
     try:
         raw: str = await resolved.complete(system=SYSTEM_PROMPT, user=user_message)
     except model.ModelUnavailableError:
-        return _refuse(REFUSAL_MODEL_UNAVAILABLE)
+        return _extractive_fallback(passages, payload.question)
 
     try:
         parsed: boundary.ModelOutput = boundary.parse_model_output(raw)

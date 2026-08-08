@@ -136,6 +136,7 @@ class InviteCode(Base):
 class OrchestratorRun(Base, TenantMixin):
     __tablename__ = "orchestrator_runs"
     __table_args__ = (
+        sqlalchemy.Index("ix_orchestrator_runs_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint(
             "owner_id",
             "workflow_type",
@@ -226,6 +227,7 @@ class OrchestratorStep(Base):
 class PublicationProject(Base, TimestampMixin, TenantMixin):
     __tablename__ = "publication_projects"
     __table_args__ = (
+        sqlalchemy.Index("ix_publication_projects_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint("owner_id", "slug", name="uq_publication_project_owner_slug"),
     )
 
@@ -367,6 +369,7 @@ class PublicationRelease(Base):
 class FootprintAccount(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_accounts"
     __table_args__ = (
+        sqlalchemy.Index("ix_footprint_accounts_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint(
             "owner_id",
             "platform",
@@ -414,6 +417,7 @@ class FootprintAccount(Base, TimestampMixin, TenantMixin):
 class FootprintNode(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_nodes"
     __table_args__ = (
+        sqlalchemy.Index("ix_footprint_nodes_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint(
             "owner_id",
             "platform",
@@ -472,6 +476,7 @@ class FootprintNode(Base, TimestampMixin, TenantMixin):
 class FootprintEdge(Base, TimestampMixin, TenantMixin):
     __tablename__ = "footprint_edges"
     __table_args__ = (
+        sqlalchemy.Index("ix_footprint_edges_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint(
             "owner_id",
             "source_node_id",
@@ -528,6 +533,9 @@ class FootprintEdge(Base, TimestampMixin, TenantMixin):
 
 class FootprintImport(Base, TenantMixin):
     __tablename__ = "footprint_imports"
+    __table_args__ = (
+        sqlalchemy.Index("ix_footprint_imports_owner_shard", "owner_shard", "owner_id"),
+    )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(64), primary_key=True, default=lambda: make_id("imp")
@@ -571,6 +579,7 @@ class FootprintImport(Base, TenantMixin):
 class SourceObject(Base, TimestampMixin, TenantMixin):
     __tablename__ = "source_objects"
     __table_args__ = (
+        sqlalchemy.Index("ix_source_objects_owner_shard", "owner_shard", "owner_id"),
         sqlalchemy.UniqueConstraint(
             "owner_id", "object_store_key", name="uq_source_object_owner_key"
         ),
@@ -654,6 +663,7 @@ class SourceVersion(Base):
 class KnowledgeChunk(Base):
     __tablename__ = "knowledge_chunks"
     __table_args__ = (
+        sqlalchemy.Index("ix_knowledge_chunks_embedding_model", "embedding_model"),
         sqlalchemy.UniqueConstraint(
             "source_version_id", "chunk_index", name="uq_knowledge_chunk_index"
         ),
@@ -719,6 +729,10 @@ class SourceAnchor(Base):
 
 class TwinConversation(Base, TimestampMixin, TenantMixin):
     __tablename__ = "twin_conversations"
+    __table_args__ = (
+        sqlalchemy.Index("ix_twin_conversations_owner_shard", "owner_shard", "owner_id"),
+        sqlalchemy.Index("ix_twin_conversations_owner_recent", "owner_id", "last_message_at"),
+    )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(64), primary_key=True, default=lambda: make_id("conv")
@@ -736,7 +750,7 @@ class TwinConversation(Base, TimestampMixin, TenantMixin):
     )
     #: Denormalised so the conversation list sorts without touching messages.
     last_message_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.DateTime(timezone=True), index=True
+        sqlalchemy.DateTime(timezone=True)
     )
     message_count: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Integer, nullable=False, default=0
@@ -752,6 +766,7 @@ class TwinConversation(Base, TimestampMixin, TenantMixin):
 class TwinMessage(Base):
     __tablename__ = "twin_messages"
     __table_args__ = (
+        sqlalchemy.Index("ix_twin_messages_conversation_seq", "conversation_id", "seq"),
         sqlalchemy.UniqueConstraint("conversation_id", "seq", name="uq_twin_message_seq"),
     )
 

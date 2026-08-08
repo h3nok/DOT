@@ -20,6 +20,7 @@ import {
 } from "../../content/doctrine/doctrineData";
 import { useTheme } from "../../shared/contexts/SimpleThemeContext";
 import { useSignalAccent } from "../../shared/hooks/useSignalAccent";
+import { useOwnerMode } from "../../dot/useOwnerMode";
 import OrchestratorNodeTools from "./OrchestratorNodeTools";
 
 // Book One concept map — conforms to
@@ -229,6 +230,7 @@ const DoctrinePage = () => {
   const prefersReducedMotion = useReducedMotion();
   const isDark = theme === "dark";
   const accent = useSignalAccent();
+  const ownerTools = useOwnerMode();
 
   const initialId =
     params.nodeId && getDoctrineNode(params.nodeId)
@@ -746,8 +748,13 @@ const DoctrinePage = () => {
         ) : null}
       </AnimatePresence>
 
-      {/* Orchestrator presence + node-scoped tools (organism & activity aware) */}
-      <OrchestratorNodeTools node={focusNode} />
+      {/* Orchestrator presence + node-scoped tools. Operator surface: a reader
+          has no use for service readiness, and a status pill reading "offline"
+          tells them the site is broken when it is not. Gating it here also
+          stops the 15s readiness poll from running for every visitor. The
+          passage behind this concept stays reachable for everyone through the
+          "Derived from Book One" link in the focus panel. */}
+      {ownerTools && <OrchestratorNodeTools node={focusNode} />}
     </div>
   );
 };

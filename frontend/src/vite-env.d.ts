@@ -9,7 +9,6 @@ interface ImportMetaEnv {
   readonly VITE_ORCHESTRATOR_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_SLUG?: string;
-  readonly VITE_STRIPE_PUBLISHABLE_KEY: string;
   // Add more environment variables as needed
 }
 

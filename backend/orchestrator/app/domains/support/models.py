@@ -25,6 +25,11 @@ SUPPORT_TIERS: dict[str, int] = {
     "steward": 2_500,
     "patron": 10_000,
 }
+SUPPORT_PURPOSES: dict[str, str] = {
+    "lumen": "Reliable Lumen and semantic book search",
+    "reader": "Book One reader and concept map",
+    "infrastructure": "A secure and reliable public release",
+}
 MIN_CUSTOM_AMOUNT = 200
 MAX_CUSTOM_AMOUNT = 500_000
 
@@ -33,13 +38,17 @@ class SupportContribution(app.db.models.Base):
     """One contribution. Written only from a verified Stripe event."""
 
     __tablename__ = "support_contributions"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("provider_ref"),
+        sqlalchemy.Index("ix_support_contributions_provider_ref", "provider_ref"),
+    )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(64), primary_key=True, default=lambda: app.db.models.make_id("sup")
     )
     #: Stripe PaymentIntent or Subscription id. Unique so replayed webhooks are inert.
     provider_ref: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.String(128), unique=True, nullable=False, index=True
+        sqlalchemy.String(128), nullable=False
     )
     #: SHA-256 of the lowercased email — a blind index, never the address itself.
     email_hash: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
@@ -58,7 +67,10 @@ class SupportContribution(app.db.models.Base):
     tier: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), nullable=False, default="custom"
     )
-    # one_time | recurring
+    purpose: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="general"
+    )
+    # one_time; recurring is reserved until a real subscription checkout exists.
     cadence: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(16), nullable=False, default="one_time"
     )
@@ -88,6 +100,12 @@ def resolve_amount(tier: str, custom_amount_minor: int | None) -> tuple[str, int
     if not MIN_CUSTOM_AMOUNT <= custom_amount_minor <= MAX_CUSTOM_AMOUNT:
         raise ValueError("Support amount is outside the permitted range.")
     return "custom", custom_amount_minor
+
+
+def resolve_purpose(purpose: str) -> str:
+    if purpose not in SUPPORT_PURPOSES:
+        raise ValueError("Unknown support purpose.")
+    return purpose
 
 
 def new_idempotency_key() -> str:

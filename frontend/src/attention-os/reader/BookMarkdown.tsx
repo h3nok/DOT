@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { headingSlug } from "./headingSlug";
 import "katex/dist/katex.min.css";
 
 function nodeText(node: ReactNode): string {
@@ -16,12 +17,7 @@ function nodeText(node: ReactNode): string {
 }
 
 function headingId(children: ReactNode): string {
-  return nodeText(children)
-    .trim()
-    .toLowerCase()
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return headingSlug(nodeText(children));
 }
 
 export function BookMarkdown({

@@ -15,6 +15,8 @@ export const dotGraph: DotNode = {
       surface: "publications",
       href: "/book/digital-organism-theory",
       relation: "defines",
+      // The one action under the nucleus. Not a ring dot as well.
+      primary: true,
     },
     {
       id: "theory",
@@ -28,32 +30,25 @@ export const dotGraph: DotNode = {
       id: "practice",
       label: "Practice",
       kind: "page",
-      description: "Coming soon",
+      description: "Teaching and exercises drawn from the book",
       relation: "applies",
+      planned: true,
     },
     {
       id: "applied",
-      label: "Applications",
+      label: "Applied",
       kind: "page",
-      description: "Coming soon",
+      description: "What the book still owes, and the work recorded against it",
+      href: "/applied",
       relation: "applies",
-      children: [
-        {
-          id: "studies",
-          label: "Studies",
-          kind: "page",
-          description: "Studies",
-          surface: "publications",
-          relation: "applies",
-        },
-      ],
     },
     {
       id: "movement",
       label: "The Movement",
       kind: "page",
-      description: "Coming soon",
+      description: "Circle, contribution, stewardship, and support",
       relation: "leads-to",
+      planned: true,
       children: [
         {
           id: "henok",

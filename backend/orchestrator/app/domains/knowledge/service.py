@@ -252,6 +252,14 @@ async def embed_chunks(records: list[app.db.models.KnowledgeChunk]) -> int:
     if isinstance(client, app.domains.knowledge.embedding.NullEmbeddingClient):
         return 0
 
+    records = [
+        record
+        for record in records
+        if record.embedding is None or record.embedding_model != client.model
+    ]
+    if not records:
+        return 0
+
     settings: app.settings.Settings = app.settings.get_settings()
     batch_size: int = max(1, settings.EMBEDDING_BATCH_SIZE)
     embedded: int = 0

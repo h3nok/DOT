@@ -18,6 +18,12 @@ interface GraphNodeProps {
   active?: boolean;
   reducedMotion: boolean;
   editing?: boolean;
+  /**
+   * Set the centre's one-line essence as the book's thesis rather than as
+   * metadata. Only true at the root of the field: at depth the essence is a
+   * short label ("Steward") that would read absurdly at display size.
+   */
+  thesis?: boolean;
   onActivate: (node: DotNode) => void;
   onAddChild?: (node: DotNode) => void;
   onEdit?: (node: DotNode) => void;
@@ -94,6 +100,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   active = false,
   reducedMotion,
   editing = false,
+  thesis = false,
   onActivate,
   onAddChild,
   onEdit,
@@ -102,7 +109,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   const isCenter = variant === "center";
   const drillable = hasChildren(node);
   const kind = node.kind ?? "attribute";
-  const comingSoon = node.description?.trim().toLowerCase() === "coming soon";
+  const comingSoon = node.planned === true;
 
   if (isCenter) {
     return (
@@ -120,11 +127,20 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
         <span className="max-w-[min(82vw,32rem)] text-balance font-serif text-2xl font-semibold text-foreground sm:text-3xl">
           {node.label}
         </span>
-        {node.description && (
-          <span className="mt-2 font-mono text-[11px] uppercase text-muted-foreground">
-            {node.description}
-          </span>
-        )}
+        {node.description &&
+          (thesis ? (
+            // The thesis, set in the book's voice. Letterspaced uppercase mono
+            // is the register this product uses for word counts and edition
+            // labels; the sentence the whole framework turns on should not
+            // arrive looking like metadata.
+            <span className="mt-3 max-w-[min(88vw,34rem)] text-balance font-serif text-lg italic leading-snug text-muted-foreground sm:text-xl">
+              {node.description}
+            </span>
+          ) : (
+            <span className="mt-2 font-mono text-[11px] uppercase text-muted-foreground">
+              {node.description}
+            </span>
+          ))}
       </button>
     );
   }
