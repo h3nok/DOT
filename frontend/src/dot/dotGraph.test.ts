@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dotGraph } from "./dotGraph";
+import { DOT_DEVELOPMENT_STATEMENT, dotGraph } from "./dotGraph";
 import type { DotNode } from "./types";
 
 /**
@@ -113,6 +113,21 @@ describe("the movement graph seed", () => {
 
     expect(applied.href).toBe("/applied");
     expect(applied.description).not.toBe("Coming soon");
+  });
+
+  it("delivers the two live theory layers as explicit routes", () => {
+    const theory = dotGraph.children!.find((child) => child.id === "theory")!;
+    const applied = dotGraph.children!.find((child) => child.id === "applied")!;
+
+    expect(theory).toMatchObject({ label: "Concept Map", href: "/doctrine" });
+    expect(applied).toMatchObject({ label: "Applied", href: "/applied" });
+    expect(dotGraph.introduction).toBe(DOT_DEVELOPMENT_STATEMENT);
+    expect(dotGraph.children!.find((child) => child.id === "canon")?.actionLabel).toBe(
+      "Begin reading",
+    );
+    expect(DOT_DEVELOPMENT_STATEMENT).toBe(
+      "The Development and Application of a Big Theory of Everything (TOE)",
+    );
   });
 
   it("states how every node relates to its parent", () => {

@@ -78,10 +78,18 @@ describe("graphStore tree operations", () => {
   });
 
   it("turns a draft into a node, dropping blank optional fields", () => {
-    const node = draftToNode({ label: "  Work  ", description: "   ", href: "/work" });
+    const node = draftToNode({
+      label: "  Work  ",
+      description: "   ",
+      introduction: "  Begin here.  ",
+      actionLabel: "  Read now  ",
+      href: "/work",
+    });
 
     expect(node.label).toBe("Work");
     expect(node.description).toBeUndefined();
+    expect(node.introduction).toBe("Begin here.");
+    expect(node.actionLabel).toBe("Read now");
     expect(node.href).toBe("/work");
     expect(node.kind).toBe("attribute");
   });

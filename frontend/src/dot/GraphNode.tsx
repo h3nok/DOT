@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
 import {
+  ArrowRight,
   ArrowUpRight,
   Clock3,
   Layers,
   Link2,
+  Map,
+  NotebookPen,
   Pencil,
   Plus,
   Trash2,
@@ -110,6 +113,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   const drillable = hasChildren(node);
   const kind = node.kind ?? "attribute";
   const comingSoon = node.planned === true;
+  const pageDestination = kind === "page" && Boolean(node.href) && !comingSoon;
 
   if (isCenter) {
     return (
@@ -142,6 +146,41 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
             </span>
           ))}
       </button>
+    );
+  }
+
+  if (pageDestination && !editing) {
+    const DestinationIcon = node.id === "theory" ? Map : NotebookPen;
+
+    return (
+      <motion.button
+        type="button"
+        onClick={() => onActivate(node)}
+        aria-label={
+          node.description ? `${node.label} — ${node.description}` : node.label
+        }
+        className="dot-graph-destination group flex min-h-[5.5rem] w-[min(42vw,13rem)] items-center gap-3 rounded-md border px-3.5 py-3 text-left outline-none"
+        whileTap={reducedMotion ? undefined : { scale: 0.99 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
+        <span className="dot-graph-destination-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+          <DestinationIcon className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-foreground">
+            {node.label}
+          </span>
+          {node.description && (
+            <span className="mt-1 hidden text-[11px] leading-snug text-muted-foreground sm:line-clamp-2">
+              {node.description}
+            </span>
+          )}
+        </span>
+        <ArrowRight
+          className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+          aria-hidden="true"
+        />
+      </motion.button>
     );
   }
 

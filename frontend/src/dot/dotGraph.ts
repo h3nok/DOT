@@ -1,17 +1,22 @@
 import type { DotNode } from "./types";
 
+export const DOT_DEVELOPMENT_STATEMENT =
+  "The Development and Application of a Big Theory of Everything (TOE)";
+
 export const dotGraph: DotNode = {
   id: "dot",
   label: "Digital Organism Theory",
   kind: "self",
-  description: "Love is the condition in which Fear no longer governs you",
+  introduction: DOT_DEVELOPMENT_STATEMENT,
+  description: "See how Fear governs your choices, and how Love helps you choose consciously.",
   body: "Book One presents DOT as a construction, not a revelation: a framework for consciousness, conditioning, and conscious authorship whose observations, models, hypotheses, and speculation must remain distinguishable.",
   children: [
     {
       id: "canon",
       label: "Book One",
       kind: "page",
-      description: "Consciousness: A Digital Organism",
+      description: "Read Consciousness: A Digital Organism",
+      actionLabel: "Begin reading",
       surface: "publications",
       href: "/book/digital-organism-theory",
       relation: "defines",
@@ -22,7 +27,7 @@ export const dotGraph: DotNode = {
       id: "theory",
       label: "Concept Map",
       kind: "page",
-      description: "Book One concepts, claim boundaries, and open debts",
+      description: "Trace the book's concepts, see where each claim stops, and examine what remains open",
       href: "/doctrine",
       relation: "defines",
     },
@@ -30,7 +35,7 @@ export const dotGraph: DotNode = {
       id: "practice",
       label: "Practice",
       kind: "page",
-      description: "Teaching and exercises drawn from the book",
+      description: "Use the book's ideas through teaching and exercises",
       relation: "applies",
       planned: true,
     },
@@ -38,7 +43,7 @@ export const dotGraph: DotNode = {
       id: "applied",
       label: "Applied",
       kind: "page",
-      description: "What the book still owes, and the work recorded against it",
+      description: "See what the book still owes, and follow the work being done",
       href: "/applied",
       relation: "applies",
     },
@@ -46,7 +51,7 @@ export const dotGraph: DotNode = {
       id: "movement",
       label: "The Movement",
       kind: "page",
-      description: "Circle, contribution, stewardship, and support",
+      description: "Enter through contribution, stewardship, and support",
       relation: "leads-to",
       planned: true,
       children: [

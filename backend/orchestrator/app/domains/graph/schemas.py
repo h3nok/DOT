@@ -164,6 +164,8 @@ def _safe_link(value: str | None, field: str, schemes: tuple[str, ...]) -> str |
 class ProfileNode(pydantic.BaseModel):
     """One node of the member's public tree. Recursive by design."""
 
+    model_config = pydantic.ConfigDict(populate_by_name=True)
+
     id: str = pydantic.Field(min_length=1, max_length=128, pattern=_ID_PATTERN)
     label: str = pydantic.Field(min_length=1, max_length=512)
     kind: ProfileNodeKind | None = None
@@ -171,6 +173,8 @@ class ProfileNode(pydantic.BaseModel):
     relation: ProfileRelation | None = None
     href: str | None = pydantic.Field(default=None, max_length=1024)
     description: str | None = pydantic.Field(default=None, max_length=1024)
+    introduction: str | None = pydantic.Field(default=None, max_length=1024)
+    action_label: str | None = pydantic.Field(default=None, alias="actionLabel", max_length=128)
     body: str | None = pydantic.Field(default=None, max_length=100_000)
     meta: list[ProfileMetaEntry] | None = None
     image: str | None = pydantic.Field(default=None, max_length=1024)

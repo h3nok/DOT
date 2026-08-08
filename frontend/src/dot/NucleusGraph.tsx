@@ -60,17 +60,6 @@ type PlatformSurface =
   | "twin"
   | null;
 
-/** "Practice and The Movement are being built." — the whole promise, once. */
-function plannedLine(nodes: DotNode[]): string {
-  const labels = nodes.map((node) => node.label);
-  if (labels.length === 0) return "";
-  const list =
-    labels.length === 1
-      ? labels[0]
-      : `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}`;
-  return `${list} ${labels.length === 1 ? "is" : "are"} being built.`;
-}
-
 function initialPlatformSurface(): PlatformSurface {
   if (typeof window === "undefined") return null;
   return new URLSearchParams(window.location.search).has("support") ? "support" : null;
@@ -102,7 +91,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const invited = useInviteArrival();
   const { root, create, edit, remove, reset, status } = useEditableGraph(
     seed,
-    owner,
+    isOwner,
   );
 
   // Focus is a path of ids (root-first), resolved fresh against the live tree
@@ -158,10 +147,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   // author even while it is hidden from visitors.
   const primaryChild = useMemo(
     () => (editing ? null : (allChildren.find((child) => child.primary) ?? null)),
-    [allChildren, editing],
-  );
-  const plannedChildren = useMemo(
-    () => (editing ? [] : allChildren.filter((child) => child.planned)),
     [allChildren, editing],
   );
   const children = useMemo(
@@ -478,6 +463,17 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         </button>
       )}
 
+      {!editing && chain.length === 1 && center.introduction && (
+        <motion.p
+          initial={motionSafe ? { opacity: 0 } : false}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35, duration: 0.3 }}
+          className="pointer-events-none absolute inset-x-0 top-5 z-10 mx-auto max-w-2xl px-16 text-center font-serif text-sm leading-snug text-muted-foreground/80"
+        >
+          {center.introduction}
+        </motion.p>
+      )}
+
       {/* Synaptic edges from the nucleus to each attribute. */}
       {size.w > 0 && (
         <svg
@@ -518,6 +514,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             node={center}
             variant="center"
             reducedMotion={reducedMotion}
+            editing={editing}
             thesis={chain.length === 1}
             onActivate={activate}
           />
@@ -532,20 +529,15 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               <button
                 type="button"
                 onClick={() => activate(primaryChild)}
-                className="group inline-flex items-center gap-2.5 whitespace-nowrap rounded-full bg-foreground px-7 py-3.5 text-sm font-semibold text-background shadow-[0_10px_30px_-12px_rgb(0_0_0/0.5)] transition-transform duration-300 hover:-translate-y-0.5"
+                className="dot-reading-action group inline-flex min-h-12 items-center gap-2.5 whitespace-nowrap rounded-md px-7 py-3.5 text-sm font-semibold outline-none"
               >
                 <BookOpen className="h-4 w-4" aria-hidden="true" />
-                Begin — Chapter One
+                {primaryChild.actionLabel ?? `Open ${primaryChild.label}`}
                 <ArrowRight
-                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+                  className="h-3.5 w-3.5"
                   aria-hidden="true"
                 />
               </button>
-              {plannedChildren.length > 0 && (
-                <p className="mt-6 max-w-xs text-center text-xs leading-relaxed text-muted-foreground/70">
-                  {plannedLine(plannedChildren)}
-                </p>
-              )}
             </motion.div>
           )}
           {editing && (
@@ -567,7 +559,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
       <AnimatePresence mode="popLayout">
         {size.w > 0 &&
           children.map((child, i) => {
-            const slot = slots[i];
             // Staggered entrance delay: nodes arrive one after another.
             const entranceDelay = 0.5 + i * 0.065;
 
@@ -575,30 +566,21 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               <motion.div
                 key={`${center.id}:${child.id}`}
                 className="absolute z-10"
+                style={{ left: positions[i].x, top: positions[i].y }}
                 initial={
                   motionSafe
-                    ? { opacity: 0, scale: 0.5, left: cx, top: cy }
+                    ? { opacity: 0, scale: 0.92 }
                     : false
                 }
                 animate={{
                   opacity: 1,
                   scale: 1,
-                  left: positions[i].x,
-                  top: positions[i].y,
                 }}
                 exit={
                   motionSafe
                     ? {
-                        // Depth-aware exit: siblings radiate outward and fade
-                        // when drilling, or collapse to centre when backing.
                         opacity: 0,
-                        scale: drilling ? 0.7 : 0.5,
-                        left: drilling
-                          ? positions[i].x + (slot?.ux ?? 0) * 80
-                          : cx,
-                        top: drilling
-                          ? positions[i].y + (slot?.uy ?? 0) * 80
-                          : cy,
+                        scale: drilling ? 0.96 : 0.92,
                       }
                     : undefined
                 }
@@ -733,11 +715,19 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             contextLabel={
               editor.mode === "add" ? editor.parentLabel : editor.node.label
             }
+            showIntroduction={
+              editor.mode === "edit" && editor.node.id === root.id
+            }
+            showActionLabel={
+              editor.mode === "edit" && editor.node.primary === true
+            }
             initial={
               editor.mode === "edit"
                 ? {
                     label: editor.node.label,
                     description: editor.node.description,
+                    introduction: editor.node.introduction,
+                    actionLabel: editor.node.actionLabel,
                     body: editor.node.body,
                     kind: editor.node.kind,
                     href: editor.node.href,
@@ -748,7 +738,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             onSubmit={submitEditor}
             onClose={() => setEditor(null)}
             onDelete={
-              editor.mode === "edit"
+              editor.mode === "edit" && editor.node.id !== root.id
                 ? () => {
                     remove(editor.node.id);
                     setEditor(null);

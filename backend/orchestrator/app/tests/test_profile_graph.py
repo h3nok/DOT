@@ -14,12 +14,14 @@ TREE: dict = {
         "label": "Henok",
         "kind": "self",
         "description": "Root of the tree.",
+        "introduction": "Begin with the question that brought you here.",
         "children": [
             {
                 "id": "writing",
                 "label": "Writing",
                 "kind": "page",
                 "surface": "publications",
+                "actionLabel": "Begin reading",
                 "children": [
                     {"id": "dot", "label": "Digital Organism Theory", "kind": "page"},
                 ],
@@ -51,8 +53,10 @@ def test_put_then_get_round_trips_the_tree(client: fastapi.testclient.TestClient
     graph = body["graph"]
     assert graph["id"] == "self"
     assert graph["label"] == "Henok"
+    assert graph["introduction"] == "Begin with the question that brought you here."
     assert [child["id"] for child in graph["children"]] == ["writing", "work"]
     assert graph["children"][0]["surface"] == "publications"
+    assert graph["children"][0]["actionLabel"] == "Begin reading"
     assert graph["children"][0]["children"][0]["label"] == "Digital Organism Theory"
     assert graph["children"][1]["meta"] == [{"label": "Role", "value": "Engineer"}]
 

@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 /**
  * useOwnerMode — a minimal gate for authoring.
  *
- * The graph is editable, but only its owner should see Edit. Until real
- * authentication lands, this is a lightweight gate: visiting with `?owner=1`
- * (or `#owner`) enables owner mode and remembers it; `?owner=0` clears it.
- * Visitors never see authoring affordances. This is intentionally not security
- * — it hides owner UI from the public, and real auth replaces it before any
- * write reaches a server.
+ * The graph is editable, but only its owner should see Edit. Visiting with
+ * `?owner=1` (or `#owner`) enables a local preview and remembers it;
+ * `?owner=0` clears it. This is intentionally not authentication: only a real
+ * owner session can publish edits to the server.
  */
 
 const OWNER_KEY = "dot-owner";

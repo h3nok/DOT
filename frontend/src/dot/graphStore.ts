@@ -11,7 +11,7 @@ import type { DotNode, DotNodeKind } from "./types";
  */
 
 export const GRAPH_STORAGE_KEY = "dot-profile-graph";
-const GRAPH_SEED_VERSION = 3;
+const GRAPH_SEED_VERSION = 4;
 
 interface StoredGraph {
   fingerprint: string;
@@ -21,6 +21,8 @@ interface StoredGraph {
 export interface NodeDraft {
   label: string;
   description?: string;
+  introduction?: string;
+  actionLabel?: string;
   body?: string;
   kind?: DotNodeKind;
   href?: string;
@@ -104,6 +106,8 @@ export function draftToNode(draft: NodeDraft): DotNode {
     label,
     kind: draft.kind ?? "attribute",
     description: draft.description?.trim() || undefined,
+    introduction: draft.introduction?.trim() || undefined,
+    actionLabel: draft.actionLabel?.trim() || undefined,
     body: draft.body?.trim() || undefined,
     href: href || undefined,
     image: draft.image?.trim() || undefined,

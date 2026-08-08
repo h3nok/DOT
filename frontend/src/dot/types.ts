@@ -36,6 +36,10 @@ export interface DotNode {
   href?: string;
   /** One-line essence, revealed when the node is focused. */
   description?: string;
+  /** Short framing copy shown above a node when it is used as a page nucleus. */
+  introduction?: string;
+  /** Reader-facing command used when this node is promoted as the primary action. */
+  actionLabel?: string;
   /** Rich content (plain text / light markdown) shown in the node's reading
    *  panel. This is the node's substance — the profile, the project, the note. */
   body?: string;

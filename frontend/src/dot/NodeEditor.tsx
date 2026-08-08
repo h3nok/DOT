@@ -30,6 +30,8 @@ export interface NodeEditorProps {
   /** Name of the parent (add) or the node being edited, for the header. */
   contextLabel: string;
   initial?: NodeDraft;
+  showIntroduction?: boolean;
+  showActionLabel?: boolean;
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
   onSubmit: (draft: NodeDraft) => void;
@@ -41,6 +43,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   mode,
   contextLabel,
   initial,
+  showIntroduction = false,
+  showActionLabel = false,
   origin,
   reducedMotion = false,
   onSubmit,
@@ -49,6 +53,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
 }) => {
   const [label, setLabel] = useState(initial?.label ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [introduction, setIntroduction] = useState(initial?.introduction ?? "");
+  const [actionLabel, setActionLabel] = useState(initial?.actionLabel ?? "");
   const [body, setBody] = useState(initial?.body ?? "");
   const [kind, setKind] = useState<DotNodeKind>(initial?.kind ?? "attribute");
   const [href, setHref] = useState(initial?.href ?? "");
@@ -64,6 +70,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
     onSubmit({
       label,
       description,
+      introduction: showIntroduction ? introduction : initial?.introduction,
+      actionLabel: showActionLabel ? actionLabel : initial?.actionLabel,
       body,
       kind,
       href: needsHref ? href : undefined,
@@ -144,6 +152,34 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
             className="w-full rounded-xl border border-border/60 bg-background/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-[color:var(--organism-accent-soft)]"
           />
         </label>
+
+        {showIntroduction && (
+          <label className="mb-3 block">
+            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Home introduction
+            </span>
+            <input
+              value={introduction}
+              onChange={(event) => setIntroduction(event.target.value)}
+              placeholder="A short line that frames the page for your reader."
+              className="w-full rounded-xl border border-border/60 bg-background/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-[color:var(--organism-accent-soft)]"
+            />
+          </label>
+        )}
+
+        {showActionLabel && (
+          <label className="mb-3 block">
+            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Primary action
+            </span>
+            <input
+              value={actionLabel}
+              onChange={(event) => setActionLabel(event.target.value)}
+              placeholder="Use a direct command, such as Begin reading."
+              className="w-full rounded-xl border border-border/60 bg-background/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-[color:var(--organism-accent-soft)]"
+            />
+          </label>
+        )}
 
         <label className="mb-3 block">
           <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">

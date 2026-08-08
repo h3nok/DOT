@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CircleDashed } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  CircleDashed,
+  Map,
+} from "lucide-react";
 import {
   openSeams,
   seamWork,
@@ -91,7 +97,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
         {work.map((entry) => (
           <li
             key={entry.id}
-            className="rounded-xl border border-border/50 p-3.5"
+            className="border-l-2 border-[color:var(--organism-accent-soft)] py-1 pl-4"
           >
             <div className="flex flex-wrap items-center gap-2">
               <ClaimChip level={entry.claimLevel} />
@@ -118,35 +124,39 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
 function Seam({ seam, index }: { seam: OpenSeam; index: number }) {
   return (
     <li id={seam.id} className="scroll-mt-24">
-      <article className="rounded-2xl border border-border/60 bg-foreground/[0.015] p-6 sm:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <article className="grid gap-5 border-t border-border/70 py-9 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-8 sm:py-11">
+        <div>
           <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             Seam {String(index + 1).padStart(2, "0")}
           </span>
-          <ClaimChip level={seam.claimLevel} />
+          <div className="mt-3">
+            <ClaimChip level={seam.claimLevel} />
+          </div>
         </div>
 
-        <h2 className="mt-4 text-xl font-semibold leading-snug tracking-[-0.01em] text-foreground sm:text-2xl">
-          {seam.title}
-        </h2>
+        <div>
+          <h2 className="text-xl font-semibold leading-snug text-foreground sm:text-2xl">
+            {seam.title}
+          </h2>
 
-        <Field label="Not established">{seam.notEstablished}</Field>
-        {seam.alternative && (
-          <Field label="The account this does not defeat">
-            {seam.alternative}
-          </Field>
-        )}
-        <Field label="What would settle it">{seam.wouldSettleIt}</Field>
+          <Field label="Not established">{seam.notEstablished}</Field>
+          {seam.alternative && (
+            <Field label="The account this does not defeat">
+              {seam.alternative}
+            </Field>
+          )}
+          <Field label="What would settle it">{seam.wouldSettleIt}</Field>
 
-        <Link
-          to={seam.source.href}
-          className="mt-5 inline-flex items-center gap-2 text-xs text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]"
-        >
-          Read the passage this comes from
-          <ArrowRight className="h-3 w-3" aria-hidden="true" />
-        </Link>
+          <Link
+            to={seam.source.href}
+            className="mt-5 inline-flex items-center gap-2 text-xs text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]"
+          >
+            Read the passage this comes from
+            <ArrowRight className="h-3 w-3" aria-hidden="true" />
+          </Link>
 
-        <RecordedWork seam={seam} />
+          <RecordedWork seam={seam} />
+        </div>
       </article>
     </li>
   );
@@ -187,7 +197,7 @@ export default function AppliedPage() {
       </a>
 
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-4xl items-center justify-between gap-4 px-5 sm:px-8">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -195,13 +205,26 @@ export default function AppliedPage() {
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             DOT
           </Link>
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-            The applied layer
-          </span>
+          <nav aria-label="Applied context" className="flex items-center gap-1">
+            <Link
+              to="/book/digital-organism-theory"
+              className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+            >
+              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Book One</span>
+            </Link>
+            <Link
+              to="/doctrine"
+              className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+            >
+              <Map className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Concept Map</span>
+            </Link>
+          </nav>
         </div>
       </header>
 
-      <main id="applied-main" className="mx-auto max-w-4xl px-5 pb-24 pt-12 sm:px-8">
+      <main id="applied-main" className="mx-auto max-w-5xl px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           Open seams · Edition v2
         </p>
@@ -220,13 +243,13 @@ export default function AppliedPage() {
           in the released edition and links back to it.
         </p>
 
-        <dl className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border/60 bg-border/60 sm:grid-cols-3">
+        <dl className="mt-10 grid border-y border-border/70 sm:grid-cols-3 sm:divide-x sm:divide-border/70">
           {[
             ["Seams", String(openSeams.length)],
             ["Work recorded", String(recorded)],
             ["Edition", "v2 · line-edited"],
           ].map(([label, value]) => (
-            <div key={label} className="bg-background px-4 py-3.5">
+            <div key={label} className="border-b border-border/50 px-1 py-4 last:border-b-0 sm:border-b-0 sm:px-5 sm:first:pl-0 sm:last:pr-0">
               <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
                 {label}
               </dt>
@@ -237,7 +260,7 @@ export default function AppliedPage() {
           ))}
         </dl>
 
-        <ol className="mt-12 space-y-6">
+        <ol className="mt-14 border-b border-border/70">
           {openSeams.map((seam, index) => (
             <Seam key={seam.id} seam={seam} index={index} />
           ))}

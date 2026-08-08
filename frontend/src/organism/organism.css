@@ -106,6 +106,51 @@
   transition: color 600ms ease;
 }
 
+/* Primary reading door and live graph destinations share the active theme.
+   They stay still: state changes are communicated by contrast, not motion. */
+.dot-reading-action {
+  color: oklch(0.14 0.02 var(--organism-hue));
+  background: var(--organism-accent-strong);
+  border: 1px solid color-mix(in oklch, var(--organism-accent-strong) 72%, black);
+  box-shadow: 0 12px 32px -18px var(--organism-accent-strong);
+  transition:
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.dot-reading-action:hover {
+  background: color-mix(in oklch, var(--organism-accent-strong) 88%, white);
+  box-shadow: 0 14px 34px -16px var(--organism-accent-strong);
+}
+
+.dot-reading-action:focus-visible,
+.dot-graph-destination:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: 4px;
+}
+
+.dot-graph-destination {
+  border-color: color-mix(in oklch, var(--organism-accent-strong) 34%, var(--border));
+  background: color-mix(in oklch, var(--background) 94%, var(--organism-accent-strong));
+  box-shadow: 0 14px 34px -28px var(--organism-accent-strong);
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.dot-graph-destination:hover {
+  border-color: color-mix(in oklch, var(--organism-accent-strong) 62%, var(--border));
+  background: color-mix(in oklch, var(--background) 89%, var(--organism-accent-strong));
+  box-shadow: 0 16px 38px -24px var(--organism-accent-strong);
+}
+
+.dot-graph-destination-icon {
+  color: var(--organism-accent-strong);
+  background: color-mix(in oklch, var(--organism-accent-strong) 12%, transparent);
+  border: 1px solid var(--organism-accent-soft);
+}
+
 /* A standalone "pulse dot" — the red DOT, now a living heartbeat. */
 [data-organism="on"] .organism-pulse-dot {
   background: var(--organism-accent-strong);

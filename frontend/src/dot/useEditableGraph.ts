@@ -88,6 +88,8 @@ export function useEditableGraph(seed: DotNode, owner = false) {
         label: draft.label.trim() || "Untitled",
         kind: draft.kind,
         description: draft.description?.trim() || undefined,
+        introduction: draft.introduction?.trim() || undefined,
+        actionLabel: draft.actionLabel?.trim() || undefined,
         body: draft.body?.trim() || undefined,
         href: draft.href?.trim() || undefined,
         image: draft.image?.trim() || undefined,
