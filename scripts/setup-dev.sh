@@ -144,6 +144,11 @@ install_macos_packages() {
     say "Installing Docker Desktop. Open it once setup asks for it."
     brew install --cask docker
   fi
+
+  if ! command_exists gcloud; then
+    say "Installing Google Cloud SDK (Cloud Run deploy tooling)."
+    brew install --cask google-cloud-sdk
+  fi
 }
 
 install_debian_node() {
@@ -170,12 +175,26 @@ install_debian_docker() {
   run_sudo apt-get install -y docker-compose-plugin || run_sudo apt-get install -y docker-compose-v2 || true
 }
 
+install_debian_gcloud() {
+  if command_exists gcloud; then
+    return 0
+  fi
+
+  # Official Google apt repository; https://cloud.google.com/sdk/docs/install#deb
+  say "Installing Google Cloud SDK from the Google apt repository."
+  curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | run_sudo gpg --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg
+  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | run_sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
+  run_sudo apt-get update
+  run_sudo apt-get install -y google-cloud-cli
+}
+
 install_linux_packages() {
   if command_exists apt-get; then
     run_sudo apt-get update
     run_sudo apt-get install -y ca-certificates curl gnupg python3 python3-venv python3-pip
     install_debian_docker
     install_debian_node
+    install_debian_gcloud
   elif command_exists dnf; then
     run_sudo dnf install -y python3 python3-pip nodejs npm docker docker-compose-plugin
   elif command_exists pacman; then
@@ -183,7 +202,7 @@ install_linux_packages() {
   elif command_exists zypper; then
     run_sudo zypper --non-interactive install python312 python312-pip nodejs20 npm20 docker docker-compose
   else
-    fail "unsupported Linux package manager; install Python 3.12+, Node ${MIN_NODE_MAJOR}+, pnpm, Docker, and Docker Compose manually"
+    fail "unsupported Linux package manager; install Python 3.12+, Node ${MIN_NODE_MAJOR}+, pnpm, Docker, Docker Compose, and the Google Cloud SDK manually"
   fi
 }
 
@@ -195,8 +214,8 @@ install_system_packages() {
     return 0
   fi
 
-  if python_has_venv && has_node_major && command_exists docker && docker compose version >/dev/null 2>&1; then
-    say "Python, Node, Docker, and Docker Compose are present."
+  if python_has_venv && has_node_major && command_exists docker && docker compose version >/dev/null 2>&1 && command_exists gcloud; then
+    say "Python, Node, Docker, Docker Compose, and the Google Cloud SDK are present."
     return 0
   fi
 
@@ -328,6 +347,26 @@ start_docker_service() {
   fi
 }
 
+ensure_gcloud() {
+  section "Checking Google Cloud SDK"
+
+  if ! command_exists gcloud; then
+    if [ "$SKIP_SYSTEM_PACKAGES" = "1" ]; then
+      say "gcloud not found; skipping (SKIP_SYSTEM_PACKAGES=1)."
+      return 0
+    fi
+    fail "Google Cloud SDK (gcloud) is required; install it or rerun make setup without SKIP_SYSTEM_PACKAGES=1"
+  fi
+
+  say "$(gcloud version 2>/dev/null | head -n 1)"
+
+  if gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>/dev/null | grep -q .; then
+    say "An active gcloud account is configured."
+  else
+    say "No active gcloud account. When you are ready to deploy: gcloud auth login && gcloud auth application-default login"
+  fi
+}
+
 ensure_docker_running() {
   section "Checking Docker"
 
@@ -415,6 +454,7 @@ main() {
   prepare_env_files
   ensure_python
   ensure_node
+  ensure_gcloud
   prepare_infra
 
   cat <<EOF
@@ -430,6 +470,12 @@ Local services:
   Frontend:         http://localhost:5173
   Orchestrator API: http://127.0.0.1:8000/docs
   MinIO console:    http://127.0.0.1:${ORCHESTRATOR_MINIO_CONSOLE_PORT}
+
+Google Cloud (deploys the orchestrator to Cloud Run, see .github/workflows/ci.yml):
+  gcloud auth login                              Authenticate your user account
+  gcloud auth application-default login          Application default credentials
+  gcloud auth configure-docker \${GCP_REGION:-REGION}-docker.pkg.dev
+                                                 Push images to Artifact Registry
 
 Useful flags:
   ASSUME_YES=1 make setup              Non-interactive package installs

@@ -65,7 +65,7 @@ stable section/concept identifiers for Stay's graph layer.
 4. Open your browser to explore Digital Organism Theory
 
 `make setup` supports macOS and Linux. It checks or installs the local toolchain
-(Python 3.12+, Node 20+, pnpm, Docker, Docker Compose), creates the Python
+(Python 3.12+, Node 20+, pnpm, Docker, Docker Compose, Google Cloud SDK), creates the Python
 virtual environment, installs frontend and orchestrator dependencies, prepares
 local env files from examples, starts Postgres/Redis/MinIO with Docker Compose,
 applies orchestrator migrations, and seeds local profile delivery data.
@@ -79,6 +79,23 @@ Useful setup flags:
 On Linux, setup starts Docker with `systemctl` or `service` when available. If
 your user is not in the `docker` group yet, setup can use `sudo docker` for the
 current run and add your user to the group for future shells.
+
+### Google Cloud (Cloud Run deploys)
+
+CI deploys the orchestrator to Google Cloud Run from `main` (see
+`.github/workflows/ci.yml`). `make setup` verifies the Google Cloud SDK and, on
+macOS/Homebrew or Debian/Ubuntu, installs it when missing. To make this machine
+deploy-ready, authenticate once:
+
+```bash
+gcloud auth login                       # user account
+gcloud auth application-default login   # application default credentials
+gcloud config set project <your-gcp-project-id>
+gcloud auth configure-docker <region>-docker.pkg.dev  # Artifact Registry pushes
+```
+
+Setup does not authenticate for you — credentials are personal and stay out of
+the repo.
 
 ### Alternative Commands
 
