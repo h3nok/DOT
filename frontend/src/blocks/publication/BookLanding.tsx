@@ -1,7 +1,7 @@
 import {
   ArrowRight,
   BookOpen,
-  Compass,
+  ShoppingBag,
 } from "lucide-react";
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
@@ -12,10 +12,13 @@ import {
   type BookReleaseSection,
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
-import { NucleusMark } from "../../dot/NucleusMark";
+import NucleusMark from "../../dot/NucleusMark";
 import BookEditionMap from "./BookEditionMap";
+import { BookAction, BookCard } from "./BookPrimitives";
+import BookPurchase from "./BookPurchase";
 import ExperienceLoop from "./ExperienceLoop";
 import { EXPERIENCE_LOOP_STEPS } from "./experienceLoopModel";
+import MovementSupportInvitation from "./MovementSupportInvitation";
 
 const FRAMEWORK_VOCABULARY = [
   {
@@ -89,9 +92,7 @@ function DimensionalBookObject() {
       <div className="book-manuscript">
         <div className="book-manuscript-plane">
           <div className="book-manuscript-face">
-            <NucleusMark size={220} reducedMotion className="book-manuscript-mark" />
-            <span className="book-manuscript-label">Book One</span>
-            <span className="book-manuscript-subline">The Painting and the Painter</span>
+            <NucleusMark size={142} reducedMotion className="book-manuscript-mark" />
           </div>
         </div>
       </div>
@@ -151,16 +152,23 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             </p>
             <p className="book-hero-byline">By {manifest.project.author}</p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-4">
-              <Link to={bookSectionRoute(firstSection)} className="book-primary-action">
-                Begin reading
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a href="#book-model" className="book-secondary-action">
-                Explore the model
-                <Compass className="h-3.5 w-3.5" />
-              </a>
+            <div className="book-hero-actions mt-7 flex flex-wrap items-center gap-4">
+              <BookAction asChild>
+                <Link to={bookSectionRoute(firstSection)}>
+                  Begin reading
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </BookAction>
+              <BookAction asChild variant="secondary">
+                <a href="#own-the-edition">
+                  Own the edition
+                  <ShoppingBag className="h-3.5 w-3.5" />
+                </a>
+              </BookAction>
             </div>
+            <p className="book-hero-assurance">
+              Read the complete edition online · No account required
+            </p>
           </div>
 
           <DimensionalBookObject />
@@ -181,6 +189,8 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           </div>
         </div>
       </section>
+
+      <BookPurchase />
 
       <section
         id="book-model"
@@ -218,15 +228,17 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
         <dl className="book-vocab-grid">
           {FRAMEWORK_VOCABULARY.map((term, index) => (
-            <div key={term.name} className="book-vocab-term">
-              <dt>
-                <span className="book-vocab-index" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="book-vocab-name">{term.name}</span>
-              </dt>
-              <dd>{term.definition}</dd>
-            </div>
+            <BookCard key={term.name} asChild variant="accent">
+              <div className="book-vocab-term">
+                <dt>
+                  <span className="book-vocab-index" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="book-vocab-name">{term.name}</span>
+                </dt>
+                <dd>{term.definition}</dd>
+              </div>
+            </BookCard>
           ))}
         </dl>
       </section>
@@ -247,12 +259,12 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
         <div className="book-reading-paths grid gap-5 md:grid-cols-2">
           {READING_PATHS.map((path) => (
-            <Link
-              key={path.id}
-              to={`${DOT_BOOK_ONE_ROUTE}/${path.steps[0].slug}?path=${path.id}`}
-              className="book-path-card group"
-            >
-              <header className="book-path-card-head">
+            <BookCard key={path.id} asChild variant="interactive">
+              <Link
+                to={`${DOT_BOOK_ONE_ROUTE}/${path.steps[0].slug}?path=${path.id}`}
+                className="book-path-card group"
+              >
+                <header className="book-path-card-head">
                 <span className="book-path-card-icon">
                   <BookOpen className="h-4 w-4" />
                 </span>
@@ -264,9 +276,9 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                   <strong>{path.minutes}</strong>
                   min
                 </span>
-              </header>
+                </header>
 
-              <ol className="book-path-card-steps">
+                <ol className="book-path-card-steps">
                 {path.steps.slice(0, 3).map((step, index) => (
                   <li key={step.slug}>
                     <span className="book-path-step-dot">{index + 1}</span>
@@ -283,13 +295,14 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                     </span>
                   </li>
                 )}
-              </ol>
+                </ol>
 
-              <footer className="book-path-card-foot">
+                <footer className="book-path-card-foot">
                 <span>Enter this path</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </footer>
-            </Link>
+                </footer>
+              </Link>
+            </BookCard>
           ))}
         </div>
       </section>
@@ -311,13 +324,15 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
         <ol className="book-chapter-stack">
           {manifest.sections.map((section, index) => (
             <li key={section.id}>
-              <Link to={bookSectionRoute(section)} className="book-chapter-plane">
-                <span className="book-chapter-sequence">{String(index + 1).padStart(2, "0")}</span>
-                <span className="book-chapter-label">{sectionLabel(section)}</span>
-                <strong>{section.title}</strong>
-                <p>{sectionSummary(section)}</p>
-                <ArrowRight className="book-chapter-arrow" aria-hidden="true" />
-              </Link>
+              <BookCard asChild variant="row">
+                <Link to={bookSectionRoute(section)} className="book-chapter-plane">
+                  <span className="book-chapter-sequence">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="book-chapter-label">{sectionLabel(section)}</span>
+                  <strong>{section.title}</strong>
+                  <p>{sectionSummary(section)}</p>
+                  <ArrowRight className="book-chapter-arrow" aria-hidden="true" />
+                </Link>
+              </BookCard>
             </li>
           ))}
         </ol>
@@ -325,6 +340,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <BookEditionMap manifest={manifest} />
+        <MovementSupportInvitation />
       </div>
     </main>
   );

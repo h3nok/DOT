@@ -8,6 +8,28 @@ import pydantic
 TwinLens = typing.Literal["orient", "ground", "test"]
 
 
+class TwinReaderScope(pydantic.BaseModel):
+    """The released reading position that opened Lumen.
+
+    Values are locators, not authority. The server still resolves passages from
+    the released canon and treats a selected quote as untrusted query material.
+    """
+
+    model_config = pydantic.ConfigDict(extra="forbid")
+
+    release_id: str = pydantic.Field(min_length=2, max_length=64, pattern=r"^[a-z0-9][a-z0-9-]+$")
+    edition_slug: str = pydantic.Field(
+        min_length=2, max_length=128, pattern=r"^[a-z0-9][a-z0-9-]+$"
+    )
+    section_slug: str | None = pydantic.Field(
+        default=None, max_length=128, pattern=r"^[a-z0-9][a-z0-9-]+$"
+    )
+    heading_slug: str | None = pydantic.Field(
+        default=None, max_length=160, pattern=r"^[a-z0-9][a-z0-9-]+$"
+    )
+    selection: str | None = pydantic.Field(default=None, max_length=1_200)
+
+
 class TwinHistoryTurn(pydantic.BaseModel):
     """A visitor turn replayed as untrusted, non-persistent context."""
 
@@ -24,6 +46,7 @@ class TwinAskRequest(pydantic.BaseModel):
     lens: TwinLens = "ground"
     #: Whose graph to ask. Defaults to the caller's own twin.
     owner_id: str | None = pydantic.Field(default=None, max_length=128)
+    scope: TwinReaderScope | None = None
 
 
 class TwinPublicAskRequest(pydantic.BaseModel):
@@ -35,6 +58,7 @@ class TwinPublicAskRequest(pydantic.BaseModel):
     owner_id: str = pydantic.Field(min_length=1, max_length=128)
     lens: TwinLens = "ground"
     history: list[TwinHistoryTurn] = pydantic.Field(default_factory=list, max_length=6)
+    scope: TwinReaderScope | None = None
 
 
 class Citation(pydantic.BaseModel):
@@ -65,6 +89,7 @@ class TwinMessageRequest(pydantic.BaseModel):
     #: Whose twin to address. Ignored when continuing an existing thread, which
     #: keeps the subject it was opened with.
     owner_id: str | None = pydantic.Field(default=None, max_length=128)
+    scope: TwinReaderScope | None = None
 
 
 class TwinConversation(pydantic.BaseModel):

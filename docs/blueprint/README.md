@@ -49,3 +49,4 @@ This folder is the north star for the project. Read in order.
 | [0016](adr/0016-field-focus-navigation.md)                         | Navigation is Field, Focus, and a Thread — never a menu   | Proposed |
 | [0017](adr/0017-movement-platform-canon-and-applied.md)            | The platform is the movement — canon, theory, applied     | Proposed |
 | [0018](adr/0018-book-derived-knowledge-surfaces.md)                | First-party knowledge surfaces derive from the book       | Accepted |
+| [0019](adr/0019-free-reading-paid-fixed-edition.md)                | Free reading; paid fixed edition and verified fulfillment | Proposed |

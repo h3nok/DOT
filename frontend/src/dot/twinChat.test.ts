@@ -50,6 +50,11 @@ describe("twinChat.sendMessage", () => {
     expect(outcome?.ephemeral).toBe(false);
     expect(outcome?.thread?.id).toBe("conv_1");
     expect(outcome?.turn.citations[0].label).toBe("a note");
+    const body = JSON.parse(calls()[0][1].body as string);
+    expect(body.scope).toEqual({
+      release_id: "dot-book-one-v2",
+      edition_slug: "digital-organism-theory",
+    });
   });
 
   it("still answers a visitor with no session, without storing the thread", async () => {
@@ -78,6 +83,10 @@ describe("twinChat.sendMessage", () => {
     expect(body.history).toEqual([
       { role: "member", content: "Tell me about consciousness." },
     ]);
+    expect(body.scope).toEqual({
+      release_id: "dot-book-one-v2",
+      edition_slug: "digital-organism-theory",
+    });
   });
 
   it("reports a vanished thread rather than retrying into the same 404", async () => {

@@ -41,6 +41,24 @@
       "Speculation"
     ]
   },
+  "artifacts": [
+    {
+      "kind": "cover",
+      "format": "png",
+      "name": "cover.png",
+      "sha256": "b42bff0634f858040faf5e98005b63419533fba15e214bd22eafdaf3f3c470d2",
+      "byte_size": 52723,
+      "access": "public"
+    },
+    {
+      "kind": "pdf",
+      "format": "pdf",
+      "name": "consciousness-a-digital-organism-v2.pdf",
+      "sha256": "25956f5ddde32224d5b42c1bbf0fe0778122d711c0bd95950d5b47859a188756",
+      "byte_size": 679978,
+      "access": "purchase"
+    }
+  ],
   "sections": [
     {
       "id": "dot-book-one-preface",

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowRight, Compass, Network } from "lucide-react";
 import { Link } from "react-router-dom";
+import { BookAction, BookCard } from "./BookPrimitives";
 import {
   bookSectionRoute,
   groupBookSectionsByPart,
@@ -53,7 +54,7 @@ function EditionInspector({
 
   if (!section) {
     return (
-      <div className="book-map-inspector grid gap-7 border border-[var(--book-hairline)] p-5 sm:p-7 lg:grid-cols-[1fr_auto] lg:items-end">
+      <BookCard className="book-map-inspector grid gap-7 p-5 sm:p-7 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="book-overline">The thesis</p>
           <h3 className="mt-2 font-serif text-3xl font-semibold leading-tight text-[var(--book-ink)]">
@@ -65,14 +66,13 @@ function EditionInspector({
             authorship.
           </p>
         </div>
-        <Link
-          to={bookSectionRoute(firstSection)}
-          className="book-primary-action inline-flex min-h-12 items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--book-ink)] transition-colors"
-        >
-          Read the preface
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
+        <BookAction asChild>
+          <Link to={bookSectionRoute(firstSection)}>
+            Read the preface
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </BookAction>
+      </BookCard>
     );
   }
 
@@ -87,7 +87,7 @@ function EditionInspector({
     .slice(0, 3);
 
   return (
-    <div className="book-map-inspector grid gap-7 border border-[var(--book-hairline)] p-5 sm:p-7 lg:grid-cols-[1fr_0.8fr_auto] lg:items-end">
+    <BookCard className="book-map-inspector grid gap-7 p-5 sm:p-7 lg:grid-cols-[1fr_0.8fr_auto] lg:items-end">
       <div>
         <p className="book-overline text-[var(--book-cinnabar)]">
           {sectionLabel(section)} · {section.part}
@@ -126,14 +126,13 @@ function EditionInspector({
         </div>
       </div>
 
-      <Link
-        to={bookSectionRoute(section)}
-        className="book-primary-action inline-flex min-h-12 items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--book-ink)] transition-colors"
-      >
-        Read this section
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
+      <BookAction asChild>
+        <Link to={bookSectionRoute(section)}>
+          Read this section
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </BookAction>
+    </BookCard>
   );
 }
 

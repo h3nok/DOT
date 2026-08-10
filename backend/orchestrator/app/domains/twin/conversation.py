@@ -161,6 +161,7 @@ async def send(
             question=payload.question,
             owner_id=subject_owner_id,
             lens=payload.lens,
+            scope=payload.scope,
         ),
         client=client,
         history=history,

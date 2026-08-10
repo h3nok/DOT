@@ -1,6 +1,10 @@
 import { api, PROFILE_OWNER_ID } from "./orchestrator";
 import type { AgentCitation, AgentLens } from "./agent";
 import {
+  DOT_BOOK_ONE_EDITION_SLUG,
+  DOT_BOOK_ONE_RELEASE_ID,
+} from "../content/publications/dotBookOne";
+import {
   answerFromBook,
   type CompanionHistoryTurn,
 } from "./bookCompanion";
@@ -67,6 +71,10 @@ export interface SendOutcome {
 
 const EPHEMERAL_SESSION_KEY = "dot-lumen-session-v1";
 const MAX_EPHEMERAL_TURNS = 24;
+const BOOK_ONE_SCOPE = {
+  release_id: DOT_BOOK_ONE_RELEASE_ID,
+  edition_slug: DOT_BOOK_ONE_EDITION_SLUG,
+} as const;
 
 function isTwinTurn(value: unknown): value is TwinTurn {
   if (!value || typeof value !== "object") return false;
@@ -171,6 +179,7 @@ export async function sendMessage(
       body: {
         question,
         lens,
+        scope: BOOK_ONE_SCOPE,
         ...(threadId
           ? { conversation_id: threadId }
           : { owner_id: PROFILE_OWNER_ID }),
@@ -207,6 +216,7 @@ export async function sendMessage(
       owner_id: PROFILE_OWNER_ID,
       lens,
       history: history.slice(-6),
+      scope: BOOK_ONE_SCOPE,
     },
   });
   if (open.ok && open.data && (open.data.grounded || !open.data.refusal_code)) {

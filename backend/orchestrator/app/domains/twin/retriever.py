@@ -227,6 +227,7 @@ async def _chunk_candidates(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     owner_id: str,
     visibilities: tuple[str, ...],
+    canon_release_id: str | None = None,
 ) -> list[tuple[app.db.models.KnowledgeChunk, str, dict[str, typing.Any] | None]]:
     statement = (
         sqlalchemy.select(
@@ -254,6 +255,10 @@ async def _chunk_candidates(
         .order_by(app.db.models.SourceVersion.created_at.desc().nullslast())
         .limit(CHUNK_CANDIDATE_WINDOW)
     )
+    if canon_release_id is not None:
+        statement = statement.where(
+            app.db.models.SourceObject.object_store_key.startswith(f"canon/{canon_release_id}/")
+        )
     result = await session.execute(statement)
     return [(row[0], row[1], row[2]) for row in result.all()]
 
@@ -264,6 +269,8 @@ async def _chunk_passages(
     graph_owner_id: str,
     question: str,
     limit: int,
+    canon_release_id: str | None = None,
+    reader_section_slug: str | None = None,
 ) -> list[Passage]:
     """Document passages, scored by vector similarity when available.
 
@@ -275,7 +282,7 @@ async def _chunk_passages(
 
     visibilities: tuple[str, ...] = allowed_visibilities(requester, graph_owner_id)
 
-    candidates = await _chunk_candidates(session, graph_owner_id, visibilities)
+    candidates = await _chunk_candidates(session, graph_owner_id, visibilities, canon_release_id)
     if not candidates:
         return []
 
@@ -292,6 +299,11 @@ async def _chunk_passages(
         )
         for chunk, filename, _ in candidates
     ]
+    if reader_section_slug is not None:
+        keyword = [
+            score + (3.0 if (locator or {}).get("section") == reader_section_slug else 0.0)
+            for score, (_, _, locator) in zip(keyword, candidates, strict=True)
+        ]
     scores: list[float] = _normalized(keyword)
 
     query_embedding: tuple[list[float], str] | None = await _embed_question(question)
@@ -355,15 +367,27 @@ async def retrieve_passages(
     graph_owner_id: str,
     question: str,
     limit: int = DEFAULT_LIMIT,
+    canon_release_id: str | None = None,
+    reader_section_slug: str | None = None,
 ) -> list[Passage]:
     """Graph nodes and vault passages, ranked together into one citable set."""
 
     bounded: int = min(limit, MAX_LIMIT)
-    nodes: list[Passage] = await _node_passages(
-        session, requester, graph_owner_id, question, bounded
+    # A reader-scoped request belongs to the released book, not the wider
+    # footprint graph. This keeps first-party explanation inside ADR-0018.
+    nodes: list[Passage] = (
+        []
+        if canon_release_id is not None
+        else await _node_passages(session, requester, graph_owner_id, question, bounded)
     )
     chunks: list[Passage] = await _chunk_passages(
-        session, requester, graph_owner_id, question, bounded
+        session,
+        requester,
+        graph_owner_id,
+        question,
+        bounded,
+        canon_release_id,
+        reader_section_slug,
     )
 
     # Documents answer "what did I write about this"; nodes answer "what is

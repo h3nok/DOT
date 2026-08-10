@@ -1,0 +1,11 @@
+*
+!backend/
+!backend/orchestrator/
+!backend/orchestrator/**
+!frontend/
+!frontend/public/
+!frontend/public/publications/
+!frontend/public/publications/henok/
+!frontend/public/publications/henok/digital-organism-theory/
+!frontend/public/publications/henok/digital-organism-theory/v2/
+!frontend/public/publications/henok/digital-organism-theory/v2/**

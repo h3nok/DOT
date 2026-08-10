@@ -57,6 +57,30 @@ async def test_a_first_message_opens_a_thread_titled_by_the_question(session_fac
     assert answer.grounded is True
 
 
+async def test_a_book_scoped_thread_keeps_the_exact_release_boundary(
+    session_factory, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: list[schemas.TwinReaderScope | None] = []
+
+    async def capture_scope(session, requester, payload, client=None, history=()):
+        seen.append(payload.scope)
+        return schemas.TwinAskResponse(answer="Grounded.", citations=[], grounded=True)
+
+    monkeypatch.setattr(conversation.service, "ask", capture_scope)
+    scope = schemas.TwinReaderScope(
+        release_id="dot-book-one-v2", edition_slug="digital-organism-theory"
+    )
+
+    async with session_factory() as session:
+        await conversation.send(
+            session,
+            ALICE,
+            schemas.TwinMessageRequest(question="What is Little c?", scope=scope),
+        )
+
+    assert seen == [scope]
+
+
 async def test_both_turns_are_stored_with_the_citations_that_shipped(session_factory) -> None:
     async with session_factory() as session:
         node = await _seed_node(session)

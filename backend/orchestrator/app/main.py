@@ -9,6 +9,7 @@ import slowapi
 import slowapi.errors
 
 import app.api.v1.auth as _auth_router
+import app.api.v1.book_sales as _book_sales_router
 import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
 import app.api.v1.publications as _publications_router
@@ -107,6 +108,7 @@ def create_app() -> fastapi.FastAPI:
     )
     fapp.include_router(_health_router.router)
     fapp.include_router(_auth_router.router)
+    fapp.include_router(_book_sales_router.router)
     fapp.include_router(_graph_router.public_router)
     fapp.include_router(_graph_router.router)
     fapp.include_router(_publications_router.public_router)

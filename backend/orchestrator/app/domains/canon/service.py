@@ -112,13 +112,16 @@ async def ingest_section(
     edition_slug: str,
     edition_title: str,
     section: CanonSection,
+    release_id: str | None = None,
 ) -> CanonIngestResult:
     """Ingest one section. Re-ingesting identical text is a no-op."""
 
     if not section.text.strip():
         raise CanonError(f"{section.slug}: section has no text")
 
-    key: str = f"canon/{edition_slug}/{section.slug}.md"
+    # New canon is keyed by immutable release id. `edition_slug` remains as a
+    # compatibility fallback for callers ingesting an unversioned private draft.
+    key: str = f"canon/{release_id or edition_slug}/{section.slug}.md"
     digest: str = hashlib.sha256(section.text.encode("utf-8")).hexdigest()
     label: str = citation_label(edition_title, section)
 
@@ -199,6 +202,8 @@ async def ingest_section(
             "start": chunk.start,
             "end": chunk.end,
         }
+        if release_id is not None:
+            locator["release_id"] = release_id
         if section.number is not None:
             locator["chapter"] = section.number
         if section.claim_level is not None:
@@ -231,6 +236,7 @@ async def ingest_edition(
     edition_slug: str,
     edition_title: str,
     sections: typing.Sequence[CanonSection],
+    release_id: str | None = None,
 ) -> list[CanonIngestResult]:
     results: list[CanonIngestResult] = []
     for section in sections:
@@ -241,6 +247,7 @@ async def ingest_edition(
                 edition_slug=edition_slug,
                 edition_title=edition_title,
                 section=section,
+                release_id=release_id,
             )
         )
     return results

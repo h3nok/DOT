@@ -1,4 +1,10 @@
+import collections.abc
+import json
+import re
+import uuid
+
 import fastapi
+import fastapi.responses
 import slowapi
 import slowapi.util
 import sqlalchemy.ext.asyncio
@@ -41,8 +47,97 @@ async def ask_public(
             question=payload.question,
             owner_id=payload.owner_id,
             lens=payload.lens,
+            scope=payload.scope,
         ),
         history=[(turn.role, turn.content) for turn in payload.history],
+    )
+
+
+def _sse(event: str, payload: dict[str, object], run_id: str, seq: int) -> str:
+    envelope = {"v": 1, "run_id": run_id, "seq": seq, "type": event, "payload": payload}
+    return f"id: {seq}\nevent: {event}\ndata: {json.dumps(envelope, separators=(',', ':'))}\n\n"
+
+
+async def _public_run_events(
+    payload: app.domains.twin.schemas.TwinPublicAskRequest,
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+) -> collections.abc.AsyncGenerator[str, None]:
+    run_id: str = uuid.uuid4().hex
+    seq: int = 0
+
+    def render(event: str, data: dict[str, object]) -> str:
+        nonlocal seq
+        seq += 1
+        return _sse(event, data, run_id, seq)
+
+    yield render("run.started", {})
+    if payload.scope is not None:
+        yield render(
+            "scope.resolved",
+            {
+                "release_id": payload.scope.release_id,
+                "edition_slug": payload.scope.edition_slug,
+                "section_slug": payload.scope.section_slug,
+                "heading_slug": payload.scope.heading_slug,
+                "has_selection": bool(payload.scope.selection),
+            },
+        )
+
+    visitor = app.auth.dependencies.OwnerContext(owner_id="visitor", actor_id="visitor")
+    try:
+        answer = await app.domains.twin.service.ask(
+            session,
+            visitor,
+            app.domains.twin.schemas.TwinAskRequest(
+                question=payload.question,
+                owner_id=payload.owner_id,
+                lens=payload.lens,
+                scope=payload.scope,
+            ),
+            history=[(turn.role, turn.content) for turn in payload.history],
+        )
+        yield render("evidence.ready", {"source_count": len(answer.citations)})
+        yield render("answer.composing", {})
+        blocks = [
+            block.strip() for block in re.split(r"\n\s*\n", answer.answer.strip()) if block.strip()
+        ]
+        for index, block in enumerate(blocks):
+            yield render("answer.block", {"index": index, "text": block})
+
+        yield render(
+            "citation.ready",
+            {"citations": [citation.model_dump(mode="json") for citation in answer.citations]},
+        )
+        if answer.refusal_code is not None:
+            yield render("run.refused", {"code": answer.refusal_code})
+        yield render(
+            "run.completed",
+            {
+                "grounded": answer.grounded,
+                "refusal_code": answer.refusal_code,
+            },
+        )
+    except Exception:
+        yield render("run.failed", {"code": "assistant_unavailable"})
+
+
+@public_router.post("/public/runs")
+@_limiter.limit("10/minute")
+async def run_public(
+    request: fastapi.Request,
+    payload: app.domains.twin.schemas.TwinPublicAskRequest,
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> fastapi.responses.StreamingResponse:
+    """Stream lifecycle and already-validated answer blocks from public canon."""
+
+    return fastapi.responses.StreamingResponse(
+        _public_run_events(payload, session),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-store",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
     )
 
 

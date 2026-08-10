@@ -10,13 +10,16 @@ WORKDIR /app
 
 # ── deps layer (cached unless requirements.txt changes) ──────────────────────
 FROM base AS deps
-COPY requirements.txt .
+COPY backend/orchestrator/requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # ── final image ───────────────────────────────────────────────────────────────
 FROM deps AS final
 
-COPY . .
+COPY backend/orchestrator/ .
+COPY frontend/public/publications/henok/digital-organism-theory/v2/ /app/canon/digital-organism-theory/v2/
+
+ENV CANON_EDITION_ROOT=/app/canon/digital-organism-theory/v2
 
 # Non-root user for least-privilege execution
 RUN addgroup --system dot && adduser --system --ingroup dot dot

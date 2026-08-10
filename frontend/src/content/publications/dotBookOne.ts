@@ -53,15 +53,25 @@ export interface DotBookOneManifest {
     autoplay: false;
     claim_levels: string[];
   };
+  artifacts: Array<{
+    kind: "cover" | "pdf";
+    format: "png" | "pdf";
+    name: string;
+    sha256: string;
+    byte_size: number;
+    access: "public" | "purchase";
+  }>;
   sections: BookReleaseSection[];
 }
 
 export const DOT_BOOK_ONE_ROUTE = "/book/digital-organism-theory";
+export const DOT_BOOK_ONE_RELEASE_ID = "dot-book-one-v2";
+export const DOT_BOOK_ONE_EDITION_SLUG = "digital-organism-theory";
 
 const DOT_BOOK_ONE_ASSET_ROOT =
   "publications/henok/digital-organism-theory/v2";
 
-const publicAssetUrl = (path: string) => {
+export const bookReleaseAssetUrl = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
@@ -78,7 +88,7 @@ async function readResponse<T>(response: Response): Promise<T> {
 export async function fetchDotBookOneManifest(
   signal?: AbortSignal,
 ): Promise<DotBookOneManifest> {
-  const response = await fetch(publicAssetUrl("manifest.json"), {
+  const response = await fetch(bookReleaseAssetUrl("manifest.json"), {
     cache: "no-store",
     signal,
   });
@@ -89,7 +99,7 @@ export async function fetchDotBookOneSection(
   section: BookReleaseSection,
   signal?: AbortSignal,
 ): Promise<string> {
-  const response = await fetch(publicAssetUrl(section.content_path), {
+  const response = await fetch(bookReleaseAssetUrl(section.content_path), {
     cache: "no-store",
     signal,
   });

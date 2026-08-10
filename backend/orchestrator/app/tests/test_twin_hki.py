@@ -39,6 +39,60 @@ def test_public_companion_history_is_bounded_and_typed() -> None:
         )
 
 
+async def test_public_run_streams_only_validated_answer_blocks(
+    session_factory, monkeypatch
+) -> None:
+    import app.api.v1.twin as twin_api
+    import app.domains.twin.schemas as schemas
+    import app.domains.twin.service as service
+
+    async def grounded_answer(*args, **kwargs):
+        return schemas.TwinAskResponse(
+            answer="The Canvas carries experience.\n\nThe Painting interprets it.",
+            citations=[
+                schemas.Citation(
+                    node_id="chunk-v2",
+                    kind="chunk",
+                    label="Book One v2 · The Canvas",
+                    locator={
+                        "release_id": "dot-book-one-v2",
+                        "section": "the-canvas",
+                    },
+                )
+            ],
+            grounded=True,
+        )
+
+    monkeypatch.setattr(service, "ask", grounded_answer)
+    payload = schemas.TwinPublicAskRequest.model_validate(
+        {
+            "question": "What is the Canvas?",
+            "owner_id": "henok",
+            "scope": {
+                "release_id": "dot-book-one-v2",
+                "edition_slug": "digital-organism-theory",
+                "section_slug": "the-canvas",
+            },
+        }
+    )
+    async with session_factory() as session:
+        body = "".join([event async for event in twin_api._public_run_events(payload, session)])
+
+    events = [
+        "run.started",
+        "scope.resolved",
+        "evidence.ready",
+        "answer.composing",
+        "answer.block",
+        "citation.ready",
+        "run.completed",
+    ]
+    positions = [body.index(f"event: {event}") for event in events]
+    assert positions == sorted(positions)
+    assert body.count("event: answer.block") == 2
+    assert "chunk-v2" in body
+
+
 def test_model_outage_returns_cited_released_prose() -> None:
     import app.domains.twin.retriever as retriever
     import app.domains.twin.service as service

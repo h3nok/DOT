@@ -22,14 +22,17 @@ async def _seed_document(
     owner_id: str,
     filename: str = "private-notes.md",
     text: str = "The launch date for the platform is the fourteenth of March.",
+    object_store_key: str | None = None,
+    visibility: str = "private",
 ) -> str:
     source = app.db.models.SourceObject(
         owner_id=owner_id,
         filename=filename,
-        object_store_key=f"vault/{owner_id}/{filename}",
+        object_store_key=object_store_key or f"vault/{owner_id}/{filename}",
         size_bytes=len(text),
         mime_type="text/markdown",
         status="ready",
+        visibility=visibility,
     )
     session.add(source)
     await session.flush()
@@ -167,3 +170,46 @@ async def test_an_empty_vault_and_empty_graph_retrieve_nothing(session_factory) 
         passages = await retriever.retrieve_passages(session, ALICE, "owner-alice", "anything")
 
     assert passages == []
+
+
+async def test_reader_scope_retrieves_only_the_named_release(session_factory) -> None:
+    visitor = app.auth.dependencies.OwnerContext(owner_id="visitor", actor_id="visitor")
+    async with session_factory() as session:
+        old_id = await _seed_document(
+            session,
+            owner_id="owner-alice",
+            filename="Book One v1",
+            text="The old Canvas account described legacy stabilization.",
+            object_store_key="canon/dot-book-one-v1/the-canvas.md",
+            visibility="public",
+        )
+        current_id = await _seed_document(
+            session,
+            owner_id="owner-alice",
+            filename="Book One v2",
+            text="The Canvas carries the accumulated effects of experience.",
+            object_store_key="canon/dot-book-one-v2/the-canvas.md",
+            visibility="public",
+        )
+        session.add(
+            app.db.models.FootprintNode(
+                owner_id="owner-alice",
+                kind="theory",
+                label="Legacy Canvas stabilization",
+                visibility="public",
+            )
+        )
+        await session.commit()
+
+        passages = await retriever.retrieve_passages(
+            session,
+            visitor,
+            "owner-alice",
+            "Canvas",
+            canon_release_id="dot-book-one-v2",
+            reader_section_slug="the-canvas",
+        )
+
+    assert [passage.id for passage in passages] == [current_id]
+    assert old_id not in {passage.id for passage in passages}
+    assert {passage.kind for passage in passages} == {"chunk"}

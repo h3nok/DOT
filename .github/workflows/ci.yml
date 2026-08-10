@@ -182,7 +182,7 @@ jobs:
       - name: Build and push image
         run: |
           IMAGE=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/orchestrator:${{ github.sha }}
-          docker build -t "$IMAGE" .
+          docker build -f Dockerfile -t "$IMAGE" ../..
           docker push "$IMAGE"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
@@ -199,6 +199,24 @@ jobs:
             --task-timeout 120s \
             --project ${{ env.GCP_PROJECT_ID }}
           gcloud run jobs execute dot-migrate-${{ github.run_number }} \
+            --region ${{ env.GCP_REGION }} \
+            --wait \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Ingest the current Book One release
+        run: |
+          gcloud run jobs create dot-canon-${{ github.run_number }} \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --set-secrets \
+              ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
+              ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest \
+            --command python3 \
+            --args "scripts/ingest_canon.py,--owner,henok" \
+            --max-retries 1 \
+            --task-timeout 300s \
+            --project ${{ env.GCP_PROJECT_ID }}
+          gcloud run jobs execute dot-canon-${{ github.run_number }} \
             --region ${{ env.GCP_REGION }} \
             --wait \
             --project ${{ env.GCP_PROJECT_ID }}
@@ -224,6 +242,9 @@ jobs:
               ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
               ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
               ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
+              ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest,\
+              ORCHESTRATOR_STRIPE_SECRET_KEY=ORCHESTRATOR_STRIPE_SECRET_KEY:latest,\
+              ORCHESTRATOR_STRIPE_WEBHOOK_SECRET=ORCHESTRATOR_STRIPE_WEBHOOK_SECRET:latest,\
               ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
             --set-env-vars \
               ORCHESTRATOR_ENVIRONMENT=production,\
@@ -255,6 +276,7 @@ jobs:
               ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
               ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
               ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
+              ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest,\
               ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
             --set-env-vars \
               ORCHESTRATOR_ENVIRONMENT=production,\
@@ -304,3 +326,16 @@ jobs:
         run: |
           HEADERS=$(curl -sI "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
           echo "$HEADERS" | grep -i "cache-control" || (echo "Missing Cache-Control header" && exit 1)
+
+      - name: Book product availability check
+        run: |
+          PRODUCT=$(curl -sf "${{ steps.api_url.outputs.url }}/v1/books/digital-organism-theory/product")
+          echo "$PRODUCT" | jq -e '.id == "digital-organism-theory-v2-pdf" and .available == true' >/dev/null
+
+      - name: Grounded Book One companion check
+        run: |
+          curl -sfN --max-time 45 \
+            -H "Content-Type: application/json" \
+            -d '{"question":"What is the Canvas?","owner_id":"henok","lens":"ground","history":[],"scope":{"release_id":"dot-book-one-v2","edition_slug":"digital-organism-theory","section_slug":"the-canvas"}}' \
+            "${{ steps.api_url.outputs.url }}/v1/twin/public/runs" \
+            | grep -q 'event: run.completed'

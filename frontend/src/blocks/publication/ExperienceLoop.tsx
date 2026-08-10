@@ -86,6 +86,9 @@ export function ExperienceLoop({
             className="book-experience-orbit-line"
             d="M 500 70 C 735 70 880 160 880 340 C 880 520 735 610 500 610 C 265 610 120 520 120 340 C 120 160 265 70 500 70 Z"
           />
+          {/* Clockwise open-chevron direction cues at 3-o'clock (down) and 9-o'clock (up) */}
+          <path className="book-experience-orbit-arrow" d="M 873,333 L 880,344 L 887,333" />
+          <path className="book-experience-orbit-arrow" d="M 113,347 L 120,336 L 127,347" />
         </svg>
 
         {EXPERIENCE_LOOP_STEPS.map((step, index) => (
@@ -108,7 +111,6 @@ export function ExperienceLoop({
             </span>
             <span className="book-experience-node-copy">
               <strong>{step.orbitTitle}</strong>
-              <small>{step.label}</small>
             </span>
           </button>
         ))}
@@ -118,15 +120,17 @@ export function ExperienceLoop({
           className="book-experience-core"
           aria-live="polite"
         >
-          <NucleusMark size={62} reducedMotion className="book-experience-core-mark" />
+          <div className="book-experience-mark-group">
+            <NucleusMark size={62} reducedMotion className="book-experience-core-mark" />
+            <span className="book-experience-you-label">You</span>
+          </div>
           <div className="book-experience-core-content">
             <span className="book-experience-core-step">
               {String(activeIndex + 1).padStart(2, "0")} / {activeStep.role}
             </span>
             <h3>{activeStep.everydayTitle}</h3>
-            <span className="book-experience-example-label">In one ordinary life</span>
             <p>{activeStep.description}</p>
-            <small className="book-experience-core-term">DOT: {activeStep.label}</small>
+            <small className="book-experience-core-term">DOT · {activeStep.label}</small>
             {activeStep.label === "Intent" ? (
               <small className="book-experience-decision-label">
                 Those options together are the Decision Space.

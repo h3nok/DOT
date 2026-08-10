@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import pathlib
 import sys
 
@@ -25,16 +26,22 @@ import app.db.session
 import app.domains.canon.service as canon
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
-EDITION_ROOT = REPO_ROOT / "frontend/public/publications/henok/digital-organism-theory/v2"
+EDITION_ROOT = pathlib.Path(
+    os.environ.get(
+        "CANON_EDITION_ROOT",
+        REPO_ROOT / "frontend/public/publications/henok/digital-organism-theory/v2",
+    )
+)
 
 #: Declared by the author, section by section. Absent means undeclared.
 CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
 
 
-def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection]]:
+def load_sections(root: pathlib.Path) -> tuple[str, str, str, list[canon.CanonSection]]:
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     edition_slug: str = manifest["project"]["slug"]
     edition_title: str = manifest["project"]["title"]
+    release_id: str = manifest["release"]["id"]
 
     sections: list[canon.CanonSection] = []
     for entry in manifest["sections"]:
@@ -52,11 +59,11 @@ def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection
                 claim_level=CLAIM_LEVELS_BY_SECTION.get(entry["slug"]),
             )
         )
-    return edition_slug, edition_title, sections
+    return release_id, edition_slug, edition_title, sections
 
 
 async def main(owner_id: str, dry_run: bool) -> None:
-    edition_slug, edition_title, sections = load_sections(EDITION_ROOT)
+    release_id, edition_slug, edition_title, sections = load_sections(EDITION_ROOT)
 
     print(f"{edition_title} — {len(sections)} sections")
     for section in sections:
@@ -75,6 +82,7 @@ async def main(owner_id: str, dry_run: bool) -> None:
             edition_slug=edition_slug,
             edition_title=edition_title,
             sections=sections,
+            release_id=release_id,
         )
 
     written = sum(result.chunk_count for result in results if not result.unchanged)

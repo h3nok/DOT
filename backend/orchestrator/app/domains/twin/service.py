@@ -133,8 +133,10 @@ def _relevant_excerpt(text: str, question: str, limit: int = 900) -> tuple[str, 
     if heading:
         selected.append(heading)
     selected.append(paragraphs[best])
-    if best + 1 < len(paragraphs) and (
-        paragraphs[best].endswith(":") or sum(len(part) for part in selected) < 420
+    if (
+        best + 1 < len(paragraphs)
+        and not paragraphs[best + 1].startswith("#")
+        and (paragraphs[best].endswith(":") or sum(len(part) for part in selected) < 420)
     ):
         selected.append(paragraphs[best + 1])
 
@@ -192,6 +194,17 @@ def _extractive_fallback(
 #: short enough that the context stays dominated by retrieved material.
 HISTORY_TURNS = 6
 
+ProgressCallback = typing.Callable[[str, dict[str, typing.Any]], typing.Awaitable[None]]
+
+
+async def _report(
+    progress: ProgressCallback | None,
+    event: str,
+    payload: dict[str, typing.Any],
+) -> None:
+    if progress is not None:
+        await progress(event, payload)
+
 
 def _render_history(history: typing.Sequence[tuple[str, str]]) -> str:
     if not history:
@@ -218,6 +231,7 @@ async def ask(
     payload: schemas.TwinAskRequest,
     client: model.ModelClient | None = None,
     history: typing.Sequence[tuple[str, str]] = (),
+    progress: ProgressCallback | None = None,
 ) -> schemas.TwinAskResponse:
     social: schemas.TwinAskResponse | None = _social_response(payload.question)
     if social is not None:
@@ -225,15 +239,42 @@ async def ask(
 
     graph_owner_id: str = payload.owner_id or requester.owner_id
 
-    passages: list[retriever.Passage] = await retriever.retrieve_passages(
-        session, requester, graph_owner_id, retrieval_query(payload.question, history)
+    scope: schemas.TwinReaderScope | None = payload.scope
+    scoped_question: str = " ".join(
+        part for part in (scope.selection if scope else None, payload.question) if part
     )
+    passages: list[retriever.Passage] = await retriever.retrieve_passages(
+        session,
+        requester,
+        graph_owner_id,
+        retrieval_query(scoped_question, history),
+        canon_release_id=scope.release_id if scope else None,
+        reader_section_slug=scope.section_slug if scope else None,
+    )
+    await _report(progress, "evidence.ready", {"source_count": len(passages)})
     if not passages:
         return _refuse(REFUSAL_NO_CONTEXT)
 
     fragments: list[dict[str, typing.Any]] = retriever.passages_to_fragments(passages)
+    reader_context: str = ""
+    if scope is not None:
+        reader_context = boundary.wrap_untrusted(
+            [
+                {
+                    "kind": "reader_scope",
+                    "release_id": scope.release_id,
+                    "edition": scope.edition_slug,
+                    "section": scope.section_slug,
+                    "heading": scope.heading_slug,
+                    "selection": scope.selection,
+                }
+            ]
+        )
+        reader_context = f"{reader_context}\n\n"
+
     user_message: str = (
         f"{_render_history(history)}"
+        f"{reader_context}"
         f"{boundary.wrap_untrusted(fragments)}\n\n"
         f"Reading lens: {_LENS_INSTRUCTION[payload.lens]}\n"
         f"Question: {payload.question}\n"
@@ -241,6 +282,7 @@ async def ask(
     )
 
     resolved: model.ModelClient = client or model.get_model_client()
+    await _report(progress, "answer.composing", {})
     try:
         raw: str = await resolved.complete(system=SYSTEM_PROMPT, user=user_message)
     except model.ModelUnavailableError:

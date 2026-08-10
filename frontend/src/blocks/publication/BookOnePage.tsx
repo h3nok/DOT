@@ -1,4 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -9,9 +17,15 @@ import {
   Compass,
   List,
   Loader2,
+  Sparkles,
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import ReaderSelectionAction from "../../attention-os/assistant/ReaderSelectionAction";
+import type {
+  MarginCitation,
+  ReaderAgentScope,
+} from "../../attention-os/assistant/marginAgent";
 import {
   findPath,
   nextStep,
@@ -29,6 +43,11 @@ import {
 } from "../../content/publications/dotBookOne";
 import BookLanding from "./BookLanding";
 import ExperienceLoop from "./ExperienceLoop";
+import MovementSupportInvitation from "./MovementSupportInvitation";
+
+const LumenMargin = lazy(
+  () => import("../../attention-os/assistant/LumenMargin"),
+);
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -126,12 +145,18 @@ function BookReader({
   content,
   onOpenContents,
   path,
+  articleRef,
+  readerScope,
+  onAskLumen,
 }: {
   manifest: DotBookOneManifest;
   section: BookReleaseSection;
   content: string;
   onOpenContents: () => void;
   path: ReadingPath | null;
+  articleRef: RefObject<HTMLElement | null>;
+  readerScope: ReaderAgentScope;
+  onAskLumen: (scope: ReaderAgentScope) => void;
 }) {
   const bySlug = (slug: string | undefined) =>
     slug ? (manifest.sections.find((entry) => entry.slug === slug) ?? null) : null;
@@ -155,7 +180,7 @@ function BookReader({
 
   return (
     <>
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,700px)] lg:justify-center lg:gap-20">
+      <div className="book-reader-layout mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,700px)] lg:justify-center lg:gap-20">
         <aside className="hidden lg:block">
           <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
             <Link
@@ -169,7 +194,7 @@ function BookReader({
           </div>
         </aside>
 
-        <article id="book-main" className="book-reader min-w-0">
+        <article ref={articleRef} id="book-main" className="book-reader min-w-0">
           <div className="mb-8 flex items-center gap-4 lg:hidden">
             <Link
               to={DOT_BOOK_ONE_ROUTE + "#edition-map"}
@@ -235,7 +260,7 @@ function BookReader({
 
           <footer className="border-t border-border/60 pt-8">
             {section.kind === "references" && (
-              <div className="mb-8 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.03] p-6">
+              <div className="mb-8 rounded-lg border border-[var(--organism-accent-soft)] bg-foreground/[0.03] p-6">
                 <div className="flex items-start gap-3">
                   <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">
                     <Check className="h-3.5 w-3.5" />
@@ -251,6 +276,10 @@ function BookReader({
                   </div>
                 </div>
               </div>
+            )}
+
+            {section.kind === "references" && (
+              <MovementSupportInvitation compact />
             )}
 
             <div className="book-reflection mb-10 border-y px-1 py-8 sm:py-10">
@@ -336,6 +365,12 @@ function BookReader({
               )}
             </div>
           </footer>
+
+          <ReaderSelectionAction
+            rootRef={articleRef}
+            scope={readerScope}
+            onAsk={onAskLumen}
+          />
         </article>
       </div>
     </>
@@ -355,8 +390,11 @@ export default function BookOnePage() {
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contentsOpen, setContentsOpen] = useState(false);
+  const [marginOpen, setMarginOpen] = useState(false);
+  const [marginScope, setMarginScope] = useState<ReaderAgentScope | null>(null);
   const contentsPanelRef = useRef<HTMLElement | null>(null);
   const contentsReturnFocusRef = useRef<HTMLElement | null>(null);
+  const articleRef = useRef<HTMLElement | null>(null);
 
   const openContents = () => {
     contentsReturnFocusRef.current =
@@ -375,6 +413,23 @@ export default function BookOnePage() {
         : undefined,
     [manifest, sectionSlug],
   );
+
+  const readerScope = useMemo<ReaderAgentScope | null>(() => {
+    if (!manifest) return null;
+    return {
+      releaseId: manifest.release.id,
+      editionSlug: manifest.project.slug,
+      releaseLabel: `${manifest.release.label} · v${manifest.release.version}`,
+      sectionSlug: section?.slug,
+      sectionTitle: section?.title,
+    };
+  }, [manifest, section]);
+
+  const openLumen = (scope: ReaderAgentScope) => {
+    setContentsOpen(false);
+    setMarginScope(scope);
+    setMarginOpen(true);
+  };
 
   useEffect(() => {
     const abort = new AbortController();
@@ -494,6 +549,17 @@ export default function BookOnePage() {
     };
   }, [contentsOpen]);
 
+  useEffect(() => {
+    if (!marginOpen || !readerScope) return;
+    setMarginScope((current) => {
+      if (!current) return readerScope;
+      if (current.sectionSlug === readerScope.sectionSlug) {
+        return { ...readerScope, ...current };
+      }
+      return readerScope;
+    });
+  }, [marginOpen, readerScope]);
+
   if (error) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center text-foreground">
@@ -512,7 +578,11 @@ export default function BookOnePage() {
   if (!manifest || (sectionSlug && !content)) return <LoadingState />;
 
   return (
-    <div className="book-surface min-h-screen bg-background text-foreground">
+    <div
+      className={`book-surface min-h-screen bg-background text-foreground${
+        marginOpen ? " book-margin-open" : ""
+      }`}
+    >
       <a
         href="#book-main"
         className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
@@ -541,32 +611,47 @@ export default function BookOnePage() {
               {manifest.release.label}
             </span>
           </Link>
-          {section ? (
-            <button
-              type="button"
-              onClick={openContents}
-              className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
-            >
-              <List className="h-3.5 w-3.5" />
-              Contents
-            </button>
-          ) : (
-            <span className="w-14" aria-hidden="true" />
-          )}
+          <div className="flex items-center justify-end gap-3">
+            {readerScope && (
+              <button
+                type="button"
+                onClick={() => openLumen(readerScope)}
+                className="book-lumen-trigger"
+              >
+                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                Lumen
+              </button>
+            )}
+            {section && (
+              <button
+                type="button"
+                onClick={openContents}
+                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+              >
+                <List className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Contents</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
-      {section && content ? (
-        <BookReader
-          manifest={manifest}
-          section={section}
-          content={content}
-          onOpenContents={openContents}
-          path={activePath}
-        />
-      ) : (
-        <BookLanding manifest={manifest} />
-      )}
+      <div className="book-page-content">
+        {section && content && readerScope ? (
+          <BookReader
+            manifest={manifest}
+            section={section}
+            content={content}
+            onOpenContents={openContents}
+            path={activePath}
+            articleRef={articleRef}
+            readerScope={readerScope}
+            onAskLumen={openLumen}
+          />
+        ) : (
+          <BookLanding manifest={manifest} />
+        )}
+      </div>
 
       {contentsOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
@@ -613,6 +698,53 @@ export default function BookOnePage() {
             />
           </aside>
         </div>
+      )}
+
+      {marginOpen && marginScope && (
+        <Suspense
+          fallback={
+            <div className="lumen-margin-loading" aria-live="polite">
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              Opening Lumen
+            </div>
+          }
+        >
+          <LumenMargin
+            open={marginOpen}
+            scope={marginScope}
+            onOpenChange={setMarginOpen}
+            onClearSelection={() =>
+              setMarginScope((current) =>
+                current
+                  ? { ...current, selection: undefined }
+                  : current,
+              )
+            }
+            onCitation={(citation: MarginCitation) => {
+              const locator = citation.locator;
+              const targetSection =
+                locator && typeof locator.section === "string"
+                  ? locator.section
+                  : null;
+              const targetHeading =
+                locator && typeof locator.heading === "string"
+                  ? locator.heading
+                  : null;
+              if (!targetSection) return;
+              setMarginOpen(false);
+              navigate(
+                `${DOT_BOOK_ONE_ROUTE}/${targetSection}${
+                  targetHeading ? `#${targetHeading}` : ""
+                }`,
+              );
+              if (targetSection === section?.slug && !targetHeading) {
+                window.requestAnimationFrame(() => {
+                  window.scrollTo({ top: 0, behavior: "auto" });
+                });
+              }
+            }}
+          />
+        </Suspense>
       )}
     </div>
   );
