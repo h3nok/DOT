@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { bloomFromOrigin, EASE_BREATHE, staggerContainer } from "../organism";
@@ -57,6 +57,38 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
   };
   const from = origin ?? viewportCenter;
   const bloom = bloomFromOrigin(origin, reducedMotion);
+
+  // Scroll shadows: a quiet affordance that the body continues above/below.
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [scrollEdge, setScrollEdge] = useState({ top: false, bottom: false });
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    const update = () => {
+      setScrollEdge({
+        top: el.scrollTop > 4,
+        bottom: el.scrollTop + el.clientHeight < el.scrollHeight - 4,
+      });
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    // ResizeObserver may be absent (jsdom, older engines) or stubbed as a
+    // non-constructable mock in tests; the scroll listener alone still keeps the
+    // shadows honest. Treat it as a best-effort enhancement, never a hard dep.
+    let observer: ResizeObserver | null = null;
+    try {
+      if (typeof ResizeObserver === "function") {
+        observer = new ResizeObserver(update);
+        observer.observe(el);
+      }
+    } catch {
+      observer = null;
+    }
+    return () => {
+      el.removeEventListener("scroll", update);
+      observer?.disconnect();
+    };
+  }, []);
 
   return (
     <div
@@ -157,15 +189,31 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
           </button>
         </header>
 
-        <motion.div
-          className="mt-6 min-h-0 flex-1 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          custom={reducedMotion}
-        >
-          {children}
-        </motion.div>
+        <div className="relative mt-6 min-h-0 flex-1">
+          {/* Top scroll shadow — appears once the body is scrolled. */}
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-background/70 to-transparent transition-opacity duration-300 ${
+              scrollEdge.top ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          <motion.div
+            ref={bodyRef}
+            className="h-full min-h-0 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            custom={reducedMotion}
+          >
+            {children}
+          </motion.div>
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6 bg-gradient-to-t from-background/70 to-transparent transition-opacity duration-300 ${
+              scrollEdge.bottom ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        </div>
 
         {footer && (
           <footer className="border-t border-border/50 px-7 py-5 sm:px-8">

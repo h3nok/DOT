@@ -77,7 +77,7 @@ export interface VitalSigns {
  * and stay out of the reading. None of them scatter arbitrary links across the
  * viewport — every mark has a rule behind it.
  */
-export type OrganismPreset = "aurora" | "constellation" | "lattice" | "off";
+export type OrganismPreset = "field" | "aurora" | "constellation" | "lattice" | "off";
 
 export interface OrganismPresetSpec {
   label: string;
@@ -94,6 +94,14 @@ export interface OrganismPresetSpec {
 }
 
 export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
+  field: {
+    label: "Field of Bits",
+    hint: "E itself — the stream of experience as a drift of bits, flipping as it passes.",
+    density: 0.8,
+    speed: 0.7,
+    linkFactor: 0,
+    alpha: 0.9,
+  },
   aurora: {
     label: "Aurora",
     hint: "Soft drifting light. No structure — kindest to reading.",
@@ -208,7 +216,7 @@ export const DEFAULT_VITALS: VitalSigns = {
 export const DEFAULT_CONFIG: OrganismConfig = {
   enabled: true,
   intensity: 0.85,
-  preset: "constellation",
+  preset: "field",
   showMembrane: true,
   showHud: false,
   tint: "auto",

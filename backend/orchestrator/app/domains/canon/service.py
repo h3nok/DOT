@@ -25,6 +25,7 @@ import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
+import app.core.tenancy
 import app.db.models
 import app.domains.knowledge.chunk
 import app.domains.knowledge.service
@@ -117,6 +118,10 @@ async def ingest_section(
 
     if not section.text.strip():
         raise CanonError(f"{section.slug}: section has no text")
+
+    # Each section commits independently. Rebind here because Postgres SET LOCAL
+    # is intentionally cleared at every transaction boundary.
+    await app.core.tenancy.bind_tenant(session, owner.owner_id)
 
     key: str = f"canon/{edition_slug}/{section.slug}.md"
     digest: str = hashlib.sha256(section.text.encode("utf-8")).hexdigest()

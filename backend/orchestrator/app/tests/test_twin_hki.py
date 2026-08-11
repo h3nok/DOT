@@ -68,6 +68,70 @@ def test_model_outage_returns_cited_released_prose() -> None:
     }
 
 
+def test_fallback_dedups_identical_passages() -> None:
+    """Retrieval can surface the same prose twice; the reader must never see it."""
+    import app.domains.twin.retriever as retriever
+    import app.domains.twin.service as service
+
+    prose = "The Canvas carries. The Painting interprets. Character acts."
+    passages = [
+        retriever.Passage(
+            id="chunk-1",
+            kind="chunk",
+            label="Book One · The Canvas",
+            text=prose,
+            score=1.0,
+            locator={"section": "the-canvas", "start": 10, "end": 59},
+        ),
+        # Same text under a different chunk id — must collapse to one.
+        retriever.Passage(
+            id="chunk-2",
+            kind="chunk",
+            label="Book One · The Canvas",
+            text=prose,
+            score=0.9,
+            locator={"section": "the-canvas", "start": 10, "end": 59},
+        ),
+    ]
+
+    response = service._extractive_fallback(passages, "What is the Canvas?")  # noqa: SLF001
+
+    assert response.grounded is True
+    assert len(response.citations) == 1
+    assert response.answer.count("The Canvas carries") == 1
+    assert response.answer.startswith("From the released text:")
+
+
+def test_fallback_skips_passages_without_relevant_excerpt() -> None:
+    """A passage that yields no usable excerpt must not pad the answer."""
+    import app.domains.twin.retriever as retriever
+    import app.domains.twin.service as service
+
+    passages = [
+        retriever.Passage(
+            id="chunk-empty",
+            kind="chunk",
+            label="Book One · Empty",
+            text="   ",
+            score=1.0,
+            locator=None,
+        ),
+        retriever.Passage(
+            id="chunk-1",
+            kind="chunk",
+            label="Book One · The Canvas",
+            text="The Canvas carries.",
+            score=0.9,
+            locator=None,
+        ),
+    ]
+
+    response = service._extractive_fallback(passages, "What is the Canvas?")  # noqa: SLF001
+
+    assert response.grounded is True
+    assert [c.node_id for c in response.citations] == ["chunk-1"]
+
+
 def test_exact_concept_and_section_title_outrank_loose_repetition() -> None:
     import app.domains.twin.retriever as retriever
 
@@ -254,6 +318,62 @@ def test_twin_refuses_when_nothing_is_retrieved(client: fastapi.testclient.TestC
     assert body["grounded"] is False
     assert body["refusal_code"] == "no_grounded_context"
     assert body["citations"] == []
+
+
+# ── Feedback (L8): a member's explicit verdict, zero retained content ──────────
+
+
+def test_feedback_records_rating_without_content(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    response = client.post(
+        "/v1/twin/feedback",
+        headers=_headers("owner-alice"),
+        json={"rating": "helpful", "lens": "test", "subject_owner_id": "henok"},
+    )
+    assert response.status_code == 201, response.text
+    body = response.json()
+    assert body["rating"] == "helpful"
+    assert body["id"].startswith("fbk_")
+
+
+def test_feedback_rejects_an_invalid_rating(client: fastapi.testclient.TestClient) -> None:
+    response = client.post(
+        "/v1/twin/feedback",
+        headers=_headers("owner-alice"),
+        json={"rating": "loved-it", "subject_owner_id": "henok"},
+    )
+    assert response.status_code == 422
+
+
+def test_feedback_requires_a_signed_in_member(client: fastapi.testclient.TestClient) -> None:
+    """A visitor can ask publicly, but only a member can judge (L8)."""
+    response = client.post(
+        "/v1/twin/feedback",
+        json={"rating": "helpful", "subject_owner_id": "henok"},
+    )
+    assert response.status_code in (401, 403)
+
+
+def test_feedback_is_scoped_to_the_calling_member(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    """Feedback binds to the caller's tenant session (ADR-0011): a request as
+    bob writes bob's row, keyed separately from anyone else's."""
+    alice = client.post(
+        "/v1/twin/feedback",
+        headers=_headers("owner-alice"),
+        json={"rating": "not_helpful", "lens": "ground", "subject_owner_id": "henok"},
+    )
+    bob = client.post(
+        "/v1/twin/feedback",
+        headers=_headers("owner-bob"),
+        json={"rating": "helpful", "lens": "ground", "subject_owner_id": "henok"},
+    )
+    assert alice.status_code == 201
+    assert bob.status_code == 201
+    # Distinct rows, distinct ids — no shared or overwritten verdict.
+    assert alice.json()["id"] != bob.json()["id"]
 
 
 @pytest.mark.parametrize("greeting", ["Hi", "Hello!", "Hey.", "Good morning"])

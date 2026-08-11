@@ -286,9 +286,11 @@ export const AppearanceControl: React.FC = () => {
         onClick={() => setOpen((o) => !o)}
         aria-label="Appearance settings"
         aria-expanded={open}
-        className="organism-alive flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-background/70 text-foreground/80 shadow-lg backdrop-blur-md transition-colors hover:text-foreground"
+        title="Make it yours — theme, background, tint, text"
+        className="organism-alive group flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-3.5 py-2 text-foreground/80 shadow-lg backdrop-blur-md transition-colors hover:text-foreground"
       >
         <Sparkles className="h-4 w-4" />
+        <span className="text-[11px] font-medium">Appearance</span>
       </button>
     </div>
   );

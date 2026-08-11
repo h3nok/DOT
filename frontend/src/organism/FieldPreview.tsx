@@ -65,6 +65,29 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
         </g>
       )}
 
+      {field === "field" && (
+        <g
+          fill={dot}
+          fontFamily="ui-monospace, monospace"
+          fontSize="7"
+          textAnchor="middle"
+        >
+          {[
+            [9, 11, "0", 0.7],
+            [19, 8, "1", 0.9],
+            [30, 13, "0", 0.5],
+            [40, 9, "1", 0.75],
+            [13, 24, "1", 0.55],
+            [26, 26, "0", 0.85],
+            [37, 22, "1", 0.45],
+          ].map(([x, y, b, o]) => (
+            <text key={`${x}-${y}`} x={x} y={y} opacity={o}>
+              {b}
+            </text>
+          ))}
+        </g>
+      )}
+
       {field === "off" && (
         <line
           x1="14"

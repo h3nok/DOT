@@ -13,6 +13,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { staggerChild } from "../organism";
 import { BloomSurface } from "./BloomSurface";
+import { SUPPORT_PAYMENT_LINK } from "./supportLink";
 import { formatAmount, useSupport, type SupportTier } from "./useSupport";
 
 /**
@@ -162,6 +163,50 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
     );
   }
 
+  // The server plane is not answering. If a provider-hosted link is configured
+  // the work can still be funded; Stripe owns the amount and the receipt, so
+  // nothing here asks the client to be an authority on money.
+  if (!available && SUPPORT_PAYMENT_LINK) {
+    return (
+      <BloomSurface
+        kicker="independent work"
+        title="Support the work"
+        description="DOT sells no advertising and no attention, so it is funded by the people who find it worth funding."
+        origin={origin}
+        reducedMotion={reducedMotion}
+        zIndex={58}
+        size="sm"
+        onClose={onClose}
+        footer={
+          <a
+            href={SUPPORT_PAYMENT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--organism-accent-soft)] bg-foreground/[0.06] px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.1]"
+          >
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            Continue to Stripe
+          </a>
+        }
+      >
+        <div className="flex flex-col gap-4 py-1 text-sm leading-relaxed text-muted-foreground">
+          <p>
+            Contributions pay for the time this takes: making Minty reliable, deepening the Book
+            One reader, and keeping the whole thing running as a careful public release.
+          </p>
+          <p>
+            Support never changes what reaches you. It buys no access, no standing, and no
+            position in anything you are shown — reading stays free and complete either way.
+          </p>
+          <p className="text-[11px] leading-5 text-muted-foreground/80">
+            Stripe hosts the checkout, sets the amount, and issues the receipt. There is no
+            recurring charge and no public list of who gave.
+          </p>
+        </div>
+      </BloomSurface>
+    );
+  }
+
   if (!available) {
     return (
       <BloomSurface
@@ -186,7 +231,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
     <BloomSurface
       kicker="independent work"
       title="Support the work"
-      description="I am fundraising to make Lumen reliable, deepen the Book One reader, and prepare DOT for a careful public release."
+      description="I am fundraising to make Minty reliable, deepen the Book One reader, and prepare DOT for a careful public release."
       origin={origin}
       reducedMotion={reducedMotion}
       zIndex={58}

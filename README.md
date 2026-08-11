@@ -3,6 +3,8 @@
 Repository for *Consciousness: A Digital Organism*, Book One of Digital
 Organism Theory, and the attention-protecting publication system around it.
 
+Public home: [dotheory.org](https://dotheory.org)
+
 ## Overview
 
 Book One presents a framework for consciousness, conditioning, and conscious

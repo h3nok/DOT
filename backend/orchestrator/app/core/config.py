@@ -47,12 +47,12 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     AWS_REGION: str = "us-east-1"
 
     SENTRY_DSN: str = ""
-    FRONTEND_URL: str = "https://dot.org"
+    FRONTEND_URL: str = "https://dotheory.org"
 
     # Twin plane (ADR-0010). TOOL_RUNTIME_SECRET signs tool manifests; without it
     # the registry refuses to dispatch anything.
     TWIN_ENABLED: bool = True
-    TWIN_MODEL: str = "gemini-2.5-flash"
+    TWIN_MODEL: str = "gemini-3.5-flash-lite"
     TWIN_API_KEY: str = ""
     TWIN_TIMEOUT_SECONDS: float = 30.0
     TOOL_RUNTIME_SECRET: str = ""

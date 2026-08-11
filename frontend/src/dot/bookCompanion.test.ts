@@ -19,7 +19,7 @@ const markdownBySlug = Object.fromEntries(
 );
 const corpus = buildBookCorpus(manifest, markdownBySlug);
 
-describe("Lumen's Book One fallback", () => {
+describe("Minty's Book One fallback", () => {
   it("answers a definition from the released passage and links to it", () => {
     const result = answerFromCorpus(
       corpus,

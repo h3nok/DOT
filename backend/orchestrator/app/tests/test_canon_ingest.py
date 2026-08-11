@@ -13,6 +13,7 @@ import json
 import pytest
 
 import app.auth.dependencies
+import app.core.tenancy
 import app.db.models
 import app.domains.canon.service as canon
 import app.domains.knowledge.embedding
@@ -110,6 +111,13 @@ async def test_a_visitor_can_be_taught_from_the_book(session_factory) -> None:
 
     assert passages, "a visitor asking about the book must reach the book"
     assert any("Canvas entropy" in passage.text for passage in passages)
+
+
+async def test_retrieval_binds_the_selected_public_corpus(session_factory) -> None:
+    async with session_factory() as session:
+        await retriever.retrieve_passages(session, VISITOR, AUTHOR.owner_id, "Canvas")
+
+        assert app.core.tenancy.current_tenant(session) == AUTHOR.owner_id
 
 
 async def test_a_citation_points_at_a_chapter_a_reader_can_turn_to(session_factory) -> None:

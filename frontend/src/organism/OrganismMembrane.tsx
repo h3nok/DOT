@@ -15,6 +15,9 @@ interface Point {
   /** 0 = far (small, faint, slow) … 1 = near (larger, brighter, quicker). */
   depth: number;
   phase: number;
+  /** Field-of-bits state: the bit carried, and when it next flips (a delta). */
+  bit: "0" | "1";
+  flipAt: number;
 }
 
 interface Bloom {
@@ -124,6 +127,34 @@ export const OrganismMembrane: React.FC = () => {
           r: 0.5 + depth * 1.6,
           depth,
           phase: Math.random() * Math.PI * 2,
+          bit: Math.random() < 0.5 ? ("0" as const) : ("1" as const),
+          flipAt: Math.random() * 8,
+        };
+      });
+    };
+
+    /**
+     * The field of bits — E, the stream of experience. Points are glyphs, not
+     * dots: 0s and 1s rising slowly, each flipping now and then. A flip is a
+     * delta — the smallest unit of change the Canvas would carry. No links;
+     * experience arrives unjoined until something interprets it.
+     */
+    const buildField = () => {
+      const budget = Math.min(160, Math.max(48, Math.round((w * h) / 16000)));
+      points = Array.from({ length: budget }, (_, i) => {
+        const depth = DEPTHS[i % DEPTHS.length];
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          hx: 0,
+          hy: 0,
+          vx: 0,
+          vy: 0,
+          r: 1,
+          depth,
+          phase: Math.random() * Math.PI * 2,
+          bit: Math.random() < 0.5 ? ("0" as const) : ("1" as const),
+          flipAt: Math.random() * 10,
         };
       });
     };
@@ -150,6 +181,8 @@ export const OrganismMembrane: React.FC = () => {
             r: 1.1,
             depth: 1,
             phase: (c + r) * 0.6,
+            bit: "0",
+            flipAt: 0,
           });
         }
       }
@@ -157,6 +190,7 @@ export const OrganismMembrane: React.FC = () => {
 
     const rebuild = () => {
       if (config.preset === "lattice") buildLattice();
+      else if (config.preset === "field") buildField();
       else if (spec.density > 0) {
         const budget = Math.min(POINT_BUDGET, (w * h) / 14000) * spec.density;
         buildConstellation(Math.max(24, Math.round(budget)));
@@ -316,6 +350,50 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
+    /**
+     * The field of bits — glyphs rising like experience arriving, each
+     * occasionally flipping. No links: this stream is not yet interpreted.
+     * Quieter than the other fields — it's a weather, not a structure.
+     */
+    const drawField = (
+      hue: number,
+      sat: number,
+      light: number,
+      alpha: number,
+      animate: boolean,
+    ) => {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const p of points) {
+        if (animate) {
+          // Slow rise with a gentle sway; wrap at the edges so the stream
+          // never ends. Deeper bits move a touch faster — parallax of attention.
+          p.y -= (0.12 + p.depth * 0.3) * spec.speed;
+          p.x += Math.sin(p.phase) * 0.08;
+          p.phase += 0.004;
+          if (p.y < -20) {
+            p.y = h + 20;
+            p.x = Math.random() * w;
+          }
+          if (p.x < -20) p.x = w + 20;
+          if (p.x > w + 20) p.x = -20;
+          // A bit flips when its time comes — a delta in the stream.
+          p.flipAt -= 1 / 60;
+          if (p.flipAt <= 0) {
+            p.bit = p.bit === "0" ? "1" : "0";
+            p.flipAt = 4 + Math.random() * 10;
+          }
+        }
+        const mask = clearance(p.x, p.y);
+        const a = alpha * mask * (0.16 + p.depth * 0.22);
+        if (a <= 0.005) continue;
+        const size = 9 + p.depth * 5;
+        ctx.font = `${size}px ui-monospace, monospace`;
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
+        ctx.fillText(p.bit, p.x, p.y);
+      }
+    };
+
     const draw = (animate: boolean) => {
       const v = vitals.current;
       const { hue, sat, light, dark } = palette();
@@ -395,10 +473,18 @@ export const OrganismMembrane: React.FC = () => {
           p.y = p.hy + Math.cos(p.hx * 0.011 - wave * 0.8) * amp * 0.7;
         }
         drawLatticeLinks(hue, sat, light, alpha);
+      } else if (config.preset === "field") {
+        // E, as glyphs — the stream before interpretation. Drawn and moved in
+        // its own pass; the generic point-body loop below skips this preset
+        // because bits are text, not dots.
+        drawField(hue, sat, light, alpha, animate);
       }
 
       // Point bodies. They dim but never vanish while reading, so the ground
-      // still feels quietly alive.
+      // still feels quietly alive. (The field preset draws its own glyphs.)
+      if (config.preset === "field") {
+        // bits already painted above
+      } else
       for (const p of points) {
         const mask = clearance(p.x, p.y);
         const breath = animate ? 0.8 + 0.2 * Math.sin(p.phase) : 1;

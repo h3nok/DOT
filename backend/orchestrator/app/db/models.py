@@ -806,3 +806,36 @@ class TwinMessage(Base):
     conversation: sqlalchemy.orm.Mapped[TwinConversation] = sqlalchemy.orm.relationship(
         back_populates="messages"
     )
+
+
+class TwinFeedback(Base, TimestampMixin, TenantMixin):
+    """A member's explicit verdict on one twin answer (L8 — accountability).
+
+    Zero retention (HKI-6) applies to the *conversation*, not to a member's own
+    deliberate signal. So this row holds only the verdict and its coarse shape —
+    the rating, the lens it was given through, and whose twin answered. It never
+    stores the prompt, the answer, or any free text: a member's words stay out of
+    the ledger even when they choose to judge the reply.
+    """
+
+    __tablename__ = "twin_feedback"
+    __table_args__ = (sqlalchemy.Index("ix_twin_feedback_owner_recent", "owner_id", "created_at"),)
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("fbk")
+    )
+    owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    #: Whose twin produced the answer being judged.
+    subject_owner_id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(128), index=True, nullable=False
+    )
+    #: "helpful" or "not_helpful" — a closed verdict, never a number to rank by.
+    rating: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), nullable=False
+    )
+    #: The lens the answer was read through (orient / ground / test).
+    lens: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), nullable=False, default="ground"
+    )

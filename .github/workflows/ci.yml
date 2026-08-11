@@ -19,7 +19,8 @@ env:
   GCP_REGION: ${{ vars.GCP_REGION }}
   AR_REPO: ${{ vars.AR_REPO }} # Artifact Registry repo name, e.g. dot-orchestrator
   API_SERVICE: dot-orchestrator-api
-  WORKER_SERVICE: dot-orchestrator-worker
+  CLOUD_SQL_INSTANCE: ${{ vars.CLOUD_SQL_INSTANCE }}
+  RUNTIME_SERVICE_ACCOUNT: ${{ vars.RUNTIME_SERVICE_ACCOUNT }}
 
 jobs:
   frontend:
@@ -182,23 +183,46 @@ jobs:
       - name: Build and push image
         run: |
           IMAGE=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/orchestrator:${{ github.sha }}
-          docker build -t "$IMAGE" .
+          docker build -f Dockerfile -t "$IMAGE" ../..
           docker push "$IMAGE"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
       - name: Run migrations via Cloud Run job
-        # One-off job runs alembic upgrade head before the new revision goes live.
         run: |
-          gcloud run jobs create dot-migrate-${{ github.run_number }} \
+          gcloud run jobs deploy dot-migrate \
             --image "$IMAGE" \
             --region ${{ env.GCP_REGION }} \
-            --set-secrets DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
+            --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
+            --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
+            --set-secrets ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
             --command python3 \
             --args "-m,alembic,upgrade,head" \
             --max-retries 1 \
             --task-timeout 120s \
+            --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
-          gcloud run jobs execute dot-migrate-${{ github.run_number }} \
+          gcloud run jobs execute dot-migrate \
+            --region ${{ env.GCP_REGION }} \
+            --wait \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Ingest released Book One canon
+        run: |
+          gcloud run jobs deploy dot-ingest-canon \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
+            --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
+            --set-secrets \
+              ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
+              ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest \
+            --command python3 \
+            --args "scripts/ingest_canon.py,--owner,henok" \
+            --max-retries 1 \
+            --task-timeout 600s \
+            --quiet \
+            --project ${{ env.GCP_PROJECT_ID }}
+          gcloud run jobs execute dot-ingest-canon \
             --region ${{ env.GCP_REGION }} \
             --wait \
             --project ${{ env.GCP_PROJECT_ID }}
@@ -212,56 +236,26 @@ jobs:
             --allow-unauthenticated \
             --port 8000 \
             --min-instances 0 \
-            --max-instances 4 \
+            --max-instances 1 \
             --memory 512Mi \
             --cpu 1 \
+            --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
+            --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
             --set-secrets \
               ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
-              ORCHESTRATOR_REDIS_URL=ORCHESTRATOR_REDIS_URL:latest,\
               ORCHESTRATOR_SERVICE_AUTH_SECRET=ORCHESTRATOR_SERVICE_AUTH_SECRET:latest,\
               ORCHESTRATOR_CORS_ORIGINS=ORCHESTRATOR_CORS_ORIGINS:latest,\
-              ORCHESTRATOR_OBJECT_STORE_BUCKET=ORCHESTRATOR_OBJECT_STORE_BUCKET:latest,\
-              ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
-              ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
-              ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
-              ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
+              ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest \
             --set-env-vars \
               ORCHESTRATOR_ENVIRONMENT=production,\
               ORCHESTRATOR_AUTH_MODE=jwt,\
               ORCHESTRATOR_AUTH_ENABLED=true,\
-              ORCHESTRATOR_OBJECT_STORE_BACKEND=s3,\
-              ORCHESTRATOR_AWS_REGION=auto \
-            --project ${{ env.GCP_PROJECT_ID }}
-
-      - name: Deploy worker to Cloud Run
-        run: |
-          gcloud run deploy ${{ env.WORKER_SERVICE }} \
-            --image "$IMAGE" \
-            --region ${{ env.GCP_REGION }} \
-            --platform managed \
-            --no-allow-unauthenticated \
-            --port 8080 \
-            --min-instances 0 \
-            --max-instances 2 \
-            --memory 512Mi \
-            --cpu 1 \
-            --command python3 \
-            --args "-m,dramatiq,app.workers.tasks" \
-            --set-secrets \
-              ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
-              ORCHESTRATOR_REDIS_URL=ORCHESTRATOR_REDIS_URL:latest,\
-              ORCHESTRATOR_SERVICE_AUTH_SECRET=ORCHESTRATOR_SERVICE_AUTH_SECRET:latest,\
-              ORCHESTRATOR_OBJECT_STORE_BUCKET=ORCHESTRATOR_OBJECT_STORE_BUCKET:latest,\
-              ORCHESTRATOR_OBJECT_STORE_ENDPOINT=ORCHESTRATOR_OBJECT_STORE_ENDPOINT:latest,\
-              ORCHESTRATOR_AWS_ACCESS_KEY_ID=ORCHESTRATOR_AWS_ACCESS_KEY_ID:latest,\
-              ORCHESTRATOR_AWS_SECRET_ACCESS_KEY=ORCHESTRATOR_AWS_SECRET_ACCESS_KEY:latest,\
-              ORCHESTRATOR_SENTRY_DSN=ORCHESTRATOR_SENTRY_DSN:latest \
-            --set-env-vars \
-              ORCHESTRATOR_ENVIRONMENT=production,\
-              ORCHESTRATOR_AUTH_MODE=jwt,\
-              ORCHESTRATOR_AUTH_ENABLED=true,\
-              ORCHESTRATOR_OBJECT_STORE_BACKEND=s3,\
-              ORCHESTRATOR_AWS_REGION=auto \
+              ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,\
+              ORCHESTRATOR_TWIN_MODEL=gemini-3.5-flash-lite,\
+              ORCHESTRATOR_REDIS_URL=memory://,\
+              ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,\
+              ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/tmp/dot-objects \
+            --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
 
   smoke:
@@ -304,3 +298,10 @@ jobs:
         run: |
           HEADERS=$(curl -sI "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
           echo "$HEADERS" | grep -i "cache-control" || (echo "Missing Cache-Control header" && exit 1)
+
+      - name: Grounded companion check
+        run: |
+          curl -sf "${{ steps.api_url.outputs.url }}/v1/twin/public/ask" \
+            -H "Content-Type: application/json" \
+            -d '{"owner_id":"henok","lens":"ground","question":"What is the Limit of Knowledge?"}' \
+            | jq -e '.grounded == true and (.citations | length > 0)'

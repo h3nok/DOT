@@ -23,11 +23,26 @@ class ModelClient(typing.Protocol):
     async def complete(self, *, system: str, user: str) -> str: ...
 
 
+class StreamChunk(typing.NamedTuple):
+    """One incremental piece of the model's emission.
+
+    `text` carries a raw delta of the JSON payload the model is producing. The
+    caller — not the model — decides how much of that JSON is safe to show before
+    the whole object has been validated at the boundary (HKI-2).
+    """
+
+    text: str
+
+
 class NullModelClient:
     """Used when no API key is configured. Refuses rather than inventing."""
 
     async def complete(self, *, system: str, user: str) -> str:
         raise ModelUnavailableError("Twin model is not configured.")
+
+    async def stream(self, *, system: str, user: str) -> typing.AsyncGenerator[StreamChunk, None]:
+        raise ModelUnavailableError("Twin model is not configured.")
+        yield  # pragma: no cover - marks this an async generator
 
 
 class GeminiModelClient:
@@ -37,19 +52,13 @@ class GeminiModelClient:
         self._timeout: float = timeout
 
     async def complete(self, *, system: str, user: str) -> str:
-        payload: dict[str, typing.Any] = {
-            "systemInstruction": {"parts": [{"text": system}]},
-            "contents": [{"role": "user", "parts": [{"text": user}]}],
-            "generationConfig": {
-                "temperature": 0.2,
-                "responseMimeType": "application/json",
-            },
-        }
         url: str = f"{GEMINI_ENDPOINT}/{self._model}:generateContent"
         try:
             async with httpx.AsyncClient(timeout=self._timeout) as client:
                 response: httpx.Response = await client.post(
-                    url, json=payload, headers={"x-goog-api-key": self._api_key}
+                    url,
+                    json=self._payload(system, user),
+                    headers={"x-goog-api-key": self._api_key},
                 )
                 response.raise_for_status()
                 data: dict[str, typing.Any] = response.json()
@@ -61,6 +70,53 @@ class GeminiModelClient:
             return data["candidates"][0]["content"]["parts"][0]["text"]
         except (KeyError, IndexError, TypeError) as exc:
             raise ModelUnavailableError("Twin model returned no usable candidate.") from exc
+
+    def _payload(self, system: str, user: str) -> dict[str, typing.Any]:
+        return {
+            "systemInstruction": {"parts": [{"text": system}]},
+            "contents": [{"role": "user", "parts": [{"text": user}]}],
+            "generationConfig": {
+                "responseMimeType": "application/json",
+            },
+        }
+
+    async def stream(self, *, system: str, user: str) -> typing.AsyncGenerator[StreamChunk, None]:
+        """Yield raw text deltas as Gemini produces them (SSE).
+
+        Each `data:` frame is a JSON object; we surface only the inner text delta
+        and let the caller accumulate and validate the full payload at the
+        boundary. No frame content is logged (HKI-6).
+        """
+
+        url: str = f"{GEMINI_ENDPOINT}/{self._model}:streamGenerateContent"
+        try:
+            async with (
+                httpx.AsyncClient(timeout=self._timeout) as client,
+                client.stream(
+                    "POST",
+                    url,
+                    params={"alt": "sse"},
+                    json=self._payload(system, user),
+                    headers={"x-goog-api-key": self._api_key},
+                ) as response,
+            ):
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if not line.startswith("data:"):
+                        continue
+                    frame = line[len("data:") :].strip()
+                    if not frame:
+                        continue
+                    try:
+                        data: typing.Any = httpx.Response(200, content=frame).json()
+                        delta = data["candidates"][0]["content"]["parts"][0]["text"]
+                    except (ValueError, KeyError, IndexError, TypeError):
+                        # A partial/keep-alive frame is not content; skip it.
+                        continue
+                    if delta:
+                        yield StreamChunk(text=delta)
+        except httpx.HTTPError as exc:
+            raise ModelUnavailableError("Twin model stream failed.") from exc
 
 
 def get_model_client() -> ModelClient:

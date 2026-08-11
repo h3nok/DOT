@@ -1,7 +1,10 @@
+import json
+
 import fastapi
 import slowapi
 import slowapi.util
 import sqlalchemy.ext.asyncio
+from fastapi.responses import StreamingResponse
 
 import app.auth.dependencies
 import app.db.session
@@ -46,6 +49,42 @@ async def ask_public(
     )
 
 
+@public_router.post("/public/ask/stream")
+@_limiter.limit("10/minute")
+async def ask_public_stream(
+    request: fastapi.Request,
+    payload: app.domains.twin.schemas.TwinPublicAskRequest,
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> StreamingResponse:
+    """Stream a public answer as server-sent events.
+
+    Prose arrives as `delta` events; a terminal `done` (validated citations) or
+    `refused` event closes the stream. Citations are only emitted after the full
+    model output passes the boundary, so a half-seen sentence can never carry an
+    unchecked citation (ADR-0010).
+    """
+
+    visitor = app.auth.dependencies.OwnerContext(owner_id="visitor", actor_id="visitor")
+    ask_request = app.domains.twin.schemas.TwinAskRequest(
+        question=payload.question,
+        owner_id=payload.owner_id,
+        lens=payload.lens,
+    )
+    history = [(turn.role, turn.content) for turn in payload.history]
+
+    async def event_stream():
+        async for event in app.domains.twin.service.ask_stream(
+            session, visitor, ask_request, history=history
+        ):
+            yield f"data: {json.dumps(event)}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @router.post("/ask", response_model=app.domains.twin.schemas.TwinAskResponse)
 @_limiter.limit("20/minute")
 async def ask(
@@ -59,6 +98,27 @@ async def ask(
     """Ask a twin. Answers are grounded in graph nodes or they are refused."""
 
     return await app.domains.twin.service.ask(session, owner, payload)
+
+
+@router.post(
+    "/feedback",
+    response_model=app.domains.twin.schemas.TwinFeedbackResponse,
+    status_code=201,
+)
+@_limiter.limit("30/minute")
+async def submit_feedback(
+    request: fastapi.Request,
+    payload: app.domains.twin.schemas.TwinFeedbackRequest,
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(
+        app.db.session.get_tenant_session
+    ),
+) -> app.domains.twin.schemas.TwinFeedbackResponse:
+    """Record a member's verdict on an answer. Signed-in members only (L8)."""
+
+    return await app.domains.twin.service.record_feedback(session, owner, payload)
 
 
 @router.get("/conversations", response_model=app.domains.twin.schemas.TwinConversationList)

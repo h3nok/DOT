@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import pathlib
 import sys
 
@@ -24,8 +25,12 @@ import app.auth.dependencies
 import app.db.session
 import app.domains.canon.service as canon
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
-EDITION_ROOT = REPO_ROOT / "frontend/public/publications/henok/digital-organism-theory/v2"
+configured_canon_root = os.environ.get("ORCHESTRATOR_CANON_ROOT")
+if configured_canon_root:
+    EDITION_ROOT = pathlib.Path(configured_canon_root)
+else:
+    repo_root = pathlib.Path(__file__).resolve().parents[2]
+    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v2"
 
 #: Declared by the author, section by section. Absent means undeclared.
 CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
@@ -68,7 +73,7 @@ async def main(owner_id: str, dry_run: bool) -> None:
         return
 
     owner = app.auth.dependencies.OwnerContext(owner_id=owner_id, actor_id="ingest-canon")
-    async with app.db.session.AsyncSessionLocal() as session:
+    async with app.db.session.tenant_session(owner_id) as session:
         results = await canon.ingest_edition(
             session,
             owner,

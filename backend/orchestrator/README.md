@@ -56,6 +56,13 @@ Then open `http://127.0.0.1:5173/DOT/profile`. The delivery panel should show
 ## Local auth scaffold
 
 Private routes require `X-Owner-Id` while `ORCHESTRATOR_AUTH_MODE=local_header`.
+
+Build the production image from the repository root so the released Book One
+canon is included for the post-migration ingestion job:
+
+```bash
+docker build -f backend/orchestrator/Dockerfile -t dot-orchestrator .
+```
 This is a development adapter for the future gateway/session verifier. Do not expose
 private production routes without replacing or constraining this adapter at the gateway.
 

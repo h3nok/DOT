@@ -15,6 +15,7 @@ import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
+import app.core.tenancy
 import app.db.models
 import app.domains.knowledge.embedding
 
@@ -357,6 +358,10 @@ async def retrieve_passages(
     limit: int = DEFAULT_LIMIT,
 ) -> list[Passage]:
     """Graph nodes and vault passages, ranked together into one citable set."""
+
+    # The corpus owner is the tenant being queried. Public callers still receive
+    # only public rows because visibility is resolved below from the requester.
+    await app.core.tenancy.bind_tenant(session, graph_owner_id)
 
     bounded: int = min(limit, MAX_LIMIT)
     nodes: list[Passage] = await _node_passages(

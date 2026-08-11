@@ -227,7 +227,7 @@ async function answerLocally(
   if (grounded) {
     return {
       kind: "answer",
-      title: "Lumen · Book One",
+      title: "Minty · Book One",
       text: grounded.answer,
       source: "local",
       citations: grounded.citations,
@@ -236,7 +236,7 @@ async function answerLocally(
 
   return {
     kind: "answer",
-    title: "Lumen",
+    title: "Minty",
     text: "I could not locate a Book One passage that supports an answer to that question. Try naming a concept such as Little c, the Canvas, Intent, Fear, or a Reality Frame.",
     source: "local",
   };

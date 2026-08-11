@@ -1,210 +1,135 @@
-# Domain Reservation Guide for DOT.com
+# dotheory.org Launch Runbook
 
-## 🎯 **Primary Target: DOT.com**
+`dotheory.org` is the canonical public home of Digital Organism Theory.
 
-### **Current Status Check**
+## Production Shape
 
-1. **Check Availability**: Visit domain registrars to check if DOT.com is available
-   - GoDaddy.com
-   - Namecheap.com
-   - Google Domains
-   - Name.com
-   - Hover.com
+- `https://dotheory.org`: canonical GitHub Pages frontend.
+- `https://www.dotheory.org`: DNS alias that redirects to the canonical apex.
+- Cloud Run's generated HTTPS URL: initial orchestrator origin.
+- `https://api.dotheory.org`: later orchestrator origin behind a Google Cloud
+  global external Application Load Balancer.
 
-2. **If DOT.com is Available**:
-   - **IMMEDIATE ACTION REQUIRED** - Register immediately
-   - DOT.com is a premium 3-letter domain and highly valuable
-   - Estimated value: $50,000 - $500,000+ if available
+Do not add wildcard DNS records. Do not expose model, Stripe, database, or
+service-auth credentials through a `VITE_*` variable.
 
-3. **If DOT.com is Taken**:
-   - Check if it's for sale (many premium domains are parked for sale)
-   - Contact the owner through WHOIS information
-   - Consider purchasing if within budget
+## 1. Secure The Accounts
 
-## 🔄 **Alternative Domain Strategies**
+1. Enable two-factor authentication on Squarespace, GitHub, Google Cloud, and
+   Stripe.
+2. Revoke any model API key that has appeared in source code or chat output.
+3. Create a replacement `ORCHESTRATOR_TWIN_API_KEY` in Google Secret Manager.
+4. Verify `dotheory.org` in the GitHub account's Pages domain settings. GitHub
+   provides a `_github-pages-challenge-h3nok` TXT value for this step.
 
-### **Primary Alternatives**
+Never share account passwords. Complete sign-in and two-factor challenges in
+the provider's own page.
 
-- **DOT.org** - Non-profit/community focus
-- **DOT.net** - Technology focus
-- **DOT.io** - Tech startup appeal
-- **DOT.ai** - AI/consciousness focus
-- **DOT.tech** - Technology focus
+## 2. Repair GitHub Pages
 
-### **Creative Alternatives**
+The `github-pages` environment currently rejects deployments from `main` before
+the build starts.
 
-- **DigitalOrganism.com**
-- **ConsciousnessDOT.com**
-- **DOTTheory.com**
-- **DigitalDOT.com**
-- **DOTPlatform.com**
-- **DOTCommunity.com**
+In `h3nok/DOT`:
 
-### **International Options**
+1. Open **Settings > Environments > github-pages**.
+2. Under deployment branches, allow `main` or select all branches.
+3. Open **Settings > Pages**.
+4. Keep **GitHub Actions** as the publishing source.
+5. Set the custom domain to `dotheory.org` before changing DNS.
+6. Set the Actions variable `VITE_ORCHESTRATOR_URL` to the deployed Cloud Run
+   service's generated `https://...run.app` URL.
+7. After DNS and certificate provisioning complete, enable **Enforce HTTPS**.
 
-- **DOT.co** - Colombia/global tech
-- **DOT.me** - Montenegro/personal brand
-- **DOT.dev** - Development focus
-- **DOT.app** - Application focus
+The build emits `frontend/public/CNAME`, but account-level Pages configuration
+is still required for an Actions-based deployment.
 
-## 🛡️ **Domain Protection Strategy**
+## 3. Add Squarespace DNS
 
-### **1. Register Multiple Variations**
+Remove only conflicting Squarespace web-hosting records for `@` and `www`.
+Preserve MX, SPF, DKIM, DMARC, verification, and unrelated TXT records.
 
+| Type  | Host | Value                 |
+| ----- | ---- | --------------------- |
+| A     | @    | `185.199.108.153`     |
+| A     | @    | `185.199.109.153`     |
+| A     | @    | `185.199.110.153`     |
+| A     | @    | `185.199.111.153`     |
+| CNAME | www  | `h3nok.github.io`     |
+
+IPv6 is optional. When enabled, add all four records:
+
+| Type | Host | Value                  |
+| ---- | ---- | ---------------------- |
+| AAAA | @    | `2606:50c0:8000::153` |
+| AAAA | @    | `2606:50c0:8001::153` |
+| AAAA | @    | `2606:50c0:8002::153` |
+| AAAA | @    | `2606:50c0:8003::153` |
+
+Use a one-hour TTL during cutover when Squarespace permits it. DNS propagation
+and managed HTTPS certificate issuance can take up to 24 hours.
+
+## 4. Configure Cloud Run
+
+Create these GitHub Actions variables:
+
+```text
+GCP_PROJECT_ID=<project-id>
+GCP_REGION=us-central1
+AR_REPO=dot-orchestrator
+CLOUD_SQL_INSTANCE=dotheory-org:us-central1:dot-postgres
+RUNTIME_SERVICE_ACCOUNT=dot-orchestrator-runtime@dotheory-org.iam.gserviceaccount.com
+VITE_ORCHESTRATOR_URL=https://<cloud-run-service>.run.app
 ```
-Primary: DOT.com (if available)
-Backup: DOT.org, DOT.net, DOT.io
-Brand Protection: DOTTheory.com, DigitalDOT.com
+
+Create the Workload Identity Federation secrets documented in
+`backend/orchestrator/.env.production.example`, then create every Secret Manager
+secret referenced by `.github/workflows/ci.yml`. Important domain values are:
+
+```text
+ORCHESTRATOR_CORS_ORIGINS=["https://dotheory.org","https://www.dotheory.org"]
+ORCHESTRATOR_FRONTEND_URL=https://dotheory.org
 ```
 
-### **2. Set Up Domain Monitoring**
+The first public release uses one scale-to-zero API instance, in-memory rate
+limits, and an ephemeral filesystem for authenticated vault uploads. Book One,
+the agent, and support use Cloud SQL; member uploads do not become durable until
+managed object storage and the worker plane are deployed.
 
-- **Services to Use**:
-  - DomainTools.com
-  - GoDaddy Domain Monitoring
-  - Namecheap Domain Monitoring
-  - Google Alerts for "DOT.com"
+The frontend may safely call the generated Cloud Run URL. Do not create an
+`api` DNS record until the global external Application Load Balancer has
+reserved its IP address and provisioned a Google-managed certificate. Direct
+Cloud Run domain mapping is preview and is not the production path.
 
-### **3. Trademark Protection**
+## 5. Configure Stripe Support
 
-- File trademark for "DOT" in relevant categories
-- Consider international trademark registration
-- Document your use of the DOT brand
+Set the Stripe Checkout return origin to `https://dotheory.org`. Until
+`api.dotheory.org` exists, register the webhook against the generated Cloud Run
+URL:
 
-## 💰 **Budget Considerations**
+```text
+https://<cloud-run-service>.run.app/v1/support/webhook
+```
 
-### **Domain Registration Costs**
+After the load balancer is live, move the webhook to:
 
-- **DOT.com**: $10-15/year (if available)
-- **DOT.org**: $12-18/year
-- **DOT.net**: $10-15/year
-- **DOT.io**: $30-40/year
-- **Premium domains**: $100-500,000+ (if for sale)
+```text
+https://api.dotheory.org/v1/support/webhook
+```
 
-### **Recommended Budget Allocation**
+Store the signing secret as `ORCHESTRATOR_STRIPE_WEBHOOK_SECRET` and run the
+end-to-end checks in `docs/DONATION_SETUP.md` before accepting live support.
 
-1. **Immediate**: $100-200 for multiple domain registrations
-2. **Monitoring**: $50-100/year for domain monitoring services
-3. **Legal**: $500-2000 for trademark filing
-4. **Premium**: $10,000+ if DOT.com is for sale and within budget
+## 6. Verify The Cutover
 
-## 🚀 **Action Plan**
+```bash
+dig +short A dotheory.org
+dig +short CNAME www.dotheory.org
+curl -I https://dotheory.org
+curl -I https://www.dotheory.org
+curl -fsS "$VITE_ORCHESTRATOR_URL/health/ready"
+```
 
-### **Week 1: Immediate Actions**
-
-1. **Check DOT.com availability** on all major registrars
-2. **Register backup domains** (DOT.org, DOT.net, DOT.io)
-3. **Set up domain monitoring** for DOT.com
-4. **Document your brand usage** of DOT
-
-### **Week 2: Legal Protection**
-
-1. **Consult with trademark attorney**
-2. **File trademark application** for DOT
-3. **Research international trademark options**
-4. **Set up Google Alerts** for domain mentions
-
-### **Week 3: Brand Strategy**
-
-1. **Choose primary domain** for your platform
-2. **Set up redirects** from other domains
-3. **Update all branding** to use chosen domain
-4. **Announce domain** to your community
-
-## 🔍 **Domain Research Tools**
-
-### **Availability Checkers**
-
-- [Domainr.com](https://domainr.com)
-- [LeanDomainSearch.com](https://leandomainsearch.com)
-- [NameMesh.com](https://namemesh.com)
-- [BustAName.com](https://bustaname.com)
-
-### **Domain Valuation**
-
-- [Estibot.com](https://estibot.com)
-- [GoDaddy Domain Appraisal](https://www.godaddy.com/domain-value-appraisal)
-- [DomainIndex.com](https://domainindex.com)
-
-### **WHOIS Lookup**
-
-- [Whois.com](https://whois.com)
-- [ICANN WHOIS](https://lookup.icann.org)
-- [DomainTools.com](https://domaintools.com)
-
-## 📋 **Checklist**
-
-### **Immediate (Today)**
-
-- [ ] Check DOT.com availability
-- [ ] Register DOT.org, DOT.net, DOT.io
-- [ ] Set up domain monitoring
-- [ ] Document current brand usage
-
-### **This Week**
-
-- [ ] Research trademark requirements
-- [ ] Set up Google Alerts
-- [ ] Choose primary domain strategy
-- [ ] Budget for domain protection
-
-### **This Month**
-
-- [ ] File trademark application
-- [ ] Set up domain redirects
-- [ ] Update all branding
-- [ ] Announce domain to community
-
-## 🎯 **Priority Recommendations**
-
-### **If DOT.com is Available**
-
-1. **REGISTER IMMEDIATELY** - This is a once-in-a-lifetime opportunity
-2. Register backup domains
-3. File trademark immediately
-4. Set up monitoring for similar domains
-
-### **If DOT.com is Taken**
-
-1. Check if it's for sale
-2. Register DOT.org as primary alternative
-3. Consider DOT.io for tech appeal
-4. Set up monitoring for DOT.com availability
-
-### **If DOT.com is for Sale**
-
-1. Evaluate asking price
-2. Consider negotiation if within budget
-3. Register backup domains regardless
-4. Plan for long-term domain strategy
-
-## 💡 **Pro Tips**
-
-1. **Act Fast**: Premium domains like DOT.com don't stay available long
-2. **Think Long-term**: Choose a domain that will scale with your vision
-3. **Protect Your Brand**: Register variations to prevent confusion
-4. **Monitor Continuously**: Set up alerts for domain changes
-5. **Document Everything**: Keep records of your brand usage and domain strategy
-
-## 🆘 **Emergency Contacts**
-
-### **Domain Registrars**
-
-- GoDaddy: 1-480-505-8877
-- Namecheap: <support@namecheap.com>
-- Google Domains: <domains-support@google.com>
-
-### **Legal Resources**
-
-- USPTO Trademark Office: 1-800-786-9199
-- International Trademark Association: inta.org
-
-### **Domain Brokers** (if DOT.com is for sale)
-
-- Sedo.com
-- Flippa.com
-- DomainAgents.com
-
----
-
-**Remember**: DOT.com is an extremely valuable domain. If it's available, prioritize securing it immediately. If it's taken, develop a comprehensive strategy to either acquire it or establish a strong alternative brand presence.
+Confirm that a deep link such as
+`https://dotheory.org/book/digital-organism-theory/preface` survives a direct
+load and that social previews resolve `https://dotheory.org/og-image.png`.

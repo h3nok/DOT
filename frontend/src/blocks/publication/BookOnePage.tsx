@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -9,6 +10,7 @@ import {
   Compass,
   List,
   Loader2,
+  Sparkles,
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
@@ -29,6 +31,7 @@ import {
 } from "../../content/publications/dotBookOne";
 import BookLanding from "./BookLanding";
 import ExperienceLoop from "./ExperienceLoop";
+import { TwinSurface } from "../../dot/TwinSurface";
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -355,6 +358,9 @@ export default function BookOnePage() {
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contentsOpen, setContentsOpen] = useState(false);
+  // Minty stays one door away while you read — the field-state surface, opened
+  // from the chrome, never a widget floating over the text.
+  const [mintyOpen, setMintyOpen] = useState(false);
   const contentsPanelRef = useRef<HTMLElement | null>(null);
   const contentsReturnFocusRef = useRef<HTMLElement | null>(null);
 
@@ -519,7 +525,7 @@ export default function BookOnePage() {
       >
         Skip to book
       </a>
-      <header className="book-chrome sticky top-0 z-30 border-b backdrop-blur-xl">
+      <header className="book-chrome sticky top-0 z-30">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
@@ -529,30 +535,28 @@ export default function BookOnePage() {
             <span className="book-dot-link-mark" aria-hidden="true" />
             <span>DOT</span>
           </Link>
-          <Link
-            to={DOT_BOOK_ONE_ROUTE}
-            className="min-w-0 text-center"
-            aria-label="Book home"
-          >
-            <span className="block truncate font-serif text-sm font-semibold text-foreground">
-              {manifest.project.title}
-            </span>
-            <span className="block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
-              {manifest.release.label}
-            </span>
-          </Link>
-          {section ? (
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={openContents}
-              className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
+              onClick={() => setMintyOpen(true)}
+              title="Ask Minty about what you're reading"
+              aria-label="Ask Minty about this book"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground/80 transition-colors hover:text-foreground"
             >
-              <List className="h-3.5 w-3.5" />
-              Contents
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Ask Minty
             </button>
-          ) : (
-            <span className="w-14" aria-hidden="true" />
-          )}
+            {section ? (
+              <button
+                type="button"
+                onClick={openContents}
+                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground/80 transition-colors hover:text-foreground lg:invisible"
+              >
+                <List className="h-3.5 w-3.5" />
+                Contents
+              </button>
+            ) : null}
+          </div>
         </div>
       </header>
 
@@ -614,6 +618,18 @@ export default function BookOnePage() {
           </aside>
         </div>
       )}
+
+      {/* Minty, from within the book — a sidecar beside the text, so the passage
+          stays in view while you consult it. */}
+      <AnimatePresence>
+        {mintyOpen && (
+          <TwinSurface
+            variant="sidecar"
+            onClose={() => setMintyOpen(false)}
+            onOpenNode={() => setMintyOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
