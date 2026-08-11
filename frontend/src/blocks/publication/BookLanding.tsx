@@ -1,9 +1,4 @@
-import {
-  ArrowRight,
-  BookOpen,
-  Compass,
-} from "lucide-react";
-import type { CSSProperties } from "react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { READING_PATHS } from "../../attention-os/reader/readingPaths";
 import {
@@ -14,42 +9,16 @@ import {
 } from "../../content/publications/dotBookOne";
 import { NucleusMark } from "../../dot/NucleusMark";
 import BookEditionMap from "./BookEditionMap";
-import ExperienceLoop from "./ExperienceLoop";
-import { EXPERIENCE_LOOP_STEPS } from "./experienceLoopModel";
 
-const FRAMEWORK_VOCABULARY = [
-  {
-    name: "Big C",
-    definition:
-      "DOT's central hypothesis: consciousness as a fundamental, self-preserving informational process — the Digital Organism that persisted.",
-  },
-  {
-    name: "Little c",
-    definition:
-      "The local experiencer: the individuated process that receives experience, forms Intent, participates in action, and changes through consequence.",
-  },
-  {
-    name: "Reality Frame",
-    definition:
-      "A rule-bound environment in which action meets consequence. The physical universe we inhabit is RF₀.",
-  },
-  {
-    name: "Canvas",
-    definition:
-      "The persistent capacity to carry forward the effects of experience — the evolving substrate on which tendencies, associations, and expectations accumulate.",
-  },
-  {
-    name: "Painting",
-    definition:
-      "What has accumulated on the Canvas: the interpretation each new moment is read through. The Canvas carries; the Painting interprets; Character acts.",
-  },
-];
-
-function formatWordCount(words: number): string {
-  return new Intl.NumberFormat(undefined, {
-    maximumFractionDigits: 0,
-  }).format(words);
-}
+/**
+ * BookLanding — the frontispiece.
+ *
+ * Not a landing page about the book: the book's own opening leaf. The seal, the
+ * title, the discipline it holds itself to, and one door in. Below the fold the
+ * seams show before the structure (a framework that marks its own hypotheses is
+ * the reason to trust it), and the argument is a spine — a table of contents,
+ * not a pitch deck.
+ */
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -79,251 +48,128 @@ function sectionSummary(section: BookReleaseSection): string {
   }
 }
 
-function DimensionalBookObject() {
-  return (
-    <div className="book-hero-stage" aria-hidden="true">
-      <div className="book-depth-grid" />
-      <div className="book-hero-ring book-hero-ring-outer" />
-      <div className="book-hero-ring book-hero-ring-inner" />
-
-      <div className="book-manuscript">
-        <div className="book-manuscript-plane">
-          <div className="book-manuscript-face">
-            <NucleusMark size={220} reducedMotion className="book-manuscript-mark" />
-            <span className="book-manuscript-label">Book One</span>
-            <span className="book-manuscript-subline">The Painting and the Painter</span>
-          </div>
-        </div>
-      </div>
-
-      {EXPERIENCE_LOOP_STEPS.map((step, index) => (
-        <span
-          key={step.label}
-          className={`book-loop-node book-loop-node-${index}`}
-          style={{ "--step-color": step.color } as CSSProperties}
-        >
-          <span className="book-loop-node-orb">
-            <step.Icon className="book-loop-node-icon" />
-          </span>
-          <span className="book-loop-node-text">{step.label}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export default function BookLanding({ manifest }: { manifest: DotBookOneManifest }) {
   const firstSection = manifest.sections[0];
+  const claimLevels = manifest.reader_contract.claim_levels;
 
   return (
     <main id="book-main" className="w-full pb-24">
-      <section className="book-frontispiece relative overflow-hidden border-b border-[var(--book-hairline)] px-5 sm:px-8">
-        <div className="book-depth-field" aria-hidden="true" />
+      {/* ── Frontispiece ─────────────────────────────────────────────── */}
+      {/* One quiet opening: the seal, the title, the discipline, one door. */}
+      <section className="relative flex min-h-[100svh] flex-col items-center justify-center border-b border-[var(--book-hairline)] px-6 text-center">
+        <NucleusMark size={132} className="mb-10" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-3 py-8 sm:min-h-[min(40rem,calc(100svh-8rem))] sm:grid-cols-[minmax(0,0.84fr)_minmax(300px,0.95fr)] sm:items-center sm:gap-8 sm:py-10 md:grid-cols-[minmax(0,0.84fr)_minmax(320px,0.95fr)] md:gap-10 md:py-12 xl:grid-cols-[minmax(0,0.82fr)_minmax(360px,0.95fr)] xl:gap-14">
-          <div className="book-hero-copy max-w-xl">
-            <div className="book-hero-masthead">
-              <span className="book-seal">
-                <span className="h-2 w-2 rounded-full bg-[var(--organism-accent-strong)]" />
-                {manifest.project.series_title}
-              </span>
-              <span className="book-label-pill">
-                {manifest.release.label}
-              </span>
-            </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--book-muted)]">
+          {manifest.project.series_title} · Book One
+        </p>
 
-            <p className="book-overline">Book One / The Painting and the Painter</p>
-            <h1 className="book-hero-title" aria-label={manifest.project.title}>
-              <span className="book-hero-title-main" aria-hidden="true">Consciousness</span>
-              <span className="book-hero-wordmark" aria-hidden="true">
-                <span className="book-hero-title-article">A</span>
-                <span className="book-hero-title-digital">Digital</span>
-                <span className="book-hero-title-organism">Organism</span>
-              </span>
-            </h1>
-            <p className="book-hero-thesis">
-              Love is the condition in which Fear no longer governs you.
-            </p>
-            <p className="book-hero-sub">
-              A framework for consciousness, conditioning, and conscious
-              authorship: how a life is painted by experience, and how you move
-              from being painted to becoming the painter.
-            </p>
-            <p className="book-hero-byline">By {manifest.project.author}</p>
+        <h1 className="mt-6 font-serif font-semibold leading-[1.05] tracking-tight text-[var(--book-ink)]">
+          <span className="block text-4xl sm:text-6xl">Consciousness</span>
+          <span className="mt-2 block text-2xl font-medium text-[var(--book-muted)] sm:text-4xl">
+            A Digital Organism
+          </span>
+        </h1>
 
-            <div className="mt-7 flex flex-wrap items-center gap-4">
-              <Link to={bookSectionRoute(firstSection)} className="book-primary-action">
-                Begin reading
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a href="#book-model" className="book-secondary-action">
-                Explore the model
-                <Compass className="h-3.5 w-3.5" />
-              </a>
-            </div>
-          </div>
+        <p className="mt-8 max-w-xl text-balance font-serif text-lg italic leading-relaxed text-[var(--book-muted)]">
+          A construction, not a revelation — a framework whose observations,
+          models, hypotheses, and speculation remain distinguishable.
+        </p>
 
-          <DimensionalBookObject />
-        </div>
+        <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--book-muted)]">
+          {manifest.project.author}
+        </p>
 
-        <div className="book-edition-ribbon relative z-10 mx-auto grid max-w-7xl grid-cols-3 gap-px overflow-hidden border border-[var(--book-hairline)] bg-[var(--book-hairline)]">
-          <div>
-            <span>Extent</span>
-            <strong>{formatWordCount(manifest.extent.words)} words</strong>
-          </div>
-          <div>
-            <span>Structure</span>
-            <strong>{manifest.extent.chapters} chapters</strong>
-          </div>
-          <div>
-            <span>Grounding</span>
-            <strong>{manifest.extent.references} sources</strong>
-          </div>
+        <div className="mt-12 flex flex-col items-center gap-5">
+          <Link
+            to={bookSectionRoute(firstSection)}
+            className="book-primary-action inline-flex min-h-12 items-center gap-2.5 px-7 py-3.5 text-sm font-semibold"
+          >
+            Begin reading
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <Link
+            to="/doctrine"
+            className="text-sm text-[var(--book-muted)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-ink)]"
+          >
+            Trace the concept map instead
+          </Link>
         </div>
       </section>
 
-      <section
-        id="book-model"
-        className="book-model-threshold mx-auto mt-16 max-w-7xl px-5 sm:px-8"
-      >
-        <div className="book-model-intro">
-          <p className="book-overline">The core model</p>
-          <h2 className="book-section-title">
-            The Experience Loop
-          </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--book-muted)]">
-            Experience does not move straight through us. What we carry shapes
-            what we notice; what we do changes what we carry next.
-          </p>
-        </div>
-
-        <div className="mt-8">
-          <ExperienceLoop />
-        </div>
-      </section>
-
-      <section className="book-vocab-section mx-auto mt-20 max-w-7xl px-5 sm:px-8" aria-labelledby="book-vocab-title">
-        <div className="book-section-heading">
-          <div>
-            <p className="book-overline">01 / Define the terms</p>
-            <h2 id="book-vocab-title" className="book-section-title">
-              Five words carry the whole framework
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-[var(--book-muted)]">
-            DOT names its parts exactly, so its claims can be examined rather
-            than absorbed. These are the handles the book will use.
-          </p>
-        </div>
-
-        <dl className="book-vocab-grid">
-          {FRAMEWORK_VOCABULARY.map((term, index) => (
-            <div key={term.name} className="book-vocab-term">
-              <dt>
-                <span className="book-vocab-index" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="book-vocab-name">{term.name}</span>
-              </dt>
-              <dd>{term.definition}</dd>
-            </div>
+      {/* ── The seams, first ─────────────────────────────────────────── */}
+      {/* The differentiator moves up: this book labels what it knows. */}
+      <section className="mx-auto max-w-3xl px-6 pt-24 text-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--book-cinnabar)]">
+          An argument with its seams showing
+        </p>
+        <p className="mt-6 text-balance font-serif text-xl leading-relaxed text-[var(--book-ink)] sm:text-2xl">
+          Every claim in this book is marked as what it is —{" "}
+          {claimLevels.map((level, i) => (
+            <span key={level}>
+              <span className="italic">{level.toLowerCase()}</span>
+              {i < claimLevels.length - 2 ? ", " : i === claimLevels.length - 2 ? ", or " : ""}
+            </span>
           ))}
-        </dl>
+          — and where it still owes a debt, the debt is named.
+        </p>
+        <Link
+          to="/doctrine/limits-and-debts"
+          className="mt-6 inline-block text-sm text-[var(--book-muted)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-ink)]"
+        >
+          Read the open questions
+        </Link>
       </section>
 
-      <section className="book-entry-section mx-auto mt-20 max-w-7xl px-5 sm:px-8">
-        <div className="book-section-heading">
-          <div>
-            <p className="book-overline">02 / Choose an entry</p>
-            <h2 className="book-section-title">
-              Where do you want to enter?
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-[var(--book-muted)]">
-            The text is fixed; the door is yours. Start from your own
-            conditioning, or from the architecture that explains it.
-          </p>
-        </div>
-
-        <div className="book-reading-paths grid gap-5 md:grid-cols-2">
-          {READING_PATHS.map((path) => (
-            <Link
-              key={path.id}
-              to={`${DOT_BOOK_ONE_ROUTE}/${path.steps[0].slug}?path=${path.id}`}
-              className="book-path-card group"
-            >
-              <header className="book-path-card-head">
-                <span className="book-path-card-icon">
-                  <BookOpen className="h-4 w-4" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3>{path.label}</h3>
-                  <p>{path.purpose}</p>
-                </div>
-                <span className="book-path-card-meta">
-                  <strong>{path.minutes}</strong>
-                  min
-                </span>
-              </header>
-
-              <ol className="book-path-card-steps">
-                {path.steps.slice(0, 3).map((step, index) => (
-                  <li key={step.slug}>
-                    <span className="book-path-step-dot">{index + 1}</span>
-                    <span className="book-path-step-text">{step.why}</span>
-                  </li>
-                ))}
-                {path.steps.length > 3 && (
-                  <li className="book-path-step-more">
-                    <span className="book-path-step-dot" aria-hidden="true">
-                      ⋮
-                    </span>
-                    <span className="book-path-step-text">
-                      {path.steps.length - 3} more steps to the end
-                    </span>
-                  </li>
-                )}
-              </ol>
-
-              <footer className="book-path-card-foot">
-                <span>Enter this path</span>
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </footer>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="book-chapter-depth mx-auto mt-20 max-w-7xl px-5 sm:px-8" aria-labelledby="book-argument-title">
-        <div className="book-section-heading mb-7 flex flex-wrap items-end justify-between gap-5 border-b border-[var(--book-hairline)] pb-6">
-          <div>
-            <p className="book-overline">03 / Follow the argument</p>
-            <h2 id="book-argument-title" className="book-section-title">
-              Six chapters, one descent into authorship
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-[var(--book-muted)]">
-            The structure reads like depth: from method, to architecture, to the
-            human capacity to revise the interpreter.
-          </p>
-        </div>
-
-        <ol className="book-chapter-stack">
-          {manifest.sections.map((section, index) => (
+      {/* ── The spine ────────────────────────────────────────────────── */}
+      {/* The argument as a table of contents: lines, not cards. */}
+      <section className="mx-auto mt-24 max-w-3xl px-6" aria-label="Contents">
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--book-muted)]">
+          Contents
+        </p>
+        <ol className="mt-8 border-t border-[var(--book-hairline)]">
+          {manifest.sections.map((section) => (
             <li key={section.id}>
-              <Link to={bookSectionRoute(section)} className="book-chapter-plane">
-                <span className="book-chapter-sequence">{String(index + 1).padStart(2, "0")}</span>
-                <span className="book-chapter-label">{sectionLabel(section)}</span>
-                <strong>{section.title}</strong>
-                <p>{sectionSummary(section)}</p>
-                <ArrowRight className="book-chapter-arrow" aria-hidden="true" />
+              <Link
+                to={bookSectionRoute(section)}
+                className="group flex items-baseline gap-5 border-b border-[var(--book-hairline)] py-5 transition-colors hover:bg-[var(--book-vellum)]"
+              >
+                <span className="w-20 shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--book-muted)]">
+                  {sectionLabel(section)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-serif text-lg font-medium text-[var(--book-ink)] transition-colors group-hover:text-[var(--book-cinnabar)]">
+                    {section.title}
+                  </span>
+                  <span className="mt-1 block text-sm leading-relaxed text-[var(--book-muted)]">
+                    {sectionSummary(section)}
+                  </span>
+                </span>
+                <span className="shrink-0 font-mono text-[10px] tabular-nums text-[var(--book-muted)]">
+                  {section.reading_time_minutes} min
+                </span>
               </Link>
             </li>
           ))}
         </ol>
       </section>
 
-      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      {/* ── Other doors, one quiet line ──────────────────────────────── */}
+      <p className="mx-auto mt-24 max-w-3xl px-6 text-center text-sm leading-relaxed text-[var(--book-muted)]">
+        The text is fixed; the door is yours.{" "}
+        {READING_PATHS.map((path, i) => (
+          <span key={path.id}>
+            <Link
+              to={`${DOT_BOOK_ONE_ROUTE}/${path.steps[0].slug}?path=${path.id}`}
+              className="text-[var(--book-ink)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
+            >
+              {path.label.toLowerCase()}
+            </Link>
+            {i < READING_PATHS.length - 1 ? ", or " : "."}
+          </span>
+        ))}
+      </p>
+
+      <div className="mx-auto mt-24 max-w-7xl px-5 sm:px-8">
         <BookEditionMap manifest={manifest} />
       </div>
     </main>

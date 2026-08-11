@@ -163,20 +163,23 @@ export default function BookEditionMap({
       className="book-map mt-24 scroll-mt-24"
       aria-labelledby="edition-map-title"
     >
-      <div className="book-section-heading">
-        <div>
-          <p className="book-overline">04 / See the whole</p>
-          <h2 id="edition-map-title" className="book-section-title">
-            An atlas of the argument
-          </h2>
-        </div>
-        <p className="max-w-sm text-sm leading-relaxed text-[var(--book-muted)]">
-          Follow the written order, or select a chapter to see the concepts it
-          carries across the whole work.
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--book-muted)]">
+          See the whole
+        </p>
+        <h2
+          id="edition-map-title"
+          className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-[-0.015em] text-[var(--book-ink)] sm:text-4xl"
+        >
+          An atlas of the argument
+        </h2>
+        <p className="mt-4 text-balance text-sm leading-relaxed text-[var(--book-muted)]">
+          Select a chapter to see the concepts it shares with the rest of the
+          work.
         </p>
       </div>
 
-      <div className="book-map-instrument relative hidden aspect-[16/10] min-h-[640px] w-full overflow-hidden border border-[var(--book-hairline)] md:block">
+      <div className="book-map-instrument relative mt-12 hidden aspect-[16/10] min-h-[640px] w-full overflow-hidden border border-[var(--book-hairline)] md:block">
         <div className="book-map-engraving" aria-hidden="true" />
         <svg
           viewBox="0 0 100 100"

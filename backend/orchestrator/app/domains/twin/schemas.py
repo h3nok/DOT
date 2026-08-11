@@ -97,3 +97,22 @@ class TwinMessageList(pydantic.BaseModel):
 class TwinMessageResponse(pydantic.BaseModel):
     conversation: TwinConversation
     answer: TwinAskResponse
+
+
+TwinFeedbackRating = typing.Literal["helpful", "not_helpful"]
+
+
+class TwinFeedbackRequest(pydantic.BaseModel):
+    """A member's verdict on one answer. Carries no prompt or answer text (HKI-6)."""
+
+    model_config = pydantic.ConfigDict(extra="forbid")
+
+    rating: TwinFeedbackRating
+    lens: TwinLens = "ground"
+    #: Whose twin produced the answer being judged.
+    subject_owner_id: str = pydantic.Field(min_length=1, max_length=128)
+
+
+class TwinFeedbackResponse(pydantic.BaseModel):
+    id: str
+    rating: TwinFeedbackRating

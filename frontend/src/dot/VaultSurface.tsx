@@ -185,7 +185,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
     <BloomSurface
       kicker="knowledge vault"
       title="The Vault"
-      description="Upload what you know. Whatever Lumen can read becomes something it can cite."
+      description="Upload what you know. Whatever Minty can read becomes something it can cite."
       origin={origin}
       reducedMotion={reducedMotion}
       zIndex={55}

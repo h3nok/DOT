@@ -9,7 +9,8 @@ interface ImportMetaEnv {
   readonly VITE_ORCHESTRATOR_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_SLUG?: string;
-  // Add more environment variables as needed
+  readonly VITE_SITE_URL?: string;
+  readonly VITE_SUPPORT_PAYMENT_LINK?: string;
 }
 
 interface ImportMeta {

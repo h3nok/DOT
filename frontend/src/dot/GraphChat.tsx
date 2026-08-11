@@ -23,7 +23,7 @@ interface GraphChatProps {
 export const GraphChat: React.FC<GraphChatProps> = ({
   onSubmit,
   busy = false,
-  placeholder = "Find an idea, or ask Lumen about Book One…",
+  placeholder = "Find an idea, or ask Minty about Book One…",
   suggestions = [],
 }) => {
   const [value, setValue] = useState("");

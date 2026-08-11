@@ -45,18 +45,34 @@ jobs:
     - name: Build
       env:
         VITE_ORCHESTRATOR_URL: ${{ vars.VITE_ORCHESTRATOR_URL }}
+        VITE_SUPPORT_PAYMENT_LINK: ${{ vars.VITE_SUPPORT_PAYMENT_LINK }}
         VITE_ORCHESTRATOR_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_SLUG: henok-profile
-        VITE_SITE_URL: https://dot.org
+        VITE_SITE_URL: https://dotheory.org
       run: |
-        if [[ ! "$VITE_ORCHESTRATOR_URL" =~ ^https:// ]]; then
-          echo "VITE_ORCHESTRATOR_URL must be configured as an HTTPS repository variable."
+        # An orchestrator is optional: the canon, the concept map and the seams
+        # register are static, so the reading surfaces ship without a backend.
+        # What is not optional is that any backend we do name is HTTPS — the
+        # session cookie and the support plane both ride on it.
+        if [[ -z "$VITE_ORCHESTRATOR_URL" ]]; then
+          echo "::notice::No VITE_ORCHESTRATOR_URL set — building a static release. Minty, invites and the circle will be unavailable."
+        elif [[ ! "$VITE_ORCHESTRATOR_URL" =~ ^https:// ]]; then
+          echo "::error::VITE_ORCHESTRATOR_URL is set but is not HTTPS. Fix the repository variable or unset it for a static release."
           exit 1
+        fi
+        # The payment link sends a visitor to a page that asks for card details,
+        # so a misconfigured one must fail the build rather than downgrade it.
+        if [[ -n "$VITE_SUPPORT_PAYMENT_LINK" && ! "$VITE_SUPPORT_PAYMENT_LINK" =~ ^https:// ]]; then
+          echo "::error::VITE_SUPPORT_PAYMENT_LINK must be an HTTPS URL."
+          exit 1
+        fi
+        if [[ -z "$VITE_SUPPORT_PAYMENT_LINK" && -z "$VITE_ORCHESTRATOR_URL" ]]; then
+          echo "::warning::Neither a payment link nor an orchestrator is configured — this release has no way to accept support."
         fi
         cd frontend
         pnpm build
-        
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
       

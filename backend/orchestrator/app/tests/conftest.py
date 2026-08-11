@@ -56,6 +56,10 @@ def client(
     monkeypatch.setenv(
         "ORCHESTRATOR_SERVICE_AUTH_SECRET", "test-session-signing-secret-at-least-32-bytes"
     )
+    # The twin model must be opt-in per test, not inherited from a developer's
+    # .env. pydantic-settings reads .env directly, so an explicit empty value
+    # (not delenv) is what keeps "model unconfigured" tests deterministic.
+    monkeypatch.setenv("ORCHESTRATOR_TWIN_API_KEY", "")
     app.settings.get_settings.cache_clear()
     fastapi_app: FastAPI = app.main.create_app()
 

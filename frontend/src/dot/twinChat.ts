@@ -1,4 +1,4 @@
-import { api, PROFILE_OWNER_ID } from "./orchestrator";
+import { api, ORCHESTRATOR_BASE, PROFILE_OWNER_ID } from "./orchestrator";
 import type { AgentCitation, AgentLens } from "./agent";
 import {
   answerFromBook,
@@ -152,6 +152,91 @@ function turnFrom(id: string, answer: AskAnswer): TwinTurn {
     citations: answer.citations ?? [],
     refusal_code: answer.refusal_code,
   };
+}
+
+/** Server-sent events the public streaming endpoint emits. */
+interface TwinStreamEvent {
+  event: "delta" | "done" | "refused";
+  text?: string;
+  answer?: string;
+  citations?: TwinCitation[];
+  grounded?: boolean;
+  refusal_code?: string | null;
+}
+
+/**
+ * Ask the public companion with live streaming. `onDelta` fires as prose
+ * arrives so the answer appears as it is written; the returned turn is the
+ * final, boundary-validated answer with citations attached only after the model
+ * output has been checked (ADR-0010). Falls back to null when streaming is
+ * unavailable so the caller can use the non-streaming path.
+ */
+export async function sendMessageStream(
+  question: string,
+  history: readonly CompanionHistoryTurn[] = [],
+  lens: AgentLens = "ground",
+  onDelta: (accumulated: string) => void,
+): Promise<SendOutcome | null> {
+  let response: Response;
+  try {
+    response = await fetch(`${ORCHESTRATOR_BASE}/v1/twin/public/ask/stream`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        owner_id: PROFILE_OWNER_ID,
+        lens,
+        history: history.slice(-6),
+      }),
+    });
+  } catch {
+    return null; // Unreachable service — the caller falls back.
+  }
+  if (!response.ok || !response.body) return null;
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let accumulated = "";
+  let final: TwinStreamEvent | null = null;
+
+  const handle = (event: TwinStreamEvent) => {
+    if (event.event === "delta" && typeof event.text === "string") {
+      accumulated += event.text;
+      onDelta(accumulated);
+    } else if (event.event === "done" || event.event === "refused") {
+      final = event;
+    }
+  };
+
+  // Parse SSE frames; a frame may be split across reads, so buffer by line.
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const frames = buffer.split("\n\n");
+    buffer = frames.pop() ?? "";
+    for (const frame of frames) {
+      const line = frame.trim();
+      if (!line.startsWith("data:")) continue;
+      try {
+        handle(JSON.parse(line.slice(5).trim()) as TwinStreamEvent);
+      } catch {
+        // A malformed frame is skipped; the terminal event decides the outcome.
+      }
+    }
+  }
+
+  if (!final) return null;
+  const outcome: TwinStreamEvent = final;
+  const answer: AskAnswer = {
+    answer: outcome.answer ?? accumulated,
+    citations: outcome.citations ?? [],
+    grounded: outcome.grounded ?? false,
+    refusal_code: outcome.refusal_code ?? null,
+  };
+  return { turn: turnFrom(`turn-${Date.now()}`, answer), ephemeral: true };
 }
 
 /**

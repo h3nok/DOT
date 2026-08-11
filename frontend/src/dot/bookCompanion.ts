@@ -382,7 +382,7 @@ export async function answerFromBook(
   if (SOCIAL_GREETING.test(question.trim())) {
     return {
       answer:
-        "Hello. I am Lumen, the DOT Companion. We can locate an idea, ground a question in Book One, or test where the argument is weakest.",
+        "Hello. I am Minty, the DOT Companion. We can locate an idea, ground a question in Book One, or test where the argument is weakest.",
       citations: [],
       grounded: true,
       refusal_code: null,

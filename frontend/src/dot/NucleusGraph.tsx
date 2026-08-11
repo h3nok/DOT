@@ -29,13 +29,16 @@ import { Invite } from "./Invite";
 import { InviteWelcome } from "./InviteWelcome";
 import { NodeEditor } from "./NodeEditor";
 import { NodeStage } from "./NodeStage";
+import { PresenceSurface } from "./PresenceSurface";
 import { SignIn } from "./SignIn";
 import { SupportSurface } from "./SupportSurface";
 import { SynapticEdge } from "./SynapticEdge";
 import { TwinSurface } from "./TwinSurface";
 import { VaultSurface } from "./VaultSurface";
 import { resolveNode } from "./agent";
+import { DOT_STEWARD_NAME } from "./dotGraph";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
+import { SUPPORT_PAYMENT_LINK } from "./supportLink";
 import { hasChildren, type DotNode } from "./types";
 import { useAuth } from "./useAuth";
 import { acceptInvite } from "./useCircle";
@@ -79,13 +82,14 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion() ?? false;
   const devOwner = useOwnerMode();
-  const { isOwner, logout, refresh: refreshAuth } = useAuth();
+  const { user, isOwner, logout, refresh: refreshAuth } = useAuth();
   const pulse = useOrganismPulse();
   // Authoring unlocks for an authenticated owner; `?owner=1` stays a local dev
   // escape hatch (it cannot publish to the server without a real session).
   const owner = isOwner || devOwner;
   const [signInOpen, setSignInOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [presenceOpen, setPresenceOpen] = useState(false);
   const [platformSurface, setPlatformSurface] =
     useState<PlatformSurface>(initialPlatformSurface);
   const invited = useInviteArrival();
@@ -194,8 +198,19 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const usableH = Math.max(0, size.h - topReserve - chatReserve);
   const cy = topReserve + usableH / 2;
   const compact = size.w < 640;
-  const labelGutter = compact ? 116 : 180;
-  const horizontalLimit = Math.max(72, (size.w - labelGutter) / 2);
+  // A destination card is `w-[min(42vw,13rem)]`, so it reaches half its own
+  // width either side of the slot it sits on, and a crown slot only travels
+  // `|ux|` of the radius sideways. Sizing the field by a fixed gutter ignored
+  // both, which pushed the outermost cards past the viewport edge on phones —
+  // where the stage clips them with no scroll to recover them. Derive the limit
+  // from the card and from how far the widest slot actually reaches.
+  const cardHalfWidth = Math.min(size.w * 0.21, 104);
+  const edgeMargin = compact ? 8 : 16;
+  const widestSlotReach = Math.max(...slots.map((s) => Math.abs(s.ux)), 0.001);
+  const horizontalLimit = Math.max(
+    72,
+    (size.w / 2 - cardHalfWidth - edgeMargin) / widestSlotReach,
+  );
   const proportionalRadius = Math.min(size.w, usableH) * 0.4;
   const horizontalRadius = Math.min(330, horizontalLimit, proportionalRadius);
   const verticalRadius = compact
@@ -240,7 +255,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         appendStep(current, { id: node.id, label: node.label }),
       );
     }
-    // The centre opens Lumen, the shared conversational surface. Editing still
+    // The centre opens Minty, the shared conversational surface. Editing still
     // opens the graph node itself.
     if (node.kind === "self" && node.id === root.id && !editing) {
       setCompanionRequest(null);
@@ -310,7 +325,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   };
 
   const ask = ({ query, lens }: AgentWorkspaceRequest) => {
-    if (/\b(consult|lumen|companion)\b/i.test(query) && query.split(/\s+/).length < 5) {
+    if (/\b(consult|minty|companion)\b/i.test(query) && query.split(/\s+/).length < 5) {
       setCompanionRequest(null);
       setPlatformSurface("twin");
       return;
@@ -538,6 +553,31 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
                   aria-hidden="true"
                 />
               </button>
+              {/* Who made this, and the single quiet ask. ADR-0017 keeps DOT at
+                  the centre and the author a steward, but it also names the cost
+                  — "anyone looking for the person has further to travel" — and
+                  promises a byline as the remedy. ADR-0016 says that remedy is a
+                  quiet text line, never another ring node, and ADR-0017 says
+                  support is "stated plainly and asked once". This is that once. */}
+              <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground">
+                <span>by {DOT_STEWARD_NAME}</span>
+                {SUPPORT_PAYMENT_LINK && (
+                  <>
+                    {/* The separator only earns its place while both halves
+                        share a line; on a phone they stack and it would dangle. */}
+                    <span aria-hidden="true" className="hidden sm:inline">
+                      ·
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPlatformSurface("support")}
+                      className="rounded-sm underline decoration-border underline-offset-4 outline-none transition-colors hover:text-foreground focus-visible:text-foreground"
+                    >
+                      Support this work
+                    </button>
+                  </>
+                )}
+              </p>
             </motion.div>
           )}
           {editing && (
@@ -554,6 +594,39 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
           )}
         </div>
       </motion.div>
+
+      {/* Presence — a signed-in member is a node on the field, not a corner
+          avatar. It sits just off the nucleus, distinct from the content ring,
+          and opens the member's own surface. Absent when the field is anonymous. */}
+      {user && !editing && (
+        <motion.button
+          type="button"
+          onClick={() => setPresenceOpen(true)}
+          className="group absolute z-10 flex flex-col items-center gap-1.5 outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--organism-accent-strong)]"
+          style={{ left: cx, top: cy }}
+          initial={motionSafe ? { opacity: 0, scale: 0.8 } : false}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.4, ease: "easeOut" }}
+          aria-label={`You are present as ${user.display_name?.trim() || "a member"}. Open your presence.`}
+        >
+          <span className="flex translate-x-[92px] translate-y-[84px] flex-col items-center gap-1.5">
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-full border font-serif text-sm text-foreground transition-transform duration-300 group-hover:scale-105"
+              style={{
+                borderColor: "var(--organism-accent-soft)",
+                background:
+                  "color-mix(in oklch, var(--organism-accent) 10%, transparent)",
+              }}
+              aria-hidden="true"
+            >
+              {(user.display_name?.trim()[0] ?? "Y").toUpperCase()}
+            </span>
+            <span className="whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              {user.display_name?.trim() || "You"}
+            </span>
+          </span>
+        </motion.button>
+      )}
 
       {/* Attribute nodes — staggered entrance, orbital breathing, depth-aware exit. */}
       <AnimatePresence mode="popLayout">
@@ -775,6 +848,30 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
+      {/* The member's own node, opened. */}
+      <AnimatePresence>
+        {presenceOpen && user && (
+          <PresenceSurface
+            user={user}
+            reducedMotion={reducedMotion}
+            onClose={() => setPresenceOpen(false)}
+            onOpenConversations={() => {
+              setPresenceOpen(false);
+              setCompanionRequest(null);
+              setPlatformSurface("twin");
+            }}
+            onInvite={() => {
+              setPresenceOpen(false);
+              setInviteOpen(true);
+            }}
+            onSignOut={() => {
+              setPresenceOpen(false);
+              void logout();
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Guest arrival — someone opened a door for them. */}
       <AnimatePresence>
         {invited.open && (
@@ -836,7 +933,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
-      {/* Lumen is the conversational centre of DOT. */}
+      {/* Minty is the conversational centre of DOT. */}
       <AnimatePresence>
         {platformSurface === "twin" && (
           <TwinSurface

@@ -104,6 +104,36 @@ require_file "$VITE_BIN" "missing frontend Vite binary; run make install-fronten
 require_file "$COMPOSE_FILE" "missing docker-compose.orchestrator.yml"
 require_file "$ROOT_DIR/frontend/node_modules" "missing frontend dependencies; run make install-frontend first"
 
+# Reaping this project's own stale dev processes. A previous `make dev` that was
+# interrupted (or a stray `make start-*`) leaves uvicorn on :8000 and vite on
+# :5173 behind; the new stack then dies on "address already in use" and the whole
+# script exits 2. Kill only what is unmistakably ours — this repo's uvicorn,
+# dramatiq worker, and vite dev — and leave Docker services and anything else
+# (e.g. another tool's sandbox on :8001) alone.
+reap_stale() {
+  local pattern pids
+  for pattern in \
+    "uvicorn app.main:app" \
+    "dramatiq app.workers.tasks" \
+    "frontend/node_modules/.bin.*vite.* dev"; do
+    pids="$(pgrep -f "$pattern" 2>/dev/null || true)"
+    if [ -n "$pids" ]; then
+      # Only kill processes whose command line references this repo, so we never
+      # touch an unrelated service that happens to share a binary name.
+      for pid in $pids; do
+        if tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null | grep -q "$ROOT_DIR"; then
+          kill "$pid" 2>/dev/null || true
+        fi
+      done
+    fi
+  done
+  # Give the OS a moment to release the sockets before we bind them again.
+  sleep 1
+}
+
+echo "Clearing any stale DOT dev processes..."
+reap_stale
+
 echo "Starting local infrastructure..."
 docker compose -f "$COMPOSE_FILE" up -d
 

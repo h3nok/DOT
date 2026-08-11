@@ -21,7 +21,7 @@ import {
 } from "../../services/OrchestratorPublicationService";
 
 const SITE_URL =
-  import.meta.env.VITE_SITE_URL ?? "https://dot.org";
+  import.meta.env.VITE_SITE_URL ?? "https://dotheory.org";
 
 type Manifest = PublicationReleaseManifest;
 type Section = PublicationReleaseManifestSection;

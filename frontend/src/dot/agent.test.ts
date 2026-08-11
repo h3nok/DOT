@@ -25,7 +25,7 @@ describe("asksWhoIsSpeaking", () => {
 
   it("leaves questions about the book to the book", () => {
     for (const question of [
-      // Lumen's own suggested prompt. Used to return an uncited paragraph.
+      // Minty's own suggested prompt. Used to return an uncited paragraph.
       "What does DOT claim about Fear and Love?",
       "Tell me about the Canvas",
       "What is this book about?",

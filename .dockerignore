@@ -1,0 +1,16 @@
+.git/
+.github/
+.venv/
+.data/
+artifacts/
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+backend/orchestrator/.env
+backend/orchestrator/.env.*
+!backend/orchestrator/.env.example
+!backend/orchestrator/.env.production.example
+backend/orchestrator/.pytest_cache/
+backend/orchestrator/.ruff_cache/
+**/__pycache__/
+**/*.pyc

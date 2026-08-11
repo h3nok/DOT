@@ -33,7 +33,7 @@ const LENSES = [
     id: "orient",
     label: "Orient",
     icon: Compass,
-    placeholder: "Ask Lumen to locate an idea or chapter...",
+    placeholder: "Ask Minty to locate an idea or chapter...",
     prompts: [
       "Open the canon",
       "Open the Book One concept map",
@@ -44,7 +44,7 @@ const LENSES = [
     id: "ground",
     label: "Ground",
     icon: FileCheck2,
-    placeholder: "Ask Lumen for a grounded answer...",
+    placeholder: "Ask Minty for a grounded answer...",
     prompts: [
       "What does DOT actually claim?",
       "Which source explains attention?",
@@ -55,7 +55,7 @@ const LENSES = [
     id: "test",
     label: "Test",
     icon: Scale,
-    placeholder: "Ask Lumen to test the argument...",
+    placeholder: "Ask Minty to test the argument...",
     prompts: [
       "Where is the evidence weakest?",
       "What would falsify this?",
@@ -107,20 +107,20 @@ export const AgentWorkspace: React.FC<AgentWorkspaceProps> = ({
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
             className="agent-workspace-panel pointer-events-auto w-full"
-            aria-label="Lumen, the DOT Companion"
+            aria-label="Minty, the DOT Companion"
           >
             <div className="agent-workspace-header">
               <div className="min-w-0">
                 <p className="agent-workspace-kicker">The DOT Companion</p>
-                <h2>Lumen</h2>
+                <h2>Minty</h2>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onOpenCompanion}
                   className="agent-icon-button"
-                  title="Open Lumen"
-                  aria-label="Open Lumen"
+                  title="Open Minty"
+                  aria-label="Open Minty"
                 >
                   <MessageSquareText className="h-4 w-4" aria-hidden="true" />
                 </button>
@@ -222,15 +222,15 @@ export const AgentWorkspace: React.FC<AgentWorkspaceProps> = ({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={lens.placeholder}
-            aria-label="Navigate or ask Lumen about Book One"
+            aria-label="Navigate or ask Minty about Book One"
             className="agent-command-input"
           />
           <button
             type="button"
             onClick={onOpenCompanion}
             className="agent-command-tool hidden sm:inline-flex"
-            title="Open Lumen"
-            aria-label="Open Lumen"
+            title="Open Minty"
+            aria-label="Open Minty"
           >
             <MessageSquareText className="h-4 w-4" aria-hidden="true" />
           </button>

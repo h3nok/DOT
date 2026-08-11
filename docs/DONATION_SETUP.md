@@ -23,7 +23,7 @@ Set these values in the orchestrator environment:
 ```env
 ORCHESTRATOR_STRIPE_SECRET_KEY=sk_live_...
 ORCHESTRATOR_STRIPE_WEBHOOK_SECRET=whsec_...
-ORCHESTRATOR_FRONTEND_URL=https://your-public-dot-domain.example
+ORCHESTRATOR_FRONTEND_URL=https://dotheory.org
 ```
 
 Both Stripe secrets are required. When either is missing,
@@ -41,8 +41,13 @@ make migrate-orchestrator
 Create a Stripe webhook endpoint for:
 
 ```text
-https://your-api-domain.example/v1/support/webhook
+https://api.dotheory.org/v1/support/webhook
 ```
+
+Before the production load balancer for `api.dotheory.org` exists, use the
+deployed Cloud Run service's generated `https://...run.app/v1/support/webhook`
+URL. Move the endpoint after the custom API hostname is live, then replace the
+webhook signing secret in Secret Manager.
 
 The current ledger understands these event types:
 

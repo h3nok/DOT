@@ -3,12 +3,22 @@ import type { DotNode } from "./types";
 export const DOT_DEVELOPMENT_STATEMENT =
   "The Development and Application of a Big Theory of Everything (TOE)";
 
+/**
+ * The steward this deployment publishes for (ADR-0017).
+ *
+ * DOT is the centre of the field and the author is a steward within it, but a
+ * stranger still has to be able to find the person: the ADR names that cost and
+ * promises a byline and a dedicated route as the remedy. Must match the
+ * `author` recorded in the released Book One manifest.
+ */
+export const DOT_STEWARD_NAME = "Henok Ghebrechristos";
+
 export const dotGraph: DotNode = {
   id: "dot",
   label: "Digital Organism Theory",
   kind: "self",
   introduction: DOT_DEVELOPMENT_STATEMENT,
-  description: "See how Fear governs your choices, and how Love helps you choose consciously.",
+  description: "A construction of consciousness, held to its own evidence.",
   body: "Book One presents DOT as a construction, not a revelation: a framework for consciousness, conditioning, and conscious authorship whose observations, models, hypotheses, and speculation must remain distinguishable.",
   children: [
     {
