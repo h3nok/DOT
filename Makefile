@@ -6,7 +6,7 @@ OWNER ?= henok
 
 help:
 	@echo "Available targets:"
-	@echo "  make setup             Bootstrap local dev tools, deps, env files, and infra"
+	@echo "  make setup             Bootstrap local dev tools, deps, env files, and infra (incl. Google Cloud SDK for Cloud Run deploys)"
 	@echo "  make install           Install frontend and orchestrator dependencies"
 	@echo "  make install-orchestrator Install FastAPI orchestrator dependencies"
 	@echo "  make dev               Start the full local stack (infra + APIs + worker + frontend)"
