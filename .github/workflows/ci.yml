@@ -196,7 +196,7 @@ jobs:
             --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
             --set-secrets ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
             --command python3 \
-            --args "-m,alembic,upgrade,head" \
+            --args=-m,alembic,upgrade,head \
             --max-retries 1 \
             --task-timeout 120s \
             --quiet \
@@ -217,7 +217,7 @@ jobs:
               ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,\
               ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest \
             --command python3 \
-            --args "scripts/ingest_canon.py,--owner,henok" \
+            --args=scripts/ingest_canon.py,--owner,henok \
             --max-retries 1 \
             --task-timeout 600s \
             --quiet \
