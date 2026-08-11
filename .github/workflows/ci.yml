@@ -282,7 +282,7 @@ jobs:
 
       - name: Cache-Control header check
         run: |
-          HEADERS=$(curl -sI "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
+          HEADERS=$(curl -sfS -D - -o /dev/null "${{ steps.api_url.outputs.url }}/v1/publications/sitemap.xml")
           echo "$HEADERS" | grep -i "cache-control" || (echo "Missing Cache-Control header" && exit 1)
 
       - name: Grounded companion check
