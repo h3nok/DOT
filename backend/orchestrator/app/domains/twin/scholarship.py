@@ -41,7 +41,7 @@ _QUERY_EXPANSIONS: tuple[tuple[re.Pattern[str], str], ...] = (
     ),
     (
         re.compile(r"\b(?:canvas|painting)\b", re.IGNORECASE),
-        "predictive processing cognitive schemas conditioning embodied cognition",
+        "predictive processing cognitive schemas conditioning prior expectations perception",
     ),
     (
         re.compile(r"\b(?:little c|intent)\b", re.IGNORECASE),
@@ -67,10 +67,23 @@ def wants_scholarship(question: str) -> bool:
 def research_query(question: str) -> str:
     """Translate DOT-specific vocabulary into neutral research vocabulary."""
 
-    expansions = [expansion for pattern, expansion in _QUERY_EXPANSIONS if pattern.search(question)]
+    reader_question, _, supporting_passage = question.partition("\n")
+    expansions = [
+        expansion for pattern, expansion in _QUERY_EXPANSIONS if pattern.search(reader_question)
+    ]
+    # When the reader says only "test this", the released passage supplies the
+    # vocabulary. When they name Painting, Fear, Intent, etc., that explicit
+    # subject wins and incidental terms in the passage cannot redirect search.
+    if not expansions:
+        expansions = [
+            expansion
+            for pattern, expansion in _QUERY_EXPANSIONS
+            if pattern.search(supporting_passage)
+        ]
     # Put neutral expansions first so a long Book One excerpt cannot truncate
     # the terms that make its local vocabulary legible to a research index.
-    return " ".join([*expansions, question])[:300]
+    context = question if not reader_question or not expansions else reader_question
+    return " ".join([*expansions, context])[:300]
 
 
 def _authors(record: dict[str, typing.Any]) -> str:
@@ -279,7 +292,10 @@ async def search(question: str) -> list[retriever.Passage]:
             try:
                 params: dict[str, str | int] = {
                     "query.bibliographic": query,
-                    "filter": "has-abstract:true",
+                    # Crossref type describes publication format, not review
+                    # status. Restrict to journal articles but never represent
+                    # the provider metadata itself as proof of peer review.
+                    "filter": "has-abstract:true,type:journal-article",
                     "rows": 6,
                     "select": "DOI,title,abstract,author,published,container-title,URL",
                 }

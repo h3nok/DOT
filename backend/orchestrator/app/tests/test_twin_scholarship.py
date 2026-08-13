@@ -40,6 +40,17 @@ def test_research_intent_and_dot_query_expansion() -> None:
     assert "predictive processing" in query
 
 
+def test_explicit_concept_is_not_redirected_by_incidental_passage_terms() -> None:
+    query = scholarship.research_query(
+        "What research bears on the Painting model?\n"
+        "The passage also discusses Little c, Intent, action, and consequence."
+    )
+
+    assert "prior expectations perception" in query
+    assert "conscious intention agency" not in query
+    assert "Little c" not in query
+
+
 def test_paper_context_requires_an_abstract_and_links_verification() -> None:
     record = {
         "paperId": "paper-1",
