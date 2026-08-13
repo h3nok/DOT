@@ -129,6 +129,11 @@ export async function listThreads(): Promise<{
   threads: TwinThread[];
   authenticated: boolean;
 }> {
+  const session = await api<{ user: { id: string } | null }>("/v1/auth/session");
+  if (!session.ok || !session.data?.user) {
+    return { threads: [], authenticated: false };
+  }
+
   const result = await api<{ conversations: TwinThread[] }>(
     "/v1/twin/conversations",
   );

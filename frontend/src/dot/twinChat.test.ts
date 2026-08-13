@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   clearEphemeralTurns,
   isUnauthenticated,
+  listThreads,
   loadEphemeralTurns,
   saveEphemeralTurns,
   sendMessage,
@@ -134,6 +135,43 @@ describe("visitor session continuity", () => {
     expect(loadEphemeralTurns()).toEqual([turn]);
     clearEphemeralTurns();
     expect(loadEphemeralTurns()).toEqual([]);
+  });
+});
+
+describe("twinChat.listThreads", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn());
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("does not probe the private thread route for a visitor", async () => {
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce(
+      jsonResponse(200, { user: null }),
+    );
+
+    expect(await listThreads()).toEqual({ threads: [], authenticated: false });
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(globalThis.fetch).mock.calls[0][0]).toContain(
+      "/v1/auth/session",
+    );
+  });
+
+  it("loads private threads only after a session is confirmed", async () => {
+    vi.mocked(globalThis.fetch)
+      .mockResolvedValueOnce(jsonResponse(200, { user: { id: "member-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse(200, {
+          conversations: [{ id: "conv-1", title: "A question", message_count: 2 }],
+        }),
+      );
+
+    const result = await listThreads();
+
+    expect(result.authenticated).toBe(true);
+    expect(result.threads[0].id).toBe("conv-1");
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2);
   });
 });
 
