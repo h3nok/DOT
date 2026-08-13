@@ -35,8 +35,8 @@ export default function PublicationStudioPage() {
         ]);
         setProject(proj);
         setSections(sects);
-      } catch (err: any) {
-        if (err.name !== "AbortError") {
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== "AbortError") {
           setError(err.message || "Failed to load project");
         }
       } finally {

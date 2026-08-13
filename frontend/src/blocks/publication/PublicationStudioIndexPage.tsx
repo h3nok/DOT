@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, FileText, Loader2 } from "lucide-react";
+import { ArrowRight, FileText, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,6 +6,7 @@ import {
   fetchPublicationProjects,
   type PublicationProjectRead,
 } from "../../services/OrchestratorPublicationService";
+import { PageHeader, PageShell } from "../../shared/PageShell";
 
 export default function PublicationStudioIndexPage() {
   const [projects, setProjects] = useState<PublicationProjectRead[]>([]);
@@ -27,23 +28,14 @@ export default function PublicationStudioIndexPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-foreground sm:px-10">
-      <div className="mx-auto max-w-3xl">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          Back to DOT
-        </Link>
-
-        <header className="mt-12 border-b border-border/60 pb-8">
-          <p className="dot-label">Private workspace</p>
-          <h1 className="mt-2 font-serif text-4xl font-normal">Publication studio</h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-            Open a manuscript project to revise its sections and prepare a finite release.
-          </p>
-        </header>
+    <PageShell header={<PageHeader />}>
+      <header className="border-b border-border/60 pb-8">
+        <p className="dot-label">Private workspace</p>
+        <h1 className="dot-page-heading mt-2">Publication studio</h1>
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Open a manuscript project to revise its sections and prepare a finite release.
+        </p>
+      </header>
 
         {loading ? (
           <div className="flex min-h-52 items-center justify-center" aria-label="Loading projects">
@@ -93,7 +85,6 @@ export default function PublicationStudioIndexPage() {
             ))}
           </ul>
         )}
-      </div>
-    </main>
+    </PageShell>
   );
 }

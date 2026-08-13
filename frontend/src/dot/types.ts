@@ -70,3 +70,19 @@ export interface DotNode {
 export function hasChildren(node: DotNode): boolean {
   return !!node.children && node.children.length > 0;
 }
+
+export type PlatformSurface =
+  | "publications"
+  | "circle"
+  | "vault"
+  | "support"
+  | "join"
+  | "twin"
+  | null;
+
+export function initialPlatformSurface(): PlatformSurface {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).has("support")
+    ? "support"
+    : null;
+}

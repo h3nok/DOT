@@ -8,9 +8,11 @@ import { TwinSurface } from "../../../dot/TwinSurface";
 import { useAuth } from "../../../dot/useAuth";
 import { useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
+import { DotWordmark } from "../../../shared/DotWordmark";
 import { EmergenceMark } from "./EmergenceMark";
 import { HeroConcepts } from "./HeroConcepts";
-import { HeroAsk, type HeroAskRequest } from "./HeroAsk";
+import { HeroAsk } from "./HeroAsk";
+import type { HeroAskRequest } from "./heroData";
 import { StepOneUnlearning } from "./StepOneUnlearning";
 import { ArchitectureDiagram } from "./ArchitectureDiagram";
 
@@ -33,7 +35,7 @@ const FURTHER_PATHS = [
   { label: "Ask to Join", to: "/join", hint: "DOT grows one invitation at a time", icon: UserPlus },
 ] as const;
 
-export default function HomeV2Page() {
+export default function HomePage() {
   const navigate = useNavigate();
   const { isOwner, logout, refresh: refreshAuth } = useAuth();
   const { config, reducedMotion: organismReducedMotion } = useOrganism();
@@ -69,7 +71,7 @@ export default function HomeV2Page() {
       {/* ── Dynamic Scroll-Aware Header ───────────────────────────────────────── */}
       <header
         aria-label="Site Header"
-        className={`fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-6 transition-all duration-300 sm:px-10 ${
+        className={`fixed top-0 left-0 right-0 z-30 flex items-center justify-between transition-all duration-300 dot-page-container ${
           scrolled
             ? "bg-transparent py-3.5 backdrop-blur-md border-b border-transparent"
             : "bg-transparent py-5"
@@ -79,8 +81,7 @@ export default function HomeV2Page() {
           to="/"
           className="flex items-center gap-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
         >
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-foreground/60" />
-          <span className="font-mono uppercase tracking-[0.14em]">DOT</span>
+          <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
         </Link>
 
         <div className="flex items-center gap-3">
@@ -121,7 +122,7 @@ export default function HomeV2Page() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative mx-auto flex min-h-[75vh] w-full max-w-5xl flex-col items-center justify-center px-6 pt-24 pb-16 text-center sm:px-10"
+        className="relative mx-auto flex min-h-[75vh] w-full flex-col items-center justify-center pt-24 pb-16 text-center dot-page-container"
       >
         <div className="flex flex-col items-center w-full max-w-4xl">
           <EmergenceMark settled={hasSeen || reducedMotion} />
@@ -223,7 +224,7 @@ export default function HomeV2Page() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full max-w-4xl scroll-mt-24 px-6 py-16 text-center sm:px-10 border-t border-border/40"
+        className="mx-auto w-full scroll-mt-24 py-16 text-center dot-page-container border-t border-border/40"
       >
         <div className="flex flex-col items-center justify-center text-center">
           <div className="flex items-center justify-center gap-2">
@@ -232,7 +233,7 @@ export default function HomeV2Page() {
             </span>
           </div>
 
-          <h3 className="mt-4 text-balance font-serif text-3xl font-normal leading-tight text-foreground sm:text-4xl">
+          <h3 className="dot-page-heading mt-4 text-balance">
             This is not passive content.
           </h3>
 
@@ -241,7 +242,7 @@ export default function HomeV2Page() {
           </p>
 
           <p className="dot-caption mt-3 max-w-2xl text-balance text-sm leading-relaxed sm:text-base">
-            Every Little c is meant to test, apply, and develop this model within its own reality frame. Passive reading changes nothing; only direct inquiry and application pop the loop.
+            The model asks each reader to test its claims against lived experience, notice what consequence teaches, and revise what does not hold.
           </p>
 
           <div className="mt-8 flex items-center justify-center">
@@ -265,15 +266,15 @@ export default function HomeV2Page() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full max-w-6xl scroll-mt-24 px-6 py-16 sm:px-10 border-t border-border/40"
+        className="mx-auto w-full scroll-mt-24 py-16 dot-page-container dot-page-wide border-t border-border/40"
       >
         <div className="flex flex-col items-center justify-center text-center gap-4">
           <div>
             <span className="dot-label">
               Where to begin
             </span>
-            <h3 className="mt-2 font-serif text-3xl font-normal text-foreground sm:text-4xl">
-              Four ways to enter Digital Organism Theory
+            <h3 className="dot-page-heading mt-2">
+              Four ways to enter DOT
             </h3>
           </div>
 
@@ -313,7 +314,7 @@ export default function HomeV2Page() {
           <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
             <Link
               to="/book/digital-organism-theory"
-              className={`group flex h-full flex-col justify-between rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
+              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
                 intentFilter === "all" || intentFilter === "text" ? "opacity-100" : "opacity-40"
               } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
             >
@@ -328,7 +329,7 @@ export default function HomeV2Page() {
                   Book One
                 </h4>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  The complete 10-chapter foundational work on human experience.
+                  The complete foundational work on consciousness, conditioning, and human action.
                 </p>
               </div>
               <span className="mt-6 inline-flex items-center text-xs font-semibold text-foreground/80 group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
@@ -340,7 +341,7 @@ export default function HomeV2Page() {
           <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
             <Link
               to="/doctrine"
-              className={`group flex h-full flex-col justify-between rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
+              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
                 intentFilter === "all" || intentFilter === "concepts" ? "opacity-100" : "opacity-40"
               } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
             >
@@ -368,7 +369,7 @@ export default function HomeV2Page() {
             <a
               href="#orientation"
               onClick={scrollToAnchor("orientation")}
-              className={`group flex h-full flex-col justify-between rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
+              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
                 intentFilter === "all" || intentFilter === "concepts" ? "opacity-100" : "opacity-40"
               } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
             >
@@ -396,7 +397,7 @@ export default function HomeV2Page() {
             <button
               type="button"
               onClick={() => setAsk({ query: "What does DOT claim?", lens: "ground", id: Date.now() })}
-              className={`group text-left flex h-full flex-col justify-between rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
+              className={`group text-left flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
                 intentFilter === "all" || intentFilter === "ask" ? "opacity-100" : "opacity-40"
               } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
             >
@@ -430,22 +431,19 @@ export default function HomeV2Page() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full max-w-5xl scroll-mt-24 px-6 py-16 sm:px-10 border-t border-border/40"
+        className="mx-auto w-full scroll-mt-24 py-16 dot-page-container border-t border-border/40"
       >
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[11px] uppercase tracking-widest text-[color:var(--organism-accent-strong)] font-semibold">
-            Short Orientation
+        <div className="text-center">
+          <span className="dot-label text-[color:var(--organism-accent-strong)] font-semibold">
+            Short Orientation · 10 Core Claims
           </span>
-          <span className="font-mono text-[10px] uppercase text-muted-foreground">
-            10 Core Claims
-          </span>
+          <h2
+            id="orientation-title"
+            className="dot-page-heading mt-2 text-balance mx-auto"
+          >
+            Principles of the Model
+          </h2>
         </div>
-        <h2
-          id="orientation-title"
-          className="mt-2 text-balance font-serif text-3xl font-normal text-foreground sm:text-4xl"
-        >
-          Principles of the Model
-        </h2>
         <div className="mt-8">
           <HeroConcepts autoAdvance={!reducedMotion} />
         </div>
@@ -458,16 +456,16 @@ export default function HomeV2Page() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full max-w-5xl px-6 py-16 sm:px-10 border-t border-border/40"
+        className="mx-auto w-full py-16 dot-page-container border-t border-border/40"
       >
         <div className="text-center">
-          <span className="font-mono text-[11px] uppercase tracking-widest text-[color:var(--organism-accent-strong)] font-semibold">
+          <span className="dot-label text-[color:var(--organism-accent-strong)] font-semibold">
             Open Inquiry
           </span>
 
           <h2
             id="invitation-title"
-            className="mt-3 text-balance font-serif text-3xl font-normal leading-tight sm:text-4xl text-foreground"
+            className="dot-page-heading mt-3 text-balance leading-tight"
           >
             An invitation, not a demand.
           </h2>
@@ -484,9 +482,9 @@ export default function HomeV2Page() {
                   <motion.div key={path.to} whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
                     <Link
                       to={path.to}
-                      className="group flex items-start gap-4 rounded-2xl border border-border/40 bg-foreground/[0.015] p-5 backdrop-blur-md transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]"
+                    className="group flex items-start gap-4 rounded-lg border border-border/40 bg-foreground/[0.015] p-5 backdrop-blur-md transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]"
                     >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--organism-accent-soft)] text-[color:var(--organism-accent-strong)]">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)] text-[color:var(--organism-accent-strong)]">
                         <PathIcon className="h-4.5 w-4.5" />
                       </div>
                       <div>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowUp, CornerDownLeft, Sparkles } from "lucide-react";
 import { useState } from "react";
 
-import type { AgentLens } from "../../../dot/agent";
+import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
 
 /**
  * The one question a visitor is actually holding, asked here.
@@ -18,23 +18,6 @@ import type { AgentLens } from "../../../dot/agent";
  * and each one hands the reader straight to a grounded answer with its sources
  * rather than into a conversation designed to continue.
  */
-
-export interface HeroAskRequest {
-  query: string;
-  lens: AgentLens;
-}
-
-/** Four openings: the claim, the reader, the weak point, the epistemic status. */
-export const SAMPLE_QUESTIONS: ReadonlyArray<{
-  text: string;
-  category: string;
-  lens: AgentLens;
-}> = [
-  { text: "What does DOT actually claim?", category: "Core Claim", lens: "ground" },
-  { text: "Why do I keep repeating the same patterns?", category: "Pattern Inquiry", lens: "ground" },
-  { text: "Where is the argument weakest?", category: "Critique", lens: "test" },
-  { text: "Is this science, philosophy, or faith?", category: "Foundations", lens: "test" },
-];
 
 interface HeroAskProps {
   onAsk: (request: HeroAskRequest) => void;
@@ -120,5 +103,3 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
     </div>
   );
 }
-
-export default HeroAsk;

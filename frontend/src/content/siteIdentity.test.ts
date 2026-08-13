@@ -4,7 +4,7 @@ import { siteConfig } from "./site.config";
 /**
  * Author identity as an executable gate.
  *
- * Four public surfaces (HomeV2Page, BookLanding, BookAccessPage, BookOnePage)
+ * Four public surfaces (HomePage, BookLanding, BookAccessPage, BookOnePage)
  * attribute the work by linking `siteConfig.social.linkedin`. Placeholder
  * handles once shipped to all four, so a broken profile link is a silent
  * public-facing failure that no other test catches.

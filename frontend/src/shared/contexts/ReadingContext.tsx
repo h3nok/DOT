@@ -264,9 +264,8 @@ export function ReadingProvider({ children }: ReadingProviderProps) {
     if (stored) {
       try {
         const readingData = JSON.parse(stored);
-        // Merge with current state to preserve any new fields
         Object.keys(readingData).forEach(key => {
-          if (key in state.reading) {
+          if (key in initialState.reading) {
             const action = { type: 'UPDATE_READING_SETTINGS', payload: readingData } as ReadingAction;
             dispatch(action);
           }

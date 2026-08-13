@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   BookOpen,
   CircleDashed,
   Map,
 } from "lucide-react";
+import { PageHeader, PageShell } from "../../shared/PageShell";
 import {
   openSeams,
   seamWork,
@@ -49,7 +49,7 @@ const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
 function ClaimChip({ level }: { level: ClaimLevel }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] ${CLAIM_TONE[level]}`}
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 dot-label ${CLAIM_TONE[level]}`}
       title={`Book One assigns this claim the level: ${level}`}
     >
       {level}
@@ -60,7 +60,7 @@ function ClaimChip({ level }: { level: ClaimLevel }) {
 function Field({ label, children }: { label: string; children: string }) {
   return (
     <div className="mt-5">
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="dot-label">
         {label}
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -90,7 +90,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
 
   return (
     <div className="mt-6 border-t border-border/50 pt-5">
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="dot-label">
         Recorded work
       </p>
       {/* In recorded order. Never sorted or filtered by outcome. */}
@@ -102,7 +102,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
           >
             <div className="flex flex-wrap items-center gap-2">
               <ClaimChip level={entry.claimLevel} />
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="dot-label">
                 {entry.kind} · {OUTCOME_LABEL[entry.outcome]}
               </span>
             </div>
@@ -196,47 +196,43 @@ export default function AppliedPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <a
-        href="#applied-main"
-        className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to the register
-      </a>
-
-      <header className="sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-5 sm:px-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+    <PageShell
+      header={
+        <>
+          <a
+            href="#applied-main"
+            className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
           >
-            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            DOT
-          </Link>
-          <nav aria-label="Applied context" className="flex items-center gap-1">
-            <Link
-              to="/book/digital-organism-theory"
-              className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
-            >
-              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Book One</span>
-            </Link>
-            <Link
-              to="/doctrine"
-              className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
-            >
-              <Map className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Concept Map</span>
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      <main id="applied-main" className="mx-auto max-w-5xl px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
+            Skip to the register
+          </a>
+          <PageHeader
+            right={
+              <>
+                <Link
+                  to="/book/digital-organism-theory"
+                  className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                >
+                  <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span className="hidden sm:inline">Book One</span>
+                </Link>
+                <Link
+                  to="/doctrine"
+                  className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                >
+                  <Map className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span className="hidden sm:inline">Concept Map</span>
+                </Link>
+              </>
+            }
+          />
+        </>
+      }
+    >
+      <div id="applied-main">
         <p className="dot-label">
           Open seams · Edition v2
         </p>
-        <h1 className="mt-4 max-w-2xl text-3xl font-semibold leading-tight tracking-[-0.02em] text-foreground sm:text-4xl">
+        <h1 className="dot-page-heading mt-4 max-w-2xl">
           What Book One does not establish
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
@@ -300,7 +296,7 @@ export default function AppliedPage() {
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </section>
-      </main>
-    </div>
+      </div>
+    </PageShell>
   );
 }

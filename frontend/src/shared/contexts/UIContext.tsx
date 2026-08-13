@@ -10,7 +10,7 @@ export interface UIState {
   modal: {
     isOpen: boolean;
     type?: string;
-    props?: Record<string, any>;
+    props?: Record<string, unknown>;
   };
   notifications: Array<{
     id: string;
@@ -34,7 +34,7 @@ export type UIAction =
   | { type: 'SET_BREADCRUMBS'; payload: string[] }
   | { type: 'SET_LOADING_STATE'; payload: { key: string; loading: boolean } }
   | { type: 'CLEAR_LOADING_STATES' }
-  | { type: 'OPEN_MODAL'; payload: { type: string; props?: Record<string, any> } }
+  | { type: 'OPEN_MODAL'; payload: { type: string; props?: Record<string, unknown> } }
   | { type: 'CLOSE_MODAL' }
   | { type: 'ADD_NOTIFICATION'; payload: Omit<UIState['notifications'][0], 'id'> }
   | { type: 'REMOVE_NOTIFICATION'; payload: string }
@@ -193,7 +193,7 @@ interface UIContextType {
   setBreadcrumbs: (breadcrumbs: string[]) => void;
   setLoadingState: (key: string, loading: boolean) => void;
   clearLoadingStates: () => void;
-  openModal: (type: string, props?: Record<string, any>) => void;
+  openModal: (type: string, props?: Record<string, unknown>) => void;
   closeModal: () => void;
   addNotification: (notification: Omit<UIState['notifications'][0], 'id'>) => void;
   removeNotification: (id: string) => void;
@@ -241,7 +241,7 @@ export function UIProvider({ children, initialPage = '/' }: UIProviderProps) {
     dispatch({ type: 'CLEAR_LOADING_STATES' });
   };
 
-  const openModal = (type: string, props?: Record<string, any>) => {
+  const openModal = (type: string, props?: Record<string, unknown>) => {
     dispatch({ type: 'OPEN_MODAL', payload: { type, props } });
   };
 

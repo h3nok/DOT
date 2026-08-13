@@ -111,4 +111,16 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
+
+  // Context/provider files co-locate hooks with their providers — standard React pattern.
+  {
+    files: [
+      'src/shared/contexts/**',
+      'src/organism/OrganismContext.tsx',
+      'src/content/editable/SiteContentProvider.tsx',
+    ],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 )

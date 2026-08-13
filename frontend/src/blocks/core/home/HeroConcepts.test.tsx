@@ -42,7 +42,8 @@ vi.mock("framer-motion", () => {
   };
 });
 
-import { DWELL_MS, HERO_CONCEPTS, HeroConcepts } from "./HeroConcepts";
+import { DWELL_MS, HERO_CONCEPTS } from "./heroData";
+import { HeroConcepts } from "./HeroConcepts";
 
 const FIRST = HERO_CONCEPTS[0].text;
 const LAST = HERO_CONCEPTS[HERO_CONCEPTS.length - 1].text;

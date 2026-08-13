@@ -75,7 +75,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
   const [files, setFiles] = useState<SelectedFile[]>([]);
   const pulse = useOrganismPulse();
 
-  const uploadFile = async (fileRec: SelectedFile) => {
+  const uploadFile = useCallback(async (fileRec: SelectedFile) => {
     try {
       setFiles((prev) =>
         prev.map((f) =>
@@ -123,7 +123,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
       });
 
       const properties = nodeRes.data?.properties ?? {};
-      pulse(1); // The organism feels the new knowledge
+      pulse(1);
       setFiles((prev) =>
         prev.map((f) =>
           f.id === fileRec.id
@@ -136,16 +136,17 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
             : f,
         ),
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Upload failed";
       setFiles((prev) =>
         prev.map((f) =>
           f.id === fileRec.id
-            ? { ...f, status: "error", error: err.message }
+            ? { ...f, status: "error", error: message }
             : f,
         ),
       );
     }
-  };
+  }, [pulse]);
 
   const handleDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles = acceptedFiles.map((file) => ({
@@ -158,7 +159,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
 
     // Trigger uploads
     newFiles.forEach((file) => uploadFile(file));
-  }, []);
+  }, [uploadFile]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,

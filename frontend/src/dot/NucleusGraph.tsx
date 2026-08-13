@@ -22,16 +22,19 @@ import { GraphToolbar } from "./GraphToolbar";
 import { NodeEditor } from "./NodeEditor";
 import { NodeStage } from "./NodeStage";
 import {
-  initialPlatformSurface,
   ModalOverlays,
   PlatformOverlays,
-  type PlatformSurface,
 } from "./PlatformOverlays";
 import { SynapticEdge } from "./SynapticEdge";
 import { resolveNode } from "./agent";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
 import { SUPPORT_PAYMENT_LINK } from "./supportLink";
-import { hasChildren, type DotNode } from "./types";
+import {
+  hasChildren,
+  initialPlatformSurface,
+  type DotNode,
+  type PlatformSurface,
+} from "./types";
 import { useAuth } from "./useAuth";
 import { acceptInvite } from "./useCircle";
 import { useEditableGraph } from "./useEditableGraph";

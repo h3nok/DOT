@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { Editable, useSiteContent } from "../../../content/editable";
+import { DWELL_MS, HERO_CONCEPTS, type Concept } from "./heroData";
 
 /**
  * The core vocabulary, arriving one term at a time and then stopping.
@@ -21,85 +22,13 @@ import { Editable, useSiteContent } from "../../../content/editable";
  * cannot see it rotate is noise — so the visual rotator is hidden from them.
  */
 
-type ClaimLevel = "observation" | "model" | "hypothesis";
-
-interface Concept {
-  id: string;
-  term: string;
-  text: string;
-  level: ClaimLevel;
-}
-
-export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
-  {
-    id: "home.concept.organism",
-    term: "The Digital Organism",
-    text: "A state-bearing, information-sensitive process that works to preserve or develop its coherence across change.",
-    level: "model",
-  },
-  {
-    id: "home.concept.feeling",
-    term: "The Subjective Data Principle",
-    text: "Feeling must be treated as data, but feeling is not automatically truth.",
-    level: "observation",
-  },
-  {
-    id: "home.concept.layers",
-    term: "Canvas · Painting · Character",
-    text: "The Canvas carries. The Painting interprets. Character acts.",
-    level: "model",
-  },
-  {
-    id: "home.concept.rest",
-    term: "The First Painting",
-    text: "You were shaped by your environment, yet you must choose within your available decision space.",
-    level: "observation",
-  },
-  {
-    id: "home.concept.fear",
-    term: "Fear",
-    text: "The governing contraction that organizes perception around defense, control, and the preservation of identity at the expense of truth.",
-    level: "model",
-  },
-  {
-    id: "home.concept.love",
-    term: "Love",
-    text: "The condition in which Fear no longer governs you. Not a mood added to the loop — the operating condition that makes inquiry harder to corrupt.",
-    level: "model",
-  },
-  {
-    id: "home.concept.intent",
-    term: "Intent",
-    text: "The directional organization of Little c before action. Clarity matters without requiring magic.",
-    level: "model",
-  },
-  {
-    id: "home.concept.frame",
-    term: "Reality Frame",
-    text: "A rule-bound environment in which action meets consequence. Consequence is what gives experience weight.",
-    level: "model",
-  },
-  {
-    id: "home.concept.bigc",
-    term: "Big C and Little c",
-    text: "Life as a fundamental, self-preserving process, differentiated into local centres of experience. Held as hypothesis, not finding.",
-    level: "hypothesis",
-  },
-  {
-    id: "home.concept.lok",
-    term: "The Limit of Knowledge",
-    text: "A restraint on certainty — not permission to fill the unknown with whatever story we prefer.",
-    level: "model",
-  },
-];
+type ClaimLevel = Concept["level"];
 
 const LEVEL_LABEL: Record<ClaimLevel, string> = {
   observation: "Observation",
   model: "Model",
   hypothesis: "Hypothesis",
 };
-
-export const DWELL_MS = 6000;
 
 function LevelBadge({ level, index, total }: { level: ClaimLevel; index?: number; total?: number }) {
   return (
@@ -148,7 +77,7 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
         {HERO_CONCEPTS.map((concept) => (
           <li key={concept.id}>
             <LevelBadge level={concept.level} />
-            <span className="mt-2 block font-serif text-2xl font-semibold leading-tight text-foreground">
+            <span className="dot-section-heading mt-2 block">
               {concept.term}
             </span>
             <Editable
@@ -194,10 +123,10 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
             className="absolute inset-x-0 top-0 flex flex-col items-center justify-center text-center gap-2.5"
           >
             <LevelBadge level={current.level} index={index} total={HERO_CONCEPTS.length} />
-            <span className="block font-serif text-2xl font-semibold leading-tight text-foreground sm:text-3xl">
+            <span className="dot-section-heading block">
               {current.term}
             </span>
-            <span className="block max-w-xl text-balance text-base leading-relaxed text-foreground/75 sm:text-lg mx-auto">
+            <span className="block max-w-xl text-balance text-sm leading-relaxed text-foreground/75 sm:text-base mx-auto" style={{ fontFamily: "var(--font-serif)" }}>
               {resolve(current.id, current.text)}
             </span>
           </motion.div>
@@ -226,5 +155,3 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
     </div>
   );
 }
-
-export default HeroConcepts;

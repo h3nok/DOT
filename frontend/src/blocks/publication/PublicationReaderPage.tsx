@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import { DotWordmark } from "../../shared/DotWordmark";
 import {
   fetchPublicDeliveryManifest,
   fetchSectionBody,
@@ -219,7 +220,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
               {meta.series_title}
             </p>
           )}
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-[-0.02em] text-foreground sm:text-6xl">
+          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-6xl">
             {manifest.project.title}
           </h1>
           {meta?.subtitle && (
@@ -375,7 +376,7 @@ function SectionReader({
               </p>
             )}
           </div>
-          <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-[-0.02em] text-foreground sm:text-5xl">
+          <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
             {section.title}
           </h1>
           {section.meta?.subtitle && (
@@ -641,7 +642,7 @@ export default function PublicationReaderPage() {
             className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            DOT
+            <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
           </Link>
           <Link
             to={bookRoute(manifest)}

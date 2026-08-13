@@ -18,15 +18,12 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const HERO_FILES = [
-  "HomeV2Page.tsx",
+  "HomePage.tsx",
   "EmergenceMark.tsx",
   "HeroConcepts.tsx",
   "HeroAsk.tsx",
   "ArchitectureDiagram.tsx",
   "StepOneUnlearning.tsx",
-  "HomeMethod.tsx",
-  "HomeWhatThisIs.tsx",
-  "HomePractice.tsx",
 ] as const;
 
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");
@@ -54,7 +51,7 @@ describe("home entry theme compatibility", () => {
   }
 
   it("keeps the hero transparent so the living field shows through", () => {
-    const source = readFileSync(join(HERE, "HomeV2Page.tsx"), "utf8");
+    const source = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
     // An opaque stage on the section itself would seal the membrane out. The
     // one permitted `bg-background` is the veil, which animates away.
@@ -62,7 +59,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("treats Appearance-panel stillness as a reason not to animate", () => {
-    const source = readFileSync(join(HERE, "HomeV2Page.tsx"), "utf8");
+    const source = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
     expect(source).toContain("config.stillness");
     expect(source).toContain("config.enabled");

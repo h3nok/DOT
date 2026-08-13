@@ -10,25 +10,10 @@ import { SupportSurface } from "./SupportSurface";
 import { TwinSurface } from "./TwinSurface";
 import { VaultSurface } from "./VaultSurface";
 import type { DotNode } from "./types";
+import type { PlatformSurface } from "./types";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
 import type { AuthUser } from "./useAuth";
 import type { InviteArrival } from "./useInviteArrival";
-
-export type PlatformSurface =
-  | "publications"
-  | "circle"
-  | "vault"
-  | "support"
-  | "join"
-  | "twin"
-  | null;
-
-export function initialPlatformSurface(): PlatformSurface {
-  if (typeof window === "undefined") return null;
-  return new URLSearchParams(window.location.search).has("support")
-    ? "support"
-    : null;
-}
 
 interface PlatformOverlaysProps {
   surface: PlatformSurface;

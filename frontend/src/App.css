@@ -40,7 +40,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: "Inter", sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-serif: Georgia, "Playfair Display", "Times New Roman", serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
@@ -295,7 +295,7 @@ html[data-contrast="high"].dark {
 }
 
 .font-serif {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-serif);
 }
 
 .font-mono {

@@ -84,7 +84,7 @@ export function StepOneUnlearning() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="mt-7 max-w-5xl mx-auto text-balance text-xl leading-relaxed text-foreground/90 sm:text-2xl lg:text-3xl font-light"
+        className="mt-6 max-w-3xl mx-auto text-balance text-base leading-relaxed text-foreground/85 sm:text-lg lg:text-xl font-normal tracking-normal"
       >
         {BODY_TEXT.split("").map((char, index) => (
           <motion.span key={`${char}-${index}`} variants={bodyTypewriterChar}>

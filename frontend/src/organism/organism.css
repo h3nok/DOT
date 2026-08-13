@@ -310,6 +310,53 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
   box-shadow: 0 16px 48px -16px rgb(0 0 0 / 0.4);
 }
 
+/* --- Page layout: standard container for secondary pages ------------- */
+.dot-page-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64rem; /* max-w-5xl */
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 640px) {
+  .dot-page-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.dot-page-wide {
+  max-width: 72rem; /* max-w-6xl */
+}
+
+/* --- Page heading: serif title for page-level headings --------------- */
+.dot-page-heading {
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 2.25rem; /* text-4xl */
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  color: var(--foreground);
+}
+@media (min-width: 640px) {
+  .dot-page-heading {
+    font-size: 3rem; /* text-5xl */
+  }
+}
+
+/* --- Section heading: serif title for within-page sections ----------- */
+.dot-section-heading {
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+@media (min-width: 640px) {
+  .dot-section-heading {
+    font-size: 1.875rem; /* text-3xl */
+  }
+}
+
 /* --- Pill: the floating toolbar button (edit, invite, sign-out, etc.) - */
 .dot-pill {
   display: inline-flex;
@@ -334,10 +381,10 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
 /* --- Micro label: the mono uppercase kicker text --------------------- */
 .dot-label {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.75rem; /* 12px */
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--muted-foreground);
 }
 

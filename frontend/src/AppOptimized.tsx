@@ -15,7 +15,7 @@ import {
 import { SiteContentProvider } from "./content/editable";
 
 // Lazy load surfaces for code splitting.
-const HomeV2Page = React.lazy(() => import("./blocks/core/home/HomeV2Page"));
+const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
 const DoctrinePage = React.lazy(
   () => import("./blocks/knowledge/DoctrinePage"),
 );
@@ -128,7 +128,7 @@ const App: React.FC = () => {
           <main>
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
-                <Route path="/" element={<HomeV2Page />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/doctrine" element={<DoctrinePage />} />
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/applied" element={<AppliedPage />} />
