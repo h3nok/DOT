@@ -1,0 +1,2 @@
+# False positive: a Python service call using the public content-block key.
+c47002484cdd404cd9c950d18d8452cb875d2944:backend/orchestrator/app/api/v1/sitecontent.py:generic-api-key:86

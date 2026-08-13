@@ -290,6 +290,12 @@ def clean_markdown(raw: str, spec: SectionSpec) -> str:
         text,
         flags=re.DOTALL,
     )
+    text: str = re.sub(
+        r"^\$\$(.+)\$\$$",
+        lambda match: f"$$\n{match.group(1)}\n$$",
+        text,
+        flags=re.MULTILINE,
+    )
     text: str = re.sub(r"\$`([^`\n]+)`\$", r"$\1$", text)
 
     if spec.kind == "references":
@@ -319,6 +325,15 @@ def word_count(markdown: str) -> int:
     without_urls: str = re.sub(r"https?://\S+", "", markdown)
     without_math: str = re.sub(r"\$\$.*?\$\$", "", without_urls, flags=re.DOTALL)
     return len(re.findall(r"\b[\w’'-]+\b", without_math))
+
+
+def display_equation_count(markdown: str) -> int:
+    """Count equations after Pandoc output has been normalized for the reader."""
+
+    delimiters: int = len(re.findall(r"^\$\$\s*$", markdown, flags=re.MULTILINE))
+    if delimiters % 2:
+        raise ValueError("Unbalanced display-math delimiters in released Markdown")
+    return delimiters // 2
 
 
 def release_downloads(
@@ -388,9 +403,11 @@ def main() -> None:
     pandoc = resolve_executable(args.pandoc)
     markdown: str = pandoc_markdown(source, pandoc, args.pandoc_data_dir)
     manifest_sections: list[dict[str, object]] = []
+    released_sections: list[str] = []
 
     for index, spec in enumerate(SECTIONS):
         content: str = clean_markdown(section_slice(markdown, spec), spec)
+        released_sections.append(content)
         content_path = sections_dir / f"{spec.slug}.md"
         content_path.write_text(content, encoding="utf-8")
         words: int = word_count(content)
@@ -413,7 +430,12 @@ def main() -> None:
 
     checksum: str = hashlib.sha256(source.read_bytes()).hexdigest()
     total_words: int = sum(int(section["word_count"]) for section in manifest_sections)
-    equation_count: int = len(re.findall(r"^``` math$", markdown, flags=re.MULTILINE))
+    # Pandoc 3.7 writes Word equations as fenced math while Ubuntu's Pandoc 3.1
+    # writes display delimiters directly. `clean_markdown` normalizes both to
+    # the reader's `$$` form, so the manifest must count that stable output.
+    equation_count: int = sum(
+        display_equation_count(content) for content in released_sections
+    )
     reference_count: int = len(
         re.findall(
             r"^\*\*\d+\.\*\*", section_slice(markdown, SECTIONS[-1]), re.MULTILINE
@@ -443,7 +465,9 @@ def main() -> None:
             "version": args.release_version,
             "status": args.release_status,
             "label": args.release_label,
-            "published_at": args.release_date if args.release_status == "published" else None,
+            "published_at": args.release_date
+            if args.release_status == "published"
+            else None,
             "updated_at": args.release_date,
         },
         "extent": {

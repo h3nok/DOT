@@ -83,7 +83,9 @@ async def publish_block(
 ) -> schemas.SiteContentValue:
     try:
         result = await sitecontent_service.publish_block(
-            session, key=key, actor_id=steward.actor_id
+            session,
+            key=key,
+            actor_id=steward.actor_id,
         )
     except sitecontent_service.InvalidContentKeyError as exc:
         raise fastapi.HTTPException(status_code=400, detail=str(exc)) from exc
