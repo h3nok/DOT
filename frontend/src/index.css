@@ -3711,6 +3711,11 @@ html[data-motion="still"] .dot-emergence-signal {
   );
 }
 
+.book-recall-note {
+  border-color: var(--book-hairline);
+  font-family: var(--book-reading-font);
+}
+
 .book-concept {
   position: relative;
   padding-left: 0.85rem;

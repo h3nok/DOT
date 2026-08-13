@@ -41,6 +41,7 @@ import { AppearanceControl } from "../../organism";
 import BookLanding from "./BookLanding";
 import ExperienceLoop from "./ExperienceLoop";
 import { TwinSurface } from "../../dot/TwinSurface";
+import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -95,6 +96,60 @@ function LoadingState() {
       <Loader2 className="h-5 w-5 animate-spin" />
       <span className="sr-only">Loading the book</span>
     </div>
+  );
+}
+
+function SectionRecall({
+  prompt,
+  onOpenMinty,
+}: {
+  prompt: string;
+  onOpenMinty: (request?: AgentWorkspaceRequest) => void;
+}) {
+  const [note, setNote] = useState("");
+
+  return (
+    <section
+      id="section-practice"
+      className="book-reflection scroll-mt-24 border-y px-1 py-9 sm:py-11"
+      aria-labelledby="section-recall-title"
+    >
+      <p className="dot-label">Pause and recall</p>
+      <h2
+        id="section-recall-title"
+        className="book-reading-heading mt-3 max-w-xl text-2xl font-semibold leading-snug text-foreground sm:text-3xl"
+      >
+        {prompt}
+      </h2>
+      <p className="book-reading-copy mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
+        Answer from memory first. Then return to the passage and notice what
+        changed.
+      </p>
+      <label className="mt-6 block" htmlFor="section-recall-note">
+        <span className="dot-label">Scratch note · not saved</span>
+        <textarea
+          id="section-recall-note"
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+          rows={3}
+          placeholder="Put the idea in your own words…"
+          className="book-recall-note mt-2 w-full resize-y border-x-0 border-b border-t bg-transparent px-0 py-3 font-serif text-base leading-7 text-foreground outline-none placeholder:text-muted-foreground/65 focus:border-[var(--book-cinnabar)]"
+        />
+      </label>
+      <button
+        type="button"
+        onClick={() =>
+          onOpenMinty({
+            query: `Help me test this Book One practice question against relevant academic evidence without assuming the framework is true: ${prompt}`,
+            lens: "test",
+          })
+        }
+        className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
+      >
+        <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+        Test this with Minty
+      </button>
+    </section>
   );
 }
 
@@ -162,13 +217,15 @@ function BookReader({
   section,
   content,
   onOpenMinty,
+  companionOpen,
   path,
   references,
 }: {
   manifest: DotBookOneManifest;
   section: BookReleaseSection;
   content: string;
-  onOpenMinty: () => void;
+  onOpenMinty: (request?: AgentWorkspaceRequest) => void;
+  companionOpen: boolean;
   path: ReadingPath | null;
   references: ReadonlyMap<number, BookReference>;
 }) {
@@ -196,8 +253,14 @@ function BookReader({
 
   return (
     <>
-      <div className="mx-auto grid w-full max-w-[88rem] gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[230px_minmax(0,700px)] lg:justify-center lg:gap-14 xl:grid-cols-[230px_minmax(0,700px)_220px] xl:gap-12">
-        <aside className="hidden lg:block">
+      <div
+        className={`mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-14 ${
+          companionOpen
+            ? "max-w-[52rem] lg:grid-cols-[minmax(0,720px)]"
+            : "max-w-[68rem] lg:grid-cols-[220px_minmax(0,720px)]"
+        }`}
+      >
+        <aside className={companionOpen ? "hidden" : "hidden lg:block"}>
           <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
             <Link
               to={DOT_BOOK_ONE_ROUTE}
@@ -251,10 +314,13 @@ function BookReader({
             </div>
           </header>
 
-          <div className="book-reader-quick-tools flex items-center gap-1 border-b border-[var(--book-hairline)] py-3 xl:hidden">
+          <nav
+            aria-label="Reading tools"
+            className="book-reader-quick-tools flex flex-wrap items-center gap-1 border-b border-[var(--book-hairline)] py-3"
+          >
             <button
               type="button"
-              onClick={onOpenMinty}
+              onClick={() => onOpenMinty()}
               className="inline-flex min-h-10 items-center gap-2 px-2 text-xs font-semibold text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
             >
               <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
@@ -266,7 +332,7 @@ function BookReader({
               className="inline-flex min-h-10 items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <NotebookPen className="h-4 w-4" aria-hidden="true" />
-              Practice
+              Recall
             </a>
             <span className="h-5 w-px bg-border/60" aria-hidden="true" />
             <Link
@@ -274,9 +340,11 @@ function BookReader({
               className="inline-flex min-h-10 items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <Library className="h-4 w-4" aria-hidden="true" />
-              {sourceCount > 0 ? `${sourceCount} sources` : "Sources"}
+              {sourceCount > 0
+                ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
+                : "Notes & sources"}
             </Link>
-          </div>
+          </nav>
 
           <BookMarkdown
             content={content}
@@ -314,17 +382,12 @@ function BookReader({
               </div>
             )}
 
-            <div id="section-practice" className="book-reflection mb-10 scroll-mt-24 border-y px-1 py-8 sm:py-10">
-              <p className="dot-label">
-                Practice the frame
-              </p>
-              <h2 className="book-reading-heading mt-3 max-w-xl text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
-                {practicePrompt}
-              </h2>
-              <p className="book-reading-copy mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                Treat this as observation, not a test you can fail. The framework
-                becomes useful when it changes what you can notice and choose.
-              </p>
+            <div className="mb-10">
+              <SectionRecall
+                key={section.slug}
+                prompt={practicePrompt}
+                onOpenMinty={onOpenMinty}
+              />
             </div>
 
             {section.related_concepts.length > 0 ? (
@@ -352,11 +415,14 @@ function BookReader({
               </div>
             ) : null}
 
-            <div className="flex items-stretch justify-between gap-4">
+            <nav
+              aria-label="Chapter navigation"
+              className="grid border-y border-[var(--book-hairline)] sm:grid-cols-2"
+            >
               {previous ? (
                 <Link
                   to={step(previous)}
-                  className="book-path-link group flex max-w-[48%] items-center gap-3 rounded-lg border px-4 py-4 text-left transition-colors"
+                  className="book-path-link group flex min-h-24 items-center gap-3 border-b px-3 py-4 text-left transition-colors sm:border-b-0 sm:border-r"
                 >
                   <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground" />
                   <span>
@@ -369,13 +435,13 @@ function BookReader({
                   </span>
                 </Link>
               ) : (
-                <span />
+                <span className="hidden sm:block" />
               )}
 
               {next ? (
                 <Link
                   to={step(next)}
-                  className="book-path-link book-path-link-primary group flex max-w-[48%] items-center justify-end gap-3 rounded-lg border px-4 py-4 text-right transition-colors"
+                  className="book-path-link book-path-link-primary group flex min-h-24 items-center justify-end gap-3 px-3 py-4 text-right transition-colors"
                 >
                   <span>
                     <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -390,13 +456,13 @@ function BookReader({
               ) : (
                 <Link
                   to={DOT_BOOK_ONE_ROUTE}
-                  className="book-path-link book-path-link-primary inline-flex items-center gap-2 rounded-lg border px-4 py-4 text-sm font-semibold text-foreground transition-colors"
+                  className="book-path-link book-path-link-primary inline-flex min-h-24 items-center justify-end gap-2 px-3 py-4 text-sm font-semibold text-foreground transition-colors"
                 >
                   Return to the book
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
-            </div>
+            </nav>
 
             <a
               href={siteConfig.social.linkedin}
@@ -411,60 +477,6 @@ function BookReader({
           </footer>
         </article>
 
-        <aside className="hidden xl:block">
-          <div className="sticky top-28 space-y-8 border-l border-[var(--book-hairline)] pl-6">
-            <section>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--book-cinnabar)]">
-                Reading companion
-              </p>
-              <p className="book-reading-copy mt-3 text-sm leading-relaxed text-muted-foreground">
-                Keep the claim boundary intact. Open a citation without losing
-                your place, or ask Minty to trace the passage through Book One.
-              </p>
-              <button
-                type="button"
-                onClick={onOpenMinty}
-                className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
-              >
-                <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
-                Ask Minty
-              </button>
-            </section>
-
-            <section className="border-t border-[var(--book-hairline)] pt-6">
-              <p className="dot-label">
-                Evidence trail
-              </p>
-              <p className="book-reading-heading mt-3 text-lg text-foreground">
-                {sourceCount > 0
-                  ? `${sourceCount} external ${sourceCount === 1 ? "source" : "sources"} cited here`
-                  : "No external sources cited in this section"}
-              </p>
-              <Link
-                to="/book/digital-organism-theory/references"
-                className="mt-3 inline-flex items-center gap-2 text-xs text-muted-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-foreground"
-              >
-                <Library className="h-3.5 w-3.5" aria-hidden="true" />
-                Open Notes and Sources
-              </Link>
-            </section>
-
-            <section className="border-t border-[var(--book-hairline)] pt-6">
-              <p className="dot-label">
-                Try it
-              </p>
-              <p className="book-reading-copy mt-3 text-base italic leading-relaxed text-[var(--book-ink)]">
-                {practicePrompt}
-              </p>
-              <a
-                href="#section-practice"
-                className="mt-3 inline-flex text-xs text-muted-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-foreground"
-              >
-                Carry this into practice
-              </a>
-            </section>
-          </div>
-        </aside>
       </div>
     </>
   );
@@ -488,6 +500,9 @@ export default function BookOnePage() {
   // Minty stays one door away while you read — the field-state surface, opened
   // from the chrome, never a widget floating over the text.
   const [mintyOpen, setMintyOpen] = useState(false);
+  const [mintyRequest, setMintyRequest] = useState<
+    (AgentWorkspaceRequest & { id: number }) | null
+  >(null);
   const contentsPanelRef = useRef<HTMLElement | null>(null);
   const contentsReturnFocusRef = useRef<HTMLElement | null>(null);
 
@@ -500,6 +515,13 @@ export default function BookOnePage() {
   };
 
   const closeContents = () => setContentsOpen(false);
+
+  const openMinty = (request?: AgentWorkspaceRequest) => {
+    if (request) {
+      setMintyRequest({ ...request, id: Date.now() });
+    }
+    setMintyOpen(true);
+  };
 
   const section = useMemo(
     () =>
@@ -687,16 +709,16 @@ export default function BookOnePage() {
             <span>DOT</span>
           </Link>
           <div className="flex items-center gap-3">
-            <AppearanceControl />
+            <AppearanceControl placement="inline" />
             <button
               type="button"
-              onClick={() => setMintyOpen(true)}
+              onClick={() => openMinty()}
               title="Ask Minty about what you're reading"
               aria-label="Ask Minty about this book"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Ask Minty
+              <span className="hidden sm:inline">Ask Minty</span>
             </button>
             {section ? (
               <button
@@ -704,8 +726,8 @@ export default function BookOnePage() {
                 onClick={openContents}
                 className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
               >
-                <List className="h-3.5 w-3.5" />
-                Contents
+                <List className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Contents</span>
               </button>
             ) : null}
           </div>
@@ -717,7 +739,8 @@ export default function BookOnePage() {
           manifest={manifest}
           section={section}
           content={content}
-          onOpenMinty={() => setMintyOpen(true)}
+          onOpenMinty={openMinty}
+          companionOpen={mintyOpen}
           path={activePath}
           references={references}
         />
@@ -779,6 +802,7 @@ export default function BookOnePage() {
           <TwinSurface
             variant="sidecar"
             reducedMotion={reducedMotion}
+            initialRequest={mintyRequest}
             onClose={() => setMintyOpen(false)}
             onOpenNode={() => setMintyOpen(false)}
           />

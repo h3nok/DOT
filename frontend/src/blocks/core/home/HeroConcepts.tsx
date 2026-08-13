@@ -7,18 +7,18 @@ import { DWELL_MS, HERO_CONCEPTS, type Concept } from "./heroData";
 /**
  * The core vocabulary, arriving one term at a time and then stopping.
  *
- * Every line is the book's own wording, and every card carries the claim level
+ * Every line is the book's own wording, and every concept carries the claim level
  * Book One assigns it — observation, model, or hypothesis. That is not
  * decoration: the preface says the distinction "governs the entire book", so a
  * surface that recited the vocabulary without it would misrepresent the work on
  * its own front page.
  *
- * The sequence **settles** on the last card and does not loop. A hero that
+ * The sequence **settles** on the last concept and does not loop. A surface that
  * cycles forever is a small autoplay engine; this one finishes, which is the
  * same promise the book makes about itself. It also pauses on hover and focus,
  * because a line that moves while you are reading it is hostile.
  *
- * Screen readers get the whole list at once — a card rotating under a reader who
+ * Screen readers get the whole list at once — a concept rotating under a reader who
  * cannot see it rotate is noise — so the visual rotator is hidden from them.
  */
 
@@ -58,7 +58,7 @@ function LevelBadge({ level, index, total }: { level: ClaimLevel; index?: number
 export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) {
   const { resolve, editMode } = useSiteContent();
   const last = HERO_CONCEPTS.length - 1;
-  // Always opens on the first card. A reader who cannot see it move should get
+  // Always opens on the first concept. A reader who cannot see it move should get
   // the start of the argument, not wherever the sequence would have ended.
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -101,7 +101,7 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 text-center backdrop-blur-sm"
+      className="border-y border-border/50 py-8 text-center sm:py-10"
     >
       <ul className="sr-only">
         {HERO_CONCEPTS.map((concept) => (
@@ -112,7 +112,7 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
         ))}
       </ul>
 
-      <div aria-hidden="true" className="relative min-h-[14rem] sm:min-h-[12rem]">
+      <div aria-hidden="true" className="relative min-h-[12rem] sm:min-h-[10rem]">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
@@ -126,7 +126,7 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
             <span className="dot-section-heading block">
               {current.term}
             </span>
-            <span className="block max-w-xl text-balance text-sm leading-relaxed text-foreground/75 sm:text-base mx-auto" style={{ fontFamily: "var(--font-serif)" }}>
+            <span className="mx-auto block max-w-xl text-balance font-serif text-sm leading-relaxed text-foreground/75 sm:text-base">
               {resolve(current.id, current.text)}
             </span>
           </motion.div>

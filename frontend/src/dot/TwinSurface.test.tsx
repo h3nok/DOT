@@ -111,4 +111,49 @@ describe("TwinSurface", () => {
     await waitFor(() => expect(screen.getAllByRole("table")).toHaveLength(1));
     expect(screen.getByRole("columnheader", { name: "Model" })).toBeVisible();
   });
+
+  it("keeps book and academic provenance distinct", async () => {
+    vi.mocked(loadEphemeralTurns).mockReturnValueOnce([
+      {
+        id: "research-answer",
+        role: "twin",
+        content: "Book One proposes a model. A paper reports a related result.",
+        citations: [
+          {
+            node_id: "book-1",
+            kind: "chunk",
+            label: "Book One · The Painting",
+            locator: {
+              section: "the-painting",
+              heading: "the-first-painting",
+            },
+          },
+          {
+            node_id: "crossref:10.1000/example",
+            kind: "scholarly_work",
+            label: "A. Researcher (2025) · A related paper",
+            locator: {
+              provider: "Crossref",
+              href: "https://doi.org/10.1000/example",
+              scholar_url: "https://scholar.google.com/scholar?q=example",
+            },
+          },
+        ],
+        refusal_code: null,
+      },
+    ]);
+
+    renderMinty();
+
+    await waitFor(() => expect(screen.getByText("Crossref abstract")).toBeVisible());
+    expect(screen.getByText("Book One")).toBeVisible();
+    expect(screen.getByRole("link", { name: /Open paper/i })).toHaveAttribute(
+      "href",
+      "https://doi.org/10.1000/example",
+    );
+    expect(screen.getByRole("link", { name: /Check Google Scholar/i })).toHaveAttribute(
+      "href",
+      "https://scholar.google.com/scholar?q=example",
+    );
+  });
 });

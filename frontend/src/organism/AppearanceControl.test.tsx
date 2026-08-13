@@ -5,11 +5,11 @@ import { AppearanceControl } from "./AppearanceControl";
 import { OrganismProvider } from "./OrganismContext";
 import { ORGANISM_STORAGE_KEY } from "./types";
 
-function renderAppearance() {
+function renderAppearance(placement: "floating" | "inline" = "floating") {
   return render(
     <ThemeProvider>
       <OrganismProvider>
-        <AppearanceControl />
+        <AppearanceControl placement={placement} />
       </OrganismProvider>
     </ThemeProvider>,
   );
@@ -66,5 +66,16 @@ describe("AppearanceControl", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
     expect(screen.getByRole("dialog", { name: /appearance/i })).toBeTruthy();
+  });
+
+  it("can live in reading chrome without fixed positioning", () => {
+    renderAppearance("inline");
+
+    const trigger = screen.getByRole("button", { name: "Appearance settings" });
+    expect(trigger.parentElement).toHaveClass("relative");
+    expect(trigger.parentElement).not.toHaveClass("fixed");
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: /appearance/i })).toHaveClass("fixed");
   });
 });

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, BookOpen, Compass, HelpCircle, LogIn, UserPlus } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, LogIn, MessageCircleQuestion, UserPlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -26,14 +26,6 @@ function alreadySeen(): boolean {
     return false;
   }
 }
-
-/** Quiet doors, in the order a reader is likely to want them. */
-const FURTHER_PATHS = [
-  { label: "Book One: A Model of Life", to: "/book/digital-organism-theory", hint: "The complete foundational text", icon: BookOpen },
-  { label: "The Concept Map", to: "/doctrine", hint: "Core terms, defined and sourced", icon: Compass },
-  { label: "Open Questions", to: "/applied", hint: "Where the argument is thin", icon: HelpCircle },
-  { label: "Ask to Join", to: "/join", hint: "DOT grows one invitation at a time", icon: UserPlus },
-] as const;
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -229,39 +221,104 @@ export default function HomePage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full scroll-mt-24 py-16 text-center dot-page-container border-t border-border/40"
+        className="mx-auto grid w-full scroll-mt-24 gap-8 border-t border-border/40 py-16 dot-page-container sm:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] sm:items-start sm:text-left"
       >
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="flex items-center justify-center gap-2">
-            <span className="dot-label">
-              An Honest Warning
-            </span>
-          </div>
-
+        <div>
+          <span className="dot-label">The claim boundary</span>
           <h2 className="dot-page-heading mt-4 text-balance">
             Reading this is not the same as testing it.
           </h2>
-
-          <p className="mt-5 max-w-2xl text-balance text-lg leading-relaxed text-foreground/85 sm:text-xl">
-            Digital Organism Theory is a model under construction, not a finished
-            account. It is meant to be applied and developed — and it marks every
-            claim as observation, model, or hypothesis so you can see how far each
-            one is willing to go.
+        </div>
+        <div>
+          <p className="dot-lede max-w-2xl text-balance">
+            Digital Organism Theory is a developing model, not a completed account.
+            Book One marks each major claim as observation, model, or hypothesis so
+            a reader can see what is being noticed, proposed, or left uncertain.
           </p>
-
-          <p className="dot-caption mt-3 max-w-2xl text-balance text-sm leading-relaxed sm:text-base">
-            The model asks each reader to test its claims against lived experience, notice what consequence teaches, and revise what does not hold.
+          <p className="dot-caption mt-4 max-w-xl text-balance">
+            Lived experience can reveal whether a practice changes what you notice.
+            It cannot, by itself, prove the book's larger claims. Those require
+            comparison, criticism, and evidence beyond the framework.
           </p>
+          <Link
+            to="/applied"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]"
+          >
+            Examine the open questions
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </motion.section>
 
-          <div className="mt-8 flex items-center justify-center">
+      {/* ── Choose Your Door / Visitor Intent Pathways ───────────────── */}
+      <motion.section
+        id="choose-path"
+        aria-label="How to approach this work"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5 }}
+        className="mx-auto w-full scroll-mt-24 border-t border-border/40 py-16 dot-page-container"
+      >
+        <div className="max-w-2xl">
+          <span className="dot-label">Continue from here</span>
+          <h2 className="dot-page-heading mt-2 text-balance">
+            Choose the depth you need.
+          </h2>
+          <p className="dot-lede mt-4 max-w-xl">
+            Read the argument in order, inspect how its terms connect, or bring a
+            precise question to the companion.
+          </p>
+        </div>
+
+        <div className="mt-9 divide-y divide-border/50 border-y border-border/50">
+          <div className="group grid gap-4 py-6 sm:grid-cols-[3rem_1fr_auto] sm:items-center">
+            <span className="font-mono text-xs text-[color:var(--organism-accent-strong)]">01</span>
+            <div>
+              <h3 className="dot-section-heading">Read Book One</h3>
+              <p className="dot-caption mt-1">The complete argument, in its intended order and with its notes.</p>
+            </div>
             <Link
               to="/book/digital-organism-theory"
-              className="dot-reading-action inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 text-sm font-semibold transition-all hover:scale-[1.01] active:scale-[0.98]"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-[color:var(--organism-accent-strong)]"
             >
               <BookOpen className="h-4 w-4" aria-hidden="true" />
-              <span>Read Book One with Intent</span>
+              Begin reading
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
+          </div>
+
+          <div className="group grid gap-4 py-6 sm:grid-cols-[3rem_1fr_auto] sm:items-center">
+            <span className="font-mono text-xs text-[color:var(--organism-accent-strong)]">02</span>
+            <div>
+              <h3 className="dot-section-heading">Trace the concepts</h3>
+              <p className="dot-caption mt-1">Definitions, claim levels, and exact links back to the source text.</p>
+            </div>
+            <Link
+              to="/doctrine"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-[color:var(--organism-accent-strong)]"
+            >
+              <Compass className="h-4 w-4" aria-hidden="true" />
+              Open the map
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <div className="group grid gap-4 py-6 sm:grid-cols-[3rem_1fr_auto] sm:items-center">
+            <span className="font-mono text-xs text-[color:var(--organism-accent-strong)]">03</span>
+            <div>
+              <h3 className="dot-section-heading">Question the framework</h3>
+              <p className="dot-caption mt-1">Ask Minty to locate, ground, or test a claim against Book One.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setAsk({ query: "What does DOT claim?", lens: "ground", id: Date.now() })}
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-[color:var(--organism-accent-strong)]"
+            >
+              <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+              Ask Minty
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </motion.section>
@@ -276,17 +333,17 @@ export default function HomePage() {
         transition={{ duration: 0.5 }}
         className="mx-auto w-full scroll-mt-24 py-16 dot-page-container border-t border-border/40"
       >
-        <div className="text-center">
-          <span className="dot-label text-[color:var(--organism-accent-strong)] font-semibold">
-            Short Orientation · 10 Core Claims
-          </span>
-          <h2
-            id="orientation-title"
-            className="dot-page-heading mt-2 text-balance mx-auto"
-          >
-            Principles of the Model
-          </h2>
-        </div>
+        <span className="dot-label">A working vocabulary · 10 concepts</span>
+        <h2
+          id="orientation-title"
+          className="dot-page-heading mt-2 max-w-2xl text-balance"
+        >
+          The terms the argument depends on.
+        </h2>
+        <p className="dot-lede mt-4 max-w-xl">
+          Move through the vocabulary before deciding whether the framework holds.
+          Each term retains the claim level assigned in Book One.
+        </p>
         <div className="mt-8">
           <HeroConcepts autoAdvance={!reducedMotion} />
         </div>
@@ -299,64 +356,45 @@ export default function HomePage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto w-full py-16 dot-page-container border-t border-border/40"
+        className="mx-auto w-full border-t border-border/40 py-16 dot-page-container"
       >
-        <div className="text-center">
-          <span className="dot-label text-[color:var(--organism-accent-strong)] font-semibold">
-            Open Inquiry
-          </span>
-
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="dot-label">Open inquiry</span>
           <h2
             id="invitation-title"
-            className="dot-page-heading mt-3 text-balance leading-tight"
+            className="dot-page-heading mt-3 text-balance"
           >
-            An invitation, not a demand.
+            Stay with the work.
           </h2>
-
-          <p className="mt-4 max-w-2xl mx-auto text-balance text-base leading-relaxed text-foreground/80">
-            I am not asking you to believe any of this before it has earned your confidence. Examine the model, compare it with your own experience, and test the practical claims where they can be tested.
+          <p className="dot-lede mx-auto mt-4 max-w-2xl text-balance">
+            DOT is being built in public as a book, a critical practice, and a
+            community for people who want to learn without surrendering their
+            attention. You do not need to agree to take part; honest scrutiny is
+            part of the work.
           </p>
-
-          <div className="mt-10 pt-4">
-            <div className="grid gap-4 sm:grid-cols-2 text-left">
-              {FURTHER_PATHS.map((path) => {
-                const PathIcon = path.icon;
-                return (
-                  <motion.div key={path.to} whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-                    <Link
-                      to={path.to}
-                    className="group flex items-start gap-4 rounded-lg border border-border/40 bg-foreground/[0.015] p-5 backdrop-blur-md transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]"
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)] text-[color:var(--organism-accent-strong)]">
-                        <PathIcon className="h-4.5 w-4.5" />
-                      </div>
-                      <div>
-                        <span className="text-sm font-semibold text-foreground group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                          {path.label}
-                          <ArrowRight className="ml-1.5 inline h-3.5 w-3.5 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5" aria-hidden="true" />
-                        </span>
-                        <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">{path.hint}</p>
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            <div className="mt-12 flex flex-col items-center gap-2 border-t border-border/30 pt-6">
-              <p className="text-xs font-mono text-muted-foreground">
-                Written by Henok Ghebrechristos · offered as a construction, not a revelation
-              </p>
-              <p className="text-xs text-muted-foreground/70">
-                No ads, no tracking, no data sales.{" "}
-                <Link
-                  to="/support"
-                  className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
-                >
-                  Readers fund the work.
-                </Link>
-              </p>
-            </div>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              to="/join"
+              className="dot-reading-action inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-sm font-semibold"
+            >
+              <UserPlus className="h-4 w-4" aria-hidden="true" />
+              Ask to join
+            </Link>
+            <Link
+              to="/support"
+              className="dot-graph-destination inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border px-6 text-sm font-semibold"
+            >
+              Support the work
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="mt-12 border-t border-border/40 pt-6">
+            <p className="font-mono text-xs text-muted-foreground">
+              Written by Henok Ghebrechristos · offered as a construction, not a revelation
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground/70">
+              No ads, no tracking, no data sales. Reader support funds the next edition and platform.
+            </p>
           </div>
         </div>
       </motion.section>

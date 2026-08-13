@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Moon, RotateCcw, Sparkles, Sun, X } from "lucide-react";
+import { Moon, Palette, RotateCcw, Sparkles, Sun, X } from "lucide-react";
 import { useTheme } from "../shared/contexts/SimpleThemeContext";
 import { useOrganism } from "./OrganismContext";
 import { FieldPreview } from "./FieldPreview";
@@ -66,7 +66,9 @@ const chip = (selected: boolean) =>
  * and the typography of the reading surfaces. Everything persists in the
  * organism config, so a member's environment is theirs across visits.
  */
-export const AppearanceControl: React.FC = () => {
+export const AppearanceControl: React.FC<{
+  placement?: "floating" | "inline";
+}> = ({ placement = "floating" }) => {
   const { theme, setTheme } = useTheme();
   const { config, setConfig } = useOrganism();
   const [open, setOpen] = useState(false);
@@ -88,12 +90,17 @@ export const AppearanceControl: React.FC = () => {
 
   const isDark = theme === "dark";
   const fields = Object.keys(ORGANISM_PRESETS) as OrganismPreset[];
+  const inline = placement === "inline";
 
   return (
     <div
       ref={ref}
       data-appearance-control
-      className="fixed bottom-4 left-4 z-50 flex flex-col-reverse items-start transition-opacity sm:bottom-5 sm:left-5"
+      className={
+        inline
+          ? "relative z-50 transition-opacity"
+          : "fixed bottom-4 left-4 z-50 flex flex-col-reverse items-start transition-opacity sm:bottom-5 sm:left-5"
+      }
     >
       <button
         type="button"
@@ -101,17 +108,29 @@ export const AppearanceControl: React.FC = () => {
         aria-label="Appearance settings"
         aria-expanded={open}
         title="Make it yours — theme, background, tint, text"
-        className="organism-alive group flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-3.5 py-2 text-foreground/80 shadow-lg backdrop-blur-md transition-colors hover:text-foreground"
+        className={`organism-alive group flex items-center justify-center rounded-full border border-border/60 bg-background/70 text-foreground/80 backdrop-blur-md transition-colors hover:text-foreground ${
+          inline ? "h-9 w-9" : "gap-2 px-3.5 py-2 shadow-lg"
+        }`}
       >
-        <Sparkles className="h-4 w-4" />
-        <span className="text-[11px] font-medium">Appearance</span>
+        {inline ? (
+          <Palette className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Sparkles className="h-4 w-4" aria-hidden="true" />
+        )}
+        <span className={inline ? "sr-only" : "text-[11px] font-medium"}>
+          Appearance
+        </span>
       </button>
 
       {open && (
         <div
           role="dialog"
           aria-label="Appearance"
-          className="organism-alive mb-3 max-h-[calc(100svh-5.5rem)] w-[min(19rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-border/60 bg-background/90 text-foreground shadow-2xl backdrop-blur-xl"
+          className={`organism-alive max-h-[calc(100svh-5.5rem)] overflow-y-auto rounded-2xl border border-border/60 bg-background/90 text-foreground shadow-2xl backdrop-blur-xl ${
+            inline
+              ? "fixed left-4 right-4 top-16 w-auto sm:absolute sm:left-auto sm:right-0 sm:top-[calc(100%+0.75rem)] sm:w-[min(19rem,calc(100vw-2rem))]"
+              : "mb-3 w-[min(19rem,calc(100vw-2rem))]"
+          }`}
         >
           <div className="flex items-center justify-between px-4 pb-1 pt-3.5">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">

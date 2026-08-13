@@ -57,6 +57,13 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     TWIN_TIMEOUT_SECONDS: float = 30.0
     TOOL_RUNTIME_SECRET: str = ""
 
+    # Scholarly context is opt-in per question. Crossref and Semantic Scholar
+    # provide supported APIs; Google Scholar is linked for verification only.
+    SCHOLARLY_SEARCH_ENABLED: bool = True
+    SCHOLARLY_SEARCH_TIMEOUT_SECONDS: float = 5.0
+    SEMANTIC_SCHOLAR_API_KEY: str = ""
+    SCHOLARLY_CONTACT_EMAIL: str = ""
+
     # Retrieval. Without an embedding key the twin still answers, using keyword
     # scoring only; it never silently returns nothing.
     EMBEDDING_MODEL: str = "gemini-embedding-001"

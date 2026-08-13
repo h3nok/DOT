@@ -6,8 +6,9 @@ import remarkGfm from "remark-gfm";
 import {
   ArrowUp,
   BookOpen,
+  ExternalLink,
   GitBranch,
-  Loader2,
+  GraduationCap,
   MessageSquare,
   Plus,
   Scale,
@@ -18,6 +19,7 @@ import {
 import { staggerChild, staggerContainer, useOrganismPulse } from "../organism";
 import { PROFILE_OWNER_ID } from "./orchestrator";
 import { TwinFeedback } from "./TwinFeedback";
+import { MintyMark } from "./MintyMark";
 import {
   deleteThread,
   clearEphemeralTurns,
@@ -95,20 +97,32 @@ const LENSES = [
     icon: Scale,
     prompts: [
       "Where is the evidence weakest?",
-      "What would distinguish Little c from a neural account?",
+      "What peer-reviewed research bears on the Painting model?",
     ],
   },
 ] as const;
 
 function citationHref(citation: TwinCitation): string | null {
   const direct = citation.locator?.href;
-  if (typeof direct === "string" && direct.startsWith("/")) return direct;
+  if (
+    typeof direct === "string" &&
+    (direct.startsWith("/") || direct.startsWith("https://"))
+  ) {
+    return direct;
+  }
   const section = citation.locator?.section;
   if (typeof section !== "string") return null;
   const heading = citation.locator?.heading;
   return `/book/digital-organism-theory/${section}${
     typeof heading === "string" && heading ? `#${heading}` : ""
   }`;
+}
+
+function scholarHref(citation: TwinCitation): string | null {
+  const href = citation.locator?.scholar_url;
+  return typeof href === "string" && href.startsWith("https://scholar.google.com/")
+    ? href
+    : null;
 }
 
 /**
@@ -181,50 +195,84 @@ const Citations: React.FC<{
     <section className="mt-5 border-t border-border/50 pt-4" aria-label="Answer sources">
       <p className="mb-3 flex items-center gap-2 dot-label">
         <ShieldCheck className="h-3 w-3" aria-hidden="true" />
-        Sources used
+        Grounding
       </p>
       <ol className="space-y-1.5">
         {distinct.map((citation, index) => {
           const href = citationHref(citation);
-          const className =
-            "group flex w-full items-center gap-3 border-l border-[color:var(--organism-accent-soft)] bg-foreground/[0.025] px-3 py-2.5 text-left text-[11px] text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground";
-          const label = (
-            <>
-              <span className="font-mono text-[11px] text-[var(--organism-accent-strong)]">
-                [{String(index + 1).padStart(2, "0")}]
-              </span>
-              <span className="min-w-0 flex-1 truncate font-medium">{citation.label}</span>
-              {href ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[color:var(--organism-accent-strong)] group-hover:underline">
-                  <span className="hidden sm:inline">Open in Book One</span>
-                  <BookOpen className="h-3 w-3 shrink-0" aria-hidden="true" />
-                </span>
-              ) : null}
-            </>
-          );
-          if (href) {
-            return (
-              <li key={`${citation.node_id}-${index}`}>
-                <Link
-                  to={href}
-                  className={className}
-                  title="Open the cited Book One passage"
-                >
-                  {label}
-                </Link>
-              </li>
-            );
-          }
+          const scholar = scholarHref(citation);
+          const research = citation.kind === "scholarly_work";
+          const provider = citation.locator?.provider;
+          const researchLabel =
+            research && typeof provider === "string"
+              ? `${provider} abstract`
+              : "Research abstract";
+          const external = href?.startsWith("https://") ?? false;
           return (
-            <li key={`${citation.node_id}-${index}`}>
-              <button
-                type="button"
-                onClick={() => onOpen(citation.node_id)}
-                className={className}
-                title="Open this knowledge node"
-              >
-                {label}
-              </button>
+            <li
+              key={`${citation.node_id}-${index}`}
+              className="border-l border-[color:var(--organism-accent-soft)] bg-foreground/[0.025] px-3 py-3 text-[11px] text-muted-foreground"
+            >
+              <div className="flex items-start gap-3">
+                <span className="pt-0.5 font-mono text-[11px] text-[var(--organism-accent-strong)]">
+                  [{String(index + 1).padStart(2, "0")}]
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium leading-5 text-foreground/90">
+                    {citation.label}
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase text-muted-foreground">
+                      {research ? (
+                        <GraduationCap className="h-3 w-3" aria-hidden="true" />
+                      ) : (
+                        <BookOpen className="h-3 w-3" aria-hidden="true" />
+                      )}
+                      {research ? researchLabel : "Book One"}
+                    </span>
+                    {href ? (
+                      external ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-medium text-[color:var(--organism-accent-strong)] hover:underline"
+                        >
+                          Open paper
+                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={href}
+                          className="inline-flex items-center gap-1 font-medium text-[color:var(--organism-accent-strong)] hover:underline"
+                        >
+                          Open passage
+                          <BookOpen className="h-3 w-3" aria-hidden="true" />
+                        </Link>
+                      )
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => onOpen(citation.node_id)}
+                        className="font-medium text-[color:var(--organism-accent-strong)] hover:underline"
+                      >
+                        Open source
+                      </button>
+                    )}
+                    {scholar ? (
+                      <a
+                        href={scholar}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-medium hover:text-foreground hover:underline"
+                      >
+                        Check Google Scholar
+                        <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </li>
           );
         })}
@@ -760,11 +808,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               was produced on the right, and the way out. */}
           <header className="flex items-center justify-between gap-4 border-b border-border/40 pb-3.5 pt-5">
             <div className="flex min-w-0 items-center gap-2.5">
-              <span
-                className="organism-pulse-dot inline-flex h-2 w-2 shrink-0 rounded-full"
-                style={{ background: "var(--organism-accent-strong)" }}
-                aria-hidden="true"
-              />
+              <MintyMark size={28} thinking={busy} reducedMotion={reducedMotion} />
               <span className="font-serif text-base font-semibold leading-none text-foreground">
                 Minty
               </span>
@@ -780,7 +824,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                   className="h-3 w-3 text-[var(--organism-accent-strong)]"
                   aria-hidden="true"
                 />
-                {HAS_ORCHESTRATOR ? "Cited answers" : "Quoted passages"}
+                {HAS_ORCHESTRATOR ? "Source-checked" : "Quoted passages"}
               </span>
             </div>
             <button
@@ -880,8 +924,8 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
                   {authenticated
-                    ? "Your saved knowledge and released Book One canon."
-                    : "Released Book One canon. Private documents remain private."}
+                    ? "Your saved knowledge and released Book One canon. Academic abstracts are added when you ask for evidence."
+                    : "Released Book One canon. Ask for evidence to compare it with academic abstracts; private documents remain private."}
                 </p>
                 {/* On a static release there is no model behind Minty, only the
                     released text and a ranking over it. It still cites what it
@@ -978,11 +1022,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               aria-live="polite"
             >
               <p className="mb-2 flex items-center gap-2 dot-label">
-                <span
-                  className="organism-pulse-dot inline-block h-1.5 w-1.5 rounded-full"
-                  style={{ background: "var(--organism-accent-strong)" }}
-                  aria-hidden="true"
-                />
+                <MintyMark size={18} thinking reducedMotion={reducedMotion} />
                 Minty
               </p>
               <div className="font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
@@ -995,8 +1035,8 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               </div>
             </motion.article>
           ) : busy ? (
-            /* The aperture breathing while Minty gathers the thread — present,
-               not a faint footnote. Rings dilate outward from the mark. */
+            /* Source signals converge on the DOT mark while Minty gathers the
+               thread. The motion describes the product instead of decorating it. */
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1004,38 +1044,9 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               aria-live="polite"
               role="status"
             >
-              <span className="relative flex h-14 w-14 items-center justify-center">
-                {[0, 1, 2].map((i) => (
-                  <motion.span
-                    key={i}
-                    className="absolute rounded-full border"
-                    style={{ borderColor: "var(--organism-accent-soft)" }}
-                    initial={{ opacity: 0 }}
-                    animate={
-                      reducedMotion
-                        ? { opacity: 0.3 }
-                        : { scale: [0.4, 1.5], opacity: [0.6, 0] }
-                    }
-                    transition={
-                      reducedMotion
-                        ? { duration: 0 }
-                        : {
-                            duration: 2.4,
-                            repeat: Infinity,
-                            delay: i * 0.8,
-                            ease: "easeOut",
-                          }
-                    }
-                  />
-                ))}
-                <span
-                  className="organism-pulse-dot relative inline-block h-3 w-3 rounded-full"
-                  style={{ background: "var(--organism-accent-strong)" }}
-                  aria-hidden="true"
-                />
-              </span>
+              <MintyMark size={86} thinking reducedMotion={reducedMotion} />
               <span className="font-serif text-[15px] italic text-muted-foreground">
-                Minty is reading…
+                Tracing the question through its sources…
               </span>
             </motion.div>
           ) : null}
@@ -1111,7 +1122,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[color:var(--organism-accent-strong)] text-background transition-opacity disabled:opacity-40"
             >
               {busy ? (
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                <MintyMark size={22} thinking reducedMotion={reducedMotion} />
               ) : (
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
               )}

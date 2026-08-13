@@ -74,6 +74,15 @@ export interface SendOutcome {
 
 const EPHEMERAL_SESSION_KEY = "dot-lumen-session-v1";
 const MAX_EPHEMERAL_TURNS = 24;
+const SOCIAL_MESSAGE = /^(?:hi|hello|hey|howdy|thanks|thank you|good (?:morning|afternoon|evening))[\s!,.?]*$/i;
+
+function isUsableAnswer(answer: AskAnswer, question: string): boolean {
+  if (answer.refusal_code) return false;
+  // Hospitality is intentionally uncited. Every substantive answer needs both
+  // the server's grounded verdict and a source the reader can inspect.
+  if (SOCIAL_MESSAGE.test(question.trim())) return true;
+  return answer.grounded && answer.citations.length > 0;
+}
 
 function isTwinTurn(value: unknown): value is TwinTurn {
   if (!value || typeof value !== "object") return false;
@@ -260,6 +269,7 @@ export async function sendMessageStream(
     grounded: outcome.grounded ?? false,
     refusal_code: outcome.refusal_code ?? null,
   };
+  if (outcome.event === "done" && !isUsableAnswer(answer, question)) return null;
   return { turn: turnFrom(`turn-${Date.now()}`, answer), ephemeral: true };
 }
 
@@ -286,7 +296,11 @@ export async function sendMessage(
       },
     });
 
-    if (result.ok && result.data && result.data.answer.grounded) {
+    if (
+      result.ok &&
+      result.data &&
+      isUsableAnswer(result.data.answer, question)
+    ) {
       return {
         thread: result.data.conversation,
         turn: turnFrom(`turn-${Date.now()}`, result.data.answer),
@@ -297,14 +311,6 @@ export async function sendMessage(
     // A thread that vanished server-side must not strand the member in a dead
     // conversation; the caller restarts rather than retrying into the same 404.
     if (result.status === 404 && threadId) return null;
-
-    if (result.ok && result.data && !result.data.answer.refusal_code) {
-      return {
-        thread: result.data.conversation,
-        turn: turnFrom(`turn-${Date.now()}`, result.data.answer),
-        ephemeral: false,
-      };
-    }
   }
 
   // Released canon is public. Visitor history is sent as bounded, untrusted
@@ -318,12 +324,12 @@ export async function sendMessage(
       history: history.slice(-6),
     },
   });
-  if (open.ok && open.data && (open.data.grounded || !open.data.refusal_code)) {
+  if (open.ok && open.data && isUsableAnswer(open.data, question)) {
     return { turn: turnFrom(`turn-${Date.now()}`, open.data), ephemeral: true };
   }
 
   const local = await answerFromBook(question, lens, history);
-  if (local) {
+  if (local && isUsableAnswer(local, question)) {
     return {
       turn: turnFrom(`turn-${Date.now()}`, local, "passages"),
       ephemeral: true,

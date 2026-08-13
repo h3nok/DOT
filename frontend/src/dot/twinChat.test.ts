@@ -57,7 +57,7 @@ describe("twinChat.sendMessage", () => {
     vi.mocked(globalThis.fetch).mockResolvedValueOnce(
       jsonResponse(200, {
         answer: "Public answer.",
-        citations: [],
+        citations: [{ node_id: "book-1", kind: "book", label: "Book One" }],
         grounded: true,
         refusal_code: null,
       }),
@@ -94,7 +94,12 @@ describe("twinChat.sendMessage", () => {
     vi.mocked(globalThis.fetch).mockResolvedValueOnce(
       jsonResponse(200, {
         conversation: { id: "conv_1", title: "hello", message_count: 4 },
-        answer: { answer: "More.", citations: [], grounded: true, refusal_code: null },
+        answer: {
+          answer: "More.",
+          citations: [{ node_id: "book-1", kind: "book", label: "Book One" }],
+          grounded: true,
+          refusal_code: null,
+        },
       }),
     );
 
@@ -115,6 +120,28 @@ describe("twinChat.sendMessage", () => {
       false,
     );
     expect(outcome?.ephemeral).toBe(true);
+    expect(outcome?.turn.citations[0].kind).toBe("book");
+  });
+
+  it("rejects a substantive server answer with no inspectable source", async () => {
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce(
+      jsonResponse(200, {
+        answer: "Trust me.",
+        citations: [],
+        grounded: true,
+        refusal_code: null,
+      }),
+    );
+
+    const outcome = await sendMessage(
+      "What is a Digital Organism?",
+      null,
+      [],
+      "ground",
+      false,
+    );
+
+    expect(outcome?.turn.content).not.toBe("Trust me.");
     expect(outcome?.turn.citations[0].kind).toBe("book");
   });
 });

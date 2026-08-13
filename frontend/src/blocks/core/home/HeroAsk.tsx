@@ -87,7 +87,7 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
       {/* ── Symmetrical Centered Sample Inquiry Chips ────────────────────────── */}
       <div className="pt-1 flex flex-wrap items-center justify-center gap-2">
         <span className="dot-label mr-1 hidden sm:inline">Try asking:</span>
-        {SAMPLE_QUESTIONS.map((question) => (
+        {SAMPLE_QUESTIONS.map((question, index) => (
           <motion.button
             key={question.text}
             type="button"
@@ -96,7 +96,9 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             onClick={() => onAsk({ query: question.text, lens: question.lens })}
             // min-h-11 on touch, tightening to the compact pill once there is a
             // pointer: these are the first thing a thumb reaches for.
-            className="group inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border/40 bg-foreground/[0.015] px-3.5 py-1.5 text-xs text-muted-foreground transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035] hover:text-foreground sm:min-h-0"
+            className={`group min-h-11 items-center gap-1.5 rounded-full border border-border/40 bg-foreground/[0.015] px-3.5 py-1.5 text-xs text-muted-foreground transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035] hover:text-foreground sm:min-h-0 ${
+              index < 2 ? "inline-flex" : "hidden sm:inline-flex"
+            }`}
           >
             <span>{question.text}</span>
           </motion.button>

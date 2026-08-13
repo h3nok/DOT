@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Shield, Palette, User, Box, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Box,
+  Palette,
+  RotateCcw,
+  Shield,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ArchitectureNode {
@@ -19,10 +27,10 @@ const NODES: ArchitectureNode[] = [
     num: "01",
     title: "Little c & Canvas",
     role: "Holds Awareness",
-    description: "The localized experiencing center (Little c) and quiet field of state.",
+    description: "Awareness receives a present state before it decides what that state means.",
     level: "Model",
     details:
-      "Little c is the localized center of awareness tied to Big C. It holds the Canvas—the raw, self-preserving field of awareness carrying the felt weight of everything you encounter.",
+      "DOT calls the local point of experience Little c and the state it carries the Canvas. Big C remains a hypothesis; the immediate claim is simply that experience has a situated point of view.",
     icon: Shield,
   },
   {
@@ -30,10 +38,10 @@ const NODES: ArchitectureNode[] = [
     num: "02",
     title: "The Painting",
     role: "Perceives",
-    description: "Inherited lenses, feelings, and habits coloring the present.",
+    description: "Inherited expectations interpret what the present appears to mean.",
     level: "Observation",
     details:
-      "You were shaped by your environment. Yet Little c still chooses within its available decision space through automatic reactions and intentional focus.",
+      "The Painting names conditioning in operation: prior learning, identity, emotion, and expectation shaping what becomes salient before deliberate choice begins.",
     icon: Palette,
   },
   {
@@ -41,10 +49,10 @@ const NODES: ArchitectureNode[] = [
     num: "03",
     title: "Character",
     role: "Acts",
-    description: "Who you choose to be when stepping out of habit.",
+    description: "Interpretation becomes response, habit, or a more deliberate act.",
     level: "Model",
     details:
-      "Active agency—intentional choice by Little c stepping out of automatic reaction into direct action.",
+      "Character is the enacted pattern. DOT reserves the word for what you repeatedly do, including the moments when Intent widens the response beyond automatic reaction.",
     icon: User,
   },
   {
@@ -52,10 +60,10 @@ const NODES: ArchitectureNode[] = [
     num: "04",
     title: "Reality Frame",
     role: "Environment",
-    description: "The rule-bound arena where action meets consequence.",
+    description: "Action meets a world with limits, consequences, and other lives.",
     level: "Model",
     details:
-      "An immersive environment providing the hard friction needed for Big C and Little c to reflect, learn, and adapt.",
+      "The Reality Frame is not whatever the mind prefers. It is the environment that answers action with consequence; that feedback can revise the next Canvas and Painting.",
     icon: Box,
   },
 ];
@@ -73,50 +81,62 @@ export function ArchitectureDiagram() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
-      className="scroll-mt-24 border-t border-border/40 py-20 dot-page-container"
+      className="scroll-mt-24 border-t border-border/40 py-16 dot-page-container"
     >
       {/* ── Header ───────────────────────────────────────────────────── */}
       <div className="mx-auto max-w-2xl text-center">
-        <span className="dot-label text-[color:var(--organism-accent-strong)]">
-          Visual Model
-        </span>
-        <h2 className="dot-page-heading mt-2">
-          Architecture of Experience
-        </h2>
-        <p className="dot-caption mt-3">
-          Four layers form a recursive loop. Each one feeds the next.
+        <span className="dot-label">The core model</span>
+        <h2 className="dot-page-heading mt-2">Experience becomes action, then feedback.</h2>
+        <p className="dot-lede mx-auto mt-4 max-w-xl text-balance">
+          A present state is interpreted, enacted, and answered by consequence.
+          What happens next becomes part of the next state.
         </p>
       </div>
 
       {/* ── Circuit selector ─────────────────────────────────────────── */}
-      <div className="mx-auto mt-10 max-w-2xl text-center">
-        <p className="dot-label">The Recursive Feedback Circuit</p>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+      <div className="mx-auto mt-10 max-w-3xl">
+        <p className="dot-label text-center">Select a stage</p>
+        <ol className="mt-4 grid gap-px overflow-hidden rounded-lg border border-border/50 bg-border/50 sm:grid-cols-4">
           {NODES.map((node, i) => {
             const isSelected = node.id === selectedId;
             const IconComponent = node.icon;
             return (
-              <div key={node.id} className="flex items-center gap-1.5">
+              <li key={node.id} className="relative bg-background">
                 <button
                   type="button"
                   onClick={() => setSelectedId(node.id)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-[11px] transition-all ${
+                  aria-pressed={isSelected}
+                  className={`flex min-h-[4.5rem] w-full flex-col items-start justify-between gap-2 px-4 py-3 text-left transition-colors sm:min-h-24 sm:gap-3 sm:py-4 ${
                     isSelected
-                      ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold"
-                      : "border border-border/40 text-muted-foreground hover:border-border hover:text-foreground"
+                      ? "bg-foreground/[0.065] text-foreground"
+                      : "text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
                   }`}
                 >
-                  <IconComponent className="h-3 w-3" />
-                  {node.title}
+                  <span className="flex w-full items-center justify-between">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.14em]">
+                      {node.num}
+                    </span>
+                    <IconComponent
+                      className={`h-4 w-4 ${isSelected ? "text-[color:var(--organism-accent-strong)]" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className="text-sm font-semibold leading-tight">{node.title}</span>
                 </button>
-                {i < NODES.length - 1 && (
-                  <span className="text-muted-foreground/30" aria-hidden="true">→</span>
-                )}
-              </div>
+                {i < NODES.length - 1 ? (
+                  <ArrowRight
+                    className="absolute -right-2 top-1/2 z-10 hidden h-4 w-4 -translate-y-1/2 bg-background text-muted-foreground sm:block"
+                    aria-hidden="true"
+                  />
+                ) : null}
+              </li>
             );
           })}
-          <span className="text-muted-foreground/30" aria-hidden="true">↩</span>
-        </div>
+        </ol>
+        <p className="mt-3 flex items-center justify-end gap-2 text-xs text-muted-foreground">
+          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+          Consequence informs the next state
+        </p>
       </div>
 
       {/* ── Detail panel ─────────────────────────────────────────────── */}
@@ -127,28 +147,21 @@ export function ArchitectureDiagram() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className="mx-auto mt-6 max-w-2xl rounded-lg border border-[color:var(--organism-accent-soft)] bg-foreground/[0.015] p-6 text-center sm:p-8"
+          className="mx-auto mt-6 grid max-w-3xl gap-5 border-y border-[color:var(--organism-accent-soft)] py-7 text-left sm:grid-cols-[12rem_1fr] sm:items-start"
         >
-          <div className="inline-flex items-center gap-2.5">
+          <div>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--organism-accent-strong)] text-background">
-              <SelectedIcon className="h-3.5 w-3.5" />
+              <SelectedIcon className="h-3.5 w-3.5" aria-hidden="true" />
             </div>
-            <span className="dot-section-heading">
-              {selectedNode.title}
-            </span>
+            <p className="dot-label mt-4">
+              {selectedNode.role} · {selectedNode.level}
+            </p>
           </div>
-
-          <p className="dot-label mt-2">
-            {selectedNode.role} · {selectedNode.level}
-          </p>
-
-          <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-foreground/85 sm:text-base" style={{ fontFamily: "var(--font-serif)" }}>
-            {selectedNode.description}
-          </p>
-
-          <p className="dot-caption mx-auto mt-3 max-w-lg">
-            {selectedNode.details}
-          </p>
+          <div>
+            <h3 className="dot-section-heading">{selectedNode.title}</h3>
+            <p className="dot-lede mt-3">{selectedNode.description}</p>
+            <p className="dot-caption mt-3 max-w-xl">{selectedNode.details}</p>
+          </div>
         </motion.div>
       </AnimatePresence>
     </motion.section>

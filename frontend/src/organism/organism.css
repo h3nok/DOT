@@ -331,29 +331,44 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
 /* --- Page heading: serif title for page-level headings --------------- */
 .dot-page-heading {
   font-family: var(--font-serif, ui-serif, Georgia, serif);
-  font-size: 2.25rem; /* text-4xl */
+  font-size: 1.875rem; /* text-3xl */
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: 0;
   color: var(--foreground);
 }
 @media (min-width: 640px) {
   .dot-page-heading {
-    font-size: 3rem; /* text-5xl */
+    font-size: 2.25rem; /* text-4xl */
   }
 }
 
 /* --- Section heading: serif title for within-page sections ----------- */
 .dot-section-heading {
   font-family: var(--font-serif, ui-serif, Georgia, serif);
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.25rem; /* text-xl */
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.3;
   color: var(--foreground);
 }
 @media (min-width: 640px) {
   .dot-section-heading {
-    font-size: 1.875rem; /* text-3xl */
+    font-size: 1.5rem; /* text-2xl */
+  }
+}
+
+/* --- Lede: the paragraph directly under a section heading ------------
+   Without this every section invented its own body size, so the same rank of
+   text arrived at four different scales down one page. One measure, one size:
+   set the width on the element (max-w-2xl) and let this own the type. */
+.dot-lede {
+  font-size: 1rem; /* text-base */
+  line-height: 1.7;
+  color: color-mix(in oklch, var(--foreground) 82%, transparent);
+}
+@media (min-width: 640px) {
+  .dot-lede {
+    font-size: 1.125rem; /* text-lg */
   }
 }
 
@@ -381,10 +396,10 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
 /* --- Micro label: the mono uppercase kicker text --------------------- */
 .dot-label {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.75rem; /* 12px */
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--muted-foreground);
 }
 
