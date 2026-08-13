@@ -66,14 +66,14 @@ export const PresenceSurface: React.FC<PresenceSurfaceProps> = ({
             >
               {initial}
             </span>
-            <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+            <p className="dot-label mt-4">
               Present
             </p>
             <h2 className="mt-1 font-serif text-2xl font-semibold text-foreground">
               {name}
             </h2>
             {user.is_owner && (
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="mt-1 dot-label">
                 Steward of this field
               </p>
             )}

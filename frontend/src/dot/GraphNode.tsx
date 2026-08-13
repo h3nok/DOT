@@ -113,7 +113,12 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   const drillable = hasChildren(node);
   const kind = node.kind ?? "attribute";
   const comingSoon = node.planned === true;
-  const pageDestination = kind === "page" && Boolean(node.href) && !comingSoon;
+  // A limb that opens into its own children is as much a destination as one
+  // that navigates: both are a single deliberate move from here. Keying this on
+  // `href` alone dropped drillable limbs to the bare-dot form, so a hub stood
+  // beside full cards looking like a stray mark rather than their peer.
+  const pageDestination =
+    kind === "page" && (Boolean(node.href) || drillable) && !comingSoon;
 
   if (isCenter) {
     return (
@@ -128,6 +133,11 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
         className="group flex flex-col items-center text-center outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--organism-accent-strong)] focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       >
         <NucleusFace node={node} reducedMotion={reducedMotion} />
+        {thesis && node.introduction && (
+          <span className="mb-2 px-6 text-balance font-serif text-xs leading-snug text-muted-foreground sm:hidden">
+            {node.introduction}
+          </span>
+        )}
         <span className="max-w-[min(82vw,32rem)] text-balance font-serif text-2xl font-semibold text-foreground sm:text-3xl">
           {node.label}
         </span>
@@ -150,7 +160,9 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
   }
 
   if (pageDestination && !editing) {
-    const DestinationIcon = node.id === "theory" ? Map : NotebookPen;
+    // Layers says "this opens into more"; the flat glyphs say "this is a place".
+    const DestinationIcon =
+      node.id === "theory" ? Map : drillable ? Layers : NotebookPen;
 
     return (
       <motion.button
@@ -163,15 +175,22 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
         whileTap={reducedMotion ? undefined : { scale: 0.99 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <span className="dot-graph-destination-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
+        {/* The glyph costs 48px of a 164px card on a phone, which left about
+            eleven characters per line and clipped every teaching line. The
+            label already says which limb this is; the icon is reinforcement,
+            and reinforcement is what yields when space runs out. */}
+        <span className="dot-graph-destination-icon hidden h-9 w-9 shrink-0 items-center justify-center rounded-full sm:flex">
           <DestinationIcon className="h-4 w-4" aria-hidden="true" />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-semibold text-foreground">
             {node.label}
           </span>
+          {/* This line is the only teaching a stranger gets before choosing.
+              Hiding it below 640px left phones with three bare labels, and
+              clamping to two lines cut the sentence mid-clause on desktop. */}
           {node.description && (
-            <span className="mt-1 hidden text-[11px] leading-snug text-muted-foreground sm:line-clamp-2">
+            <span className="mt-1 line-clamp-3 text-[11px] leading-snug text-muted-foreground">
               {node.description}
             </span>
           )}

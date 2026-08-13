@@ -1,29 +1,3 @@
-// API Services
-export { BaseApiService } from "./api/BaseApiService";
-export type { ApiResponse, ApiRequestConfig } from "./api/BaseApiService";
-
-// Metrics Services
-export { default as MetricsService } from "./metrics/MetricsService";
-export { default as IntegrationsService } from "./metrics/IntegrationsService";
-export type {
-  PlatformMetrics,
-  DashboardMetrics,
-  HistoricalMetrics,
-  ResearchMetrics,
-  MetricsSummary,
-} from "./metrics/MetricsService";
-export type {
-  Integration,
-  CreateIntegrationData,
-  IntegrationUsageData,
-  HealthStatus,
-} from "./metrics/IntegrationsService";
-
-// Error Services
-export { default as ErrorService } from "./errors/ErrorService";
-export type { ErrorLog, ErrorContext } from "./errors/ErrorService";
-
-// Orchestrator Services
 export {
   createPublicationRelease,
   fetchOrchestratorReadiness,
@@ -62,6 +36,3 @@ export type {
   FootprintImportRead,
   FootprintNodeRead,
 } from "./OrchestratorGraphService";
-
-// Legacy exports for backward compatibility
-export { default as PlatformMetricsService } from "./PlatformMetricsService";

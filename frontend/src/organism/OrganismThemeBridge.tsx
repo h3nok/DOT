@@ -46,9 +46,10 @@ export const OrganismThemeBridge: React.FC = () => {
       v.calm = v.calmTarget; // snap; nothing animates here anyway
       // Reading desaturates the field a touch so text contrast stays stable.
       const hue = hueOf(v);
-      const chroma =
+      const rawStaticChroma =
         0.13 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * v.calm);
+      const chroma = tint === "auto" ? rawStaticChroma : Math.max(0.06, rawStaticChroma);
       // Reduced motion never flashes: drop any pending/queued pulse silently.
       v.pendingPulse = false;
       v.pulseDeferred = false;
@@ -91,9 +92,11 @@ export const OrganismThemeBridge: React.FC = () => {
       shown.hue = (shown.hue + dh * k + 360) % 360;
 
       // Reading pins chroma lower so body-text contrast stays stable.
-      const targetChroma =
+      // Floor at 0.06 so a pinned tint is always perceptible.
+      const rawChroma =
         0.14 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * calm);
+      const targetChroma = tint === "auto" ? rawChroma : Math.max(0.06, rawChroma);
       shown.chroma += (targetChroma - shown.chroma) * k;
       shown.luma += (v.daylight - shown.luma) * k;
       shown.arousal += (v.arousal - shown.arousal) * 0.1;

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import logging
+import os
 
 import pydantic
 import pydantic_settings
@@ -52,7 +53,7 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     # Twin plane (ADR-0010). TOOL_RUNTIME_SECRET signs tool manifests; without it
     # the registry refuses to dispatch anything.
     TWIN_ENABLED: bool = True
-    TWIN_MODEL: str = "gemini-3.5-flash-lite"
+    TWIN_MODEL: str = "gemini-3.6-flash"
     TWIN_API_KEY: str = ""
     TWIN_TIMEOUT_SECONDS: float = 30.0
     TOOL_RUNTIME_SECRET: str = ""
@@ -123,6 +124,8 @@ class ServiceSettings(pydantic_settings.BaseSettings):
             errors.append("AUTH_MODE=local_header is not allowed in production/staging")
         if self.AUTH_MODE == "jwt" and not self.SERVICE_AUTH_SECRET:
             errors.append("SERVICE_AUTH_SECRET is required for AUTH_MODE=jwt")
+        if not os.environ.get("RESEND_API_KEY", "").strip():
+            errors.append("RESEND_API_KEY is required in production/staging")
 
         if errors:
             msg: str = f"{self.SERVICE_NAME} config validation failed:\n  - " + "\n  - ".join(

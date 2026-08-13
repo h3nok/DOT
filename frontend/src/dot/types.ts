@@ -20,6 +20,7 @@ export type DotSurface =
   | "circle"
   | "vault"
   | "support"
+  | "join"
   | "twin";
 
 export interface DotNode {

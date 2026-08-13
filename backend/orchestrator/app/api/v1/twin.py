@@ -1,12 +1,11 @@
 import json
 
 import fastapi
-import slowapi
-import slowapi.util
 import sqlalchemy.ext.asyncio
 from fastapi.responses import StreamingResponse
 
 import app.auth.dependencies
+import app.core.security
 import app.db.session
 import app.domains.twin.conversation
 import app.domains.twin.schemas
@@ -19,7 +18,7 @@ router = fastapi.APIRouter(
     dependencies=[fastapi.Depends(app.db.session.get_tenant_session)],
 )
 
-_limiter = slowapi.Limiter(key_func=slowapi.util.get_remote_address)
+_limiter = app.core.security.make_limiter()
 
 # Released canon is public (ADR-0017), so a visitor must be able to be taught from
 # it. This router takes no tenant binding and never resolves to a member: the

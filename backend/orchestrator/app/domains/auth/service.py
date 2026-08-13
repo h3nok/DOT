@@ -70,11 +70,22 @@ def _mint_session_jwt(member: app.db.models.Member, email: str) -> str:
     return jwt.encode(payload, settings.SERVICE_AUTH_SECRET, algorithm=_ALGORITHM)
 
 
-async def _send_code_email(email: str, code: str) -> bool:
-    """Send via Resend; fall back to console log in dev."""
+async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> bool:
+    """Send via Resend; fall back to console log in dev.
+
+    Shared with the join queue, which needs the same delivery but must not tell
+    someone they are signing in when they are asking to be let in.
+    """
+    joining: bool = purpose == "join"
+    subject: str = f"Confirm your DOT request: {code}" if joining else f"Your DOT code: {code}"
+    lead: str = (
+        "Confirm the address for your request to join DOT"
+        if joining
+        else "Your sign-in code for DOT"
+    )
     api_key: str = os.environ.get("RESEND_API_KEY", "")
     if not api_key:
-        logger.info("[OTP] DEV CODE for %s: %s", email, code)
+        logger.info("[OTP] DEV CODE (%s) for %s: %s", purpose, email, code)
         return True
     from_addr: str = os.environ.get("EMAIL_FROM", "DOT <onboarding@resend.dev>")
     try:
@@ -85,11 +96,11 @@ async def _send_code_email(email: str, code: str) -> bool:
                 json={
                     "from": from_addr,
                     "to": [email],
-                    "subject": f"Your DOT code: {code}",
+                    "subject": subject,
                     "html": (
                         f'<div style="font-family:ui-sans-serif,system-ui,sans-serif;'
                         f'max-width:420px;margin:0 auto;padding:24px">'
-                        f'<p style="font-size:14px;color:#555">Your sign-in code for DOT</p>'
+                        f'<p style="font-size:14px;color:#555">{lead}</p>'
                         f'<p style="font-size:34px;font-weight:700;letter-spacing:8px;'
                         f'margin:12px 0;color:#111">{code}</p>'
                         f'<p style="font-size:12px;color:#999">Expires in 10 minutes. '
@@ -117,7 +128,9 @@ async def request_otp(
     recent: app.db.models.OtpCode | None = await session.scalar(
         sqlalchemy.select(app.db.models.OtpCode)
         .where(
-            app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None)
+            app.db.models.OtpCode.email_hash == email_hash,
+            app.db.models.OtpCode.used_at.is_(None),
+            app.db.models.OtpCode.purpose == "signin",
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
@@ -136,7 +149,9 @@ async def request_otp(
     await session.execute(
         sqlalchemy.update(app.db.models.OtpCode)
         .where(
-            app.db.models.OtpCode.email_hash == email_hash, app.db.models.OtpCode.used_at.is_(None)
+            app.db.models.OtpCode.email_hash == email_hash,
+            app.db.models.OtpCode.used_at.is_(None),
+            app.db.models.OtpCode.purpose == "signin",
         )
         .values(used_at=now)
     )
@@ -148,12 +163,13 @@ async def request_otp(
         app.db.models.OtpCode(
             email_hash=email_hash,
             code_hash=code_hash,
+            purpose="signin",
             expires_at=now + datetime.timedelta(seconds=_CODE_TTL_SECONDS),
         )
     )
     await session.commit()
 
-    sent: bool = await _send_code_email(email, code)
+    sent: bool = await send_code_email(email, code)
     if not sent:
         return {"ok": False, "error": "Could not send code. Try again.", "status": 502}
 
@@ -181,6 +197,7 @@ async def verify_otp(
             app.db.models.OtpCode.email_hash == email_hash,
             app.db.models.OtpCode.used_at.is_(None),
             app.db.models.OtpCode.expires_at > now,
+            app.db.models.OtpCode.purpose == "signin",
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)

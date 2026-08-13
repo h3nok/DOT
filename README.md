@@ -40,24 +40,32 @@ models, hypotheses, and speculation visibly distinct.
 
 ## Book One
 
-The current line-edited edition is available at:
+The current digital edition is available at:
 
 ```text
 /book/digital-organism-theory
 ```
 
-The Word manuscript remains the editorial source of truth. To rebuild the web
-release from a revised manuscript:
+The Word manuscript in `docs/blueprint/` remains the editorial source of truth.
+After revising it in Word or LibreOffice, rebuild the web chapters, manifest,
+and branded digital PDF together:
 
 ```bash
-python3 scripts/import_dot_book.py \
-  --input docs/blueprint/DOT-Book-One-Version-2-Line-Edited.docx
+make release-book
 ```
 
 The importer writes a deterministic release manifest and one finite Markdown
 unit per chapter under `frontend/public/publications/`. It preserves DOT model
 equations as TeX, links numbered citations to the reference section, and emits
-stable section/concept identifiers for Stay's graph layer.
+stable section/concept identifiers for DOT's graph layer. The normal test suite
+compares the private manuscript checksum with the manifest, so a DOCX edit
+cannot ship while the reader still represents an older manuscript. The DOCX is
+never exposed as a public download. `make release-book-artifacts` refreshes only
+the digital PDF when chapter extraction is intentionally unchanged.
+
+The GitHub Pages deployment runs the same release command before every build.
+Once a manuscript revision reaches `main`, the public reader and digital PDF are
+regenerated from that Word document as part of the deployment.
 
 ## Getting Started
 

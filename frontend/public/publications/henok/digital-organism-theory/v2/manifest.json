@@ -1,10 +1,10 @@
 {
   "schema_version": "publication.release.v2",
-  "generated_at": "2026-08-06T00:00:00Z",
+  "generated_at": "2026-08-12T00:00:00Z",
   "source": {
     "format": "docx",
-    "name": "DOT-Book-One-Version-2-Line-Edited.docx",
-    "sha256": "4080b9f2247b7dafaa7f62a95efb1d3150837e827172afcf86b17f60a8a80a67"
+    "name": "DOT-Book-One-Digital-Edition-v2.docx",
+    "sha256": "d2b5071a10f78d8efaee502fd455bb1c0d4142876b7a13ae577909fe489a2926"
   },
   "project": {
     "id": "dot-book-one",
@@ -20,14 +20,14 @@
   "release": {
     "id": "dot-book-one-v2",
     "version": 2,
-    "status": "line-edited-preview",
-    "label": "Line-edited edition",
-    "published_at": null,
-    "updated_at": "2026-08-06"
+    "status": "published",
+    "label": "Digital edition",
+    "published_at": "2026-08-12",
+    "updated_at": "2026-08-12"
   },
   "extent": {
     "chapters": 6,
-    "words": 22572,
+    "words": 22719,
     "equations": 14,
     "references": 25
   },
@@ -168,8 +168,8 @@
       "subtitle": "From inherited conditioning to conscious authorship",
       "part": "The Human Instance",
       "content_path": "sections/the-painting.md",
-      "word_count": 6180,
-      "reading_time_minutes": 28,
+      "word_count": 6327,
+      "reading_time_minutes": 29,
       "related_concepts": [
         "painting",
         "character",

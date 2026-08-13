@@ -2,7 +2,7 @@
  * The anchor a book heading renders with.
  *
  * One implementation on purpose. Anything that links *into* the released text —
- * the reader's own headings, Lumen's citations, the concept map, the open seams
+ * the reader's own headings, Minty's citations, the concept map, the open seams
  * register — has to agree on this slug or the link lands nowhere, and a second
  * copy of the rules is how they quietly stop agreeing.
  */

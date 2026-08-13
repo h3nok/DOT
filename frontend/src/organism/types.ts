@@ -77,7 +77,7 @@ export interface VitalSigns {
  * and stay out of the reading. None of them scatter arbitrary links across the
  * viewport — every mark has a rule behind it.
  */
-export type OrganismPreset = "field" | "aurora" | "constellation" | "lattice" | "off";
+export type OrganismPreset = "field" | "aurora" | "neural" | "breath" | "ink" | "lattice" | "off";
 
 export interface OrganismPresetSpec {
   label: string;
@@ -110,13 +110,29 @@ export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
     linkFactor: 0,
     alpha: 1,
   },
-  constellation: {
-    label: "Constellation",
-    hint: "Sparse points, each joined only to its nearest neighbour.",
-    density: 1,
-    speed: 1,
-    linkFactor: 0.16,
-    alpha: 1,
+  neural: {
+    label: "Neural",
+    hint: "A living network — nodes pulse and connections fire with activity.",
+    density: 0.6,
+    speed: 0.8,
+    linkFactor: 0.22,
+    alpha: 0.95,
+  },
+  breath: {
+    label: "Breath",
+    hint: "Slow concentric rings expand and fade, like the organism breathing.",
+    density: 0,
+    speed: 0.35,
+    linkFactor: 0,
+    alpha: 0.85,
+  },
+  ink: {
+    label: "Ink",
+    hint: "Calligraphic strokes drift and dissolve — writing as atmosphere.",
+    density: 0,
+    speed: 0.5,
+    linkFactor: 0,
+    alpha: 0.8,
   },
   lattice: {
     label: "Lattice",
@@ -138,8 +154,9 @@ export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
 
 /** Fields renamed in the background redesign; old saved configs still resolve. */
 const LEGACY_PRESETS: Record<string, OrganismPreset> = {
-  plexus: "constellation",
-  cosmos: "constellation",
+  plexus: "neural",
+  cosmos: "neural",
+  constellation: "neural",
   calm: "aurora",
 };
 
@@ -154,6 +171,20 @@ export type OrganismTint = "auto" | number;
 
 /** Reading surface typography the member owns. */
 export type ReadingFont = "serif" | "sans";
+
+/** Accessible contrast treatment across interface and reading surfaces. */
+export type AppearanceContrast = "standard" | "high";
+
+/**
+ * UI surface style — how cards, borders, and interactive elements feel.
+ * Each style applies a CSS class to <html> that organism.css uses to restyle
+ * shared surface tokens (border-radius, backdrop, shadow, border treatment).
+ */
+export type UIStyle = "default" | "neural" | "minimal" | "organic";
+
+export function resolveContrast(value: unknown): AppearanceContrast {
+  return value === "high" ? "high" : "standard";
+}
 
 export interface OrganismConfig {
   /** Master switch. When false the organism is fully inert and removes itself. */
@@ -170,6 +201,10 @@ export interface OrganismConfig {
   tint: OrganismTint;
   /** Hold the field still without disabling it (motion sensitivity, focus). */
   stillness: boolean;
+  /** Contrast treatment shared by interface, diagrams, and reading surfaces. */
+  contrast: AppearanceContrast;
+  /** UI surface style — how cards, borders, and interactive elements feel. */
+  uiStyle: UIStyle;
   /** Body-text family on reading surfaces. */
   readingFont: ReadingFont;
   /** Body-text scale multiplier on reading surfaces [0.9..1.3]. */
@@ -221,6 +256,8 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   showHud: false,
   tint: "auto",
   stillness: false,
+  contrast: "standard",
+  uiStyle: "default",
   readingFont: "serif",
   readingScale: 1,
 };

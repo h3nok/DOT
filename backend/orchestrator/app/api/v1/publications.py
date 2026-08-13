@@ -3,12 +3,11 @@ import typing
 import xml.etree.ElementTree as _ET
 
 import fastapi
-import slowapi
-import slowapi.util
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
 import app.core.config
+import app.core.security
 import app.db.models
 import app.db.session
 import app.domains.publication
@@ -28,7 +27,7 @@ router = fastapi.APIRouter(
 public_router = fastapi.APIRouter(prefix="/v1/publications", tags=["publications"])
 
 # Limiter instance is attached to app.state by main.py; resolved per-request.
-_limiter = slowapi.Limiter(key_func=slowapi.util.get_remote_address)
+_limiter = app.core.security.make_limiter()
 
 
 @public_router.get("/delivery/{owner_id}/{project_slug}/manifest")

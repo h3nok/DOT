@@ -127,6 +127,24 @@ describe("graphStore persistence", () => {
     expect(loadGraph(seed()).label).toBe("Root");
   });
 
+  it("ignores the unversioned bare-node cache so seed changes still reach a returning visitor", () => {
+    // How an older build wrote the cache. It has no fingerprint, so it cannot
+    // be checked against the current seed; honouring it froze a browser on the
+    // anatomy it happened to cache first and hid every limb added afterwards.
+    window.localStorage.setItem(
+      GRAPH_STORAGE_KEY,
+      JSON.stringify({
+        id: "self",
+        label: "Stale",
+        children: [{ id: "a", label: "A" }],
+      }),
+    );
+
+    const loaded = loadGraph(seed());
+    expect(loaded.label).toBe("Root");
+    expect(loaded.children?.map((child) => child.id)).toEqual(["a", "b"]);
+  });
+
   it("ignores cached values that are not graph nodes", () => {
     window.localStorage.setItem(
       GRAPH_STORAGE_KEY,

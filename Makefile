@@ -1,8 +1,9 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery ingest-canon orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
 #: Whose canon and graph the local stack serves.
 OWNER ?= henok
+BOOK_MANUSCRIPT ?= docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx
 
 help:
 	@echo "Available targets:"
@@ -20,6 +21,9 @@ help:
 	@echo "  make migrate-orchestrator Apply orchestrator migrations"
 	@echo "  make seed-profile-delivery Seed one published profile delivery release"
 	@echo "  make ingest-canon      Load Book One so the copilot can cite it"
+	@echo "  make release-book      Rebuild the web reader and digital PDF from the DOCX"
+	@echo "  make release-book-artifacts Refresh the digital PDF from the DOCX"
+	@echo "  make test-book-release Verify every Book One artifact matches the DOCX"
 	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
@@ -73,6 +77,20 @@ seed-profile-delivery:
 # Released canon becomes citable by the twin (ADR-0017). Safe to re-run.
 ingest-canon:
 	cd backend/orchestrator && ../../.venv/bin/python3 scripts/ingest_canon.py --owner $(OWNER)
+
+# The Word manuscript is the only editorial source. Pandoc derives the web
+# sections and LibreOffice derives the public PDF; both tools must be explicit
+# so a release cannot quietly fall back to stale generated files.
+release-book:
+	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT)
+	$(MAKE) test-book-release
+
+release-book-artifacts:
+	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT) --artifacts-only
+	$(MAKE) test-book-release
+
+test-book-release:
+	pnpm --dir frontend exec vitest run src/content/publications/dotBookOne.release.test.ts
 
 build:
 	pnpm --dir frontend build

@@ -11,6 +11,7 @@ import {
   DEFAULT_CONFIG,
   DEFAULT_VITALS,
   ORGANISM_STORAGE_KEY,
+  resolveContrast,
   resolvePreset,
   type OrganismConfig,
   type OrganismContextValue,
@@ -37,6 +38,7 @@ function loadConfig(): OrganismConfig {
       ...DEFAULT_CONFIG,
       ...saved,
       preset: resolvePreset(saved.preset),
+      contrast: resolveContrast(saved.contrast),
     };
   } catch {
     return DEFAULT_CONFIG;
@@ -115,11 +117,22 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
     const root = document.documentElement;
     root.dataset.organism = config.enabled ? "on" : "off";
     root.dataset.organismMood = mood;
+    root.dataset.contrast = config.contrast;
+    root.dataset.uiStyle = config.uiStyle;
+    root.dataset.motion = reducedMotion || config.stillness ? "still" : "full";
     root.style.setProperty("--organism-intensity", String(config.intensity));
     return () => {
       // Leave attributes in place on unmount; the provider lives for the app.
     };
-  }, [config.enabled, config.intensity, mood]);
+  }, [
+    config.contrast,
+    config.enabled,
+    config.intensity,
+    config.stillness,
+    config.uiStyle,
+    mood,
+    reducedMotion,
+  ]);
 
   // The member's reading choices are theirs, not the route's: publish them as
   // variables the reading surfaces consume.

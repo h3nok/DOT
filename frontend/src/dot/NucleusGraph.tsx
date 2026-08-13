@@ -3,16 +3,10 @@ import {
     ArrowLeft,
     ArrowRight,
     BookOpen,
-    Check,
-    LogIn,
-    Pencil,
     Plus,
-    RotateCcw,
-    UserPlus,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { crownSlots, orderedRadialSlots } from "../attention-os/focus/radialOrder";
 import { ThreadLine } from "../attention-os/focus/ThreadLine";
 import {
   appendStep,
@@ -23,26 +17,26 @@ import {
 import { useOrganismPulse } from "../organism";
 import { AgentWorkspace } from "./AgentWorkspace";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
-import { CircleSurface } from "./Circle";
 import { GraphNode } from "./GraphNode";
-import { Invite } from "./Invite";
-import { InviteWelcome } from "./InviteWelcome";
+import { GraphToolbar } from "./GraphToolbar";
 import { NodeEditor } from "./NodeEditor";
 import { NodeStage } from "./NodeStage";
-import { PresenceSurface } from "./PresenceSurface";
-import { SignIn } from "./SignIn";
-import { SupportSurface } from "./SupportSurface";
+import {
+  initialPlatformSurface,
+  ModalOverlays,
+  PlatformOverlays,
+  type PlatformSurface,
+} from "./PlatformOverlays";
 import { SynapticEdge } from "./SynapticEdge";
-import { TwinSurface } from "./TwinSurface";
-import { VaultSurface } from "./VaultSurface";
 import { resolveNode } from "./agent";
-import { DOT_STEWARD_NAME } from "./dotGraph";
 import { findNode, resolveChain, type NodeDraft } from "./graphStore";
 import { SUPPORT_PAYMENT_LINK } from "./supportLink";
 import { hasChildren, type DotNode } from "./types";
 import { useAuth } from "./useAuth";
 import { acceptInvite } from "./useCircle";
 import { useEditableGraph } from "./useEditableGraph";
+import { useGraphLayout } from "./useGraphLayout";
+import { DOT_STEWARD_NAME } from "./dotGraph";
 import { useInviteArrival } from "./useInviteArrival";
 import { useOwnerMode } from "./useOwnerMode";
 
@@ -54,19 +48,6 @@ interface NucleusGraphProps {
 type EditorState =
   | { mode: "add"; parentId: string; parentLabel: string }
   | { mode: "edit"; node: DotNode };
-
-type PlatformSurface =
-  | "publications"
-  | "circle"
-  | "vault"
-  | "support"
-  | "twin"
-  | null;
-
-function initialPlatformSurface(): PlatformSurface {
-  if (typeof window === "undefined") return null;
-  return new URLSearchParams(window.location.search).has("support") ? "support" : null;
-}
 
 /**
  * The living, editable graph surface.
@@ -163,64 +144,13 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
 
   // An extra ghost slot in edit mode lets you add a child to the centre.
   const slotCount = children.length + (editing ? 1 : 0);
-  // The root nucleus carries the masthead — mark, title, thesis, one action —
-  // so its limbs form a crown above it. Deeper centres are a mark and a short
-  // label, so they keep the ring: clockwise from 12, bottom arc reserved for
-  // the label (doc 12 §6.1).
   const crowned = chain.length === 1 && !editing;
-  const slots = useMemo(
-    () => (crowned ? crownSlots(slotCount) : orderedRadialSlots(slotCount)),
-    [crowned, slotCount],
+
+  const { stageRef, size, cx, cy, positions } = useGraphLayout(
+    slotCount,
+    crowned,
+    editing,
   );
-
-  // Responsive geometry.
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState(() => ({
-    w: typeof window === "undefined" ? 0 : window.innerWidth,
-    h: typeof window === "undefined" ? 0 : window.innerHeight,
-  }));
-  useEffect(() => {
-    const el = stageRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      setSize({ w: width, h: height });
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const cx = size.w / 2;
-  // Reserve the top band for the toolbar and the bottom band for the chat bar
-  // and its chips, so no node or label can ever collide with them.
-  const topReserve = 72;
-  const chatReserve = editing ? 24 : 168;
-  const usableH = Math.max(0, size.h - topReserve - chatReserve);
-  const cy = topReserve + usableH / 2;
-  const compact = size.w < 640;
-  // A destination card is `w-[min(42vw,13rem)]`, so it reaches half its own
-  // width either side of the slot it sits on, and a crown slot only travels
-  // `|ux|` of the radius sideways. Sizing the field by a fixed gutter ignored
-  // both, which pushed the outermost cards past the viewport edge on phones —
-  // where the stage clips them with no scroll to recover them. Derive the limit
-  // from the card and from how far the widest slot actually reaches.
-  const cardHalfWidth = Math.min(size.w * 0.21, 104);
-  const edgeMargin = compact ? 8 : 16;
-  const widestSlotReach = Math.max(...slots.map((s) => Math.abs(s.ux)), 0.001);
-  const horizontalLimit = Math.max(
-    72,
-    (size.w / 2 - cardHalfWidth - edgeMargin) / widestSlotReach,
-  );
-  const proportionalRadius = Math.min(size.w, usableH) * 0.4;
-  const horizontalRadius = Math.min(330, horizontalLimit, proportionalRadius);
-  const verticalRadius = compact
-    ? Math.min(220, usableH * 0.38)
-    : horizontalRadius;
-
-  const positions = slots.map((s) => ({
-    x: cx + s.ux * horizontalRadius,
-    y: cy + s.uy * verticalRadius,
-  }));
 
   const drill = useCallback(
     (node: DotNode) => {
@@ -372,7 +302,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             initial={motionSafe ? { opacity: 0, x: -8 } : false}
             animate={{ opacity: 1, x: 0 }}
             exit={motionSafe ? { opacity: 0, x: -8 } : undefined}
-            className="absolute left-5 top-5 z-20 inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition-colors hover:text-foreground"
+            className="dot-pill absolute left-5 top-5 z-20 text-foreground/80"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {chain[chain.length - 2].label}
@@ -380,110 +310,27 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
-      {/* Edit affordances. */}
-      {owner && (
-        <div className="absolute right-5 top-5 z-20 flex items-center gap-2">
-          {editing && status !== "idle" && (
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md"
-              aria-live="polite"
-            >
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{
-                  background:
-                    status === "error"
-                      ? "#ef4444"
-                      : status === "saved"
-                        ? "var(--organism-accent-strong)"
-                        : "var(--organism-accent-soft)",
-                }}
-              />
-              {status === "saving"
-                ? "Publishing…"
-                : status === "saved"
-                  ? "Published"
-                  : status === "loading"
-                    ? "Syncing…"
-                    : "Offline"}
-            </span>
-          )}
-          {editing && (
-            <button
-              type="button"
-              onClick={reset}
-              title="Reset the graph to its seed"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              Reset
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => {
-              setEditing((e) => !e);
-              setSelectedId(null);
-            }}
-            aria-pressed={editing}
-            title={editing ? "Done editing" : "Edit the graph"}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-md transition-colors hover:text-foreground"
-          >
-            {editing ? (
-              <>
-                <Check className="h-3.5 w-3.5" />
-                Done
-              </>
-            ) : (
-              <>
-                <Pencil className="h-3.5 w-3.5" />
-                Edit
-              </>
-            )}
-          </button>
-          {!editing && isOwner && (
-            <button
-              type="button"
-              onClick={() => setInviteOpen(true)}
-              title="Invite someone"
-              className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--organism-accent-soft)] bg-background/60 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur-md transition-colors hover:bg-foreground/[0.06]"
-            >
-              <UserPlus className="h-3.5 w-3.5" />
-              Invite
-            </button>
-          )}
-          {!editing && isOwner && (
-            <button
-              type="button"
-              onClick={() => void logout()}
-              title="Sign out"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
-            >
-              Sign out
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Quiet owner door for visitors — only the owner's code unlocks it. */}
-      {!owner && (
-        <button
-          type="button"
-          onClick={() => setSignInOpen(true)}
-          title="Sign in"
-          className="absolute right-5 top-5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/40 bg-background/40 text-muted-foreground/60 backdrop-blur-md transition-colors hover:text-foreground"
-          aria-label="Sign in"
-        >
-          <LogIn className="h-3.5 w-3.5" />
-        </button>
-      )}
+      <GraphToolbar
+        owner={owner}
+        isOwner={isOwner}
+        editing={editing}
+        status={status}
+        onToggleEdit={() => {
+          setEditing((e) => !e);
+          setSelectedId(null);
+        }}
+        onReset={reset}
+        onInvite={() => setInviteOpen(true)}
+        onSignOut={() => void logout()}
+        onSignIn={() => setSignInOpen(true)}
+      />
 
       {!editing && chain.length === 1 && center.introduction && (
         <motion.p
           initial={motionSafe ? { opacity: 0 } : false}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.35, duration: 0.3 }}
-          className="pointer-events-none absolute inset-x-0 top-5 z-10 mx-auto max-w-2xl px-16 text-center font-serif text-sm leading-snug text-muted-foreground/80"
+          className="pointer-events-none absolute inset-x-0 top-5 z-10 mx-auto hidden max-w-2xl px-16 text-center font-serif text-sm leading-snug text-muted-foreground/80 sm:block"
         >
           {center.introduction}
         </motion.p>
@@ -585,7 +432,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
               <button
                 type="button"
                 onClick={() => openAdd(center)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition-colors hover:text-foreground"
+                className="dot-pill text-muted-foreground"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add to {center.label}
@@ -621,7 +468,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
             >
               {(user.display_name?.trim()[0] ?? "Y").toUpperCase()}
             </span>
-            <span className="whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="dot-label whitespace-nowrap">
               {user.display_name?.trim() || "You"}
             </span>
           </span>
@@ -822,137 +669,63 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         )}
       </AnimatePresence>
 
-      {/* Owner sign-in. */}
-      <AnimatePresence>
-        {signInOpen && (
-          <SignIn
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onClose={() => setSignInOpen(false)}
-            onSignedIn={() => {
-              setSignInOpen(false);
-              void refreshAuth();
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <PlatformOverlays
+        surface={platformSurface}
+        origin={{ x: cx, y: cy }}
+        reducedMotion={reducedMotion}
+        root={root}
+        isOwner={isOwner}
+        companionRequest={companionRequest}
+        onSetSurface={setPlatformSurface}
+        onCloseSupport={closeSupport}
+        onInvite={() => setInviteOpen(true)}
+        onOpenNode={(nodeId) => {
+          if (!findNode(root, nodeId)) return;
+          setPlatformSurface(null);
+          setSelectedId(nodeId);
+          setDetailId(nodeId);
+        }}
+        onClearCompanion={() => setCompanionRequest(null)}
+      />
 
-      {/* Owner invitation — invite-only by design. */}
-      <AnimatePresence>
-        {inviteOpen && (
-          <Invite
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onClose={() => setInviteOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* The member's own node, opened. */}
-      <AnimatePresence>
-        {presenceOpen && user && (
-          <PresenceSurface
-            user={user}
-            reducedMotion={reducedMotion}
-            onClose={() => setPresenceOpen(false)}
-            onOpenConversations={() => {
-              setPresenceOpen(false);
-              setCompanionRequest(null);
-              setPlatformSurface("twin");
-            }}
-            onInvite={() => {
-              setPresenceOpen(false);
-              setInviteOpen(true);
-            }}
-            onSignOut={() => {
-              setPresenceOpen(false);
-              void logout();
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Guest arrival — someone opened a door for them. */}
-      <AnimatePresence>
-        {invited.open && (
-          <InviteWelcome
-            ownerName={root.label}
-            arrival={invited.arrival}
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onEnter={() => {
-              // If they're already signed in, joining the circle is immediate;
-              // otherwise the token is simply dismissed and they explore freely.
-              if (isOwner && invited.token) {
-                void acceptInvite(invited.token);
-                pulse(0.8); // a new connection — the organism feels it
-              }
-              invited.dismiss();
-            }}
-            onClose={() => invited.dismiss()}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Circle — the networking surface, personal-first. */}
-      <AnimatePresence>
-        {platformSurface === "circle" && (
-          <CircleSurface
-            ownerName={root.label}
-            isOwner={isOwner}
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onInvite={() => {
-              setPlatformSurface(null);
-              setInviteOpen(true);
-            }}
-            onClose={() => setPlatformSurface(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Vault — the knowledge ingestion surface. */}
-      <AnimatePresence>
-        {platformSurface === "vault" && (
-          <VaultSurface
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onClose={() => setPlatformSurface(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Support — how the movement is funded, since it takes no advertising. */}
-      <AnimatePresence>
-        {platformSurface === "support" && (
-          <SupportSurface
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            onClose={closeSupport}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Minty is the conversational centre of DOT. */}
-      <AnimatePresence>
-        {platformSurface === "twin" && (
-          <TwinSurface
-            origin={{ x: cx, y: cy }}
-            reducedMotion={reducedMotion}
-            initialRequest={companionRequest}
-            onClose={() => {
-              setCompanionRequest(null);
-              setPlatformSurface(null);
-            }}
-            onOpenNode={(nodeId) => {
-              if (!findNode(root, nodeId)) return;
-              setPlatformSurface(null);
-              setSelectedId(nodeId);
-              setDetailId(nodeId);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <ModalOverlays
+        signInOpen={signInOpen}
+        inviteOpen={inviteOpen}
+        presenceOpen={presenceOpen}
+        origin={{ x: cx, y: cy }}
+        reducedMotion={reducedMotion}
+        user={user}
+        invited={invited}
+        rootLabel={root.label}
+        isOwner={isOwner}
+        onCloseSignIn={() => setSignInOpen(false)}
+        onSignedIn={() => {
+          setSignInOpen(false);
+          void refreshAuth();
+        }}
+        onCloseInvite={() => setInviteOpen(false)}
+        onClosePresence={() => setPresenceOpen(false)}
+        onOpenConversations={() => {
+          setPresenceOpen(false);
+          setCompanionRequest(null);
+          setPlatformSurface("twin");
+        }}
+        onPresenceInvite={() => {
+          setPresenceOpen(false);
+          setInviteOpen(true);
+        }}
+        onSignOut={() => {
+          setPresenceOpen(false);
+          void logout();
+        }}
+        onEnterInvite={() => {
+          if (isOwner && invited.token) {
+            void acceptInvite(invited.token);
+            pulse(0.8);
+          }
+          invited.dismiss();
+        }}
+      />
     </div>
   );
 };

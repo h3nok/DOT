@@ -105,6 +105,47 @@ def _heading_slug(value: str) -> str:
     return re.sub(r"^-|-$", "", re.sub(r"[^a-z0-9]+", "-", normalized))
 
 
+def _locator_with_heading(
+    passage: retriever.Passage, question: str
+) -> dict[str, typing.Any] | None:
+    """Pin a citation to the heading it came from.
+
+    A chunk locator carries the section and character offsets, which is enough
+    to name the source but not enough to open it: the reader lands at the top of
+    the chapter and has to hunt for the sentence that was quoted. The chunk text
+    still contains its markdown headings, so the anchor can be recovered here.
+
+    The slug must match `headingSlug.ts` in the reader exactly — that file is the
+    single implementation for anything linking *into* the released text, and this
+    is the one place the server has to agree with it.
+    """
+
+    if passage.locator is None:
+        return None
+    locator: dict[str, typing.Any] = dict(passage.locator)
+    if locator.get("heading"):
+        return locator
+
+    # Prefer the heading above whichever paragraph actually answered the
+    # question. When the chunk opens on its heading there is nothing above the
+    # best paragraph, so fall back to the chunk's own first heading — still the
+    # right place to land, and better than the top of the chapter.
+    _, heading = _relevant_excerpt(passage.text, question)
+    if not heading:
+        heading = next(
+            (
+                line.lstrip("#").strip().rstrip("#").strip()
+                for line in passage.text.splitlines()
+                if line.lstrip().startswith("#")
+            ),
+            None,
+        )
+    if heading:
+        locator["heading"] = _heading_slug(heading)
+        locator["heading_title"] = heading
+    return locator
+
+
 def _relevant_excerpt(text: str, question: str, limit: int = 900) -> tuple[str, str | None]:
     paragraphs: list[str] = [part.strip() for part in re.split(r"\n\s*\n", text) if part.strip()]
     if not paragraphs:
@@ -298,7 +339,7 @@ async def ask(
                 node_id=passage_id,
                 kind=retrieved[passage_id].kind,
                 label=retrieved[passage_id].label,
-                locator=retrieved[passage_id].locator,
+                locator=_locator_with_heading(retrieved[passage_id], payload.question),
             )
             for passage_id in cited
         ],
@@ -489,7 +530,7 @@ async def ask_stream(
                 node_id=pid,
                 kind=retrieved[pid].kind,
                 label=retrieved[pid].label,
-                locator=retrieved[pid].locator,
+                locator=_locator_with_heading(retrieved[pid], payload.question),
             ).model_dump()
             for pid in cited
         ],

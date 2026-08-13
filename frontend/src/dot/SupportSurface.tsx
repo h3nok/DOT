@@ -260,7 +260,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
       )}
 
       <div>
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="dot-label">
           What should this help build?
         </p>
         <div className="mt-3 grid gap-2">
@@ -288,7 +288,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
       </div>
 
       <div className="mt-6">
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="dot-label">
           One-time contribution
         </p>
         <ul className="mt-3 grid gap-2 sm:grid-cols-3">

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { BookMarkdown } from "./BookMarkdown";
 
@@ -38,5 +38,34 @@ describe("BookMarkdown", () => {
 
     const heading = screen.getByRole("heading", { name: "The Experience Loop" });
     expect(heading.nextElementSibling).toBe(screen.getByTestId("experience-loop"));
+  });
+
+  it("previews a numbered source without navigating away from the passage", () => {
+    render(
+      <BookMarkdown
+        content="A supported claim.[¹](/book/digital-organism-theory/references#reference-1)"
+        references={
+          new Map([
+            [
+              1,
+              {
+                number: 1,
+                markdown: "A. Researcher, *A Source*. [Open](https://example.com).",
+              },
+            ],
+          ])
+        }
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open reference 1" }));
+
+    expect(screen.getByRole("dialog", { name: "Reference 1" })).toHaveTextContent(
+      "A. Researcher",
+    );
+    expect(screen.getByRole("link", { name: "Open" })).toHaveAttribute(
+      "href",
+      "https://example.com",
+    );
   });
 });

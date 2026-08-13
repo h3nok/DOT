@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -9,7 +9,20 @@ const releaseRoot = join(
 );
 const manuscriptPath = join(
   process.cwd(),
-  "../docs/blueprint/DOT-Book-One-Version-2-Line-Edited.docx",
+  "../docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx",
+);
+const downloadsRoot = join(process.cwd(), "public/books");
+const retiredPublicWordPath = join(
+  downloadsRoot,
+  "consciousness-a-digital-organism-book-one-v2.docx",
+);
+const retiredPublicPdfPath = join(
+  downloadsRoot,
+  "consciousness-a-digital-organism-book-one-v2.pdf",
+);
+const publicPdfPath = join(
+  downloadsRoot,
+  "digital-organism-theory-book-one-digital-edition.pdf",
 );
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),
@@ -22,17 +35,17 @@ const manifest = JSON.parse(
 };
 
 describe("Book One edition v2", () => {
-  it("is generated from the current line-edited manuscript", () => {
+  it("is generated from the canonical digital-edition manuscript", () => {
     const digest = createHash("sha256")
       .update(readFileSync(manuscriptPath))
       .digest("hex");
 
     expect(manifest.source.sha256).toBe(digest);
     expect(manifest.source.name).toBe(
-      "DOT-Book-One-Version-2-Line-Edited.docx",
+      "DOT-Book-One-Digital-Edition-v2.docx",
     );
     expect(manifest.release.version).toBe(2);
-    expect(manifest.release.label).toBe("Line-edited edition");
+    expect(manifest.release.label).toBe("Digital edition");
   });
 
   it("carries the current title language and complete apparatus", () => {
@@ -46,5 +59,21 @@ describe("Book One edition v2", () => {
         existsSync(join(releaseRoot, section.content_path)),
       ),
     ).toBe(true);
+  });
+
+  it("publishes one PDF while keeping the editable manuscript private", () => {
+    const sourceDigest = createHash("sha256")
+      .update(readFileSync(manuscriptPath))
+      .digest("hex");
+    const pdf = readFileSync(publicPdfPath);
+
+    expect(existsSync(retiredPublicWordPath)).toBe(false);
+    expect(existsSync(retiredPublicPdfPath)).toBe(false);
+    expect(readdirSync(downloadsRoot)).toEqual([
+      "digital-organism-theory-book-one-digital-edition.pdf",
+    ]);
+    expect(sourceDigest).toBe(manifest.source.sha256);
+    expect(pdf.subarray(0, 5).toString("ascii")).toBe("%PDF-");
+    expect(pdf.byteLength).toBeGreaterThan(100_000);
   });
 });

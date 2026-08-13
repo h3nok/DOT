@@ -367,12 +367,7 @@ const DoctrinePage = () => {
       {/* Back to the movement graph */}
       <Link
         to="/"
-        className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border pl-2.5 pr-3.5 text-[13px] font-semibold text-[color:var(--surface-muted)] backdrop-blur-2xl transition-colors hover:text-[color:var(--surface-fg)]"
-        style={{
-          borderColor: "var(--surface-hairline)",
-          background: "var(--surface-panel)",
-          boxShadow: "var(--surface-shadow)",
-        }}
+        className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-[13px] font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
         aria-label="Back to the movement graph"
         title="Back to the movement graph"
       >
@@ -382,23 +377,14 @@ const DoctrinePage = () => {
 
       <Link
         to="/book/digital-organism-theory"
-        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-[color:var(--surface-muted)] backdrop-blur-2xl transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
-        style={{
-          borderColor: "var(--surface-hairline)",
-          background: "var(--surface-panel)",
-        }}
+        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-transparent bg-transparent px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
       >
         Book One concept map · Edition v2
       </Link>
 
       {/* Reading controls — quiet until hovered or focused */}
       <div
-        className="fixed right-4 top-4 z-40 flex items-center gap-1 rounded-full border p-1 opacity-55 backdrop-blur-2xl transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100"
-        style={{
-          borderColor: "var(--surface-hairline)",
-          background: "var(--surface-panel)",
-          boxShadow: "var(--surface-shadow)",
-        }}
+        className="fixed right-4 top-4 z-40 flex items-center gap-1 rounded-full border border-transparent bg-transparent p-1 opacity-55 backdrop-blur-md transition-opacity duration-300 hover:opacity-100 focus-within:opacity-100"
       >
         <button
           type="button"

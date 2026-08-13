@@ -166,7 +166,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
                 className="organism-pulse-dot inline-flex h-2.5 w-2.5 rounded-full"
                 style={{ background: "var(--organism-accent-strong)" }}
               />
-              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+              <span className="dot-label">
                 {kicker}
               </span>
             </div>

@@ -15,7 +15,7 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
   return (
     <svg
       viewBox="0 0 48 32"
-      className="h-8 w-12 shrink-0 rounded-md bg-foreground/[0.04]"
+      className="h-8 w-full max-w-12 shrink-0 rounded-md bg-foreground/[0.04]"
       aria-hidden="true"
     >
       {field === "aurora" && (
@@ -35,22 +35,39 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
         </>
       )}
 
-      {field === "constellation" && (
+      {field === "neural" && (
         <g stroke={stroke} fill={dot}>
-          {/* Pairs and one short chain — never a mesh. */}
-          <line x1="7" y1="8" x2="16" y2="13" strokeOpacity="0.45" />
-          <line x1="16" y1="13" x2="24" y2="7" strokeOpacity="0.45" />
-          <line x1="33" y1="20" x2="41" y2="24" strokeOpacity="0.3" />
+          {/* Nodes with pulsing connections — a living network. */}
+          <line x1="8" y1="10" x2="20" y2="16" strokeOpacity="0.5" />
+          <line x1="20" y1="16" x2="34" y2="10" strokeOpacity="0.35" />
+          <line x1="20" y1="16" x2="18" y2="26" strokeOpacity="0.4" />
+          <line x1="34" y1="10" x2="40" y2="22" strokeOpacity="0.3" />
+          <line x1="18" y1="26" x2="34" y2="24" strokeOpacity="0.25" />
           {[
-            [7, 8, 1.5],
-            [16, 13, 1.5],
-            [24, 7, 1.5],
-            [33, 20, 1.2],
-            [41, 24, 1.2],
-            [12, 25, 1],
+            [8, 10, 2],
+            [20, 16, 2.5],
+            [34, 10, 2],
+            [18, 26, 1.8],
+            [40, 22, 1.5],
+            [34, 24, 1.5],
           ].map(([x, y, r]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} stroke="none" />
+            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} stroke="none" fillOpacity="0.8" />
           ))}
+        </g>
+      )}
+
+      {field === "breath" && (
+        <g stroke={stroke} fill="none">
+          <circle cx="24" cy="16" r="5" strokeOpacity="0.6" />
+          <circle cx="24" cy="16" r="10" strokeOpacity="0.35" />
+          <circle cx="24" cy="16" r="15" strokeOpacity="0.15" />
+        </g>
+      )}
+
+      {field === "ink" && (
+        <g stroke={stroke} fill="none" strokeLinecap="round">
+          <path d="M8 22 Q16 8, 24 14 T40 10" strokeOpacity="0.6" strokeWidth="1.5" />
+          <path d="M12 28 Q22 18, 36 20" strokeOpacity="0.3" strokeWidth="1" />
         </g>
       )}
 

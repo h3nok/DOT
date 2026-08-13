@@ -38,6 +38,7 @@ export type {
   OrganismMood,
   OrganismPreset,
   OrganismTint,
+  AppearanceContrast,
   ReadingFont,
   OrganismContextValue,
 } from "./types";

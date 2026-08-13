@@ -62,7 +62,7 @@ const MemberRow: React.FC<{ member: CircleMember; reducedMotion: boolean }> = ({
       </p>
     </div>
     {member.joined_at && (
-      <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+      <span className="shrink-0 dot-label">
         {formatDate(member.joined_at)}
       </span>
     )}

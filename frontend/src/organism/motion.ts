@@ -48,7 +48,15 @@ export function bloomFromOrigin(
   origin: { x: number; y: number } | undefined,
   reducedMotion: boolean,
 ) {
-  if (reducedMotion || !origin) {
+  if (reducedMotion) {
+    return {
+      initial: false,
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      transition: { duration: 0 },
+    };
+  }
+  if (!origin) {
     return {
       initial: { opacity: 0 },
       animate: { opacity: 1 },

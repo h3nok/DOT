@@ -9,7 +9,15 @@ import {
   type OrganismPreset,
   type OrganismTint,
   type ReadingFont,
+  type UIStyle,
 } from "./types";
+
+const UI_STYLES: Array<{ value: UIStyle; label: string; hint: string }> = [
+  { value: "default", label: "Default", hint: "The standard DOT surface" },
+  { value: "neural", label: "Neural", hint: "Fluid glass with living borders" },
+  { value: "minimal", label: "Minimal", hint: "Flat and sharp — pure content" },
+  { value: "organic", label: "Organic", hint: "Soft, rounded, warm" },
+];
 
 /** Pinned tints. Named for what they feel like, not their degrees. */
 const TINTS: Array<{ value: OrganismTint; label: string; swatch: string }> = [
@@ -19,6 +27,8 @@ const TINTS: Array<{ value: OrganismTint; label: string; swatch: string }> = [
   { value: 158, label: "Jade", swatch: "hsl(158 42% 45%)" },
   { value: 28, label: "Amber", swatch: "hsl(28 62% 55%)" },
   { value: 348, label: "Rose", swatch: "hsl(348 52% 58%)" },
+  { value: 190, label: "Cyan", swatch: "hsl(190 55% 50%)" },
+  { value: 82, label: "Sage", swatch: "hsl(82 35% 48%)" },
 ];
 
 const READING_SIZES: Array<{ value: number; label: string }> = [
@@ -33,7 +43,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({
   children,
 }) => (
   <section className="border-t border-border/40 px-4 py-3.5 first:border-t-0">
-    <h3 className="mb-2.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+    <h3 className="mb-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
       {title}
     </h3>
     {children}
@@ -50,7 +60,7 @@ const chip = (selected: boolean) =>
 /**
  * The appearance control — DOT's living theme, made the member's.
  *
- * One quiet affordance (bottom-right) opens a panel that owns every appearance
+ * One quiet affordance (bottom-left) opens a panel that owns every appearance
  * choice in one place: the light/dark base, the character of the background
  * field, the accent tint, how loud the whole thing is, whether it moves at all,
  * and the typography of the reading surfaces. Everything persists in the
@@ -80,12 +90,28 @@ export const AppearanceControl: React.FC = () => {
   const fields = Object.keys(ORGANISM_PRESETS) as OrganismPreset[];
 
   return (
-    <div ref={ref} className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+    <div
+      ref={ref}
+      data-appearance-control
+      className="fixed bottom-4 left-4 z-50 flex flex-col-reverse items-start transition-opacity sm:bottom-5 sm:left-5"
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Appearance settings"
+        aria-expanded={open}
+        title="Make it yours — theme, background, tint, text"
+        className="organism-alive group flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-3.5 py-2 text-foreground/80 shadow-lg backdrop-blur-md transition-colors hover:text-foreground"
+      >
+        <Sparkles className="h-4 w-4" />
+        <span className="text-[11px] font-medium">Appearance</span>
+      </button>
+
       {open && (
         <div
           role="dialog"
           aria-label="Appearance"
-          className="organism-alive mb-3 max-h-[78vh] w-[19rem] overflow-y-auto rounded-2xl border border-border/60 bg-background/90 text-foreground shadow-2xl backdrop-blur-xl"
+          className="organism-alive mb-3 max-h-[calc(100svh-5.5rem)] w-[min(19rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-border/60 bg-background/90 text-foreground shadow-2xl backdrop-blur-xl"
         >
           <div className="flex items-center justify-between px-4 pb-1 pt-3.5">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -200,6 +226,30 @@ export const AppearanceControl: React.FC = () => {
             </div>
           </Section>
 
+          <Section title="Style">
+            <div className="grid grid-cols-4 gap-1.5">
+              {UI_STYLES.map(({ value, label, hint }) => {
+                const selected = config.uiStyle === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setConfig({ uiStyle: value })}
+                    aria-pressed={selected}
+                    title={hint}
+                    className={`rounded-md border px-1 py-2 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      selected
+                        ? "border-foreground/40 bg-foreground/[0.07] text-foreground"
+                        : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
+                    }`}
+                  >
+                    <span className="block text-[10px] font-medium">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </Section>
+
           <Section title="Presence">
             <label className="flex items-center gap-3 text-[11px] text-muted-foreground">
               <span className="w-14 shrink-0">Intensity</span>
@@ -280,18 +330,6 @@ export const AppearanceControl: React.FC = () => {
           </div>
         </div>
       )}
-
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label="Appearance settings"
-        aria-expanded={open}
-        title="Make it yours — theme, background, tint, text"
-        className="organism-alive group flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-3.5 py-2 text-foreground/80 shadow-lg backdrop-blur-md transition-colors hover:text-foreground"
-      >
-        <Sparkles className="h-4 w-4" />
-        <span className="text-[11px] font-medium">Appearance</span>
-      </button>
     </div>
   );
 };

@@ -38,6 +38,10 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+has_libreoffice() {
+  command_exists libreoffice || command_exists soffice || [ -x /Applications/LibreOffice.app/Contents/MacOS/soffice ]
+}
+
 docker_cli() {
   if [ "$DOCKER_NEEDS_SUDO" = "1" ]; then
     run_sudo docker "$@"
@@ -134,6 +138,7 @@ install_macos_packages() {
   python_has_venv || formulae+=(python@3.12)
   has_node_major || formulae+=(node)
   command_exists pnpm || command_exists corepack || formulae+=(pnpm)
+  command_exists pandoc || formulae+=(pandoc)
 
   if [ "${#formulae[@]}" -gt 0 ]; then
     say "Installing Homebrew formulae: ${formulae[*]}"
@@ -143,6 +148,11 @@ install_macos_packages() {
   if ! command_exists docker; then
     say "Installing Docker Desktop. Open it once setup asks for it."
     brew install --cask docker
+  fi
+
+  if ! has_libreoffice; then
+    say "Installing LibreOffice for Book One PDF releases."
+    brew install --cask libreoffice
   fi
 }
 
@@ -173,17 +183,17 @@ install_debian_docker() {
 install_linux_packages() {
   if command_exists apt-get; then
     run_sudo apt-get update
-    run_sudo apt-get install -y ca-certificates curl gnupg python3 python3-venv python3-pip
+    run_sudo apt-get install -y ca-certificates curl gnupg python3 python3-venv python3-pip pandoc libreoffice
     install_debian_docker
     install_debian_node
   elif command_exists dnf; then
-    run_sudo dnf install -y python3 python3-pip nodejs npm docker docker-compose-plugin
+    run_sudo dnf install -y python3 python3-pip nodejs npm docker docker-compose-plugin pandoc libreoffice
   elif command_exists pacman; then
-    run_sudo pacman -Sy --needed --noconfirm python python-pip nodejs npm docker docker-compose
+    run_sudo pacman -Sy --needed --noconfirm python python-pip nodejs npm docker docker-compose pandoc libreoffice-fresh
   elif command_exists zypper; then
-    run_sudo zypper --non-interactive install python312 python312-pip nodejs20 npm20 docker docker-compose
+    run_sudo zypper --non-interactive install python312 python312-pip nodejs20 npm20 docker docker-compose pandoc libreoffice
   else
-    fail "unsupported Linux package manager; install Python 3.12+, Node ${MIN_NODE_MAJOR}+, pnpm, Docker, and Docker Compose manually"
+    fail "unsupported Linux package manager; install Python 3.12+, Node ${MIN_NODE_MAJOR}+, pnpm, Docker, Docker Compose, Pandoc, and LibreOffice manually"
   fi
 }
 
@@ -195,8 +205,8 @@ install_system_packages() {
     return 0
   fi
 
-  if python_has_venv && has_node_major && command_exists docker && docker compose version >/dev/null 2>&1; then
-    say "Python, Node, Docker, and Docker Compose are present."
+  if python_has_venv && has_node_major && command_exists docker && docker compose version >/dev/null 2>&1 && command_exists pandoc && has_libreoffice; then
+    say "Python, Node, Docker, Docker Compose, Pandoc, and LibreOffice are present."
     return 0
   fi
 

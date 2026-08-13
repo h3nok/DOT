@@ -406,6 +406,8 @@ DOT does not ask us to choose between personal and structural responsibility. Th
 
 We must learn to see the loop whole.
 
+I should locate this critique. I am writing from within modern Western industrial society, whose achievements in science, medicine, law, and individual liberty are real. The claim is not that “the West” is uniquely corrupt, or that other civilizations escaped fear, hierarchy, extraction, or domination. It is that the institutions surrounding many of us often reward adaptation to their present arrangements more reliably than conscious development. Accurate sight must be able to criticize those conditions without turning a civilization into an enemy or treating its inherited categories as the limits of human possibility.
+
 ## Seeing Without Hatred
 
 To see the Painting clearly is not to declare war on everyone who carries it.
@@ -559,6 +561,10 @@ What made you is not necessarily what you are.
 You did not choose your first Painting.
 
 You are responsible for what you paint once you can see it.
+
+This responsibility is personal, but it is not private. We inherit institutions together, and together we can alter the consequences they organize. Every repaired relationship, honest inquiry, humane technology, school, workplace, and community can make a wider decision-space available to another Canvas.
+
+Freedom becomes collective when we make better options real for one another.
 
 **APPENDIX**
 

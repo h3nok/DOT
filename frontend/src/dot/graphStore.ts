@@ -137,7 +137,14 @@ export function loadGraph(seed: DotNode): DotNode {
     const raw = window.localStorage.getItem(GRAPH_STORAGE_KEY);
     if (!raw) return seed;
     const parsed: unknown = JSON.parse(raw);
-    if (isDotNode(parsed)) return parsed.id === seed.id ? parsed : seed;
+    // A bare node is the pre-fingerprint cache format. It carries no record of
+    // which seed it was derived from, so it cannot be checked against this one
+    // — and accepting it on a matching root id alone pinned a browser to
+    // whatever anatomy it first cached, permanently. A limb added to the seed
+    // then never reached anyone who had loaded the site before. Treat the
+    // unversioned format as unusable and fall back to the seed; the next save
+    // rewrites it in the checkable format.
+    if (isDotNode(parsed)) return seed;
     if (parsed && typeof parsed === "object") {
       const stored = parsed as Partial<StoredGraph>;
       if (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PlatformMetricsService from "../../services/PlatformMetricsService";
+import { fetchOrchestratorReadiness } from "../../services/OrchestratorPublicationService";
 
 export interface MetabolismReading {
   /** Backend health / oxygenation in [0,1]. */
@@ -9,15 +9,12 @@ export interface MetabolismReading {
 }
 
 const FASTING_BASELINE = 0.45;
+const ALIVE_LEVEL = 0.75;
 
 /**
- * Maps living-community signal from the backend into the organism's
- * "metabolism" — how oxygenated and vivid it looks.
- *
- * It polls the dashboard metrics slowly (every 45s). The service already
- * degrades gracefully to fallback demo data when the Flask backend is down,
- * so we additionally detect "fasting" via a probe and let metabolism settle
- * toward a calm baseline rather than reading the synthetic numbers as health.
+ * Probes the orchestrator's readiness endpoint to derive the organism's
+ * "metabolism" — how oxygenated and vivid it looks. A reachable backend
+ * reads as alive; an unreachable one settles toward a calm fasting baseline.
  */
 export function useMetabolism(active: boolean): MetabolismReading {
   const [reading, setReading] = useState<MetabolismReading>({
@@ -31,22 +28,12 @@ export function useMetabolism(active: boolean): MetabolismReading {
 
     const sample = async () => {
       try {
-        const m = await PlatformMetricsService.getDashboardMetrics();
+        const r = await fetchOrchestratorReadiness();
         if (cancelled) return;
-
-        // Activity of the colony, normalised with gentle saturation curves so
-        // a thriving community reads as fully oxygenated without ever pegging.
-        const members = clamp01(Math.log10(Math.max(1, m.members)) / 3.7); // ~5000 → 1
-        const discussions = clamp01(m.discussions / 600);
-        const integrations = clamp01(m.integrations / 30);
-
-        const level = clamp01(
-          0.35 + 0.4 * members + 0.15 * discussions + 0.1 * integrations,
-        );
-        setReading({ level, fasting: false });
+        const alive = r.status === "ok";
+        setReading({ level: alive ? ALIVE_LEVEL : FASTING_BASELINE, fasting: !alive });
       } catch {
         if (!cancelled) {
-          // Ease toward the fasting baseline instead of snapping.
           setReading((prev) => ({
             level: prev.level + (FASTING_BASELINE - prev.level) * 0.5,
             fasting: true,
@@ -64,8 +51,4 @@ export function useMetabolism(active: boolean): MetabolismReading {
   }, [active]);
 
   return reading;
-}
-
-function clamp01(n: number): number {
-  return Math.max(0, Math.min(1, n));
 }

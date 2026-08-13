@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, useReducedMotion } from "framer-motion";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -8,8 +8,13 @@ import {
   Check,
   ChevronLeft,
   Compass,
+  ExternalLink,
+  Library,
+  Linkedin,
   List,
   Loader2,
+  MessageCircleQuestion,
+  NotebookPen,
   Sparkles,
   X,
 } from "lucide-react";
@@ -26,9 +31,13 @@ import {
   fetchDotBookOneManifest,
   fetchDotBookOneSection,
   groupBookSectionsByPart,
+  parseBookReferences,
+  type BookReference,
   type BookReleaseSection,
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
+import { siteConfig } from "../../content/site.config";
+import { AppearanceControl } from "../../organism";
 import BookLanding from "./BookLanding";
 import ExperienceLoop from "./ExperienceLoop";
 import { TwinSurface } from "../../dot/TwinSurface";
@@ -50,6 +59,31 @@ function conceptLabel(concept: string): string {
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+const PRACTICE_PROMPTS: Record<string, string> = {
+  preface:
+    "Name one belief you protect as identity. What evidence would you permit to revise it?",
+  "the-digital-organism":
+    "Notice one moment when new information changes your state. What persists, and what adapts?",
+  "the-decoupling-principle":
+    "Before one ordinary action, notice the intention, the body's execution, and the consequence as separate events.",
+  "architecture-of-continuity":
+    "Across one change today, ask what continuity you are preserving and what the change is teaching you.",
+  "reality-frames":
+    "Choose one environment you inhabit. List one constraint, one consequence, and one real possibility it permits.",
+  "the-canvas":
+    "When a strong response appears, distinguish the bodily signal from the interpretation already painted onto it.",
+  "the-painting":
+    "Find one inherited conclusion in a recurring reaction. What wider choice becomes possible once you can see it?",
+  references:
+    "Choose one source that matters to the argument and read beyond the citation before deciding what it supports.",
+};
+
+function citedReferenceCount(content: string): number {
+  return new Set(
+    Array.from(content.matchAll(/#reference-(\d+)/g), (match) => match[1]),
+  ).size;
 }
 
 function LoadingState() {
@@ -79,7 +113,7 @@ function BookContents({
     <nav aria-label="Book contents" className="space-y-7">
       {groups.map((group) => (
         <section key={group.part}>
-          <h2 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <h2 className="mb-2 dot-label">
             {group.part}
           </h2>
           <ol className="space-y-1">
@@ -127,14 +161,16 @@ function BookReader({
   manifest,
   section,
   content,
-  onOpenContents,
+  onOpenMinty,
   path,
+  references,
 }: {
   manifest: DotBookOneManifest;
   section: BookReleaseSection;
   content: string;
-  onOpenContents: () => void;
+  onOpenMinty: () => void;
   path: ReadingPath | null;
+  references: ReadonlyMap<number, BookReference>;
 }) {
   const bySlug = (slug: string | undefined) =>
     slug ? (manifest.sections.find((entry) => entry.slug === slug) ?? null) : null;
@@ -155,57 +191,51 @@ function BookReader({
 
   const step = (target: BookReleaseSection) =>
     path ? `${bookSectionRoute(target)}?path=${path.id}` : bookSectionRoute(target);
+  const sourceCount = citedReferenceCount(content);
+  const practicePrompt = PRACTICE_PROMPTS[section.slug] ?? PRACTICE_PROMPTS.preface;
 
   return (
     <>
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,700px)] lg:justify-center lg:gap-20">
+      <div className="mx-auto grid w-full max-w-[88rem] gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[230px_minmax(0,700px)] lg:justify-center lg:gap-14 xl:grid-cols-[230px_minmax(0,700px)_220px] xl:gap-12">
         <aside className="hidden lg:block">
           <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
             <Link
-              to={DOT_BOOK_ONE_ROUTE + "#edition-map"}
+              to={DOT_BOOK_ONE_ROUTE}
               className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              Edition map
+              Book overview
             </Link>
             <BookContents manifest={manifest} currentSlug={section.slug} />
           </div>
         </aside>
 
         <article id="book-main" className="book-reader min-w-0">
-          <div className="mb-8 flex items-center gap-4 lg:hidden">
+          <div className="mb-8 lg:hidden">
             <Link
-              to={DOT_BOOK_ONE_ROUTE + "#edition-map"}
+              to={DOT_BOOK_ONE_ROUTE}
               className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <BookOpen className="h-3.5 w-3.5" />
-              Edition map
+              Overview
             </Link>
-            <button
-              type="button"
-              onClick={onOpenContents}
-              className="inline-flex min-h-11 items-center gap-2 border-l border-border/60 pl-4 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <List className="h-3.5 w-3.5" />
-              Contents
-            </button>
           </div>
 
           <header className="book-chapter-header border-b pb-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              <p className="dot-label">
                 {sectionLabel(section)} · {section.part}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="dot-label">
                 {formatWordCount(section.word_count)} words · about{" "}
                 {section.reading_time_minutes} min
               </p>
             </div>
-            <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-[-0.02em] text-foreground sm:text-5xl">
+            <h1 className="book-reading-heading mt-5 text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
               {section.title}
             </h1>
             {section.subtitle && (
-              <p className="mt-4 font-serif text-xl italic leading-relaxed text-muted-foreground">
+              <p className="book-reading-copy mt-4 text-xl italic leading-relaxed text-muted-foreground">
                 {section.subtitle}
               </p>
             )}
@@ -221,8 +251,36 @@ function BookReader({
             </div>
           </header>
 
+          <div className="book-reader-quick-tools flex items-center gap-1 border-b border-[var(--book-hairline)] py-3 xl:hidden">
+            <button
+              type="button"
+              onClick={onOpenMinty}
+              className="inline-flex min-h-10 items-center gap-2 px-2 text-xs font-semibold text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
+            >
+              <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+              Ask Minty
+            </button>
+            <span className="h-5 w-px bg-border/60" aria-hidden="true" />
+            <a
+              href="#section-practice"
+              className="inline-flex min-h-10 items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <NotebookPen className="h-4 w-4" aria-hidden="true" />
+              Practice
+            </a>
+            <span className="h-5 w-px bg-border/60" aria-hidden="true" />
+            <Link
+              to="/book/digital-organism-theory/references"
+              className="inline-flex min-h-10 items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Library className="h-4 w-4" aria-hidden="true" />
+              {sourceCount > 0 ? `${sourceCount} sources` : "Sources"}
+            </Link>
+          </div>
+
           <BookMarkdown
             content={content}
+            references={references}
             afterHeading={
               section.slug === "the-canvas"
                 ? {
@@ -244,10 +302,10 @@ function BookReader({
                     <Check className="h-3.5 w-3.5" />
                   </span>
                   <div>
-                    <h2 className="font-serif text-xl text-foreground">
+                    <h2 className="book-reading-heading text-xl text-foreground">
                       You have reached the end of this edition.
                     </h2>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    <p className="book-reading-copy mt-1 text-sm leading-relaxed text-muted-foreground">
                       The reading path stops here. Return to the book when you
                       are ready; nothing will begin automatically.
                     </p>
@@ -256,21 +314,22 @@ function BookReader({
               </div>
             )}
 
-            <div className="book-reflection mb-10 border-y px-1 py-8 sm:py-10">
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-                Before you continue
+            <div id="section-practice" className="book-reflection mb-10 scroll-mt-24 border-y px-1 py-8 sm:py-10">
+              <p className="dot-label">
+                Practice the frame
               </p>
-              <h2 className="mt-3 max-w-xl font-serif text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
-                What is one idea you want to carry from this section?
+              <h2 className="book-reading-heading mt-3 max-w-xl text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
+                {practicePrompt}
               </h2>
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                Let the answer settle before choosing the next path.
+              <p className="book-reading-copy mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
+                Treat this as observation, not a test you can fail. The framework
+                becomes useful when it changes what you can notice and choose.
               </p>
             </div>
 
             {section.related_concepts.length > 0 ? (
               <div className="mb-10 border-b border-border/60 pb-8">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Ideas to carry
                 </p>
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
@@ -338,8 +397,74 @@ function BookReader({
                 </Link>
               )}
             </div>
+
+            <a
+              href={siteConfig.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
+              Henok Ghebrechristos · author profile and résumé
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
           </footer>
         </article>
+
+        <aside className="hidden xl:block">
+          <div className="sticky top-28 space-y-8 border-l border-[var(--book-hairline)] pl-6">
+            <section>
+              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--book-cinnabar)]">
+                Reading companion
+              </p>
+              <p className="book-reading-copy mt-3 text-sm leading-relaxed text-muted-foreground">
+                Keep the claim boundary intact. Open a citation without losing
+                your place, or ask Minty to trace the passage through Book One.
+              </p>
+              <button
+                type="button"
+                onClick={onOpenMinty}
+                className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
+              >
+                <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+                Ask Minty
+              </button>
+            </section>
+
+            <section className="border-t border-[var(--book-hairline)] pt-6">
+              <p className="dot-label">
+                Evidence trail
+              </p>
+              <p className="book-reading-heading mt-3 text-lg text-foreground">
+                {sourceCount > 0
+                  ? `${sourceCount} external ${sourceCount === 1 ? "source" : "sources"} cited here`
+                  : "No external sources cited in this section"}
+              </p>
+              <Link
+                to="/book/digital-organism-theory/references"
+                className="mt-3 inline-flex items-center gap-2 text-xs text-muted-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-foreground"
+              >
+                <Library className="h-3.5 w-3.5" aria-hidden="true" />
+                Open Notes and Sources
+              </Link>
+            </section>
+
+            <section className="border-t border-[var(--book-hairline)] pt-6">
+              <p className="dot-label">
+                Try it
+              </p>
+              <p className="book-reading-copy mt-3 text-base italic leading-relaxed text-[var(--book-ink)]">
+                {practicePrompt}
+              </p>
+              <a
+                href="#section-practice"
+                className="mt-3 inline-flex text-xs text-muted-foreground underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-foreground"
+              >
+                Carry this into practice
+              </a>
+            </section>
+          </div>
+        </aside>
       </div>
     </>
   );
@@ -354,10 +479,12 @@ export default function BookOnePage() {
     [location.search],
   );
   const navigate = useNavigate();
+  const reducedMotion = useReducedMotion() ?? false;
   const [manifest, setManifest] = useState<DotBookOneManifest | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contentsOpen, setContentsOpen] = useState(false);
+  const [references, setReferences] = useState<Map<number, BookReference>>(new Map());
   // Minty stays one door away while you read — the field-state surface, opened
   // from the chrome, never a widget floating over the text.
   const [mintyOpen, setMintyOpen] = useState(false);
@@ -396,6 +523,21 @@ export default function BookOnePage() {
       });
     return () => abort.abort();
   }, []);
+
+  useEffect(() => {
+    const referencesSection = manifest?.sections.find(
+      (candidate) => candidate.kind === "references",
+    );
+    if (!referencesSection) return;
+
+    const abort = new AbortController();
+    fetchDotBookOneSection(referencesSection, abort.signal)
+      .then((markdown) => setReferences(parseBookReferences(markdown)))
+      .catch((reason: Error) => {
+        if (reason.name !== "AbortError") setReferences(new Map());
+      });
+    return () => abort.abort();
+  }, [manifest]);
 
   useEffect(() => {
     if (!manifest || !sectionSlug) {
@@ -518,7 +660,16 @@ export default function BookOnePage() {
   if (!manifest || (sectionSlug && !content)) return <LoadingState />;
 
   return (
-    <div className="book-surface min-h-screen bg-background text-foreground">
+    // Docking means the page gives up the width, not that Minty is laid over
+    // it. Without this inset the sidecar is a fixed panel the reading column
+    // knows nothing about: the two only cleared each other at exactly 1440px,
+    // and at every narrower width the panel covered the ends of the lines.
+    // Matches the sidecar's own `lg:w-[26rem]` — change them together.
+    <div
+      className={`book-surface min-h-screen bg-background text-foreground transition-[padding] duration-200 ${
+        mintyOpen ? "lg:pr-[26rem]" : ""
+      }`}
+    >
       <a
         href="#book-main"
         className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
@@ -536,12 +687,13 @@ export default function BookOnePage() {
             <span>DOT</span>
           </Link>
           <div className="flex items-center gap-3">
+            <AppearanceControl />
             <button
               type="button"
               onClick={() => setMintyOpen(true)}
               title="Ask Minty about what you're reading"
               aria-label="Ask Minty about this book"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground/80 transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
               Ask Minty
@@ -550,7 +702,7 @@ export default function BookOnePage() {
               <button
                 type="button"
                 onClick={openContents}
-                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground/80 transition-colors hover:text-foreground lg:invisible"
+                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
               >
                 <List className="h-3.5 w-3.5" />
                 Contents
@@ -565,8 +717,9 @@ export default function BookOnePage() {
           manifest={manifest}
           section={section}
           content={content}
-          onOpenContents={openContents}
+          onOpenMinty={() => setMintyOpen(true)}
           path={activePath}
+          references={references}
         />
       ) : (
         <BookLanding manifest={manifest} />
@@ -590,12 +743,12 @@ export default function BookOnePage() {
           >
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Finite reading path
                 </p>
                 <h2
                   id="book-contents-title"
-                  className="mt-1 font-serif text-2xl text-foreground"
+                  className="book-reading-heading mt-1 text-2xl text-foreground"
                 >
                   Contents
                 </h2>
@@ -625,6 +778,7 @@ export default function BookOnePage() {
         {mintyOpen && (
           <TwinSurface
             variant="sidecar"
+            reducedMotion={reducedMotion}
             onClose={() => setMintyOpen(false)}
             onOpenNode={() => setMintyOpen(false)}
           />

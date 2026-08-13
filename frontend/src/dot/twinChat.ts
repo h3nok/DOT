@@ -6,9 +6,9 @@ import {
 } from "./bookCompanion";
 
 /**
- * twinChat — the conversation transport for Lumen at the centre of the graph.
+ * twinChat — the conversation transport for Minty at the centre of the graph.
  *
- * Lumen only answers from material it retrieved and names the ids behind
+ * Minty only answers from material it retrieved and names the ids behind
  * every claim (ADR-0010), so a citation is not decoration: an answer without
  * one has not been grounded, and this module keeps that distinction visible to
  * the surface rather than flattening it into plain text.
@@ -29,6 +29,13 @@ export interface TwinTurn {
   citations: TwinCitation[];
   refusal_code: string | null;
   created_at?: string;
+  /**
+   * Where this answer actually came from. `passages` means the orchestrator was
+   * unreachable or ungrounded and the answer is quoted straight out of the
+   * released text — which reads very differently from synthesis and must not be
+   * presented as though a model wrote it.
+   */
+  source?: "synthesis" | "passages";
 }
 
 export interface TwinThread {
@@ -144,13 +151,18 @@ export async function deleteThread(id: string): Promise<boolean> {
   return result.ok;
 }
 
-function turnFrom(id: string, answer: AskAnswer): TwinTurn {
+function turnFrom(
+  id: string,
+  answer: AskAnswer,
+  source: "synthesis" | "passages" = "synthesis",
+): TwinTurn {
   return {
     id,
     role: "twin",
     content: answer.answer,
     citations: answer.citations ?? [],
     refusal_code: answer.refusal_code,
+    source,
   };
 }
 
@@ -210,22 +222,29 @@ export async function sendMessageStream(
     }
   };
 
-  // Parse SSE frames; a frame may be split across reads, so buffer by line.
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const frames = buffer.split("\n\n");
-    buffer = frames.pop() ?? "";
-    for (const frame of frames) {
-      const line = frame.trim();
-      if (!line.startsWith("data:")) continue;
-      try {
-        handle(JSON.parse(line.slice(5).trim()) as TwinStreamEvent);
-      } catch {
-        // A malformed frame is skipped; the terminal event decides the outcome.
+  try {
+    // Parse SSE frames; a frame may be split across reads, so buffer by line.
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const frames = buffer.split("\n\n");
+      buffer = frames.pop() ?? "";
+      for (const frame of frames) {
+        const line = frame.trim();
+        if (!line.startsWith("data:")) continue;
+        try {
+          handle(JSON.parse(line.slice(5).trim()) as TwinStreamEvent);
+        } catch {
+          // A malformed frame is skipped; the terminal event decides the outcome.
+        }
       }
     }
+  } catch {
+    // A connection can close after headers but before the terminal event. Let
+    // the caller retry through the regular request/local-book path rather than
+    // leaving a half-written answer on screen.
+    return null;
   }
 
   if (!final) return null;
@@ -300,7 +319,10 @@ export async function sendMessage(
 
   const local = await answerFromBook(question, lens, history);
   if (local) {
-    return { turn: turnFrom(`turn-${Date.now()}`, local), ephemeral: true };
+    return {
+      turn: turnFrom(`turn-${Date.now()}`, local, "passages"),
+      ephemeral: true,
+    };
   }
 
   if (open.ok && open.data) {

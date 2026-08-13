@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -31,10 +32,10 @@ import {
  */
 
 const CLAIM_TONE: Record<ClaimLevel, string> = {
-  Observation: "border-emerald-500/35 text-emerald-700 dark:text-emerald-300",
-  Model: "border-sky-500/35 text-sky-700 dark:text-sky-300",
-  Hypothesis: "border-amber-500/40 text-amber-700 dark:text-amber-300",
-  Speculation: "border-rose-500/35 text-rose-700 dark:text-rose-300",
+  Observation: "border-[color:var(--organism-accent-strong)]/40 text-[color:var(--organism-accent-strong)] bg-[color:var(--organism-accent-soft)]",
+  Model: "border-border/60 text-foreground bg-foreground/[0.03]",
+  Hypothesis: "border-border/50 text-muted-foreground bg-foreground/[0.02]",
+  Speculation: "border-border/40 text-muted-foreground/80 bg-transparent",
 };
 
 const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
@@ -48,7 +49,7 @@ const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
 function ClaimChip({ level }: { level: ClaimLevel }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] ${CLAIM_TONE[level]}`}
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] ${CLAIM_TONE[level]}`}
       title={`Book One assigns this claim the level: ${level}`}
     >
       {level}
@@ -59,7 +60,7 @@ function ClaimChip({ level }: { level: ClaimLevel }) {
 function Field({ label, children }: { label: string; children: string }) {
   return (
     <div className="mt-5">
-      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
         {label}
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -89,7 +90,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
 
   return (
     <div className="mt-6 border-t border-border/50 pt-5">
-      <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
         Recorded work
       </p>
       {/* In recorded order. Never sorted or filtered by outcome. */}
@@ -101,7 +102,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
           >
             <div className="flex flex-wrap items-center gap-2">
               <ClaimChip level={entry.claimLevel} />
-              <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                 {entry.kind} · {OUTCOME_LABEL[entry.outcome]}
               </span>
             </div>
@@ -111,7 +112,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {entry.summary}
             </p>
-            <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="mt-2 dot-label">
               {entry.steward} · {entry.recordedAt}
             </p>
           </li>
@@ -123,10 +124,17 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
 
 function Seam({ seam, index }: { seam: OpenSeam; index: number }) {
   return (
-    <li id={seam.id} className="scroll-mt-24">
+    <motion.li
+      id={seam.id}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.4 }}
+      className="scroll-mt-24"
+    >
       <article className="grid gap-5 border-t border-border/70 py-9 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-8 sm:py-11">
         <div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <span className="dot-label">
             Seam {String(index + 1).padStart(2, "0")}
           </span>
           <div className="mt-3">
@@ -158,7 +166,7 @@ function Seam({ seam, index }: { seam: OpenSeam; index: number }) {
           <RecordedWork seam={seam} />
         </div>
       </article>
-    </li>
+    </motion.li>
   );
 }
 
@@ -196,7 +204,7 @@ export default function AppliedPage() {
         Skip to the register
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
@@ -225,7 +233,7 @@ export default function AppliedPage() {
       </header>
 
       <main id="applied-main" className="mx-auto max-w-5xl px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        <p className="dot-label">
           Open seams · Edition v2
         </p>
         <h1 className="mt-4 max-w-2xl text-3xl font-semibold leading-tight tracking-[-0.02em] text-foreground sm:text-4xl">
@@ -247,10 +255,10 @@ export default function AppliedPage() {
           {[
             ["Seams", String(openSeams.length)],
             ["Work recorded", String(recorded)],
-            ["Edition", "v2 · line-edited"],
+            ["Edition", "v2 · digital edition"],
           ].map(([label, value]) => (
             <div key={label} className="border-b border-border/50 px-1 py-4 last:border-b-0 sm:border-b-0 sm:px-5 sm:first:pl-0 sm:last:pr-0">
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              <dt className="dot-label">
                 {label}
               </dt>
               <dd className="mt-1 text-sm font-medium text-foreground">

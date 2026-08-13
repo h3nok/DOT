@@ -56,6 +56,11 @@ export interface DotBookOneManifest {
   sections: BookReleaseSection[];
 }
 
+export interface BookReference {
+  number: number;
+  markdown: string;
+}
+
 export const DOT_BOOK_ONE_ROUTE = "/book/digital-organism-theory";
 
 const DOT_BOOK_ONE_ASSET_ROOT =
@@ -97,6 +102,25 @@ export async function fetchDotBookOneSection(
     throw new Error(`Book section request failed: ${response.status}`);
   }
   return response.text();
+}
+
+/** Split the released notes section without weakening its original citation text. */
+export function parseBookReferences(markdown: string): Map<number, BookReference> {
+  const headings = Array.from(markdown.matchAll(/^### Reference (\d+)\s*$/gm));
+  const references = new Map<number, BookReference>();
+
+  headings.forEach((heading, index) => {
+    if (heading.index === undefined) return;
+    const number = Number(heading[1]);
+    const start = heading.index + heading[0].length;
+    const end = headings[index + 1]?.index ?? markdown.length;
+    references.set(number, {
+      number,
+      markdown: markdown.slice(start, end).trim(),
+    });
+  });
+
+  return references;
 }
 
 export function bookSectionRoute(section: BookReleaseSection): string {

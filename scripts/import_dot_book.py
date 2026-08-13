@@ -1,26 +1,37 @@
 #!/usr/bin/env python3
-"""Import the current DOT Word manuscript as a deterministic public web release.
+"""Release the current DOT Word manuscript to every public reading format.
 
 The Word manuscript remains the editorial source of truth. This script uses
 Pandoc for OOXML/OMML extraction, splits the result at the manuscript's existing
 section markers, and writes finite Markdown reading units plus a release
-manifest for the public Stay reader.
+manifest for the public DOT reader. It uses LibreOffice to produce one
+downloadable digital PDF from that same file; the editable DOCX remains private
+inside the repository.
 """
 
 from __future__ import annotations
 
 import argparse
 import dataclasses
+import datetime
 import hashlib
 import json
 import os
 import pathlib
 import re
+import shutil
 import subprocess
 import tempfile
 from typing import Any
 
 BOOK_ROUTE = "/book/digital-organism-theory"
+PUBLIC_PDF_NAME = "digital-organism-theory-book-one-digital-edition.pdf"
+LEGACY_PUBLIC_ARTIFACTS = (
+    "consciousness-a-digital-organism-book-one-v2.docx",
+    "consciousness-a-digital-organism-book-one-v2.pdf",
+)
+MACOS_LIBREOFFICE = "/Applications/LibreOffice.app/Contents/MacOS/soffice"
+PANDOC_DATA_DIR = os.environ.get("PANDOC_DATA_DIR")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -163,12 +174,35 @@ def parse_args() -> argparse.Namespace:
         ),
         type=pathlib.Path,
     )
-    parser.add_argument("--release-date", default="2026-08-06")
+    parser.add_argument("--release-date", default=datetime.date.today().isoformat())
     parser.add_argument("--release-version", default=2, type=int)
-    parser.add_argument("--release-label", default="Line-edited edition")
-    parser.add_argument("--release-status", default="line-edited-preview")
+    parser.add_argument("--release-label", default="Digital edition")
+    parser.add_argument("--release-status", default="published")
     parser.add_argument("--pandoc", default=os.environ.get("PANDOC", "pandoc"))
-    parser.add_argument("--pandoc-data-dir", type=pathlib.Path)
+    parser.add_argument(
+        "--pandoc-data-dir",
+        default=pathlib.Path(PANDOC_DATA_DIR) if PANDOC_DATA_DIR else None,
+        type=pathlib.Path,
+    )
+    parser.add_argument(
+        "--artifacts-output",
+        default=pathlib.Path("frontend/public/books"),
+        type=pathlib.Path,
+    )
+    parser.add_argument(
+        "--libreoffice",
+        default=os.environ.get("LIBREOFFICE", "libreoffice"),
+    )
+    parser.add_argument(
+        "--skip-artifacts",
+        action="store_true",
+        help="Rebuild only the web release and manifest.",
+    )
+    parser.add_argument(
+        "--artifacts-only",
+        action="store_true",
+        help="Refresh the public digital PDF without running Pandoc.",
+    )
     parser.add_argument(
         "--push",
         action="store_true",
@@ -177,6 +211,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--orchestrator-url", default="http://127.0.0.1:8000")
     parser.add_argument("--owner-id", default="henok")
     return parser.parse_args()
+
+
+def resolve_executable(requested: str, *fallbacks: str) -> str:
+    """Resolve a release tool while preserving explicit path overrides."""
+
+    for candidate in (requested, *fallbacks):
+        candidate_path = pathlib.Path(candidate).expanduser()
+        if candidate_path.is_file() and os.access(candidate_path, os.X_OK):
+            return str(candidate_path)
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+
+    names = ", ".join((requested, *fallbacks))
+    raise SystemExit(f"Required release tool not found: {names}")
 
 
 def pandoc_markdown(
@@ -272,14 +321,72 @@ def word_count(markdown: str) -> int:
     return len(re.findall(r"\b[\w’'-]+\b", without_math))
 
 
+def release_downloads(
+    source: pathlib.Path,
+    output: pathlib.Path,
+    libreoffice: str,
+) -> None:
+    """Derive the single public digital PDF from the private manuscript."""
+
+    output.mkdir(parents=True, exist_ok=True)
+    for stale_name in LEGACY_PUBLIC_ARTIFACTS:
+        (output / stale_name).unlink(missing_ok=True)
+
+    with tempfile.TemporaryDirectory(prefix="dot-book-pdf-") as temp_dir:
+        temp = pathlib.Path(temp_dir)
+        profile = temp / "libreoffice-profile"
+        runtime = temp / "runtime"
+        runtime.mkdir(mode=0o700)
+        environment = {
+            **os.environ,
+            "HOME": str(temp),
+            "XDG_CACHE_HOME": str(temp / "cache"),
+            "XDG_CONFIG_HOME": str(temp / "config"),
+            "XDG_RUNTIME_DIR": str(runtime),
+        }
+        command = [
+            libreoffice,
+            f"-env:UserInstallation={profile.resolve().as_uri()}",
+            "--headless",
+            "--convert-to",
+            "pdf:writer_pdf_Export",
+            "--outdir",
+            str(temp),
+            str(source),
+        ]
+        subprocess.run(command, check=True, env=environment)
+        generated_pdf = temp / f"{source.stem}.pdf"
+        if not generated_pdf.exists():
+            raise RuntimeError("LibreOffice completed without producing a PDF")
+        shutil.copyfile(generated_pdf, output / PUBLIC_PDF_NAME)
+
+    print(f"Released the digital edition from {source.name}:")
+    print(f"  {output / PUBLIC_PDF_NAME}")
+
+
 def main() -> None:
     args: argparse.Namespace = parse_args()
     source = args.input.resolve()
     output = args.output.resolve()
+    artifacts_output = args.artifacts_output.resolve()
+
+    if not source.is_file() or source.suffix.lower() != ".docx":
+        raise SystemExit(f"Word manuscript not found: {source}")
+
+    if args.artifacts_only:
+        libreoffice = resolve_executable(
+            args.libreoffice,
+            "soffice",
+            MACOS_LIBREOFFICE,
+        )
+        release_downloads(source, artifacts_output, libreoffice)
+        return
+
     sections_dir = output / "sections"
     sections_dir.mkdir(parents=True, exist_ok=True)
 
-    markdown: str = pandoc_markdown(source, args.pandoc, args.pandoc_data_dir)
+    pandoc = resolve_executable(args.pandoc)
+    markdown: str = pandoc_markdown(source, pandoc, args.pandoc_data_dir)
     manifest_sections: list[dict[str, object]] = []
 
     for index, spec in enumerate(SECTIONS):
@@ -336,7 +443,7 @@ def main() -> None:
             "version": args.release_version,
             "status": args.release_status,
             "label": args.release_label,
-            "published_at": None,
+            "published_at": args.release_date if args.release_status == "published" else None,
             "updated_at": args.release_date,
         },
         "extent": {
@@ -361,6 +468,14 @@ def main() -> None:
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+
+    if not args.skip_artifacts:
+        libreoffice = resolve_executable(
+            args.libreoffice,
+            "soffice",
+            MACOS_LIBREOFFICE,
+        )
+        release_downloads(source, artifacts_output, libreoffice)
 
     if args.push:
         push_to_orchestrator(

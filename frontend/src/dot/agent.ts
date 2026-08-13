@@ -165,7 +165,7 @@ async function askBackend(
  * "Who are you?" — a question about this surface rather than about the book.
  *
  * Anchored on purpose. The pattern this replaces tested for the bare substring
- * `about`, so "What does DOT claim about Fear and Love?" — one of Lumen's own
+ * `about`, so "What does DOT claim about Fear and Love?" — one of Minty's own
  * suggested prompts — never reached retrieval and came back as an uncited
  * paragraph. A canned answer must only pre-empt the book when the question is
  * genuinely not about the book.

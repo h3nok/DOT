@@ -66,7 +66,7 @@ I capitalize Fear when I mean more than the body’s immediate protective respon
 
 Love does not make inquiry soft. It makes inquiry harder to corrupt.
 
-Love creates enough inner freedom for reality to contradict identity. It permits us to inspect what we inherited without immediately defending it, to encounter another person without reducing them to a threat, and to revise a cherished model when consequence no longer supports it. In this sense, Love is not only a moral aspiration. It is an epistemic requirement.
+Love creates enough inner freedom for reality to contradict identity. It permits us to inspect what we inherited without immediately defending it, to encounter another person without reducing them to a threat, and to revise a cherished model when consequence no longer supports it. In this sense, Love is not only a moral aspiration. It is an epistemic necessity.
 
 If every cosmological hypothesis in this book were eventually proven wrong, this obligation would remain:
 

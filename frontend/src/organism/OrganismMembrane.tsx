@@ -188,9 +188,27 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
+    const buildNeural = () => {
+      const count = Math.min(40, Math.max(12, Math.round((w * h) / 40000)));
+      points = Array.from({ length: count }, (_, i) => {
+        const depth = DEPTHS[i % DEPTHS.length];
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        return {
+          x, y, hx: x, hy: y,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: 1.5 + depth * 2.5,
+          depth, phase: Math.random() * Math.PI * 2,
+          bit: "0" as const, flipAt: 0,
+        };
+      });
+    };
+
     const rebuild = () => {
       if (config.preset === "lattice") buildLattice();
       else if (config.preset === "field") buildField();
+      else if (config.preset === "neural") buildNeural();
       else if (spec.density > 0) {
         const budget = Math.min(POINT_BUDGET, (w * h) / 14000) * spec.density;
         buildConstellation(Math.max(24, Math.round(budget)));
@@ -276,52 +294,6 @@ export const OrganismMembrane: React.FC = () => {
      * A nearest-neighbour graph, one edge per point, computed per plane.
      *
      * Every point reaches for exactly one partner, so the field resolves into
-     * pairs and short chains — never the everything-to-everything mesh that
-     * reads as noise. Reciprocal choices are drawn once.
-     */
-    const drawConstellationLinks = (
-      reach: number,
-      hue: number,
-      sat: number,
-      light: number,
-      alpha: number,
-    ) => {
-      const n = points.length;
-      const nearest = new Int16Array(n).fill(-1);
-      const gap = new Float32Array(n);
-      for (let i = 0; i < n; i++) {
-        const a = points[i];
-        let bestD = reach * (0.55 + a.depth * 0.75);
-        for (let j = 0; j < n; j++) {
-          if (i === j || points[j].depth !== a.depth) continue; // planes never cross
-          const d = Math.hypot(a.x - points[j].x, a.y - points[j].y);
-          if (d < bestD) {
-            bestD = d;
-            nearest[i] = j;
-            gap[i] = d;
-          }
-        }
-      }
-
-      ctx.lineWidth = 1;
-      for (let i = 0; i < n; i++) {
-        const j = nearest[i];
-        if (j < 0) continue;
-        if (nearest[j] === i && j < i) continue; // reciprocal pair, already drawn
-        const a = points[i];
-        const b = points[j];
-        const limit = reach * (0.55 + a.depth * 0.75);
-        const mask = Math.min(clearance(a.x, a.y), clearance(b.x, b.y));
-        const strength = alpha * a.depth * (1 - gap[i] / limit) * mask * 0.6;
-        if (strength <= 0.004) continue;
-        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light}%, ${strength})`;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
-    };
-
     /** Rows and columns only — the lattice never draws a diagonal. */
     const drawLatticeLinks = (
       hue: number,
@@ -394,6 +366,213 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
+    const drawNeuralLinks = (
+      reach: number, hue: number, sat: number, light: number, alpha: number,
+      synapsis: number, animate: boolean,
+    ) => {
+      const r2 = reach * reach;
+      // Draw connections with signal propagation
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i];
+        for (let j = i + 1; j < points.length; j++) {
+          const b = points[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > r2) continue;
+          const proximity = 1 - Math.sqrt(d2) / reach;
+          const mask = Math.min(clearance(a.x, a.y), clearance(b.x, b.y));
+          const pulse = animate ? 0.5 + 0.5 * Math.sin(a.phase + b.phase + t * 2) : 0.7;
+          const lineAlpha = alpha * mask * proximity * (0.15 + 0.35 * synapsis) * pulse;
+          if (lineAlpha <= 0.005) continue;
+
+          // Signal traveling along the connection
+          if (animate && synapsis > 0.1) {
+            const signalPos = (Math.sin(a.phase * 0.7 + t * 3) + 1) / 2;
+            const sx = a.x + (b.x - a.x) * signalPos;
+            const sy = a.y + (b.y - a.y) * signalPos;
+            const signalAlpha = lineAlpha * 2.5 * synapsis;
+            ctx.fillStyle = `hsla(${(hue + 30) % 360}, ${Math.min(90, sat + 25)}%, ${light + 20}%, ${signalAlpha})`;
+            ctx.beginPath();
+            ctx.arc(sx, sy, 1.5 + proximity * 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 10}%, ${lineAlpha})`;
+          ctx.lineWidth = 0.8 + proximity * 1.2;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+
+      // Node halos — each node glows with its own rhythm
+      for (const p of points) {
+        const mask = clearance(p.x, p.y);
+        const glow = animate ? 0.6 + 0.4 * Math.sin(p.phase + t * 1.5) : 0.8;
+        const haloAlpha = alpha * mask * p.depth * 0.12 * glow;
+        if (haloAlpha <= 0.005) continue;
+        const haloR = p.r * (3 + 2 * synapsis);
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
+        grad.addColorStop(0, `hsla(${(hue + 15) % 360}, ${sat + 10}%, ${light + 15}%, ${haloAlpha})`);
+        grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    // Breath — concentric rings that expand and fade, like the organism breathing.
+    const drawBreath = (
+      hue: number, sat: number, light: number, alpha: number, animate: boolean,
+    ) => {
+      // Two breath sources — primary at centre, secondary offset for depth.
+      const sources = [
+        { x: w / 2, y: h / 2, weight: 1, phaseOff: 0 },
+        { x: w * 0.3, y: h * 0.35, weight: 0.5, phaseOff: 0.33 },
+        { x: w * 0.72, y: h * 0.65, weight: 0.4, phaseOff: 0.6 },
+      ];
+      const maxR = Math.sqrt((w / 2) ** 2 + (h / 2) ** 2);
+      const ringCount = 6;
+      const period = 8;
+
+      for (const src of sources) {
+        for (let i = 0; i < ringCount; i++) {
+          const phase = animate
+            ? (t / period + i / ringCount + src.phaseOff) % 1
+            : (i / ringCount + src.phaseOff) % 1;
+          const r = phase * maxR * 0.9;
+          const life = 1 - phase;
+          const a = alpha * life * life * 0.25 * src.weight;
+          if (a <= 0.005) continue;
+          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
+          ctx.lineWidth = 0.8 + life * 1.8;
+          ctx.beginPath();
+          ctx.arc(src.x, src.y, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // Soft central glow that pulses with the breath
+      if (alpha > 0.01) {
+        const breathPhase = animate ? (Math.sin(t / period * Math.PI * 2) + 1) / 2 : 0.5;
+        const glowR = maxR * (0.2 + 0.15 * breathPhase);
+        const grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, glowR);
+        grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light + 12}%, ${alpha * 0.08 * (0.5 + 0.5 * breathPhase)})`);
+        grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, glowR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    // Ink — calligraphic strokes that drift and dissolve.
+    interface InkStroke {
+      points: { x: number; y: number }[];
+      life: number;
+      maxLife: number;
+      width: number;
+      phase: number;
+    }
+    const inkStrokes: InkStroke[] = [];
+    let inkTimer = 0;
+
+    const spawnInkStroke = () => {
+      // Strokes favour the edges where the clearance mask lets them show.
+      const edge = Math.random() < 0.6;
+      const startX = edge
+        ? (Math.random() < 0.5 ? Math.random() * w * 0.3 : w * 0.7 + Math.random() * w * 0.3)
+        : Math.random() * w;
+      const startY = edge
+        ? Math.random() * h
+        : (Math.random() < 0.5 ? Math.random() * h * 0.25 : h * 0.75 + Math.random() * h * 0.25);
+      const angle = Math.random() * Math.PI * 2;
+      const len = 140 + Math.random() * 260;
+      const segments = 10 + Math.floor(Math.random() * 8);
+      const curvature = 25 + Math.random() * 40;
+      const pts: { x: number; y: number }[] = [];
+      for (let i = 0; i <= segments; i++) {
+        const frac = i / segments;
+        // Organic curve: sine-wave deviation perpendicular to the stroke direction
+        const perp = Math.sin(frac * Math.PI * (1.5 + Math.random())) * curvature;
+        pts.push({
+          x: startX + Math.cos(angle) * len * frac + Math.sin(angle) * perp + (Math.random() - 0.5) * 8,
+          y: startY + Math.sin(angle) * len * frac - Math.cos(angle) * perp + (Math.random() - 0.5) * 8,
+        });
+      }
+      const maxLife = 5 + Math.random() * 6;
+      inkStrokes.push({
+        points: pts, life: maxLife, maxLife,
+        width: 1.5 + Math.random() * 3,
+        phase: Math.random() * Math.PI * 2,
+      });
+    };
+
+    const drawInk = (
+      hue: number, sat: number, light: number, alpha: number, animate: boolean,
+    ) => {
+      if (animate) {
+        inkTimer -= 1 / 60;
+        if (inkTimer <= 0) {
+          // Spawn 1-2 strokes at a time for density
+          spawnInkStroke();
+          if (Math.random() < 0.4) spawnInkStroke();
+          inkTimer = 0.6 + Math.random() * 1.8;
+        }
+      }
+      if (!animate && inkStrokes.length === 0) {
+        for (let i = 0; i < 8; i++) spawnInkStroke();
+      }
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      for (let i = inkStrokes.length - 1; i >= 0; i--) {
+        const s = inkStrokes[i];
+        if (animate) s.life -= 1 / 60;
+        if (s.life <= 0) { inkStrokes.splice(i, 1); continue; }
+        const frac = s.life / s.maxLife;
+        // Smooth fade in (first 15%) then long sustain then fade out (last 20%)
+        const envelope = frac > 0.85 ? (1 - frac) / 0.15 : frac < 0.2 ? frac / 0.2 : 1;
+        // Ink ignores the clearance mask — strokes are the content, not noise
+        const a = alpha * envelope * 0.7;
+        if (a <= 0.005) continue;
+
+        // Pressure-sensitive width: thicker in the middle, tapered at ends
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 6}%, ${a})`;
+        ctx.beginPath();
+        ctx.moveTo(s.points[0].x, s.points[0].y);
+        for (let j = 1; j < s.points.length; j++) {
+          const prev = s.points[j - 1];
+          const cur = s.points[j];
+          const mx = (prev.x + cur.x) / 2;
+          const my = (prev.y + cur.y) / 2;
+          // Vary width along the stroke for a calligraphic feel
+          const strokeFrac = j / s.points.length;
+          const pressure = Math.sin(strokeFrac * Math.PI);
+          ctx.lineWidth = s.width * (0.3 + 0.7 * pressure) * (0.5 + 0.5 * envelope);
+          ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+        }
+        const last = s.points[s.points.length - 1];
+        ctx.lineTo(last.x, last.y);
+        ctx.stroke();
+
+        // Faint glow trail along the stroke
+        if (a > 0.1) {
+          const mid = s.points[Math.floor(s.points.length / 2)];
+          const glowA = a * 0.15;
+          const grad = ctx.createRadialGradient(mid.x, mid.y, 0, mid.x, mid.y, 30);
+          grad.addColorStop(0, `hsla(${(hue + 20) % 360}, ${sat + 10}%, ${light + 15}%, ${glowA})`);
+          grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(mid.x, mid.y, 30, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    };
+
     const draw = (animate: boolean) => {
       const v = vitals.current;
       const { hue, sat, light, dark } = palette();
@@ -428,14 +607,12 @@ export const OrganismMembrane: React.FC = () => {
         ? (0.35 + arousal * 1.6) * (1 - 0.9 * calm) * spec.speed
         : 0;
 
-      if (config.preset === "constellation") {
+      if (config.preset === "neural") {
         for (const p of points) {
           if (!animate) continue;
           p.x += p.vx * speed * p.depth;
           p.y += p.vy * speed * p.depth;
 
-          // Cursor tropism: near points lean in. Suppressed while reading so
-          // the ground never tugs beneath the text.
           if (pointer.current.active && calm < 0.5) {
             const dx = pointer.current.x - p.x;
             const dy = pointer.current.y - p.y;
@@ -456,13 +633,14 @@ export const OrganismMembrane: React.FC = () => {
           if (p.y > h + 30) p.y = -30;
           p.phase += (0.006 + arousal * 0.012) * (1 - 0.85 * calm);
         }
-        drawConstellationLinks(
+        drawNeuralLinks(
           Math.min(w, h) * (spec.linkFactor + 0.04 * synapsis),
-          hue,
-          sat,
-          light,
-          alpha,
+          hue, sat, light, alpha, synapsis, animate,
         );
+      } else if (config.preset === "breath") {
+        drawBreath(hue, sat, light, alpha, animate);
+      } else if (config.preset === "ink") {
+        drawInk(hue, sat, light, alpha, animate);
       } else if (config.preset === "lattice") {
         // One travelling wave warps the whole grid coherently, so the structure
         // stays legible while nothing sits perfectly still.
@@ -480,11 +658,8 @@ export const OrganismMembrane: React.FC = () => {
         drawField(hue, sat, light, alpha, animate);
       }
 
-      // Point bodies. They dim but never vanish while reading, so the ground
-      // still feels quietly alive. (The field preset draws its own glyphs.)
-      if (config.preset === "field") {
-        // bits already painted above
-      } else
+      // Point bodies — presets that draw their own visuals skip this.
+      if (config.preset !== "field" && config.preset !== "breath" && config.preset !== "ink")
       for (const p of points) {
         const mask = clearance(p.x, p.y);
         const breath = animate ? 0.8 + 0.2 * Math.sin(p.phase) : 1;

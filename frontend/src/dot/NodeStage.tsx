@@ -124,7 +124,7 @@ export const NodeStage: React.FC<NodeStageProps> = ({
               key={item.label}
               className="rounded-2xl border border-border/50 bg-foreground/[0.03] px-3.5 py-3"
             >
-              <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              <dt className="dot-label">
                 {item.label}
               </dt>
               <dd className="mt-1 text-sm font-medium text-foreground">

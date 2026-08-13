@@ -19,7 +19,8 @@ restore earlier claims.
 
 ## Decision
 
-The current line-edited Word manuscript is the editorial source of truth.
+The current digital-edition Word manuscript is the private editorial source of
+truth.
 Immutable web releases are the public canon.
 
 - The live reader points to the newest released edition. Earlier releases remain
@@ -61,4 +62,4 @@ Immutable web releases are the public canon.
 | ------ | ---- | ---- | ------- |
 | Keep book and living draft as peers | Faster theory iteration | Readers receive conflicting canon; agent grounding becomes ambiguous | Rejected |
 | Rewrite the existing v1 release | One live folder | Destroys immutable release history and provenance | Rejected |
-| Treat the line-edited manuscript as source and derive all first-party surfaces | One checkable account; history preserved | Requires regeneration and provenance tests | **Accepted** |
+| Treat the digital-edition manuscript as source and derive all first-party surfaces | One checkable account; history preserved | Requires regeneration and provenance tests | **Accepted** |

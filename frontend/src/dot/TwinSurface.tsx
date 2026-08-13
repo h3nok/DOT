@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   ArrowUp,
   BookOpen,
@@ -9,7 +11,9 @@ import {
   MessageSquare,
   Plus,
   Scale,
+  ShieldCheck,
   Trash2,
+  X,
 } from "lucide-react";
 import { staggerChild, staggerContainer, useOrganismPulse } from "../organism";
 import { PROFILE_OWNER_ID } from "./orchestrator";
@@ -29,6 +33,9 @@ import {
 } from "./twinChat";
 import type { AgentLens } from "./agent";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
+
+/** Whether this release names a backend at all; see the note in the empty state. */
+const HAS_ORCHESTRATOR = Boolean(import.meta.env.VITE_ORCHESTRATOR_URL);
 
 /**
  * Minty — the conversation at the centre of the graph.
@@ -171,43 +178,145 @@ const Citations: React.FC<{
   });
   if (distinct.length === 0) return null;
   return (
-    <div className="mt-4 border-l-2 pl-4" style={{ borderColor: "var(--organism-accent-soft)" }}>
-      <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-        Grounded in
+    <section className="mt-5 border-t border-border/50 pt-4" aria-label="Answer sources">
+      <p className="mb-3 flex items-center gap-2 dot-label">
+        <ShieldCheck className="h-3 w-3" aria-hidden="true" />
+        Sources used
       </p>
-      <div className="flex flex-wrap gap-1.5">
+      <ol className="space-y-1.5">
         {distinct.map((citation, index) => {
           const href = citationHref(citation);
           const className =
-            "rounded-md border border-[color:var(--organism-accent-soft)] bg-foreground/[0.03] px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground";
+            "group flex w-full items-center gap-3 border-l border-[color:var(--organism-accent-soft)] bg-foreground/[0.025] px-3 py-2.5 text-left text-[11px] text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground";
+          const label = (
+            <>
+              <span className="font-mono text-[11px] text-[var(--organism-accent-strong)]">
+                [{String(index + 1).padStart(2, "0")}]
+              </span>
+              <span className="min-w-0 flex-1 truncate font-medium">{citation.label}</span>
+              {href ? (
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[color:var(--organism-accent-strong)] group-hover:underline">
+                  <span className="hidden sm:inline">Open in Book One</span>
+                  <BookOpen className="h-3 w-3 shrink-0" aria-hidden="true" />
+                </span>
+              ) : null}
+            </>
+          );
           if (href) {
             return (
-              <Link
-                key={`${citation.node_id}-${index}`}
-                to={href}
-                className={className}
-                title="Open the cited Book One passage"
-              >
-                {citation.label}
-              </Link>
+              <li key={`${citation.node_id}-${index}`}>
+                <Link
+                  to={href}
+                  className={className}
+                  title="Open the cited Book One passage"
+                >
+                  {label}
+                </Link>
+              </li>
             );
           }
           return (
-            <button
-              key={`${citation.node_id}-${index}`}
-              type="button"
-              onClick={() => onOpen(citation.node_id)}
-              className={className}
-              title="Open this knowledge node"
-            >
-              {citation.label}
-            </button>
+            <li key={`${citation.node_id}-${index}`}>
+              <button
+                type="button"
+                onClick={() => onOpen(citation.node_id)}
+                className={className}
+                title="Open this knowledge node"
+              >
+                {label}
+              </button>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 };
+
+const AnswerMarkdown: React.FC<{ children: string }> = ({ children }) => (
+  <div className="minty-answer font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
+    <ReactMarkdown
+      skipHtml
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({ children: heading }) => (
+          <h2 className="mb-2 mt-5 text-xl font-semibold first:mt-0">{heading}</h2>
+        ),
+        h2: ({ children: heading }) => (
+          <h2 className="mb-2 mt-5 text-xl font-semibold first:mt-0">{heading}</h2>
+        ),
+        h3: ({ children: heading }) => (
+          <h3 className="mb-2 mt-4 text-base font-semibold">{heading}</h3>
+        ),
+        p: ({ children: paragraph }) => (
+          <p className="mb-3 whitespace-pre-wrap last:mb-0">{paragraph}</p>
+        ),
+        // Quoted Book One passages. Set apart from Minty's own sentences by a
+        // rule and a tint, so a reader can always see where the book stops and
+        // the companion starts. The trailing "— Heading" line is dimmed and
+        // letterspaced by the sibling rule below.
+        blockquote: ({ children: quote }) => (
+          <blockquote className="my-4 rounded-r-lg border-l-2 border-[color:var(--organism-accent-strong)] bg-foreground/[0.035] py-3 pl-4 pr-3 [&>p:last-child]:mb-0 [&>p:last-child]:font-mono [&>p:last-child]:text-[10px] [&>p:last-child]:uppercase [&>p:last-child]:tracking-[0.14em] [&>p:last-child]:text-muted-foreground [&>p:last-child]:not-italic [&>p]:italic">
+            {quote}
+          </blockquote>
+        ),
+        ul: ({ children: list }) => (
+          <ul className="mb-3 ml-5 list-disc space-y-1.5">{list}</ul>
+        ),
+        ol: ({ children: list }) => (
+          <ol className="mb-3 ml-5 list-decimal space-y-1.5">{list}</ol>
+        ),
+        strong: ({ children: strong }) => (
+          <strong className="font-semibold text-foreground">{strong}</strong>
+        ),
+        a: ({ href, children: link }) => {
+          const safeHref =
+            href?.startsWith("/") || href?.startsWith("https://") ? href : null;
+          if (!safeHref) return <span>{link}</span>;
+          const external = safeHref.startsWith("https://");
+          return (
+            <a
+              href={safeHref}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              className="underline decoration-[var(--organism-accent-soft)] underline-offset-4 transition-colors hover:decoration-[var(--organism-accent-strong)]"
+            >
+              {link}
+            </a>
+          );
+        },
+        code: ({ children: code }) => (
+          <code className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[0.82em]">
+            {code}
+          </code>
+        ),
+        pre: ({ children: code }) => (
+          <pre className="my-4 max-w-full overflow-x-auto border-y border-border/50 bg-foreground/[0.025] px-4 py-3 font-mono text-xs leading-6">
+            {code}
+          </pre>
+        ),
+        table: ({ children: table }) => (
+          <span className="my-4 block max-w-full overflow-x-auto border-y border-border/50">
+            <table className="w-full border-collapse font-sans text-sm">{table}</table>
+          </span>
+        ),
+        th: ({ children: heading }) => (
+          <th className="border-b border-border/60 px-3 py-2 text-left text-xs font-semibold">
+            {heading}
+          </th>
+        ),
+        td: ({ children: cell }) => (
+          <td className="border-b border-border/35 px-3 py-2 align-top text-sm">
+            {cell}
+          </td>
+        ),
+        img: () => null,
+      }}
+    >
+      {children}
+    </ReactMarkdown>
+  </div>
+);
 
 const Turn: React.FC<{
   turn: TwinTurn;
@@ -230,17 +339,23 @@ const Turn: React.FC<{
 
   return (
     <motion.article variants={staggerChild} className="max-w-full">
-      <p className="mb-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="mb-2 flex items-center gap-2 dot-label">
         <span
           className="inline-block h-1.5 w-1.5 rounded-full"
           style={{ background: "var(--organism-accent-strong)" }}
           aria-hidden="true"
         />
         Minty
+        {turn.source === "passages" && (
+          <span
+            className="font-mono text-[9px] normal-case tracking-normal text-muted-foreground/80"
+            title="No model answered this one. These are passages retrieved from the released text and quoted directly."
+          >
+            · quoted from Book One
+          </span>
+        )}
       </p>
-      <p className="whitespace-pre-wrap font-serif text-[15px] leading-[1.75] text-foreground">
-        {turn.content}
-      </p>
+      <AnswerMarkdown>{turn.content}</AnswerMarkdown>
       <Citations citations={turn.citations} onOpen={onOpen} />
       {feedback && turn.refusal_code === null && (
         <TwinFeedback
@@ -271,10 +386,43 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   const [busy, setBusy] = useState(false);
   // The in-progress answer text while a public answer streams in. Null when idle.
   const [streamingText, setStreamingText] = useState<string | null>(null);
+  const sidecar = variant === "sidecar";
+  const [wideViewport, setWideViewport] = useState(() =>
+    typeof window === "undefined"
+      ? true
+      : window.matchMedia("(min-width: 1024px)").matches,
+  );
+  // A sidecar is only genuinely modeless while the source remains visible next
+  // to it. Below lg it fills the viewport and must keep the same focus and
+  // scroll promises as the full-screen companion.
+  const modal = !sidecar || !wideViewport;
   // Smoothed for display: the network delivers clumps, the reader sees writing.
   const smoothedStream = useSmoothedText(streamingText, reducedMotion);
   const pulse = useOrganismPulse();
   const endRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  /** Whether the transcript should follow new text. False once the reader scrolls up. */
+  const stickToBottom = useRef(true);
+
+  const streaming = streamingText !== null;
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const update = () => setWideViewport(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!modal) return;
+    document.documentElement.dataset.mintyModal = "true";
+    return () => {
+      delete document.documentElement.dataset.mintyModal;
+    };
+  }, [modal]);
 
   const refreshThreads = useCallback(async () => {
     const { threads: found, authenticated: signedIn } = await listThreads();
@@ -291,14 +439,125 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
     void refreshThreads();
   }, [refreshThreads]);
 
+  /**
+   * Follow the answer without commandeering the page.
+   *
+   * This used to call `endRef.scrollIntoView({ behavior: "smooth" })`, which has
+   * two failures that compound. `scrollIntoView` scrolls *every* scrollable
+   * ancestor, so in sidecar the book behind Minty moved too — the reader lost
+   * their place in the text they opened Minty to ask about. And the effect
+   * depends on the streamed text, which `useSmoothedText` advances on a 34ms
+   * interval: a smooth scroll re-issued ~30 times a second is restarted before
+   * any of them can finish, so the panel never settles.
+   *
+   * Writing `scrollTop` on the transcript alone cannot touch an ancestor, and
+   * following only when the reader is already at the bottom means scrolling up
+   * to re-read a citation is no longer undone on the next delta.
+   */
   useEffect(() => {
-    endRef.current?.scrollIntoView({
-      behavior: reducedMotion ? "auto" : "smooth",
-      block: "end",
-    });
-  }, [turns, busy, smoothedStream, reducedMotion]);
+    const scroller = scrollerRef.current;
+    if (!scroller || !stickToBottom.current) return;
+    if (typeof scroller.scrollTo === "function") {
+      scroller.scrollTo({
+        top: scroller.scrollHeight,
+        // Easing is for a turn arriving; a moving stream target needs to be met,
+        // not chased.
+        behavior: reducedMotion || streaming ? "auto" : "smooth",
+      });
+    } else {
+      scroller.scrollTop = scroller.scrollHeight;
+    }
+  }, [turns, busy, smoothedStream, streaming, reducedMotion]);
+
+  /** Near the bottom means "following"; anywhere else means the reader is reading. */
+  const trackStickiness = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const distance = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
+    stickToBottom.current = distance < 48;
+  }, []);
+
+  /**
+   * The keyboard contract an overlay owes a reader.
+   *
+   * Minty is reached from a hero chip, a suggestion card, or a button inside the
+   * book, so a member may well arrive without a mouse. Escape closes either
+   * variant, the composer takes focus on open so the next keystroke is already
+   * the question, and focus returns to whatever opened Minty on the way out
+   * rather than being dropped at the top of the document.
+   *
+   * The trap is `focus`-only, and deliberately so. That variant sets
+   * `aria-modal`, which tells assistive technology the rest of the page is
+   * inert — a promise that is a lie unless Tab is genuinely held inside.
+   * Sidecar promises the opposite: the passage stays live beside Minty, so the
+   * reader must be able to tab back into the text while consulting it.
+   */
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    composerRef.current?.focus();
+
+    const focusableItems = () =>
+      Array.from(
+        panelRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((el) => el.offsetParent !== null);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab" || !modal) return;
+
+      const items = focusableItems();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const inside = Boolean(active && panelRef.current?.contains(active));
+
+      if (event.shiftKey && (!inside || active === first)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (!inside || active === last)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      opener?.focus?.();
+    };
+  }, [modal, onClose]);
+
+  /**
+   * Focus covers the whole viewport, so the field behind it must hold still —
+   * scrolling a page you cannot see is how a reader loses their place. Sidecar
+   * is exempt: scrolling the text under it is the entire point.
+   */
+  useEffect(() => {
+    if (!modal) return;
+    // The page scrolls on <html>, not <body>: locking the body alone leaves the
+    // field free to move behind the scrim, which is what it did.
+    const scroller = (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+    const previousOverflow = scroller.style.overflow;
+    const previousPadding = scroller.style.paddingRight;
+    // Replace the scrollbar with padding so locking does not shift the layout.
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    scroller.style.overflow = "hidden";
+    if (gutter > 0) scroller.style.paddingRight = `${gutter}px`;
+    return () => {
+      scroller.style.overflow = previousOverflow;
+      scroller.style.paddingRight = previousPadding;
+    };
+  }, [modal]);
 
   const openThread = async (id: string) => {
+    if (busy) return;
     const messages = await loadThread(id);
     if (!messages) return;
     setThreadId(id);
@@ -308,6 +567,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   };
 
   const startNew = () => {
+    if (busy) return;
     setThreadId(null);
     setTurns([]);
     setShowThreads(false);
@@ -316,6 +576,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   };
 
   const removeThread = async (id: string) => {
+    if (busy) return;
     if (!(await deleteThread(id))) return;
     setThreads((current) => current.filter((thread) => thread.id !== id));
     if (id === threadId) startNew();
@@ -326,6 +587,9 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
     if (trimmed.length < 2 || busy) return;
     setValue("");
     setBusy(true);
+    // Asking is itself a request to see the answer, so re-follow even if the
+    // reader had scrolled up to re-read something before typing.
+    stickToBottom.current = true;
     const memberTurn: TwinTurn = {
       id: `local-${Date.now()}`,
       role: "member",
@@ -385,6 +649,21 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
         void refreshThreads();
       }
       pulse(1);
+    } catch {
+      const unavailable: TwinTurn = {
+        id: `local-err-${Date.now()}`,
+        role: "twin",
+        content:
+          "I could not complete that reading. Your question is still here; try again when the connection settles.",
+        citations: [],
+        refusal_code: "temporarily_unavailable",
+      };
+      setTurns((current) => {
+        const next = [...current, unavailable];
+        if (authenticated !== true) saveEphemeralTurns(next);
+        return next;
+      });
+      setEphemeral(authenticated !== true);
     } finally {
       setBusy(false);
       setStreamingText(null);
@@ -410,26 +689,31 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   const empty = turns.length === 0;
   const lens = LENSES.find((candidate) => candidate.id === lensId) ?? LENSES[0];
 
-  const sidecar = variant === "sidecar";
-
   return (
     <motion.div
+      ref={panelRef}
       role="dialog"
       aria-label="Minty, the DOT Companion"
-      aria-modal={!sidecar}
+      aria-modal={modal}
       className={
         sidecar
-          ? "fixed inset-y-0 right-0 z-[60] flex w-full max-w-md flex-col sm:w-[26rem]"
+          // Docking only earns its keep where the text still has a readable
+          // measure left over. Below `lg` a 26rem panel eats more than half the
+          // window and the passage it is meant to sit beside becomes a gutter,
+          // so Minty takes the full width there and is dismissed rather than
+          // consulted alongside. `BookOnePage` insets the page at the same
+          // breakpoint, and the two must be changed together.
+          ? "fixed inset-y-0 right-0 z-[60] flex w-full flex-col lg:w-[26rem]"
           : "fixed inset-0 z-[60] flex flex-col"
       }
-      initial={sidecar ? { x: "100%" } : { opacity: 0 }}
+      initial={sidecar ? false : { opacity: 0 }}
       animate={sidecar ? { x: 0 } : { opacity: 1 }}
       exit={sidecar ? { x: "100%" } : { opacity: 0 }}
       transition={
         reducedMotion
           ? { duration: 0 }
           : sidecar
-            ? { type: "spring", stiffness: 320, damping: 34 }
+            ? { duration: 0.24, ease: "easeOut" }
             : { duration: 0.5, ease: "easeOut" }
       }
     >
@@ -440,7 +724,12 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
           type="button"
           aria-label="Close Minty"
           onClick={onClose}
-          className="absolute inset-0 cursor-default bg-background/70 backdrop-blur-md"
+          // At 70% the field did not recede, it ghosted: the masthead and the
+          // reading action stayed legible straight through Minty's empty middle
+          // band, which reads as a rendering fault rather than depth. Take the
+          // scrim to near-opaque so the field is *felt* behind the voice, not
+          // read through it.
+          className="absolute inset-0 cursor-default bg-background/95 backdrop-blur-xl"
         />
       )}
 
@@ -453,37 +742,54 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
             : "pointer-events-none relative flex min-h-0 flex-1 flex-col items-center overflow-hidden"
         }
       >
+        {/* In focus the column is a raised reading surface rather than bare text
+            on the scrim: a hairline edge and its own ground give the words a
+            place to sit, which is what makes this feel like somewhere you read
+            rather than a panel that opened over the page. */}
         <div
           className={
             sidecar
               ? "flex min-h-0 w-full flex-1 flex-col px-5"
-              : "pointer-events-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-6"
+              // Opaque on purpose. At 80% the homepage read straight through
+              // the reading column, which is the same "ghosting rather than
+              // depth" failure the scrim comment below already warns about.
+              : "pointer-events-auto flex min-h-0 w-full flex-1 flex-col overflow-hidden border-border/60 bg-background px-4 shadow-[0_1.5rem_4rem_-1.5rem_rgba(0,0,0,0.25)] sm:my-5 sm:max-w-3xl sm:rounded-xl sm:border sm:px-7"
           }
         >
-          {/* Aperture: Minty's mark and name, quiet, at the top of the column. */}
-          <header className="flex items-center justify-between pt-6">
-            <div className="flex items-center gap-2.5">
+          {/* One row of chrome, not three. Identity on the left, how the answer
+              was produced on the right, and the way out. */}
+          <header className="flex items-center justify-between gap-4 border-b border-border/40 pb-3.5 pt-5">
+            <div className="flex min-w-0 items-center gap-2.5">
               <span
-                className="organism-pulse-dot inline-flex h-2.5 w-2.5 rounded-full"
+                className="organism-pulse-dot inline-flex h-2 w-2 shrink-0 rounded-full"
                 style={{ background: "var(--organism-accent-strong)" }}
                 aria-hidden="true"
               />
-              <span className="font-serif text-lg font-semibold text-foreground">
+              <span className="font-serif text-base font-semibold leading-none text-foreground">
                 Minty
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-                the DOT companion
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/60 px-2 py-0.5 dot-label"
+                title={
+                  HAS_ORCHESTRATOR
+                    ? "Every answer carries the Book One passages it used. Answers that fall back to direct quotation are marked as such."
+                    : "This release has no model behind it. Answers are passages retrieved from Book One and quoted directly."
+                }
+              >
+                <ShieldCheck
+                  className="h-3 w-3 text-[var(--organism-accent-strong)]"
+                  aria-hidden="true"
+                />
+                {HAS_ORCHESTRATOR ? "Cited answers" : "Quoted passages"}
               </span>
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="rounded-full border border-border/50 p-2 text-muted-foreground transition-colors hover:text-foreground"
+              className="rounded-full border border-border/50 p-1.5 text-muted-foreground transition-colors hover:text-foreground"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <path d="M18 6 6 18M6 6l12 12" />
-              </svg>
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           </header>
 
@@ -493,13 +799,13 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
             <button
               type="button"
               onClick={() => setShowThreads((current) => !current)}
-              className="flex items-center gap-1.5 rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+              className="flex items-center gap-1.5 rounded-full px-2 py-1 dot-label transition-colors hover:text-foreground"
             >
               <MessageSquare className="h-3 w-3" aria-hidden="true" />
               Saved sessions
             </button>
           ) : (
-            <span className="flex items-center gap-1.5 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="flex items-center gap-1.5 px-2 py-1 dot-label">
               <MessageSquare className="h-3 w-3" aria-hidden="true" />
               Current tab
             </span>
@@ -507,10 +813,11 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
           <button
             type="button"
             onClick={startNew}
-            className="flex items-center gap-1.5 rounded-full px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+            disabled={busy}
+            className="flex items-center gap-1.5 rounded-full px-2 py-1 dot-label transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-3 w-3" aria-hidden="true" />
-            new session
+            New session
           </button>
         </div>
 
@@ -539,8 +846,9 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                   <button
                     type="button"
                     onClick={() => void removeThread(thread.id)}
+                    disabled={busy}
                     aria-label={`Delete ${thread.title}`}
-                    className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive"
+                    className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <Trash2 className="h-3 w-3" aria-hidden="true" />
                   </button>
@@ -551,16 +859,23 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
         </AnimatePresence>
 
         <motion.div
+          ref={scrollerRef}
+          onScroll={trackStickiness}
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
           custom={reducedMotion}
-          className="min-h-0 flex-1 space-y-2.5 overflow-y-auto pr-1"
+          className={`min-h-0 flex-1 space-y-7 overflow-y-auto overscroll-contain pr-1 ${
+            empty ? "flex flex-col" : ""
+          }`}
         >
           {empty && (
-            <motion.div variants={staggerChild} className="space-y-5 py-2">
+            // Auto margins rather than `justify-center`: this is a scroll
+            // container, and on a short viewport centring by justification
+            // clips the top of the block beyond reach.
+            <motion.div variants={staggerChild} className="my-auto space-y-5 py-2">
               <div className="border-y border-border/40 py-4">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Consulting
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/85">
@@ -568,10 +883,22 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                     ? "Your saved knowledge and released Book One canon."
                     : "Released Book One canon. Private documents remain private."}
                 </p>
+                {/* On a static release there is no model behind Minty, only the
+                    released text and a ranking over it. It still cites what it
+                    found and still refuses what it cannot ground — but it
+                    returns passages rather than composing an answer, and a chat
+                    window that does not say so is quietly promising a
+                    conversation it cannot hold. */}
+                {!HAS_ORCHESTRATOR && (
+                  <p className="mt-2 text-[11px] leading-5 text-muted-foreground/85">
+                    Reading directly from the released text right now, so answers arrive as the
+                    closest passages with their claim levels, not as composed prose.
+                  </p>
+                )}
               </div>
 
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Choose a lens
                 </p>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -604,7 +931,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               </div>
 
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Begin here
                 </p>
                 <div className="mt-2 grid gap-2">
@@ -650,7 +977,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               className="max-w-full"
               aria-live="polite"
             >
-              <p className="mb-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+              <p className="mb-2 flex items-center gap-2 dot-label">
                 <span
                   className="organism-pulse-dot inline-block h-1.5 w-1.5 rounded-full"
                   style={{ background: "var(--organism-accent-strong)" }}
@@ -658,14 +985,14 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 />
                 Minty
               </p>
-              <p className="whitespace-pre-wrap font-serif text-[15px] leading-[1.75] text-foreground">
-                {smoothedStream}
+              <div className="font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
+                <span className="whitespace-pre-wrap">{smoothedStream}</span>
                 <span
                   className="ml-0.5 inline-block h-4 w-[2px] animate-pulse align-middle"
                   style={{ background: "var(--organism-accent-strong)" }}
                   aria-hidden="true"
                 />
-              </p>
+              </div>
             </motion.article>
           ) : busy ? (
             /* The aperture breathing while Minty gathers the thread — present,
@@ -736,11 +1063,12 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                   key={candidate.id}
                   type="button"
                   onClick={() => setLensId(candidate.id)}
+                  disabled={busy}
                   aria-pressed={active}
                   title={candidate.description}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                     active
-                      ? "bg-foreground/[0.08] text-foreground"
+                      ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -755,20 +1083,32 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               event.preventDefault();
               void send(value);
             }}
-            className="flex items-center gap-2"
+            className="flex items-end gap-2"
           >
-            <input
+            <textarea
+              ref={composerRef}
               value={value}
               onChange={(event) => setValue(event.target.value)}
+              onKeyDown={(event) => {
+                if (
+                  event.key === "Enter" &&
+                  !event.shiftKey &&
+                  !event.nativeEvent.isComposing
+                ) {
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }
+              }}
               placeholder={`Ask through the ${lens.label.toLowerCase()} lens…`}
-              aria-label="Ask Minty about Digital Organism Theory"
-              className="min-w-0 flex-1 rounded-full border border-border/50 bg-background/60 px-4 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-soft)]"
+              aria-label="Ask Minty about Digital Organism Theory. Enter sends; Shift plus Enter adds a new line."
+              rows={2}
+              className="min-h-14 min-w-0 flex-1 resize-none rounded-lg border border-border/60 bg-background/70 px-3.5 py-3 text-base leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]"
             />
             <button
               type="submit"
               disabled={value.trim().length < 2 || busy}
               aria-label="Send"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-background transition-opacity disabled:opacity-40"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[color:var(--organism-accent-strong)] text-background transition-opacity disabled:opacity-40"
             >
               {busy ? (
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />

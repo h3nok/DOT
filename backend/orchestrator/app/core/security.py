@@ -11,10 +11,25 @@ import starlette.responses
 # ── Rate limiter (Redis-backed in prod; memory-backed in dev) ─────────────────
 
 
+_shared_limiter: slowapi.Limiter | None = None
+
+
 def make_limiter(redis_url: str | None = None) -> slowapi.Limiter:
-    """Return a Limiter wired to Redis when a URL is provided."""
-    storage_uri: str = redis_url if redis_url else "memory://"
-    return slowapi.Limiter(key_func=slowapi.util.get_remote_address, storage_uri=storage_uri)
+    """Return the process-wide limiter using the configured storage.
+
+    Routers are imported before ``create_app`` runs, so decorators must receive
+    one deterministic object immediately. The current Cloud Run release is
+    deliberately single-instance and configures ``memory://``; a distributed
+    store requires constructing routers after settings resolution rather than
+    silently swapping the storage beneath already-bound decorators.
+    """
+    global _shared_limiter  # noqa: PLW0603
+    if _shared_limiter is None:
+        _shared_limiter = slowapi.Limiter(
+            key_func=slowapi.util.get_remote_address,
+            storage_uri=redis_url or "memory://",
+        )
+    return _shared_limiter
 
 
 # ── Security headers ──────────────────────────────────────────────────────────

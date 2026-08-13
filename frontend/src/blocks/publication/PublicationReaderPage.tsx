@@ -155,7 +155,7 @@ function ReaderContents({
     <nav aria-label="Contents" className="space-y-7">
       {groups.map((group) => (
         <section key={group.part}>
-          <h2 className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          <h2 className="mb-2 dot-label">
             {group.part}
           </h2>
           <ol className="space-y-1">
@@ -365,12 +365,12 @@ function SectionReader({
 
         <header className="border-b border-border/60 pb-10">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            <p className="dot-label">
               {sectionLabel(section, index)}
               {section.meta?.part ? ` · ${section.meta.part}` : ""}
             </p>
             {words != null && minutes != null && (
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="dot-label">
                 {formatNumber(words)} words · about {minutes} min
               </p>
             )}
@@ -634,7 +634,7 @@ export default function PublicationReaderPage() {
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-border/50 bg-background/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
@@ -697,7 +697,7 @@ export default function PublicationReaderPage() {
           <aside className="relative h-full w-full max-w-sm overflow-y-auto border-l border-border/60 bg-background px-6 py-7 shadow-2xl">
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   Finite reading path
                 </p>
                 <h2

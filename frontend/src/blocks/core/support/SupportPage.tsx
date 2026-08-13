@@ -1,7 +1,7 @@
 import { useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-import { SupportSurface } from "../../../dot";
+import { SupportSurface } from "../../../dot/SupportSurface";
 
 /**
  * The support ask as its own address.

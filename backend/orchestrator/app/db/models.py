@@ -84,6 +84,12 @@ class OtpCode(Base):
     code_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(128), nullable=False
     )
+    #: What the code was issued for: "signin" or "join". Both flows share this
+    #: table, and a code proving an address for the join queue must never be
+    #: redeemable for a session — so every query filters on this.
+    purpose: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), nullable=False, default="signin", server_default="signin"
+    )
     expires_at: sqlalchemy.orm.Mapped[datetime.datetime] = sqlalchemy.orm.mapped_column(
         sqlalchemy.DateTime(timezone=True), nullable=False
     )
@@ -838,4 +844,51 @@ class TwinFeedback(Base, TimestampMixin, TenantMixin):
     #: The lens the answer was read through (orient / ground / test).
     lens: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(16), nullable=False, default="ground"
+    )
+
+
+# ── Join requests ─────────────────────────────────────────────────────────────
+
+
+class JoinRequest(Base, TimestampMixin):
+    """Someone asking to be let in, with an address they have proved they hold.
+
+    Invite-only (ADR-0001) governs who is admitted; it never meant the platform
+    should refuse to learn who is interested. This is that queue.
+
+    Two rules shape the columns. The address is *sealed*, not stored plainly
+    (ADR-0007, `app.core.contact`): a request has to be answerable by a human, so
+    the value must be recoverable, but a database dump on its own must not hand
+    over every prospective member's address. And `email_hash` sits beside it as
+    the blind index, so dedupe and lookup never unseal anything.
+
+    There is no queue position and no ordering anyone competes on: ADR-0004 bans
+    manufactured scarcity, and a rank here is exactly that.
+    """
+
+    __tablename__ = "join_requests"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("email_hash", name="uq_join_requests_email_hash"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("join")
+    )
+    #: Blind index over the lowercased address — the only searchable handle.
+    email_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), nullable=False, index=True
+    )
+    #: Fernet-sealed address. Readable only by a service holding the key.
+    email_sealed: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text, nullable=False
+    )
+    #: Why they want in, in their words. Bounded and optional.
+    reason: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(sqlalchemy.String(600))
+    #: Set once they prove control of the address. Unverified rows are noise.
+    verified_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    #: "pending" once verified, then "invited" or "declined" by the steward.
+    status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(16), nullable=False, default="pending"
     )

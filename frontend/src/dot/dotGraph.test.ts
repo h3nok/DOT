@@ -10,7 +10,14 @@ import type { DotNode } from "./types";
 
 const ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/;
 const KINDS = new Set(["self", "attribute", "page", "external"]);
-const SURFACES = new Set(["publications", "circle", "vault", "support", "twin"]);
+const SURFACES = new Set([
+  "publications",
+  "circle",
+  "vault",
+  "support",
+  "join",
+  "twin",
+]);
 const SAFE_HREF = /^(\/|https?:\/\/|mailto:|tel:)/;
 
 const MAX_DEPTH = 8;
@@ -119,15 +126,41 @@ describe("the movement graph seed", () => {
     const theory = dotGraph.children!.find((child) => child.id === "theory")!;
     const applied = dotGraph.children!.find((child) => child.id === "applied")!;
 
-    expect(theory).toMatchObject({ label: "Concept Map", href: "/doctrine" });
-    expect(applied).toMatchObject({ label: "Applied", href: "/applied" });
+    // The route is the contract; the label is copy and is expected to change as
+    // it is written for people who have not read the book yet.
+    expect(theory.href).toBe("/doctrine");
+    expect(applied.href).toBe("/applied");
     expect(dotGraph.introduction).toBe(DOT_DEVELOPMENT_STATEMENT);
     expect(dotGraph.children!.find((child) => child.id === "canon")?.actionLabel).toBe(
       "Begin reading",
     );
-    expect(DOT_DEVELOPMENT_STATEMENT).toBe(
-      "The Development and Application of a Big Theory of Everything (TOE)",
+  });
+
+  it("teaches an idea on every limb a visitor can see", () => {
+    const visible = dotGraph.children!.filter(
+      (child) => !child.primary && !child.planned,
     );
+
+    for (const child of visible) {
+      // A bare label is a filing-cabinet drawer. The line under it is the only
+      // thing that tells a first-time reader what the idea actually is, so a
+      // visible limb without one is a dead end wearing a name.
+      expect(child.description, `${child.id} needs a teaching line`).toBeTruthy();
+      expect(child.description!.length).toBeGreaterThan(25);
+    }
+  });
+
+  it("keeps the front door out of the theory-of-everything register", () => {
+    // The differentiator is that the book publishes what it fails to establish.
+    // Announcing a theory of everything spends that credibility before a
+    // stranger has read a sentence.
+    const frontDoor = [
+      dotGraph.introduction,
+      dotGraph.description,
+      ...dotGraph.children!.map((child) => child.description ?? ""),
+    ].join(" ");
+
+    expect(frontDoor).not.toMatch(/theory of everything|\bTOE\b/i);
   });
 
   it("states how every node relates to its parent", () => {

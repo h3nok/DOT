@@ -40,6 +40,28 @@
   50% { transform: scale(1.018); opacity: 0.92; }
 }
 
+@keyframes dot-state-update {
+  0%,
+  18%,
+  100% {
+    opacity: 0.28;
+  }
+  26%,
+  72% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes dot-local-process {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
 /* Glassmorphic responsive scrollbar utilities */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -123,6 +145,59 @@
   animation: borderPulse 4s ease-in-out infinite;
 }
 
+/* Entry reveal for the front door's copy.
+   Deliberately CSS rather than JS: this animates the page's own words, and a
+   stalled animation layer must never be the reason a reader sees a blank hero.
+   `both` holds the from-state during the delay; if the animation is disabled
+   the element simply renders at its natural opacity. */
+@keyframes dotRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dot-rise {
+  animation: dotRise 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* The blank field the organism arrives into, lifting to reveal the living
+   background behind it. */
+@keyframes dotVeilLift {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.dot-veil {
+  animation: dotVeilLift 1600ms ease-out 500ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-rise,
+  .dot-veil {
+    animation: none;
+  }
+  .dot-veil {
+    display: none;
+  }
+}
+
+/* Full-screen Minty owns the viewport. Its composer must never compete with a
+   global floating control; desktop reader sidecar mode remains modeless and
+   keeps Appearance available beside the book. */
+html[data-minty-modal="true"] [data-appearance-control] {
+  pointer-events: none;
+  opacity: 0;
+}
+
 /* Book One — a finite, still reading surface. */
 .book-surface {
   --book-paper: var(--background);
@@ -137,6 +212,8 @@
   --book-azurite: var(--organism-accent-soft);
   --book-hairline: color-mix(in oklch, var(--foreground) 12%, transparent);
   --book-halo: color-mix(in oklch, var(--organism-accent) 12%, transparent);
+  --book-reading-font: "Source Serif 4", Charter, Georgia, serif;
+  --book-reading-heading-font: "Playfair Display", Georgia, serif;
   /* The page must not seal itself off from the organism: the ambient membrane
      (the member's chosen background — the field of bits by default) shows
      through, so the Appearance panel governs this surface like every other. */
@@ -169,12 +246,72 @@ html[data-organism="off"] .book-surface,
   --book-hairline: color-mix(in oklch, var(--foreground) 14%, transparent);
 }
 
+html[data-contrast="high"] .book-surface {
+  --book-ink: var(--foreground);
+  --book-muted: color-mix(in oklch, var(--foreground) 80%, var(--background));
+  --book-hairline: color-mix(in oklch, var(--foreground) 30%, transparent);
+  --book-halo: color-mix(in oklch, var(--organism-accent) 8%, transparent);
+}
+
+html[data-reading="sans"] .book-surface {
+  --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --book-reading-heading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.book-reading-copy {
+  font-family: var(--book-reading-font);
+}
+
+.book-reading-heading {
+  font-family: var(--book-reading-heading-font);
+  letter-spacing: 0;
+}
+
+.book-reading-copy.text-sm {
+  font-size: calc(0.875rem * var(--reading-scale, 1));
+}
+
+.book-reading-copy.text-base {
+  font-size: calc(1rem * var(--reading-scale, 1));
+}
+
+.book-reading-copy.text-lg,
+.book-reading-heading.text-lg {
+  font-size: calc(1.125rem * var(--reading-scale, 1));
+}
+
+.book-reading-copy.text-xl,
+.book-reading-heading.text-xl {
+  font-size: calc(1.25rem * var(--reading-scale, 1));
+}
+
+.book-reading-heading.text-2xl {
+  font-size: calc(1.5rem * var(--reading-scale, 1));
+}
+
+.book-reading-heading.text-3xl {
+  font-size: calc(1.875rem * var(--reading-scale, 1));
+}
+
+.book-reading-heading.text-4xl {
+  font-size: calc(2.25rem * var(--reading-scale, 1));
+}
+
 .book-chrome {
-  /* Frameless: no bar, no border, no tint. The controls float on the field;
-     only what you might touch is present, and the page is the background. */
-  border: none;
+  border-bottom: 1px solid transparent;
   background: transparent;
-  backdrop-filter: none;
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+}
+
+html[data-contrast="high"] .book-chrome {
+  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  border-bottom-color: var(--book-hairline);
+}
+
+.book-reading-band {
+  background: color-mix(in oklch, var(--book-paper) 78%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 .book-dot-link {
@@ -214,6 +351,249 @@ html[data-organism="off"] .book-surface,
 
 .book-chapter-header {
   border-color: var(--book-hairline);
+}
+
+.book-engraved-frontispiece {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.book-frontispiece-wash {
+  background: radial-gradient(
+    circle at 50% 45%,
+    color-mix(in oklch, var(--background) 78%, transparent) 25%,
+    transparent 70%
+  );
+}
+
+.book-digital-subtitle {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dot-emergence-field {
+  color: var(--foreground);
+  pointer-events: none;
+  opacity: 0.22;
+  transition: opacity 300ms ease;
+}
+
+.dot-emergence-field svg {
+  display: block;
+}
+
+.dot-emergence-grid-line,
+.dot-emergence-grid-dot,
+.dot-emergence-spine,
+.dot-emergence-stage,
+.dot-emergence-inputs,
+.dot-emergence-memory,
+.dot-emergence-frame,
+.dot-emergence-return,
+.dot-emergence-distribution,
+.dot-emergence-local {
+  fill: none;
+  stroke: currentColor;
+  vector-effect: non-scaling-stroke;
+}
+
+.dot-emergence-grid-line {
+  stroke-width: 0.55;
+  opacity: 0.075;
+}
+
+.dot-emergence-grid-dot {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0.12;
+}
+
+.dot-emergence-spine {
+  stroke-dasharray: 2 7;
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.dot-emergence-seed,
+.dot-emergence-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.dot-emergence-seed {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.dot-emergence-stage {
+  stroke-width: 1;
+  opacity: 0.56;
+}
+
+.dot-emergence-stage-one {
+  opacity: 0.28;
+}
+
+.dot-emergence-stage-two {
+  opacity: 0.36;
+}
+
+.dot-emergence-stage-3 {
+  opacity: 0.72;
+}
+
+.dot-emergence-matrix {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.85;
+  opacity: 0.82;
+}
+
+.dot-emergence-matrix .dot-emergence-fill {
+  animation: dot-state-update 6s steps(1, end) infinite;
+}
+
+.dot-emergence-matrix .dot-emergence-fill:nth-child(3n + 1) {
+  animation-delay: -2s;
+}
+
+.dot-emergence-matrix .dot-emergence-fill:nth-child(3n + 2) {
+  animation-delay: -4s;
+}
+
+.dot-emergence-inputs {
+  stroke-dasharray: 3 7;
+  stroke-width: 1;
+  opacity: 0.48;
+}
+
+.dot-emergence-frame {
+  stroke-width: 0.9;
+  opacity: 0.2;
+}
+
+.dot-emergence-memory {
+  opacity: 0.72;
+}
+
+.dot-emergence-return {
+  stroke-dasharray: 4 9;
+  stroke-width: 1;
+  opacity: 0.42;
+}
+
+.dot-emergence-distribution {
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+.dot-emergence-local {
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.dot-emergence-local .dot-emergence-fill {
+  animation: dot-local-process 5s ease-in-out infinite;
+}
+
+.dot-emergence-labels {
+  fill: currentColor;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  opacity: 0.5;
+}
+
+.dot-emergence-signal {
+  fill: currentColor;
+  filter: drop-shadow(0 0 7px currentColor);
+  opacity: 0.9;
+}
+
+.dot-emergence-signal-secondary {
+  opacity: 0.52;
+}
+
+html[data-contrast="high"] .dot-emergence-grid-line {
+  opacity: 0.12;
+}
+
+html[data-contrast="high"] .dot-emergence-grid-dot,
+html[data-contrast="high"] .dot-emergence-frame {
+  opacity: 0.28;
+}
+
+html[data-contrast="high"] .dot-emergence-labels,
+html[data-contrast="high"] .dot-emergence-spine,
+html[data-contrast="high"] .dot-emergence-inputs,
+html[data-contrast="high"] .dot-emergence-return,
+html[data-contrast="high"] .dot-emergence-distribution {
+  opacity: 0.72;
+}
+
+html[data-motion="still"] .dot-emergence-matrix .dot-emergence-fill,
+html[data-motion="still"] .dot-emergence-local .dot-emergence-fill {
+  animation: none;
+}
+
+html[data-motion="still"] .dot-emergence-signal {
+  display: none;
+}
+
+.dot-emergence-field--cover {
+  opacity: 0.86;
+}
+
+.dot-emergence-field .dot-emergence-mobile {
+  display: none;
+}
+
+.book-digital-cover-wash {
+  z-index: 1;
+}
+
+.book-digital-cover > .relative {
+  z-index: 2;
+}
+
+.book-digital-cover-wash {
+  background: linear-gradient(
+    180deg,
+    transparent 0 33%,
+    color-mix(in oklch, var(--background) 78%, transparent) 42% 72%,
+    transparent 84% 100%
+  );
+}
+
+.book-frontispiece-action {
+  border: 1px solid color-mix(in oklch, var(--foreground) 44%, transparent);
+  border-radius: 0.375rem;
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 0.8rem 2rem color-mix(in oklch, var(--foreground) 18%, transparent);
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.book-frontispiece-action:hover,
+.book-frontispiece-action:focus-visible {
+  background: color-mix(in oklch, var(--foreground) 82%, var(--background));
+  transform: translateY(-1px);
+}
+
+.book-digital-cover {
+  background: var(--background);
+  box-shadow:
+    -0.55rem 0.55rem 0 color-mix(in oklch, var(--foreground) 86%, var(--background)),
+    -0.8rem 0.8rem 0 color-mix(in oklch, var(--foreground) 24%, transparent),
+    0 1.8rem 4rem color-mix(in oklch, var(--foreground) 22%, transparent);
+}
+
+.book-digital-cover::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.42rem;
+  background: color-mix(in oklch, var(--foreground) 76%, transparent);
+  content: "";
 }
 
 .book-frontispiece {
@@ -3364,10 +3744,10 @@ html[data-organism="off"] .book-surface,
 }
 
 .book-prose {
-  /* A text serif, not a display serif. Playfair still sets every heading
-     below; it is the running text of a 3,000-word chapter that needs a larger
-     x-height and even stroke weight to hold up. */
-  font-family: "Source Serif 4", Charter, Georgia, serif;
+  /* Source Serif is the long-form default; the shared reading variables let
+     the member move the whole reading hierarchy to Inter without changing the
+     book's fixed cover identity. */
+  font-family: var(--book-reading-font);
   font-variant-numeric: oldstyle-nums proportional-nums;
   color: var(--book-ink, color-mix(in oklch, var(--foreground) 90%, transparent));
   hanging-punctuation: first last;
@@ -3382,8 +3762,15 @@ html[data-organism="off"] .book-surface,
 
 /* The member's reading choices, published by the organism provider. */
 [data-reading="sans"] .book-prose {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-variant-numeric: normal;
+}
+
+[data-reading="sans"] .book-prose h1,
+[data-reading="sans"] .book-prose h2,
+[data-reading="sans"] .book-prose h3,
+[data-reading="sans"] .book-prose h4,
+[data-reading="sans"] .book-reference-copy {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 .book-prose p,
@@ -3411,14 +3798,14 @@ html[data-organism="off"] .book-surface,
 .book-prose h2,
 .book-prose h3,
 .book-prose h4 {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--book-reading-heading-font);
   letter-spacing: 0;
 }
 
 .book-prose h2 {
   margin-top: 3.5rem;
   margin-bottom: 1.25rem;
-  font-size: 1.6rem;
+  font-size: calc(1.6rem * var(--reading-scale, 1));
   font-weight: 650;
   line-height: 1.25;
   color: var(--book-ink);
@@ -3427,7 +3814,7 @@ html[data-organism="off"] .book-surface,
 .book-prose h3 {
   margin-top: 2.75rem;
   margin-bottom: 1rem;
-  font-size: 1.2rem;
+  font-size: calc(1.2rem * var(--reading-scale, 1));
   font-weight: 650;
   color: var(--book-ink);
 }
@@ -3435,7 +3822,7 @@ html[data-organism="off"] .book-surface,
 .book-prose h4 {
   margin-top: 2rem;
   margin-bottom: 0.85rem;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--reading-scale, 1));
   font-weight: 650;
   color: var(--book-ink);
 }
@@ -3488,6 +3875,50 @@ html[data-organism="off"] .book-surface,
   vertical-align: super;
 }
 
+.book-reference-marker {
+  display: inline;
+  margin-left: 0.08em;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+  color: color-mix(in oklch, var(--book-cinnabar) 78%, var(--book-ink));
+  cursor: pointer;
+  vertical-align: super;
+  transition: color 160ms ease;
+}
+
+.book-reference-marker:hover,
+.book-reference-marker:focus-visible {
+  color: var(--book-cinnabar);
+  outline: 1px solid color-mix(in oklch, var(--book-cinnabar) 45%, transparent);
+  outline-offset: 2px;
+}
+
+.book-reference-sheet {
+  border-radius: 0.5rem;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 1.55rem,
+    color-mix(in oklch, var(--book-ink) 3%, transparent) 1.55rem calc(1.55rem + 1px)
+  );
+}
+
+.book-reference-copy {
+  font-family: var(--book-reading-font);
+  font-size: calc(1rem * var(--reading-scale, 1));
+  line-height: 1.75;
+  color: var(--book-ink);
+}
+
+.book-reference-copy a {
+  color: var(--book-cinnabar);
+  text-decoration: underline;
+  text-decoration-color: var(--book-hairline);
+  text-underline-offset: 0.2em;
+}
+
 .book-prose a {
   color: var(--foreground);
   text-decoration-line: underline;
@@ -3506,6 +3937,23 @@ html[data-organism="off"] .book-surface,
 }
 
 @media (max-width: 640px) {
+  .book-frontispiece-wash {
+    background: linear-gradient(
+      90deg,
+      transparent 0 5%,
+      color-mix(in oklch, var(--background) 78%, transparent) 18% 82%,
+      transparent 95% 100%
+    );
+  }
+
+  .dot-emergence-field .dot-emergence-desktop {
+    display: none;
+  }
+
+  .dot-emergence-field .dot-emergence-mobile {
+    display: block;
+  }
+
   .book-hero-stage {
     min-height: 11rem;
     margin-top: -0.5rem;
@@ -3635,6 +4083,31 @@ html[data-organism="off"] .book-surface,
 
   .book-prose h2 {
     margin-top: 2.75rem;
-    font-size: 1.4rem;
+    font-size: calc(1.4rem * var(--reading-scale, 1));
+  }
+}
+
+@media (min-width: 640px) {
+  .book-reading-copy.sm\:text-2xl {
+    font-size: calc(1.5rem * var(--reading-scale, 1));
+  }
+
+  .book-reading-heading.sm\:text-3xl {
+    font-size: calc(1.875rem * var(--reading-scale, 1));
+  }
+
+  .book-reading-heading.sm\:text-5xl {
+    font-size: calc(3rem * var(--reading-scale, 1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-emergence-matrix .dot-emergence-fill,
+  .dot-emergence-local .dot-emergence-fill {
+    animation: none;
+  }
+
+  .dot-emergence-signal {
+    display: none;
   }
 }

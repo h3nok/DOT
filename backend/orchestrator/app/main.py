@@ -11,8 +11,10 @@ import slowapi.errors
 import app.api.v1.auth as _auth_router
 import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
+import app.api.v1.join as _join_router
 import app.api.v1.publications as _publications_router
 import app.api.v1.runs as _runs_router
+import app.api.v1.sitecontent as _sitecontent_router
 import app.api.v1.support as _support_router
 import app.api.v1.twin as _twin_router
 import app.api.v1.vault as _vault_router
@@ -79,6 +81,13 @@ def create_app() -> fastapi.FastAPI:
                 "name": "support",
                 "description": "Member funding for the movement. Amounts are set server-side.",
             },
+            {
+                "name": "join",
+                "description": (
+                    "Verified requests to join. Addresses are sealed at rest and the "
+                    "queue is never public."
+                ),
+            },
         ],
     )
     _errors.install_error_handlers(fapp)
@@ -92,7 +101,7 @@ def create_app() -> fastapi.FastAPI:
         fastapi.middleware.cors.CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
         allow_credentials=True,
-        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=[
             "Authorization",
             "Content-Type",
@@ -112,7 +121,10 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_publications_router.public_router)
     fapp.include_router(_publications_router.router)
     fapp.include_router(_runs_router.router)
+    fapp.include_router(_sitecontent_router.public_router)
+    fapp.include_router(_sitecontent_router.router)
     fapp.include_router(_support_router.router)
+    fapp.include_router(_join_router.router)
     fapp.include_router(_twin_router.public_router)
     fapp.include_router(_twin_router.router)
     fapp.include_router(_vault_router.router)

@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_PROFILE_DELIVERY_SLUG?: string;
   readonly VITE_SITE_URL?: string;
   readonly VITE_SUPPORT_PAYMENT_LINK?: string;
+  readonly VITE_JOIN_URL?: string;
 }
 
 interface ImportMeta {

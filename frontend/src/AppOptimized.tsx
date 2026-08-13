@@ -12,6 +12,7 @@ import {
   OrganismHud,
   AppearanceControl,
 } from "./organism";
+import { SiteContentProvider } from "./content/editable";
 
 // Lazy load surfaces for code splitting.
 const HomeV2Page = React.lazy(() => import("./blocks/core/home/HomeV2Page"));
@@ -21,16 +22,23 @@ const DoctrinePage = React.lazy(
 const PublicationStudioPage = React.lazy(
   () => import("./blocks/publication/PublicationStudioPage"),
 );
+const PublicationStudioIndexPage = React.lazy(
+  () => import("./blocks/publication/PublicationStudioIndexPage"),
+);
 const PublicationReaderPage = React.lazy(
   () => import("./blocks/publication/PublicationReaderPage"),
 );
 const BookOnePage = React.lazy(
   () => import("./blocks/publication/BookOnePage"),
 );
+const BookAccessPage = React.lazy(
+  () => import("./blocks/publication/BookAccessPage"),
+);
 const AppliedPage = React.lazy(() => import("./blocks/applied/AppliedPage"));
 const SupportPage = React.lazy(
   () => import("./blocks/core/support/SupportPage"),
 );
+const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 
 const LoadingSpinner = () => (
   <div className="flex h-[60vh] items-center justify-center">
@@ -52,6 +60,19 @@ const RouteScrollManager: React.FC = () => {
   }, [pathname]);
 
   return null;
+};
+
+/** Book surfaces own this control in their sticky reading chrome. */
+const FloatingAppearanceControl: React.FC = () => {
+  const { pathname } = useLocation();
+
+  if (
+    pathname.startsWith("/book/digital-organism-theory") &&
+    !pathname.endsWith("/copy")
+  ) {
+    return null;
+  }
+  return <AppearanceControl />;
 };
 
 class ErrorBoundary extends React.Component<
@@ -91,6 +112,9 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <Router basename={import.meta.env.BASE_URL}>
+        {/* Published copy overrides, resolved once for the whole app. Every
+            failure here falls back to the released wording (ADR-0021). */}
+        <SiteContentProvider>
         <div className="App">
           {/* Living organism layer: ambient membrane + CSS-var bridge +
                 reading reflex + diagnostics. Behind all content, pointer-inert,
@@ -109,6 +133,8 @@ const App: React.FC = () => {
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/applied" element={<AppliedPage />} />
                 <Route path="/support" element={<SupportPage />} />
+                <Route path="/join" element={<JoinPage />} />
+                <Route path="/studio" element={<PublicationStudioIndexPage />} />
                 <Route path="/studio/:projectId" element={<PublicationStudioPage />} />
                 <Route path="/read/:ownerId/:slug" element={<PublicationReaderPage />} />
                 <Route
@@ -117,6 +143,10 @@ const App: React.FC = () => {
                 />
                 <Route path="/book/digital-organism-theory" element={<BookOnePage />} />
                 <Route
+                  path="/book/digital-organism-theory/copy"
+                  element={<BookAccessPage />}
+                />
+                <Route
                   path="/book/digital-organism-theory/:sectionSlug"
                   element={<BookOnePage />}
                 />
@@ -124,8 +154,9 @@ const App: React.FC = () => {
             </Suspense>
           </main>
           {/* User-facing appearance control (theme + living background). */}
-          <AppearanceControl />
+          <FloatingAppearanceControl />
         </div>
+        </SiteContentProvider>
       </Router>
     </ErrorBoundary>
   );
