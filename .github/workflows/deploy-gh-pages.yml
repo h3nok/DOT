@@ -88,6 +88,13 @@ jobs:
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
+
+    - name: Verify public route entry points
+      run: |
+        test -f frontend/dist/book/digital-organism-theory/preface/index.html
+        test -f frontend/dist/doctrine/subjective-data/index.html
+        test -f frontend/dist/join/index.html
+        test -f frontend/dist/support/index.html
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3

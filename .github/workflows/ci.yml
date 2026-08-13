@@ -180,6 +180,16 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
+      - name: Grant runtime access to release secrets
+        run: |
+          for secret in JOIN_CONTACT_KEY RESEND_API_KEY; do
+            gcloud secrets add-iam-policy-binding "$secret" \
+              --member="serviceAccount:${{ env.RUNTIME_SERVICE_ACCOUNT }}" \
+              --role=roles/secretmanager.secretAccessor \
+              --quiet \
+              --project ${{ env.GCP_PROJECT_ID }}
+          done
+
       - name: Build and push image
         run: |
           IMAGE=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/orchestrator:${{ github.sha }}
@@ -291,3 +301,8 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"owner_id":"henok","lens":"ground","question":"What is the Limit of Knowledge?"}' \
             | jq -e '.grounded == true and (.citations | length > 0)'
+
+      - name: Join service check
+        run: |
+          curl -sf "${{ steps.api_url.outputs.url }}/v1/join/status" \
+            | jq -e '.available == true'
