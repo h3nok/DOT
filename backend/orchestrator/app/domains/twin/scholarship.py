@@ -80,10 +80,13 @@ def research_query(question: str) -> str:
             for pattern, expansion in _QUERY_EXPANSIONS
             if pattern.search(supporting_passage)
         ]
-    # Put neutral expansions first so a long Book One excerpt cannot truncate
-    # the terms that make its local vocabulary legible to a research index.
-    context = question if not reader_question or not expansions else reader_question
-    return " ".join([*expansions, context])[:300]
+    # Once local vocabulary has a neutral expansion, do not append boilerplate
+    # such as "what peer-reviewed research bears on..." or the DOT term itself.
+    # Crossref's bibliographic search otherwise overweights generic words such
+    # as "research", "model", and "predictive" and returns unrelated records.
+    if expansions:
+        return " ".join(expansions)[:300]
+    return question[:300]
 
 
 def _authors(record: dict[str, typing.Any]) -> str:

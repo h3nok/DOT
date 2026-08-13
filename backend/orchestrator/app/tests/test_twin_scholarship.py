@@ -49,6 +49,8 @@ def test_explicit_concept_is_not_redirected_by_incidental_passage_terms() -> Non
     assert "prior expectations perception" in query
     assert "conscious intention agency" not in query
     assert "Little c" not in query
+    assert "peer-reviewed research" not in query
+    assert "Painting model" not in query
 
 
 def test_paper_context_requires_an_abstract_and_links_verification() -> None:
