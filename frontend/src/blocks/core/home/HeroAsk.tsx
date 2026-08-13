@@ -94,7 +94,9 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onAsk({ query: question.text, lens: question.lens })}
-            className="group inline-flex items-center gap-1.5 rounded-full border border-border/40 bg-foreground/[0.015] px-3.5 py-1.5 text-xs text-muted-foreground transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035] hover:text-foreground"
+            // min-h-11 on touch, tightening to the compact pill once there is a
+            // pointer: these are the first thing a thumb reaches for.
+            className="group inline-flex min-h-11 items-center gap-1.5 rounded-full border border-border/40 bg-foreground/[0.015] px-3.5 py-1.5 text-xs text-muted-foreground transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035] hover:text-foreground sm:min-h-0"
           >
             <span>{question.text}</span>
           </motion.button>

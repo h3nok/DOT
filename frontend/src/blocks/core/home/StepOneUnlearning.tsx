@@ -75,9 +75,9 @@ export function StepOneUnlearning() {
         </div>
       </div>
 
-      <h3 className="mt-4 text-balance font-serif text-3xl font-normal leading-tight text-foreground sm:text-4xl lg:text-5xl">
+      <h2 className="mt-4 text-balance font-serif text-3xl font-normal leading-tight text-foreground sm:text-4xl lg:text-5xl">
         Understanding takes time.
-      </h3>
+      </h2>
 
       <motion.p
         variants={bodyTypewriterContainer}

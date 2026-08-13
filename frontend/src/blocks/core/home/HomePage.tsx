@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, BookOpen, Compass, HelpCircle, LogIn, Sparkles, UserPlus } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, HelpCircle, LogIn, UserPlus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -40,7 +40,6 @@ export default function HomePage() {
   const { isOwner, logout, refresh: refreshAuth } = useAuth();
   const { config, reducedMotion: organismReducedMotion } = useOrganism();
   const [signInOpen, setSignInOpen] = useState(false);
-  const [intentFilter, setIntentFilter] = useState<"all" | "text" | "concepts" | "ask">("all");
   const [ask, setAsk] = useState<(HeroAskRequest & { id: number }) | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
@@ -79,7 +78,9 @@ export default function HomePage() {
       >
         <Link
           to="/"
-          className="flex items-center gap-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
+          // -my-2.5 keeps the header its original height while the link itself
+          // reaches a thumb-sized target.
+          className="-my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
         >
           <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
         </Link>
@@ -191,7 +192,11 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
-            className="mt-10 flex flex-col items-center gap-2 text-muted-foreground/50"
+            // Hidden on phones. A "scroll" hint is for a viewport that looks
+            // finished at the fold; on mobile the next section is already
+            // visibly cut off, so the cue only costs height where height is
+            // scarcest.
+            className="mt-10 hidden flex-col items-center gap-2 text-muted-foreground/50 sm:flex"
           >
             <a
               href="#unlearning-experiment"
@@ -233,12 +238,15 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h3 className="dot-page-heading mt-4 text-balance">
-            This is not passive content.
-          </h3>
+          <h2 className="dot-page-heading mt-4 text-balance">
+            Reading this is not the same as testing it.
+          </h2>
 
           <p className="mt-5 max-w-2xl text-balance text-lg leading-relaxed text-foreground/85 sm:text-xl">
-            Digital Organism Theory is not a passive philosophy to observe — it is the active application and development of a Big Theory of Everything.
+            Digital Organism Theory is a model under construction, not a finished
+            account. It is meant to be applied and developed — and it marks every
+            claim as observation, model, or hypothesis so you can see how far each
+            one is willing to go.
           </p>
 
           <p className="dot-caption mt-3 max-w-2xl text-balance text-sm leading-relaxed sm:text-base">
@@ -255,171 +263,6 @@ export default function HomePage() {
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-        </div>
-      </motion.section>
-
-      {/* ── Choose Your Door / Visitor Intent Pathways ───────────────── */}
-      <motion.section
-        id="choose-path"
-        aria-label="How to approach this work"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5 }}
-        className="mx-auto w-full scroll-mt-24 py-16 dot-page-container dot-page-wide border-t border-border/40"
-      >
-        <div className="flex flex-col items-center justify-center text-center gap-4">
-          <div>
-            <span className="dot-label">
-              Where to begin
-            </span>
-            <h3 className="dot-page-heading mt-2">
-              Four ways to enter DOT
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-1 rounded-xl border border-border/40 bg-foreground/[0.015] p-1 text-xs">
-            <button
-              type="button"
-              onClick={() => setIntentFilter("all")}
-              className={`rounded-lg px-3 py-1.5 transition-all ${intentFilter === "all" ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              All Doors
-            </button>
-            <button
-              type="button"
-              onClick={() => setIntentFilter("text")}
-              className={`rounded-lg px-3 py-1.5 transition-all ${intentFilter === "text" ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              Source Text
-            </button>
-            <button
-              type="button"
-              onClick={() => setIntentFilter("concepts")}
-              className={`rounded-lg px-3 py-1.5 transition-all ${intentFilter === "concepts" ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              Concept Map
-            </button>
-            <button
-              type="button"
-              onClick={() => setIntentFilter("ask")}
-              className={`rounded-lg px-3 py-1.5 transition-all ${intentFilter === "ask" ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              Inquire
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-            <Link
-              to="/book/digital-organism-theory"
-              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
-                intentFilter === "all" || intentFilter === "text" ? "opacity-100" : "opacity-40"
-              } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
-            >
-              <div>
-                <div className="flex items-center gap-2.5 text-[color:var(--organism-accent-strong)]">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)]">
-                    <BookOpen className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <span className="font-mono text-xs uppercase tracking-wider font-semibold">Read the Text</span>
-                </div>
-                <h4 className="mt-4 font-serif text-xl font-medium text-foreground group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                  Book One
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  The complete foundational work on consciousness, conditioning, and human action.
-                </p>
-              </div>
-              <span className="mt-6 inline-flex items-center text-xs font-semibold text-foreground/80 group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                Start reading <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </motion.div>
-
-          <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-            <Link
-              to="/doctrine"
-              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
-                intentFilter === "all" || intentFilter === "concepts" ? "opacity-100" : "opacity-40"
-              } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
-            >
-              <div>
-                <div className="flex items-center gap-2.5 text-[color:var(--organism-accent-strong)]">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)]">
-                    <Compass className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <span className="font-mono text-xs uppercase tracking-wider font-semibold">Concept Map</span>
-                </div>
-                <h4 className="mt-4 font-serif text-xl font-medium text-foreground group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                  The Doctrine
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Interactive graph of core terms, defined and fully sourced.
-                </p>
-              </div>
-              <span className="mt-6 inline-flex items-center text-xs font-semibold text-foreground/80 group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                Explore map <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </motion.div>
-
-          <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-            <a
-              href="#orientation"
-              onClick={scrollToAnchor("orientation")}
-              className={`group flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
-                intentFilter === "all" || intentFilter === "concepts" ? "opacity-100" : "opacity-40"
-              } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
-            >
-              <div>
-                <div className="flex items-center gap-2.5 text-[color:var(--organism-accent-strong)]">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)]">
-                    <Sparkles className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <span className="font-mono text-xs uppercase tracking-wider font-semibold">Practical Claims</span>
-                </div>
-                <h4 className="mt-4 font-serif text-xl font-medium text-foreground group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                  Core Concepts
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Step through the 10 foundational concepts of the model.
-                </p>
-              </div>
-              <span className="mt-6 inline-flex items-center text-xs font-semibold text-foreground/80 group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                View rotator <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </a>
-          </motion.div>
-
-          <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }}>
-            <button
-              type="button"
-              onClick={() => setAsk({ query: "What does DOT claim?", lens: "ground", id: Date.now() })}
-              className={`group text-left flex h-full flex-col justify-between rounded-lg border border-border/40 bg-foreground/[0.015] p-6 backdrop-blur-md transition-all ${
-                intentFilter === "all" || intentFilter === "ask" ? "opacity-100" : "opacity-40"
-              } hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035]`}
-            >
-              <div>
-                <div className="flex items-center gap-2.5 text-[color:var(--organism-accent-strong)]">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--organism-accent-soft)]">
-                    <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <span className="font-mono text-xs uppercase tracking-wider font-semibold">Ask Anything</span>
-                </div>
-                <h4 className="mt-4 font-serif text-xl font-medium text-foreground group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                  Ask Minty
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Test your own questions directly against the text.
-                </p>
-              </div>
-              <span className="mt-6 inline-flex items-center text-xs font-semibold text-foreground/80 group-hover:text-[color:var(--organism-accent-strong)] transition-colors">
-                Ask question <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </button>
-          </motion.div>
         </div>
       </motion.section>
 

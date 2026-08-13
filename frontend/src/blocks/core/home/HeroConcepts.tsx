@@ -135,7 +135,10 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
 
       {/* Position, and a way to step through it. Finite by design: the last dot
           is the end, not a wrap point. */}
-      <ol className="mt-4 flex items-center justify-center gap-1.5">
+      {/* The dot is the indicator, not the target. Ten 6px dots were unhittable
+          on a phone, so each button carries a 44px-tall transparent hit area
+          around a mark that stays small. */}
+      <ol className="mt-2 flex items-center justify-center">
         {HERO_CONCEPTS.map((concept, i) => (
           <li key={concept.id}>
             <button
@@ -143,12 +146,16 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
               onClick={() => setIndex(i)}
               aria-label={concept.term}
               aria-current={i === index}
-              className={`block h-1.5 rounded-full transition-all ${
-                i === index
-                  ? "w-5 bg-[color:var(--organism-accent-strong)]"
-                  : "w-1.5 bg-border hover:bg-muted-foreground"
-              }`}
-            />
+              className="group flex h-11 w-6 items-center justify-center"
+            >
+              <span
+                className={`block h-1.5 rounded-full transition-all ${
+                  i === index
+                    ? "w-5 bg-[color:var(--organism-accent-strong)]"
+                    : "w-1.5 bg-border group-hover:bg-muted-foreground"
+                }`}
+              />
+            </button>
           </li>
         ))}
       </ol>

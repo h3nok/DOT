@@ -80,9 +80,9 @@ export function ArchitectureDiagram() {
         <span className="dot-label text-[color:var(--organism-accent-strong)]">
           Visual Model
         </span>
-        <h3 className="dot-page-heading mt-2">
+        <h2 className="dot-page-heading mt-2">
           Architecture of Experience
-        </h3>
+        </h2>
         <p className="dot-caption mt-3">
           Four layers form a recursive loop. Each one feeds the next.
         </p>
