@@ -50,6 +50,20 @@ def test_refuses_requests_when_no_sealing_key_is_configured(
     assert response.status_code == 503
 
 
+def test_production_refuses_requests_without_email_delivery(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("JOIN_CONTACT_KEY", KEY)
+    monkeypatch.setenv("ORCHESTRATOR_ENVIRONMENT", "production")
+    monkeypatch.setenv("RESEND_API_KEY", "disabled")
+
+    assert client.get("/v1/join/status").json() == {"available": False}
+
+    response = client.post("/v1/join/requests", json={"email": "reader@example.com"})
+
+    assert response.status_code == 503
+
+
 def test_verifies_an_address_and_records_the_request(
     client: fastapi.testclient.TestClient, sealed: None
 ) -> None:

@@ -45,13 +45,24 @@ def _as_utc(value: datetime.datetime) -> datetime.datetime:
     return value if value.tzinfo else value.replace(tzinfo=datetime.UTC)
 
 
+def join_available() -> bool:
+    """Only open when addresses can be sealed and verification can be delivered."""
+    api_key = os.environ.get("RESEND_API_KEY", "").strip()
+    environment = os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development")
+    delivery_available = bool(api_key and api_key != "disabled") or environment not in {
+        "production",
+        "staging",
+    }
+    return app.core.contact.sealing_available() and delivery_available
+
+
 async def request_join(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
     reason: str | None,
 ) -> dict:
     """Record the request and send a code proving the address."""
-    if not app.core.contact.sealing_available():
+    if not join_available():
         # Fail closed. Accepting an address with nowhere safe to put it is worse
         # than declining it, and mirrors how the support plane refuses without
         # its Stripe keys.

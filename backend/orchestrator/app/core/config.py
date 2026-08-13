@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import functools
 import logging
-import os
 
 import pydantic
 import pydantic_settings
@@ -124,9 +123,6 @@ class ServiceSettings(pydantic_settings.BaseSettings):
             errors.append("AUTH_MODE=local_header is not allowed in production/staging")
         if self.AUTH_MODE == "jwt" and not self.SERVICE_AUTH_SECRET:
             errors.append("SERVICE_AUTH_SECRET is required for AUTH_MODE=jwt")
-        if not os.environ.get("RESEND_API_KEY", "").strip():
-            errors.append("RESEND_API_KEY is required in production/staging")
-
         if errors:
             msg: str = f"{self.SERVICE_NAME} config validation failed:\n  - " + "\n  - ".join(
                 errors

@@ -83,8 +83,13 @@ async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> 
         if joining
         else "Your sign-in code for DOT"
     )
-    api_key: str = os.environ.get("RESEND_API_KEY", "")
-    if not api_key:
+    api_key: str = os.environ.get("RESEND_API_KEY", "").strip()
+    delivery_configured = bool(api_key and api_key != "disabled")
+    environment = os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development")
+    if not delivery_configured and environment in {"production", "staging"}:
+        logger.warning("[OTP] Email delivery is unavailable for %s", purpose)
+        return False
+    if not delivery_configured:
         logger.info("[OTP] DEV CODE (%s) for %s: %s", purpose, email, code)
         return True
     from_addr: str = os.environ.get("EMAIL_FROM", "DOT <onboarding@resend.dev>")

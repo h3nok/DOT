@@ -28,7 +28,7 @@ def _fail(result: dict) -> None:
 async def get_status() -> dict:
     """Whether the queue is open, so the UI can decline honestly rather than
     collect an address it cannot store safely."""
-    return {"available": app.core.contact.sealing_available()}
+    return {"available": join_service.join_available()}
 
 
 @router.post("/requests", response_model=schemas.JoinRequestAccepted, status_code=202)
