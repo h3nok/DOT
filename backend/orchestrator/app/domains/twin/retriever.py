@@ -390,7 +390,10 @@ def passages_to_fragments(passages: list[Passage]) -> list[dict[str, typing.Any]
             "kind": passage.kind,
             "label": passage.label,
         }
-        if passage.kind == "chunk":
+        # Document chunks and vetted scholarly abstracts both ground prose.
+        # Graph nodes remain structured properties; remote metadata must never
+        # be treated as evidence unless scholarship.py admitted its abstract.
+        if passage.kind in {"chunk", "scholarly_work"}:
             fragment["text"] = passage.text
         else:
             fragment["properties"] = passage.properties

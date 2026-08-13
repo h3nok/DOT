@@ -137,3 +137,16 @@ def test_research_answer_must_cite_book_and_paper() -> None:
         )
         is None
     )
+
+
+def test_scholarly_abstract_crosses_the_model_boundary_as_citable_text() -> None:
+    fragments = retriever.passages_to_fragments([_canon(), _paper()])
+    book = next(fragment for fragment in fragments if fragment["node_id"] == "book-1")
+    paper = next(fragment for fragment in fragments if fragment["node_id"] == "s2:paper-1")
+
+    assert "The Painting interprets" in book["text"]
+    assert "Prior expectations influence perception" in paper["text"]
+    assert "properties" not in paper
+    instruction = service._scholarship_instruction(True)  # noqa: SLF001
+    assert "released Book One node_id" in instruction
+    assert "scholarly_work node_id" in instruction

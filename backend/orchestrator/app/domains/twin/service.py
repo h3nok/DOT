@@ -333,6 +333,17 @@ def _grounded_citation_ids(
     return cited
 
 
+def _scholarship_instruction(available: bool) -> str:
+    if not available:
+        return ""
+    return (
+        "Academic context is present. Compare rather than conflate: cite at least "
+        "one released Book One node_id and at least one scholarly_work node_id. "
+        "If the abstracts do not support a useful comparison, say so and still "
+        "cite the records you examined.\n"
+    )
+
+
 async def ask(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     requester: app.auth.dependencies.OwnerContext,
@@ -358,6 +369,7 @@ async def ask(
         f"{_render_history(history)}"
         f"{boundary.wrap_untrusted(fragments)}\n\n"
         f"Reading lens: {_LENS_INSTRUCTION[payload.lens]}\n"
+        f"{_scholarship_instruction(scholarship_available)}"
         f"Question: {payload.question}\n"
         "Answer using only the context above."
     )
@@ -526,6 +538,7 @@ async def ask_stream(
         f"{_render_history(history)}"
         f"{boundary.wrap_untrusted(fragments)}\n\n"
         f"Reading lens: {_LENS_INSTRUCTION[payload.lens]}\n"
+        f"{_scholarship_instruction(scholarship_available)}"
         f"Question: {payload.question}\n"
         "Answer using only the context above."
     )
