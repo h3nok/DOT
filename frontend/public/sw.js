@@ -1,51 +1,41 @@
 // PWA Configuration for Digital Organism Theory Platform
-// Service Worker Configuration
+// Offline-first service worker for Book One and canonical DOT routes.
 
-const CACHE_NAME = "dot-platform-v1";
-const STATIC_CACHE = "dot-static-v1";
-const DYNAMIC_CACHE = "dot-dynamic-v1";
+const STATIC_CACHE = "dot-static-v2";
+const DYNAMIC_CACHE = "dot-dynamic-v2";
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/favicon.ico",
-  // Core CSS and JS will be added by Vite
+  "/favicon-dot.svg",
+  "/favicon-dot-16.svg",
+  "/favicon-dot.ico",
+  "/publications/henok/digital-organism-theory/v2/manifest.json",
 ];
 
 // Routes to cache dynamically
 const DYNAMIC_ROUTES = [
-  "/blog",
-  "/community",
-  "/learn",
-  "/research",
-  "/settings",
+  "/doctrine",
+  "/applied",
   "/support",
+  "/join",
+  "/book/digital-organism-theory",
 ];
 
 // Install event - cache static assets
 self.addEventListener("install", (event) => {
-  console.log("[Service Worker] Installing...");
-
   event.waitUntil(
     caches
       .open(STATIC_CACHE)
-      .then((cache) => {
-        console.log("[Service Worker] Caching static assets");
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .then(() => {
-        console.log("[Service Worker] Static assets cached");
-        return self.skipWaiting();
-      }),
+      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then(() => self.skipWaiting()),
   );
 });
 
 // Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("[Service Worker] Activating...");
-
   event.waitUntil(
     caches
       .keys()
@@ -53,16 +43,12 @@ self.addEventListener("activate", (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log("[Service Worker] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
           }),
         );
       })
-      .then(() => {
-        console.log("[Service Worker] Claiming clients");
-        return self.clients.claim();
-      }),
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -76,48 +62,79 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Skip chrome-extension requests
-  if (url.protocol === "chrome-extension:") {
+  // Skip browser extensions or cross-origin trackers
+  if (url.protocol === "chrome-extension:" || url.origin !== self.location.origin) {
     return;
   }
 
   // Handle navigation requests (HTML pages)
   if (request.mode === "navigate") {
     event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request).then((cachedResponse) => {
+            return cachedResponse || caches.match("/index.html");
+          });
+        }),
+    );
+    return;
+  }
+
+  // Handle static assets (CSS, JS, fonts, images, publications)
+  if (
+    request.destination === "style" ||
+    request.destination === "script" ||
+    request.destination === "image" ||
+    request.destination === "font" ||
+    url.pathname.startsWith("/publications/") ||
+    url.pathname.startsWith("/books/")
+  ) {
+    event.respondWith(
       caches.match(request).then((cachedResponse) => {
         if (cachedResponse) {
-          console.log("[Service Worker] Serving from cache:", request.url);
           return cachedResponse;
         }
 
-        // Network first for navigation
-        return fetch(request)
-          .then((response) => {
-            // Cache successful responses
-            if (response.status === 200) {
-              const responseClone = response.clone();
-              caches.open(DYNAMIC_CACHE).then((cache) => {
-                cache.put(request, responseClone);
-              });
-            }
-            return response;
-          })
-          .catch(() => {
-            // Offline fallback
-            console.log(
-              "[Service Worker] Network failed, serving offline page",
-            );
-            return caches.match("/index.html");
-          });
+        return fetch(request).then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        });
       }),
     );
     return;
   }
 
-  // Handle static assets (CSS, JS, images)
-  if (
-    request.destination === "style" ||
-    request.destination === "script" ||
+  // Handle orchestrator public delivery & content requests
+  if (url.pathname.startsWith("/v1/profile-delivery/") || url.pathname.startsWith("/v1/site-content")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
+    );
+  }
+});
     request.destination === "image"
   ) {
     event.respondWith(

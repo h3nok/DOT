@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "node runner.js",
     "dev:frontend": "pnpm --dir frontend dev",
-    "dev:backend": "cd backend && python src/main.py",
+    "dev:backend": "cd backend/orchestrator && python3 -m uvicorn app.main:app --reload --port 8000",
     "build": "pnpm --dir frontend build",
     "preview": "pnpm --dir frontend preview",
     "lint": "pnpm --dir frontend lint",
     "typecheck": "pnpm --dir frontend typecheck",
     "install:frontend": "pnpm --dir frontend install",
-    "install:backend": "cd backend && pip install -r requirements.txt"
+    "install:backend": "cd backend/orchestrator && pip install -r requirements.txt"
   },
   "engines": {
     "node": ">=18"

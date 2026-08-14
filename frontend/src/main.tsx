@@ -30,6 +30,14 @@ import "./organism/organism.css";
 import { AppProviders } from "./shared/contexts";
 import { ThemeProvider } from "./shared/contexts/SimpleThemeContext";
 
+if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD) {
+  window.addEventListener("load", () => {
+    void navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Offline cache registration failed silently without blocking UI.
+    });
+  });
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HelmetProvider>

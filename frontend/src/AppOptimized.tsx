@@ -73,6 +73,7 @@ const FloatingAppearanceControl: React.FC = () => {
   ) {
     return null;
   }
+  if (pathname === "/") return null;
   return <AppearanceControl />;
 };
 
