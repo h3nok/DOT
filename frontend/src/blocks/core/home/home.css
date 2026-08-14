@@ -1,0 +1,1092 @@
+/* ====================================================================
+   Home journey — a sequence of environments, not a stack of cards.
+
+   The public threshold stays visibly digital and alive; the book route owns
+   the quieter paper metaphor. Every colour is derived from the active theme,
+   so changing Appearance changes the atmosphere without breaking the sequence.
+   ==================================================================== */
+
+.home-journey {
+  --home-ground-threshold: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 92%, var(--organism-accent)) 48%,
+    transparent
+  );
+  --home-ground-reflection: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 88%, var(--organism-accent)) 56%,
+    transparent
+  );
+  --home-ground-architecture: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 88%, var(--foreground)) 64%,
+    transparent
+  );
+  --home-ground-language: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 92%, var(--organism-accent)) 52%,
+    transparent
+  );
+  --home-ground-entrances: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 96%, var(--foreground)) 64%,
+    transparent
+  );
+  --home-ground-invitation: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--background) 88%, var(--organism-accent)) 46%,
+    transparent
+  );
+  --home-ground-reality: color-mix(
+    in oklch,
+    color-mix(in oklch, var(--foreground) 90%, var(--organism-accent)) 82%,
+    transparent
+  );
+  isolation: isolate;
+  overflow: clip;
+}
+
+.home-environment {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+}
+
+.home-environment > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home-journey .dot-page-heading,
+.home-journey .dot-section-heading {
+  letter-spacing: 0;
+}
+
+html:has(.home-journey) {
+  scroll-padding-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.home-journey) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Finite page map. Labels only enter the centre of attention on hover/focus. */
+.home-journey-nav {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  z-index: 28;
+  display: none;
+  transform: translateY(-50%);
+}
+
+.home-journey-nav ol {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-journey-nav a {
+  position: relative;
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+}
+
+.home-journey-nav a > span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  transition:
+    width 180ms ease,
+    height 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.home-journey-nav a::before {
+  content: attr(aria-label);
+  position: absolute;
+  right: 2.35rem;
+  width: max-content;
+  max-width: 12rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: color-mix(in oklch, var(--background) 92%, transparent);
+  color: var(--foreground);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(0.25rem);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+  backdrop-filter: blur(12px);
+}
+
+.home-journey-nav a:hover::before,
+.home-journey-nav a:focus-visible::before {
+  opacity: 1;
+  transform: none;
+}
+
+.home-journey-nav a[aria-current="location"] > span {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-color: var(--organism-accent-strong);
+  background: var(--organism-accent-strong);
+  box-shadow: 0 0 0 0.25rem var(--organism-accent-soft);
+}
+
+.home-journey-nav a:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: -0.4rem;
+}
+
+@media (min-width: 1536px) {
+  .home-journey-nav {
+    display: block;
+  }
+}
+
+/* Threshold: an observatory within the existing interactive bit field. */
+.home-hero-environment {
+  display: flex;
+  min-height: 92svh;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--home-ground-threshold);
+}
+
+.home-hero-environment::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--organism-accent-soft) 50%,
+    transparent
+  );
+}
+
+.home-hero-content {
+  width: 100%;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+}
+
+.home-hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 45rem;
+}
+
+.home-hero-title {
+  color: var(--foreground);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.02;
+}
+
+.home-hero-title-code {
+  color: var(--organism-accent-strong);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 500;
+}
+
+.home-hero-lede {
+  color: color-mix(in oklch, var(--foreground) 76%, transparent);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.home-hero-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.home-ask-prompts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.home-ask-prompt {
+  display: grid;
+  min-width: 0;
+  min-height: 3.25rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
+  border-radius: 0.45rem;
+  background: color-mix(in oklch, var(--background) 58%, transparent);
+  color: var(--muted-foreground);
+  text-align: left;
+  backdrop-filter: blur(10px);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.home-ask-prompt:hover,
+.home-ask-prompt:focus-visible {
+  border-color: var(--organism-accent-strong);
+  background: color-mix(
+    in oklch,
+    var(--background) 84%,
+    var(--organism-accent-soft)
+  );
+  color: var(--foreground);
+  box-shadow:
+    inset 3px 0 0 var(--organism-accent-strong),
+    0 0.5rem 1.25rem color-mix(in oklch, var(--organism-accent) 12%, transparent);
+  transform: translateY(-1px);
+}
+
+.home-ask-prompt:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: 2px;
+}
+
+.home-ask-prompt-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.08rem;
+}
+
+.home-ask-prompt-category {
+  color: color-mix(in oklch, var(--muted-foreground) 68%, transparent);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.58rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.home-ask-prompt-question {
+  overflow-wrap: anywhere;
+  font-size: 0.7rem;
+  line-height: 1.25;
+}
+
+.home-ask-prompt-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: color-mix(in oklch, var(--muted-foreground) 52%, transparent);
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.home-ask-prompt:hover .home-ask-prompt-category,
+.home-ask-prompt:focus-visible .home-ask-prompt-category,
+.home-ask-prompt:hover .home-ask-prompt-icon,
+.home-ask-prompt:focus-visible .home-ask-prompt-icon {
+  color: var(--organism-accent-strong);
+}
+
+.home-ask-prompt:hover .home-ask-prompt-icon,
+.home-ask-prompt:focus-visible .home-ask-prompt-icon {
+  transform: translate(0.12rem, -0.12rem);
+}
+
+.home-hero-stage {
+  position: absolute;
+  top: 50%;
+  right: max(0rem, calc((100vw - 74rem) / 2));
+  z-index: 0;
+  width: 42rem;
+  height: 29rem;
+  transform: translate(18%, -48%);
+  color: var(--organism-accent-strong);
+  pointer-events: none;
+}
+
+.home-hero-axis {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  background: color-mix(in oklch, var(--organism-accent) 38%, transparent);
+}
+
+.home-hero-axis-horizontal {
+  top: 96%;
+  left: 26%;
+  width: 68%;
+  height: 1px;
+  transform-origin: left center;
+}
+
+.home-hero-axis-horizontal::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -0.05rem;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-top: 1px solid currentcolor;
+  border-right: 1px solid currentcolor;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.home-hero-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 72%;
+  height: 78%;
+  display: grid;
+  place-items: center;
+}
+
+.home-hero-mark > span {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.home-hero-stage-label {
+  position: absolute;
+  padding: 0 0.4rem;
+  background: color-mix(in oklch, var(--background) 84%, transparent);
+  color: color-mix(in oklch, var(--foreground) 55%, transparent);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.home-hero-stage-label-time {
+  top: calc(96% + 0.7rem);
+  left: 26%;
+}
+
+.home-hero-state-trace {
+  position: absolute;
+  top: calc(96% - 0.3rem);
+  left: 28%;
+  width: 28%;
+  height: 0.65rem;
+}
+
+.home-hero-state-trace > span {
+  position: absolute;
+  top: 50%;
+  display: block;
+  border: 1px solid color-mix(in oklch, var(--organism-accent-strong) 68%, transparent);
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--background) 72%, var(--organism-accent-soft));
+  transform: translateY(-50%);
+}
+
+.home-hero-state-trace > span:nth-child(1) {
+  left: 0;
+  width: 0.28rem;
+  height: 0.28rem;
+}
+
+.home-hero-state-trace > span:nth-child(2) {
+  left: 38%;
+  width: 0.44rem;
+  height: 0.44rem;
+}
+
+.home-hero-state-trace > span:nth-child(3) {
+  left: 76%;
+  width: 0.65rem;
+  height: 0.65rem;
+  background: var(--organism-accent-strong);
+}
+
+.home-scroll-cue {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 50%;
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted-foreground);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  transition: color 160ms ease;
+}
+
+.home-scroll-cue:hover,
+.home-scroll-cue:focus-visible {
+  color: var(--organism-accent-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero-axis-horizontal {
+    animation: home-time-reveal 1.1s ease-out 0.15s both;
+  }
+
+  .home-hero-state-trace > span {
+    animation: home-state-arrive 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .home-hero-state-trace > span:nth-child(1) {
+    animation-delay: 0.45s;
+  }
+
+  .home-hero-state-trace > span:nth-child(2) {
+    animation-delay: 0.75s;
+  }
+
+  .home-hero-state-trace > span:nth-child(3) {
+    animation-delay: 1.05s;
+  }
+
+  .home-scroll-cue svg {
+    animation: home-cue-breathe 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes home-time-reveal {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes home-state-arrive {
+  from {
+    opacity: 0;
+    transform: translate(-0.8rem, -50%) scale(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%) scale(1);
+  }
+}
+
+@keyframes home-cue-breathe {
+  0%,
+  100% {
+    transform: translateY(-0.12rem);
+  }
+  50% {
+    transform: translateY(0.16rem);
+  }
+}
+
+@media (min-width: 640px) {
+  .home-hero-title {
+    font-size: 4rem;
+  }
+
+  .home-hero-lede {
+    font-size: 1.125rem;
+  }
+
+  .home-hero-actions {
+    display: flex;
+    width: max-content;
+    align-items: center;
+  }
+}
+
+@media (min-width: 380px) and (max-width: 639px) {
+  .home-hero-actions {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+
+  .home-hero-actions > * {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-hero-title {
+    font-size: 4.1rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .home-hero-environment {
+    min-height: 94svh;
+  }
+
+  .home-hero-content {
+    padding-top: 8.5rem;
+    padding-bottom: 7rem;
+  }
+
+  .home-hero-copy {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .home-hero-copy > div {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .home-hero-stage {
+    top: 46%;
+    right: 50%;
+    width: 40rem;
+    height: 28rem;
+    transform: translate(50%, -50%);
+    opacity: 0.2;
+  }
+
+  .home-hero-stage-label {
+    display: none;
+  }
+
+}
+
+@media (max-width: 639px) {
+  .home-hero-environment {
+    min-height: 52rem;
+  }
+
+  .home-hero-content {
+    padding-top: 14.25rem;
+    padding-bottom: 4rem;
+  }
+
+  .home-hero-title {
+    font-size: 2.55rem;
+  }
+
+  .home-hero-stage {
+    top: 5.25rem;
+    right: 50%;
+    width: 20rem;
+    height: 8.75rem;
+    transform: translateX(50%);
+    opacity: 0.72;
+  }
+
+  .home-hero-axis-horizontal {
+    top: 96%;
+  }
+
+  .home-hero-state-trace {
+    top: calc(96% - 0.3rem);
+  }
+
+  .home-hero-mark {
+    top: -1.45rem;
+    right: -0.25rem;
+    width: 10.25rem;
+    height: 10.25rem;
+  }
+
+  .home-scroll-cue span {
+    display: none;
+  }
+}
+
+/* Reflection: a human reading room with a large editorial statement. */
+.home-reflection-environment {
+  overflow: hidden;
+  padding: 7rem 0;
+  background-color: var(--home-ground-reflection);
+}
+
+.home-reflection-layout {
+  display: grid;
+  gap: 4rem;
+}
+
+.home-reflection-heading {
+  align-self: start;
+}
+
+.home-preface-copy {
+  position: relative;
+  margin: 0;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--organism-accent-strong);
+}
+
+.home-preface-copy::before {
+  content: "“";
+  position: absolute;
+  top: -2.15rem;
+  right: 0;
+  color: color-mix(in oklch, var(--organism-accent-strong) 30%, transparent);
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.home-preface-statement {
+  color: color-mix(in oklch, var(--foreground) 88%, transparent);
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+@media (min-width: 900px) {
+  .home-reflection-layout {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    gap: 6rem;
+  }
+
+  .home-preface-statement {
+    font-size: 1.35rem;
+  }
+}
+
+/* Architecture: a precise model room with a visible return path. */
+.home-architecture-environment {
+  overflow: hidden;
+  padding: 7rem 0;
+  background-color: var(--home-ground-architecture);
+}
+
+.home-section-heading-row {
+  display: grid;
+  gap: 2rem;
+  align-items: end;
+}
+
+.home-architecture-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.home-architecture-node {
+  position: relative;
+  display: flex;
+  min-height: 7.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.15rem 1.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  text-align: left;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.home-architecture-node:last-child {
+  border-bottom: 0;
+}
+
+.home-architecture-node:hover,
+.home-architecture-node:focus-visible,
+.home-architecture-node[aria-pressed="true"] {
+  background: color-mix(in oklch, var(--background) 88%, var(--organism-accent-soft));
+  color: var(--foreground);
+}
+
+.home-architecture-node[aria-pressed="true"] {
+  box-shadow: inset 3px 0 0 var(--organism-accent-strong);
+}
+
+.home-architecture-node:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: -3px;
+}
+
+.home-architecture-node-heading {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-architecture-node-number {
+  color: var(--organism-accent-strong);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.65rem;
+}
+
+.home-architecture-node-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--organism-accent-soft);
+  border-radius: 0.35rem;
+  color: var(--organism-accent-strong);
+}
+
+.home-architecture-node-title {
+  color: var(--foreground);
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.home-architecture-node-role {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.home-architecture-node-flow {
+  position: absolute;
+  bottom: -0.75rem;
+  left: 1.4rem;
+  z-index: 2;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--background) 92%, var(--foreground));
+  color: var(--organism-accent-strong);
+  transform: rotate(90deg);
+}
+
+.home-architecture-node:last-child .home-architecture-node-flow {
+  display: none;
+}
+
+.home-architecture-return-path {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  color: var(--muted-foreground);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.home-architecture-return-path::before {
+  content: "";
+  width: 4rem;
+  height: 1px;
+  background: var(--organism-accent-soft);
+}
+
+.home-architecture-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+  padding: 2.25rem 0 0;
+  border-top: 2px solid var(--organism-accent-strong);
+  border-bottom: 1px solid var(--border);
+}
+
+.home-architecture-detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home-architecture-detail-icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.4rem;
+  background: var(--organism-accent-strong);
+  color: var(--background);
+}
+
+.home-architecture-detail-copy {
+  display: grid;
+  gap: 0.9rem;
+  padding-bottom: 2.25rem;
+}
+
+.home-architecture-detail-summary {
+  color: var(--foreground);
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.home-architecture-detail-body {
+  max-width: 46rem;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+@media (min-width: 800px) {
+  .home-section-heading-row {
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.85fr);
+    gap: 5rem;
+  }
+
+  .home-architecture-track {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .home-architecture-node {
+    min-height: 10rem;
+    padding: 1.35rem 1.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+
+  .home-architecture-node:last-child {
+    border-right: 0;
+  }
+
+  .home-architecture-node[aria-pressed="true"] {
+    box-shadow: inset 0 3px 0 var(--organism-accent-strong);
+  }
+
+  .home-architecture-node-flow {
+    top: 50%;
+    right: -0.75rem;
+    bottom: auto;
+    left: auto;
+    transform: translateY(-50%);
+  }
+
+  .home-architecture-detail {
+    grid-template-columns: minmax(16rem, 0.72fr) minmax(0, 1.28fr);
+    gap: 4rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-architecture-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reality Frame: inversion marks the passage from model to consequence. */
+.home-reality-environment {
+  overflow: hidden;
+  background: var(--home-ground-reality);
+  color: var(--background);
+}
+
+.home-reality-environment::before {
+  content: "";
+  position: absolute;
+  inset: 1.25rem;
+  z-index: 0;
+  border: 1px solid color-mix(in oklch, var(--background) 16%, transparent);
+  pointer-events: none;
+}
+
+.home-reality-environment::after {
+  content: "REALITY FRAME";
+  position: absolute;
+  right: 2rem;
+  bottom: 1.7rem;
+  z-index: 0;
+  color: color-mix(in oklch, var(--background) 18%, transparent);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+}
+
+.home-reality-layout {
+  display: grid;
+  gap: 3rem;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+}
+
+.home-inverse-label {
+  color: color-mix(in oklch, var(--background) 62%, var(--organism-accent-strong));
+}
+
+.home-inverse-heading {
+  color: var(--background);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 3rem;
+  font-weight: 520;
+  letter-spacing: 0;
+  line-height: 1.04;
+}
+
+.home-reality-copy {
+  max-width: 38rem;
+  color: var(--background);
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
+  font-size: 1.18rem;
+  line-height: 1.75;
+}
+
+.home-inverse-link {
+  border-bottom: 1px solid color-mix(in oklch, var(--background) 38%, transparent);
+  color: var(--background);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.home-inverse-link:hover,
+.home-inverse-link:focus-visible {
+  border-color: var(--organism-accent-strong);
+  color: color-mix(in oklch, var(--background) 72%, var(--organism-accent-strong));
+}
+
+@media (min-width: 800px) {
+  .home-reality-layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .home-inverse-heading {
+    font-size: 4rem;
+  }
+}
+
+/* Vocabulary: a bright workbench after the Reality Frame inversion. */
+.home-language-environment {
+  overflow: hidden;
+  padding: 7rem 0;
+  background-color: var(--home-ground-language);
+}
+
+.home-concept-stage {
+  min-height: 20rem;
+  padding: 2.25rem 1.25rem 1rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklch, var(--background) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+/* Entrances: two compact, equally weighted destinations. */
+.home-entrances-environment {
+  padding: 6.5rem 0;
+  background-color: var(--home-ground-entrances);
+}
+
+.home-entrance {
+  display: grid;
+  min-height: 8.5rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: color-mix(in oklch, var(--background) 88%, transparent);
+  color: var(--foreground);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.home-entrance:hover,
+.home-entrance:focus-visible {
+  border-color: var(--organism-accent-strong);
+  background: color-mix(in oklch, var(--background) 91%, var(--organism-accent));
+}
+
+.home-entrance:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: 3px;
+}
+
+.home-entrance-icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--organism-accent-soft);
+  border-radius: 50%;
+  color: var(--organism-accent-strong);
+}
+
+.home-entrance-arrow {
+  width: 1rem;
+  height: 1rem;
+  color: var(--muted-foreground);
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.home-entrance:hover .home-entrance-arrow,
+.home-entrance:focus-visible .home-entrance-arrow {
+  color: var(--organism-accent-strong);
+  transform: translateX(0.2rem);
+}
+
+/* Invitation: the field opens outward again, now around participation. */
+.home-invitation-environment {
+  overflow: hidden;
+  padding: 8rem 0;
+  background-color: var(--home-ground-invitation);
+}
+
+html[data-contrast="high"] .home-environment::before,
+html[data-contrast="high"] .home-environment::after {
+  opacity: 0.28;
+}
+
+html[data-contrast="high"] .home-architecture-node,
+html[data-contrast="high"] .home-entrance,
+html[data-contrast="high"] .home-concept-stage {
+  border-color: var(--foreground);
+  background: var(--background);
+}
+
+@media (max-width: 639px) {
+  .home-reflection-environment,
+  .home-architecture-environment,
+  .home-language-environment,
+  .home-entrances-environment,
+  .home-invitation-environment {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .home-reflection-environment {
+    padding-top: 2rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-journey *,
+  .home-journey *::before,
+  .home-journey *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

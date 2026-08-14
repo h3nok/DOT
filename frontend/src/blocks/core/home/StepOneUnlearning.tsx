@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const PLAIN_TEXT =
@@ -23,38 +23,16 @@ const SEGMENTS: Segment[] = [
   { text: " is not only a moral aspiration. It is an epistemic necessity." },
 ];
 
-function TypewriterBody() {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const [charCount, setCharCount] = useState(0);
-
-  const totalChars = SEGMENTS.reduce((sum, s) => sum + s.text.length, 0);
-
-  useEffect(() => {
-    if (!inView || charCount >= totalChars) return;
-    const id = window.setTimeout(() => setCharCount((c) => c + 1), 6);
-    return () => window.clearTimeout(id);
-  }, [inView, charCount, totalChars]);
-
-  let rendered = 0;
+function LinkedStatement() {
   return (
-    <p ref={ref} className="dot-lede mx-auto mt-6 max-w-3xl text-balance" aria-label={PLAIN_TEXT}>
+    <p className="home-preface-statement" aria-label={PLAIN_TEXT}>
       {SEGMENTS.map((seg, i) => {
-        const start = rendered;
-        rendered += seg.text.length;
-        const visible = Math.max(0, Math.min(seg.text.length, charCount - start));
-        const content = (
-          <>
-            <span>{seg.text.slice(0, visible)}</span>
-            {visible < seg.text.length && (
-              <span className="invisible">{seg.text.slice(visible)}</span>
-            )}
-          </>
-        );
         return seg.link ? (
-          <Link key={i} to={seg.link} className={TERM_STYLE}>{content}</Link>
+          <Link key={i} to={seg.link} className={TERM_STYLE}>
+            {seg.text}
+          </Link>
         ) : (
-          <span key={i}>{content}</span>
+          <span key={i}>{seg.text}</span>
         );
       })}
     </p>
@@ -70,16 +48,30 @@ export function StepOneUnlearning() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
-      className="relative scroll-mt-24 border-t border-border/40 py-20 dot-page-container"
+      className="home-environment home-reflection-environment scroll-mt-24"
     >
-      <div className="dot-surface mx-auto max-w-3xl rounded-2xl border border-border/30 bg-foreground/[0.02] p-8 text-center backdrop-blur-sm sm:p-10">
-        <span className="dot-label">From the preface</span>
+      <div className="home-reflection-layout dot-page-container dot-page-wide">
+        <div className="home-reflection-heading">
+          <span className="dot-label">Begin with lived experience</span>
+          <h2 className="dot-page-heading mt-4 text-balance">
+            Love is an epistemic necessity.
+          </h2>
+          <p className="dot-caption mt-5 max-w-sm">
+            The framework begins close to home: with the conditions under which
+            a person can see clearly enough to revise a protected belief.
+          </p>
+          <Link
+            to="/book/digital-organism-theory/preface"
+            className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-[color:var(--organism-accent-strong)]"
+          >
+            Read the Preface
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
 
-        <h2 className="dot-page-heading mt-4 text-balance">
-          Love is an epistemic necessity.
-        </h2>
-
-        <TypewriterBody />
+        <blockquote className="home-preface-copy">
+          <LinkedStatement />
+        </blockquote>
       </div>
     </motion.section>
   );

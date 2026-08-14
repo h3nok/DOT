@@ -49,7 +49,7 @@ const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
 function ClaimChip({ level }: { level: ClaimLevel }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 font-mono dot-meta uppercase tracking-[0.14em] ${CLAIM_TONE[level]}`}
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 dot-label ${CLAIM_TONE[level]}`}
       title={`Book One assigns this claim the level: ${level}`}
     >
       {level}
@@ -60,7 +60,7 @@ function ClaimChip({ level }: { level: ClaimLevel }) {
 function Field({ label, children }: { label: string; children: string }) {
   return (
     <div className="mt-5">
-      <p className="dot-meta font-mono uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="dot-label">
         {label}
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">
@@ -90,7 +90,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
 
   return (
     <div className="mt-6 border-t border-border/50 pt-5">
-      <p className="font-mono dot-meta uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="dot-label">
         Recorded work
       </p>
       {/* In recorded order. Never sorted or filtered by outcome. */}
@@ -102,7 +102,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
           >
             <div className="flex flex-wrap items-center gap-2">
               <ClaimChip level={entry.claimLevel} />
-              <span className="dot-meta font-mono uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="dot-label">
                 {entry.kind} · {OUTCOME_LABEL[entry.outcome]}
               </span>
             </div>

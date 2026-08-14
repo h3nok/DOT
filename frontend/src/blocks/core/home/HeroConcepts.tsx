@@ -101,7 +101,7 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="rounded-2xl border border-border/40 bg-foreground/[0.015] p-6 text-center backdrop-blur-sm"
+      className="home-concept-stage text-center"
     >
       <ul className="sr-only">
         {HERO_CONCEPTS.map((concept) => (

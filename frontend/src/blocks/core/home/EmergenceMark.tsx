@@ -22,7 +22,7 @@ const ACCENT_SOFT = "var(--organism-accent-soft)";
 
 interface EmergenceMarkProps {
   size?: number;
-  /** Skip the sequence and paint the settled mark (reduced motion, repeat visit). */
+  /** Skip the sequence and paint the settled mark when motion is disabled. */
   settled?: boolean;
 }
 

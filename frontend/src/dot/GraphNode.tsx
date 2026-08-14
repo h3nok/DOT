@@ -151,7 +151,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
               {node.description}
             </span>
           ) : (
-            <span className="mt-2 font-mono dot-meta uppercase text-muted-foreground">
+            <span className="mt-2 dot-label text-muted-foreground">
               {node.description}
             </span>
           ))}

@@ -22,6 +22,7 @@ const HERO_FILES = [
   "EmergenceMark.tsx",
   "HeroConcepts.tsx",
   "HeroAsk.tsx",
+  "HomeJourneyNav.tsx",
   "ArchitectureDiagram.tsx",
   "StepOneUnlearning.tsx",
 ] as const;

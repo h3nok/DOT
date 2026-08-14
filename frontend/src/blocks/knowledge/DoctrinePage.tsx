@@ -377,7 +377,7 @@ const DoctrinePage = () => {
 
       <Link
         to="/book/digital-organism-theory"
-        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-transparent bg-transparent px-3.5 py-2 font-mono dot-meta uppercase tracking-[0.14em] text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
+        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-transparent bg-transparent px-3.5 py-2 dot-label text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
       >
         Book One concept map · Edition v2
       </Link>

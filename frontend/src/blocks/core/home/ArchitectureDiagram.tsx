@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Shield, Palette, User, Box, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Box,
+  Palette,
+  RotateCcw,
+  Shield,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ArchitectureNode {
@@ -73,37 +81,55 @@ export function ArchitectureDiagram() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
-      className="scroll-mt-24 border-t border-border/40 py-20 dot-page-container"
+      className="home-environment home-architecture-environment scroll-mt-24"
     >
-      <div className="dot-surface mx-auto max-w-3xl rounded-2xl border border-border/30 bg-foreground/[0.02] p-8 text-center backdrop-blur-sm sm:p-10">
-        <span className="dot-label">Visual model · Architecture of Experience</span>
+      <div className="dot-page-container dot-page-wide">
+        <div className="home-section-heading-row">
+          <div>
+            <span className="dot-label">Architecture of Experience · Model</span>
+            <h2 className="dot-page-heading mt-3 text-balance">
+              Experience becomes a feedback loop.
+            </h2>
+          </div>
+          <p className="dot-lede max-w-lg">
+            State is interpreted, interpretation shapes action, and consequence
+            returns as the next state. Select a stage to examine its role.
+          </p>
+        </div>
 
         {/* ── Circuit selector ─────────────────────────────────────────── */}
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
-          {NODES.map((node, i) => {
+        <div className="home-architecture-track mt-12">
+          {NODES.map((node) => {
             const isSelected = node.id === selectedId;
             const IconComponent = node.icon;
             return (
-              <div key={node.id} className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setSelectedId(node.id)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs backdrop-blur-sm transition-all sm:py-1.5 ${
-                    isSelected
-                      ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold shadow-lg shadow-[color:var(--organism-accent-strong)]/20"
-                      : "border border-border/30 bg-foreground/[0.02] text-muted-foreground hover:border-[color:var(--organism-accent-strong)]/30 hover:bg-foreground/[0.04] hover:text-foreground"
-                  }`}
-                >
-                  <IconComponent className="h-3 w-3" />
-                  <span className="font-mono dot-meta">{node.title}</span>
-                </button>
-                {i < NODES.length - 1 && (
-                  <span className="text-muted-foreground/25 hidden sm:inline" aria-hidden="true">→</span>
-                )}
-              </div>
+              <button
+                key={node.id}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => setSelectedId(node.id)}
+                className="home-architecture-node"
+              >
+                <span className="home-architecture-node-heading">
+                  <span className="home-architecture-node-number">{node.num}</span>
+                  <span className="home-architecture-node-icon">
+                    <IconComponent className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                </span>
+                <span className="home-architecture-node-title">{node.title}</span>
+                <span className="home-architecture-node-role">{node.role}</span>
+                <span className="home-architecture-node-flow" aria-hidden="true">
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </button>
             );
           })}
         </div>
+
+        <p className="home-architecture-return-path">
+          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+          Consequence becomes the next state
+        </p>
 
         {/* ── Detail panel ───────────────────────────────────────────── */}
         <AnimatePresence mode="wait">
@@ -113,16 +139,25 @@ export function ArchitectureDiagram() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
-            className="mt-5 rounded-xl border border-[color:var(--organism-accent-soft)]/40 bg-foreground/[0.02] px-5 py-5 text-center backdrop-blur-md sm:px-7 sm:py-6"
+            className="home-architecture-detail"
           >
-            <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[color:var(--organism-accent-strong)] text-background">
-              <SelectedIcon className="h-4 w-4" />
+            <div className="home-architecture-detail-heading">
+              <span className="home-architecture-detail-icon">
+                <SelectedIcon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="dot-label">
+                  {selectedNode.level} · {selectedNode.role}
+                </p>
+                <h3 className="dot-section-heading mt-2">{selectedNode.title}</h3>
+              </div>
             </div>
-            <h3 className="mt-3 text-sm font-semibold text-foreground">{selectedNode.title}</h3>
-            <p className="dot-label mt-0.5">{selectedNode.role} · {selectedNode.level}</p>
-            <p className="dot-lede mx-auto mt-3 max-w-lg">
-              {selectedNode.details}
-            </p>
+            <div className="home-architecture-detail-copy">
+              <p className="home-architecture-detail-summary">
+                {selectedNode.description}
+              </p>
+              <p className="home-architecture-detail-body">{selectedNode.details}</p>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
