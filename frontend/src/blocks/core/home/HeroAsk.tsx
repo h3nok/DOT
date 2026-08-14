@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
 import type { AgentLens } from "../../../dot/agent";
 
+const FEATURED_COMMANDS = [
+  { command: "/claim", question: SAMPLE_QUESTIONS[0] },
+  { command: "/critique", question: SAMPLE_QUESTIONS[2] },
+] as const;
+
 interface HeroAskProps {
   onAsk: (request: HeroAskRequest) => void;
   className?: string;
@@ -50,11 +55,18 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     const trimmed = query.trim();
-    if (!trimmed || isSubmitting) return;
+    if (!trimmed || trimmed === "/" || isSubmitting) return;
+
+    const command = FEATURED_COMMANDS.find(
+      (item) => item.command === trimmed.toLowerCase(),
+    );
+    const request = command
+      ? { query: command.question.text, lens: command.question.lens }
+      : { query: trimmed, lens: selectedLens };
 
     setIsSubmitting(true);
     setTimeout(() => {
-      onAsk({ query: trimmed, lens: selectedLens });
+      onAsk(request);
       setQuery("");
       setIsSubmitting(false);
     }, 120);
@@ -62,8 +74,12 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
 
   const handlePromptClick = (question: (typeof SAMPLE_QUESTIONS)[number]) => {
     setSelectedLens(question.lens);
+    setIsFocused(false);
+    inputRef.current?.blur();
     onAsk({ query: question.text, lens: question.lens });
   };
+
+  const showCommands = query.trim() === "" || query.trim() === "/";
 
   return (
     <div className={`space-y-3 ${className}`}>
@@ -94,8 +110,8 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={
-              selectedLens === "test"
-                ? "Test a Book One claim…"
+              isFocused
+                ? "Ask Minty or enter a / command…"
                 : "Ask Minty about Book One…"
             }
             aria-label="Ask a question about Digital Organism Theory"
@@ -155,10 +171,10 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
 
           <button
             type="submit"
-            disabled={!query.trim() || isSubmitting}
+            disabled={!query.trim() || query.trim() === "/" || isSubmitting}
             aria-label="Send"
             className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-              query.trim()
+              query.trim() && query.trim() !== "/"
                 ? "bg-[color:var(--organism-accent-strong)] text-background shadow-md shadow-[color:var(--organism-accent-strong)]/25 hover:scale-[1.03] active:scale-[0.97]"
                 : "bg-foreground/[0.06] text-muted-foreground/40"
             }`}
@@ -166,25 +182,28 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>
-      </form>
 
-      {/* Stable two-by-two prompt grid: each option remains a full button. */}
-      <div className="home-ask-prompts">
-        {SAMPLE_QUESTIONS.map((question) => (
-          <button
-            key={question.text}
-            type="button"
-            onClick={() => handlePromptClick(question)}
-            className="home-ask-prompt group"
+        {showCommands && (
+          <div
+            id="minty-command-suggestions"
+            className="home-ask-command-menu"
+            aria-label="Sample Minty commands"
           >
-            <span className="home-ask-prompt-category">
-              {question.category}
-            </span>
-            <span className="home-ask-prompt-divider" aria-hidden="true" />
-            <span className="home-ask-prompt-question">{question.text}</span>
-          </button>
-        ))}
-      </div>
+            {FEATURED_COMMANDS.map(({ command, question }) => (
+              <button
+                key={command}
+                type="button"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => handlePromptClick(question)}
+                className="home-ask-command"
+              >
+                <kbd>{command}</kbd>
+                <span>{question.text}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </form>
     </div>
   );
 }
