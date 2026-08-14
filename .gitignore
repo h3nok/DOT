@@ -84,6 +84,7 @@ jspm_packages/
 
 # Vite
 .vite
+.vite-cache/
 
 # Storybook build outputs
 .out

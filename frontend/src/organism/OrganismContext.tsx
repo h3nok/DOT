@@ -139,8 +139,15 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.reading = config.readingFont;
+    root.dataset.leading = config.readingLeading;
+    root.dataset.align = config.readingAlign;
     root.style.setProperty("--reading-scale", config.readingScale.toFixed(2));
-  }, [config.readingFont, config.readingScale]);
+  }, [
+    config.readingAlign,
+    config.readingFont,
+    config.readingLeading,
+    config.readingScale,
+  ]);
 
   const setConfig = useCallback((patch: Partial<OrganismConfig>) => {
     setConfigState((prev) => {

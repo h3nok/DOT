@@ -1,8 +1,73 @@
+import pathlib
+
+import fastapi
 import fastapi.testclient
 import httpx
+import pytest
+import sqlalchemy
+import sqlalchemy.ext.asyncio
+
+import app.auth.dependencies
+import app.db.models
+import app.domains.publication.schemas
+import app.domains.publication.service
 
 OWNER_HEADERS: dict[str, str] = {"X-Owner-Id": "owner_1"}
 OTHER_OWNER_HEADERS: dict[str, str] = {"X-Owner-Id": "owner_2"}
+
+
+@pytest.mark.asyncio
+async def test_section_body_service_round_trip_preserves_revisions(
+    session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: pathlib.Path,
+) -> None:
+    monkeypatch.setenv("ORCHESTRATOR_OBJECT_STORE_BACKEND", "filesystem")
+    monkeypatch.setenv("ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT", str(tmp_path / "objects"))
+    owner = app.auth.dependencies.OwnerContext(owner_id="owner_1", actor_id="editor_1")
+    other_owner = app.auth.dependencies.OwnerContext(owner_id="owner_2", actor_id="editor_2")
+
+    async with session_factory() as session:
+        project = await app.domains.publication.service.create_project(
+            session,
+            owner,
+            app.domains.publication.schemas.PublicationProjectCreate(title="A Living Draft"),
+        )
+        section = await app.domains.publication.service.create_section(
+            session,
+            owner,
+            project.id,
+            app.domains.publication.schemas.PublicationSectionCreate(title="Opening"),
+        )
+        first = await app.domains.publication.service.set_section_body(
+            session, owner, section.id, "# Opening\n\nThe first draft."
+        )
+        first_ref: str = first.body_ref or ""
+        second = await app.domains.publication.service.set_section_body(
+            session, owner, section.id, "# Opening\n\nThe revised draft."
+        )
+
+        assert second.body_ref != first_ref
+        assert (
+            await app.domains.publication.service.get_section_body(session, owner, section.id)
+            == "# Opening\n\nThe revised draft."
+        )
+
+        with pytest.raises(fastapi.HTTPException) as forbidden:
+            await app.domains.publication.service.get_section_body(session, other_owner, section.id)
+        assert forbidden.value.status_code == 404
+
+        revisions = list(
+            (
+                await session.execute(
+                    sqlalchemy.select(app.db.models.PublicationRevision).where(
+                        app.db.models.PublicationRevision.section_id == section.id
+                    )
+                )
+            ).scalars()
+        )
+        assert len(revisions) == 2
+        assert {revision.body_ref for revision in revisions} == {first_ref, second.body_ref}
 
 
 def create_ready_project(
@@ -230,6 +295,29 @@ def test_section_body_upload_and_release_snapshot(
     assert upload.status_code == 200
     assert upload.json()["body_ref"].startswith("drafts/")
 
+    private_body: httpx.Response = client.get(
+        f"/v1/publications/sections/{section['id']}/body",
+        headers=OWNER_HEADERS,
+    )
+    assert private_body.status_code == 200
+    assert private_body.headers["cache-control"] == "private, no-store"
+    assert private_body.text == "# Preface\n\nThe observer belongs in the inquiry."
+
+    other_owner_body: httpx.Response = client.get(
+        f"/v1/publications/sections/{section['id']}/body",
+        headers=OTHER_OWNER_HEADERS,
+    )
+    assert other_owner_body.status_code == 404
+
+    first_draft_ref: str = upload.json()["body_ref"]
+    second_upload: httpx.Response = client.put(
+        f"/v1/publications/sections/{section['id']}/body",
+        headers={**OWNER_HEADERS, "Content-Type": "text/markdown"},
+        content="# Preface\n\nA revised observer belongs in the inquiry.",
+    )
+    assert second_upload.status_code == 200
+    assert second_upload.json()["body_ref"] != first_draft_ref
+
     release: httpx.Response = client.post(
         f"/v1/publications/projects/{project['id']}/releases",
         headers=OWNER_HEADERS,
@@ -256,3 +344,27 @@ def test_section_body_upload_and_release_snapshot(
         f"/v1/publications/delivery/body/{upload.json()['body_ref']}"
     )
     assert draft_leak.status_code == 404
+
+
+def test_empty_section_body_is_private_and_editable(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    project = client.post(
+        "/v1/publications/projects",
+        headers=OWNER_HEADERS,
+        json={"title": "New Book"},
+    ).json()
+    section = client.post(
+        f"/v1/publications/projects/{project['id']}/sections",
+        headers=OWNER_HEADERS,
+        json={"title": "Untitled Section"},
+    ).json()
+
+    response: httpx.Response = client.get(
+        f"/v1/publications/sections/{section['id']}/body",
+        headers=OWNER_HEADERS,
+    )
+
+    assert response.status_code == 200
+    assert response.text == ""
+    assert response.headers["cache-control"] == "private, no-store"

@@ -3,6 +3,7 @@ import typing
 import xml.etree.ElementTree as _ET
 
 import fastapi
+import fastapi.responses
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
@@ -55,7 +56,7 @@ async def get_public_delivery_manifest(
 
 @public_router.get("/delivery/body/{body_key:path}", include_in_schema=False)
 @_limiter.limit("120/minute")
-async def get_section_body(
+async def get_public_section_body(
     request: fastapi.Request,
     body_key: str,
 ) -> fastapi.Response:
@@ -229,6 +230,21 @@ async def set_section_body(
         raise fastapi.HTTPException(status_code=422, detail="Body must be UTF-8 text.") from err
     return await app.domains.publication.service.set_section_body(
         session, owner, section_id, body_text
+    )
+
+
+@router.get("/sections/{section_id}/body", response_class=fastapi.responses.PlainTextResponse)
+async def get_private_section_body(
+    section_id: str,
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> fastapi.Response:
+    body: str = await app.domains.publication.service.get_section_body(session, owner, section_id)
+    return fastapi.responses.PlainTextResponse(
+        body,
+        headers={"Cache-Control": "private, no-store"},
     )
 
 

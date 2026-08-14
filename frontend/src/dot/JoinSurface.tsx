@@ -145,7 +145,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
             Requests are read by one person, so an answer can take a while, and there is no
             guarantee of one. Nothing about reading changes either way.
           </p>
-          <p className="text-[11px] leading-5 text-muted-foreground/80">
+          <p className="dot-meta leading-5 text-muted-foreground/80">
             There is no queue position and no waiting list to watch. Your request is not
             published anywhere.
           </p>
@@ -201,7 +201,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
             className={`${FIELD} text-center font-mono tracking-[0.4em]`}
           />
           {devCode && (
-            <p className="text-[11px] text-muted-foreground">
+            <p className="dot-meta text-muted-foreground">
               No mail provider is configured, so the code is{" "}
               <span className="font-mono text-foreground">{devCode}</span>.
             </p>
@@ -260,7 +260,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
           placeholder="What would you want to do here? Disagreeing with the book counts."
           className={`${FIELD} resize-none`}
         />
-        <p className="text-[11px] leading-5 text-muted-foreground/80">
+        <p className="dot-meta leading-5 text-muted-foreground/80">
           Your address is confirmed by a code, then stored encrypted so it can be answered and
           nothing else. It is never published, never sold, and there is no queue position to
           watch.

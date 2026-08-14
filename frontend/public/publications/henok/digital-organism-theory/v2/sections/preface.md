@@ -16,15 +16,17 @@ The framework that emerged is Digital Organism Theory, or DOT.
 
 DOT asks whether consciousness can be understood as a living informational process rather than as a passive side effect of matter. It proposes a larger architecture involving a hypothesized conscious process called Big C; individuated centers of experience called Little c; rule-bound experiential environments called Reality Frames; and an evolving inner substrate called the Canvas. These ideas become increasingly specific as the book develops.
 
-Some are observations.
-
-Some are models.
-
-Some are hypotheses.
-
-Some remain speculation.
-
-That distinction governs the entire book.
+> **Epistemic key**
+>
+> Some are observations.
+>
+> Some are models.
+>
+> Some are hypotheses.
+>
+> Some remain speculation.
+>
+> That distinction governs the entire book.
 
 What I directly know is that experience occurs, that it is mediated, that attention changes what becomes available to us, that feeling carries information about the condition of the observer, and that human beings can become increasingly aware of the patterns shaping their perception and action. What I infer is that these processes may belong to an architecture larger than the brain and body through which we encounter them. What I hypothesize is that consciousness is fundamental and that our physical universe is one Reality Frame within a wider field of experience. The later claims do not become facts merely because the earlier observations are real.
 
@@ -34,7 +36,9 @@ I want the reader to be able to tell which ground we are standing on.
 
 The irreducible commitment of this book is simple:
 
-Feeling must be treated as data, but feeling is not automatically truth.
+> **Working definition**
+>
+> Feeling must be treated as data, but feeling is not automatically truth.
 
 Feeling reveals something about the interpreter’s relationship to reality. It may carry accurate information about danger, loss, attachment, contradiction, or meaning. It may also carry an inherited expectation, an old wound, a cultural assumption, or a prediction that no longer fits the present. To exclude feeling is to discard evidence from inside the phenomenon being studied. To treat every feeling as an infallible description of the world is to abandon rigor.
 
@@ -60,7 +64,9 @@ This brings us to Love.
 
 By Love, I do not mean sentimentality, agreement, passivity, or the disappearance of every protective sensation. A person can love while frightened. Courage often acts in the presence of fear. In DOT, Love names a more exact condition:
 
-Love is the condition in which Fear no longer governs you.
+> **Working definition**
+>
+> Love is the condition in which Fear no longer governs you.
 
 I capitalize Fear when I mean more than the body’s immediate protective response. Fear is the governing contraction that organizes perception around defense, control, avoidance, domination, or the preservation of identity at the expense of truth.
 

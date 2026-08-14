@@ -129,7 +129,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
     >
       <form id={FORM_ID} onSubmit={submit}>
         <label className="mb-3 block">
-          <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="mb-1 block dot-meta font-medium uppercase tracking-wider text-muted-foreground">
             Name
           </span>
           <input
@@ -142,7 +142,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         </label>
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="dot-meta mb-1 block font-medium uppercase tracking-wider text-muted-foreground">
             Essence
           </span>
           <input
@@ -155,7 +155,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
 
         {showIntroduction && (
           <label className="mb-3 block">
-            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="mb-1 block dot-meta font-medium uppercase tracking-wider text-muted-foreground">
               Home introduction
             </span>
             <input
@@ -169,7 +169,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
 
         {showActionLabel && (
           <label className="mb-3 block">
-            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="dot-meta mb-1 block font-medium uppercase tracking-wider text-muted-foreground">
               Primary action
             </span>
             <input
@@ -182,7 +182,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         )}
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="mb-1 block dot-meta font-medium uppercase tracking-wider text-muted-foreground">
             Content
           </span>
           <textarea
@@ -195,7 +195,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         </label>
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="dot-meta mb-1 block font-medium uppercase tracking-wider text-muted-foreground">
             Portrait{" "}
             <span className="normal-case opacity-60">(optional image URL)</span>
           </span>
@@ -208,7 +208,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         </label>
 
         <div className="mb-3">
-          <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="mb-1.5 block dot-meta font-medium uppercase tracking-wider text-muted-foreground">
             Kind
           </span>
           <div className="grid grid-cols-3 gap-1.5">
@@ -236,7 +236,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
 
         {needsHref && (
           <label className="block">
-            <span className="mb-1 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            <span className="dot-meta mb-1 block font-medium uppercase tracking-wider text-muted-foreground">
               {kind === "page" ? "Route" : "URL"}
             </span>
             <input

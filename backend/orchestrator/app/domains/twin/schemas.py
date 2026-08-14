@@ -17,6 +17,26 @@ class TwinHistoryTurn(pydantic.BaseModel):
     content: str = pydantic.Field(min_length=1, max_length=4_000)
 
 
+class ReadingPosition(pydantic.BaseModel):
+    """Where the reader is when they ask.
+
+    "What is this guy talking about?" has an obvious answer to anyone looking at
+    the page and none at all to a companion that receives only the sentence. The
+    section the reader has open is therefore part of the question.
+
+    Client-supplied, so it is constrained here and treated as untrusted
+    everywhere after: it seeds retrieval terms and enters the prompt inside the
+    untrusted envelope, never as instruction.
+    """
+
+    model_config = pydantic.ConfigDict(extra="forbid")
+
+    #: Released section slug, matching the publication manifest.
+    section: str = pydantic.Field(min_length=1, max_length=64, pattern=r"^[a-z0-9-]+$")
+    #: The section's title as the reader sees it, for retrieval terms.
+    title: str | None = pydantic.Field(default=None, max_length=200)
+
+
 class TwinAskRequest(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
 
@@ -24,6 +44,8 @@ class TwinAskRequest(pydantic.BaseModel):
     lens: TwinLens = "ground"
     #: Whose graph to ask. Defaults to the caller's own twin.
     owner_id: str | None = pydantic.Field(default=None, max_length=128)
+    #: What the reader has open, when the question came from inside the book.
+    reading: ReadingPosition | None = None
 
 
 class TwinPublicAskRequest(pydantic.BaseModel):
@@ -35,6 +57,7 @@ class TwinPublicAskRequest(pydantic.BaseModel):
     owner_id: str = pydantic.Field(min_length=1, max_length=128)
     lens: TwinLens = "ground"
     history: list[TwinHistoryTurn] = pydantic.Field(default_factory=list, max_length=6)
+    reading: ReadingPosition | None = None
 
 
 class Citation(pydantic.BaseModel):

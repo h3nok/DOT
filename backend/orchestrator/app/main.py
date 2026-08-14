@@ -95,6 +95,9 @@ def create_app() -> fastapi.FastAPI:
     fapp.add_exception_handler(
         slowapi.errors.RateLimitExceeded, slowapi._rate_limit_exceeded_handler
     )
+    # Keep failures inside the response pipeline so CORS, security headers, and
+    # request IDs remain present instead of masking an exception as a CORS error.
+    fapp.add_middleware(_errors.UnhandledExceptionMiddleware)
     fapp.add_middleware(_security.SecurityHeadersMiddleware)
     fapp.add_middleware(_middleware.RequestIdMiddleware)
     fapp.add_middleware(

@@ -6,7 +6,6 @@ import {
   Braces,
   Compass,
   FileCheck2,
-  Loader2,
   MessageSquareText,
   PanelBottomOpen,
   Scale,
@@ -14,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import type { AgentLens } from "./agent";
+import { NucleusMark } from "./NucleusMark";
 import "./agent-workspace.css";
 
 export interface AgentWorkspaceRequest {
@@ -238,10 +238,13 @@ export const AgentWorkspace: React.FC<AgentWorkspaceProps> = ({
             type="submit"
             disabled={value.trim().length < 2 || busy}
             aria-label="Send"
+            data-busy={busy ? "true" : undefined}
             className="agent-command-send"
           >
+            {/* DOT's own mark thinking, not a borrowed spinner: the same
+                identity that answers is the one that shows it is working. */}
             {busy ? (
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              <NucleusMark size={18} thinking />
             ) : (
               <ArrowUp className="h-4 w-4" aria-hidden="true" />
             )}

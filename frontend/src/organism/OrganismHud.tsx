@@ -33,7 +33,7 @@ const VitalBar: React.FC<BarProps> = ({ label, valueRef }) => {
   }, [valueRef]);
 
   return (
-    <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider">
+    <div className="flex items-center gap-2 dot-micro uppercase tracking-wider">
       <span className="w-16 shrink-0 opacity-70">{label}</span>
       <div className="h-1 flex-1 overflow-hidden rounded-full bg-foreground/10">
         <div
@@ -92,7 +92,7 @@ export const OrganismHud: React.FC = () => {
           {MOOD_GLYPH[mood] ?? "○"} organism · {mood}
           <span
             ref={readingChip}
-            className="ml-1 rounded px-1 text-[9px] uppercase"
+            className="dot-micro ml-1 rounded px-1 uppercase"
             style={{
               background: "var(--organism-accent-soft)",
               transition: "opacity 400ms ease",
@@ -119,7 +119,7 @@ export const OrganismHud: React.FC = () => {
         <VitalBar label="stillness" valueRef={refs.current.stillness} />
       </div>
 
-      <div className="mt-3 flex items-center gap-3 text-[10px]">
+      <div className="mt-3 flex items-center gap-3 dot-micro">
         <label className="flex items-center gap-1">
           <input
             type="checkbox"
@@ -143,7 +143,7 @@ export const OrganismHud: React.FC = () => {
       </div>
 
       {reducedMotion && (
-        <p className="mt-2 text-[10px] leading-tight opacity-60">
+        <p className="mt-2 dot-micro leading-tight opacity-60">
           Reduced motion is on — physiology stays, animation is stilled.
         </p>
       )}

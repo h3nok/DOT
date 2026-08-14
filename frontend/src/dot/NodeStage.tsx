@@ -142,7 +142,7 @@ export const NodeStage: React.FC<NodeStageProps> = ({
               key={index}
               variants={staggerChild}
               custom={reducedMotion}
-              className="text-[15px] leading-7 text-foreground/85 first:text-[17px] first:leading-8 first:text-foreground"
+              className="text-base leading-7 text-foreground/85 first:text-[17px] first:leading-8 first:text-foreground"
             >
               {paragraph}
             </motion.p>

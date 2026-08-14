@@ -58,7 +58,7 @@ export const RelationExits: React.FC<RelationExitsProps> = ({
       ].join(" ")}
       aria-hidden={!arrived}
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70">
+      <p className="font-mono dot-micro uppercase tracking-[0.2em] text-muted-foreground/70">
         {exits.length > 0 ? "where this leads" : "this is an end"}
       </p>
 
@@ -72,10 +72,10 @@ export const RelationExits: React.FC<RelationExitsProps> = ({
                 onClick={() => onFollow(exit.id)}
                 className="group flex w-full items-baseline gap-2 text-left"
               >
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
+                <span className="dot-micro font-mono uppercase tracking-[0.18em] text-muted-foreground/70">
                   {RELATION_PHRASE[exit.relation ?? "leads-to"]}
                 </span>
-                <span className="text-[15px] font-medium text-foreground/90 transition-colors group-hover:text-foreground">
+                <span className="text-base font-medium text-foreground/90 transition-colors group-hover:text-foreground">
                   {exit.label}
                 </span>
                 <ArrowRight className="h-3 w-3 shrink-0 self-center text-muted-foreground/60 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -89,7 +89,7 @@ export const RelationExits: React.FC<RelationExitsProps> = ({
         type="button"
         tabIndex={arrived ? 0 : -1}
         onClick={onStop}
-        className="mt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors hover:text-foreground"
+        className="mt-6 font-mono dot-micro uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors hover:text-foreground"
       >
         stop here
       </button>

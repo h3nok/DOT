@@ -1,15 +1,21 @@
-"""Generate the Open Graph share image for dotheory.org.
+"""Generate the Open Graph share images for dotheory.org.
 
 The card mirrors the platform identity: off-white paper, the cinnabar
 fingerprint dot (the NucleusMark), and the serif book title. Output is a
 1200x630 PNG — the Open Graph / Twitter `summary_large_image` size.
 
+A chapter link is the thing people actually share, so each chapter also gets
+its own card naming that chapter. One card for the whole book would make every
+shared chapter look like every other one.
+
 Run:  .venv/bin/python scripts/generate_og_image.py
 Output: frontend/public/og-image.png
+        frontend/public/og/book/<section-slug>.png (one per released section)
 """
 
 from __future__ import annotations
 
+import json
 import math
 import os
 
@@ -23,8 +29,11 @@ CINNABAR = (220, 38, 38)  # #dc2626 — the dot
 HAIRLINE = (26, 26, 24)  # foreground hairline, applied at low alpha
 
 WIDTH, HEIGHT = 1200, 630
-OUT_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "frontend", "public", "og-image.png"
+PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public")
+OUT_PATH = os.path.join(PUBLIC_DIR, "og-image.png")
+CHAPTER_OUT_DIR = os.path.join(PUBLIC_DIR, "og", "book")
+RELEASE_MANIFEST = os.path.join(
+    PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v2", "manifest.json"
 )
 
 SERIF_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"
@@ -48,6 +57,37 @@ def _fitted_font(
         if all(draw.textbbox((0, 0), line, font=candidate)[2] <= max_width for line in lines):
             return candidate
     return _font(path, 24)
+
+
+def _wrapped(
+    draw: ImageDraw.ImageDraw,
+    path: str,
+    text: str,
+    max_size: int,
+    max_width: int,
+    max_lines: int,
+) -> tuple[ImageFont.FreeTypeFont, list[str]]:
+    """The largest type size at which `text` still fits within `max_lines`."""
+    words = text.split()
+    for size in range(max_size, 27, -2):
+        font = _font(path, size)
+        lines: list[str] = []
+        current = ""
+        for word in words:
+            candidate = f"{current} {word}".strip()
+            fits = draw.textbbox((0, 0), candidate, font=font)[2] <= max_width
+            if fits or not current:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+        if current:
+            lines.append(current)
+        if len(lines) <= max_lines and all(
+            draw.textbbox((0, 0), line, font=font)[2] <= max_width for line in lines
+        ):
+            return font, lines
+    return _font(path, 28), [text]
 
 
 def draw_fingerprint(draw: ImageDraw.ImageDraw, cx: int, cy: int) -> None:
@@ -79,20 +119,61 @@ def draw_fingerprint(draw: ImageDraw.ImageDraw, cx: int, cy: int) -> None:
     )
 
 
-def main() -> None:
+def _new_card() -> tuple[Image.Image, ImageDraw.ImageDraw]:
+    """Paper, hairline, and the fingerprint — what every card shares."""
     img = Image.new("RGBA", (WIDTH, HEIGHT), PAPER + (255,))
     draw = ImageDraw.Draw(img)
+    draw.rectangle([24, 24, WIDTH - 24, HEIGHT - 24], outline=HAIRLINE + (28,), width=1)
+    draw_fingerprint(draw, 250, HEIGHT // 2)
+    return img, draw
 
-    # Subtle paper border hairline.
-    draw.rectangle(
-        [24, 24, WIDTH - 24, HEIGHT - 24],
-        outline=HAIRLINE + (28,),
-        width=1,
+
+def _save(img: Image.Image, path: str) -> None:
+    out = Image.new("RGB", img.size, PAPER)
+    out.paste(img, mask=img.split()[3])
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    out.save(path, "PNG", optimize=True)
+    print(f"wrote {os.path.abspath(path)} ({out.size[0]}x{out.size[1]})")
+
+
+def section_label(section: dict) -> str:
+    """Mirrors `sectionLabel` in BookOnePage.tsx, so a share card and the page
+    it opens name the section the same way."""
+    if section["kind"] == "chapter":
+        return f"Chapter {section['number']}"
+    if section["kind"] == "preface":
+        return "Preface"
+    return "Notes and sources"
+
+
+def chapter_card(section: dict, manifest: dict) -> Image.Image:
+    img, draw = _new_card()
+    text_x = 420
+    text_width = WIDTH - text_x - 52
+
+    draw.text((text_x, 132), "DOTHEORY · BOOK ONE", font=_font(SERIF_BOLD, 26), fill=CINNABAR)
+    draw.text((text_x, 186), section_label(section), font=_font(SERIF, 27), fill=INK_SOFT)
+
+    title_font, title_lines = _wrapped(
+        draw, SERIF_BOLD, section["title"], 60, text_width, 3
     )
+    y = 238
+    for line in title_lines:
+        draw.text((text_x, y), line, font=title_font, fill=INK)
+        y += int(title_font.size * 1.18)
 
-    # Fingerprint mark, vertically centered on the left third.
-    mark_cx, mark_cy = 250, HEIGHT // 2
-    draw_fingerprint(draw, mark_cx, mark_cy)
+    release = manifest["release"]
+    draw.text(
+        (text_x, 498),
+        f"{manifest['project']['title']} · {release['label']}, version {release['version']}",
+        font=_font(SERIF, 22),
+        fill=INK_SOFT,
+    )
+    return img
+
+
+def main() -> None:
+    img, draw = _new_card()
 
     # Title block on the right two-thirds.
     text_x = 420
@@ -132,13 +213,16 @@ def main() -> None:
         fill=INK_SOFT,
     )
 
-    # Flatten to RGB on the paper color and save as PNG.
-    out = Image.new("RGB", img.size, PAPER)
-    out.paste(img, mask=img.split()[3])
+    _save(img, OUT_PATH)
 
-    os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-    out.save(OUT_PATH, "PNG", optimize=True)
-    print(f"wrote {os.path.abspath(OUT_PATH)} ({out.size[0]}x{out.size[1]})")
+    # One card per released section, named by the manifest the reader serves.
+    with open(RELEASE_MANIFEST, encoding="utf-8") as handle:
+        manifest = json.load(handle)
+    for section in manifest["sections"]:
+        _save(
+            chapter_card(section, manifest),
+            os.path.join(CHAPTER_OUT_DIR, f"{section['slug']}.png"),
+        )
 
 
 if __name__ == "__main__":

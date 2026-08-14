@@ -352,6 +352,41 @@ export async function createPublicationRevision(
   return readJson<PublicationRevisionRead>(response);
 }
 
+export async function fetchPublicationSectionBody(
+  sectionId: string,
+  ownerId = ORCHESTRATOR_OWNER_ID,
+  signal?: AbortSignal,
+): Promise<string> {
+  const response = await authedFetch(
+    orchestratorUrl(`/v1/publications/sections/${encodeURIComponent(sectionId)}/body`),
+    { ownerId, signal },
+  );
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Section body request failed: ${response.status}`);
+  }
+  return response.text();
+}
+
+export async function setPublicationSectionBody(
+  sectionId: string,
+  body: string,
+  ownerId = ORCHESTRATOR_OWNER_ID,
+  signal?: AbortSignal,
+): Promise<PublicationSectionRead> {
+  const response = await authedFetch(
+    orchestratorUrl(`/v1/publications/sections/${encodeURIComponent(sectionId)}/body`),
+    {
+      method: "PUT",
+      ownerId,
+      text: body,
+      contentType: "text/markdown; charset=utf-8",
+      signal,
+    },
+  );
+  return readJson<PublicationSectionRead>(response);
+}
+
 export async function fetchPublicationReleases(
   projectId: string,
   ownerId = ORCHESTRATOR_OWNER_ID,

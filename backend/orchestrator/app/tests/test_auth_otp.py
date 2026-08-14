@@ -53,6 +53,23 @@ def test_verify_correct_code_sets_cookie(client: fastapi.testclient.TestClient) 
     assert body["user"]["role"] in ("member", "owner")
 
 
+def test_unhandled_auth_error_keeps_cors_headers(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    @client.app.get("/test/unhandled-auth-error")
+    async def unhandled_auth_error() -> None:
+        raise RuntimeError("test failure")
+
+    response = client.get(
+        "/test/unhandled-auth-error",
+        headers={"Origin": "http://127.0.0.1:5175"},
+    )
+
+    assert response.status_code == 500
+    assert response.json()["error"]["code"] == "INTERNAL_ERROR"
+    assert response.headers["access-control-allow-origin"] == "http://127.0.0.1:5175"
+
+
 def test_verify_expired_code_rejected(
     client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

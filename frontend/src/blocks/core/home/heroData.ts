@@ -12,7 +12,7 @@ export const SAMPLE_QUESTIONS: ReadonlyArray<{
   lens: AgentLens;
 }> = [
   { text: "What does DOT actually claim?", category: "Core Claim", lens: "ground" },
-  { text: "Why do I keep repeating the same patterns?", category: "Pattern Inquiry", lens: "ground" },
+  { text: "What does 'digital' mean here?", category: "Definition", lens: "ground" },
   { text: "Where is the argument weakest?", category: "Critique", lens: "test" },
   { text: "Is this science, philosophy, or faith?", category: "Foundations", lens: "test" },
 ];

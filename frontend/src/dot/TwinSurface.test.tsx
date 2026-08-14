@@ -33,12 +33,30 @@ vi.mock("./twinChat", () => ({
   })),
 }));
 
-function renderMinty(variant: "focus" | "sidecar" = "focus") {
+/** Docking is only offered where the text still has room beside it. */
+function mockViewport(wide: boolean) {
+  vi.mocked(window.matchMedia).mockImplementation((query: string) => ({
+    matches: wide,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+}
+
+function renderMinty(
+  variant: "focus" | "sidecar" = "focus",
+  reading: { section: string; title?: string } | null = null,
+) {
   return render(
     <MemoryRouter>
       <TwinSurface
         variant={variant}
         reducedMotion
+        reading={reading}
         onClose={vi.fn()}
         onOpenNode={vi.fn()}
       />
@@ -54,10 +72,16 @@ describe("TwinSurface", () => {
     });
     vi.mocked(sendMessageStream).mockClear();
     delete document.documentElement.dataset.mintyModal;
+    delete document.documentElement.dataset.mintySidecar;
+    document.documentElement.style.removeProperty("--minty-sidecar-width");
+    window.localStorage.clear();
+    mockViewport(false);
   });
 
   afterEach(() => {
     delete document.documentElement.dataset.mintyModal;
+    delete document.documentElement.dataset.mintySidecar;
+    document.documentElement.style.removeProperty("--minty-sidecar-width");
   });
 
   it("sends with Enter and keeps Shift+Enter for a new line", async () => {
@@ -76,6 +100,31 @@ describe("TwinSurface", () => {
         [],
         "ground",
         expect.any(Function),
+        null,
+      ),
+    );
+  });
+
+  it("asks from where the reader is standing in the book", async () => {
+    // "What is this guy talking about?" is answerable to anyone looking at the
+    // page and to nobody reading only the sentence. The open chapter travels
+    // with the question so the reference has something to resolve against.
+    renderMinty("sidecar", { section: "the-canvas", title: "The Canvas" });
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+
+    const composer = screen.getByRole("textbox", { name: /Ask Minty/i });
+    fireEvent.change(composer, {
+      target: { value: "What is this guy talking about?" },
+    });
+    fireEvent.keyDown(composer, { key: "Enter" });
+
+    await waitFor(() =>
+      expect(sendMessageStream).toHaveBeenCalledWith(
+        "What is this guy talking about?",
+        [],
+        "ground",
+        expect.any(Function),
+        { section: "the-canvas", title: "The Canvas" },
       ),
     );
   });
@@ -93,6 +142,50 @@ describe("TwinSurface", () => {
 
     view.unmount();
     expect(document.documentElement.dataset.mintyModal).toBeUndefined();
+  });
+
+  it("publishes the dock's width, so the page it sits beside makes room", async () => {
+    // Wide enough for docking to be real; below `lg` there is no width to give.
+    mockViewport(true);
+    const view = renderMinty("sidecar");
+    const root = document.documentElement;
+
+    await waitFor(() =>
+      expect(root.style.getPropertyValue("--minty-sidecar-width")).toBe("416px"),
+    );
+
+    // The edge is a resizer, and it moves without a pointer.
+    const edge = screen.getByRole("separator", { name: "Resize Minty" });
+    fireEvent.keyDown(edge, { key: "ArrowLeft" });
+
+    await waitFor(() =>
+      expect(root.style.getPropertyValue("--minty-sidecar-width")).toBe("440px"),
+    );
+    expect(edge).toHaveAttribute("aria-valuenow", "440");
+    expect(window.localStorage.getItem("dot.minty.sidecar")).toBe("440");
+
+    fireEvent.keyDown(edge, { key: "Home" });
+    await waitFor(() =>
+      expect(root.style.getPropertyValue("--minty-sidecar-width")).toBe("416px"),
+    );
+
+    // Closed, the page keeps none of the dock's width.
+    view.unmount();
+    expect(root.style.getPropertyValue("--minty-sidecar-width")).toBe("");
+    expect(root.dataset.mintySidecar).toBeUndefined();
+  });
+
+  it("reopens at the width the reader left it", async () => {
+    mockViewport(true);
+    window.localStorage.setItem("dot.minty.sidecar", "520");
+
+    renderMinty("sidecar");
+
+    await waitFor(() =>
+      expect(
+        document.documentElement.style.getPropertyValue("--minty-sidecar-width"),
+      ).toBe("520px"),
+    );
   });
 
   it("renders a Markdown comparison table exactly once", async () => {

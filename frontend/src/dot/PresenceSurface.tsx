@@ -130,7 +130,7 @@ const PresenceAction: React.FC<{
     </span>
     <span className="min-w-0 flex-1">
       <span className="block text-sm font-medium">{label}</span>
-      <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground">
+      <span className="mt-0.5 block dot-meta leading-snug text-muted-foreground">
         {hint}
       </span>
     </span>

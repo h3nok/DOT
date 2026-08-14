@@ -167,6 +167,20 @@
   font-size: 0.78rem;
 }
 
+/**
+ * The composer.
+ *
+ * It used to carry four effects at rest — a full pill, a 26px blur, the
+ * premium shadow, and a 38px accent glow — which is a lot of insistence from a
+ * component that is doing nothing yet. The glow in particular is a borrowed
+ * gesture: it says "AI product", where the rest of this site says paper,
+ * hairline, and one cinnabar mark.
+ *
+ * So the resting state is quiet — a field on paper — and *focus* is where the
+ * accent arrives, because that is the moment something is actually happening.
+ * The radius matches Minty's composer so the two read as one instrument in two
+ * places rather than two components that met at a party.
+ */
 .agent-command {
   position: relative;
   display: flex;
@@ -174,18 +188,46 @@
   align-items: center;
   gap: 0.45rem;
   border: 1px solid var(--agent-line);
-  border-radius: 9999px;
+  border-radius: 0.85rem;
+  padding-left: 1.15rem;
   background: var(--agent-surface-strong);
-  padding: 0.45rem;
-  box-shadow:
-    var(--premium-shadow),
-    0 0 38px color-mix(in oklch, var(--organism-accent) 10%, transparent);
-  backdrop-filter: blur(26px);
+  padding: 0.4rem 0.4rem 0.4rem 0.5rem;
+  box-shadow: var(--premium-shadow);
+  backdrop-filter: blur(20px);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+/* ── The pen ────────────────────────────────────────────────────────────────
+   This is where a reader's intent becomes an act, which in this book is not a
+   metaphor: Intent is the threshold where a possibility becomes committed
+   direction. So the field is dressed as a page rather than as a chat box — a
+   cinnabar margin rule down the inside edge, the reader's words set in the
+   book's own serif, and a writing line beneath that is *drawn* when the field
+   takes focus rather than merely brightening.
+
+   Nothing here depicts a pen. The motif is carried by the page it writes on. */
+
+.agent-command::before {
+  content: "";
+  position: absolute;
+  left: 0.62rem;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 1px;
+  background: color-mix(in oklch, var(--organism-accent-strong) 42%, transparent);
+  transition: background 180ms ease;
+  pointer-events: none;
+}
+
+.agent-command-focus::before {
+  background: color-mix(in oklch, var(--organism-accent-strong) 78%, transparent);
 }
 
 .agent-command::after {
   position: absolute;
-  inset-inline: 1.25rem;
+  inset-inline: 0.9rem;
   bottom: -1px;
   height: 1px;
   background: linear-gradient(
@@ -195,23 +237,29 @@
     transparent
   );
   content: "";
-  opacity: 0.35;
+  opacity: 0.22;
   transition: opacity 180ms ease;
 }
 
+/* Focus is the expressive moment: the accent hairline arrives and the rule
+   under the field lights, rather than the whole bar glowing while idle. */
 .agent-command-focus {
-  border-color: var(--agent-line-strong);
+  border-color: color-mix(in oklch, var(--organism-accent-strong) 55%, var(--border));
+  box-shadow:
+    var(--premium-shadow),
+    0 0 0 3px color-mix(in oklch, var(--organism-accent) 14%, transparent);
 }
 
 .agent-command-focus::after {
-  opacity: 0.75;
+  opacity: 0.9;
+  transform: scaleX(1);
 }
 
 .agent-command-tool {
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid transparent;
-  border-radius: 9999px;
+  border-radius: 0.6rem;
   color: var(--muted-foreground);
 }
 
@@ -221,7 +269,12 @@
   border: 0;
   background: transparent;
   color: var(--foreground);
-  font-size: 0.9rem;
+  /* The reader's question is set in the same face as the book answering it. */
+  font-family: "Source Serif 4", Georgia, serif;
+  /* 16px: below this iOS zooms the page when the field takes focus. */
+  font-size: 1.05rem;
+  line-height: 1.4;
+  caret-color: var(--organism-accent-strong);
   outline: none;
 }
 
@@ -230,16 +283,24 @@
 }
 
 .agent-command-send {
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border: 0;
-  border-radius: 9999px;
+  border-radius: 0.6rem;
   background: var(--organism-accent-strong);
   color: var(--background);
 }
 
 .agent-command-send:disabled {
   opacity: 0.42;
+}
+
+/* Working: the button gives way to paper so the thinking mark, drawn in the
+   accent, is not one solid accent shape on another. */
+.agent-command-send[data-busy="true"] {
+  background: var(--background);
+  border: 1px solid color-mix(in oklch, var(--foreground) 16%, transparent);
+  opacity: 1;
 }
 
 @media (min-width: 760px) {
@@ -264,5 +325,12 @@
 
   .agent-workspace-header h2 {
     font-size: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-command::after {
+    transition: opacity 180ms ease;
+    transform: scaleX(1);
   }
 }

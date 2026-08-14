@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { FilePlus2, Loader2 } from "lucide-react";
 import { 
   type PublicationProjectRead, 
   type PublicationSectionRead, 
@@ -34,44 +34,48 @@ export function ProjectOutline({ project, sections, activeSectionId, onSelectSec
   };
 
   return (
-    <div className="flex h-full flex-col bg-background/50 border-r border-border/50">
-      <div className="p-4 border-b border-border/50">
-        <h2 className="font-semibold text-sm truncate">{project.title}</h2>
-        <p className="text-xs text-muted-foreground mt-1 capitalize">{project.visibility} Project</p>
+    <aside className="flex h-full flex-col bg-background">
+      <div className="border-b border-border/60 px-4 py-3">
+        <p className="font-mono dot-micro uppercase text-muted-foreground">Manuscript</p>
+        <h2 className="mt-1 truncate font-serif text-sm font-semibold">{project.title}</h2>
       </div>
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto py-2">
         {sections.length === 0 ? (
           <div className="p-4 text-center text-sm text-muted-foreground">
             No sections yet.
           </div>
         ) : (
-          <ul className="space-y-1">
-            {sections.map((section) => (
+          <ol>
+            {sections.map((section, index) => (
               <li key={section.id}>
                 <button
+                  type="button"
                   onClick={() => onSelectSection(section.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                  className={`grid w-full grid-cols-[1.5rem_minmax(0,1fr)] gap-2 border-l-2 px-3 py-2.5 text-left text-sm transition-colors ${
                     activeSectionId === section.id
-                      ? "bg-primary/10 text-primary font-medium"
-                      : "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                      ? "border-[color:var(--organism-accent-strong)] bg-foreground/[0.04] text-foreground"
+                      : "border-transparent text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
                   }`}
                 >
-                  {section.title}
+                  <span className="pt-0.5 font-mono opacity-60">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="min-w-0 truncate font-serif text-sm font-medium">{section.title}</span>
                 </button>
               </li>
             ))}
-          </ul>
+          </ol>
         )}
       </div>
-      <div className="p-4 border-t border-border/50">
+      <div className="border-t border-border/60 p-3">
         <button
+          type="button"
           onClick={handleCreateSection}
           disabled={isCreating}
-          className="w-full flex items-center justify-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-accent disabled:opacity-50"
+          className="flex min-h-9 w-full items-center justify-center gap-2 border border-border/70 px-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
         >
-          {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : "+ New Section"}
+          {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <FilePlus2 className="h-4 w-4" />}
+          New section
         </button>
       </div>
-    </div>
+    </aside>
   );
 }

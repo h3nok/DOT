@@ -1,6 +1,19 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { BookMarkdown } from "./BookMarkdown";
+import type { BookConceptDefinition } from "../../content/publications/dotBookOne";
+
+const canvasConcept: BookConceptDefinition = {
+  id: "canvas",
+  title: "Canvas",
+  aliases: ["Canvas"],
+  definition: "The capacity to carry consequential change forward.",
+  context: "The Canvas carries the effects of experience across moments.",
+  boundary: "It is a model, not a physically located object.",
+  claimLevel: "Model",
+  sourceHref: "/book/digital-organism-theory/the-canvas#canvas-painting-and-character",
+  mapHref: "/doctrine/canvas",
+};
 
 describe("BookMarkdown", () => {
   it("renders stable heading anchors, equations, and safe external links", () => {
@@ -24,6 +37,16 @@ describe("BookMarkdown", () => {
       "rel",
       "noopener noreferrer",
     );
+    expect(container.querySelector(".book-prose--chapter")).toBeInTheDocument();
+  });
+
+  it("marks notes and sources for its denser publication treatment", () => {
+    const { container } = render(
+      <BookMarkdown content="A source note." variant="references" />,
+    );
+
+    expect(container.querySelector(".book-prose--references")).toBeInTheDocument();
+    expect(container.querySelector(".book-prose--chapter")).not.toBeInTheDocument();
   });
 
   it("places a contextual reader element after its matching heading", () => {
@@ -66,6 +89,64 @@ describe("BookMarkdown", () => {
     expect(screen.getByRole("link", { name: "Open" })).toHaveAttribute(
       "href",
       "https://example.com",
+    );
+  });
+
+  it("defines a concept at first use without marking every repetition", () => {
+    render(
+      <BookMarkdown
+        content="The Canvas carries. The Canvas updates."
+        concepts={[canvasConcept]}
+      />,
+    );
+
+    const definitionTrigger = screen.getByRole("button", {
+      name: "Define Canvas",
+    });
+    expect(definitionTrigger).toHaveTextContent("Canvas");
+    expect(screen.getByText(/The Canvas updates/)).toBeInTheDocument();
+
+    fireEvent.click(definitionTrigger);
+
+    expect(screen.getByRole("dialog", { name: "Canvas" })).toHaveTextContent(
+      "The capacity to carry consequential change forward.",
+    );
+    expect(screen.getByText("Boundary:").parentElement).toHaveTextContent(
+      "It is a model, not a physically located object.",
+    );
+    expect(screen.getByRole("link", { name: "Read the source passage" })).toHaveAttribute(
+      "href",
+      canvasConcept.sourceHref,
+    );
+  });
+
+  it("gives authored passage forms semantic hooks without changing their words", () => {
+    const { container } = render(
+      <BookMarkdown
+        content={[
+          "> **Epistemic key**",
+          ">",
+          "> Some are observations.",
+          ">",
+          "> Some are models.",
+        ].join("\n")}
+      />,
+    );
+
+    const passage = container.querySelector(
+      '[data-editorial-form="epistemic-key"]',
+    );
+    expect(passage).toHaveClass("book-editorial-form");
+    expect(passage).toHaveTextContent("Some are observations. Some are models.");
+  });
+
+  it("renders explicit claim levels through the shared editorial grammar", () => {
+    const { container } = render(
+      <BookMarkdown content="**Hypothesis:** Consciousness is fundamental." />,
+    );
+
+    expect(container.querySelector('[data-claim-level="hypothesis"]')).toHaveTextContent(
+      "Consciousness is fundamental.",
     );
   });
 });

@@ -114,9 +114,9 @@ These observations are the experiential foundation of DOT.
 
 They do not prove Big C, multiple Reality Frames, nonphysical memory, or a rendered universe. Those came later as attempts to explain how the observed architecture might fit into a larger account of existence.
 
-The distinction is essential:
-
-The observation is that experience is mediated, recursive, embodied, and capable of self-modification. The cosmology is DOT’s attempt to explain why.
+> **Claim boundary**
+>
+> The observation is that experience is mediated, recursive, embodied, and capable of self-modification. The cosmology is DOT’s attempt to explain why.
 
 ## The Limit of Knowledge
 
@@ -212,9 +212,9 @@ But dependence during embodied experience does not automatically settle ontologi
 
 A musician depends on an instrument to produce music in a room. Damage the instrument and the music changes. That fact proves the importance of the instrument; it does not, by itself, tell us whether the instrument originated the musician. The analogy cannot prove that consciousness exists independently of the brain. It clarifies the alternative DOT intends to investigate.
 
-The decisive question is empirical:
-
-What observation would distinguish a brain that produces consciousness from a brain that constrains, transmits, or locally implements a consciousness not exhausted by it?
+> **Open question**
+>
+> What observation would distinguish a brain that produces consciousness from a brain that constrains, transmits, or locally implements a consciousness not exhausted by it?
 
 DOT must eventually offer more than analogies. It must identify discriminating predictions or admit that a claim remains metaphysical.
 
@@ -272,7 +272,9 @@ The pattern of action that emerges from that Painting will be called Character.
 
 For now, remember the distinction:
 
-The Canvas carries. The Painting interprets. Character acts.
+> **Keep this distinction**
+>
+> The Canvas carries. The Painting interprets. Character acts.
 
 The second term is Intent.
 

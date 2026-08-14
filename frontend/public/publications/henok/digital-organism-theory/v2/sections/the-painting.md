@@ -8,11 +8,13 @@ Every experience is interpreted through what has already accumulated on its Canv
 
 The distinction matters:
 
-The Canvas carries.
-
-The Painting interprets.
-
-Character acts.
+> **Keep this distinction**
+>
+> The Canvas carries.
+>
+> The Painting interprets.
+>
+> Character acts.
 
 The Reality Stream arrives as input. Little c interprets that stream through the Painting. From that interpretation, Intent forms. The body renders action. The Reality Frame returns consequence. That return becomes feedback, and the feedback leaves another stroke on the Canvas.
 
@@ -514,9 +516,11 @@ Becoming the painter does not mean achieving total control.
 
 Little c remains embodied, situated, and influenced. The Reality Stream continues arriving. Old strokes may reappear under pressure. Some wounds require time, help, protection, and repeated experience before the Painting can change. Some external conditions must be confronted materially; they cannot be meditated away.
 
-Authorship is not omnipotence.
-
-It is participation with increasing clarity.
+> **Keep this distinction**
+>
+> Authorship is not omnipotence.
+>
+> It is participation with increasing clarity.
 
 The painter notices the interpretation before automatically becoming it. The painter creates space between reaction and Intent. The painter studies consequence without turning every mistake into shame. The painter learns which strokes protect life, which preserve fear, which belong to an earlier environment, and which open a wider decision-space.
 

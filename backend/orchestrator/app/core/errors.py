@@ -6,6 +6,8 @@ from typing import Any
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.responses import Response
 
 logger = logging.getLogger("dot_orchestrator.errors")
 
@@ -82,6 +84,25 @@ def _serialisable_errors(errors: list[Any]) -> list[dict[str, Any]]:
             item["ctx"] = {key: str(value) for key, value in context.items()}
         cleaned.append(item)
     return cleaned
+
+
+class UnhandledExceptionMiddleware(BaseHTTPMiddleware):
+    """Return a stable response before outer CORS and header middleware run."""
+
+    async def dispatch(
+        self,
+        request: Request,
+        call_next: RequestResponseEndpoint,
+    ) -> Response:
+        try:
+            return await call_next(request)
+        except Exception:
+            logger.exception("Unhandled request error", extra={"path": request.url.path})
+            return _error_json(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "INTERNAL_ERROR",
+                "An unexpected error occurred",
+            )
 
 
 def install_error_handlers(app: FastAPI) -> None:

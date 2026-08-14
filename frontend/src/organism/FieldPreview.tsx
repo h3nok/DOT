@@ -35,32 +35,27 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
         </>
       )}
 
-      {field === "neural" && (
-        <g stroke={stroke} fill={dot}>
-          {/* Nodes with pulsing connections — a living network. */}
-          <line x1="8" y1="10" x2="20" y2="16" strokeOpacity="0.5" />
-          <line x1="20" y1="16" x2="34" y2="10" strokeOpacity="0.35" />
-          <line x1="20" y1="16" x2="18" y2="26" strokeOpacity="0.4" />
-          <line x1="34" y1="10" x2="40" y2="22" strokeOpacity="0.3" />
-          <line x1="18" y1="26" x2="34" y2="24" strokeOpacity="0.25" />
+      {field === "dots" && (
+        <g fill={dot}>
+          {/* Many small dots — each a Little c */}
           {[
-            [8, 10, 2],
-            [20, 16, 2.5],
-            [34, 10, 2],
-            [18, 26, 1.8],
-            [40, 22, 1.5],
-            [34, 24, 1.5],
-          ].map(([x, y, r]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} stroke="none" fillOpacity="0.8" />
+            [8, 8, 1, 0.4], [16, 14, 1, 0.5], [28, 9, 1, 0.35],
+            [38, 18, 1, 0.45], [12, 22, 1, 0.3], [32, 25, 1, 0.4],
+            [22, 20, 1, 0.5], [42, 10, 1, 0.3], [6, 16, 1, 0.35],
+            /* "You" — brighter and larger */
+            [24, 14, 2, 0.9],
+          ].map(([x, y, r, o]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} fillOpacity={o} />
           ))}
         </g>
       )}
 
-      {field === "breath" && (
-        <g stroke={stroke} fill="none">
-          <circle cx="24" cy="16" r="5" strokeOpacity="0.6" />
-          <circle cx="24" cy="16" r="10" strokeOpacity="0.35" />
-          <circle cx="24" cy="16" r="15" strokeOpacity="0.15" />
+      {field === "topology" && (
+        <g stroke={stroke} fill="none" strokeLinecap="round">
+          <path d="M4 10 Q12 6, 24 10 T44 8" strokeOpacity="0.5" strokeWidth="0.8" />
+          <path d="M4 16 Q16 12, 24 16 T44 14" strokeOpacity="0.4" strokeWidth="0.8" />
+          <path d="M4 22 Q14 18, 24 22 T44 20" strokeOpacity="0.3" strokeWidth="0.8" />
+          <path d="M4 28 Q18 24, 28 28 T44 26" strokeOpacity="0.2" strokeWidth="0.8" />
         </g>
       )}
 

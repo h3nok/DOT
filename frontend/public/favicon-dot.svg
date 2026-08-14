@@ -1,8 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Clean white background -->
-  <rect width="32" height="32" fill="#ffffff"/>
-  
-  <!-- Simple red dot - smaller and cleaner -->
-  <circle cx="16" cy="16" r="4" fill="#dc2626"/>
-  <circle cx="16" cy="16" r="1.5" fill="#ffffff" opacity="0.7"/>
+  <rect width="32" height="32" rx="6" fill="#fafaf9"/>
+  <!-- Outer field -->
+  <circle cx="16" cy="16" r="14" fill="none" stroke="#c4b5a0" stroke-width="0.6" opacity="0.5"/>
+  <!-- Mid ring -->
+  <circle cx="16" cy="16" r="9.6" fill="none" stroke="#8b7355" stroke-width="0.6" opacity="0.4"/>
+  <!-- Arcs -->
+  <path d="M 16 5.1 C 22 5.1 26.9 10 26.9 16 C 26.9 22 22 26.9 16 26.9" fill="none" stroke="#6b5b3e" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+  <path d="M 16 26.9 C 10 26.9 5.1 22 5.1 16 C 5.1 10 10 5.1 16 5.1" fill="none" stroke="#8b7355" stroke-width="0.8" stroke-linecap="round" opacity="0.4"/>
+  <!-- Inner ring -->
+  <circle cx="16" cy="16" r="4.8" fill="none" stroke="#6b5b3e" stroke-width="0.6" opacity="0.3"/>
+  <!-- Core -->
+  <circle cx="16" cy="16" r="2.4" fill="#6b5b3e"/>
+  <circle cx="16" cy="16" r="1" fill="#fafaf9" opacity="0.7"/>
 </svg>

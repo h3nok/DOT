@@ -230,7 +230,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
         {/* File list */}
         {files.length > 0 && (
           <div className="space-y-2">
-            <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-3">
+            <h3 className="dot-meta font-medium uppercase tracking-wider text-muted-foreground mb-3">
               Ingestion Queue
             </h3>
             <AnimatePresence mode="popLayout">
@@ -289,7 +289,7 @@ export const VaultSurface: React.FC<VaultSurfaceProps> = ({
                         ) : f.status === "success" ? (
                           <IngestNote ingest={f.ingest} passages={f.passages} />
                         ) : (
-                          <span className="text-[10px] font-semibold uppercase tracking-wider">
+                          <span className="dot-micro font-semibold uppercase tracking-wider">
                             {f.file.name.split(".").pop()}
                           </span>
                         )}

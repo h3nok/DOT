@@ -48,7 +48,7 @@ export const TwinFeedback: React.FC<TwinFeedbackProps> = ({
 
   if (sent) {
     return (
-      <p className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+      <p className="mt-2 flex items-center gap-1.5 dot-meta text-muted-foreground">
         <Check className="h-3 w-3" aria-hidden="true" />
         Noted — thank you.
       </p>
@@ -56,11 +56,11 @@ export const TwinFeedback: React.FC<TwinFeedbackProps> = ({
   }
 
   const buttonClass =
-    "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40";
+    "dot-meta flex items-center gap-1 rounded-full px-2 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40";
 
   return (
     <div className="mt-2 flex items-center gap-1" role="group" aria-label="Was this answer useful?">
-      <span className="mr-1 text-[11px] text-muted-foreground">Was this useful?</span>
+      <span className="mr-1 dot-meta text-muted-foreground">Was this useful?</span>
       <button
         type="button"
         onClick={() => void submit("helpful")}

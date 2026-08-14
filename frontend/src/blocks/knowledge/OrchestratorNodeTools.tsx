@@ -165,7 +165,7 @@ export const OrchestratorNodeTools = ({
           />
         </span>
         <span className="text-[color:var(--surface-fg)]">Orchestrator</span>
-        <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] sm:inline">
+        <span className="hidden font-mono dot-micro uppercase tracking-[0.16em] sm:inline">
           {statusLabel[status]}
         </span>
       </button>
@@ -208,7 +208,7 @@ export const OrchestratorNodeTools = ({
                     className="h-4 w-4"
                     style={{ color: "var(--surface-accent)" }}
                   />
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--surface-accent)]">
+                  <p className="font-mono font-bold uppercase tracking-[0.24em] text-[color:var(--surface-accent)]">
                     Orchestrator
                   </p>
                 </div>
@@ -237,7 +237,7 @@ export const OrchestratorNodeTools = ({
                     Presence
                   </span>
                   <span
-                    className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em]"
+                    className="inline-flex items-center gap-2 font-mono dot-meta uppercase tracking-[0.16em]"
                     style={{ color: statusColor(status) }}
                   >
                     <span
@@ -248,11 +248,11 @@ export const OrchestratorNodeTools = ({
                   </span>
                 </div>
                 {readiness ? (
-                  <p className="mt-2 font-mono text-[11px] text-[color:var(--surface-muted)]">
+                  <p className="mt-2 font-mono text-[color:var(--surface-muted)]">
                     {readiness.service} · v{readiness.version}
                   </p>
                 ) : (
-                  <p className="mt-2 font-mono text-[11px] text-[color:var(--surface-muted)]">
+                  <p className="mt-2 font-mono dot-meta text-[color:var(--surface-muted)]">
                     Orchestrator not reachable — tools that need it wait.
                   </p>
                 )}
@@ -260,7 +260,7 @@ export const OrchestratorNodeTools = ({
 
               {/* Node-scoped tools */}
               <div className="mt-6">
-                <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[color:var(--surface-muted)]">
+                <p className="flex items-center gap-2 font-mono dot-micro font-bold uppercase tracking-[0.2em] text-[color:var(--surface-muted)]">
                   <Hammer className="h-3.5 w-3.5" />
                   Tools for “{node.title}”
                 </p>
@@ -291,12 +291,12 @@ export const OrchestratorNodeTools = ({
                             <span className="block text-sm font-semibold text-[color:var(--surface-fg)]">
                               {tool.label}
                             </span>
-                            <span className="block text-[11px] text-[color:var(--surface-muted)]">
+                            <span className="block text-[color:var(--surface-muted)]">
                               {tool.hint}
                             </span>
                           </span>
                         </span>
-                        <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.16em] text-[color:var(--surface-muted)]">
+                        <span className="shrink-0 font-mono dot-micro uppercase tracking-[0.16em] text-[color:var(--surface-muted)]">
                           {scaffolded ? "soon" : gated ? "waiting" : "open"}
                         </span>
                       </button>

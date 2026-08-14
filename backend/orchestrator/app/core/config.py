@@ -120,16 +120,14 @@ class ServiceSettings(pydantic_settings.BaseSettings):
 
     @pydantic.model_validator(mode="after")
     def validate_production(self) -> ServiceSettings:
-        if self.ENVIRONMENT not in {"production", "staging"}:
-            return self
-
         errors: list[str] = []
-        if not self.AUTH_ENABLED:
-            errors.append("AUTH_ENABLED=false is not allowed in production/staging")
-        if self.AUTH_MODE == "local_header":
-            errors.append("AUTH_MODE=local_header is not allowed in production/staging")
-        if self.AUTH_MODE == "jwt" and not self.SERVICE_AUTH_SECRET:
-            errors.append("SERVICE_AUTH_SECRET is required for AUTH_MODE=jwt")
+        if self.AUTH_ENABLED and not self.SERVICE_AUTH_SECRET:
+            errors.append("SERVICE_AUTH_SECRET is required when AUTH_ENABLED=true")
+        if self.ENVIRONMENT in {"production", "staging"}:
+            if not self.AUTH_ENABLED:
+                errors.append("AUTH_ENABLED=false is not allowed in production/staging")
+            if self.AUTH_MODE == "local_header":
+                errors.append("AUTH_MODE=local_header is not allowed in production/staging")
         if errors:
             msg: str = f"{self.SERVICE_NAME} config validation failed:\n  - " + "\n  - ".join(
                 errors

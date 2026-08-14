@@ -9,6 +9,7 @@ import {
   ExternalLink,
   GitBranch,
   GraduationCap,
+  GripVertical,
   MessageSquare,
   Plus,
   Scale,
@@ -19,7 +20,7 @@ import {
 import { staggerChild, staggerContainer, useOrganismPulse } from "../organism";
 import { PROFILE_OWNER_ID } from "./orchestrator";
 import { TwinFeedback } from "./TwinFeedback";
-import { MintyMark } from "./MintyMark";
+import { NucleusMark } from "./NucleusMark";
 import {
   deleteThread,
   clearEphemeralTurns,
@@ -33,11 +34,63 @@ import {
   type TwinThread,
   type TwinTurn,
 } from "./twinChat";
+import type { ReadingPosition } from "./bookCompanion";
 import type { AgentLens } from "./agent";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
 
 /** Whether this release names a backend at all; see the note in the empty state. */
 const HAS_ORCHESTRATOR = Boolean(import.meta.env.VITE_ORCHESTRATOR_URL);
+
+/**
+ * How wide the reader last left the dock. Remembered, not re-asked.
+ *
+ * The width is the reader's, not a setting with two answers: how much room
+ * Minty deserves depends on what they are doing with it, and that changes
+ * within a single sitting. So the edge is draggable, and where they leave it
+ * is where it opens next time.
+ */
+const SIDECAR_WIDTH_KEY = "dot.minty.sidecar";
+/** A column beside the text — enough to ask, narrow enough to keep reading. */
+const DOCKED_WIDTH = 416;
+/** A passage and Minty's reading of it, side by side. */
+const WIDE_WIDTH = 640;
+/** Below this the transcript is a gutter, not a column. */
+const MIN_WIDTH = 320;
+/** The book keeps the majority of the window; a dock is not a takeover. */
+const MAX_WIDTH_FRACTION = 0.6;
+/** Past this the transcript needs its own measure rather than the full panel. */
+const ROOMY_WIDTH = 560;
+
+function maxSidecarWidth(): number {
+  if (typeof window === "undefined") return WIDE_WIDTH;
+  return Math.max(MIN_WIDTH, Math.round(window.innerWidth * MAX_WIDTH_FRACTION));
+}
+
+function clampSidecarWidth(width: number): number {
+  return Math.min(Math.max(Math.round(width), MIN_WIDTH), maxSidecarWidth());
+}
+
+function loadSidecarWidth(): number {
+  if (typeof window === "undefined") return DOCKED_WIDTH;
+  try {
+    const stored = window.localStorage.getItem(SIDECAR_WIDTH_KEY);
+    // "docked"/"wide" are the two-state preference this replaced.
+    if (stored === "wide") return clampSidecarWidth(WIDE_WIDTH);
+    if (stored === "docked" || stored === null) return clampSidecarWidth(DOCKED_WIDTH);
+    const parsed = Number.parseInt(stored, 10);
+    return clampSidecarWidth(Number.isFinite(parsed) ? parsed : DOCKED_WIDTH);
+  } catch {
+    return DOCKED_WIDTH;
+  }
+}
+
+function rememberSidecarWidth(width: number): void {
+  try {
+    window.localStorage.setItem(SIDECAR_WIDTH_KEY, String(Math.round(width)));
+  } catch {
+    // Storage can be refused; the choice still holds for this visit.
+  }
+}
 
 /**
  * Minty — the conversation at the centre of the graph.
@@ -67,6 +120,12 @@ interface TwinSurfaceProps {
    * right edge beside the text, for asking while reading.
    */
   variant?: "focus" | "sidecar";
+  /**
+   * What the reader has open, when Minty was opened from inside the book. It
+   * travels with every question so a reference to "this" has something to
+   * resolve against.
+   */
+  reading?: ReadingPosition | null;
 }
 
 const LENSES = [
@@ -211,10 +270,10 @@ const Citations: React.FC<{
           return (
             <li
               key={`${citation.node_id}-${index}`}
-              className="border-l border-[color:var(--organism-accent-soft)] bg-foreground/[0.025] px-3 py-3 text-[11px] text-muted-foreground"
+              className="border-l border-[color:var(--organism-accent-soft)] bg-foreground/[0.025] px-3 py-3 dot-meta text-muted-foreground"
             >
               <div className="flex items-start gap-3">
-                <span className="pt-0.5 font-mono text-[11px] text-[var(--organism-accent-strong)]">
+                <span className="pt-0.5 font-mono text-[var(--organism-accent-strong)]">
                   [{String(index + 1).padStart(2, "0")}]
                 </span>
                 <div className="min-w-0 flex-1">
@@ -222,7 +281,7 @@ const Citations: React.FC<{
                     {citation.label}
                   </p>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase text-muted-foreground">
+                    <span className="inline-flex items-center gap-1 font-mono dot-micro uppercase text-muted-foreground">
                       {research ? (
                         <GraduationCap className="h-3 w-3" aria-hidden="true" />
                       ) : (
@@ -304,7 +363,7 @@ const AnswerMarkdown: React.FC<{ children: string }> = ({ children }) => (
         // the companion starts. The trailing "— Heading" line is dimmed and
         // letterspaced by the sibling rule below.
         blockquote: ({ children: quote }) => (
-          <blockquote className="my-4 rounded-r-lg border-l-2 border-[color:var(--organism-accent-strong)] bg-foreground/[0.035] py-3 pl-4 pr-3 [&>p:last-child]:mb-0 [&>p:last-child]:font-mono [&>p:last-child]:text-[10px] [&>p:last-child]:uppercase [&>p:last-child]:tracking-[0.14em] [&>p:last-child]:text-muted-foreground [&>p:last-child]:not-italic [&>p]:italic">
+          <blockquote className="my-4 rounded-r-lg border-l-2 border-[color:var(--organism-accent-strong)] bg-foreground/[0.035] py-3 pl-4 pr-3 [&>p:last-child]:mb-0 [&>p:last-child]:font-mono [&>p:last-child]:dot-micro [&>p:last-child]:uppercase [&>p:last-child]:tracking-[0.14em] [&>p:last-child]:text-muted-foreground [&>p:last-child]:not-italic [&>p]:italic">
             {quote}
           </blockquote>
         ),
@@ -396,7 +455,7 @@ const Turn: React.FC<{
         Minty
         {turn.source === "passages" && (
           <span
-            className="font-mono text-[9px] normal-case tracking-normal text-muted-foreground/80"
+            className="dot-micro font-mono normal-case tracking-normal text-muted-foreground/80"
             title="No model answered this one. These are passages retrieved from the released text and quoted directly."
           >
             · quoted from Book One
@@ -422,6 +481,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   onClose,
   onOpenNode,
   variant = "focus",
+  reading = null,
 }) => {
   const [turns, setTurns] = useState<TwinTurn[]>([]);
   const [threads, setThreads] = useState<TwinThread[]>([]);
@@ -444,6 +504,15 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   // to it. Below lg it fills the viewport and must keep the same focus and
   // scroll promises as the full-screen companion.
   const modal = !sidecar || !wideViewport;
+  // How wide the dock stands, in px, dragged from its edge.
+  const [width, setWidth] = useState(loadSidecarWidth);
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startWidth: number;
+    moved: boolean;
+  } | null>(null);
   // Smoothed for display: the network delivers clumps, the reader sees writing.
   const smoothedStream = useSmoothedText(streamingText, reducedMotion);
   const pulse = useOrganismPulse();
@@ -471,6 +540,43 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
       delete document.documentElement.dataset.mintyModal;
     };
   }, [modal]);
+
+  /**
+   * Publish the dock's width to the document, where `--minty-sidecar-width`
+   * turns it into both the panel's width and the reading page's inset. The
+   * page cannot ask the panel how wide it is, so the panel says so once and
+   * everything that has to make room reads the same answer — including while
+   * the edge is being dragged, so the text reflows under the reader's hand.
+   *
+   * Below `lg` the panel covers the page rather than docking beside it, so the
+   * variable is withdrawn and the page keeps its full width.
+   */
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!sidecar || !wideViewport) return;
+    root.dataset.mintySidecar = "docked";
+    root.style.setProperty("--minty-sidecar-width", `${width}px`);
+    return () => {
+      delete root.dataset.mintySidecar;
+      root.style.removeProperty("--minty-sidecar-width");
+    };
+  }, [sidecar, wideViewport, width]);
+
+  /** While the edge is held, the whole page is part of that one gesture. */
+  useEffect(() => {
+    if (!dragging) return;
+    document.documentElement.dataset.mintyResizing = "true";
+    return () => {
+      delete document.documentElement.dataset.mintyResizing;
+    };
+  }, [dragging]);
+
+  /** A window narrowed under the dock must not leave it wider than the rules. */
+  useEffect(() => {
+    const clamp = () => setWidth((current) => clampSidecarWidth(current));
+    window.addEventListener("resize", clamp);
+    return () => window.removeEventListener("resize", clamp);
+  }, []);
 
   const refreshThreads = useCallback(async () => {
     const { threads: found, authenticated: signedIn } = await listThreads();
@@ -542,7 +648,12 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
    */
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null;
-    composerRef.current?.focus();
+    // On touch devices, auto-focusing the composer summons the keyboard before
+    // the reader has oriented themselves — hostile on mobile (L1).
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    if (!isTouch) {
+      composerRef.current?.focus();
+    }
 
     const focusableItems = () =>
       Array.from(
@@ -657,7 +768,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
       // whole-answer path for now.
       const outcome =
         authenticated === true
-          ? await sendMessage(trimmed, threadId, history, requestedLens, true)
+          ? await sendMessage(trimmed, threadId, history, requestedLens, true, reading)
           : await (async () => {
               setStreamingText("");
               const streamed = await sendMessageStream(
@@ -665,11 +776,15 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 history,
                 requestedLens,
                 (text) => setStreamingText(text),
+                reading,
               );
               setStreamingText(null);
               // A null means streaming was unavailable; fall back to the
               // non-streaming public path rather than failing the question.
-              return streamed ?? (await sendMessage(trimmed, threadId, history, requestedLens, false));
+              return (
+                streamed ??
+                (await sendMessage(trimmed, threadId, history, requestedLens, false, reading))
+              );
             })();
       if (!outcome) {
         // The thread is gone server-side. Say so plainly rather than looping.
@@ -737,6 +852,64 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   const empty = turns.length === 0;
   const lens = LENSES.find((candidate) => candidate.id === lensId) ?? LENSES[0];
 
+  const applyWidth = (next: number) => {
+    const clamped = clampSidecarWidth(next);
+    setWidth(clamped);
+    rememberSidecarWidth(clamped);
+  };
+
+  const startResize = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    // Without this the drag selects the transcript it passes over.
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startWidth: width,
+      moved: false,
+    };
+    setDragging(true);
+  };
+
+  const resize = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    // The dock is anchored right, so dragging its edge leftward widens it.
+    const delta = drag.startX - event.clientX;
+    if (Math.abs(delta) > 3) drag.moved = true;
+    setWidth(clampSidecarWidth(drag.startWidth + delta));
+  };
+
+  const endResize = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    dragRef.current = null;
+    setDragging(false);
+    if (drag.moved) {
+      rememberSidecarWidth(width);
+      return;
+    }
+    // A press that never moved is a click, and a click on the resize edge means
+    // "give me the other size" rather than nothing at all.
+    applyWidth(width >= WIDE_WIDTH ? DOCKED_WIDTH : WIDE_WIDTH);
+  };
+
+  const resizeByKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = event.shiftKey ? 96 : 24;
+    const moves: Record<string, number> = {
+      ArrowLeft: width + step,
+      ArrowRight: width - step,
+      Home: DOCKED_WIDTH,
+      End: maxSidecarWidth(),
+    };
+    const next = moves[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    applyWidth(next);
+  };
+
   return (
     <motion.div
       ref={panelRef}
@@ -746,12 +919,15 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
       className={
         sidecar
           // Docking only earns its keep where the text still has a readable
-          // measure left over. Below `lg` a 26rem panel eats more than half the
-          // window and the passage it is meant to sit beside becomes a gutter,
-          // so Minty takes the full width there and is dismissed rather than
-          // consulted alongside. `BookOnePage` insets the page at the same
-          // breakpoint, and the two must be changed together.
-          ? "fixed inset-y-0 right-0 z-[60] flex w-full flex-col lg:w-[26rem]"
+          // measure left over. Below `lg` a docked panel eats more than half
+          // the window and the passage it is meant to sit beside becomes a
+          // gutter, so Minty takes the full width there and is dismissed
+          // rather than consulted alongside. Above it the width comes from
+          // `--minty-sidecar-width`, which the reading page reads too.
+          ? `fixed inset-y-0 right-0 z-[60] flex w-full flex-col lg:w-[var(--minty-sidecar-width)] ${
+              // A transition would lag a width the reader is holding.
+              reducedMotion || dragging ? "" : "lg:transition-[width] lg:duration-200"
+            }`
           : "fixed inset-0 z-[60] flex flex-col"
       }
       initial={sidecar ? false : { opacity: 0 }}
@@ -781,6 +957,40 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
         />
       )}
 
+      {/* The dock's edge, and the way to move it.
+          Standing on the seam rather than inside the chrome, it says what it
+          does before it is used: this boundary is yours to move. Drag sets any
+          width, a click swaps the two useful ones, and arrow keys do the same
+          for a reader who never touches a pointer. */}
+      {sidecar && wideViewport && (
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize Minty"
+          aria-valuenow={width}
+          aria-valuemin={MIN_WIDTH}
+          aria-valuemax={maxSidecarWidth()}
+          tabIndex={0}
+          title="Drag to resize · click for the other width"
+          onPointerDown={startResize}
+          onPointerMove={resize}
+          onPointerUp={endResize}
+          onPointerCancel={endResize}
+          onKeyDown={resizeByKey}
+          className="group absolute inset-y-0 left-0 z-10 flex w-4 -translate-x-1/2 cursor-col-resize touch-none items-center justify-center focus:outline-none"
+        >
+          <span
+            className={`flex h-12 w-4 items-center justify-center rounded-full border bg-background text-muted-foreground shadow-sm transition-colors group-hover:text-foreground group-focus-visible:border-[color:var(--organism-accent-strong)] group-focus-visible:text-foreground ${
+              dragging
+                ? "border-[color:var(--organism-accent-strong)] text-foreground"
+                : "border-border/60"
+            }`}
+          >
+            <GripVertical className="h-3.5 w-3.5" aria-hidden="true" />
+          </span>
+        </div>
+      )}
+
       {/* The voice flows down from the nucleus in a single reading column —
           full-width and centred in focus, a solid panel at the edge in sidecar. */}
       <div
@@ -797,7 +1007,13 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
         <div
           className={
             sidecar
-              ? "flex min-h-0 w-full flex-1 flex-col px-5"
+              // Widening the dock buys room for the passage beside the answer,
+              // not longer lines: past a comfortable measure the transcript
+              // gets harder to read, not easier, so the column is capped and
+              // centred once the panel is wider than it needs to be.
+              ? `flex min-h-0 w-full flex-1 flex-col px-5 ${
+                  width >= ROOMY_WIDTH ? "mx-auto max-w-2xl" : ""
+                }`
               // Opaque on purpose. At 80% the homepage read straight through
               // the reading column, which is the same "ghosting rather than
               // depth" failure the scrim comment below already warns about.
@@ -808,7 +1024,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               was produced on the right, and the way out. */}
           <header className="flex items-center justify-between gap-4 border-b border-border/40 pb-3.5 pt-5">
             <div className="flex min-w-0 items-center gap-2.5">
-              <MintyMark size={28} thinking={busy} reducedMotion={reducedMotion} />
+              <NucleusMark size={28} thinking={busy} reducedMotion={reducedMotion} />
               <span className="font-serif text-base font-semibold leading-none text-foreground">
                 Minty
               </span>
@@ -827,11 +1043,12 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 {HAS_ORCHESTRATOR ? "Source-checked" : "Quoted passages"}
               </span>
             </div>
+            {/* Width lives on the dock's own edge, not in here. */}
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="rounded-full border border-border/50 p-1.5 text-muted-foreground transition-colors hover:text-foreground"
+              className="shrink-0 rounded-full border border-border/50 p-1.5 text-muted-foreground transition-colors hover:text-foreground"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -934,7 +1151,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                     window that does not say so is quietly promising a
                     conversation it cannot hold. */}
                 {!HAS_ORCHESTRATOR && (
-                  <p className="mt-2 text-[11px] leading-5 text-muted-foreground/85">
+                  <p className="mt-2 dot-meta leading-5 text-muted-foreground/85">
                     Reading directly from the released text right now, so answers arrive as the
                     closest passages with their claim levels, not as composed prose.
                   </p>
@@ -965,7 +1182,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                         <span className="mt-3 block text-xs font-semibold">
                           {candidate.label}
                         </span>
-                        <span className="mt-1 block text-[10px] leading-relaxed opacity-75">
+                        <span className="mt-1 block dot-micro leading-relaxed opacity-75">
                           {candidate.description}
                         </span>
                       </button>
@@ -1022,7 +1239,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               aria-live="polite"
             >
               <p className="mb-2 flex items-center gap-2 dot-label">
-                <MintyMark size={18} thinking reducedMotion={reducedMotion} />
+                <NucleusMark size={18} thinking reducedMotion={reducedMotion} />
                 Minty
               </p>
               <div className="font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
@@ -1035,8 +1252,8 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               </div>
             </motion.article>
           ) : busy ? (
-            /* Source signals converge on the DOT mark while Minty gathers the
-               thread. The motion describes the product instead of decorating it. */
+            /* The DOT mark itself at work while Minty gathers the thread: the
+               same identity the site is built around, thinking. */
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1044,8 +1261,8 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               aria-live="polite"
               role="status"
             >
-              <MintyMark size={86} thinking reducedMotion={reducedMotion} />
-              <span className="font-serif text-[15px] italic text-muted-foreground">
+              <NucleusMark size={86} thinking reducedMotion={reducedMotion} />
+              <span className="font-serif text-base italic text-muted-foreground">
                 Tracing the question through its sources…
               </span>
             </motion.div>
@@ -1054,13 +1271,13 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
         </motion.div>
 
         {ephemeral && (
-          <p className="text-[10px] text-muted-foreground">
+          <p className="dot-micro text-muted-foreground">
             Temporary session · stored only in this browser tab.
           </p>
         )}
 
         {/* The composer: lens within reach, then the field to speak into. */}
-        <div className="space-y-2.5 pb-6 pt-2">
+        <div className="space-y-2.5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
           <div
             role="group"
             aria-label="Reading lens"
@@ -1077,7 +1294,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                   disabled={busy}
                   aria-pressed={active}
                   title={candidate.description}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                  className={`dot-meta flex items-center gap-1.5 rounded-full px-3 py-1.5 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                     active
                       ? "bg-[color:var(--organism-accent-strong)] text-background font-semibold"
                       : "text-muted-foreground hover:text-foreground"
@@ -1112,17 +1329,26 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               }}
               placeholder={`Ask through the ${lens.label.toLowerCase()} lens…`}
               aria-label="Ask Minty about Digital Organism Theory. Enter sends; Shift plus Enter adds a new line."
-              rows={2}
-              className="min-h-14 min-w-0 flex-1 resize-none rounded-lg border border-border/60 bg-background/70 px-3.5 py-3 text-base leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]"
+              rows={1}
+              // The same page the home composer is: a cinnabar margin rule down the
+              // inside edge, and the reader's words in the book's own serif.
+              className="min-h-11 min-w-0 flex-1 resize-none rounded-lg border border-border/60 border-l-2 border-l-[color:var(--organism-accent-strong)]/45 bg-background/70 px-3.5 py-2.5 font-serif text-base leading-relaxed text-foreground outline-none transition-colors placeholder:font-sans placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:border-l-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]"
             />
             <button
               type="submit"
               disabled={value.trim().length < 2 || busy}
               aria-label="Send"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[color:var(--organism-accent-strong)] text-background transition-opacity disabled:opacity-40"
+              // While Minty is working the button steps back to paper: the mark
+              // is drawn in the accent, and on an accent-filled button it was
+              // one solid shape thinking invisibly to itself.
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors disabled:opacity-40 ${
+                busy
+                  ? "border border-border/60 bg-background"
+                  : "bg-[color:var(--organism-accent-strong)] text-background"
+              }`}
             >
               {busy ? (
-                <MintyMark size={22} thinking reducedMotion={reducedMotion} />
+                <NucleusMark size={22} thinking reducedMotion={reducedMotion} />
               ) : (
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
               )}

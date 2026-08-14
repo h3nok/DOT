@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { type PublicationProjectRead, type PublicationSectionRead } from "../../../services/OrchestratorPublicationService";
+import { DotWordmark } from "../../../shared/DotWordmark";
 import { ProjectOutline } from "./ProjectOutline";
 import { SectionEditor } from "./SectionEditor";
 import { ReleasePanel } from "./ReleasePanel";
@@ -20,25 +23,53 @@ export function PublicationStudioShell({ project, sections, onRefreshSections }:
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-background text-foreground">
-      {/* Studio Header */}
-      <header className="flex h-12 shrink-0 items-center justify-between border-b border-border/50 px-4">
-        <div className="flex items-center gap-3">
-          <span className="font-serif font-semibold">DOT Studio</span>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-sm">{project.title}</span>
+      <header className="flex h-12 shrink-0 items-center justify-between border-b border-border/60 px-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link
+            to="/studio"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            title="All publications"
+            aria-label="All publications"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <DotWordmark className="hidden font-mono dot-micro uppercase sm:inline" />
+          <span className="hidden text-muted-foreground sm:inline">/</span>
+          <span className="truncate font-serif text-sm font-semibold">{project.title}</span>
         </div>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="rounded-full bg-accent px-2 py-1 text-accent-foreground">
+        <div className="flex items-center gap-3 text-xs">
+          <label className="sr-only" htmlFor="studio-section-select">
+            Current section
+          </label>
+          <select
+            id="studio-section-select"
+            value={activeSectionId ?? ""}
+            onChange={(event) => setActiveSectionId(event.target.value || null)}
+            className="max-w-36 bg-transparent font-serif text-xs text-foreground outline-none md:hidden"
+          >
+            {sections.map((section) => (
+              <option key={section.id} value={section.id}>
+                {section.title}
+              </option>
+            ))}
+          </select>
+          <span className="font-mono uppercase text-muted-foreground">
             {project.status}
           </span>
         </div>
       </header>
 
-      {/* Split Canvas Workspace */}
       <main className="flex-1 overflow-hidden">
         <PanelGroup direction="horizontal">
-          {/* Left Sidebar: Outline */}
-          <Panel defaultSize={20} minSize={15} maxSize={30}>
+          <Panel
+            id="studio-outline"
+            defaultSize={18}
+            minSize={14}
+            maxSize={28}
+            collapsible
+            collapsedSize={0}
+            className="hidden md:block"
+          >
             <ProjectOutline
               project={project}
               sections={sections}
@@ -48,17 +79,23 @@ export function PublicationStudioShell({ project, sections, onRefreshSections }:
             />
           </Panel>
 
-          <PanelResizeHandle className="w-1 bg-border/50 hover:bg-primary/50 transition-colors" />
+          <PanelResizeHandle className="hidden w-px bg-border/60 transition-colors hover:bg-[color:var(--organism-accent-strong)] md:block" />
 
-          {/* Center Canvas: Editor */}
-          <Panel defaultSize={60} minSize={40}>
+          <Panel id="studio-editor" defaultSize={64} minSize={42}>
             <SectionEditor section={activeSection} onRefresh={onRefreshSections} />
           </Panel>
 
-          <PanelResizeHandle className="w-1 bg-border/50 hover:bg-primary/50 transition-colors" />
+          <PanelResizeHandle className="hidden w-px bg-border/60 transition-colors hover:bg-[color:var(--organism-accent-strong)] xl:block" />
 
-          {/* Right Sidebar: Release Panel */}
-          <Panel defaultSize={20} minSize={15} maxSize={30}>
+          <Panel
+            id="studio-release"
+            defaultSize={18}
+            minSize={15}
+            maxSize={26}
+            collapsible
+            collapsedSize={0}
+            className="hidden xl:block"
+          >
             <ReleasePanel project={project} />
           </Panel>
         </PanelGroup>

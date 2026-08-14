@@ -10,9 +10,11 @@ The first is **primordial continuity**, which DOT names **T**. T is the minimal 
 
 The second is **experienced continuity** inside a Reality Frame. This is the seamless flow through which distinct events arrive as one life. DOT proposes that this continuity is constructed through the coordination of the Frame, the body, the Canvas, memory, and the way Little c gathers change into an intelligible present.
 
-Primordial continuity is fundamental in the model.
-
-Seamless continuity inside a Reality Frame is engineered.
+> **Keep this distinction**
+>
+> Primordial continuity is fundamental in the model.
+>
+> Seamless continuity inside a Reality Frame is engineered.
 
 That distinction resolves the apparent contradiction. DOT is not claiming both that continuity is fundamental and that continuity is merely a system feature. It is claiming that the possibility of ordered change is fundamental, while the smooth, measured continuity of a particular world is locally produced.
 
@@ -152,9 +154,11 @@ Physics studies the observable history, structure, and laws of that universe. DO
 
 In this interpretation, the Big Bang functions as a boot metaphor. It marks the earliest boundary of RF₀’s accessible physical history, not a moment DOT has independently observed from outside the universe. The laws, symmetries, constants, conservation relations, and quantum statistics studied by physics become, in DOT language, the stable rules of the running Frame.[¹³](/book/digital-organism-theory/references#reference-13)
 
-Physics maps the runtime.
-
-DOT hypothesizes a source architecture.
+> **Claim boundary**
+>
+> Physics maps the runtime.
+>
+> DOT hypothesizes a source architecture.
 
 The difference is important. Physics can test its models against public measurements inside RF₀. DOT’s proposed pre-boot conditions cannot presently be observed in the same way. Subjective experience may motivate the larger model, but it is not a window through which the specific engineering decisions of Big C can be read directly.
 
@@ -178,11 +182,13 @@ Coherence is delegated into stable structure so that attention can move toward n
 
 The principle is an observed pattern and a modeling heuristic. It does not demonstrate that every level was intentionally designed by Big C, nor does it make biological evolution a disguised software project. It tells us why the language of architecture remains useful across different forms of organization.
 
-Delegate stability.
-
-Preserve continuity.
-
-Learn at the next level.
+> **The model in one movement**
+>
+> Delegate stability.
+>
+> Preserve continuity.
+>
+> Learn at the next level.
 
 ## Conclusion
 

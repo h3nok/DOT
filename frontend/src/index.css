@@ -35,9 +35,92 @@
   }
 }
 
+/* How much of the window Minty holds while docked beside the text.
+ *
+ * The panel's width and the reading page's inset both read this variable, so
+ * the two cannot drift apart — the earlier arrangement hard-coded 26rem in
+ * both places and only lined up at exactly one viewport width. While docked,
+ * TwinSurface writes the reader's dragged width here on the root element, so
+ * the text reflows as the edge moves. Below `lg` it stays 0: there the panel
+ * covers the page instead of docking beside it, and the text underneath must
+ * not be indented for a panel it cannot see past. */
+:root {
+  --minty-sidecar-width: 0px;
+}
+
+@media (min-width: 1024px) {
+  /* The opening width, until the panel publishes the one it was left at. */
+  html[data-minty-sidecar] {
+    --minty-sidecar-width: 26rem;
+  }
+}
+
+/* Dragging the dock's edge is one gesture about the boundary; the page under
+   the pointer must not start selecting paragraphs mid-drag. */
+html[data-minty-resizing],
+html[data-minty-resizing] * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
 @keyframes nucleusBreathe {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.018); opacity: 0.92; }
+}
+
+/* The mark at work (NucleusMark `thinking`).
+ *
+ * Minty is DOT answering, so its working state is the DOT mark's own parts in
+ * motion: the arcs sweep, the field and inner ring breathe, the core pulses.
+ * No element here draws anything the settled logo does not already contain —
+ * an extra orbit or converging particle would make the companion's identity a
+ * lookalike of the site's rather than the same one. */
+@keyframes nucleusArcSweep {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nucleusFieldBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.42; }
+}
+
+@keyframes nucleusInnerBreathe {
+  0%, 100% { opacity: 0.36; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes nucleusCorePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-arcs,
+.nucleus-mark[data-thinking="true"] .nucleus-mark-core {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-arcs {
+  animation: nucleusArcSweep 9s linear infinite;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-field {
+  animation: nucleusFieldBreathe 2.8s ease-in-out infinite;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-inner {
+  animation: nucleusInnerBreathe 2.1s ease-in-out infinite;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-core {
+  animation: nucleusCorePulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nucleus-mark[data-thinking="true"] *,
+  .nucleus-mark[data-thinking="true"] {
+    animation: none;
+  }
 }
 
 @keyframes dot-state-update {
@@ -59,6 +142,12 @@
   }
   50% {
     opacity: 0.78;
+  }
+}
+
+@keyframes dot-life-descends {
+  to {
+    stroke-dashoffset: -56;
   }
 }
 
@@ -298,10 +387,23 @@ html[data-reading="sans"] .book-surface {
 }
 
 .book-chrome {
-  border-bottom: 1px solid transparent;
-  background: transparent;
-  box-shadow: none;
+  border-bottom: 1px solid var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 86%, transparent);
+  box-shadow: 0 1px 0 color-mix(in oklch, var(--book-paper) 42%, transparent);
   backdrop-filter: blur(12px);
+}
+
+/* Over the cover the chrome is only its links.
+   A permanent bar puts a translucent band across the brightest part of the
+   composition and lays a second hairline a rem above the plate's own edge —
+   two parallel lines that read as a mistake without being nameable. On the
+   cover the header keeps its position and loses its surface; it becomes paper
+   again the moment there is text to sit above. */
+.book-chrome-over-cover {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 html[data-contrast="high"] .book-chrome {
@@ -353,17 +455,159 @@ html[data-contrast="high"] .book-chrome {
   border-color: var(--book-hairline);
 }
 
+/* ── The cover ──────────────────────────────────────────────────────────────
+   This is the book's opening leaf, not a hero section, and the difference is
+   mostly one of resolve: a cover commits to a plate, a single light, and an
+   edge that holds the composition.
+
+   What was here stacked three gradient systems with different origins — a glow
+   from the top, the field's own halo, and a veil centred at 46% — so nothing
+   agreed about where the light came from, and the veil bleached the field out
+   of the exact region the eye lands on. One light source now, falling from
+   above; the field is allowed to be visible; and legibility is bought locally,
+   behind the words themselves, rather than by washing out the whole middle. */
+
 .book-engraved-frontispiece {
-  background: var(--background);
+  --cover-inset: clamp(0.75rem, 2.4vw, 1.5rem);
+  position: relative;
+  background:
+    /* The one light: above and slightly forward of the title. */
+    radial-gradient(
+      ellipse 70% 55% at 50% 8%,
+      color-mix(in oklch, var(--book-dot-bright) 13%, transparent),
+      transparent 72%
+    ),
+    /* Its falloff, resolving into a weighted sill instead of stopping at 76%. */
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--background) 95%, var(--book-dot) 5%) 0%,
+      var(--background) 62%,
+      color-mix(in oklch, var(--background) 97%, var(--foreground) 3%) 100%
+    );
   color: var(--foreground);
 }
 
-.book-frontispiece-wash {
-  background: radial-gradient(
-    circle at 50% 45%,
-    color-mix(in oklch, var(--background) 78%, transparent) 25%,
-    transparent 70%
+/* The plate. A hairline held off the edge is what reads as "cover" rather than
+   "section" — and it is the same frame the printed edition carries, so the two
+   finally agree with each other. */
+.book-engraved-frontispiece::before {
+  content: "";
+  position: absolute;
+  inset: var(--cover-inset);
+  border: 1px solid var(--book-hairline);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* The paper the rest of the reader is printed on. The cover used to override
+   it entirely and so belonged to a different product. */
+.book-engraved-frontispiece::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklch, var(--foreground) 7%, transparent) 1px,
+    transparent 0
   );
+  background-size: 3px 3px;
+}
+
+/* Legibility, bought where it is needed. A column-width scrim sits behind the
+   words only; everywhere else the field is left alone. */
+.book-frontispiece-wash {
+  --cover-scrim: color-mix(in oklch, var(--background) 74%, transparent);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--cover-scrim) 14%,
+    var(--cover-scrim) 78%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 16%,
+    #000 84%,
+    transparent 100%
+  );
+}
+
+/* The field is the only thing on this page that is uniquely this book's. It
+   was held at 0.32 and then veiled; here it is simply allowed to be seen. */
+.book-engraved-frontispiece .dot-emergence-field {
+  opacity: 0.46;
+}
+
+html[data-contrast="high"] .book-engraved-frontispiece .dot-emergence-field {
+  opacity: 0.24;
+}
+
+html[data-contrast="high"] .book-frontispiece-wash {
+  --cover-scrim: color-mix(in oklch, var(--background) 90%, transparent);
+}
+
+/* The epigraph, promoted out of the footnote it was set in. */
+.book-frontispiece-epigraph {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-style: italic;
+  color: color-mix(in oklch, var(--foreground) 62%, transparent);
+}
+
+.book-frontispiece-epigraph::before,
+.book-frontispiece-epigraph::after {
+  content: "";
+  display: inline-block;
+  width: clamp(1.25rem, 4vw, 2.5rem);
+  height: 1px;
+  vertical-align: middle;
+  background: var(--book-hairline);
+}
+
+.book-frontispiece-epigraph::before {
+  margin-right: 0.75rem;
+}
+
+.book-frontispiece-epigraph::after {
+  margin-left: 0.75rem;
+}
+
+.book-model-orientation {
+  background: color-mix(in oklch, var(--book-paper) 90%, var(--book-verdigris));
+}
+
+.book-model-movement-step {
+  border-bottom: 1px solid var(--book-hairline);
+}
+
+.book-model-movement-step:last-child {
+  border-bottom: 0;
+}
+
+.book-reader {
+  position: relative;
+  isolation: isolate;
+}
+
+.book-reader::before {
+  position: absolute;
+  inset: -1.5rem -2rem -3rem;
+  z-index: -1;
+  background: color-mix(in oklch, var(--book-paper) 78%, transparent);
+  content: "";
+}
+
+html[data-contrast="high"] .book-reader::before {
+  background: var(--book-paper);
 }
 
 .book-digital-subtitle {
@@ -373,10 +617,30 @@ html[data-contrast="high"] .book-chrome {
 }
 
 .dot-emergence-field {
-  color: var(--foreground);
+  --dot-field-ink: color-mix(in oklch, var(--foreground) 72%, var(--background));
+  --dot-field-life: color-mix(
+    in oklch,
+    var(--book-dot-bright, var(--organism-accent-strong)) 72%,
+    var(--foreground)
+  );
+  --dot-field-life-soft: color-mix(
+    in oklch,
+    var(--dot-field-life) 58%,
+    var(--dot-field-ink)
+  );
+  color: var(--dot-field-ink);
   pointer-events: none;
   opacity: 0.22;
   transition: opacity 300ms ease;
+}
+
+.dark .dot-emergence-field {
+  --dot-field-ink: color-mix(in oklch, var(--foreground) 78%, var(--background));
+  --dot-field-life: color-mix(
+    in oklch,
+    var(--book-dot-bright, var(--organism-accent-strong)) 54%,
+    var(--foreground)
+  );
 }
 
 .dot-emergence-field svg {
@@ -387,6 +651,7 @@ html[data-contrast="high"] .book-chrome {
 .dot-emergence-grid-dot,
 .dot-emergence-spine,
 .dot-emergence-stage,
+.dot-emergence-life-thread,
 .dot-emergence-inputs,
 .dot-emergence-memory,
 .dot-emergence-frame,
@@ -396,6 +661,11 @@ html[data-contrast="high"] .book-chrome {
   fill: none;
   stroke: currentColor;
   vector-effect: non-scaling-stroke;
+}
+
+.dot-emergence-aura {
+  fill: color-mix(in oklch, var(--dot-field-life) 15%, transparent);
+  filter: blur(14px);
 }
 
 .dot-emergence-grid-line {
@@ -417,12 +687,23 @@ html[data-contrast="high"] .book-chrome {
 
 .dot-emergence-seed,
 .dot-emergence-fill {
-  fill: currentColor;
+  fill: var(--dot-field-life);
   stroke: none;
 }
 
 .dot-emergence-seed {
-  filter: drop-shadow(0 0 8px currentColor);
+  filter: drop-shadow(0 0 8px var(--dot-field-life));
+}
+
+.dot-emergence-life-thread {
+  fill: none;
+  stroke: var(--dot-field-life);
+  stroke-dasharray: 1 13;
+  stroke-linecap: round;
+  stroke-width: 1.35;
+  opacity: 0.9;
+  animation: dot-life-descends 7s linear infinite;
+  vector-effect: non-scaling-stroke;
 }
 
 .dot-emergence-stage {
@@ -473,10 +754,12 @@ html[data-contrast="high"] .book-chrome {
 }
 
 .dot-emergence-memory {
+  stroke: var(--dot-field-life-soft);
   opacity: 0.72;
 }
 
 .dot-emergence-return {
+  stroke: var(--dot-field-life-soft);
   stroke-dasharray: 4 9;
   stroke-width: 1;
   opacity: 0.42;
@@ -496,6 +779,14 @@ html[data-contrast="high"] .book-chrome {
   animation: dot-local-process 5s ease-in-out infinite;
 }
 
+.dot-emergence-local-active {
+  stroke: var(--dot-field-life-soft);
+}
+
+.dot-emergence-local-active circle {
+  filter: drop-shadow(0 0 5px var(--dot-field-life));
+}
+
 .dot-emergence-labels {
   fill: currentColor;
   font-family: "JetBrains Mono", monospace;
@@ -505,8 +796,8 @@ html[data-contrast="high"] .book-chrome {
 }
 
 .dot-emergence-signal {
-  fill: currentColor;
-  filter: drop-shadow(0 0 7px currentColor);
+  fill: var(--dot-field-life);
+  filter: drop-shadow(0 0 7px var(--dot-field-life));
   opacity: 0.9;
 }
 
@@ -532,7 +823,8 @@ html[data-contrast="high"] .dot-emergence-distribution {
 }
 
 html[data-motion="still"] .dot-emergence-matrix .dot-emergence-fill,
-html[data-motion="still"] .dot-emergence-local .dot-emergence-fill {
+html[data-motion="still"] .dot-emergence-local .dot-emergence-fill,
+html[data-motion="still"] .dot-emergence-life-thread {
   animation: none;
 }
 
@@ -541,7 +833,14 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .dot-emergence-field--cover {
-  opacity: 0.86;
+  --dot-field-ink: color-mix(in oklch, var(--foreground) 80%, var(--background));
+  opacity: 0.92;
+}
+
+.dot-emergence-field--cover .dot-emergence-stage-3,
+.dot-emergence-field--cover .dot-emergence-memory,
+.dot-emergence-field--cover .dot-emergence-local {
+  opacity: 0.88;
 }
 
 .dot-emergence-field .dot-emergence-mobile {
@@ -559,33 +858,96 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-digital-cover-wash {
   background: linear-gradient(
     180deg,
-    transparent 0 33%,
-    color-mix(in oklch, var(--background) 78%, transparent) 42% 72%,
-    transparent 84% 100%
+    transparent 0 27%,
+    color-mix(in oklch, var(--background) 86%, transparent) 37% 73%,
+    color-mix(in oklch, var(--background) 66%, transparent) 81%,
+    transparent 91% 100%
   );
 }
 
+.book-cover-colophon {
+  position: relative;
+  isolation: isolate;
+}
+
+.book-cover-colophon::before {
+  position: absolute;
+  inset: -1.15rem -1rem -0.75rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in oklch, var(--background) 90%, transparent) 0 55%,
+    transparent 82%
+  );
+  content: "";
+}
+
 .book-frontispiece-action {
-  border: 1px solid color-mix(in oklch, var(--foreground) 44%, transparent);
+  border: 1px solid color-mix(in oklch, var(--organism-accent-strong) 72%, var(--foreground));
   border-radius: 0.375rem;
-  background: var(--foreground);
-  color: var(--background);
-  box-shadow: 0 0.8rem 2rem color-mix(in oklch, var(--foreground) 18%, transparent);
-  transition: background-color 160ms ease, transform 160ms ease;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow:
+    0 0.8rem 2rem color-mix(in oklch, var(--organism-accent) 24%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--primary-foreground) 18%, transparent);
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
 .book-frontispiece-action:hover,
 .book-frontispiece-action:focus-visible {
-  background: color-mix(in oklch, var(--foreground) 82%, var(--background));
+  border-color: var(--organism-accent-strong);
+  background: color-mix(in oklch, var(--primary) 86%, var(--organism-accent-strong));
   transform: translateY(-1px);
 }
 
+.book-frontispiece-action:focus-visible,
+.book-frontispiece-secondary-action:focus-visible,
+.book-frontispiece-download-action:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: 3px;
+}
+
+.book-frontispiece-secondary-action {
+  color: color-mix(in oklch, var(--organism-accent-strong) 68%, var(--foreground));
+  text-decoration-color: color-mix(in oklch, var(--organism-accent) 62%, transparent);
+}
+
+.book-frontispiece-secondary-action svg {
+  color: var(--organism-accent-strong);
+}
+
+.book-frontispiece-secondary-action:hover,
+.book-frontispiece-secondary-action:focus-visible {
+  color: var(--foreground);
+  text-decoration-color: var(--organism-accent-strong);
+}
+
+.book-frontispiece-download-action {
+  color: color-mix(in oklch, var(--organism-accent) 46%, var(--muted-foreground));
+}
+
+.book-frontispiece-download-action svg {
+  color: var(--organism-accent-strong);
+}
+
+.book-frontispiece-download-action:hover,
+.book-frontispiece-download-action:focus-visible {
+  color: var(--foreground);
+}
+
 .book-digital-cover {
-  background: var(--background);
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      color-mix(in oklch, var(--book-dot-bright) 13%, transparent),
+      transparent 42%
+    ),
+    var(--background);
   box-shadow:
     -0.55rem 0.55rem 0 color-mix(in oklch, var(--foreground) 86%, var(--background)),
     -0.8rem 0.8rem 0 color-mix(in oklch, var(--foreground) 24%, transparent),
-    0 1.8rem 4rem color-mix(in oklch, var(--foreground) 22%, transparent);
+    0 1.8rem 4rem color-mix(in oklch, var(--foreground) 22%, transparent),
+    0 0 3rem color-mix(in oklch, var(--book-dot-bright) 10%, transparent);
 }
 
 .book-digital-cover::after {
@@ -3701,19 +4063,38 @@ html[data-motion="still"] .dot-emergence-signal {
   );
 }
 
-.book-reflection {
-  border-color: color-mix(in oklch, var(--book-gold) 24%, var(--book-hairline));
+.book-recall-note {
+  border-color: var(--book-hairline);
+  font-family: var(--book-reading-font);
+}
+
+.book-private-note {
   background: linear-gradient(
     90deg,
     transparent,
-    color-mix(in oklch, var(--book-gold) 5%, transparent),
+    color-mix(in oklch, var(--book-cinnabar) 4%, transparent) 30% 70%,
     transparent
   );
 }
 
-.book-recall-note {
-  border-color: var(--book-hairline);
-  font-family: var(--book-reading-font);
+.book-surface[data-book-focus="true"] {
+  padding-right: 0 !important;
+}
+
+.book-surface[data-book-focus="true"] .book-focus-hidden {
+  display: none !important;
+}
+
+.book-surface[data-book-focus="true"] .book-reading-grid {
+  padding-top: clamp(2.5rem, 7vh, 5.5rem);
+}
+
+.book-surface[data-book-focus="true"] .book-reader::before {
+  inset: -2rem -3rem -4rem;
+}
+
+.book-focus-exit {
+  border-radius: 0.35rem;
 }
 
 .book-concept {
@@ -3754,11 +4135,16 @@ html[data-motion="still"] .dot-emergence-signal {
      book's fixed cover identity. */
   font-family: var(--book-reading-font);
   font-variant-numeric: oldstyle-nums proportional-nums;
+  width: 100%;
   color: var(--book-ink, color-mix(in oklch, var(--foreground) 90%, transparent));
   hanging-punctuation: first last;
   /* A hairline of white under the glyphs reads as ink pressed into paper. On a
      dark ground the same rule is a halo around light text, so it is scoped. */
   text-shadow: 0 1px 0 color-mix(in oklch, white 20%, transparent);
+  --book-claim-observation: color-mix(in oklch, var(--book-verdigris) 76%, var(--book-ink));
+  --book-claim-model: color-mix(in oklch, var(--book-gold) 70%, var(--book-ink));
+  --book-claim-hypothesis: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-ink));
+  --book-claim-speculation: var(--book-muted);
 }
 
 .dark .book-prose {
@@ -3779,6 +4165,20 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose p,
+.book-prose li,
+.book-prose blockquote {
+  width: 100%;
+  max-width: none;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  overflow-wrap: break-word;
+  text-align: justify;
+  text-align-last: left;
+  text-justify: inter-word;
+}
+
+.book-prose p,
 .book-prose li {
   font-size: calc(1.125rem * var(--reading-scale, 1));
   /* 1.92 was set for Playfair's small x-height. Source Serif 4 sits taller on
@@ -3789,14 +4189,21 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-prose p {
   margin-bottom: 1.65rem;
-  max-width: 68ch;
-  text-wrap: pretty;
+  text-wrap: wrap;
 }
 
 .book-prose ul,
 .book-prose ol,
 .book-prose blockquote {
-  max-width: 68ch;
+  width: 100%;
+  max-width: none;
+}
+
+.book-prose > p:first-child,
+.book-prose > h2:first-child + p {
+  font-size: calc(1.25rem * var(--reading-scale, 1));
+  line-height: 1.62;
+  color: var(--book-ink);
 }
 
 .book-prose h1,
@@ -3805,36 +4212,72 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-prose h4 {
   font-family: var(--book-reading-heading-font);
   letter-spacing: 0;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .book-prose h2 {
+  position: relative;
   margin-top: 3.5rem;
   margin-bottom: 1.25rem;
+  border-top: 1px solid var(--book-hairline);
+  padding-top: 1.2rem;
   font-size: calc(1.6rem * var(--reading-scale, 1));
   font-weight: 650;
   line-height: 1.25;
   color: var(--book-ink);
 }
 
+.book-prose h2::before {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 3.75rem;
+  height: 2px;
+  background: var(--book-cinnabar);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.book-prose > h2:first-child {
+  margin-top: 0;
+}
+
 .book-prose h3 {
+  position: relative;
   margin-top: 2.75rem;
   margin-bottom: 1rem;
+  padding-top: 0.75rem;
   font-size: calc(1.2rem * var(--reading-scale, 1));
   font-weight: 650;
+  line-height: 1.35;
   color: var(--book-ink);
+}
+
+.book-prose h3::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1.5rem;
+  height: 1px;
+  background: color-mix(in oklch, var(--book-gold) 70%, var(--book-cinnabar));
+  content: "";
+  transform: translateX(-50%);
 }
 
 .book-prose h4 {
   margin-top: 2rem;
   margin-bottom: 0.85rem;
+  font-family: "JetBrains Mono", monospace;
   font-size: calc(1rem * var(--reading-scale, 1));
   font-weight: 650;
-  color: var(--book-ink);
+  color: color-mix(in oklch, var(--book-cinnabar) 64%, var(--book-ink));
 }
 
 .book-prose ul,
 .book-prose ol {
-  margin: 0 0 1.5rem 1.35rem;
+  margin: 0 0 1.65rem;
+  padding-left: 1.55rem;
 }
 
 .book-prose ul {
@@ -3850,26 +4293,254 @@ html[data-motion="still"] .dot-emergence-signal {
   padding-left: 0.25rem;
 }
 
-.book-prose strong {
-  color: var(--book-ink);
+.book-prose li::marker {
+  color: color-mix(in oklch, var(--book-cinnabar) 68%, var(--book-ink));
   font-weight: 700;
+}
+
+.book-prose strong {
+  color: color-mix(in oklch, var(--book-cinnabar) 28%, var(--book-ink));
+  font-weight: 700;
+}
+
+/* Book One has an epistemic grammar as well as a typographic hierarchy. These
+   treatments are intentionally sparse: they identify what kind of passage a
+   reader has reached without turning the manuscript into a collection of UI. */
+.book-prose .book-editorial-form {
+  position: relative;
+  display: block;
+  margin-block: 2.75rem;
+  border: 0;
+  border-block: 1px solid var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 74%, transparent);
+  padding: 1.4rem 1.25rem 1.5rem;
+}
+
+.book-prose .book-editorial-form > p {
+  margin-bottom: 0.8rem;
+  font-size: calc(1.08rem * var(--reading-scale, 1));
+  line-height: 1.6;
+}
+
+.book-prose .book-editorial-form > p:first-child {
+  margin: 0 0 1rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(0.66rem * var(--reading-scale, 1));
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--book-cinnabar);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.book-prose .book-editorial-form > p:last-child {
+  margin-bottom: 0;
+}
+
+.book-prose [data-editorial-form="epistemic-key"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--book-verdigris) 7%, var(--book-paper)),
+    color-mix(in oklch, var(--book-gold) 5%, var(--book-paper))
+  );
+}
+
+.book-prose [data-editorial-form="epistemic-key"] > p:first-child,
+.book-prose [data-editorial-form="epistemic-key"] > p:last-child {
+  grid-column: 1 / -1;
+}
+
+.book-prose [data-editorial-form="epistemic-key"] > p:nth-child(n + 2):not(:last-child) {
+  margin: 0;
+  border-top: 1px solid color-mix(in oklch, var(--book-hairline) 66%, transparent);
+  padding: 0.8rem 0.9rem 0.8rem 1rem;
+  font-family: var(--book-reading-heading-font);
+  font-size: calc(1rem * var(--reading-scale, 1));
+  font-weight: 650;
+  text-align: left;
+}
+
+.book-prose [data-editorial-form="epistemic-key"] > p:nth-child(2n + 3):not(:last-child) {
+  border-left: 1px solid color-mix(in oklch, var(--book-hairline) 66%, transparent);
+}
+
+.book-prose [data-editorial-form="epistemic-key"] > p:last-child {
+  border-top: 1px solid var(--book-hairline);
+  padding-top: 1rem;
+  color: var(--book-muted);
+  font-style: italic;
+  text-align: center;
+  text-align-last: center;
+}
+
+.book-prose [data-editorial-form="distinction"],
+.book-prose [data-editorial-form="cadence"] {
+  background: transparent;
+  padding-inline: clamp(1rem, 5vw, 3rem);
+}
+
+.book-prose [data-editorial-form="distinction"] > p:not(:first-child),
+.book-prose [data-editorial-form="cadence"] > p:not(:first-child) {
+  font-family: var(--book-reading-heading-font);
+  font-size: calc(1.15rem * var(--reading-scale, 1));
+  font-weight: 620;
+  text-align: center;
+  text-align-last: center;
+}
+
+.book-prose [data-editorial-form="cadence"] > p:not(:first-child) {
+  margin-bottom: 0.4rem;
+}
+
+.book-prose [data-editorial-form="plain-language"] {
+  border-block-color: color-mix(in oklch, var(--book-verdigris) 44%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-verdigris) 6%, transparent);
+}
+
+.book-prose [data-editorial-form="plain-language"] > p:not(:first-child) {
+  font-family: var(--book-reading-heading-font);
+  font-size: calc(1.18rem * var(--reading-scale, 1));
+  font-weight: 650;
+  text-align: center;
+  text-align-last: center;
+}
+
+.book-prose [data-editorial-form="open-question"] {
+  border-block-color: color-mix(in oklch, var(--book-gold) 54%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-gold) 6%, transparent);
+}
+
+.book-prose [data-editorial-form="open-question"] > p:not(:first-child) {
+  font-family: var(--book-reading-heading-font);
+  font-size: calc(1.12rem * var(--reading-scale, 1));
+  font-style: italic;
+}
+
+.book-prose [data-editorial-form="working-definition"] > p:not(:first-child),
+.book-prose [data-editorial-form="model-statement"] > p:not(:first-child),
+.book-prose [data-editorial-form="claim-boundary"] > p:not(:first-child) {
+  font-weight: 570;
+}
+
+.book-prose .book-inline-definition {
+  margin-block: 2rem;
+  border-left: 2px solid color-mix(in oklch, var(--book-verdigris) 56%, var(--book-hairline));
+  padding: 0.25rem 0 0.25rem 1.15rem;
+  color: color-mix(in oklch, var(--book-ink) 93%, var(--book-verdigris));
+}
+
+.book-prose .book-claim-ledger-label {
+  margin: 2.4rem 0 1rem;
+  border-top: 1px solid var(--book-hairline);
+  padding-top: 0.85rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(0.72rem * var(--reading-scale, 1));
+  font-weight: 650;
+  line-height: 1.5;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.book-prose .book-claim-ledger-label[data-claim-level] {
+  color: var(--book-claim-tone);
+}
+
+.book-prose .book-claim-ledger-label + ul {
+  border-left: 1px solid var(--book-hairline);
+  padding-left: 1.8rem;
+}
+
+.book-prose .book-claim-level-statement {
+  margin-bottom: 1rem;
+  border-left: 2px solid var(--book-hairline);
+  padding: 0.25rem 0 0.25rem 1.15rem;
+}
+
+.book-prose .book-claim-level-statement[data-claim-level] {
+  border-left-color: color-mix(in oklch, var(--book-claim-tone) 64%, var(--book-hairline));
+}
+
+.book-prose .book-theory-debt {
+  margin-block: 2rem;
+  border-block: 1px dashed var(--book-hairline);
+  padding-block: 1rem;
+  color: var(--book-muted);
+  font-size: calc(1.02rem * var(--reading-scale, 1));
+}
+
+.book-prose .book-theory-debt::before {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(0.62rem * var(--reading-scale, 1));
+  font-style: normal;
+  font-weight: 650;
+  color: var(--book-cinnabar);
+  content: "Open theoretical debt";
+  text-transform: uppercase;
 }
 
 .book-prose blockquote {
   margin-block: 2.25rem;
-  border-left-width: 1px;
-  border-left-color: color-mix(in oklch, var(--book-cinnabar) 48%, var(--book-hairline));
-  background: color-mix(in oklch, var(--book-gold) 5%, transparent);
-  padding: 1.25rem 1.5rem;
+  border-left-width: 2px;
+  border-left-color: color-mix(in oklch, var(--book-cinnabar) 64%, var(--book-hairline));
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--book-gold) 8%, transparent),
+    transparent 72%
+  );
+  padding: 1.35rem 1.5rem;
   font-size: calc(1.12rem * var(--reading-scale, 1));
+}
+
+.book-prose blockquote > :last-child {
+  margin-bottom: 0;
 }
 
 .book-prose .katex-display {
   margin-block: 2.25rem;
   overflow-x: auto;
-  border-block: 1px solid var(--border);
+  border-block: 1px solid var(--book-hairline);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--book-cinnabar) 5%, transparent) 22% 78%,
+    transparent
+  );
   padding-block: 1.5rem;
   font-family: "JetBrains Mono", monospace;
+}
+
+.book-prose--chapter > p:first-child::first-letter,
+.book-prose--chapter > h2:first-child + p::first-letter {
+  float: left;
+  margin: 0.12em 0.14em 0 0;
+  font-family: var(--book-reading-heading-font);
+  font-size: 3.15em;
+  font-weight: 650;
+  line-height: 0.76;
+  color: var(--book-cinnabar);
+  text-shadow: none;
+}
+
+.book-prose--references > p:first-child {
+  border-bottom: 1px solid var(--book-hairline);
+  padding-bottom: 1.5rem;
+  color: var(--book-muted);
+}
+
+.book-prose--references h3 {
+  border-top: 1px solid color-mix(in oklch, var(--book-hairline) 72%, transparent);
+  padding-left: 0;
+  padding-top: 1.1rem;
+  text-align: left;
+}
+
+.book-prose--references h3::before {
+  display: none;
 }
 
 .book-prose a[href*="#reference-"] {
@@ -3901,6 +4572,28 @@ html[data-motion="still"] .dot-emergence-signal {
   outline-offset: 2px;
 }
 
+.book-concept-marker {
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted color-mix(in oklch, var(--book-verdigris) 72%, var(--book-ink));
+  background: none;
+  font: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  cursor: help;
+  text-align: inherit;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.book-concept-marker:hover,
+.book-concept-marker:focus-visible {
+  border-bottom-color: var(--book-cinnabar);
+  color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-ink));
+  outline: none;
+}
+
 .book-reference-sheet {
   border-radius: 0.5rem;
   background-image: repeating-linear-gradient(
@@ -3924,10 +4617,56 @@ html[data-motion="still"] .dot-emergence-signal {
   text-underline-offset: 0.2em;
 }
 
+.book-concept-definition-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  font-weight: 650;
+  color: var(--book-cinnabar);
+  text-transform: uppercase;
+}
+
+.book-concept-definition-lead {
+  margin-top: 0.8rem;
+  font-family: var(--book-reading-heading-font);
+  font-size: calc(1.2rem * var(--reading-scale, 1));
+  font-weight: 620;
+  line-height: 1.5;
+  color: var(--book-ink);
+}
+
+.book-concept-definition-detail {
+  margin-top: 1.25rem;
+  font-family: var(--book-reading-font);
+  font-size: calc(0.98rem * var(--reading-scale, 1));
+  line-height: 1.7;
+  color: var(--book-muted);
+}
+
+.book-concept-definition-detail p + p {
+  margin-top: 1rem;
+}
+
+.book-concept-definition-boundary {
+  border-left: 2px solid var(--book-hairline);
+  padding-left: 1rem;
+}
+
+.book-concept-definition a {
+  color: color-mix(in oklch, var(--book-cinnabar) 66%, var(--book-ink));
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: var(--book-hairline);
+  text-underline-offset: 0.22em;
+}
+
 .book-prose a {
-  color: var(--foreground);
+  color: color-mix(in oklch, var(--book-cinnabar) 58%, var(--book-ink));
   text-decoration-line: underline;
-  text-decoration-color: var(--organism-accent-soft);
+  text-decoration-color: color-mix(in oklch, var(--book-cinnabar) 42%, transparent);
   text-underline-offset: 0.2em;
   transition: color 160ms ease;
 }
@@ -3938,7 +4677,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-prose hr {
   margin-block: 3rem;
-  border-color: var(--border);
+  border-color: var(--book-hairline);
 }
 
 @media (max-width: 640px) {
@@ -3946,9 +4685,17 @@ html[data-motion="still"] .dot-emergence-signal {
     background: linear-gradient(
       90deg,
       transparent 0 5%,
-      color-mix(in oklch, var(--background) 78%, transparent) 18% 82%,
+      color-mix(in oklch, var(--background) 90%, transparent) 18% 82%,
       transparent 95% 100%
     );
+  }
+
+  .book-reader::before {
+    inset: -1rem -1.25rem -2rem;
+  }
+
+  .book-model-movement-step:nth-last-child(2) {
+    border-bottom: 1px solid var(--book-hairline);
   }
 
   .dot-emergence-field .dot-emergence-desktop {
@@ -4086,9 +4833,37 @@ html[data-motion="still"] .dot-emergence-signal {
     line-height: 1.65;
   }
 
+  .book-prose > p:first-child,
+  .book-prose > h2:first-child + p {
+    font-size: calc(1.1rem * var(--reading-scale, 1));
+    line-height: 1.68;
+  }
+
   .book-prose h2 {
     margin-top: 2.75rem;
     font-size: calc(1.4rem * var(--reading-scale, 1));
+  }
+
+  .book-prose blockquote {
+    padding-inline: 1rem 0.5rem;
+  }
+
+  .book-prose [data-editorial-form="epistemic-key"] {
+    grid-template-columns: 1fr;
+  }
+
+  .book-prose [data-editorial-form="epistemic-key"] > p:nth-child(n + 2):not(:last-child) {
+    border-left: 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .book-model-movement-step:nth-child(odd) {
+    border-right: 1px solid var(--book-hairline);
+  }
+
+  .book-model-movement-step:nth-last-child(-n + 2) {
+    border-bottom: 0;
   }
 }
 
@@ -4108,11 +4883,112 @@ html[data-motion="still"] .dot-emergence-signal {
 
 @media (prefers-reduced-motion: reduce) {
   .dot-emergence-matrix .dot-emergence-fill,
-  .dot-emergence-local .dot-emergence-fill {
+  .dot-emergence-local .dot-emergence-fill,
+  .dot-emergence-life-thread {
     animation: none;
   }
 
   .dot-emergence-signal {
     display: none;
+  }
+}
+
+/* Printing a chapter.
+ *
+ * A reader who prints is taking the chapter off the site to annotate it on
+ * paper. Every screen affordance — the chrome, Minty, the reflection prompt,
+ * the living background — is meaningless there, and paper cannot follow a
+ * link or reflow around a page break. What has to survive is the text, its
+ * references, and which edition it came from. */
+@page {
+  margin: 2cm 1.8cm;
+}
+
+@media print {
+  html,
+  body,
+  .book-surface {
+    background: #fff !important;
+    color: #000;
+  }
+
+  /* The membrane, the appearance control, and any open panel (Minty, the
+     contents drawer) exist only while there is a screen to hold them. */
+  .organism-membrane,
+  [data-appearance-control],
+  [role="dialog"],
+  .book-reader-experience-loop {
+    display: none !important;
+  }
+
+  /* The page is inset for a docked Minty that print has just removed. */
+  .book-surface {
+    padding-right: 0 !important;
+  }
+
+  .book-reading-grid {
+    display: block;
+    max-width: none;
+    padding: 0;
+  }
+
+  .book-reader {
+    max-width: none;
+  }
+
+  .book-prose p,
+  .book-prose li {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    text-align: justify;
+  }
+
+  .book-reading-heading,
+  .book-reading-copy,
+  .book-chapter-header,
+  .book-prose h2,
+  .book-prose h3 {
+    color: #000;
+  }
+
+  /* On screen a reader can scroll back; on paper a heading orphaned at the
+     foot of a page, or an equation split across two, is simply lost. */
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  .katex-display,
+  blockquote,
+  figure,
+  table,
+  li {
+    break-inside: avoid;
+  }
+
+  .book-concept-marker {
+    border-bottom: 0;
+  }
+
+  .book-prose .book-editorial-form,
+  .book-prose .book-inline-definition,
+  .book-prose .book-claim-level-statement,
+  .book-prose .book-theory-debt {
+    background: transparent;
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  /* A cited source has to remain findable once the link is gone. */
+  .book-prose a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
   }
 }

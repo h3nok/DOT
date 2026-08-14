@@ -72,7 +72,7 @@ export default function PublicationStudioIndexPage() {
                     <span className="block truncate font-serif text-xl text-foreground">
                       {project.title}
                     </span>
-                    <span className="mt-1 block font-mono text-[10px] uppercase text-muted-foreground">
+                    <span className="mt-1 block font-mono dot-micro uppercase text-muted-foreground">
                       {project.type} · {project.status} · {project.visibility}
                     </span>
                   </span>

@@ -24,31 +24,32 @@ export function ReleasePanel({ project }: ReleasePanelProps) {
   };
 
   return (
-    <div className="flex h-full flex-col bg-background/50 border-l border-border/50">
-      <div className="p-4 border-b border-border/50">
-        <h3 className="font-semibold text-sm">Release Settings</h3>
+    <aside className="flex h-full flex-col bg-background">
+      <div className="border-b border-border/60 px-4 py-3">
+        <p className="font-mono dot-micro uppercase text-muted-foreground">Inspector</p>
+        <h3 className="mt-1 font-serif text-sm font-semibold">Release</h3>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Visibility</h4>
-          <div className="text-sm bg-accent/50 rounded-md p-3">
-            {project.visibility === "public" ? "Public - Visible to everyone" : "Private - Only you can see this"}
-          </div>
+          <h4 className="mb-2 font-mono uppercase text-muted-foreground">Visibility</h4>
+          <p className="border-block border-border/60 py-3 text-xs leading-relaxed">
+            {project.visibility === "public" ? "Public when a release is published." : "Private to your signed-in workspace."}
+          </p>
         </div>
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Publishing</h4>
+          <h4 className="mb-2 font-mono dot-micro uppercase text-muted-foreground">Publishing</h4>
           <button 
             onClick={handlePublish}
             disabled={isPublishing}
-            className="w-full flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="flex min-h-10 w-full items-center justify-center gap-2 bg-foreground px-4 text-xs font-semibold text-background transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {isPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Publish Release"}
           </button>
           <p className="text-xs text-muted-foreground mt-2">
-            Publishing will generate a new immutable manifest and make the latest drafts live.
+            Creates a new immutable edition from the latest saved revisions.
           </p>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

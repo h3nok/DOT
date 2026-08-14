@@ -77,7 +77,7 @@ export interface VitalSigns {
  * and stay out of the reading. None of them scatter arbitrary links across the
  * viewport — every mark has a rule behind it.
  */
-export type OrganismPreset = "field" | "aurora" | "neural" | "breath" | "ink" | "lattice" | "off";
+export type OrganismPreset = "field" | "aurora" | "dots" | "topology" | "ink" | "lattice" | "off";
 
 export interface OrganismPresetSpec {
   label: string;
@@ -95,56 +95,56 @@ export interface OrganismPresetSpec {
 
 export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
   field: {
-    label: "Field of Bits",
-    hint: "E itself — the stream of experience as a drift of bits, flipping as it passes.",
+    label: "Canvas",
+    hint: "The raw stream — bits of experience drifting and flipping.",
     density: 0.8,
     speed: 0.7,
     linkFactor: 0,
     alpha: 0.9,
   },
   aurora: {
-    label: "Aurora",
-    hint: "Soft drifting light. No structure — kindest to reading.",
+    label: "Painting",
+    hint: "Layered light — the inherited lens colouring experience.",
     density: 0,
-    speed: 0.6,
+    speed: 0.4,
     linkFactor: 0,
     alpha: 1,
   },
-  neural: {
-    label: "Neural",
-    hint: "A living network — nodes pulse and connections fire with activity.",
-    density: 0.6,
-    speed: 0.8,
-    linkFactor: 0.22,
-    alpha: 0.95,
+  dots: {
+    label: "Little c's",
+    hint: "Each dot is a centre of experience. You are one among many.",
+    density: 0.5,
+    speed: 0.2,
+    linkFactor: 0,
+    alpha: 0.9,
   },
-  breath: {
-    label: "Breath",
-    hint: "Slow concentric rings expand and fade, like the organism breathing.",
+  topology: {
+    label: "Topology",
+    hint: "Flowing contour lines — the landscape of experience.",
     density: 0,
-    speed: 0.35,
+    speed: 0.3,
     linkFactor: 0,
     alpha: 0.85,
   },
   ink: {
-    label: "Ink",
-    hint: "Calligraphic strokes drift and dissolve — writing as atmosphere.",
+    label: "Intent",
+    hint: "Calligraphic strokes — directed action dissolving.",
     density: 0,
     speed: 0.5,
     linkFactor: 0,
     alpha: 0.8,
   },
   lattice: {
-    label: "Lattice",
-    hint: "The graph substrate: an even grid, gently warped.",
+    label: "Frame",
+    hint: "The Reality Frame — a grid gently warped.",
     density: 1,
     speed: 0.75,
     linkFactor: 0,
     alpha: 0.9,
   },
   off: {
-    label: "Off",
-    hint: "A plain background. The colour physiology stays.",
+    label: "Still",
+    hint: "Plain ground. The colour stays.",
     density: 0,
     speed: 0,
     linkFactor: 0,
@@ -154,10 +154,12 @@ export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
 
 /** Fields renamed in the background redesign; old saved configs still resolve. */
 const LEGACY_PRESETS: Record<string, OrganismPreset> = {
-  plexus: "neural",
-  cosmos: "neural",
-  constellation: "neural",
+  plexus: "aurora",
+  cosmos: "aurora",
+  constellation: "aurora",
   calm: "aurora",
+  breath: "topology",
+  neural: "aurora",
 };
 
 export function resolvePreset(value: unknown): OrganismPreset {
@@ -172,6 +174,16 @@ export type OrganismTint = "auto" | number;
 /** Reading surface typography the member owns. */
 export type ReadingFont = "serif" | "sans";
 
+/**
+ * Line height on reading surfaces. Not a cosmetic preference: leading is what
+ * decides whether a long paragraph is a wall or a sequence of lines the eye can
+ * return to, and the right answer differs by person, screen, and time of night.
+ */
+export type ReadingLeading = "tight" | "standard" | "loose";
+
+/** Ragged-right or justified prose, as the reader prefers to be read to. */
+export type ReadingAlign = "left" | "justify";
+
 /** Accessible contrast treatment across interface and reading surfaces. */
 export type AppearanceContrast = "standard" | "high";
 
@@ -180,7 +192,7 @@ export type AppearanceContrast = "standard" | "high";
  * Each style applies a CSS class to <html> that organism.css uses to restyle
  * shared surface tokens (border-radius, backdrop, shadow, border treatment).
  */
-export type UIStyle = "default" | "neural" | "minimal" | "organic";
+export type UIStyle = "default" | "neural" | "minimal" | "organic" | "editorial" | "cinematic";
 
 export function resolveContrast(value: unknown): AppearanceContrast {
   return value === "high" ? "high" : "standard";
@@ -209,6 +221,10 @@ export interface OrganismConfig {
   readingFont: ReadingFont;
   /** Body-text scale multiplier on reading surfaces [0.9..1.3]. */
   readingScale: number;
+  /** Line height on reading surfaces. */
+  readingLeading: ReadingLeading;
+  /** Ragged-right or justified prose. */
+  readingAlign: ReadingAlign;
 }
 
 export interface OrganismContextValue {
@@ -260,6 +276,8 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   uiStyle: "default",
   readingFont: "serif",
   readingScale: 1,
+  readingLeading: "standard",
+  readingAlign: "left",
 };
 
 export const ORGANISM_STORAGE_KEY = "dot_organism";

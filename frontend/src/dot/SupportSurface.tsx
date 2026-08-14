@@ -198,7 +198,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
             Support never changes what reaches you. It buys no access, no standing, and no
             position in anything you are shown — reading stays free and complete either way.
           </p>
-          <p className="text-[11px] leading-5 text-muted-foreground/80">
+          <p className="dot-meta leading-5 text-muted-foreground/80">
             Stripe hosts the checkout, sets the amount, and issues the receipt. There is no
             recurring charge and no public list of who gave.
           </p>
@@ -309,7 +309,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
                 >
                   {tier.id === "seed" && <Coffee className="mb-3 h-4 w-4" aria-hidden="true" />}
                   <span className="text-xs font-semibold text-foreground">{copy.name}</span>
-                  <span className="mt-1 flex-1 text-[10px] leading-relaxed text-muted-foreground">
+                  <span className="mt-1 flex-1 dot-micro leading-relaxed text-muted-foreground">
                     {copy.line}
                   </span>
                   <span className="mt-2 font-mono text-xs text-foreground">
@@ -349,7 +349,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         </button>
       </div>
 
-      <p className="mt-4 text-[11px] leading-5 text-muted-foreground/80">
+      <p className="dot-meta mt-4 leading-5 text-muted-foreground/80">
         Stripe hosts checkout and issues the receipt. DOT keeps the verified amount, purpose,
         status, and only a one-way hash of the receipt email.
       </p>

@@ -72,9 +72,11 @@ DOT uses **Reality Frame**, or RF, for the generator and rule structure that mak
 
 The distinction is simple:
 
-The Reality Frame is the wider environment and its rules.
-
-The Reality Stream is what reaches the experiencer from moment to moment.
+> **Keep this distinction**
+>
+> The Reality Frame is the wider environment and its rules.
+>
+> The Reality Stream is what reaches the experiencer from moment to moment.
 
 The operational relationship can be expressed without claiming literal software:
 
@@ -160,7 +162,9 @@ A child cannot read. The same child can later interpret a book. A beginner strug
 
 That is an important definition of freedom in DOT:
 
-Freedom is not escape from constraint. It is increasing access to meaningful possibility within constraint.
+> **Working definition**
+>
+> Freedom is not escape from constraint. It is increasing access to meaningful possibility within constraint.
 
 Agency mechanics are where PuE becomes lived friction. Learning costs effort. Avoidance can preserve a pattern for a time while shrinking future choice. Cooperation can create capacities unavailable to isolated individuals. Domination may widen one person’s short-term control while degrading trust and reducing the long-term decision-space of the wider system.
 
@@ -200,9 +204,11 @@ Little c does not push atoms directly. It does not override world invariants. In
 
 A person standing on train tracks cannot intend the train’s momentum away. The person can intend to move, and the body can use muscle, balance, and available space to leave the tracks. The first request would require the local observer to suspend the Frame’s stable constraints. The second changes the trajectory through agency mechanics.
 
-Intent does not command the world.
-
-It commits the person to a lawful move within it.
+> **Keep this distinction**
+>
+> Intent does not command the world.
+>
+> It commits the person to a lawful move within it.
 
 ## Thoughts Are Pre-Intent Drafts
 
@@ -218,11 +224,13 @@ This is why personality is neither a fixed essence nor a voluntary invention. Mu
 
 Actions remain morally consequential because they affect others and alter the shared world. Intent matters because it reveals the direction being practiced on the Canvas. Two people may perform similar acts under different Intent, and sincere Intent may still produce harmful consequences through fear, ignorance, timing, or lack of skill.
 
-Outcome determines what must be repaired in the world.
-
-Intent helps determine what is being formed in the person.
-
-Neither erases the other.
+> **Keep this distinction**
+>
+> Outcome determines what must be repaired in the world.
+>
+> Intent helps determine what is being formed in the person.
+>
+> Neither erases the other.
 
 ## Difference Expands the Model
 

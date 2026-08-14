@@ -203,7 +203,8 @@ async def set_section_body(
 ) -> app.db.models.PublicationSection:
     """Store draft body text in the object store and point the section at it."""
     section: app.db.models.PublicationSection = await get_section(session, owner, section_id)
-    key: str = f"drafts/{section.project_id}/sections/{section.id}.md"
+    revision_id: str = app.db.models.make_id("rev")
+    key: str = f"drafts/{section.project_id}/sections/{section.id}/{revision_id}.md"
     try:
         await app.integrations.object_store.get_object_store().put_bytes(
             key, body_text.encode("utf-8")
@@ -216,6 +217,7 @@ async def set_section_body(
     section.body_ref = key
     session.add(
         app.db.models.PublicationRevision(
+            id=revision_id,
             section_id=section.id,
             editor_id=owner.actor_id,
             body_ref=key,
@@ -225,6 +227,29 @@ async def set_section_body(
     await session.commit()
     await session.refresh(section)
     return section
+
+
+async def get_section_body(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    owner: app.auth.dependencies.OwnerContext,
+    section_id: str,
+) -> str:
+    """Resolve one owner's mutable draft without exposing it publicly."""
+    section: app.db.models.PublicationSection = await get_section(session, owner, section_id)
+    if not section.body_ref:
+        return ""
+    try:
+        return await _resolve_section_body(section)
+    except app.integrations.object_store.ObjectNotFoundError as exc:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_404_NOT_FOUND,
+            detail="Section body not found.",
+        ) from exc
+    except app.integrations.object_store.ObjectStoreError as exc:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Section body could not be read.",
+        ) from exc
 
 
 async def validate_project(

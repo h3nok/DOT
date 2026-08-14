@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-  <!-- Clean white background -->
-  <rect width="16" height="16" fill="#ffffff"/>
-  
-  <!-- Simple red dot - very small and clean -->
-  <circle cx="8" cy="8" r="2.5" fill="#dc2626"/>
-  <circle cx="8" cy="8" r="1" fill="#ffffff" opacity="0.7"/>
+  <rect width="16" height="16" rx="3" fill="#fafaf9"/>
+  <!-- Simplified mark at 16px: outer arc + core -->
+  <circle cx="8" cy="8" r="6.5" fill="none" stroke="#8b7355" stroke-width="0.6" opacity="0.4"/>
+  <path d="M 8 2.5 C 11 2.5 13.5 5 13.5 8 C 13.5 11 11 13.5 8 13.5" fill="none" stroke="#6b5b3e" stroke-width="0.8" stroke-linecap="round" opacity="0.6"/>
+  <circle cx="8" cy="8" r="2" fill="#6b5b3e"/>
+  <circle cx="8" cy="8" r="0.8" fill="#fafaf9" opacity="0.7"/>
 </svg>

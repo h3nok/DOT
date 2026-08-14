@@ -1,3 +1,8 @@
+import type {
+  ReaderConceptDefinition,
+  ReaderReference,
+} from "../../attention-os/reader/readerTypes";
+
 export type BookSectionKind = "preface" | "chapter" | "references";
 
 export interface BookReleaseSection {
@@ -56,15 +61,22 @@ export interface DotBookOneManifest {
   sections: BookReleaseSection[];
 }
 
-export interface BookReference {
-  number: number;
-  markdown: string;
-}
+export type BookReference = ReaderReference;
+export type BookConceptDefinition = ReaderConceptDefinition;
 
 export const DOT_BOOK_ONE_ROUTE = "/book/digital-organism-theory";
 
+/**
+ * Book One is also a release in the generic publication reader
+ * (`/read/:ownerId/:slug`). It has one public home — this route — and the
+ * generic reader redirects here, so a shared link, a search result, and a
+ * citation all name the same URL.
+ */
+export const DOT_BOOK_ONE_OWNER = "henok";
+export const DOT_BOOK_ONE_SLUG = "digital-organism-theory";
+
 const DOT_BOOK_ONE_ASSET_ROOT =
-  "publications/henok/digital-organism-theory/v2";
+  `publications/${DOT_BOOK_ONE_OWNER}/${DOT_BOOK_ONE_SLUG}/v2`;
 
 const publicAssetUrl = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith("/")

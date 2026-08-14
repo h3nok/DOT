@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
   ArrowLeft,
@@ -10,10 +10,19 @@ import {
   List,
   Loader2,
   Lock,
+  Maximize2,
+  Minimize2,
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import PrivateReaderNote from "../../attention-os/reader/PrivateReaderNote";
+import { useReadingFocus } from "../../attention-os/reader/useReadingFocus";
 import { DotWordmark } from "../../shared/DotWordmark";
+import {
+  DOT_BOOK_ONE_OWNER,
+  DOT_BOOK_ONE_ROUTE,
+  DOT_BOOK_ONE_SLUG,
+} from "../../content/publications/dotBookOne";
 import {
   fetchPublicDeliveryManifest,
   fetchSectionBody,
@@ -108,11 +117,11 @@ function ProvenancePanel({ manifest }: { manifest: Manifest }) {
     <div className="rounded-2xl border border-border/50 bg-foreground/[0.02] p-5">
       <div className="flex items-center gap-2 text-muted-foreground">
         <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
+        <span className="font-mono dot-micro uppercase tracking-[0.2em]">
           Sealed release
         </span>
       </div>
-      <dl className="mt-4 space-y-2 font-mono text-[11px] text-muted-foreground">
+      <dl className="mt-4 space-y-2 font-mono dot-meta text-muted-foreground">
         <div className="flex justify-between gap-4">
           <dt>Version</dt>
           <dd className="text-foreground">v{release.version}</dd>
@@ -132,7 +141,7 @@ function ProvenancePanel({ manifest }: { manifest: Manifest }) {
           </div>
         )}
       </dl>
-      <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
+      <p className="mt-4 dot-meta leading-relaxed text-muted-foreground">
         This edition is immutable. Once published, its text cannot change —
         revisions only ever appear as a new, clearly numbered version.
       </p>
@@ -184,7 +193,7 @@ function ReaderContents({
                       }`}
                     />
                     <span className="min-w-0">
-                      <span className="block font-mono text-[9px] uppercase tracking-[0.16em] opacity-70">
+                      <span className="dot-micro block font-mono uppercase tracking-[0.16em] opacity-70">
                         {sectionLabel(section, runningIndex)}
                       </span>
                       <span className="mt-0.5 block text-sm font-medium leading-snug">
@@ -216,7 +225,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
       <section className="grid gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-20">
         <div>
           {meta?.series_title && (
-            <p className="mb-6 font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+            <p className="mb-6 font-mono dot-micro uppercase tracking-[0.24em] text-muted-foreground">
               {meta.series_title}
             </p>
           )}
@@ -235,7 +244,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
           )}
 
           {extent && (
-            <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] text-muted-foreground">
+            <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono dot-meta text-muted-foreground">
               {extent.chapters != null && (
                 <div>
                   <dt className="uppercase tracking-[0.16em] opacity-70">
@@ -284,7 +293,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
               {claims.map((level) => (
                 <span
                   key={level}
-                  className="rounded-full border border-border/50 px-2.5 py-1 font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground"
+                  className="dot-micro rounded-full border border-border/50 px-2.5 py-1 font-mono uppercase tracking-[0.14em] text-muted-foreground"
                 >
                   {level}
                 </span>
@@ -301,7 +310,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           )}
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="mt-4 font-mono dot-micro uppercase tracking-[0.16em] text-muted-foreground">
             Finite reading path · nothing plays automatically
           </p>
         </div>
@@ -320,11 +329,13 @@ function SectionReader({
   section,
   content,
   onOpenContents,
+  focusMode,
 }: {
   manifest: Manifest;
   section: Section;
   content: string;
   onOpenContents: () => void;
+  focusMode: boolean;
 }) {
   const index = manifest.sections.findIndex((c) => c.id === section.id);
   const previous = index > 0 ? manifest.sections[index - 1] : null;
@@ -337,8 +348,14 @@ function SectionReader({
   const minutes = section.meta?.reading_time_minutes;
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 pb-24 pt-10 sm:px-8 lg:grid-cols-[260px_minmax(0,760px)] lg:justify-center lg:gap-16">
-      <aside className="hidden lg:block">
+    <div
+      className={`mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-16 ${
+        focusMode
+          ? "max-w-[56rem] lg:grid-cols-[minmax(0,760px)]"
+          : "max-w-7xl lg:grid-cols-[260px_minmax(0,760px)]"
+      }`}
+    >
+      <aside className="book-focus-hidden hidden lg:block">
         <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
           <Link
             to={bookRoute(manifest)}
@@ -358,14 +375,14 @@ function SectionReader({
         <button
           type="button"
           onClick={onOpenContents}
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-border/60 px-3.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+          className="book-focus-hidden mb-8 inline-flex items-center gap-2 border border-border/60 px-3.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground lg:hidden"
         >
           <List className="h-3.5 w-3.5" />
           Contents
         </button>
 
-        <header className="border-b border-border/60 pb-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+        <header className="border-b border-border/60 pb-10 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <p className="dot-label">
               {sectionLabel(section, index)}
               {section.meta?.part ? ` · ${section.meta.part}` : ""}
@@ -376,11 +393,11 @@ function SectionReader({
               </p>
             )}
           </div>
-          <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
+          <h1 className="mx-auto mt-5 max-w-2xl font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
             {section.title}
           </h1>
           {section.meta?.subtitle && (
-            <p className="mt-4 font-serif text-xl italic leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-4 max-w-2xl font-serif text-xl italic leading-relaxed text-muted-foreground">
               {section.meta.subtitle}
             </p>
           )}
@@ -388,7 +405,7 @@ function SectionReader({
 
         <BookMarkdown content={content} />
 
-        <footer className="border-t border-border/60 pt-8">
+        <footer className="book-focus-hidden border-t border-border/60 pt-8">
           {isLast && (
             <div className="mb-8 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.03] p-6">
               <div className="flex items-start gap-3">
@@ -408,6 +425,12 @@ function SectionReader({
             </div>
           )}
 
+          <div className="mb-10">
+            <PrivateReaderNote
+              storageId={`${manifest.project.owner_id}.${manifest.project.slug}.v${manifest.release.version}.${sectionSlugOf(section)}`}
+            />
+          </div>
+
           <div className="flex items-stretch justify-between gap-4">
             {previous ? (
               <Link
@@ -416,7 +439,7 @@ function SectionReader({
               >
                 <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-1" />
                 <span>
-                  <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="dot-micro block font-mono uppercase tracking-[0.14em] text-muted-foreground">
                     Previous
                   </span>
                   <span className="mt-1 block text-sm font-medium leading-tight text-foreground">
@@ -434,7 +457,7 @@ function SectionReader({
                 className="group flex max-w-[48%] items-center justify-end gap-3 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.04] px-4 py-4 text-right transition-colors hover:bg-foreground/[0.08]"
               >
                 <span>
-                  <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="block font-mono dot-micro uppercase tracking-[0.14em] text-muted-foreground">
                     Continue
                   </span>
                   <span className="mt-1 block text-sm font-semibold leading-tight text-foreground">
@@ -454,7 +477,7 @@ function SectionReader({
             )}
           </div>
 
-          <p className="mt-10 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">
+          <p className="dot-micro mt-10 flex items-center gap-2 font-mono uppercase tracking-[0.16em] text-muted-foreground/60">
             <Lock className="h-3 w-3" aria-hidden />
             v{manifest.release.version} · immutable release · published{" "}
             {manifest.release.published_at
@@ -467,7 +490,32 @@ function SectionReader({
   );
 }
 
-export default function PublicationReaderPage() {
+/**
+ * Book One reaches its readers through its own reader at `/book/...`, which is
+ * where every share link, citation, and search result points. Serving it here
+ * as well would split that audience across two URLs for one text, so this
+ * route hands the reader over instead of rendering a second copy.
+ */
+export default function PublicationReaderRoute() {
+  const { ownerId, slug, sectionSlug } = useParams<{
+    ownerId: string;
+    slug: string;
+    sectionSlug?: string;
+  }>();
+
+  if (ownerId === DOT_BOOK_ONE_OWNER && slug === DOT_BOOK_ONE_SLUG) {
+    return (
+      <Navigate
+        replace
+        to={sectionSlug ? `${DOT_BOOK_ONE_ROUTE}/${sectionSlug}` : DOT_BOOK_ONE_ROUTE}
+      />
+    );
+  }
+
+  return <PublicationReaderPage />;
+}
+
+function PublicationReaderPage() {
   const { ownerId, slug, sectionSlug } = useParams<{
     ownerId: string;
     slug: string;
@@ -480,6 +528,7 @@ export default function PublicationReaderPage() {
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contentsOpen, setContentsOpen] = useState(false);
+  const readingFocus = useReadingFocus();
 
   const section = useMemo(
     () =>
@@ -604,7 +653,10 @@ export default function PublicationReaderPage() {
     : `${manifest.project.title}${meta?.subtitle ? ` — ${meta.subtitle}` : ""}. An immutable v${manifest.release.version} edition.`;
 
   return (
-    <div className="book-surface min-h-screen bg-background text-foreground">
+    <div
+      className="book-surface min-h-screen bg-background text-foreground"
+      data-book-focus={readingFocus.active ? "true" : "false"}
+    >
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={description} />
@@ -635,7 +687,7 @@ export default function PublicationReaderPage() {
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
+      <header className="book-focus-hidden sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
@@ -652,19 +704,33 @@ export default function PublicationReaderPage() {
             <span className="block truncate font-serif text-sm font-semibold text-foreground">
               {manifest.project.title}
             </span>
-            <span className="block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="block font-mono dot-micro uppercase tracking-[0.16em] text-muted-foreground">
               {meta?.label ?? `Version ${manifest.release.version}`}
             </span>
           </Link>
           {section ? (
-            <button
-              type="button"
-              onClick={() => setContentsOpen(true)}
-              className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
-            >
-              <List className="h-3.5 w-3.5" />
-              Contents
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setContentsOpen(false);
+                  void readingFocus.enter();
+                }}
+                title="Read in fullscreen focus mode"
+                aria-label="Enter fullscreen reading mode"
+                className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentsOpen(true)}
+                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
+              >
+                <List className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Contents</span>
+              </button>
+            </div>
           ) : (
             <span className="w-14" aria-hidden="true" />
           )}
@@ -677,10 +743,23 @@ export default function PublicationReaderPage() {
           section={section}
           content={content}
           onOpenContents={() => setContentsOpen(true)}
+          focusMode={readingFocus.active}
         />
       ) : (
         <ReaderLanding manifest={manifest} />
       )}
+
+      {readingFocus.active && section ? (
+        <button
+          type="button"
+          onClick={() => void readingFocus.exit()}
+          title="Leave fullscreen reading mode"
+          aria-label="Exit fullscreen reading mode"
+          className="book-focus-exit fixed right-4 top-4 z-50 inline-flex h-10 w-10 items-center justify-center border border-[var(--book-hairline)] bg-background/90 text-muted-foreground shadow-sm backdrop-blur-md transition-colors hover:text-foreground sm:right-6 sm:top-6"
+        >
+          <Minimize2 className="h-4 w-4" aria-hidden="true" />
+        </button>
+      ) : null}
 
       {contentsOpen && (
         <div

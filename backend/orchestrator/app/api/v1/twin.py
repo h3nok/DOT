@@ -43,6 +43,9 @@ async def ask_public(
             question=payload.question,
             owner_id=payload.owner_id,
             lens=payload.lens,
+            # Where the reader is standing travels with the question; without it
+            # "what is this about?" reaches retrieval with nothing to search for.
+            reading=payload.reading,
         ),
         history=[(turn.role, turn.content) for turn in payload.history],
     )
@@ -68,6 +71,7 @@ async def ask_public_stream(
         question=payload.question,
         owner_id=payload.owner_id,
         lens=payload.lens,
+        reading=payload.reading,
     )
     history = [(turn.role, turn.content) for turn in payload.history]
 

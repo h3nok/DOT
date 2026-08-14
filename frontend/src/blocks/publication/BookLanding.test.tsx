@@ -60,15 +60,22 @@ describe("BookLanding", () => {
       </MemoryRouter>,
     );
 
+    // The cover states the loop, then its posture, then one door.
+    expect(screen.getByText(/What you do meets consequence/)).toBeInTheDocument();
     expect(
-      screen.getByText(/DOT models consciousness as a living process/),
+      screen.getByText(/A construction, not a revelation/),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Read the preface/ })).toHaveAttribute(
-      "href",
-      "/book/digital-organism-theory/preface",
-    );
-    expect(screen.getByText("Four levels of certainty. Kept separate.")).toBeInTheDocument();
-    expect(screen.getByText("Start with your life, or start with the architecture.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Begin with the preface/ }))
+      .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+    expect(screen.getByRole("link", { name: /Begin with the preface/ }))
+      .toHaveClass("book-frontispiece-action");
+    expect(screen.getByRole("link", { name: /choose another entrance/i }))
+      .toHaveClass("book-frontispiece-secondary-action");
+    expect(screen.getByRole("link", { name: /PDF/ }))
+      .toHaveClass("book-frontispiece-download-action");
+    expect(screen.getByText("A life is shaped, acts, and is shaped again.")).toBeInTheDocument();
+    expect(screen.getByText("Not every claim carries the same weight.")).toBeInTheDocument();
+    expect(screen.getByText("One book. Two honest ways in.")).toBeInTheDocument();
     expect(screen.getByText("Contents")).toBeInTheDocument();
     expect(screen.queryByText("A reader's method")).not.toBeInTheDocument();
     expect(screen.queryByText("An atlas of the argument")).not.toBeInTheDocument();

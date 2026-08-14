@@ -8,25 +8,36 @@
  *
  * The fingerprint says: this place is held by someone. One Self, distinct,
  * keeping its form.
+ *
+ * `thinking` is the same mark working, not a second mark: the arcs sweep, the
+ * field and inner ring breathe, the core pulses. Every radius, stroke, and
+ * colour is the settled logo's, and nothing is added while it runs — Minty's
+ * working state has to *be* DOT's identity rather than resemble it. The motion
+ * lives in `index.css` so the mark stays a drawing.
  */
 
 interface NucleusMarkProps {
   /** Diameter in px. The mark scales crisply to any size. */
   size?: number;
+  /** The mark at work: its own parts in motion while an answer is forming. */
+  thinking?: boolean;
   reducedMotion?: boolean;
   className?: string;
 }
 
 export const NucleusMark: React.FC<NucleusMarkProps> = ({
   size = 120,
+  thinking = false,
   reducedMotion = false,
   className,
 }) => {
   const classes = ["nucleus-mark", className].filter(Boolean).join(" ");
+  const working = thinking && !reducedMotion;
 
   return (
     <span
       className={classes}
+      data-thinking={working ? "true" : undefined}
       style={{
         display: "inline-block",
         width: size,
@@ -45,6 +56,7 @@ export const NucleusMark: React.FC<NucleusMarkProps> = ({
         aria-hidden="true"
       >
         <circle
+          className="nucleus-mark-field"
           cx={50}
           cy={50}
           r={44}
@@ -61,23 +73,26 @@ export const NucleusMark: React.FC<NucleusMarkProps> = ({
           opacity={0.62}
           vectorEffect="non-scaling-stroke"
         />
-        <path
-          d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84"
-          stroke="var(--organism-accent-strong)"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          opacity={0.9}
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16"
-          stroke="var(--organism-accent)"
-          strokeWidth={1.8}
-          strokeLinecap="round"
-          opacity={0.56}
-          vectorEffect="non-scaling-stroke"
-        />
+        <g className="nucleus-mark-arcs">
+          <path
+            d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84"
+            stroke="var(--organism-accent-strong)"
+            strokeWidth={2.25}
+            strokeLinecap="round"
+            opacity={0.9}
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16"
+            stroke="var(--organism-accent)"
+            strokeWidth={1.8}
+            strokeLinecap="round"
+            opacity={0.56}
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
         <circle
+          className="nucleus-mark-inner"
           cx={50}
           cy={50}
           r={15}
@@ -86,7 +101,13 @@ export const NucleusMark: React.FC<NucleusMarkProps> = ({
           opacity={0.36}
           vectorEffect="non-scaling-stroke"
         />
-        <circle cx={50} cy={50} r={7.5} fill="var(--organism-accent-strong)" />
+        <circle
+          className="nucleus-mark-core"
+          cx={50}
+          cy={50}
+          r={7.5}
+          fill="var(--organism-accent-strong)"
+        />
         <circle cx={50} cy={50} r={3.25} fill="var(--background, white)" opacity={0.72} />
       </svg>
     </span>

@@ -44,27 +44,29 @@ export default function BookAccessPage() {
         <div className="book-digital-cover relative aspect-[3/4] w-[min(18rem,72vw)] overflow-hidden border border-[var(--book-hairline)] text-foreground shadow-2xl">
           <DotEmergenceField variant="cover" className="absolute inset-0" />
           <span className="book-digital-cover-wash absolute inset-0" aria-hidden="true" />
-          <div className="relative flex h-full flex-col items-center px-6 pb-8 pt-24">
-            <p className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--book-muted)]">
+          <div className="dot-meta relative flex h-full flex-col items-center px-6 pb-20 pt-20">
+            <p className="mt-8 font-mono dot-meta uppercase tracking-[0.14em] text-[var(--book-muted)]">
               Digital Organism Theory · Book One
             </p>
-            <h1 className="mt-5 font-serif text-3xl font-semibold leading-tight">
+            <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight">
               Consciousness:
               <span className="book-digital-subtitle mt-2 block text-sm font-medium text-[var(--book-muted)]">
                 A Digital Organism
               </span>
             </h1>
-            <span className="mt-auto h-px w-16 bg-foreground/40" aria-hidden="true" />
-            <p className="mt-5 font-serif text-sm font-semibold">
-              Henok Ghebrechristos
-            </p>
-            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--book-muted)]">
-              Digital Edition · Version 2
-            </p>
+            <div className="dot-meta book-cover-colophon mt-auto w-full">
+              <span className="mx-auto block h-px w-16 bg-foreground/40" aria-hidden="true" />
+              <p className="mt-4 font-serif text-sm font-semibold">
+                Henok Ghebrechristos
+              </p>
+              <p className="mt-2 font-mono dot-micro uppercase tracking-[0.12em] text-[var(--book-muted)]">
+                Digital Edition · Version 2
+              </p>
+            </div>
           </div>
         </div>
 
-        <p className="mt-12 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--book-cinnabar)]">
+        <p className="mt-12 font-mono uppercase tracking-[0.2em] text-[var(--book-cinnabar)]">
           One complete digital edition
         </p>
         <h2 className="book-reading-heading mt-5 max-w-3xl text-balance text-4xl font-semibold leading-tight sm:text-5xl">

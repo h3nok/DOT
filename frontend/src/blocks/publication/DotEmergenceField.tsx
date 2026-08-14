@@ -118,7 +118,9 @@ function Stage({
 
 function LocalProcess({ x, y, active }: { x: number; y: number; active: boolean }) {
   return (
-    <g className="dot-emergence-local">
+    <g
+      className={`dot-emergence-local${active ? " dot-emergence-local-active" : ""}`}
+    >
       <rect x={x - 18} y={y - 18} width="36" height="36" rx="8" />
       <circle cx={x} cy={y} r="4.5" className={active ? "dot-emergence-fill" : undefined} />
       <path d={`M${x - 26} ${y} H${x - 18} M${x + 18} ${y} H${x + 26}`} />
@@ -156,7 +158,9 @@ function HeroField({ id }: { id: string }) {
       <FieldLabels />
 
       <g className="dot-emergence-cascade">
+        <circle cx="600" cy="246" r="78" className="dot-emergence-aura" />
         <path d="M600 52 V282" className="dot-emergence-spine" />
+        <path d="M600 52 V282" className="dot-emergence-life-thread" />
         <circle cx="600" cy="52" r="6" className="dot-emergence-seed" />
         <Stage x={600} y={98} size={30} generation={1} />
         <Stage x={600} y={160} size={54} generation={2} />
@@ -238,6 +242,13 @@ function CompactField({ id, cover }: { id: string; cover: boolean }) {
       <rect width={width} height={height} fill={`url(#${id})`} />
 
       <path d={`M${center} 34 V${frameTop}`} className="dot-emergence-spine" />
+      <circle
+        cx={center}
+        cy="204"
+        r={cover ? 62 : 68}
+        className="dot-emergence-aura"
+      />
+      <path d={`M${center} 34 V${frameTop}`} className="dot-emergence-life-thread" />
       <circle cx={center} cy="42" r={cover ? 5 : 6} className="dot-emergence-seed" />
       <Stage x={center} y={86} size={cover ? 26 : 28} generation={1} />
       <Stage x={center} y={138} size={cover ? 46 : 50} generation={2} />
@@ -271,6 +282,15 @@ function CompactField({ id, cover }: { id: string; cover: boolean }) {
         <rect x={width - 20} y="443" width="10" height="10" rx="1.5" />
       </g>
 
+      <g className="dot-emergence-return">
+        <path
+          d={`M${width - 6} 448 H${width - 2} V${frameTop - 18} H${center + 52} V204 H${
+            center + 39
+          }`}
+        />
+        <path d={`M${center + 47} 196 L${center + 39} 204 L${center + 47} 212`} />
+      </g>
+
       <Memory x={center - 110} y={frameBottom - 36} />
       <g className="dot-emergence-distribution">
         <path d={`M${center} ${frameBottom} V${frameBottom + 18} H${locals[0]} M${center} ${
@@ -298,6 +318,7 @@ export default function DotEmergenceField({
       className={["dot-emergence-field", `dot-emergence-field--${variant}`, className]
         .filter(Boolean)
         .join(" ")}
+      data-emergence-variant={variant}
       aria-hidden="true"
     >
       {variant === "hero" ? (

@@ -10,7 +10,7 @@ import tseslint from 'typescript-eslint'
  * being switched off.
  */
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', '**/*.d.ts', 'public/**'] },
+  { ignores: ['dist', 'coverage', '.vite-cache/**', '**/*.d.ts', 'public/**'] },
 
   {
     files: ['**/*.{js,jsx}'],

@@ -310,6 +310,21 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
   box-shadow: 0 16px 48px -16px rgb(0 0 0 / 0.4);
 }
 
+/* --- Living surface: cards that respond to the organism --------------- */
+.dot-surface {
+  transition: border-color 1.2s ease, box-shadow 1.2s ease;
+}
+html[data-organism=\"on\"] .dot-surface {
+  border-color: color-mix(in oklch, var(--organism-accent-soft) 40%, var(--border));
+}
+html[data-organism=\"on\"][data-organism-mood=\"active\"] .dot-surface {
+  border-color: var(--organism-accent-soft);
+  box-shadow: 0 0 calc(4px + var(--organism-glow, 0px)) color-mix(in oklch, var(--organism-accent-soft) 30%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot-surface { transition: none; }
+}
+
 /* --- Page layout: standard container for secondary pages ------------- */
 .dot-page-container {
   margin-left: auto;
@@ -331,29 +346,29 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
 /* --- Page heading: serif title for page-level headings --------------- */
 .dot-page-heading {
   font-family: var(--font-serif, ui-serif, Georgia, serif);
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 2.25rem; /* text-4xl */
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--foreground);
 }
 @media (min-width: 640px) {
   .dot-page-heading {
-    font-size: 2.25rem; /* text-4xl */
+    font-size: 2.75rem;
   }
 }
 
 /* --- Section heading: serif title for within-page sections ----------- */
 .dot-section-heading {
   font-family: var(--font-serif, ui-serif, Georgia, serif);
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.375rem;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--foreground);
 }
 @media (min-width: 640px) {
   .dot-section-heading {
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.625rem;
   }
 }
 
@@ -362,8 +377,9 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
    text arrived at four different scales down one page. One measure, one size:
    set the width on the element (max-w-2xl) and let this own the type. */
 .dot-lede {
+  font-family: var(--font-serif, ui-serif, Georgia, serif);
   font-size: 1rem; /* text-base */
-  line-height: 1.7;
+  line-height: 1.75;
   color: color-mix(in oklch, var(--foreground) 82%, transparent);
 }
 @media (min-width: 640px) {
@@ -394,13 +410,40 @@ html[data-motion="still"][data-organism="on"] .node-halo-surface {
 }
 
 /* --- Micro label: the mono uppercase kicker text --------------------- */
+/* Used ~70 times across the product, so its size is the product's floor.
+   Uppercase monospace at 12px with 0.12em tracking *reads* smaller than 12px:
+   the caps have no descenders to judge scale by and the tracking pulls the
+   word apart. Larger, tracked a little tighter, and held at a colour that is
+   quiet rather than faint. */
 .dot-label {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.8125rem; /* 13px */
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--muted-foreground);
+  letter-spacing: 0.1em;
+  color: color-mix(in oklch, var(--muted-foreground) 88%, var(--foreground));
+}
+
+/* --- The small-type scale -------------------------------------------------
+   Below `text-sm` this product had no scale at all: ~104 hard-coded pixel
+   values between 8px and 15px, each an individual decision, which is why the
+   interface read as inconsistent and why so much of it read as too small.
+
+   Three names now cover everything under body size. `dot-label` is the mono
+   uppercase kicker; these two are size only, so they compose with whatever
+   family and colour the surface already uses. They are defined after
+   `dot-label` so that `dot-label dot-micro` resolves to the smaller size, as
+   the author of that pair intended.
+
+   Anything smaller than `dot-micro` is not a size, it is a mistake. */
+.dot-meta {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.45;
+}
+
+.dot-micro {
+  font-size: 0.6875rem; /* 11px — the floor */
+  line-height: 1.4;
 }
 
 /* --- Caption: quiet descriptive text under nodes/sections ------------ */
@@ -484,9 +527,13 @@ html[data-ui-style="neural"] .dot-label {
   color: var(--organism-accent-strong);
 }
 
+html[data-ui-style="neural"] .dot-page-heading {
+  letter-spacing: -0.03em;
+}
+
 /* --- Minimal: flat, sharp, no effects -------------------------------- */
 html[data-ui-style="minimal"] {
-  --radius: 0.375rem;
+  --radius: 0.25rem;
   --organism-glow: 0px;
 }
 
@@ -497,7 +544,7 @@ html[data-ui-style="minimal"] [role="dialog"] {
   -webkit-backdrop-filter: none;
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+  box-shadow: none;
   border-radius: var(--radius);
 }
 
@@ -527,16 +574,27 @@ html[data-ui-style="minimal"] .dot-chip {
   border-radius: var(--radius);
 }
 
+html[data-ui-style="minimal"] .dot-page-heading,
+html[data-ui-style="minimal"] .dot-section-heading {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+html[data-ui-style="minimal"] .dot-lede {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
 /* --- Organic: soft, rounded, warm, generous -------------------------- */
 html[data-ui-style="organic"] {
-  --radius: 1.25rem;
+  --radius: 1.5rem;
 }
 
 html[data-ui-style="organic"] .dot-surface,
 html[data-ui-style="organic"] .dot-graph-destination,
 html[data-ui-style="organic"] [role="dialog"] {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background: color-mix(in oklch, var(--card) 88%, var(--organism-accent));
   border: 1px solid color-mix(in oklch, var(--border) 50%, var(--organism-accent-soft));
   border-radius: var(--radius);
@@ -560,4 +618,135 @@ html[data-ui-style="organic"] .dot-reading-action {
 html[data-ui-style="organic"] .dot-chip {
   background: color-mix(in oklch, var(--organism-accent) 10%, var(--muted));
   border-color: color-mix(in oklch, var(--border) 60%, var(--organism-accent-soft));
+}
+
+html[data-ui-style="organic"] .dot-page-heading {
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+/* --- Editorial: typographic, high contrast, ruled lines -------------- */
+html[data-ui-style="editorial"] {
+  --radius: 0;
+  --organism-glow: 0px;
+}
+
+html[data-ui-style="editorial"] .dot-surface,
+html[data-ui-style="editorial"] .dot-graph-destination,
+html[data-ui-style="editorial"] [role="dialog"] {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: transparent;
+  border: none;
+  border-top: 2px solid var(--foreground);
+  border-radius: 0;
+  box-shadow: none;
+  padding-top: 1.5rem;
+}
+
+html[data-ui-style="editorial"] .dot-pill {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: transparent;
+  border: 1.5px solid var(--foreground);
+  border-radius: 0;
+  box-shadow: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+html[data-ui-style="editorial"] .dot-pill:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+html[data-ui-style="editorial"] .dot-reading-action {
+  border-radius: 0;
+  box-shadow: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+html[data-ui-style="editorial"] .dot-chip {
+  border-radius: 0;
+  border-width: 1.5px;
+  font-weight: 600;
+}
+
+html[data-ui-style="editorial"] .dot-page-heading,
+html[data-ui-style="editorial"] .dot-section-heading {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+html[data-ui-style="editorial"] .dot-lede {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 1.125rem;
+}
+
+html[data-ui-style="editorial"] .dot-label {
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+/* --- Cinematic: deep shadows, dramatic, immersive -------------------- */
+html[data-ui-style="cinematic"] {
+  --radius: 0.75rem;
+}
+
+html[data-ui-style="cinematic"] .dot-surface,
+html[data-ui-style="cinematic"] .dot-graph-destination,
+html[data-ui-style="cinematic"] [role="dialog"] {
+  backdrop-filter: blur(32px) saturate(120%) brightness(95%);
+  -webkit-backdrop-filter: blur(32px) saturate(120%) brightness(95%);
+  background: color-mix(in oklch, var(--card) 50%, transparent);
+  border: 1px solid color-mix(in oklch, var(--foreground) 8%, transparent);
+  box-shadow:
+    0 32px 80px -24px rgb(0 0 0 / 0.4),
+    0 0 1px rgb(0 0 0 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+html[data-ui-style="cinematic"].dark .dot-surface,
+html[data-ui-style="cinematic"].dark .dot-graph-destination,
+html[data-ui-style="cinematic"].dark [role="dialog"] {
+  background: color-mix(in oklch, var(--card) 35%, transparent);
+  box-shadow:
+    0 40px 100px -24px rgb(0 0 0 / 0.7),
+    0 0 1px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.03);
+}
+
+html[data-ui-style="cinematic"] .dot-pill {
+  background: color-mix(in oklch, var(--background) 50%, transparent);
+  border-color: color-mix(in oklch, var(--foreground) 12%, transparent);
+  backdrop-filter: blur(20px) brightness(95%);
+  -webkit-backdrop-filter: blur(20px) brightness(95%);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+}
+
+html[data-ui-style="cinematic"] .dot-pill:hover {
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+html[data-ui-style="cinematic"] .dot-reading-action {
+  box-shadow:
+    0 8px 32px -8px var(--organism-accent-strong),
+    0 2px 8px rgb(0 0 0 / 0.2);
+}
+
+html[data-ui-style="cinematic"] .dot-chip {
+  border-color: color-mix(in oklch, var(--foreground) 15%, transparent);
+  background: color-mix(in oklch, var(--foreground) 4%, transparent);
+}
+
+html[data-ui-style="cinematic"] .dot-page-heading {
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+html[data-ui-style="cinematic"] .dot-label {
+  letter-spacing: 0.2em;
 }

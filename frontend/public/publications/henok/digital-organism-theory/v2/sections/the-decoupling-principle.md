@@ -14,9 +14,9 @@ The word *decoupling* does not mean separation. Consciousness and physiology are
 
 The body is therefore described as an avatar: not an unreal body, and not a disposable shell, but the in-Frame interface through which Little c perceives, acts, and receives consequence. The metaphor places the body inside the architecture without diminishing its reality or importance.
 
-This is the chapter’s governing hypothesis:
-
-Little c authors Intent; the body renders action; consequence returns through the body and updates the Canvas.
+> **Model statement**
+>
+> Little c authors Intent; the body renders action; consequence returns through the body and updates the Canvas.
 
 That statement is a model. The experience of deciding and acting is observable from within. The physiology accompanying action is measurable from outside. The claim that Little c is the originating author remains a DOT hypothesis.
 
@@ -68,9 +68,9 @@ $$
 
 The variable $t_{I}$ is the hypothesized time at which Intent forms, while $t_{N}$ is the onset of the first measurable neural change causally recruited for execution. Current experiments do not independently measure $t_{I}$, and they do not identify a neural event as the first event in the full causal sequence. The equation therefore defines DOT’s claim; it does not report an observed interval.
 
-In plain language:
-
-Little c moves first; the body follows.
+> **In plain language**
+>
+> Little c moves first; the body follows.
 
 This is one of DOT’s strongest ontological claims and one of its least established. The felt sequence—notice, intend, move—does not measure the interval. A person may experience a tilt before action, but experience alone cannot determine whether the tilt originated outside neural processing. The metaphor of a handoff clarifies DOT’s architecture; it does not prove the boundary it describes.
 

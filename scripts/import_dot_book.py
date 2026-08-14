@@ -163,6 +163,131 @@ SECTIONS: tuple[
 
 SUPERSCRIPT: dict[int, int] = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
+# These are editorial presentations, not new claims. Keeping them in the
+# release pipeline means a refreshed DOCX produces the same reading grammar
+# instead of requiring hand-edits to generated Markdown.
+EDITORIAL_PASSAGES: dict[str, tuple[tuple[str, str], ...]] = {
+    "preface": (
+        (
+            "\n\n".join(
+                (
+                    "Some are observations.",
+                    "Some are models.",
+                    "Some are hypotheses.",
+                    "Some remain speculation.",
+                    "That distinction governs the entire book.",
+                )
+            ),
+            "\n>\n".join(
+                (
+                    "> **Epistemic key**",
+                    "> Some are observations.",
+                    "> Some are models.",
+                    "> Some are hypotheses.",
+                    "> Some remain speculation.",
+                    "> That distinction governs the entire book.",
+                )
+            ),
+        ),
+        (
+            "Feeling must be treated as data, but feeling is not automatically truth.",
+            "> **Working definition**\n>\n> Feeling must be treated as data, but feeling is not automatically truth.",
+        ),
+        (
+            "Love is the condition in which Fear no longer governs you.",
+            "> **Working definition**\n>\n> Love is the condition in which Fear no longer governs you.",
+        ),
+    ),
+    "the-digital-organism": (
+        (
+            "The distinction is essential:\n\nThe observation is that experience is mediated, recursive, embodied, and capable of self-modification. The cosmology is DOT’s attempt to explain why.",
+            "> **Claim boundary**\n>\n> The observation is that experience is mediated, recursive, embodied, and capable of self-modification. The cosmology is DOT’s attempt to explain why.",
+        ),
+        (
+            "The decisive question is empirical:\n\nWhat observation would distinguish a brain that produces consciousness from a brain that constrains, transmits, or locally implements a consciousness not exhausted by it?",
+            "> **Open question**\n>\n> What observation would distinguish a brain that produces consciousness from a brain that constrains, transmits, or locally implements a consciousness not exhausted by it?",
+        ),
+        (
+            "The Canvas carries. The Painting interprets. Character acts.",
+            "> **Keep this distinction**\n>\n> The Canvas carries. The Painting interprets. Character acts.",
+        ),
+    ),
+    "the-decoupling-principle": (
+        (
+            "This is the chapter’s governing hypothesis:\n\nLittle c authors Intent; the body renders action; consequence returns through the body and updates the Canvas.",
+            "> **Model statement**\n>\n> Little c authors Intent; the body renders action; consequence returns through the body and updates the Canvas.",
+        ),
+        (
+            "In plain language:\n\nLittle c moves first; the body follows.",
+            "> **In plain language**\n>\n> Little c moves first; the body follows.",
+        ),
+    ),
+    "architecture-of-continuity": (
+        (
+            "Primordial continuity is fundamental in the model.\n\nSeamless continuity inside a Reality Frame is engineered.",
+            "> **Keep this distinction**\n>\n> Primordial continuity is fundamental in the model.\n>\n> Seamless continuity inside a Reality Frame is engineered.",
+        ),
+        (
+            "Physics maps the runtime.\n\nDOT hypothesizes a source architecture.",
+            "> **Claim boundary**\n>\n> Physics maps the runtime.\n>\n> DOT hypothesizes a source architecture.",
+        ),
+        (
+            "Delegate stability.\n\nPreserve continuity.\n\nLearn at the next level.",
+            "> **The model in one movement**\n>\n> Delegate stability.\n>\n> Preserve continuity.\n>\n> Learn at the next level.",
+        ),
+    ),
+    "reality-frames": (
+        (
+            "The Reality Frame is the wider environment and its rules.\n\nThe Reality Stream is what reaches the experiencer from moment to moment.",
+            "> **Keep this distinction**\n>\n> The Reality Frame is the wider environment and its rules.\n>\n> The Reality Stream is what reaches the experiencer from moment to moment.",
+        ),
+        (
+            "Freedom is not escape from constraint. It is increasing access to meaningful possibility within constraint.",
+            "> **Working definition**\n>\n> Freedom is not escape from constraint. It is increasing access to meaningful possibility within constraint.",
+        ),
+        (
+            "Intent does not command the world.\n\nIt commits the person to a lawful move within it.",
+            "> **Keep this distinction**\n>\n> Intent does not command the world.\n>\n> It commits the person to a lawful move within it.",
+        ),
+        (
+            "Outcome determines what must be repaired in the world.\n\nIntent helps determine what is being formed in the person.\n\nNeither erases the other.",
+            "> **Keep this distinction**\n>\n> Outcome determines what must be repaired in the world.\n>\n> Intent helps determine what is being formed in the person.\n>\n> Neither erases the other.",
+        ),
+    ),
+    "the-canvas": (
+        (
+            "**The Canvas carries.**\n\n**The Painting interprets.**\n\n**Character acts.**",
+            "> **Keep this distinction**\n>\n> **The Canvas carries.**\n>\n> **The Painting interprets.**\n>\n> **Character acts.**",
+        ),
+        (
+            "The Canvas carries the deltas.\n\nThe Painting is their accumulated organization.\n\nEvery loop begins from the state left by earlier loops.",
+            "> **The model in one movement**\n>\n> The Canvas carries the deltas.\n>\n> The Painting is their accumulated organization.\n>\n> Every loop begins from the state left by earlier loops.",
+        ),
+        (
+            "Include the feeling. Inspect what it may be carrying. Do not promote it into truth without further inquiry.",
+            "> **Working definition**\n>\n> Include the feeling. Inspect what it may be carrying. Do not promote it into truth without further inquiry.",
+        ),
+        (
+            "Fear is the governing contraction that organizes decision-space around a predicted threat.",
+            "> **Working definition**\n>\n> Fear is the governing contraction that organizes decision-space around a predicted threat.",
+        ),
+        (
+            "Little c mistakes a limited Painting for the whole self and organizes life around protecting it.",
+            "> **Model statement**\n>\n> Little c mistakes a limited Painting for the whole self and organizes life around protecting it.",
+        ),
+    ),
+    "the-painting": (
+        (
+            "The Canvas carries.\n\nThe Painting interprets.\n\nCharacter acts.",
+            "> **Keep this distinction**\n>\n> The Canvas carries.\n>\n> The Painting interprets.\n>\n> Character acts.",
+        ),
+        (
+            "Authorship is not omnipotence.\n\nIt is participation with increasing clarity.",
+            "> **Keep this distinction**\n>\n> Authorship is not omnipotence.\n>\n> It is participation with increasing clarity.",
+        ),
+    ),
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -260,6 +385,14 @@ def citation_links(match: re.Match[str]) -> str:
     )
 
 
+def apply_editorial_passages(text: str, spec: SectionSpec) -> str:
+    for source, presentation in EDITORIAL_PASSAGES.get(spec.slug, ()):
+        if presentation in text:
+            continue
+        text = text.replace(source, presentation, 1)
+    return text
+
+
 def clean_markdown(raw: str, spec: SectionSpec) -> str:
     text: str = raw.strip()
     text: str = text.removeprefix(spec.marker).lstrip()
@@ -305,6 +438,8 @@ def clean_markdown(raw: str, spec: SectionSpec) -> str:
             text,
             flags=re.MULTILINE,
         )
+
+    text = apply_editorial_passages(text, spec)
 
     return text.strip() + "\n"
 

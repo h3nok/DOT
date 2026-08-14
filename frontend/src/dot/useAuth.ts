@@ -47,6 +47,18 @@ async function post(path: string, body?: unknown) {
   return { res, payload };
 }
 
+function responseError(payload: unknown, fallback: string): string {
+  if (!payload || typeof payload !== "object") return fallback;
+
+  const body = payload as {
+    detail?: unknown;
+    error?: { message?: unknown };
+  };
+  if (typeof body.detail === "string") return body.detail;
+  if (typeof body.error?.message === "string") return body.error.message;
+  return fallback;
+}
+
 export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,11 +84,21 @@ export function useAuth() {
 
   const requestCode = useCallback(
     async (email: string): Promise<RequestResult> => {
-      const { res, payload } = await post("/otp/request", { email });
-      if (!res.ok) {
-        return { ok: false, error: payload?.detail || "Could not send code." };
+      try {
+        const { res, payload } = await post("/otp/request", { email });
+        if (!res.ok) {
+          return {
+            ok: false,
+            error: responseError(payload, "Could not send code."),
+          };
+        }
+        return { ok: true, devCode: payload?.dev_code };
+      } catch {
+        return {
+          ok: false,
+          error: "Sign-in is temporarily unavailable. Please try again.",
+        };
       }
-      return { ok: true, devCode: payload?.dev_code };
     },
     [],
   );
@@ -87,17 +109,27 @@ export function useAuth() {
       code: string,
       displayName?: string,
     ): Promise<VerifyResult> => {
-      const { res, payload } = await post("/otp/verify", {
-        email,
-        code,
-        display_name: displayName,
-      });
-      if (!res.ok) {
-        return { ok: false, error: payload?.detail || "Could not verify." };
+      try {
+        const { res, payload } = await post("/otp/verify", {
+          email,
+          code,
+          display_name: displayName,
+        });
+        if (!res.ok) {
+          return {
+            ok: false,
+            error: responseError(payload, "Could not verify."),
+          };
+        }
+        const verified: AuthUser | undefined = payload?.user;
+        if (verified) setUser(verified);
+        return { ok: true, user: verified };
+      } catch {
+        return {
+          ok: false,
+          error: "Sign-in is temporarily unavailable. Please try again.",
+        };
       }
-      const verified: AuthUser | undefined = payload?.user;
-      if (verified) setUser(verified);
-      return { ok: true, user: verified };
     },
     [],
   );
@@ -108,27 +140,38 @@ export function useAuth() {
   }, []);
 
   const createInvite = useCallback(async (): Promise<InviteResult> => {
-    const { res, payload } = await post("/invites");
-    if (!res.ok) {
+    try {
+      const { res, payload } = await post("/invites");
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: responseError(payload, "Could not create invitation."),
+        };
+      }
+      const token =
+        typeof payload?.token === "string" ? payload.token : undefined;
+      if (!token) {
+        return { ok: false, error: "The invitation response was incomplete." };
+      }
+
+      const url = new URL(
+        import.meta.env.BASE_URL || "/",
+        window.location.origin,
+      );
+      url.searchParams.set("invite", token);
+
+      return {
+        ok: true,
+        token,
+        link: url.toString(),
+        expiresAt: payload?.expires_at,
+      };
+    } catch {
       return {
         ok: false,
-        error: payload?.detail || "Could not create invitation.",
+        error: "Invitations are temporarily unavailable. Please try again.",
       };
     }
-    const token = typeof payload?.token === "string" ? payload.token : undefined;
-    if (!token) {
-      return { ok: false, error: "The invitation response was incomplete." };
-    }
-
-    const url = new URL(import.meta.env.BASE_URL || "/", window.location.origin);
-    url.searchParams.set("invite", token);
-
-    return {
-      ok: true,
-      token,
-      link: url.toString(),
-      expiresAt: payload?.expires_at,
-    };
   }, []);
 
   return {

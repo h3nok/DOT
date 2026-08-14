@@ -3,6 +3,7 @@ import type { AgentCitation, AgentLens } from "./agent";
 import {
   answerFromBook,
   type CompanionHistoryTurn,
+  type ReadingPosition,
 } from "./bookCompanion";
 
 /**
@@ -202,6 +203,7 @@ export async function sendMessageStream(
   history: readonly CompanionHistoryTurn[] = [],
   lens: AgentLens = "ground",
   onDelta: (accumulated: string) => void,
+  reading?: ReadingPosition | null,
 ): Promise<SendOutcome | null> {
   let response: Response;
   try {
@@ -214,6 +216,7 @@ export async function sendMessageStream(
         owner_id: PROFILE_OWNER_ID,
         lens,
         history: history.slice(-6),
+        ...(reading ? { reading } : {}),
       }),
     });
   } catch {
@@ -283,6 +286,7 @@ export async function sendMessage(
   history: readonly CompanionHistoryTurn[] = [],
   lens: AgentLens = "ground",
   authenticated = false,
+  reading?: ReadingPosition | null,
 ): Promise<SendOutcome | null> {
   if (threadId || authenticated) {
     const result = await api<SendResponse>("/v1/twin/conversations/messages", {
@@ -322,13 +326,14 @@ export async function sendMessage(
       owner_id: PROFILE_OWNER_ID,
       lens,
       history: history.slice(-6),
+      ...(reading ? { reading } : {}),
     },
   });
   if (open.ok && open.data && isUsableAnswer(open.data, question)) {
     return { turn: turnFrom(`turn-${Date.now()}`, open.data), ephemeral: true };
   }
 
-  const local = await answerFromBook(question, lens, history);
+  const local = await answerFromBook(question, lens, history, reading);
   if (local && isUsableAnswer(local, question)) {
     return {
       turn: turnFrom(`turn-${Date.now()}`, local, "passages"),

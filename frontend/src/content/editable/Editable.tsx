@@ -81,7 +81,7 @@ export function Editable({
         </button>
         {hasDraft(id) && (
           <span
-            className="ml-2 align-middle font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--book-cinnabar,#a3544d)]"
+            className="ml-2 align-middle font-mono dot-micro uppercase tracking-[0.14em] text-[color:var(--book-cinnabar,#a3544d)]"
             title="This block has an edit you have not published yet."
           >
             draft

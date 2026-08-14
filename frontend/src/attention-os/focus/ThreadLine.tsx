@@ -52,7 +52,7 @@ export const ThreadLine: React.FC<ThreadLineProps> = ({
                   index === 0 ? `Where this session began: ${step.label}` : step.label
                 }
                 className={[
-                  "min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.18em]",
+                  "min-w-0 truncate font-mono dot-micro uppercase tracking-[0.18em]",
                   reducedMotion ? "" : "transition-opacity duration-300",
                   isCurrent
                     ? "text-foreground opacity-100"
@@ -70,7 +70,7 @@ export const ThreadLine: React.FC<ThreadLineProps> = ({
         type="button"
         onClick={onClear}
         title={`Clear the thread (began at ${start?.label ?? ""})`}
-        className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50 transition-colors hover:text-foreground"
+        className="dot-micro shrink-0 font-mono uppercase tracking-[0.18em] text-muted-foreground/50 transition-colors hover:text-foreground"
       >
         clear
       </button>

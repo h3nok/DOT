@@ -1,23 +1,7 @@
-import { motion } from "framer-motion";
-import { ArrowUp, CornerDownLeft, Sparkles } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useState } from "react";
 
 import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
-
-/**
- * The one question a visitor is actually holding, asked here.
- *
- * Most people arriving at a theory do not want a table of contents; they want to
- * find out whether it says anything to them. This is that door — a plain field
- * and four questions someone might genuinely be carrying: what the work claims,
- * what it says about the reader's own life, where it is weakest, and what kind
- * of claim it is making at all. Scepticism is a legitimate reason to be here, so
- * two of the four openings are adversarial.
- *
- * The suggestions are not engagement bait: they are finite, they never refresh,
- * and each one hands the reader straight to a grounded answer with its sources
- * rather than into a conversation designed to continue.
- */
 
 interface HeroAskProps {
   onAsk: (request: HeroAskRequest) => void;
@@ -37,71 +21,61 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   };
 
   return (
-    <div className={`space-y-5 ${className}`}>
+    <div className={`space-y-3 ${className}`}>
       <form onSubmit={submit} className="relative w-full">
         <div
-          className={`flex items-center overflow-hidden rounded-2xl border transition-all duration-200 ${
+          className={`dot-surface flex items-center gap-3 rounded-2xl border px-4 backdrop-blur-xl transition-all duration-300 shadow-lg ${
             isFocused
-              ? "border-[color:var(--organism-accent-strong)] bg-foreground/[0.025] ring-2 ring-[color:var(--organism-accent-soft)]/40 shadow-sm"
-              : "border-border/50 bg-foreground/[0.015] hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.025]"
+              ? "border-[color:var(--organism-accent-strong)]/50 bg-background/70 shadow-[color:var(--organism-accent-strong)]/8 ring-1 ring-[color:var(--organism-accent-soft)]/20"
+              : "border-border/20 bg-background/40 shadow-black/[0.03] hover:border-border/40 hover:bg-background/55"
           }`}
         >
-          {/* Search/Ask Icon */}
-          <div className="pl-4 pr-1 text-[color:var(--organism-accent-strong)]">
-            <Sparkles className="h-4.5 w-4.5" aria-hidden="true" />
-          </div>
+          {/* Accent dot — the organism's presence in the input */}
+          <span
+            className={`h-2 w-2 shrink-0 rounded-full transition-all duration-500 ${
+              isFocused
+                ? "bg-[color:var(--organism-accent-strong)] shadow-[0_0_8px_var(--organism-accent-soft)]"
+                : "bg-[color:var(--organism-accent-strong)]/40"
+            }`}
+          />
 
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder="Ask Minty about the theory…"
+            placeholder="Ask a question — answers cite Book One directly"
             aria-label="Ask a question about Digital Organism Theory"
-            className="h-13 w-full bg-transparent px-3 text-[14px] font-normal text-foreground outline-none placeholder:text-muted-foreground/60"
+            className="h-14 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/35"
           />
 
-          {/* Submit button & shortcut indicator */}
-          <div className="flex items-center gap-2 pr-3">
-            {query.trim() ? (
-              <motion.button
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                type="submit"
-                aria-label="Submit inquiry"
-                className="inline-flex h-8.5 items-center gap-1.5 rounded-xl bg-[color:var(--organism-accent-strong)] px-3.5 text-xs font-semibold text-background transition-transform active:scale-[0.98]"
-              >
-                <span>Ask</span>
-                <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
-              </motion.button>
-            ) : (
-              <span className="dot-chip hidden sm:inline-flex border border-border/40 bg-foreground/[0.03] text-muted-foreground">
-                <CornerDownLeft className="h-2.5 w-2.5" />
-                <span>Enter</span>
-              </span>
-            )}
-          </div>
+          <button
+            type="submit"
+            disabled={!query.trim()}
+            aria-label="Send"
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
+              query.trim()
+                ? "bg-[color:var(--organism-accent-strong)] text-background shadow-md shadow-[color:var(--organism-accent-strong)]/25"
+                : "bg-foreground/[0.06] text-muted-foreground/40"
+            }`}
+          >
+            <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
         </div>
       </form>
 
-      {/* ── Symmetrical Centered Sample Inquiry Chips ────────────────────────── */}
-      <div className="pt-1 flex flex-wrap items-center justify-center gap-2">
-        <span className="dot-label mr-1 hidden sm:inline">Try asking:</span>
+      <div className="flex flex-wrap items-center justify-center gap-1.5">
         {SAMPLE_QUESTIONS.map((question, index) => (
-          <motion.button
+          <button
             key={question.text}
             type="button"
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
             onClick={() => onAsk({ query: question.text, lens: question.lens })}
-            // min-h-11 on touch, tightening to the compact pill once there is a
-            // pointer: these are the first thing a thumb reaches for.
-            className={`group min-h-11 items-center gap-1.5 rounded-full border border-border/40 bg-foreground/[0.015] px-3.5 py-1.5 text-xs text-muted-foreground transition-all hover:border-[color:var(--organism-accent-strong)]/40 hover:bg-foreground/[0.035] hover:text-foreground sm:min-h-0 ${
+            className={`min-h-11 items-center rounded-full border border-border/20 px-3 py-1 dot-meta text-muted-foreground/60 transition-all hover:border-[color:var(--organism-accent-strong)]/30 hover:text-foreground sm:min-h-0 ${
               index < 2 ? "inline-flex" : "hidden sm:inline-flex"
             }`}
           >
-            <span>{question.text}</span>
-          </motion.button>
+            {question.text}
+          </button>
         ))}
       </div>
     </div>

@@ -14,6 +14,19 @@ export interface CompanionHistoryTurn {
   content: string;
 }
 
+/**
+ * Where the reader is when they ask.
+ *
+ * A question asked from inside a chapter — "what is this guy talking about?" —
+ * has an obvious referent on the reader's screen and none at all in the
+ * sentence. Carrying the open section makes those questions answerable instead
+ * of refused.
+ */
+export interface ReadingPosition {
+  section: string;
+  title?: string | null;
+}
+
 export interface BookCitation {
   node_id: string;
   kind: "book";
@@ -393,11 +406,24 @@ function rankPassages(
   question: string,
   lens: AgentLens,
   history: readonly CompanionHistoryTurn[],
+  reading?: ReadingPosition | null,
 ): BookPassage[] {
   const priorQuestion = [...history]
     .reverse()
     .find((turn) => turn.role === "member")?.content;
-  const query = `${priorQuestion ?? ""} ${question}`.trim();
+  const priorAnswer = [...history]
+    .reverse()
+    .find((turn) => turn.role === "twin")?.content;
+  // Same order the orchestrator searches in: where the reader is, what was just
+  // said, then what they actually asked.
+  const query = [
+    reading?.title ?? reading?.section?.replaceAll("-", " ") ?? "",
+    priorAnswer?.slice(0, 240) ?? "",
+    priorQuestion ?? "",
+    question,
+  ]
+    .join(" ")
+    .trim();
   const terms = termsFor(query, lens);
   const intent = intentFor(query);
   const intentHeadings = new Set(
@@ -502,8 +528,9 @@ export function answerFromCorpus(
   question: string,
   lens: AgentLens,
   history: readonly CompanionHistoryTurn[] = [],
+  reading?: ReadingPosition | null,
 ): GroundedBookAnswer | null {
-  const selected = rankPassages(corpus, question, lens, history);
+  const selected = rankPassages(corpus, question, lens, history, reading);
 
   // An honest empty hand. Two loosely-related fragments presented as an answer
   // is a small dishonesty; saying so and offering a real next step is not.
@@ -549,6 +576,7 @@ export async function answerFromBook(
   question: string,
   lens: AgentLens = "ground",
   history: readonly CompanionHistoryTurn[] = [],
+  reading?: ReadingPosition | null,
 ): Promise<GroundedBookAnswer | null> {
   if (SOCIAL_GREETING.test(question.trim())) {
     return {
@@ -569,5 +597,5 @@ export async function answerFromBook(
   }
 
   corpusPromise ??= loadCorpus();
-  return answerFromCorpus(await corpusPromise, question, lens, history);
+  return answerFromCorpus(await corpusPromise, question, lens, history, reading);
 }

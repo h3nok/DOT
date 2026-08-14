@@ -151,7 +151,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
               {node.description}
             </span>
           ) : (
-            <span className="mt-2 font-mono text-[11px] uppercase text-muted-foreground">
+            <span className="mt-2 font-mono dot-meta uppercase text-muted-foreground">
               {node.description}
             </span>
           ))}
@@ -190,7 +190,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
               Hiding it below 640px left phones with three bare labels, and
               clamping to two lines cut the sentence mid-clause on desktop. */}
           {node.description && (
-            <span className="mt-1 line-clamp-3 text-[11px] leading-snug text-muted-foreground">
+            <span className="dot-meta mt-1 line-clamp-3 leading-snug text-muted-foreground">
               {node.description}
             </span>
           )}
@@ -295,7 +295,7 @@ export const GraphNode: React.FC<GraphNodeProps> = ({
             }}
           />
         </span>
-        <span className="flex items-center gap-1.5 text-[15px] font-medium text-foreground transition-colors duration-300">
+        <span className="flex items-center gap-1.5 text-base font-medium text-foreground transition-colors duration-300">
           {node.label}
           {kindGlyph && (
             <span className="text-muted-foreground" aria-hidden="true">

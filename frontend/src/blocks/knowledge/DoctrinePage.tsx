@@ -367,7 +367,7 @@ const DoctrinePage = () => {
       {/* Back to the movement graph */}
       <Link
         to="/"
-        className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-[13px] font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
+        className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-sm font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
         aria-label="Back to the movement graph"
         title="Back to the movement graph"
       >
@@ -377,7 +377,7 @@ const DoctrinePage = () => {
 
       <Link
         to="/book/digital-organism-theory"
-        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-transparent bg-transparent px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
+        className="fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-transparent bg-transparent px-3.5 py-2 font-mono dot-meta uppercase tracking-[0.14em] text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)] sm:inline-flex"
       >
         Book One concept map · Edition v2
       </Link>
@@ -688,7 +688,7 @@ const DoctrinePage = () => {
               }}
             >
               <div className="flex items-center justify-between">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[color:var(--surface-accent)]">
+                <p className="font-mono dot-micro font-bold uppercase tracking-[0.24em] text-[color:var(--surface-accent)]">
                   All ideas
                 </p>
                 <button

@@ -80,6 +80,7 @@ jobs:
           --health-retries 10
     env:
       ORCHESTRATOR_DATABASE_URL: postgresql+asyncpg://dot:dot@127.0.0.1:5432/dot_ci
+      ORCHESTRATOR_SERVICE_AUTH_SECRET: ci-session-signing-secret-not-for-production
     defaults:
       run:
         working-directory: backend/orchestrator
@@ -195,6 +196,7 @@ jobs:
             --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
             --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
             --set-secrets ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
+            --set-env-vars ORCHESTRATOR_AUTH_ENABLED=false \
             --command python3 \
             --args=-m,alembic,upgrade,head \
             --max-retries 1 \
@@ -214,6 +216,7 @@ jobs:
             --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
             --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
             --set-secrets=ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest,ORCHESTRATOR_TWIN_API_KEY=ORCHESTRATOR_TWIN_API_KEY:latest \
+            --set-env-vars=ORCHESTRATOR_AUTH_ENABLED=false \
             --command python3 \
             --args=scripts/ingest_canon.py,--owner,henok \
             --max-retries 1 \

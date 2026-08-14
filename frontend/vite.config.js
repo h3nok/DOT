@@ -7,6 +7,10 @@ import { defineConfig } from "vite";
 // https://vite.dev/config/
 export default defineConfig({
   base: "/", // GitHub Pages base path (updated for public readiness)
+  // Keep generated optimizer state outside node_modules. Local containers have
+  // historically mounted that directory under a different uid, which leaves
+  // Vite unable to refresh stale lazy-module dependencies.
+  cacheDir: ".vite-cache",
   plugins: [
     react(),
     tailwindcss(),

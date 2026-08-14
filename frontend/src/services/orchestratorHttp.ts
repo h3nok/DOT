@@ -17,17 +17,25 @@ export interface AuthedInit extends Omit<RequestInit, "body"> {
   ownerId?: string;
   /** Serialized as a JSON body with the matching content type. */
   json?: unknown;
+  /** Sent as a UTF-8 text body. Mutually exclusive with `json`. */
+  text?: string;
+  contentType?: string;
   idempotencyKey?: string;
 }
 
 export function authedFetch(url: string, init: AuthedInit = {}): Promise<Response> {
-  const { ownerId, json, idempotencyKey, headers, ...rest } = init;
+  const { ownerId, json, text, contentType, idempotencyKey, headers, ...rest } = init;
+
+  if (json !== undefined && text !== undefined) {
+    throw new Error("An orchestrator request cannot contain both JSON and text.");
+  }
 
   const merged: Record<string, string> = {
     ...(headers as Record<string, string> | undefined),
   };
   if (import.meta.env.DEV) merged["X-Owner-Id"] = ownerId ?? DEV_OWNER_ID;
   if (json !== undefined) merged["Content-Type"] = "application/json";
+  if (text !== undefined) merged["Content-Type"] = contentType ?? "text/plain; charset=utf-8";
   if (idempotencyKey) merged["Idempotency-Key"] = idempotencyKey;
 
   return fetch(url, {
@@ -35,6 +43,6 @@ export function authedFetch(url: string, init: AuthedInit = {}): Promise<Respons
     ...rest,
     credentials: "include",
     headers: merged,
-    body: json === undefined ? undefined : JSON.stringify(json),
+    body: json !== undefined ? JSON.stringify(json) : text,
   });
 }

@@ -105,10 +105,16 @@ export const OrganismMembrane: React.FC = () => {
     let t = 0;
 
     const blooms: Bloom[] = [
-      { ox: 0.16, oy: 0.12, rx: 0.1, ry: 0.08, size: 0.52, speed: 0.055, phase: 0, hueShift: -18, weight: 1 },
-      { ox: 0.86, oy: 0.22, rx: 0.09, ry: 0.11, size: 0.46, speed: 0.041, phase: 2.1, hueShift: 26, weight: 0.85 },
-      { ox: 0.72, oy: 0.92, rx: 0.12, ry: 0.07, size: 0.58, speed: 0.033, phase: 4.0, hueShift: 8, weight: 0.7 },
-      { ox: 0.24, oy: 0.82, rx: 0.08, ry: 0.1, size: 0.42, speed: 0.048, phase: 5.4, hueShift: -34, weight: 0.55 },
+      // Deep layer — large, slow, faint
+      { ox: 0.16, oy: 0.12, rx: 0.14, ry: 0.1, size: 0.62, speed: 0.025, phase: 0, hueShift: -22, weight: 0.6 },
+      { ox: 0.82, oy: 0.88, rx: 0.12, ry: 0.09, size: 0.58, speed: 0.02, phase: 3.2, hueShift: 14, weight: 0.5 },
+      // Mid layer — medium, moderate drift
+      { ox: 0.72, oy: 0.18, rx: 0.09, ry: 0.11, size: 0.44, speed: 0.04, phase: 1.4, hueShift: 30, weight: 0.85 },
+      { ox: 0.28, oy: 0.76, rx: 0.1, ry: 0.08, size: 0.48, speed: 0.035, phase: 4.6, hueShift: -38, weight: 0.75 },
+      { ox: 0.5, oy: 0.45, rx: 0.06, ry: 0.07, size: 0.36, speed: 0.045, phase: 2.8, hueShift: 8, weight: 0.65 },
+      // Near layer — smaller, brighter, faster
+      { ox: 0.38, oy: 0.15, rx: 0.07, ry: 0.06, size: 0.28, speed: 0.06, phase: 5.1, hueShift: 42, weight: 0.95 },
+      { ox: 0.65, oy: 0.7, rx: 0.05, ry: 0.08, size: 0.3, speed: 0.055, phase: 0.8, hueShift: -12, weight: 0.9 },
     ];
 
     const buildConstellation = (count: number) => {
@@ -188,27 +194,9 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
-    const buildNeural = () => {
-      const count = Math.min(40, Math.max(12, Math.round((w * h) / 40000)));
-      points = Array.from({ length: count }, (_, i) => {
-        const depth = DEPTHS[i % DEPTHS.length];
-        const x = Math.random() * w;
-        const y = Math.random() * h;
-        return {
-          x, y, hx: x, hy: y,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          r: 1.5 + depth * 2.5,
-          depth, phase: Math.random() * Math.PI * 2,
-          bit: "0" as const, flipAt: 0,
-        };
-      });
-    };
-
     const rebuild = () => {
       if (config.preset === "lattice") buildLattice();
       else if (config.preset === "field") buildField();
-      else if (config.preset === "neural") buildNeural();
       else if (spec.density > 0) {
         const budget = Math.min(POINT_BUDGET, (w * h) / 14000) * spec.density;
         buildConstellation(Math.max(24, Math.round(budget)));
@@ -364,108 +352,208 @@ export const OrganismMembrane: React.FC = () => {
         ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
         ctx.fillText(p.bit, p.x, p.y);
       }
-    };
-
-    const drawNeuralLinks = (
-      reach: number, hue: number, sat: number, light: number, alpha: number,
-      synapsis: number, animate: boolean,
-    ) => {
-      const r2 = reach * reach;
-      // Draw connections with signal propagation
+      // Faint threads between nearby bits — the stream beginning to cohere.
+      ctx.lineWidth = 0.5;
       for (let i = 0; i < points.length; i++) {
         const a = points[i];
+        const nearest = { d2: 90 * 90, j: -1 };
         for (let j = i + 1; j < points.length; j++) {
           const b = points[j];
           const dx = a.x - b.x;
           const dy = a.y - b.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 > r2) continue;
-          const proximity = 1 - Math.sqrt(d2) / reach;
-          const mask = Math.min(clearance(a.x, a.y), clearance(b.x, b.y));
-          const pulse = animate ? 0.5 + 0.5 * Math.sin(a.phase + b.phase + t * 2) : 0.7;
-          const lineAlpha = alpha * mask * proximity * (0.15 + 0.35 * synapsis) * pulse;
-          if (lineAlpha <= 0.005) continue;
-
-          // Signal traveling along the connection
-          if (animate && synapsis > 0.1) {
-            const signalPos = (Math.sin(a.phase * 0.7 + t * 3) + 1) / 2;
-            const sx = a.x + (b.x - a.x) * signalPos;
-            const sy = a.y + (b.y - a.y) * signalPos;
-            const signalAlpha = lineAlpha * 2.5 * synapsis;
-            ctx.fillStyle = `hsla(${(hue + 30) % 360}, ${Math.min(90, sat + 25)}%, ${light + 20}%, ${signalAlpha})`;
-            ctx.beginPath();
-            ctx.arc(sx, sy, 1.5 + proximity * 2, 0, Math.PI * 2);
-            ctx.fill();
-          }
-
-          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 10}%, ${lineAlpha})`;
-          ctx.lineWidth = 0.8 + proximity * 1.2;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
+          if (d2 < nearest.d2) { nearest.d2 = d2; nearest.j = j; }
         }
-      }
-
-      // Node halos — each node glows with its own rhythm
-      for (const p of points) {
-        const mask = clearance(p.x, p.y);
-        const glow = animate ? 0.6 + 0.4 * Math.sin(p.phase + t * 1.5) : 0.8;
-        const haloAlpha = alpha * mask * p.depth * 0.12 * glow;
-        if (haloAlpha <= 0.005) continue;
-        const haloR = p.r * (3 + 2 * synapsis);
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
-        grad.addColorStop(0, `hsla(${(hue + 15) % 360}, ${sat + 10}%, ${light + 15}%, ${haloAlpha})`);
-        grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
-        ctx.fillStyle = grad;
+        if (nearest.j < 0) continue;
+        const b = points[nearest.j];
+        const mask = Math.min(clearance(a.x, a.y), clearance(b.x, b.y));
+        const la = alpha * mask * 0.06;
+        if (la <= 0.005) continue;
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${la})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2);
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+    };
+
+    // Dots — each dot is a Little c, a centre of experience. One is you.
+    const drawDots = (
+      hue: number, sat: number, light: number, alpha: number, animate: boolean,
+    ) => {
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        if (animate) {
+          // Slow drift — each consciousness moving through its own arc.
+          p.x += Math.sin(p.phase) * 0.06 * spec.speed;
+          p.y += Math.cos(p.phase * 0.7) * 0.04 * spec.speed;
+          p.phase += 0.002 + p.depth * 0.001;
+          if (p.x < -20) p.x = w + 20;
+          if (p.x > w + 20) p.x = -20;
+          if (p.y < -20) p.y = h + 20;
+          if (p.y > h + 20) p.y = -20;
+        }
+        const mask = clearance(p.x, p.y);
+        const pulse = animate ? 0.7 + 0.3 * Math.sin(p.phase * 2) : 0.85;
+        // The first dot is "you" — slightly brighter and larger.
+        const isYou = i === 0;
+        const dotAlpha = alpha * mask * (0.2 + p.depth * 0.35) * pulse * (isYou ? 1.8 : 1);
+        if (dotAlpha <= 0.005) continue;
+        const r = (1.2 + p.depth * 1.8) * (isYou ? 1.6 : 1);
+        // Soft halo
+        if (dotAlpha > 0.02) {
+          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 4);
+          grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light + 10}%, ${dotAlpha * 0.3})`);
+          grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r * 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // Core dot
+        ctx.fillStyle = `hsla(${hue}, ${sat + (isYou ? 15 : 0)}%, ${light + (isYou ? 12 : 6)}%, ${dotAlpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
       }
     };
 
-    // Breath — concentric rings that expand and fade, like the organism breathing.
-    const drawBreath = (
-      hue: number, sat: number, light: number, alpha: number, animate: boolean,
-    ) => {
-      // Two breath sources — primary at centre, secondary offset for depth.
-      const sources = [
-        { x: w / 2, y: h / 2, weight: 1, phaseOff: 0 },
-        { x: w * 0.3, y: h * 0.35, weight: 0.5, phaseOff: 0.33 },
-        { x: w * 0.72, y: h * 0.65, weight: 0.4, phaseOff: 0.6 },
-      ];
-      const maxR = Math.sqrt((w / 2) ** 2 + (h / 2) ** 2);
-      const ringCount = 6;
-      const period = 8;
+    /**
+     * Topology — iso-contours of a slow scalar field.
+     *
+     * The earlier version stacked three sine waves per line, which produces
+     * near-parallel ripples: a wallpaper, not a landscape. A real contour map
+     * is the *same* field cut at rising levels, so the lines close into basins
+     * and ridges, crowd where the ground is steep, and open out where it is
+     * flat. That is what makes it read as terrain rather than decoration, and
+     * it is the reason to compute a field at all.
+     *
+     * The field drifts rather than scrolls: the ground itself changes shape,
+     * slowly enough that nothing appears to move while you are reading it.
+     */
+    const TOPO_CELL = 30;
+    const TOPO_LEVELS = 7;
 
-      for (const src of sources) {
-        for (let i = 0; i < ringCount; i++) {
-          const phase = animate
-            ? (t / period + i / ringCount + src.phaseOff) % 1
-            : (i / ringCount + src.phaseOff) % 1;
-          const r = phase * maxR * 0.9;
-          const life = 1 - phase;
-          const a = alpha * life * life * 0.25 * src.weight;
-          if (a <= 0.005) continue;
-          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
-          ctx.lineWidth = 0.8 + life * 1.8;
-          ctx.beginPath();
-          ctx.arc(src.x, src.y, r, 0, Math.PI * 2);
-          ctx.stroke();
+    /** Deterministic value noise. Same lattice every frame; only `t` moves. */
+    const lattice = (ix: number, iy: number): number => {
+      const n = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    };
+
+    const smooth = (t: number) => t * t * (3 - 2 * t);
+
+    const valueNoise = (x: number, y: number): number => {
+      const ix = Math.floor(x);
+      const iy = Math.floor(y);
+      const fx = smooth(x - ix);
+      const fy = smooth(y - iy);
+      const a = lattice(ix, iy);
+      const b = lattice(ix + 1, iy);
+      const c = lattice(ix, iy + 1);
+      const d = lattice(ix + 1, iy + 1);
+      return (
+        a * (1 - fx) * (1 - fy) +
+        b * fx * (1 - fy) +
+        c * (1 - fx) * fy +
+        d * fx * fy
+      );
+    };
+
+    /** Three octaves is enough for ridges without turning into static. */
+    const terrain = (x: number, y: number, t: number): number =>
+      valueNoise(x * 0.9 + t, y * 0.9) * 0.6 +
+      valueNoise(x * 2.1 - t * 0.6, y * 2.1 + t * 0.3) * 0.28 +
+      valueNoise(x * 4.3, y * 4.3 - t * 0.4) * 0.12;
+
+    let topoField: Float32Array | null = null;
+    let topoCols = 0;
+    let topoRows = 0;
+
+    const sampleTerrain = (t: number) => {
+      topoCols = Math.ceil(w / TOPO_CELL) + 1;
+      topoRows = Math.ceil(h / TOPO_CELL) + 1;
+      const size = topoCols * topoRows;
+      if (!topoField || topoField.length !== size) topoField = new Float32Array(size);
+      for (let row = 0; row < topoRows; row++) {
+        for (let col = 0; col < topoCols; col++) {
+          topoField[row * topoCols + col] = terrain(
+            (col * TOPO_CELL) / 420,
+            (row * TOPO_CELL) / 420,
+            t,
+          );
         }
       }
+    };
 
-      // Soft central glow that pulses with the breath
-      if (alpha > 0.01) {
-        const breathPhase = animate ? (Math.sin(t / period * Math.PI * 2) + 1) / 2 : 0.5;
-        const glowR = maxR * (0.2 + 0.15 * breathPhase);
-        const grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, glowR);
-        grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light + 12}%, ${alpha * 0.08 * (0.5 + 0.5 * breathPhase)})`);
-        grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
-        ctx.fillStyle = grad;
+    /** Where along an edge the level crosses, so contours are smooth, not stepped. */
+    const crossing = (a: number, b: number, level: number): number =>
+      Math.abs(b - a) < 1e-6 ? 0.5 : (level - a) / (b - a);
+
+    const drawTopology = (
+      hue: number, sat: number, light: number, alpha: number, animate: boolean,
+    ) => {
+      topoTime += animate ? 0.0006 * spec.speed : 0;
+      sampleTerrain(topoTime);
+      const field = topoField;
+      if (!field) return;
+
+      ctx.lineWidth = 0.8;
+      ctx.lineCap = "round";
+
+      for (let level = 1; level <= TOPO_LEVELS; level++) {
+        // Levels span the band the field actually occupies. Cutting at even
+        // fractions of 0..1 wasted the outer contours — three octaves of noise
+        // average toward the middle, so the highest line never appeared and the
+        // lowest traced the edge of the viewport rather than any terrain.
+        const value = 0.3 + (level / (TOPO_LEVELS + 1)) * 0.44;
+        // Higher ground is drawn brighter, which is what gives the map depth.
+        const a = alpha * 0.3 * (0.45 + 0.55 * (level / TOPO_LEVELS));
+        if (a <= 0.005) continue;
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 6}%, ${a})`;
         ctx.beginPath();
-        ctx.arc(w / 2, h / 2, glowR, 0, Math.PI * 2);
-        ctx.fill();
+
+        for (let row = 0; row < topoRows - 1; row++) {
+          for (let col = 0; col < topoCols - 1; col++) {
+            const x0 = col * TOPO_CELL;
+            const y0 = row * TOPO_CELL;
+            // The clearance mask thins the field behind the reading column.
+            if (clearance(x0 + TOPO_CELL / 2, y0 + TOPO_CELL / 2) < 0.06) continue;
+
+            const tl = field[row * topoCols + col];
+            const tr = field[row * topoCols + col + 1];
+            const br = field[(row + 1) * topoCols + col + 1];
+            const bl = field[(row + 1) * topoCols + col];
+
+            // Marching squares: which corners stand above this level.
+            const code =
+              (tl > value ? 8 : 0) | (tr > value ? 4 : 0) |
+              (br > value ? 2 : 0) | (bl > value ? 1 : 0);
+            if (code === 0 || code === 15) continue;
+
+            const top = { x: x0 + TOPO_CELL * crossing(tl, tr, value), y: y0 };
+            const right = { x: x0 + TOPO_CELL, y: y0 + TOPO_CELL * crossing(tr, br, value) };
+            const bottom = { x: x0 + TOPO_CELL * crossing(bl, br, value), y: y0 + TOPO_CELL };
+            const left = { x: x0, y: y0 + TOPO_CELL * crossing(tl, bl, value) };
+
+            const segment = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+              ctx.moveTo(from.x, from.y);
+              ctx.lineTo(to.x, to.y);
+            };
+
+            switch (code) {
+              case 1: case 14: segment(left, bottom); break;
+              case 2: case 13: segment(bottom, right); break;
+              case 3: case 12: segment(left, right); break;
+              case 4: case 11: segment(top, right); break;
+              case 6: case 9: segment(top, bottom); break;
+              case 7: case 8: segment(left, top); break;
+              // Saddles: both crossings are real, so draw both.
+              case 5: segment(left, top); segment(bottom, right); break;
+              case 10: segment(top, right); segment(left, bottom); break;
+            }
+          }
+        }
+        ctx.stroke();
       }
     };
 
@@ -477,36 +565,49 @@ export const OrganismMembrane: React.FC = () => {
       width: number;
       phase: number;
     }
+    let topoTime = 0;
     const inkStrokes: InkStroke[] = [];
     let inkTimer = 0;
+
+    /**
+     * One hand, not many.
+     *
+     * Strokes used to fly off at random angles, which reads as scribble: a
+     * dozen unrelated marks with nothing in common. Here every stroke follows
+     * the same slow field the contours are cut from, so neighbouring marks
+     * curve *together* — the page looks written on rather than scratched at,
+     * and the two fields share one underlying ground.
+     */
+    const flowAngle = (x: number, y: number): number =>
+      valueNoise(x / 460, y / 460) * Math.PI * 3;
 
     const spawnInkStroke = () => {
       // Strokes favour the edges where the clearance mask lets them show.
       const edge = Math.random() < 0.6;
-      const startX = edge
+      let x = edge
         ? (Math.random() < 0.5 ? Math.random() * w * 0.3 : w * 0.7 + Math.random() * w * 0.3)
         : Math.random() * w;
-      const startY = edge
+      let y = edge
         ? Math.random() * h
         : (Math.random() < 0.5 ? Math.random() * h * 0.25 : h * 0.75 + Math.random() * h * 0.25);
-      const angle = Math.random() * Math.PI * 2;
-      const len = 140 + Math.random() * 260;
-      const segments = 10 + Math.floor(Math.random() * 8);
-      const curvature = 25 + Math.random() * 40;
-      const pts: { x: number; y: number }[] = [];
-      for (let i = 0; i <= segments; i++) {
-        const frac = i / segments;
-        // Organic curve: sine-wave deviation perpendicular to the stroke direction
-        const perp = Math.sin(frac * Math.PI * (1.5 + Math.random())) * curvature;
-        pts.push({
-          x: startX + Math.cos(angle) * len * frac + Math.sin(angle) * perp + (Math.random() - 0.5) * 8,
-          y: startY + Math.sin(angle) * len * frac - Math.cos(angle) * perp + (Math.random() - 0.5) * 8,
-        });
+
+      const segments = 16 + Math.floor(Math.random() * 10);
+      const step = 14 + Math.random() * 10;
+      // The hand keeps its heading and is only bent by the field, so a stroke
+      // curves instead of wandering.
+      let angle = flowAngle(x, y);
+      const pts: { x: number; y: number }[] = [{ x, y }];
+      for (let i = 0; i < segments; i++) {
+        angle = angle * 0.82 + flowAngle(x, y) * 0.18;
+        x += Math.cos(angle) * step;
+        y += Math.sin(angle) * step;
+        pts.push({ x, y });
       }
+
       const maxLife = 5 + Math.random() * 6;
       inkStrokes.push({
         points: pts, life: maxLife, maxLife,
-        width: 1.5 + Math.random() * 3,
+        width: 1.2 + Math.random() * 2.2,
         phase: Math.random() * Math.PI * 2,
       });
     };
@@ -558,18 +659,6 @@ export const OrganismMembrane: React.FC = () => {
         ctx.lineTo(last.x, last.y);
         ctx.stroke();
 
-        // Faint glow trail along the stroke
-        if (a > 0.1) {
-          const mid = s.points[Math.floor(s.points.length / 2)];
-          const glowA = a * 0.15;
-          const grad = ctx.createRadialGradient(mid.x, mid.y, 0, mid.x, mid.y, 30);
-          grad.addColorStop(0, `hsla(${(hue + 20) % 360}, ${sat + 10}%, ${light + 15}%, ${glowA})`);
-          grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(mid.x, mid.y, 30, 0, Math.PI * 2);
-          ctx.fill();
-        }
       }
     };
 
@@ -582,7 +671,12 @@ export const OrganismMembrane: React.FC = () => {
       const calm = num("--organism-calm", v.calm);
       const intensity = config.intensity;
       // Reading settles the field without extinguishing it.
-      const quiet = 1 - 0.72 * calm;
+      // Reading dims the field; it should not delete it. At 0.72 the organism
+      // fell to 28% of an already faint alpha exactly when a reader is most
+      // likely to be looking at it, so the intended courtesy — receding while
+      // you read — arrived as "the background is broken". Half strength still
+      // recedes, and can still be seen to move.
+      const quiet = 1 - 0.45 * calm;
       const alpha = intensity * spec.alpha * quiet;
 
       if (animate) t += 1 / 60;
@@ -603,42 +697,10 @@ export const OrganismMembrane: React.FC = () => {
       // structure without changing the colour of the room.
       drawAurora(alpha * (config.preset === "aurora" ? 1 : 0.4), hue, sat, dark);
 
-      const speed = animate
-        ? (0.35 + arousal * 1.6) * (1 - 0.9 * calm) * spec.speed
-        : 0;
-
-      if (config.preset === "neural") {
-        for (const p of points) {
-          if (!animate) continue;
-          p.x += p.vx * speed * p.depth;
-          p.y += p.vy * speed * p.depth;
-
-          if (pointer.current.active && calm < 0.5) {
-            const dx = pointer.current.x - p.x;
-            const dy = pointer.current.y - p.y;
-            const d2 = dx * dx + dy * dy;
-            const reach = 200;
-            if (d2 < reach * reach) {
-              const f = (1 - Math.sqrt(d2) / reach) * 0.0004 * p.depth;
-              p.vx += dx * f;
-              p.vy += dy * f;
-            }
-          }
-
-          p.vx *= 0.992;
-          p.vy *= 0.992;
-          if (p.x < -30) p.x = w + 30;
-          if (p.x > w + 30) p.x = -30;
-          if (p.y < -30) p.y = h + 30;
-          if (p.y > h + 30) p.y = -30;
-          p.phase += (0.006 + arousal * 0.012) * (1 - 0.85 * calm);
-        }
-        drawNeuralLinks(
-          Math.min(w, h) * (spec.linkFactor + 0.04 * synapsis),
-          hue, sat, light, alpha, synapsis, animate,
-        );
-      } else if (config.preset === "breath") {
-        drawBreath(hue, sat, light, alpha, animate);
+      if (config.preset === "dots") {
+        drawDots(hue, sat, light, alpha, animate);
+      } else if (config.preset === "topology") {
+        drawTopology(hue, sat, light, alpha, animate);
       } else if (config.preset === "ink") {
         drawInk(hue, sat, light, alpha, animate);
       } else if (config.preset === "lattice") {
@@ -659,7 +721,7 @@ export const OrganismMembrane: React.FC = () => {
       }
 
       // Point bodies — presets that draw their own visuals skip this.
-      if (config.preset !== "field" && config.preset !== "breath" && config.preset !== "ink")
+      if (config.preset !== "field" && config.preset !== "topology" && config.preset !== "ink" && config.preset !== "dots")
       for (const p of points) {
         const mask = clearance(p.x, p.y);
         const breath = animate ? 0.8 + 0.2 * Math.sin(p.phase) : 1;

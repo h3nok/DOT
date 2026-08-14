@@ -5,7 +5,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon-dot.ico" />
     <link rel="icon" type="image/svg+xml" href="/favicon-dot.svg" />
     <link rel="apple-touch-icon" href="/favicon-dot.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>DOT — Digital Organism Theory</title>
     <meta
       name="description"
@@ -66,6 +66,22 @@
       content="Read the line-edited Book One, trace every concept to its source, and keep hypotheses and open questions in view."
     />
     <meta name="twitter:image" content="https://dotheory.org/og-image.png" />
+
+    <!-- Structured data. A crawler reading only this document cannot run the
+         app, so what the site is — a book, its author, its chapters — has to be
+         stated here. scripts/materialize-public-routes.mjs rewrites this block
+         per route at build time from the release manifest; the placeholder
+         below is what the dev server serves. -->
+    <script type="application/ld+json" id="dot-structured-data">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Digital Organism Theory",
+        "alternateName": "DOT",
+        "url": "https://dotheory.org",
+        "inLanguage": "en"
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -13,6 +13,7 @@ import {
   AppearanceControl,
 } from "./organism";
 import { SiteContentProvider } from "./content/editable";
+import { StudioAuthGate } from "./blocks/publication/components/StudioAuthGate";
 
 // Lazy load surfaces for code splitting.
 const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
@@ -134,8 +135,22 @@ const App: React.FC = () => {
                 <Route path="/applied" element={<AppliedPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/join" element={<JoinPage />} />
-                <Route path="/studio" element={<PublicationStudioIndexPage />} />
-                <Route path="/studio/:projectId" element={<PublicationStudioPage />} />
+                <Route
+                  path="/studio"
+                  element={
+                    <StudioAuthGate>
+                      <PublicationStudioIndexPage />
+                    </StudioAuthGate>
+                  }
+                />
+                <Route
+                  path="/studio/:projectId"
+                  element={
+                    <StudioAuthGate>
+                      <PublicationStudioPage />
+                    </StudioAuthGate>
+                  }
+                />
                 <Route path="/read/:ownerId/:slug" element={<PublicationReaderPage />} />
                 <Route
                   path="/read/:ownerId/:slug/:sectionSlug"

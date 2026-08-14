@@ -24,11 +24,13 @@ The model must not hide the difference.
 
 Three terms that were previously used interchangeably now need exact roles.
 
-**The Canvas carries.**
-
-**The Painting interprets.**
-
-**Character acts.**
+> **Keep this distinction**
+>
+> **The Canvas carries.**
+>
+> **The Painting interprets.**
+>
+> **Character acts.**
 
 The **Canvas** is the capacity for persistence and update. It is the substrate in DOT’s model.
 
@@ -64,11 +66,13 @@ What is retained is not a complete recording of sensory life. Breakfast details 
 
 DOT calls these consequential updates **deltas**: differences that altered the system enough to influence what came next.
 
-The Canvas carries the deltas.
-
-The Painting is their accumulated organization.
-
-Every loop begins from the state left by earlier loops.
+> **The model in one movement**
+>
+> The Canvas carries the deltas.
+>
+> The Painting is their accumulated organization.
+>
+> Every loop begins from the state left by earlier loops.
 
 The three stable terms can be related formally:
 
@@ -244,7 +248,9 @@ A knot in the stomach is real. It may register danger, memory, anticipation, con
 
 This is the Subjective Data Principle operating inside the Canvas:
 
-Include the feeling. Inspect what it may be carrying. Do not promote it into truth without further inquiry.
+> **Working definition**
+>
+> Include the feeling. Inspect what it may be carrying. Do not promote it into truth without further inquiry.
 
 Scientific difficulty does not make feeling unreal. Privacy does not make it meaningless. At the same time, first-person certainty does not make an explanation scientifically established.
 
@@ -262,7 +268,9 @@ Its concern is the way an unresolved prediction can become a governing policy.
 
 DOT reserves the capitalized term **Fear** for what happens when the signal becomes a governing contraction:
 
-Fear is the governing contraction that organizes decision-space around a predicted threat.
+> **Working definition**
+>
+> Fear is the governing contraction that organizes decision-space around a predicted threat.
 
 $$
 \mathcal{D}_{t}^{Fear}\  \subset \ \mathcal{D}_{t}
@@ -294,7 +302,9 @@ The Painting carries family structure, historical structure, cultural assumption
 
 This is the **Human Identity Trap**:
 
-Little c mistakes a limited Painting for the whole self and organizes life around protecting it.
+> **Model statement**
+>
+> Little c mistakes a limited Painting for the whole self and organizes life around protecting it.
 
 Dogma is the collective form of the same mistake. A group protects a shared Painting and calls it truth, tradition, science, religion, nation, ideology, or common sense. The group then rewards interpretations that preserve the Painting and punishes those that expose its limits.
 
