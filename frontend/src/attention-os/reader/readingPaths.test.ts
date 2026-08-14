@@ -42,6 +42,14 @@ describe("reading paths", () => {
     expect(silent).toEqual([]);
   });
 
+  it("shares the Preface and then visibly diverges", () => {
+    expect(READING_PATHS.map((path) => path.steps[0].slug)).toEqual([
+      "preface",
+      "preface",
+    ]);
+    expect(new Set(READING_PATHS.map((path) => path.steps[1].slug)).size).toBe(2);
+  });
+
   it("offers a path that reaches the reader's own life before the architecture", () => {
     const path = findPath("start-where-you-live")!;
 

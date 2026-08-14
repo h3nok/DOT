@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { BookOpenText, ExternalLink, Library, X } from "lucide-react";
+import { ArrowRight, BookOpenText, ExternalLink, Library, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -207,22 +207,22 @@ function ReaderSheet({
   return (
     <Dialog.Root open={Boolean(active)} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[55] bg-background/35 backdrop-blur-[2px]" />
+        <Dialog.Overlay className="fixed inset-0 z-[55] bg-background/40 backdrop-blur-xs" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="book-reference-sheet fixed inset-x-3 bottom-3 z-[56] ml-auto max-h-[70svh] max-w-xl overflow-y-auto border border-[var(--book-hairline)] bg-background p-5 shadow-2xl sm:inset-x-6 sm:bottom-6 sm:p-7"
+          className="dot-surface book-reference-sheet fixed inset-x-3 bottom-3 z-[56] ml-auto max-h-[70svh] max-w-xl overflow-y-auto rounded-2xl border border-[var(--book-hairline)] bg-background/95 p-5 shadow-2xl backdrop-blur-xl sm:inset-x-6 sm:bottom-6 sm:p-7"
         >
           <div className="flex items-start justify-between gap-5">
             <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-[var(--book-hairline)] text-[var(--book-cinnabar)]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--book-hairline)] bg-foreground/[0.02] text-[var(--book-cinnabar)]">
                 {isReference ? (
-                  <Library className="h-4 w-4" aria-hidden="true" />
+                  <Library className="h-4.5 w-4.5" aria-hidden="true" />
                 ) : (
-                  <BookOpenText className="h-4 w-4" aria-hidden="true" />
+                  <BookOpenText className="h-4.5 w-4.5" aria-hidden="true" />
                 )}
               </span>
               <div>
-                <p className="font-mono dot-micro uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="dot-label">
                   {isReference ? "Publication source" : "Publication concept"}
                 </p>
                 <Dialog.Title className="book-reading-heading text-xl font-semibold text-foreground">
@@ -233,10 +233,10 @@ function ReaderSheet({
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:text-foreground"
+                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border/40 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
                 aria-label={`Close ${isReference ? "source" : "definition"}`}
               >
-                <X className="h-4 w-4" aria-hidden="true" />
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
             </Dialog.Close>
           </div>
@@ -261,34 +261,48 @@ function ReaderSheet({
               </div>
               <a
                 href={`/book/digital-organism-theory/references#reference-${active.reference.number}`}
-                className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-foreground underline decoration-border underline-offset-4"
+                className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[var(--organism-accent-strong)]"
               >
-                Open in Notes and Sources
+                <span>Open in Notes and Sources</span>
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </>
           )}
 
           {active?.kind === "concept" && (
             <div className="book-concept-definition mt-6">
-              <div className="book-concept-definition-status">
-                <span>{active.concept.claimLevel}</span>
-                <span aria-hidden="true">·</span>
-                <span>Defined in this work</span>
+              <div className="book-concept-definition-status flex items-center gap-2">
+                <span className="dot-chip text-[11px] font-semibold text-[var(--book-cinnabar)]">
+                  {active.concept.claimLevel}
+                </span>
+                <span className="text-xs text-muted-foreground">· Defined in this work</span>
               </div>
-              <p className="book-concept-definition-lead">
+              <p className="book-concept-definition-lead mt-3 text-sm leading-relaxed text-foreground">
                 {active.concept.definition}
               </p>
-              <div className="book-concept-definition-detail">
+              <div className="book-concept-definition-detail mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
                 <p>{active.concept.context}</p>
                 {active.concept.boundary !== active.concept.context && (
                   <p className="book-concept-definition-boundary">
-                    <strong>Boundary:</strong> {active.concept.boundary}
+                    <strong className="text-foreground font-medium">Boundary:</strong> {active.concept.boundary}
                   </p>
                 )}
               </div>
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-3 border-t border-[var(--book-hairline)] pt-5">
-                <a href={active.concept.sourceHref}>Read the source passage</a>
-                <a href={active.concept.mapHref}>Open in the concept map</a>
+              <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2.5 border-t border-[var(--book-hairline)] pt-5 text-xs font-semibold">
+                <a
+                  href={active.concept.sourceHref}
+                  className="inline-flex items-center gap-1 text-foreground transition-colors hover:text-[var(--organism-accent-strong)]"
+                >
+                  <span>Read the source passage</span>
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </a>
+                <a
+                  href={active.concept.mapHref}
+                  className="inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <span>Open in the concept map</span>
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </a>
               </div>
             </div>
           )}

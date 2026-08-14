@@ -29,9 +29,9 @@ export interface ReadingPath {
 export const READING_PATHS: ReadingPath[] = [
   {
     id: "start-where-you-live",
-    label: "Start where you live",
+    label: "Begin with lived experience",
     purpose:
-      "Begin with your own conditioning, then read the architecture that explains it.",
+      "Meet your conditioning first, then trace the architecture beneath it.",
     minutes: 78,
     steps: [
       {
@@ -70,8 +70,9 @@ export const READING_PATHS: ReadingPath[] = [
   },
   {
     id: "start-with-the-architecture",
-    label: "Start with the architecture",
-    purpose: "The book in its written order, foundations first.",
+    label: "Read in written order",
+    purpose:
+      "Build the theory from its foundations before returning to lived experience.",
     minutes: 101,
     steps: [
       { slug: "preface", why: "The method, and the claim levels that govern the book." },
