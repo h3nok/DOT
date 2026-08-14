@@ -225,91 +225,78 @@ html:has(.home-journey) {
 .home-ask-prompts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.45rem;
+  column-gap: 0.8rem;
+  row-gap: 0;
+  border-top: 1px solid color-mix(in oklch, var(--border) 58%, transparent);
 }
 
 .home-ask-prompt {
-  display: grid;
+  position: relative;
+  display: flex;
   min-width: 0;
-  min-height: 3.25rem;
-  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 1.9rem;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.65rem;
-  border: 1px solid color-mix(in oklch, var(--border) 78%, transparent);
-  border-radius: 0.45rem;
-  background: color-mix(in oklch, var(--background) 58%, transparent);
+  gap: 0.4rem;
+  padding: 0.3rem 0.35rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 58%, transparent);
+  border-radius: 0;
+  background: transparent;
   color: var(--muted-foreground);
   text-align: left;
-  backdrop-filter: blur(10px);
   transition:
     border-color 160ms ease,
     background-color 160ms ease,
-    box-shadow 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+    color 160ms ease;
 }
 
 .home-ask-prompt:hover,
 .home-ask-prompt:focus-visible {
-  border-color: var(--organism-accent-strong);
-  background: color-mix(
-    in oklch,
-    var(--background) 84%,
-    var(--organism-accent-soft)
-  );
+  border-bottom-color: var(--organism-accent-strong);
+  background: color-mix(in oklch, var(--organism-accent-soft) 42%, transparent);
   color: var(--foreground);
-  box-shadow:
-    inset 3px 0 0 var(--organism-accent-strong),
-    0 0.5rem 1.25rem color-mix(in oklch, var(--organism-accent) 12%, transparent);
-  transform: translateY(-1px);
 }
 
 .home-ask-prompt:focus-visible {
-  outline: 2px solid var(--organism-accent-strong);
-  outline-offset: 2px;
-}
-
-.home-ask-prompt-copy {
-  display: grid;
-  min-width: 0;
-  gap: 0.08rem;
+  outline: 1px solid var(--organism-accent-strong);
+  outline-offset: -1px;
 }
 
 .home-ask-prompt-category {
+  flex: 0 0 auto;
   color: color-mix(in oklch, var(--muted-foreground) 68%, transparent);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.58rem;
+  font-size: 0.5rem;
   line-height: 1.2;
   text-transform: uppercase;
   transition: color 160ms ease;
 }
 
-.home-ask-prompt-question {
-  overflow-wrap: anywhere;
-  font-size: 0.7rem;
-  line-height: 1.25;
+.home-ask-prompt-divider {
+  width: 0.18rem;
+  height: 0.18rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--muted-foreground) 46%, transparent);
+  transition: background-color 160ms ease;
 }
 
-.home-ask-prompt-icon {
-  width: 0.85rem;
-  height: 0.85rem;
-  color: color-mix(in oklch, var(--muted-foreground) 52%, transparent);
-  transition:
-    color 160ms ease,
-    transform 160ms ease;
+.home-ask-prompt-question {
+  min-width: 0;
+  font-size: 0.64rem;
+  line-height: 1.2;
 }
 
 .home-ask-prompt:hover .home-ask-prompt-category,
 .home-ask-prompt:focus-visible .home-ask-prompt-category,
-.home-ask-prompt:hover .home-ask-prompt-icon,
-.home-ask-prompt:focus-visible .home-ask-prompt-icon {
+.home-ask-prompt:hover .home-ask-prompt-question,
+.home-ask-prompt:focus-visible .home-ask-prompt-question {
   color: var(--organism-accent-strong);
 }
 
-.home-ask-prompt:hover .home-ask-prompt-icon,
-.home-ask-prompt:focus-visible .home-ask-prompt-icon {
-  transform: translate(0.12rem, -0.12rem);
+.home-ask-prompt:hover .home-ask-prompt-divider,
+.home-ask-prompt:focus-visible .home-ask-prompt-divider {
+  background: var(--organism-accent-strong);
 }
 
 .home-hero-stage {

@@ -1,4 +1,4 @@
-import { ArrowUp, ArrowUpRight, GitBranch, Scale, X } from "lucide-react";
+import { ArrowUp, GitBranch, Scale, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
@@ -177,16 +177,11 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             onClick={() => handlePromptClick(question)}
             className="home-ask-prompt group"
           >
-            <span className="home-ask-prompt-copy">
-              <span className="home-ask-prompt-category">
-                {question.category} ·
-              </span>
-              <span className="home-ask-prompt-question">{question.text}</span>
+            <span className="home-ask-prompt-category">
+              {question.category}
             </span>
-            <ArrowUpRight
-              className="home-ask-prompt-icon"
-              aria-hidden="true"
-            />
+            <span className="home-ask-prompt-divider" aria-hidden="true" />
+            <span className="home-ask-prompt-question">{question.text}</span>
           </button>
         ))}
       </div>

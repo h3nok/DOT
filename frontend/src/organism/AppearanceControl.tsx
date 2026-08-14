@@ -69,7 +69,7 @@ const Section: React.FC<{
     <div className="mb-2.5 flex items-baseline justify-between gap-3">
       <h3 className="dot-label">{title}</h3>
       {hint && (
-        <span className="truncate text-xs text-muted-foreground/70">{hint}</span>
+        <span className="truncate text-xs text-muted-foreground">{hint}</span>
       )}
     </div>
     {children}
@@ -105,9 +105,16 @@ export const AppearanceControl: React.FC<{
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"environment" | "reading">("environment");
   const ref = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      return;
+    }
+    panelRef.current?.focus();
+    // Captured now: by cleanup time the ref may point somewhere else.
+    const trigger = triggerRef.current;
     const onDown = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
@@ -117,6 +124,9 @@ export const AppearanceControl: React.FC<{
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onEsc);
+      // The panel was opened from the trigger; that is where focus belongs
+      // when it closes, not at the top of the document.
+      trigger?.focus();
     };
   }, [open]);
 
@@ -136,6 +146,7 @@ export const AppearanceControl: React.FC<{
       }
     >
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label="Appearance settings"
@@ -157,8 +168,10 @@ export const AppearanceControl: React.FC<{
 
       {open && (
         <div
+          ref={panelRef}
           role="dialog"
           aria-label="Appearance"
+          tabIndex={-1}
           className={`appearance-panel organism-alive flex flex-col overflow-hidden rounded-2xl text-foreground backdrop-blur-2xl ${
             inline
               ? "fixed left-4 right-4 top-16 w-auto sm:absolute sm:left-auto sm:right-0 sm:top-[calc(100%+0.75rem)] sm:w-[min(23rem,calc(100vw-2rem))]"
@@ -181,6 +194,11 @@ export const AppearanceControl: React.FC<{
           <div
             role="tablist"
             aria-label="Appearance sections"
+            onKeyDown={(event) => {
+              if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+              event.preventDefault();
+              setTab((current) => (current === "environment" ? "reading" : "environment"));
+            }}
             className="appearance-tabs mx-5 mt-3 flex shrink-0 gap-1 rounded-full p-0.5"
           >
             {(
@@ -193,7 +211,10 @@ export const AppearanceControl: React.FC<{
                 key={value}
                 type="button"
                 role="tab"
+                id={`appearance-tab-${value}`}
                 aria-selected={tab === value}
+                aria-controls={`appearance-panel-${value}`}
+                tabIndex={tab === value ? 0 : -1}
                 onClick={() => setTab(value)}
                 className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                   tab === value
@@ -206,7 +227,13 @@ export const AppearanceControl: React.FC<{
             ))}
           </div>
 
-          <div className="appearance-scroll min-h-0 flex-1 overflow-y-auto pt-2">
+          <div
+            role="tabpanel"
+            id={`appearance-panel-${tab}`}
+            aria-labelledby={`appearance-tab-${tab}`}
+            tabIndex={0}
+            className="appearance-scroll min-h-0 flex-1 overflow-y-auto pt-2"
+          >
             {tab === "environment" ? (
               <>
                 {/* Presets — one considered answer, before any dials. */}
@@ -474,7 +501,7 @@ export const AppearanceControl: React.FC<{
                             Ag
                           </span>
                           <span className="mt-1.5 block text-xs font-medium">{label}</span>
-                          <span className="block text-xs text-muted-foreground/70">{face}</span>
+                          <span className="block text-xs text-muted-foreground">{face}</span>
                         </button>
                       );
                     })}
