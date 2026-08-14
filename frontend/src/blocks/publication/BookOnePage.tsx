@@ -27,6 +27,7 @@ import {
   previousStep,
   type ReadingPath,
 } from "../../attention-os/reader/readingPaths";
+import { saveReadingPathProgress } from "../../attention-os/reader/readingPathProgress";
 import {
   DOT_BOOK_ONE_ROUTE,
   bookSectionRoute,
@@ -106,10 +107,12 @@ function LoadingState() {
 function BookContents({
   manifest,
   currentSlug,
+  path,
   onNavigate,
 }: {
   manifest: DotBookOneManifest;
   currentSlug?: string;
+  path?: ReadingPath | null;
   onNavigate?: () => void;
 }) {
   const groups = groupBookSectionsByPart(manifest.sections);
@@ -124,10 +127,15 @@ function BookContents({
           <ol className="space-y-0.5">
             {group.sections.map((section) => {
               const active = section.slug === currentSlug;
+              const sectionRoute = bookSectionRoute(section);
+              const destination =
+                path && positionOf(path, section.slug) >= 0
+                  ? `${sectionRoute}?path=${path.id}`
+                  : sectionRoute;
               return (
                 <li key={section.id}>
                   <Link
-                    to={bookSectionRoute(section)}
+                    to={destination}
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={`group flex flex-col rounded-lg border-l-2 px-3 py-2.5 transition-colors ${
@@ -225,7 +233,11 @@ function BookReader({
               <BookOpen className="h-3.5 w-3.5" />
               Book overview
             </Link>
-            <BookContents manifest={manifest} currentSlug={section.slug} />
+            <BookContents
+              manifest={manifest}
+              currentSlug={section.slug}
+              path={path}
+            />
           </div>
         </aside>
 
@@ -298,7 +310,7 @@ function BookReader({
               Ask about this chapter
             </button>
             <Link
-              to="/book/digital-organism-theory/references"
+              to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
               className="inline-flex min-h-10 items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <Library className="h-4 w-4" aria-hidden="true" />
@@ -508,6 +520,11 @@ export default function BookOnePage() {
   );
 
   useEffect(() => {
+    if (!activePath || !sectionSlug) return;
+    saveReadingPathProgress(activePath.id, sectionSlug);
+  }, [activePath, sectionSlug]);
+
+  useEffect(() => {
     const abort = new AbortController();
     fetchDotBookOneManifest(abort.signal)
       .then((nextManifest) => {
@@ -676,29 +693,25 @@ export default function BookOnePage() {
       >
         Skip to book
       </a>
-      <header
-        className={`book-chrome book-focus-hidden sticky top-0 z-30 print:hidden ${
-          section ? "" : "book-chrome-over-cover"
-        }`}
-      >
-        <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
-          <Link
-            to="/"
-            className="book-dot-link inline-flex items-center gap-2 text-xs font-medium transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span className="book-dot-link-mark" aria-hidden="true" />
-            <span>DOT</span>
-          </Link>
-          <Link
-            to={DOT_BOOK_ONE_ROUTE}
-            className="absolute left-1/2 hidden max-w-[42vw] -translate-x-1/2 truncate text-center font-mono dot-micro uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground md:block"
-          >
-            Book One{section ? ` · ${section.title}` : ""}
-          </Link>
-          <div className="flex items-center gap-3">
-            <AppearanceControl placement="inline" />
-            {section ? (
+      {section ? (
+        <header className="book-chrome book-focus-hidden sticky top-0 z-30 print:hidden">
+          <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 sm:px-8">
+            <Link
+              to="/"
+              className="book-dot-link inline-flex items-center gap-2 text-xs font-medium transition-colors"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span className="book-dot-link-mark" aria-hidden="true" />
+              <span>DOT</span>
+            </Link>
+            <Link
+              to={DOT_BOOK_ONE_ROUTE}
+              className="hidden truncate text-center font-mono dot-micro uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground md:block"
+            >
+              Book One · {section.title}
+            </Link>
+            <div className="flex items-center gap-3 justify-self-end">
+              <AppearanceControl placement="inline" />
               <button
                 type="button"
                 onClick={() => void enterFocusMode()}
@@ -708,18 +721,16 @@ export default function BookOnePage() {
               >
                 <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
-            ) : null}
-            <button
-              type="button"
-              onClick={() => openMinty()}
-              title="Ask Minty about what you're reading"
-              aria-label="Ask Minty about this book"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <MessageCircleQuestion className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Ask Minty</span>
-            </button>
-            {section ? (
+              <button
+                type="button"
+                onClick={() => openMinty()}
+                title="Ask Minty about what you're reading"
+                aria-label="Ask Minty about this book"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <MessageCircleQuestion className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Ask Minty</span>
+              </button>
               <button
                 type="button"
                 onClick={openContents}
@@ -728,10 +739,32 @@ export default function BookOnePage() {
                 <List className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden sm:inline">Contents</span>
               </button>
-            ) : null}
+            </div>
           </div>
+        </header>
+      ) : (
+        // The cover is the whole page: its controls float instead of sitting in a bar.
+        <div className="book-focus-hidden fixed right-6 top-6 z-30 flex h-9 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>DOT</span>
+          </Link>
+          <AppearanceControl placement="inline" />
+          <button
+            type="button"
+            onClick={() => openMinty()}
+            title="Ask Minty about this book"
+            aria-label="Ask Minty about this book"
+            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <MessageCircleQuestion className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">Ask Minty</span>
+          </button>
         </div>
-      </header>
+      )}
 
       {section && content ? (
         <BookReader
@@ -801,6 +834,7 @@ export default function BookOnePage() {
             <BookContents
               manifest={manifest}
               currentSlug={section?.slug}
+              path={activePath}
               onNavigate={closeContents}
             />
           </aside>

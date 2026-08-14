@@ -113,10 +113,10 @@ export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
   dots: {
     label: "Little c's",
     hint: "Each dot is a centre of experience. You are one among many.",
-    density: 0.5,
-    speed: 0.2,
+    density: 0.7,
+    speed: 0.25,
     linkFactor: 0,
-    alpha: 0.9,
+    alpha: 1.0,
   },
   topology: {
     label: "Topology",

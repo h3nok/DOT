@@ -381,39 +381,86 @@ export const OrganismMembrane: React.FC = () => {
     const drawDots = (
       hue: number, sat: number, light: number, alpha: number, animate: boolean,
     ) => {
+      // Subtle inter-node field connections between nearby conscious nodes
+      ctx.lineWidth = 0.6;
+      for (let i = 0; i < points.length; i++) {
+        const a = points[i];
+        for (let j = i + 1; j < points.length; j++) {
+          const b = points[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          const maxReach = 140;
+          if (d2 < maxReach * maxReach) {
+            const prox = 1 - Math.sqrt(d2) / maxReach;
+            const mask = Math.min(clearance(a.x, a.y), clearance(b.x, b.y));
+            const lineAlpha = alpha * Math.max(0.3, mask) * prox * 0.18;
+            if (lineAlpha > 0.005) {
+              ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 14}%, ${lineAlpha})`;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
       for (let i = 0; i < points.length; i++) {
         const p = points[i];
         if (animate) {
-          // Slow drift — each consciousness moving through its own arc.
-          p.x += Math.sin(p.phase) * 0.06 * spec.speed;
-          p.y += Math.cos(p.phase * 0.7) * 0.04 * spec.speed;
-          p.phase += 0.002 + p.depth * 0.001;
-          if (p.x < -20) p.x = w + 20;
-          if (p.x > w + 20) p.x = -20;
-          if (p.y < -20) p.y = h + 20;
-          if (p.y > h + 20) p.y = -20;
+          // Gentle organic drift — each consciousness moving through its own field
+          p.x += Math.sin(p.phase) * 0.08 * spec.speed;
+          p.y += Math.cos(p.phase * 0.7) * 0.05 * spec.speed;
+          p.phase += 0.003 + p.depth * 0.002;
+          if (p.x < -30) p.x = w + 30;
+          if (p.x > w + 30) p.x = -30;
+          if (p.y < -30) p.y = h + 30;
+          if (p.y > h + 30) p.y = -30;
         }
+
         const mask = clearance(p.x, p.y);
-        const pulse = animate ? 0.7 + 0.3 * Math.sin(p.phase * 2) : 0.85;
-        // The first dot is "you" — slightly brighter and larger.
+        const effMask = Math.max(0.42, mask);
+        const pulse = animate ? 0.8 + 0.2 * Math.sin(p.phase * 2.2) : 0.9;
         const isYou = i === 0;
-        const dotAlpha = alpha * mask * (0.2 + p.depth * 0.35) * pulse * (isYou ? 1.8 : 1);
+
+        // Prominent, crisp node sizing
+        const r = (3.6 + p.depth * 4.2) * (isYou ? 2.0 : 1);
+        const dotAlpha = alpha * effMask * (0.45 + p.depth * 0.45) * pulse * (isYou ? 1.4 : 1);
         if (dotAlpha <= 0.005) continue;
-        const r = (1.2 + p.depth * 1.8) * (isYou ? 1.6 : 1);
-        // Soft halo
-        if (dotAlpha > 0.02) {
-          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 4);
-          grad.addColorStop(0, `hsla(${hue}, ${sat}%, ${light + 10}%, ${dotAlpha * 0.3})`);
-          grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
-          ctx.fillStyle = grad;
+
+        // 1. Soft atmospheric luminous halo around each node
+        const haloR = r * 3.6;
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
+        grad.addColorStop(0, `hsla(${(hue + (isYou ? 20 : 0)) % 360}, ${sat + 15}%, ${light + 18}%, ${dotAlpha * 0.45})`);
+        grad.addColorStop(0.5, `hsla(${hue}, ${sat}%, ${light + 10}%, ${dotAlpha * 0.15})`);
+        grad.addColorStop(1, `hsla(${hue}, ${sat}%, ${light}%, 0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Extra radiating awareness ring for "You"
+        if (isYou) {
+          const breatheR = r * (1.6 + 0.5 * Math.sin(t * 2));
+          ctx.strokeStyle = `hsla(${(hue + 25) % 360}, ${sat + 25}%, ${light + 22}%, ${dotAlpha * 0.75})`;
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, r * 4, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.arc(p.x, p.y, breatheR, 0, Math.PI * 2);
+          ctx.stroke();
         }
-        // Core dot
-        ctx.fillStyle = `hsla(${hue}, ${sat + (isYou ? 15 : 0)}%, ${light + (isYou ? 12 : 6)}%, ${dotAlpha})`;
+
+        // 3. Solid conscious core body
+        ctx.fillStyle = `hsla(${hue + (isYou ? 15 : 0)}, ${sat + (isYou ? 25 : 10)}%, ${light + (isYou ? 20 : 10)}%, ${dotAlpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 4. Luminous pinpoint spark at the centre of consciousness
+        const sparkLight = light > 50 ? 98 : 95;
+        ctx.fillStyle = `hsla(${(hue + 30) % 360}, 40%, ${sparkLight}%, ${dotAlpha * 0.9})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(1.2, r * 0.35), 0, Math.PI * 2);
         ctx.fill();
       }
     };

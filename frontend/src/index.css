@@ -335,6 +335,80 @@ html[data-organism="off"] .book-surface,
   --book-hairline: color-mix(in oklch, var(--foreground) 14%, transparent);
 }
 
+/* The nested-architecture drawing (E ⊃ Big C ⊃ RF₀ ⊃ Little c). Its tokens are
+   derived from foreground/background so the figure stays legible in either
+   theme: light ink on light paper, light lines on dark paper. */
+.book-surface {
+  --architecture-shade: color-mix(in oklch, var(--foreground) 4%, transparent);
+  --architecture-line: color-mix(in oklch, var(--foreground) 34%, transparent);
+  --architecture-label: color-mix(in oklch, var(--foreground) 70%, transparent);
+  --architecture-node: var(--background);
+  --architecture-core: color-mix(in oklch, var(--background) 92%, var(--foreground));
+}
+
+.dark .book-surface {
+  --architecture-shade: color-mix(in oklch, var(--foreground) 6%, transparent);
+  --architecture-line: color-mix(in oklch, var(--foreground) 38%, transparent);
+  --architecture-label: color-mix(in oklch, var(--foreground) 78%, transparent);
+  --architecture-core: color-mix(in oklch, var(--background) 86%, var(--foreground));
+}
+
+html[data-contrast="high"] .book-surface {
+  --architecture-line: color-mix(in oklch, var(--foreground) 48%, transparent);
+  --architecture-label: var(--foreground);
+}
+
+/* E — the field of possibility. The frontispiece is inside it, so the field is
+   the page itself: a fine isotropic lattice with no centre and no edge. */
+.e-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle,
+      color-mix(in oklch, var(--foreground) 22%, transparent) 0.5px,
+      transparent 0.6px
+    ),
+    radial-gradient(
+      circle,
+      color-mix(in oklch, var(--organism-accent) 26%, transparent) 0.5px,
+      transparent 0.6px
+    );
+  background-size:
+    26px 26px,
+    78px 78px;
+  background-position:
+    0 0,
+    13px 13px;
+  opacity: 0.55;
+  mask-image: radial-gradient(ellipse 88% 78% at 50% 50%, #000 35%, transparent 100%);
+}
+
+.dark .e-field::before {
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .e-field::before {
+    animation: e-field-drift 90s linear infinite;
+  }
+}
+
+@keyframes e-field-drift {
+  from {
+    background-position:
+      0 0,
+      13px 13px;
+  }
+  to {
+    background-position:
+      26px 26px,
+      91px 91px;
+  }
+}
+
 html[data-contrast="high"] .book-surface {
   --book-ink: var(--foreground);
   --book-muted: color-mix(in oklch, var(--foreground) 80%, var(--background));
@@ -391,19 +465,6 @@ html[data-reading="sans"] .book-surface {
   background: color-mix(in oklch, var(--book-paper) 86%, transparent);
   box-shadow: 0 1px 0 color-mix(in oklch, var(--book-paper) 42%, transparent);
   backdrop-filter: blur(12px);
-}
-
-/* Over the cover the chrome is only its links.
-   A permanent bar puts a translucent band across the brightest part of the
-   composition and lays a second hairline a rem above the plate's own edge —
-   two parallel lines that read as a mistake without being nameable. On the
-   cover the header keeps its position and loses its surface; it becomes paper
-   again the moment there is text to sit above. */
-.book-chrome-over-cover {
-  background: transparent;
-  border-bottom-color: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
 }
 
 html[data-contrast="high"] .book-chrome {
@@ -468,51 +529,9 @@ html[data-contrast="high"] .book-chrome {
    behind the words themselves, rather than by washing out the whole middle. */
 
 .book-engraved-frontispiece {
-  --cover-inset: clamp(0.75rem, 2.4vw, 1.5rem);
   position: relative;
-  background:
-    /* The one light: above and slightly forward of the title. */
-    radial-gradient(
-      ellipse 70% 55% at 50% 8%,
-      color-mix(in oklch, var(--book-dot-bright) 13%, transparent),
-      transparent 72%
-    ),
-    /* Its falloff, resolving into a weighted sill instead of stopping at 76%. */
-    linear-gradient(
-      180deg,
-      color-mix(in oklch, var(--background) 95%, var(--book-dot) 5%) 0%,
-      var(--background) 62%,
-      color-mix(in oklch, var(--background) 97%, var(--foreground) 3%) 100%
-    );
+  background: transparent;
   color: var(--foreground);
-}
-
-/* The plate. A hairline held off the edge is what reads as "cover" rather than
-   "section" — and it is the same frame the printed edition carries, so the two
-   finally agree with each other. */
-.book-engraved-frontispiece::before {
-  content: "";
-  position: absolute;
-  inset: var(--cover-inset);
-  border: 1px solid var(--book-hairline);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* The paper the rest of the reader is printed on. The cover used to override
-   it entirely and so belonged to a different product. */
-.book-engraved-frontispiece::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.5;
-  pointer-events: none;
-  background-image: radial-gradient(
-    circle at 1px 1px,
-    color-mix(in oklch, var(--foreground) 7%, transparent) 1px,
-    transparent 0
-  );
-  background-size: 3px 3px;
 }
 
 /* Legibility, bought where it is needed. A column-width scrim sits behind the

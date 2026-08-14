@@ -1,11 +1,18 @@
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BookOpen,
+  Compass,
   Download,
+  Network,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { READING_PATHS } from "../../attention-os/reader/readingPaths";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  findPath,
+  positionOf,
+} from "../../attention-os/reader/readingPaths";
+import { readReadingPathProgress } from "../../attention-os/reader/readingPathProgress";
 import {
   DOT_BOOK_ONE_ROUTE,
   bookSectionRoute,
@@ -14,8 +21,8 @@ import {
 } from "../../content/publications/dotBookOne";
 import { siteConfig } from "../../content/site.config";
 import { Editable } from "../../content/editable";
+import { AutomataLoop } from "./AutomataLoop";
 import BookCitation from "./BookCitation";
-import DotEmergenceField from "./DotEmergenceField";
 
 /**
  * BookLanding — the frontispiece.
@@ -61,139 +68,326 @@ const CLAIM_DEFINITIONS: Record<string, string> = {
   speculation: "A possibility kept visible without being presented as fact.",
 };
 
+/** The title's first word rotates because the three names share one referent. */
+const TITLE_SUBJECTS = ["Consciousness", "You", "Little c"] as const;
+
+function readingPathHref(pathId: string, sectionSlug: string): string {
+  return `${DOT_BOOK_ONE_ROUTE}/${sectionSlug}?path=${pathId}`;
+}
+
+function pathSectionTitle(
+  manifest: DotBookOneManifest,
+  sectionSlug: string,
+): string {
+  const section = manifest.sections.find(
+    (candidate) => candidate.slug === sectionSlug,
+  );
+  if (section?.kind === "preface") return "Preface";
+  if (section?.kind === "references") return "Sources";
+  if (section) return section.title;
+
+  return sectionSlug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export default function BookLanding({ manifest }: { manifest: DotBookOneManifest }) {
   const firstSection = manifest.sections[0];
   const claimLevels = manifest.reader_contract.claim_levels;
+  const reduceMotion = useReducedMotion();
+  const [savedProgress] = useState(readReadingPathProgress);
+  const [subjectIndex, setSubjectIndex] = useState(0);
+  const subject = reduceMotion ? TITLE_SUBJECTS[0] : TITLE_SUBJECTS[subjectIndex];
+  const savedPath = savedProgress ? findPath(savedProgress.pathId) : null;
+  const savedPosition =
+    savedPath && savedProgress
+      ? positionOf(savedPath, savedProgress.sectionSlug)
+      : -1;
+  const savedPathComplete =
+    savedPath !== null && savedPosition === savedPath.steps.length - 1;
+  const primaryHref =
+    savedPath && savedProgress
+      ? readingPathHref(savedPath.id, savedProgress.sectionSlug)
+      : bookSectionRoute(firstSection);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setSubjectIndex(0);
+      return;
+    }
+
+    const timer = window.setInterval(
+      () => setSubjectIndex((index) => (index + 1) % TITLE_SUBJECTS.length),
+      3600,
+    );
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
 
   return (
     <main id="book-main" className="w-full pb-24">
-      {/* ── Frontispiece ─────────────────────────────────────────────── */}
-      <section className="book-engraved-frontispiece relative flex min-h-[80svh] flex-col items-center justify-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-8 text-center sm:px-6 sm:py-16">
-        <DotEmergenceField className="absolute inset-0" />
-        <span className="book-frontispiece-wash absolute inset-0" aria-hidden="true" />
+      {/* ── Frontispiece: The Codex ─────────────────────────────────── */}
+      <section className="e-field relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-16">
+        {/* One light source behind the architecture, in whichever theme is active */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(ellipse 52% 42% at 50% 47%, color-mix(in oklch, var(--book-cinnabar) 10%, transparent) 0%, transparent 72%),
+              radial-gradient(ellipse 96% 74% at 50% 47%, color-mix(in oklch, var(--book-paper) 94%, var(--foreground)) 0%, var(--book-paper) 78%)
+            `,
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Edge vignette, so the cover reads as a bounded object */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 82% 72% at 50% 50%, transparent 45%, color-mix(in oklch, var(--book-paper) 82%, var(--foreground)) 100%)",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* The page is E: a boundary named at its own edge */}
+        <div
+          className="pointer-events-none absolute inset-3 rounded-2xl border border-[var(--architecture-line)] sm:inset-4"
+          aria-hidden="true"
+        />
+        <span className="pointer-events-none absolute left-6 top-6 flex h-9 items-center font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--book-muted)] sm:left-8 sm:top-8">
+          E<span className="hidden sm:inline"> · the field of possibility</span>
+        </span>
 
         <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="book-frontispiece-copy relative z-10 flex w-full max-w-3xl flex-col items-center pt-4 sm:pt-14"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:grid-rows-[auto_auto] lg:gap-x-12"
         >
-          <h1 className="text-balance font-serif font-normal leading-[1.04] text-foreground">
-            <span className="block text-5xl sm:text-6xl lg:text-7xl">Consciousness</span>
-            <span className="mt-3 block text-xl font-normal text-muted-foreground sm:text-2xl">
-              A Digital Organism
-            </span>
-          </h1>
+          {/* ── The naming ──────────────────────────────────────────────── */}
+          <div className="order-1 flex flex-col items-center text-center lg:items-start lg:text-left">
+            <motion.span
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--book-muted)]"
+            >
+              {manifest.project.series_title} · Book One
+            </motion.span>
 
-          <p className="mt-8 max-w-xl text-balance font-serif text-xl leading-relaxed text-foreground sm:text-2xl">
-            A life is shaped, acts, and is shaped again.
-          </p>
+            <motion.h1
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.7 }}
+              className="mt-4"
+            >
+              <span className="sr-only">{manifest.project.title}</span>
+              <span aria-hidden="true">
+                <span className="relative block h-10 w-full">
+                  <AnimatePresence initial={false}>
+                    <motion.span
+                      key={subject}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="absolute inset-0 flex items-center justify-center whitespace-nowrap font-mono text-2xl font-semibold uppercase tracking-[0.18em] text-[var(--book-cinnabar)] drop-shadow-[0_0_12px_color-mix(in_oklch,var(--book-cinnabar)_55%,transparent)] sm:text-3xl lg:justify-start lg:text-[2rem]"
+                    >
+                      {subject}:
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
+                <span className="mt-1 block font-serif text-4xl font-medium leading-[1.06] text-[var(--book-ink)] sm:text-5xl lg:text-[3.25rem]">
+                  A Digital Organism
+                </span>
+              </span>
+            </motion.h1>
 
-          <div className="mt-10 mx-auto grid max-w-lg gap-0 text-left">
-            {[
-              { step: "Shaped", line: "You were shaped before you could choose." },
-              { step: "Filtered", line: "What you carry shapes what you see." },
-              { step: "Acted", line: "What you do meets consequence." },
-              { step: "Changed", line: "Consequence changes what you carry." },
-            ].map(({ step, line }, i) => (
-              <div key={step} className="flex items-baseline gap-3 border-l-2 border-[var(--book-hairline)] py-2 pl-4">
-                <span className="dot-label shrink-0 tabular-nums text-[var(--book-cinnabar)]">0{i + 1}</span>
-                <p className="text-sm leading-relaxed text-foreground/85 sm:text-base">
-                  <span className="font-semibold text-foreground">{step}.</span> {line}
-                </p>
-              </div>
-            ))}
-            <div className="ml-4 mt-1">
-              <span className="dot-label text-[var(--book-cinnabar)]">↩ The loop begins again</span>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.45, duration: 0.6 }}
+              className="mt-3 font-serif text-sm italic text-[var(--book-muted)]"
+            >
+              Three names. One thing.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55, duration: 0.6 }}
+              className="mt-6 max-w-md border-l-2 border-[var(--book-cinnabar)] pl-4 text-left font-serif text-lg leading-relaxed text-[var(--book-ink)] sm:text-xl"
+            >
+              What you are. What shaped you.
+              <br />
+              What you can still author.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.65, duration: 0.6 }}
+              className="mt-5 max-w-md text-balance font-serif text-base italic leading-relaxed text-[var(--book-muted)]"
+            >
+              A life is shaped, acts, and is shaped again.
+            </motion.p>
+
+            {/* Action cluster */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.85, duration: 0.6 }}
+              className="mt-8 flex flex-col items-center gap-4 sm:flex-row"
+            >
+              <Link
+                to={primaryHref}
+                className="book-frontispiece-action dot-reading-action group inline-flex min-h-12 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-7 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] sm:mr-1"
+              >
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
+                <span>
+                  {savedPath
+                    ? savedPathComplete
+                      ? "Review your path"
+                      : "Continue reading"
+                    : "Begin reading"}
+                </span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </Link>
+
+              <a
+                href="#ways-in"
+                className="dot-label inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)] sm:mx-3"
+              >
+                <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Entrances</span>
+              </a>
+
+              <Link
+                to={`${DOT_BOOK_ONE_ROUTE}/copy`}
+                className="dot-label inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)] sm:ml-1"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>PDF edition</span>
+              </Link>
+            </motion.div>
+
+            {/* Extent, so the cover promises something finite */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.95, duration: 0.6 }}
+              className="dot-label mt-6 text-[var(--book-muted)]"
+            >
+              Book One · {manifest.extent.chapters} chapters · {manifest.extent.references}{" "}
+              sources
+            </motion.p>
+          </div>
+
+          {/* ── The architecture ────────────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="order-2 flex w-full justify-center lg:col-start-2 lg:row-span-2 lg:row-start-1"
+          >
+            <AutomataLoop />
+          </motion.div>
+
+          {/* Attribution follows the model on small screens, and the title on wide ones. */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.6 }}
+            className="order-3 mx-auto flex w-full max-w-md flex-col items-center gap-1.5 border-t border-[var(--book-hairline)] pt-4 lg:col-start-1 lg:row-start-2 lg:mx-0 lg:items-start"
+          >
+            <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 lg:justify-start">
+              <a
+                href={siteConfig.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-[var(--book-ink)] transition-colors hover:text-[var(--book-cinnabar)]"
+              >
+                {manifest.project.author}
+              </a>
+              <span className="dot-label text-[var(--book-muted)]">
+                {manifest.release.label} · v{manifest.release.version}
+              </span>
             </div>
-          </div>
-          <p className="mt-6 max-w-lg text-balance text-center text-sm leading-relaxed text-muted-foreground/80 sm:text-base">
-            DOT asks whether this repeating process belongs to a larger living
-            architecture of consciousness — and whether understanding it can give
-            us more freedom in how we live.
-          </p>
+            <p className="font-serif text-sm italic text-[var(--book-muted)]">
+              A construction, not a revelation.
+            </p>
+          </motion.div>
+        </motion.div>
 
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
-            <Link
-              to={bookSectionRoute(firstSection)}
-              className="book-frontispiece-action group inline-flex min-h-11 items-center gap-2 px-6 py-3 text-sm font-semibold"
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-              <span>Begin with the preface</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
-            <a
-              href="#ways-in"
-              className="book-frontispiece-secondary-action inline-flex min-h-11 items-center gap-1.5 text-sm font-medium underline decoration-1 underline-offset-4"
-            >
-              <span>Choose another entrance</span>
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-            <Link
-              to={`${DOT_BOOK_ONE_ROUTE}/copy`}
-              className="book-frontispiece-download-action inline-flex min-h-11 items-center gap-1.5 text-sm font-medium"
-            >
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>PDF edition</span>
-            </Link>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 border-t border-[var(--book-hairline)] pt-4 text-muted-foreground">
-            <a
-              href={siteConfig.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="dot-label inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
-            >
-              {manifest.project.author}
-            </a>
-            <span className="dot-label opacity-40" aria-hidden="true">·</span>
-            <span className="dot-label">
-              v{manifest.release.version} · A construction, not a revelation
-            </span>
-          </div>
+        {/* Bottom scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <div className="h-8 w-px bg-gradient-to-b from-transparent via-[var(--architecture-line)] to-transparent" />
         </motion.div>
       </section>
 
-      {/* ── 2. Reading Paths ────────────────────────────────────────── */}
+      {/* ── 2. Entrances ───────────────────────────────────────────── */}
       <motion.section
         id="ways-in"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5 }}
-        className="mx-auto scroll-mt-24 max-w-4xl px-6 pt-20"
+        className="mx-auto scroll-mt-24 max-w-3xl px-6 pt-20"
         aria-labelledby="reading-paths-title"
       >
-        <p className="dot-label text-[var(--book-muted)]">
-          Choose your entrance
-        </p>
-        <h2 id="reading-paths-title" className="book-reading-heading mt-3 text-3xl font-semibold text-[var(--book-ink)] sm:text-4xl">
-          One book. Two honest ways in.
+        <p className="dot-label text-[var(--book-muted)]">Choose an entrance</p>
+        <h2
+          id="reading-paths-title"
+          className="mt-2 font-serif text-2xl font-medium text-[var(--book-ink)] sm:text-3xl"
+        >
+          Read the argument or explore its structure.
         </h2>
-        <p className="book-reading-copy mt-3 max-w-2xl text-base leading-relaxed text-[var(--book-muted)]">
-          The text does not change. Only the order of encounter does. Every path
-          is finite and ends in the sources.
-        </p>
-        <div className="mt-8 border-t border-[var(--book-hairline)]">
-          {READING_PATHS.map((path) => (
-            <Link
-              key={path.id}
-              to={`${DOT_BOOK_ONE_ROUTE}/${path.steps[0].slug}?path=${path.id}`}
-              className="book-reading-path group grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 border-b border-[var(--book-hairline)] px-2 py-6 transition-colors hover:bg-[var(--book-vellum)] sm:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)_auto] sm:items-center sm:px-3"
-            >
-              <span className="book-reading-heading text-xl font-semibold text-[var(--book-ink)] group-hover:text-[var(--book-cinnabar)]">
-                {path.label}
+        <div className="mt-7 grid gap-3 sm:grid-cols-2">
+          <Link
+            to={primaryHref}
+            className="group grid min-h-36 grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 rounded-lg border border-[var(--book-hairline)] bg-[var(--book-vellum)]/40 p-5 transition-all hover:border-[var(--book-cinnabar)]/40 hover:bg-[var(--book-vellum)]"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--book-hairline)] text-[var(--book-cinnabar)]">
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-serif text-lg font-medium text-[var(--book-ink)] group-hover:text-[var(--book-cinnabar)]">
+                {savedPath ? "Continue Book One" : "Read Book One"}
               </span>
-              <span className="book-reading-copy col-span-2 text-sm leading-relaxed text-[var(--book-muted)] sm:col-span-1">
-                {path.purpose}
+              <span className="mt-1.5 block text-sm leading-relaxed text-[var(--book-muted)]">
+                {savedPath && savedProgress
+                  ? savedPathComplete
+                    ? "Return to the sources at the end of your saved route."
+                    : `${savedPath.label}, section ${savedPosition + 1} of ${savedPath.steps.length}: ${pathSectionTitle(manifest, savedProgress.sectionSlug)}.`
+                  : "The complete foundational text, beginning with the Preface."}
               </span>
-              <span className="col-start-2 row-start-1 flex items-center gap-2 self-center dot-label text-[var(--book-muted)] sm:col-start-3">
-                {path.minutes} min
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </span>
+            <ArrowRight className="mt-2 h-4 w-4 text-[var(--book-muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--book-cinnabar)]" aria-hidden="true" />
+          </Link>
+
+          <Link
+            to="/doctrine"
+            className="group grid min-h-36 grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-4 rounded-lg border border-[var(--book-hairline)] bg-[var(--book-vellum)]/40 p-5 transition-all hover:border-[var(--book-cinnabar)]/40 hover:bg-[var(--book-vellum)]"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--book-hairline)] text-[var(--book-cinnabar)]">
+              <Network className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-serif text-lg font-medium text-[var(--book-ink)] group-hover:text-[var(--book-cinnabar)]">
+                Concept Map
               </span>
-            </Link>
-          ))}
+              <span className="mt-1.5 block text-sm leading-relaxed text-[var(--book-muted)]">
+                Core terms, relationships, and claim boundaries in one explorable view.
+              </span>
+            </span>
+            <ArrowRight className="mt-2 h-4 w-4 text-[var(--book-muted)] transition-transform group-hover:translate-x-1 group-hover:text-[var(--book-cinnabar)]" aria-hidden="true" />
+          </Link>
         </div>
       </motion.section>
 
