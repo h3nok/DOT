@@ -49,7 +49,9 @@ export const OrganismThemeBridge: React.FC = () => {
       const rawStaticChroma =
         0.13 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * v.calm);
-      const chroma = tint === "auto" ? rawStaticChroma : Math.max(0.06, rawStaticChroma);
+      // Same floors as the animated path; reduced motion changes the tempo,
+      // not the palette.
+      const chroma = Math.max(tint === "auto" ? 0.045 : 0.06, rawStaticChroma);
       // Reduced motion never flashes: drop any pending/queued pulse silently.
       v.pendingPulse = false;
       v.pulseDeferred = false;
@@ -91,12 +93,16 @@ export const OrganismThemeBridge: React.FC = () => {
       const dh = ((targetHue - shown.hue + 540) % 360) - 180;
       shown.hue = (shown.hue + dh * k + 360) % 360;
 
-      // Reading pins chroma lower so body-text contrast stays stable.
-      // Floor at 0.06 so a pinned tint is always perceptible.
+      // Reading pins chroma lower so body-text contrast stays stable, then a
+      // floor keeps the accent perceptible. A pinned tint is a stated choice
+      // and gets the higher floor; "auto" gets one too, because following the
+      // time of day should mean taking the hour's colour, not going grey —
+      // without it the circadian accent washes out to a neutral exactly when
+      // the reader settles in, and the field goes with it.
       const rawChroma =
         0.14 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * calm);
-      const targetChroma = tint === "auto" ? rawChroma : Math.max(0.06, rawChroma);
+      const targetChroma = Math.max(tint === "auto" ? 0.045 : 0.06, rawChroma);
       shown.chroma += (targetChroma - shown.chroma) * k;
       shown.luma += (v.daylight - shown.luma) * k;
       shown.arousal += (v.arousal - shown.arousal) * 0.1;

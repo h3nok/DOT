@@ -7,6 +7,7 @@ import sqlalchemy.ext.asyncio
 
 import app.core.security
 import app.db.session
+import app.domains.commerce.service as commerce_service
 import app.domains.support.models as models
 import app.domains.support.schemas as schemas
 import app.domains.support.service as support_service
@@ -87,7 +88,10 @@ async def stripe_webhook(
         raise fastapi.HTTPException(status_code=400, detail="Invalid signature.") from exc
     except support_service.SupportUnavailableError as exc:
         raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
-    changed: bool = await support_service.apply_event(session, event)
+    if await commerce_service.is_commerce_event(session, event):
+        changed = await commerce_service.apply_event(session, event)
+    else:
+        changed = await support_service.apply_event(session, event)
     return {"applied": changed}
 
 

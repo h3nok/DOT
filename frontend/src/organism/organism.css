@@ -750,3 +750,200 @@ html[data-ui-style="cinematic"] .dot-page-heading {
 html[data-ui-style="cinematic"] .dot-label {
   letter-spacing: 0.2em;
 }
+
+/* ====================================================================
+   The surface styles, carried onto the reading surface.
+
+   Everything above styles the `.dot-*` design system, which is every
+   screen except the one people actually spend their time on. The book
+   reader was built from its own `.book-*` vocabulary and so ignored the
+   member's surface choice entirely — you could select Neural, watch the
+   home page turn to lit glass, open a chapter, and land somewhere with
+   no opinion at all. These rules close that gap.
+
+   The rule for all of them: the treatment lands on chrome, cards, and
+   navigation. Nothing here paints behind running text, and nothing here
+   animates. A living edge belongs around the page, not under the words.
+   ==================================================================== */
+
+/* --- Neural: the page as lit glass, breathing with the organism ------ */
+
+html[data-ui-style="neural"] .book-chrome {
+  border-bottom-color: color-mix(in oklch, var(--organism-accent-soft) 55%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 72%, transparent);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 0 1px calc(4px + var(--organism-glow, 0px)) var(--organism-accent-soft);
+}
+
+/* The page panel keeps a hairline of accent so the column reads as a
+   membrane holding the text rather than as a rectangle behind it. */
+html[data-ui-style="neural"] .book-reader::before {
+  border-radius: 1.25rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--organism-accent-soft) 40%, transparent),
+    0 0 calc(10px + var(--organism-glow, 0px) * 2) color-mix(in oklch, var(--organism-accent) 16%, transparent);
+}
+
+/* A generous corner, not a pill: these are tall cards, and 999px on a
+   9rem-high grid turns the ends into lozenges. */
+html[data-ui-style="neural"] .book-reader-quick-tools,
+html[data-ui-style="neural"] .book-entrance {
+  border-radius: 1.25rem;
+  border-color: color-mix(in oklch, var(--organism-accent-soft) 60%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 0 calc(3px + var(--organism-glow, 0px)) color-mix(in oklch, var(--organism-accent) 22%, transparent);
+}
+
+/* Glass is the same for both entrances, so the primary action has to be said
+   in the other thing neural has: the strength of its lit edge. */
+html[data-ui-style="neural"] .book-entrance--primary {
+  border-color: var(--organism-accent-strong);
+  box-shadow: 0 0 calc(8px + var(--organism-glow, 0px) * 2) color-mix(in oklch, var(--organism-accent) 42%, transparent);
+}
+
+html[data-ui-style="neural"] .book-entrance:hover {
+  border-color: var(--organism-accent-strong);
+  box-shadow: 0 0 calc(7px + var(--organism-glow, 0px) * 1.5) color-mix(in oklch, var(--organism-accent) 38%, transparent);
+}
+
+/* --- Organic: warm, rounded, no glass ------------------------------- */
+
+html[data-ui-style="organic"] .book-reader::before {
+  border-radius: 1.75rem;
+}
+
+html[data-ui-style="organic"] .book-reader-quick-tools {
+  border-radius: 1.5rem;
+  border-color: color-mix(in oklch, var(--organism-accent-soft) 42%, var(--book-hairline));
+  background: color-mix(in oklch, var(--organism-accent) 5%, var(--book-paper));
+}
+
+/* Rounder and warmer, but still wearing its own ground, so the primary
+   entrance stays the primary entrance. */
+html[data-ui-style="organic"] .book-entrance {
+  border-radius: 1.5rem;
+}
+
+/* --- Cinematic: deep shadow, hard ground, no lit edges -------------- */
+
+html[data-ui-style="cinematic"] .book-reader::before {
+  border-radius: 0.5rem;
+  box-shadow: 0 32px 80px -28px rgb(0 0 0 / 0.55);
+}
+
+html[data-ui-style="cinematic"] .book-chrome {
+  border-bottom-color: transparent;
+  box-shadow: 0 12px 32px -20px rgb(0 0 0 / 0.7);
+}
+
+html[data-ui-style="cinematic"] .book-reader-quick-tools {
+  border-radius: 0.5rem;
+}
+
+/* --- Minimal: flat, sharp, opaque -----------------------------------
+   Minimal is not "less". Its surfaces above are solid `--card` behind a
+   real 1px border, with the blur and the shadow removed — the box stays,
+   it simply stops pretending to be glass. An earlier version of these
+   rules made the reader's surfaces transparent instead, which is the one
+   thing minimal never does, and it read as a broken page rather than a
+   plain one. */
+
+html[data-ui-style="minimal"] .book-chrome {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--book-paper);
+  box-shadow: none;
+}
+
+html[data-ui-style="minimal"] .book-reader::before {
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+html[data-ui-style="minimal"] .book-reader-quick-tools {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--book-hairline);
+  background: color-mix(in oklab, var(--book-paper) 94%, transparent);
+  box-shadow: none;
+}
+
+/* The entrances keep whatever ground their own modifier gives them — the
+   primary one is tinted so it reads as the primary action, and flattening
+   both to the same fill would leave two identical cards and no answer to
+   "which of these am I meant to press". Minimal squares the corners and
+   takes away the lift; it does not take away the distinction. */
+html[data-ui-style="minimal"] .book-entrance {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+/* --- Editorial: ruled, typographic, no boxes ------------------------
+   The editorial idiom above is a 2px rule across the top of a surface and
+   the space to sit under it — a section head, not a card. The controls
+   take that treatment. The page panel keeps its paper, because it is the
+   page rather than a card on it; it only loses its corners and its lift. */
+
+html[data-ui-style="editorial"] .book-chrome {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--book-paper);
+  border-bottom-width: 2px;
+  border-bottom-color: color-mix(in oklab, var(--book-ink) 70%, transparent);
+  box-shadow: none;
+}
+
+html[data-ui-style="editorial"] .book-reader::before {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html[data-ui-style="editorial"] .book-reader-quick-tools {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-top: 2px solid color-mix(in oklab, var(--book-ink) 70%, transparent);
+  border-radius: 0;
+  background: transparent;
+  padding: 1.1rem 0 0;
+  box-shadow: none;
+}
+
+/* The entrances are actions, not surfaces: editorial keeps their outline
+   and squares it, rather than dissolving a call to action into a rule. */
+html[data-ui-style="editorial"] .book-entrance {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+  border-color: color-mix(in oklab, var(--book-ink) 45%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Editorial has no fills to distinguish the primary action with, so it says
+   it the way the rest of this style says everything: with weight. */
+html[data-ui-style="editorial"] .book-entrance--primary {
+  border-width: 2px;
+  border-color: color-mix(in oklab, var(--book-ink) 85%, transparent);
+}
+
+html[data-ui-style="editorial"] .book-entrance-icon {
+  border-radius: 0;
+}
+
+/* High contrast is a stated need and outranks any surface treatment: a
+   glow around a card is decoration, and decoration loses to legibility. */
+html[data-contrast="high"] .book-chrome,
+html[data-contrast="high"] .book-reader::before,
+html[data-contrast="high"] .book-reader-quick-tools,
+html[data-contrast="high"] .book-entrance {
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

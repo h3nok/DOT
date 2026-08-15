@@ -3,7 +3,6 @@ import path from "node:path";
 
 const SITE_URL = "https://dotheory.org";
 const BOOK_ROUTE = "/book/digital-organism-theory";
-const BOOK_PDF_PATH = "/books/digital-organism-theory-book-one-digital-edition.pdf";
 // Mirrors siteConfig.social.linkedin. Search engines resolve an author entity
 // through profiles it already knows, so the book's structured data carries it.
 // `materialize-public-routes.test.ts` fails if the two ever disagree.
@@ -50,7 +49,7 @@ const STATIC_ROUTES = [
   {
     route: `${BOOK_ROUTE}/copy`,
     title: "Digital Edition — Consciousness: A Digital Organism",
-    description: "Download the branded digital edition of Digital Organism Theory Book One.",
+    description: "Purchase the authenticated digital edition of Digital Organism Theory Book One.",
   },
 ];
 
@@ -203,7 +202,7 @@ function breadcrumb(trail) {
   };
 }
 
-/** The edition itself: one work, one author, its chapters, and the PDF of it. */
+/** The edition itself: one work, one author, its chapters, and its ownership offer. */
 function bookNode(manifest) {
   const { project, release } = manifest;
   const edition = `${release.label}, version ${release.version}`;
@@ -231,15 +230,22 @@ function bookNode(manifest) {
     workExample: [
       {
         "@type": "Book",
-        "@id": `${SITE_URL}${BOOK_PDF_PATH}#edition`,
+        "@id": `${SITE_URL}${BOOK_ROUTE}/copy#edition`,
         name: project.title,
         author: personNode(manifest),
         bookEdition: edition,
         bookFormat: "https://schema.org/EBook",
         encodingFormat: "application/pdf",
-        url: `${SITE_URL}${BOOK_PDF_PATH}`,
+        url: `${SITE_URL}${BOOK_ROUTE}/copy`,
         inLanguage: "en",
-        isAccessibleForFree: true,
+        isAccessibleForFree: false,
+        offers: {
+          "@type": "Offer",
+          price: "20.00",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          url: `${SITE_URL}${BOOK_ROUTE}/copy`,
+        },
       },
     ],
   };

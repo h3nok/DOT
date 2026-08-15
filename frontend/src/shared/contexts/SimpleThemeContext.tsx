@@ -29,9 +29,25 @@ const THEMES: Record<string, ThemeInfo> = {
 
 // Theme keys for easier maintenance
 const THEME_KEYS = Object.keys(THEMES);
-const DEFAULT_THEME = 'light';
+
+const DARK_QUERY = '(prefers-color-scheme: dark)';
+
+/**
+ * The base the reader's own system asked for.
+ *
+ * This used to be hard-coded to light, so a reader whose machine was in dark
+ * mode was handed a white page at night — and the first render wrote that
+ * choice straight to storage, which pinned it permanently before they had
+ * expressed any preference at all. Their operating system already carries the
+ * answer; the only honest default is to use it.
+ */
+const systemTheme = (): string => {
+  if (typeof window === 'undefined' || !window.matchMedia) return 'light';
+  return window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light';
+};
+
 const resolveTheme = (theme: string | null | undefined) =>
-  theme && THEMES[theme] ? theme : DEFAULT_THEME;
+  theme && THEMES[theme] ? theme : systemTheme();
 
 // Context value interface
 interface ThemeContextValue {
@@ -48,13 +64,31 @@ interface ThemeProviderProps {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<string>(DEFAULT_THEME);
+  const [theme, setTheme] = useState<string>(systemTheme);
 
   useEffect(() => {
-    const savedTheme = resolveTheme(localStorage.getItem('dot_theme'));
-    localStorage.setItem('dot_theme', savedTheme);
-    applyThemeToDOM(savedTheme);
-    setTheme(savedTheme);
+    const stored = localStorage.getItem('dot_theme');
+    const resolved = resolveTheme(stored);
+    // Deliberately not written back. Storage means "the reader chose this";
+    // persisting a value they never picked would freeze them out of their own
+    // system setting for good.
+    applyThemeToDOM(resolved);
+    setTheme(resolved);
+
+    if (stored && THEMES[stored]) return;
+    if (!window.matchMedia) return;
+
+    // Until they choose, keep following the system — someone whose machine
+    // turns dark at sunset should not have to come back and tell us.
+    const mql = window.matchMedia(DARK_QUERY);
+    const onChange = () => {
+      if (localStorage.getItem('dot_theme')) return;
+      const next = mql.matches ? 'dark' : 'light';
+      applyThemeToDOM(next);
+      setTheme(next);
+    };
+    mql.addEventListener?.('change', onChange);
+    return () => mql.removeEventListener?.('change', onChange);
   }, []);
 
   const applyThemeToDOM = (newTheme: string) => {

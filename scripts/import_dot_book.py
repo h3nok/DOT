@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Release the current DOT Word manuscript to every public reading format.
+"""Release the current DOT Word manuscript to the reader and protected PDF.
 
 The Word manuscript remains the editorial source of truth. This script uses
 Pandoc for OOXML/OMML extraction, splits the result at the manuscript's existing
 section markers, and writes finite Markdown reading units plus a release
-manifest for the public DOT reader. It uses LibreOffice to produce one
-downloadable digital PDF from that same file; the editable DOCX remains private
-inside the repository.
+manifest for the public DOT reader. It uses LibreOffice to produce one protected
+digital PDF for authenticated delivery; the editable DOCX remains private.
 """
 
 from __future__ import annotations
@@ -25,7 +24,7 @@ import tempfile
 from typing import Any
 
 BOOK_ROUTE = "/book/digital-organism-theory"
-PUBLIC_PDF_NAME = "digital-organism-theory-book-one-digital-edition.pdf"
+PROTECTED_PDF_NAME = "digital-organism-theory-book-one.pdf"
 LEGACY_PUBLIC_ARTIFACTS = (
     "consciousness-a-digital-organism-book-one-v2.docx",
     "consciousness-a-digital-organism-book-one-v2.pdf",
@@ -311,7 +310,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--artifacts-output",
-        default=pathlib.Path("frontend/public/books"),
+        default=pathlib.Path("backend/orchestrator/private/books"),
         type=pathlib.Path,
     )
     parser.add_argument(
@@ -476,7 +475,7 @@ def release_downloads(
     output: pathlib.Path,
     libreoffice: str,
 ) -> None:
-    """Derive the single public digital PDF from the private manuscript."""
+    """Derive the protected digital PDF from the private manuscript."""
 
     output.mkdir(parents=True, exist_ok=True)
     for stale_name in LEGACY_PUBLIC_ARTIFACTS:
@@ -508,10 +507,10 @@ def release_downloads(
         generated_pdf = temp / f"{source.stem}.pdf"
         if not generated_pdf.exists():
             raise RuntimeError("LibreOffice completed without producing a PDF")
-        shutil.copyfile(generated_pdf, output / PUBLIC_PDF_NAME)
+        shutil.copyfile(generated_pdf, output / PROTECTED_PDF_NAME)
 
     print(f"Released the digital edition from {source.name}:")
-    print(f"  {output / PUBLIC_PDF_NAME}")
+    print(f"  {output / PROTECTED_PDF_NAME}")
 
 
 def main() -> None:

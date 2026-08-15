@@ -74,6 +74,7 @@ class ServiceSettings(pydantic_settings.BaseSettings):
     # than falling back to a placeholder.
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
+    BOOK_ONE_PDF_PATH: str = "private/books/digital-organism-theory-book-one.pdf"
 
     model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",

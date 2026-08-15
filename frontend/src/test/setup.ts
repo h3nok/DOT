@@ -1,13 +1,24 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
-// Mock IntersectionObserver
-globalThis.IntersectionObserver = vi.fn().mockImplementation((_callback) => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-  takeRecords: vi.fn(),
-}));
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root = null;
+  readonly rootMargin = "0px";
+  readonly scrollMargin = "0px";
+  readonly thresholds = [0];
+
+  constructor(
+    _callback: IntersectionObserverCallback,
+    _options?: IntersectionObserverInit,
+  ) {}
+
+  disconnect = vi.fn();
+  observe = vi.fn();
+  takeRecords = vi.fn(() => []);
+  unobserve = vi.fn();
+}
+
+globalThis.IntersectionObserver = MockIntersectionObserver;
 
 // Mock ResizeObserver
 globalThis.ResizeObserver = vi.fn().mockImplementation((_callback) => ({

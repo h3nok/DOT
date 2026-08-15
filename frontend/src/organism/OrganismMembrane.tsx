@@ -18,6 +18,10 @@ interface Point {
   /** Field-of-bits state: the bit carried, and when it next flips (a delta). */
   bit: "0" | "1";
   flipAt: number;
+  /** Current tracers: the path walked so far (flat x,y pairs), and its age. */
+  trail?: number[];
+  age?: number;
+  life?: number;
 }
 
 interface Bloom {
@@ -165,6 +169,110 @@ export const OrganismMembrane: React.FC = () => {
       });
     };
 
+    /* The value-noise field is defined here rather than beside its other
+       users because Current's tracers are integrated at build time, which
+       happens during the first resize() — before a later `const` would be
+       initialised. Topology, Intent, and Current all read from it. */
+
+    /** Deterministic value noise. Same lattice every frame; only `t` moves. */
+    const lattice = (ix: number, iy: number): number => {
+      const n = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    };
+
+    const smooth = (t: number) => t * t * (3 - 2 * t);
+
+    const valueNoise = (x: number, y: number): number => {
+      const ix = Math.floor(x);
+      const iy = Math.floor(y);
+      const fx = smooth(x - ix);
+      const fy = smooth(y - iy);
+      const a = lattice(ix, iy);
+      const b = lattice(ix + 1, iy);
+      const c = lattice(ix, iy + 1);
+      const d = lattice(ix + 1, iy + 1);
+      return (
+        a * (1 - fx) * (1 - fy) +
+        b * fx * (1 - fy) +
+        c * (1 - fx) * fy +
+        d * fx * fy
+      );
+    };
+
+    /**
+     * One hand, not many.
+     *
+     * Strokes used to fly off at random angles, which reads as scribble: a
+     * dozen unrelated marks with nothing in common. Here every stroke follows
+     * the same slow field the contours are cut from, so neighbouring marks
+     * curve *together* — the page looks written on rather than scratched at,
+     * and the two fields share one underlying ground.
+     */
+    const flowAngle = (x: number, y: number): number =>
+      valueNoise(x / 460, y / 460) * Math.PI * 3;
+
+    /**
+     * Current — tracers carried by the field, each keeping its own wake.
+     *
+     * A tracer that drew only the step it took last frame draws a dot: the
+     * canvas is cleared every frame, so there is nothing for the marks to
+     * accumulate on. Each one therefore carries its own short history and is
+     * stroked as a filament, which is what makes the flow visible rather than
+     * merely present.
+     *
+     * Trails are integrated forward at build time as well, so a field that is
+     * never allowed to animate — stillness, or reduced motion — is still a
+     * composed picture of the flow on its first and only frame.
+     */
+    const TRAIL = 30;
+
+    /**
+     * The same value-noise ground Topology and Intent read, sampled at a much
+     * longer wavelength and over a single turn.
+     *
+     * `flowAngle` sweeps three half-turns inside one noise cell, which suits a
+     * short ink stroke and is wrong for a tracer: neighbouring particles pick
+     * near-opposite directions and the result reads as scattered dashes rather
+     * than as a current. Same terrain, seen from further away.
+     */
+    const currentAngle = (x: number, y: number): number =>
+      valueNoise(x / 1000, y / 1000) * Math.PI * 2;
+
+    const buildFlow = () => {
+      const budget = Math.round(
+        Math.min(140, Math.max(48, (w * h) / 14000)) * config.fieldScale,
+      );
+      points = Array.from({ length: budget }, (_, i) => {
+        const depth = DEPTHS[i % DEPTHS.length];
+        let x = Math.random() * w;
+        let y = Math.random() * h;
+        const trail: number[] = [];
+        // Walk it forward once so the tracer arrives with a wake behind it.
+        for (let s = 0; s < TRAIL; s++) {
+          trail.push(x, y);
+          const ang = currentAngle(x, y);
+          x += Math.cos(ang) * 2.1 * (0.6 + depth);
+          y += Math.sin(ang) * 2.1 * (0.6 + depth);
+        }
+        return {
+          x,
+          y,
+          hx: x,
+          hy: y,
+          vx: 0,
+          vy: 0,
+          r: 0.7 + depth * 1.1,
+          depth,
+          phase: Math.random() * Math.PI * 2,
+          bit: "0" as const,
+          flipAt: 0,
+          trail,
+          age: Math.random() * 300,
+          life: 220 + Math.random() * 240,
+        };
+      });
+    };
+
     const buildLattice = () => {
       // One spacing rule for every viewport keeps the grid's rhythm recognisable.
       const gap = Math.max(64, Math.min(112, Math.min(w, h) / 9));
@@ -197,8 +305,10 @@ export const OrganismMembrane: React.FC = () => {
     const rebuild = () => {
       if (config.preset === "lattice") buildLattice();
       else if (config.preset === "field") buildField();
+      else if (config.preset === "flow") buildFlow();
       else if (spec.density > 0) {
-        const budget = Math.min(POINT_BUDGET, (w * h) / 14000) * spec.density;
+        const budget =
+          Math.min(POINT_BUDGET, (w * h) / 14000) * spec.density * config.fieldScale;
         buildConstellation(Math.max(24, Math.round(budget)));
       } else points = [];
     };
@@ -227,12 +337,28 @@ export const OrganismMembrane: React.FC = () => {
       const hue = num("--organism-hue", 200);
       const chroma = num("--organism-chroma", 0.05);
       const luma = num("--organism-luma", 0.6);
-      const sat = Math.max(12, Math.min(72, chroma * 320));
       // Contrast must come from the base theme: darker strokes on light,
       // lighter strokes on dark — otherwise the membrane vanishes.
       const dark = document.documentElement.classList.contains("dark");
-      const light = dark ? 60 + luma * 16 : 34 + luma * 10;
-      return { hue, sat, light, dark };
+
+      /*
+       * Weber correction.
+       *
+       * The field used to draw at the same alpha in both themes, which looks
+       * fair and is not: the eye judges a mark against the luminance around it,
+       * not in absolute terms. The same mark that lands 16% below a dark ground
+       * lands under 2% above a light one — an eight-fold difference — which is
+       * why every pattern was close to invisible in daylight while looking
+       * correct at night. Light mode therefore gets substantially more alpha
+       * and a darker mark, to arrive at the same *apparent* presence.
+       */
+      const gain = dark ? 1 : 2.6;
+      const light = dark ? 60 + luma * 16 : 30 - luma * 6;
+      // Chroma collapses to its floor while reading, and a 12%-saturated grey
+      // reads as smudged glass rather than as a decision. Light grounds show
+      // colour far more readily than dark ones, so the floor is raised there.
+      const sat = Math.max(dark ? 12 : 26, Math.min(72, chroma * 320));
+      return { hue, sat, light, dark, gain };
     };
 
     /**
@@ -263,10 +389,12 @@ export const OrganismMembrane: React.FC = () => {
         const x = (b.ox + Math.cos(a) * b.rx) * w;
         const y = (b.oy + Math.sin(a * 1.3) * b.ry) * h;
         const radius = b.size * diag * (0.9 + 0.1 * Math.sin(a * 0.7));
-        const strength = alpha * b.weight * (dark ? 0.15 : 0.085);
+        const strength = alpha * b.weight * (dark ? 0.15 : 0.1);
         if (strength <= 0.002) continue;
         const bh = (hue + b.hueShift + 360) % 360;
-        const light = dark ? 52 : 58;
+        // A bloom lighter than the paper it sits on is not a bloom, it is
+        // nothing. On a light ground the light has to arrive as shadow.
+        const light = dark ? 52 : 44;
         const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
         grad.addColorStop(0, `hsla(${bh}, ${sat + 14}%, ${light}%, ${strength})`);
         grad.addColorStop(0.5, `hsla(${bh}, ${sat}%, ${light}%, ${strength * 0.38})`);
@@ -481,31 +609,6 @@ export const OrganismMembrane: React.FC = () => {
     const TOPO_CELL = 30;
     const TOPO_LEVELS = 7;
 
-    /** Deterministic value noise. Same lattice every frame; only `t` moves. */
-    const lattice = (ix: number, iy: number): number => {
-      const n = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453;
-      return n - Math.floor(n);
-    };
-
-    const smooth = (t: number) => t * t * (3 - 2 * t);
-
-    const valueNoise = (x: number, y: number): number => {
-      const ix = Math.floor(x);
-      const iy = Math.floor(y);
-      const fx = smooth(x - ix);
-      const fy = smooth(y - iy);
-      const a = lattice(ix, iy);
-      const b = lattice(ix + 1, iy);
-      const c = lattice(ix, iy + 1);
-      const d = lattice(ix + 1, iy + 1);
-      return (
-        a * (1 - fx) * (1 - fy) +
-        b * fx * (1 - fy) +
-        c * (1 - fx) * fy +
-        d * fx * fy
-      );
-    };
-
     /** Three octaves is enough for ridges without turning into static. */
     const terrain = (x: number, y: number, t: number): number =>
       valueNoise(x * 0.9 + t, y * 0.9) * 0.6 +
@@ -616,17 +719,6 @@ export const OrganismMembrane: React.FC = () => {
     const inkStrokes: InkStroke[] = [];
     let inkTimer = 0;
 
-    /**
-     * One hand, not many.
-     *
-     * Strokes used to fly off at random angles, which reads as scribble: a
-     * dozen unrelated marks with nothing in common. Here every stroke follows
-     * the same slow field the contours are cut from, so neighbouring marks
-     * curve *together* — the page looks written on rather than scratched at,
-     * and the two fields share one underlying ground.
-     */
-    const flowAngle = (x: number, y: number): number =>
-      valueNoise(x / 460, y / 460) * Math.PI * 3;
 
     const spawnInkStroke = () => {
       // Strokes favour the edges where the clearance mask lets them show.
@@ -709,9 +801,196 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
+    /**
+     * Current — tracers on the same field the contours are cut from.
+     *
+     * Topology draws that field's level sets and Intent writes along it; this
+     * one lets particles be carried by it and keeps only the segment each one
+     * covered in a frame. Three fields, one ground: switching between them
+     * changes what you are shown about the field, not which field it is.
+     *
+     * Sampling at an offset that grows with `t` translates the whole field
+     * slowly, so the flow evolves without a second noise function.
+     */
+    const drawFlow = (
+      hue: number, sat: number, light: number, alpha: number,
+      dark: boolean, animate: boolean,
+    ) => {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const step = 2.1 * spec.speed;
+      for (const p of points) {
+        const trail = p.trail;
+        if (!trail) continue;
+
+        if (animate) {
+          const ang = currentAngle(p.x + t * 6, p.y - t * 4);
+          p.x += Math.cos(ang) * step * (0.6 + p.depth);
+          p.y += Math.sin(ang) * step * (0.6 + p.depth);
+          p.age = (p.age ?? 0) + 1;
+          trail.push(p.x, p.y);
+          while (trail.length > TRAIL * 2) trail.splice(0, 2);
+        }
+
+        // Respawn on expiry or on leaving the viewport, so the field keeps
+        // renewing instead of draining into its attractors.
+        const spent = (p.age ?? 0) > (p.life ?? 300);
+        if (spent || p.x < -40 || p.x > w + 40 || p.y < -40 || p.y > h + 40) {
+          p.x = Math.random() * w;
+          p.y = Math.random() * h;
+          p.age = 0;
+          trail.length = 0;
+          trail.push(p.x, p.y);
+          continue;
+        }
+
+        const mask = clearance(p.x, p.y);
+        // Fade in and out across the tracer's life so nothing pops in.
+        const t01 = Math.min(1, Math.max(0, (p.age ?? 0) / (p.life ?? 300)));
+        const envelope = Math.sin(t01 * Math.PI);
+        const a = alpha * mask * envelope * (0.16 + p.depth * 0.3);
+        if (a <= 0.004 || trail.length < 4) continue;
+
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + (dark ? 10 : -2)}%, ${a})`;
+        ctx.lineWidth = p.r;
+        ctx.beginPath();
+        ctx.moveTo(trail[0], trail[1]);
+        for (let i = 2; i < trail.length; i += 2) ctx.lineTo(trail[i], trail[i + 1]);
+        ctx.stroke();
+
+        // A brighter head, so the filament reads as travelling rather than drawn.
+        const n = trail.length;
+        ctx.strokeStyle = `hsla(${hue}, ${Math.min(80, sat + 12)}%, ${light + (dark ? 18 : -8)}%, ${a * 1.5})`;
+        ctx.lineWidth = p.r * 1.15;
+        ctx.beginPath();
+        ctx.moveTo(trail[n - 6] ?? trail[0], trail[n - 5] ?? trail[1]);
+        ctx.lineTo(trail[n - 2], trail[n - 1]);
+        ctx.stroke();
+      }
+    };
+
+    /**
+     * Interference — concentric wavefronts from a few sources.
+     *
+     * No fringe is computed. Each source emits evenly spaced rings and the
+     * hyperbolic fringes appear where the rings cross, exactly as in a ripple
+     * tank: drawing the causes is both cheaper than summing the field and
+     * truer to what it depicts.
+     *
+     * The amplitude envelope rises away from the source before falling, which
+     * is not physical. A physical falloff puts maximum energy at the centre and
+     * paints three bullseyes — three things to look at, competing with the
+     * page. Fading the first rings turns each source back into a place a wave
+     * came from rather than a target.
+     */
+    const drawInterference = (
+      hue: number, sat: number, light: number, alpha: number, dark: boolean,
+    ) => {
+      const sources = [
+        { x: w * 0.18, y: h * 0.22, phase: 0, weight: 1 },
+        { x: w * 0.83, y: h * 0.74, phase: 1.9, weight: 0.92 },
+        { x: w * 0.6, y: h * 0.08, phase: 3.6, weight: 0.6 },
+      ];
+      ctx.lineWidth = 1;
+      for (const s of sources) {
+        /*
+         * Reach is measured to this source's own farthest visible corner, and
+         * the ring count is capped. Both matter: a full-viewport arc is an
+         * expensive path, and an earlier version drew ~75 of them every frame
+         * from a radius fixed to the diagonal. That starved the main thread
+         * badly enough to stall the page's own entrance animation — the
+         * background was costing the content its render budget.
+         */
+        const reach = Math.max(
+          Math.hypot(s.x, s.y),
+          Math.hypot(w - s.x, s.y),
+          Math.hypot(s.x, h - s.y),
+          Math.hypot(w - s.x, h - s.y),
+        );
+        const gap = Math.max(reach / 15, 52 / Math.max(0.5, config.fieldScale));
+        const travel = (t * 9 * spec.speed + s.phase * gap) % gap;
+        for (let r = travel; r < reach; r += gap) {
+          const f = r / reach;
+          // Rise over the first fifth, then fall away to nothing. Not physical
+          // — a physical falloff peaks at the source and paints a bullseye,
+          // which is one more thing competing with the page for attention.
+          const envelope = Math.min(1, f / 0.2) * (1 - f) * (1 - f);
+          const a = alpha * s.weight * envelope * 0.62;
+          if (a <= 0.004) continue;
+          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + (dark ? 8 : 0)}%, ${a})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+    };
+
+    /**
+     * Strata — settled layers, the oldest at the bottom.
+     *
+     * Each layer is a ribbon of its own thickness, not a fill down to the foot
+     * of the page. Filling downward stacks every layer's alpha on every layer
+     * below it, and nine translucent bands compound into an opaque sheet with
+     * the text somewhere underneath it.
+     */
+    const drawStrata = (
+      hue: number, sat: number, light: number, alpha: number, dark: boolean,
+    ) => {
+      const bands = Math.round(11 * Math.min(1.6, Math.max(0.5, config.fieldScale)));
+      const drift = t * 0.16 * spec.speed;
+      const stepX = Math.max(10, w / 72);
+      for (let i = 0; i < bands; i++) {
+        const f = i / bands;
+        const baseY = h * (-0.05 + f * 1.12);
+        const amp = 10 + 24 * (1 - f) + 7 * Math.sin(i * 1.7);
+        const freq = 0.0015 + 0.001 * ((i % 3) + 1);
+        const thickness = h * (0.028 + 0.03 * (1 - f));
+        // Deeper layers are older and denser, but every one stays a whisper.
+        const a = alpha * (0.05 + 0.075 * f);
+        if (a <= 0.004) continue;
+        const yAt = (x: number) =>
+          baseY +
+          Math.sin(x * freq + drift * (0.4 + f) + i * 0.9) * amp +
+          Math.sin(x * freq * 2.3 - drift * 0.6) * amp * 0.28;
+
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + (dark ? 6 : 2)}%, ${a})`;
+        ctx.beginPath();
+        ctx.moveTo(-4, yAt(-4));
+        for (let x = -4; x <= w + 4; x += stepX) ctx.lineTo(x, yAt(x));
+        for (let x = w + 4; x >= -4; x -= stepX) ctx.lineTo(x, yAt(x) + thickness);
+        ctx.closePath();
+        ctx.fill();
+      }
+    };
+
+    /**
+     * Erase the reading column out of an area-filling field.
+     *
+     * The point fields multiply each mark by {@link clearance}, which cannot
+     * work for a pattern made of continuous rings and ribbons: a single ring
+     * crosses both the margin and the text. These fields are therefore drawn
+     * whole and then cut, which produces the same result — a background that is
+     * a frame and never a texture behind prose — with one composite operation.
+     */
+    const clearReadingColumn = (strength: number) => {
+      const r = Math.min(w, h) * 0.62;
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
+      // Matches the ellipse `clearance` uses, so cut and mask agree.
+      ctx.translate(w / 2, h / 2);
+      ctx.scale(1.18, 1);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+      g.addColorStop(0, `rgba(0,0,0,${strength})`);
+      g.addColorStop(0.45, `rgba(0,0,0,${strength * 0.8})`);
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(-w, -h, w * 2, h * 2);
+      ctx.restore();
+    };
+
     const draw = (animate: boolean) => {
       const v = vitals.current;
-      const { hue, sat, light, dark } = palette();
+      const { hue, sat, light, dark, gain } = palette();
       const synapsis = num("--organism-synapsis", v.synapsis);
       const arousal = num("--organism-arousal", v.arousal);
       const pulse = num("--organism-pulse", 0);
@@ -724,9 +1003,12 @@ export const OrganismMembrane: React.FC = () => {
       // you read — arrived as "the background is broken". Half strength still
       // recedes, and can still be seen to move.
       const quiet = 1 - 0.45 * calm;
-      const alpha = intensity * spec.alpha * quiet;
+      // The reader's own correction rides on top of the theme correction.
+      const alpha = intensity * spec.alpha * quiet * gain * config.fieldContrast;
 
-      if (animate) t += 1 / 60;
+      // One clock for the whole membrane, so the reader's tempo dial slows
+      // drift, blooms, wavefronts, and sediment by the same factor.
+      if (animate) t += (1 / 60) * config.fieldSpeed;
 
       // Rising edge of a pulse → ripple. (The bridge already withholds pulses
       // during reading, so this rarely fires there.)
@@ -748,6 +1030,14 @@ export const OrganismMembrane: React.FC = () => {
         drawDots(hue, sat, light, alpha, animate);
       } else if (config.preset === "topology") {
         drawTopology(hue, sat, light, alpha, animate);
+      } else if (config.preset === "interference") {
+        drawInterference(hue, sat, light, alpha, dark);
+        clearReadingColumn(0.9);
+      } else if (config.preset === "flow") {
+        drawFlow(hue, sat, light, alpha, dark, animate);
+      } else if (config.preset === "strata") {
+        drawStrata(hue, sat, light, alpha, dark);
+        clearReadingColumn(0.82);
       } else if (config.preset === "ink") {
         drawInk(hue, sat, light, alpha, animate);
       } else if (config.preset === "lattice") {
@@ -768,7 +1058,15 @@ export const OrganismMembrane: React.FC = () => {
       }
 
       // Point bodies — presets that draw their own visuals skip this.
-      if (config.preset !== "field" && config.preset !== "topology" && config.preset !== "ink" && config.preset !== "dots")
+      if (
+        config.preset !== "field" &&
+        config.preset !== "topology" &&
+        config.preset !== "ink" &&
+        config.preset !== "dots" &&
+        config.preset !== "interference" &&
+        config.preset !== "flow" &&
+        config.preset !== "strata"
+      )
       for (const p of points) {
         const mask = clearance(p.x, p.y);
         const breath = animate ? 0.8 + 0.2 * Math.sin(p.phase) : 1;
@@ -864,6 +1162,12 @@ export const OrganismMembrane: React.FC = () => {
     config.showMembrane,
     config.intensity,
     config.preset,
+    // Scale changes the point budget, so the field has to be rebuilt, not
+    // merely redrawn. Speed and contrast are read every frame but still belong
+    // here: with stillness on there is no next frame to read them in.
+    config.fieldScale,
+    config.fieldSpeed,
+    config.fieldContrast,
     still,
   ]);
 

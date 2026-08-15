@@ -49,3 +49,8 @@ This folder is the north star for the project. Read in order.
 | [0016](adr/0016-field-focus-navigation.md)                         | Navigation is Field, Focus, and a Thread — never a menu   | Proposed |
 | [0017](adr/0017-movement-platform-canon-and-applied.md)            | The platform is the movement — canon, theory, applied     | Proposed |
 | [0018](adr/0018-book-derived-knowledge-surfaces.md)                | First-party knowledge surfaces derive from the book       | Accepted |
+| [0019](adr/0019-verified-join-queue.md)                             | Verified join queue with sealed addresses                 | Accepted |
+| [0020](adr/0020-public-entry-follows-reader-intent.md)             | Public entry follows reader intent                        | Accepted |
+| [0021](adr/0021-steward-editable-copy-released-by-default.md)      | Steward-editable copy remains release-controlled          | Accepted |
+| [0022](adr/0022-the-front-door-is-a-note-not-a-pitch.md)           | The front door is a note, not a pitch                     | Accepted |
+| [0023](adr/0023-paid-digital-edition-free-reader.md)               | Paid authenticated PDF; complete web reader stays free    | Proposed |

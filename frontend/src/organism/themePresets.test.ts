@@ -24,10 +24,27 @@ describe("theme presets", () => {
   it("stops claiming a preset once the reader changes one of its values", () => {
     // A preset is one considered answer, not a mode: adjusting any part of it
     // means the panel is looking at the reader's arrangement, not the preset's.
-    const vellum = configFor("vellum");
-    expect(matchThemePreset(vellum, "light")).toBe("vellum");
-    expect(matchThemePreset({ ...vellum, preset: "lattice" }, "light")).toBeNull();
-    expect(matchThemePreset(vellum, "dark")).toBeNull();
+    const meridian = configFor("meridian");
+    expect(matchThemePreset(meridian, "light")).toBe("meridian");
+    expect(matchThemePreset({ ...meridian, preset: "lattice" }, "light")).toBeNull();
+    expect(matchThemePreset(meridian, "dark")).toBeNull();
+  });
+
+  it("gives every environment a distinct name", () => {
+    // The panel shows background fields, surface styles, and environments in
+    // one column; two of them answering to the same word makes the panel
+    // ambiguous to read and to operate by keyboard or screen reader.
+    const labels = THEME_PRESETS.map((preset) => preset.label);
+    const fieldLabels = Object.values(ORGANISM_PRESETS).map((field) => field.label);
+    expect(new Set(labels).size).toBe(labels.length);
+    expect(labels.filter((label) => fieldLabels.includes(label))).toEqual([]);
+  });
+
+  it("leans on the surface style that makes the site feel alive", () => {
+    // The organism's own look is the point of the place; most environments
+    // should reach for it rather than leaving it as an unused option.
+    const neural = THEME_PRESETS.filter((preset) => preset.config.uiStyle === "neural");
+    expect(neural.length).toBeGreaterThanOrEqual(3);
   });
 
   it("leaves the reader's own typography alone", () => {

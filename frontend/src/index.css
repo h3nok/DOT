@@ -316,7 +316,7 @@ html[data-organism="off"] .book-surface,
   background-image:
     linear-gradient(
       180deg,
-      color-mix(in oklch, var(--book-paper) 88%, transparent),
+      color-mix(in oklab, var(--book-paper) 88%, transparent),
       var(--book-paper) 44rem
     ),
     repeating-linear-gradient(
@@ -416,10 +416,8 @@ html[data-contrast="high"] .book-surface {
   --book-halo: color-mix(in oklch, var(--organism-accent) 8%, transparent);
 }
 
-html[data-reading="sans"] .book-surface {
-  --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --book-reading-heading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
-}
+/* The reading face is chosen in organism/appearance.css, which overrides
+   --book-reading-font for every surface at once. */
 
 .book-reading-copy {
   font-family: var(--book-reading-font);
@@ -462,18 +460,18 @@ html[data-reading="sans"] .book-surface {
 
 .book-chrome {
   border-bottom: 1px solid var(--book-hairline);
-  background: color-mix(in oklch, var(--book-paper) 86%, transparent);
-  box-shadow: 0 1px 0 color-mix(in oklch, var(--book-paper) 42%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 86%, transparent);
+  box-shadow: 0 1px 0 color-mix(in oklab, var(--book-paper) 42%, transparent);
   backdrop-filter: blur(12px);
 }
 
 html[data-contrast="high"] .book-chrome {
-  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
   border-bottom-color: var(--book-hairline);
 }
 
 .book-reading-band {
-  background: color-mix(in oklch, var(--book-paper) 78%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 78%, transparent);
   backdrop-filter: blur(10px);
 }
 
@@ -497,7 +495,7 @@ html[data-contrast="high"] .book-chrome {
   border-radius: 9999px;
   background:
     radial-gradient(circle, color-mix(in oklch, var(--book-dot) 14%, transparent), transparent 68%),
-    color-mix(in oklch, var(--book-paper) 90%, transparent);
+    color-mix(in oklab, var(--book-paper) 90%, transparent);
   box-shadow:
     0 0 0 0.14rem color-mix(in oklch, var(--book-dot) 18%, transparent),
     0 0 0.9rem color-mix(in oklch, var(--book-dot-bright) 52%, transparent);
@@ -514,6 +512,586 @@ html[data-contrast="high"] .book-chrome {
 
 .book-chapter-header {
   border-color: var(--book-hairline);
+}
+
+/* E is the opening volume itself. The two leaves occupy the whole threshold,
+   so there is one boundary, not a book object floating inside another frame. */
+.book-opening-volume {
+  isolation: isolate;
+}
+
+html:has(.book-opening-volume) {
+  scroll-padding-top: 1.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.book-opening-volume) {
+    scroll-behavior: smooth;
+  }
+}
+
+.book-e-boundary {
+  position: absolute;
+  inset: 0.75rem;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(
+    0 1.1rem 1.7rem color-mix(in oklab, var(--book-ink) 13%, transparent)
+  );
+}
+
+.book-e-boundary::before,
+.book-e-boundary::after {
+  position: absolute;
+  top: 0;
+  bottom: 0.45rem;
+  width: calc(50% + 1px);
+  border: 1px solid color-mix(in oklch, var(--book-ink) 12%, var(--book-hairline));
+  content: "";
+}
+
+.book-e-boundary::before {
+  left: 0;
+  border-radius: 1rem 0.15rem 0.75rem 1.25rem;
+  background:
+    linear-gradient(
+      color-mix(in oklch, var(--book-cinnabar) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-cinnabar) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-paper) 92%, var(--book-ink)) 0%,
+      var(--book-paper) 12% 82%,
+      color-mix(in oklch, var(--book-paper) 89%, var(--book-ink)) 100%
+    );
+  background-size:
+    2rem 2rem,
+    2rem 2rem,
+    auto;
+  box-shadow:
+    0 0.42rem 0 color-mix(in oklch, var(--book-paper) 68%, var(--book-ink)),
+    inset -1.2rem 0 1.8rem color-mix(in oklab, var(--book-ink) 4%, transparent);
+  clip-path: polygon(1% 0.5%, 97.5% 0, 100% 1.5%, 100% 98.5%, 97% 100%, 1% 99%, 0 97%, 0 3%);
+}
+
+.book-e-boundary::after {
+  right: 0;
+  border-radius: 0.15rem 1rem 1.25rem 0.75rem;
+  background:
+    linear-gradient(
+      color-mix(in oklch, var(--book-cinnabar) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-cinnabar) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-paper) 89%, var(--book-ink)) 0%,
+      var(--book-paper) 18% 88%,
+      color-mix(in oklch, var(--book-paper) 92%, var(--book-ink)) 100%
+    );
+  background-size:
+    2rem 2rem,
+    2rem 2rem,
+    auto;
+  box-shadow:
+    0 0.42rem 0 color-mix(in oklch, var(--book-paper) 68%, var(--book-ink)),
+    inset 1.2rem 0 1.8rem color-mix(in oklab, var(--book-ink) 4%, transparent);
+  clip-path: polygon(0 1.5%, 2.5% 0, 99% 0.5%, 100% 3%, 100% 97%, 99% 99%, 3% 100%, 0 98.5%);
+}
+
+.book-e-gutter {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 2;
+  display: block;
+  width: clamp(2rem, 4vw, 3.8rem);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--book-ink) 6%, transparent) 28%,
+    color-mix(in oklab, var(--book-ink) 15%, transparent) 49%,
+    color-mix(in oklab, var(--book-paper) 74%, transparent) 53%,
+    color-mix(in oklab, var(--book-ink) 5%, transparent) 72%,
+    transparent
+  );
+  filter: blur(0.25rem);
+  transform: translateX(-50%);
+}
+
+/* The open leaves are computational matter: a finite state field with quiet
+   traces below the editorial surface. The lattice is part of the page fill
+   above; this layer carries its conductive paths, vias, and register marks. */
+.book-substrate {
+  position: absolute;
+  inset: 0.3rem 0.15rem 0.7rem;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-ink));
+  clip-path: polygon(0.8% 0.3%, 49% 0, 50% 1%, 51% 0, 99.2% 0.3%, 100% 2.4%, 100% 97%, 99% 99.3%, 51% 100%, 50% 98.6%, 49% 100%, 1% 99.3%, 0 97%, 0 2.4%);
+}
+
+.book-substrate::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 29%, color-mix(in oklch, var(--book-cinnabar) 3%, transparent) 67%, transparent 86%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 7.9rem,
+      color-mix(in oklch, var(--book-cinnabar) 8%, transparent) 8rem,
+      transparent 8.05rem 16rem
+    );
+  content: "";
+}
+
+.book-substrate-map {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.58;
+}
+
+.book-substrate-traces {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.book-substrate-traces > path:not(.book-substrate-bus):not(.book-substrate-flow) {
+  opacity: 0.26;
+}
+
+.book-substrate-bus {
+  stroke-width: 1.25;
+  opacity: 0.23;
+}
+
+.book-substrate-flow {
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  stroke-width: 1.2;
+  opacity: 0.46;
+  animation: book-substrate-current 18s linear infinite;
+}
+
+.book-substrate-flow--return {
+  animation-direction: reverse;
+  animation-duration: 22s;
+}
+
+.book-substrate-vias circle {
+  fill: var(--book-paper);
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.book-substrate-state-nodes circle {
+  fill: var(--book-cinnabar);
+  opacity: 0.62;
+  filter: drop-shadow(0 0 0.45rem color-mix(in oklch, var(--book-cinnabar) 70%, transparent));
+}
+
+.book-substrate-register {
+  position: absolute;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  opacity: 0.38;
+}
+
+.book-substrate-register--input {
+  top: 16%;
+  left: 1.6%;
+  writing-mode: vertical-rl;
+}
+
+.book-substrate-register--state {
+  top: 8%;
+  right: 1.6%;
+}
+
+.book-substrate-register--return {
+  right: 1.6%;
+  bottom: 13%;
+  writing-mode: vertical-rl;
+}
+
+.book-substrate-register--edition {
+  bottom: 2.4%;
+  left: calc(50% + 1.35rem);
+}
+
+.book-open-spread-copy::before,
+.book-open-spread-model::before {
+  position: absolute;
+  inset: -2.25rem -2.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklab, var(--book-paper) 90%, transparent) 0 46%,
+    transparent 78%
+  );
+  content: "";
+}
+
+.book-open-spread-model::before {
+  inset: -2.75rem -1.5rem;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in oklab, var(--book-paper) 74%, transparent) 0 34%,
+    transparent 75%
+  );
+}
+
+@keyframes book-substrate-current {
+  to {
+    stroke-dashoffset: -84;
+  }
+}
+
+.book-open-spread {
+  padding: clamp(4.5rem, 8vh, 6.5rem) 0;
+}
+
+.book-open-spread-copy,
+.book-open-spread-model,
+.book-open-spread-colophon {
+  position: relative;
+  z-index: 3;
+  justify-self: center;
+}
+
+.book-open-spread-copy,
+.book-open-spread-colophon {
+  width: min(100%, 28rem);
+}
+
+.book-open-spread-actions {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.book-open-spread-actions > a {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+@media (min-width: 1024px) {
+  .book-open-spread-actions {
+    width: max-content;
+    max-width: calc(50vw - 3rem);
+    flex-wrap: nowrap;
+  }
+}
+
+html[data-contrast="high"] .book-e-boundary {
+  filter: none;
+}
+
+html[data-contrast="high"] .book-substrate-map,
+html[data-contrast="high"] .book-substrate-register {
+  opacity: 0.72;
+}
+
+html[data-motion="still"] .book-substrate-flow {
+  animation: none;
+}
+
+@media (max-width: 1023px) {
+  .book-open-spread {
+    padding: clamp(5rem, 10vw, 7rem) clamp(1.5rem, 8vw, 4.5rem) 4rem;
+  }
+
+  .book-e-boundary::before {
+    width: 100%;
+    border-radius: 0.9rem 0.9rem 1.2rem 1.2rem;
+    clip-path: polygon(2% 0.5%, 50% 0, 98% 0.5%, 100% 2%, 100% 98%, 98% 99.5%, 50% 100%, 2% 99.5%, 0 98%, 0 2%);
+  }
+
+  .book-e-boundary::after,
+  .book-e-gutter {
+    display: none;
+  }
+
+  .book-substrate {
+    clip-path: polygon(2% 0.3%, 50% 0, 98% 0.3%, 100% 2%, 100% 98%, 98% 99.5%, 50% 100%, 2% 99.5%, 0 98%, 0 2%);
+  }
+
+  .book-substrate-map {
+    width: 200%;
+    transform: translateX(-1%);
+  }
+
+  .book-substrate-register--state,
+  .book-substrate-register--edition {
+    display: none;
+  }
+
+  .book-open-spread-copy::before {
+    inset: -2rem -1rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .book-open-spread {
+    padding: 4.75rem 0.75rem 3.25rem;
+  }
+
+  .book-substrate-map {
+    opacity: 0.44;
+  }
+
+  .book-substrate-register--input,
+  .book-substrate-register--return {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-substrate-flow {
+    animation: none;
+  }
+}
+
+/* Below the cover, one quiet trace keeps the threshold, structure, claim
+   contract, and source record in the same material language. It is an
+   orientation line, not a progress meter: nothing is measured or persisted. */
+.book-landing-body {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.book-landing-spine {
+  position: absolute;
+  top: 3.5rem;
+  bottom: 4.5rem;
+  left: max(1rem, calc(50% - 34rem));
+  z-index: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--book-cinnabar) 32%, transparent) 0 2px,
+    transparent 2px 9px
+  );
+  opacity: 0.62;
+}
+
+.book-landing-spine::before,
+.book-landing-spine::after {
+  position: absolute;
+  left: 50%;
+  width: 0.45rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in oklch, var(--book-cinnabar) 46%, var(--book-hairline));
+  border-radius: 9999px;
+  background: var(--book-paper);
+  box-shadow: 0 0 0.7rem color-mix(in oklch, var(--book-cinnabar) 20%, transparent);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.book-landing-spine::before {
+  top: 0;
+}
+
+.book-landing-spine::after {
+  top: 100%;
+}
+
+.book-landing-spine-stop {
+  position: absolute;
+  left: 0;
+  padding-left: 1rem;
+  color: color-mix(in oklch, var(--book-cinnabar) 60%, var(--book-muted));
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.book-landing-spine-stop::before {
+  position: absolute;
+  top: 50%;
+  left: -0.21rem;
+  width: 0.45rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in oklch, var(--book-cinnabar) 54%, var(--book-hairline));
+  border-radius: 9999px;
+  background: var(--book-paper);
+  box-shadow: 0 0 0.55rem color-mix(in oklch, var(--book-cinnabar) 24%, transparent);
+  content: "";
+  transform: translateY(-50%);
+}
+
+.book-landing-spine-stop--entrance {
+  top: 5%;
+}
+
+.book-landing-spine-stop--structure {
+  top: 30%;
+}
+
+.book-landing-spine-stop--contract {
+  top: 69%;
+}
+
+.book-landing-spine-stop--source {
+  top: 88%;
+}
+
+.book-entrance {
+  border-color: var(--book-hairline);
+  background: color-mix(in oklab, var(--book-vellum) 32%, transparent);
+}
+
+.book-entrance-icon {
+  border-color: var(--book-hairline);
+}
+
+.book-entrance--primary {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 36%, var(--book-hairline));
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in oklch, var(--book-cinnabar) 9%, transparent),
+      transparent 56%
+    ),
+    color-mix(in oklab, var(--book-vellum) 48%, transparent);
+  box-shadow: inset 2px 0 0 color-mix(in oklch, var(--book-cinnabar) 68%, transparent);
+}
+
+.book-entrance--primary .book-entrance-icon {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 42%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-cinnabar) 9%, transparent);
+}
+
+.book-entrance--secondary {
+  color: color-mix(in oklch, var(--book-ink) 88%, var(--book-muted));
+}
+
+.book-entrance:hover,
+.book-entrance:focus-visible {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 62%, var(--book-hairline));
+  background-color: var(--book-vellum);
+  outline: none;
+}
+
+.book-entrance:focus-visible {
+  box-shadow: 0 0 0 2px var(--book-paper), 0 0 0 4px var(--book-cinnabar);
+}
+
+.book-contents-part + .book-contents-part {
+  margin-top: 2.75rem;
+}
+
+.book-contents-part-heading {
+  position: relative;
+  padding: 0 0.5rem;
+}
+
+.book-contents-part-heading::after {
+  height: 1px;
+  min-width: 2rem;
+  flex: 1;
+  background: linear-gradient(90deg, var(--book-hairline), transparent);
+  content: "";
+}
+
+.book-landing-end {
+  isolation: isolate;
+}
+
+.book-landing-end::before {
+  position: absolute;
+  inset: -3rem -1rem -1rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--book-cinnabar) 5%, transparent),
+    transparent 68%
+  );
+  content: "";
+}
+
+.book-landing-end-mark {
+  position: relative;
+  display: block;
+  width: 5rem;
+  height: 0.55rem;
+  margin: 0 auto;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--book-cinnabar) 54%, transparent) 0 2px,
+    transparent 2px 8px
+  );
+}
+
+.book-landing-end-mark::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.55rem;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: var(--book-cinnabar);
+  box-shadow: 0 0 0.8rem color-mix(in oklch, var(--book-cinnabar) 50%, transparent);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 1279px) {
+  .book-landing-spine {
+    left: 0.75rem;
+    opacity: 0.48;
+  }
+
+  .book-landing-spine-stop {
+    overflow: hidden;
+    width: 0.5rem;
+    padding-left: 0;
+    color: transparent;
+  }
+}
+
+@media (max-width: 639px) {
+  .book-landing-spine {
+    left: 0.45rem;
+    opacity: 0.36;
+  }
+
+  .book-contents-part-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .book-contents-part-heading::after {
+    display: none;
+  }
 }
 
 /* ── The cover ──────────────────────────────────────────────────────────────
@@ -621,7 +1199,7 @@ html[data-contrast="high"] .book-frontispiece-wash {
   position: absolute;
   inset: -1.5rem -2rem -3rem;
   z-index: -1;
-  background: color-mix(in oklch, var(--book-paper) 78%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 78%, transparent);
   content: "";
 }
 
@@ -993,7 +1571,7 @@ html[data-motion="still"] .dot-emergence-signal {
     linear-gradient(
       180deg,
       color-mix(in oklch, var(--book-paper) 88%, var(--foreground) 4%),
-      color-mix(in oklch, var(--book-paper) 96%, transparent)
+      color-mix(in oklab, var(--book-paper) 96%, transparent)
     );
 }
 
@@ -1116,7 +1694,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border-color: color-mix(in oklch, var(--book-gold) 34%, transparent);
   box-shadow:
     0 0 70px color-mix(in oklch, var(--book-gold) 14%, transparent),
-    inset 0 0 30px color-mix(in oklch, var(--book-ink) 6%, transparent);
+    inset 0 0 30px color-mix(in oklab, var(--book-ink) 6%, transparent);
 }
 
 .book-hero-ring-inner {
@@ -1156,7 +1734,7 @@ html[data-motion="still"] .dot-emergence-signal {
   box-shadow:
     0 2.8rem 5.2rem color-mix(in oklch, black 56%, transparent),
     0 0 5.8rem color-mix(in oklch, var(--book-gold) 18%, transparent),
-    0 0 0 0.85rem color-mix(in oklch, var(--book-paper) 50%, transparent),
+    0 0 0 0.85rem color-mix(in oklab, var(--book-paper) 50%, transparent),
     inset 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent);
   transform-style: preserve-3d;
 }
@@ -1295,7 +1873,7 @@ html[data-motion="still"] .dot-emergence-signal {
   isolation: isolate;
   border: 1px solid color-mix(in oklch, var(--step-color, var(--book-gold)) 45%, var(--book-hairline));
   border-radius: 9999px;
-  background: color-mix(in oklch, var(--book-paper) 88%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 88%, transparent);
   box-shadow:
     0 1rem 2.2rem color-mix(in oklch, black 24%, transparent),
     0 0 1.4rem color-mix(in oklch, var(--step-color, var(--book-gold)) 18%, transparent);
@@ -1457,7 +2035,7 @@ html[data-motion="still"] .dot-emergence-signal {
   height: 1px;
   background: linear-gradient(
     90deg,
-    color-mix(in oklch, var(--book-ink) 28%, transparent),
+    color-mix(in oklab, var(--book-ink) 28%, transparent),
     color-mix(in oklch, var(--book-gold) 54%, transparent) 45%,
     transparent
   );
@@ -1541,10 +2119,10 @@ html[data-motion="still"] .dot-emergence-signal {
     linear-gradient(
       150deg,
       color-mix(in oklch, var(--book-gold) 10%, transparent),
-      color-mix(in oklch, var(--book-paper) 82%, transparent)
+      color-mix(in oklab, var(--book-paper) 82%, transparent)
     );
   box-shadow:
-    0 0.8rem 2rem color-mix(in oklch, var(--book-ink) 10%, transparent),
+    0 0.8rem 2rem color-mix(in oklab, var(--book-ink) 10%, transparent),
     inset 0 1px 0 color-mix(in oklch, white 12%, transparent);
   font-size: 0.88rem;
   font-weight: 650;
@@ -1612,7 +2190,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-edition-ribbon > div {
   min-height: 5.1rem;
-  background: color-mix(in oklch, var(--book-paper) 84%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 84%, transparent);
   padding: 1rem 1.2rem;
   backdrop-filter: blur(22px);
 }
@@ -1661,9 +2239,9 @@ html[data-motion="still"] .dot-emergence-signal {
   border-block: 1px solid color-mix(in oklch, var(--book-ink) 14%, var(--book-hairline));
   background:
     radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--book-dot) 8%, transparent), transparent 14rem),
-    linear-gradient(color-mix(in oklch, var(--book-ink) 2.5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--book-ink) 2.5%, transparent) 1px, transparent 1px),
-    color-mix(in oklch, var(--book-paper) 94%, transparent);
+    linear-gradient(color-mix(in oklab, var(--book-ink) 2.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--book-ink) 2.5%, transparent) 1px, transparent 1px),
+    color-mix(in oklab, var(--book-paper) 94%, transparent);
   background-size: auto, 4rem 4rem, 4rem 4rem, auto;
   padding: 0;
 }
@@ -1677,7 +2255,7 @@ html[data-motion="still"] .dot-emergence-signal {
   justify-content: space-between;
   gap: 1rem;
   border-bottom: 1px solid color-mix(in oklch, var(--book-ink) 13%, var(--book-hairline));
-  background: color-mix(in oklch, var(--book-paper) 92%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 92%, transparent);
   padding: 0.8rem 1rem;
 }
 
@@ -1769,7 +2347,7 @@ html[data-motion="still"] .dot-emergence-signal {
   position: relative;
   display: block;
   height: 1px;
-  background: color-mix(in oklch, var(--book-ink) 24%, transparent);
+  background: color-mix(in oklab, var(--book-ink) 24%, transparent);
 }
 
 .book-loop-filter-input i::before,
@@ -1846,7 +2424,7 @@ html[data-motion="still"] .dot-emergence-signal {
   z-index: 1;
   background:
     radial-gradient(ellipse at center, color-mix(in oklch, var(--book-dot) 11%, transparent), transparent 69%),
-    linear-gradient(90deg, transparent, color-mix(in oklch, var(--book-paper) 56%, transparent) 16%, color-mix(in oklch, var(--book-paper) 56%, transparent) 84%, transparent);
+    linear-gradient(90deg, transparent, color-mix(in oklab, var(--book-paper) 56%, transparent) 16%, color-mix(in oklab, var(--book-paper) 56%, transparent) 84%, transparent);
   transition: background 220ms ease;
 }
 
@@ -1854,7 +2432,7 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-loop-panel[data-active-step="intent"] .book-loop-decision-space {
   background:
     radial-gradient(ellipse at center, color-mix(in oklch, var(--book-dot) 17%, transparent), transparent 72%),
-    linear-gradient(90deg, transparent, color-mix(in oklch, var(--book-paper) 62%, transparent) 13%, color-mix(in oklch, var(--book-paper) 62%, transparent) 87%, transparent);
+    linear-gradient(90deg, transparent, color-mix(in oklab, var(--book-paper) 62%, transparent) 13%, color-mix(in oklab, var(--book-paper) 62%, transparent) 87%, transparent);
 }
 
 .book-loop-decision-label {
@@ -1907,7 +2485,7 @@ html[data-motion="still"] .dot-emergence-signal {
   min-width: 3.8rem;
   border: 1px solid color-mix(in oklch, var(--book-ink) 15%, var(--book-hairline));
   border-radius: 9999px;
-  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
   padding: 0.26rem 0.42rem;
   font-size: 0.6rem;
   letter-spacing: 0;
@@ -1999,7 +2577,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border: 1px solid color-mix(in oklch, var(--book-dot) 42%, var(--book-hairline));
   border-radius: 0.65rem;
   background:
-    radial-gradient(circle, color-mix(in oklch, var(--book-dot) 13%, var(--book-paper)), color-mix(in oklch, var(--book-paper) 94%, transparent) 68%);
+    radial-gradient(circle, color-mix(in oklch, var(--book-dot) 13%, var(--book-paper)), color-mix(in oklab, var(--book-paper) 94%, transparent) 68%);
   padding: 0.65rem 0.75rem;
   text-align: left;
   box-shadow:
@@ -2113,7 +2691,7 @@ html[data-motion="still"] .dot-emergence-signal {
   grid-column: 1 / -1;
   align-items: baseline;
   gap: 0.3rem;
-  border-top: 1px solid color-mix(in oklch, var(--book-ink) 12%, transparent);
+  border-top: 1px solid color-mix(in oklab, var(--book-ink) 12%, transparent);
   margin-top: 0.35rem;
   padding-top: 0.4rem;
 }
@@ -2132,7 +2710,7 @@ html[data-motion="still"] .dot-emergence-signal {
   left: 66%;
   z-index: 3;
   border-radius: 9999px;
-  background: color-mix(in oklch, var(--book-paper) 94%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 94%, transparent);
   padding: 0.18rem 0.42rem;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.62rem;
@@ -2158,7 +2736,7 @@ html[data-motion="still"] .dot-emergence-signal {
   overflow: hidden;
   border: 1px solid color-mix(in oklch, var(--book-ink) 13%, var(--book-hairline));
   border-radius: 0.5rem;
-  background: color-mix(in oklch, var(--book-paper) 94%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 94%, transparent);
   padding: 0.7rem;
   color: var(--book-ink);
   text-align: left;
@@ -2237,7 +2815,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border-color: color-mix(in oklch, var(--book-dot) 34%, var(--book-hairline));
   background:
     linear-gradient(90deg, transparent, color-mix(in oklch, var(--book-dot) 7%, transparent), transparent),
-    color-mix(in oklch, var(--book-paper) 96%, transparent);
+    color-mix(in oklab, var(--book-paper) 96%, transparent);
 }
 
 .book-loop-state-function {
@@ -2256,7 +2834,7 @@ html[data-motion="still"] .dot-emergence-signal {
   grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
   border-top: 1px solid var(--book-hairline);
-  background: color-mix(in oklch, var(--book-paper) 88%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 88%, transparent);
   padding: 1.15rem 1.25rem 1.25rem;
 }
 
@@ -2275,7 +2853,7 @@ html[data-motion="still"] .dot-emergence-signal {
   overflow: hidden;
   border: 1px solid color-mix(in oklch, var(--book-ink) 13%, var(--book-hairline));
   border-radius: 0.5rem;
-  background: color-mix(in oklch, var(--book-paper) 92%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 92%, transparent);
 }
 
 .book-loop-inspector-foot {
@@ -2618,11 +3196,11 @@ html[data-motion="still"] .dot-emergence-signal {
   gap: 0.8rem;
   border: 1px solid color-mix(in oklch, var(--book-ink) 10%, var(--book-hairline));
   border-radius: 1.25rem;
-  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
   padding: 0.95rem 1.05rem;
   color: var(--book-ink);
   text-align: left;
-  box-shadow: 0 0.5rem 1.4rem color-mix(in oklch, var(--book-ink) 4%, transparent);
+  box-shadow: 0 0.5rem 1.4rem color-mix(in oklab, var(--book-ink) 4%, transparent);
   transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
@@ -2779,8 +3357,8 @@ html[data-motion="still"] .dot-emergence-signal {
   overflow: hidden;
   border: 1px solid color-mix(in oklch, var(--book-ink) 10%, var(--book-hairline));
   border-radius: 9999px;
-  background: color-mix(in oklch, var(--book-paper) 88%, transparent);
-  box-shadow: 0 0.6rem 1.8rem color-mix(in oklch, var(--book-ink) 8%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 88%, transparent);
+  box-shadow: 0 0.6rem 1.8rem color-mix(in oklab, var(--book-ink) 8%, transparent);
   backdrop-filter: blur(8px);
 }
 
@@ -2987,7 +3565,7 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-experience-field-ring {
-  stroke: color-mix(in oklch, var(--book-ink) 8%, transparent);
+  stroke: color-mix(in oklab, var(--book-ink) 8%, transparent);
   stroke-width: 1;
 }
 
@@ -3058,7 +3636,7 @@ html[data-motion="still"] .dot-emergence-signal {
   place-items: center;
   border: 1px solid color-mix(in oklch, var(--book-ink) 25%, var(--book-hairline));
   border-radius: 50%;
-  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
   box-shadow: 0 0.6rem 1.8rem color-mix(in oklch, black 8%, transparent);
   transition: none;
 }
@@ -3136,7 +3714,7 @@ html[data-motion="still"] .dot-emergence-signal {
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
-  background: color-mix(in oklch, var(--book-paper) 95%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 95%, transparent);
   padding: 1.1rem 0.4rem;
   text-align: center;
   transform: translate(-50%, -50%);
@@ -3160,7 +3738,7 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-experience-core::after {
   width: 12.5rem;
   height: 12.5rem;
-  border-color: color-mix(in oklch, var(--book-ink) 8%, transparent);
+  border-color: color-mix(in oklab, var(--book-ink) 8%, transparent);
 }
 
 .book-experience-core-mark {
@@ -3275,7 +3853,7 @@ html[data-motion="still"] .dot-emergence-signal {
   place-items: center;
   border: 1px solid color-mix(in oklch, var(--book-ink) 18%, var(--book-hairline));
   border-radius: 50%;
-  background: color-mix(in oklch, var(--book-paper) 96%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
   color: var(--book-ink);
 }
 
@@ -3505,8 +4083,8 @@ html[data-motion="still"] .dot-emergence-signal {
   border: 1px solid color-mix(in oklch, var(--book-ink) 12%, var(--book-hairline));
   border-radius: 0.5rem;
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--book-paper) 98%, transparent), color-mix(in oklch, var(--book-vellum) 78%, transparent)),
-    color-mix(in oklch, var(--book-paper) 96%, transparent);
+    linear-gradient(135deg, color-mix(in oklab, var(--book-paper) 98%, transparent), color-mix(in oklab, var(--book-vellum) 78%, transparent)),
+    color-mix(in oklab, var(--book-paper) 96%, transparent);
   padding: 1.2rem;
   box-shadow: 0 1rem 2.4rem color-mix(in oklch, black 8%, transparent);
   transition: none;
@@ -3580,8 +4158,8 @@ html[data-motion="still"] .dot-emergence-signal {
   background:
     linear-gradient(
       160deg,
-      color-mix(in oklch, var(--book-vellum) 85%, transparent),
-      color-mix(in oklch, var(--book-paper) 80%, transparent)
+      color-mix(in oklab, var(--book-vellum) 85%, transparent),
+      color-mix(in oklab, var(--book-paper) 80%, transparent)
     );
   box-shadow: 0 1.2rem 3rem color-mix(in oklch, black 14%, transparent);
   transition: none;
@@ -3638,7 +4216,7 @@ html[data-motion="still"] .dot-emergence-signal {
   align-items: center;
   border: 1px solid var(--book-hairline);
   border-radius: 0.65rem;
-  background: color-mix(in oklch, var(--book-paper) 85%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 85%, transparent);
   padding: 0.45rem 0.7rem;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.5rem;
@@ -3853,23 +4431,23 @@ html[data-motion="still"] .dot-emergence-signal {
     radial-gradient(
       circle at 50% 50%,
       transparent 34%,
-      color-mix(in oklch, var(--book-ink) 8%, transparent) 34.2%,
+      color-mix(in oklab, var(--book-ink) 8%, transparent) 34.2%,
       transparent 34.8%,
       transparent 46%,
       color-mix(in oklch, var(--book-gold) 18%, transparent) 46.2%,
       transparent 46.8%
     ),
-    color-mix(in oklch, var(--book-paper) 90%, transparent);
+    color-mix(in oklab, var(--book-paper) 90%, transparent);
   border-radius: 2rem;
   box-shadow:
-    0 1.5rem 3.5rem color-mix(in oklch, var(--book-ink) 7%, transparent),
+    0 1.5rem 3.5rem color-mix(in oklab, var(--book-ink) 7%, transparent),
     inset 0 1px 0 color-mix(in oklch, white 8%, transparent);
 }
 
 .book-map-engraving {
   position: absolute;
   inset: 2rem;
-  border: 1px solid color-mix(in oklch, var(--book-ink) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--book-ink) 6%, transparent);
   border-radius: 1.5rem;
   pointer-events: none;
 }
@@ -3880,7 +4458,7 @@ html[data-motion="still"] .dot-emergence-signal {
   inset: 50% auto auto 50%;
   width: 92%;
   height: 1px;
-  background: color-mix(in oklch, var(--book-ink) 10%, transparent);
+  background: color-mix(in oklab, var(--book-ink) 10%, transparent);
   content: "";
   transform: translate(-50%, -50%);
 }
@@ -3890,7 +4468,7 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-map-line {
-  stroke: color-mix(in oklch, var(--book-ink) 20%, transparent);
+  stroke: color-mix(in oklab, var(--book-ink) 20%, transparent);
   stroke-width: 1;
 }
 
@@ -3910,9 +4488,9 @@ html[data-motion="still"] .dot-emergence-signal {
       color-mix(in oklch, var(--book-gold) 12%, transparent),
       transparent 68%
     ),
-    color-mix(in oklch, var(--book-paper) 92%, transparent);
+    color-mix(in oklab, var(--book-paper) 92%, transparent);
   box-shadow:
-    0 0 0 8px color-mix(in oklch, var(--book-paper) 70%, transparent),
+    0 0 0 8px color-mix(in oklab, var(--book-paper) 70%, transparent),
     0 0 80px color-mix(in oklch, var(--book-gold) 20%, transparent);
 }
 
@@ -3924,9 +4502,9 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-map-node {
   border-color: var(--book-hairline);
   border-radius: 1.1rem;
-  background: color-mix(in oklch, var(--book-paper) 88%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 88%, transparent);
   color: var(--book-muted);
-  box-shadow: 0 12px 28px color-mix(in oklch, var(--book-ink) 6%, transparent);
+  box-shadow: 0 12px 28px color-mix(in oklab, var(--book-ink) 6%, transparent);
 }
 
 .book-map-node:hover,
@@ -3951,7 +4529,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-map-mobile,
 .book-map-inspector {
-  background: color-mix(in oklch, var(--book-paper) 90%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 90%, transparent);
 }
 
 .book-map-mobile-node:hover,
@@ -3964,7 +4542,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border-radius: 1.75rem;
   border-color: color-mix(in oklch, var(--book-gold) 14%, var(--book-hairline));
   box-shadow:
-    0 1.5rem 3.5rem color-mix(in oklch, var(--book-ink) 7%, transparent),
+    0 1.5rem 3.5rem color-mix(in oklab, var(--book-ink) 7%, transparent),
     inset 0 1px 0 color-mix(in oklch, white 8%, transparent);
 }
 
@@ -3986,7 +4564,7 @@ html[data-motion="still"] .dot-emergence-signal {
   inset: 50% auto auto 50%;
   width: 86%;
   height: 1px;
-  background: color-mix(in oklch, var(--book-ink) 18%, transparent);
+  background: color-mix(in oklab, var(--book-ink) 18%, transparent);
   content: "";
   transform: translate(-50%, -50%);
 }
@@ -3997,7 +4575,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-diagram-ring {
   inset: 50% auto auto 50%;
-  border: 1px solid color-mix(in oklch, var(--book-ink) 24%, transparent);
+  border: 1px solid color-mix(in oklab, var(--book-ink) 24%, transparent);
   border-radius: 9999px;
   transform: translate(-50%, -50%);
 }
@@ -4134,7 +4712,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-path-link {
   border-color: var(--book-hairline);
-  background: color-mix(in oklch, var(--book-paper) 70%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 70%, transparent);
 }
 
 .book-path-link:hover,
@@ -4170,19 +4748,6 @@ html[data-motion="still"] .dot-emergence-signal {
   text-shadow: none;
 }
 
-/* The member's reading choices, published by the organism provider. */
-[data-reading="sans"] .book-prose {
-  font-variant-numeric: normal;
-}
-
-[data-reading="sans"] .book-prose h1,
-[data-reading="sans"] .book-prose h2,
-[data-reading="sans"] .book-prose h3,
-[data-reading="sans"] .book-prose h4,
-[data-reading="sans"] .book-reference-copy {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-}
-
 .book-prose p,
 .book-prose li,
 .book-prose blockquote {
@@ -4192,9 +4757,9 @@ html[data-motion="still"] .dot-emergence-signal {
   hyphens: auto;
   hyphenate-limit-chars: 6 3 3;
   overflow-wrap: break-word;
-  text-align: justify;
-  text-align-last: left;
-  text-justify: inter-word;
+  /* Ragged right is the default the appearance panel claims it is. Justified
+     prose is opt-in, and organism/appearance.css turns it on. */
+  text-align: left;
 }
 
 .book-prose p,
@@ -4331,7 +4896,7 @@ html[data-motion="still"] .dot-emergence-signal {
   margin-block: 2.75rem;
   border: 0;
   border-block: 1px solid var(--book-hairline);
-  background: color-mix(in oklch, var(--book-paper) 74%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 74%, transparent);
   padding: 1.4rem 1.25rem 1.5rem;
 }
 
@@ -4618,7 +5183,7 @@ html[data-motion="still"] .dot-emergence-signal {
   background-image: repeating-linear-gradient(
     0deg,
     transparent 0 1.55rem,
-    color-mix(in oklch, var(--book-ink) 3%, transparent) 1.55rem calc(1.55rem + 1px)
+    color-mix(in oklab, var(--book-ink) 3%, transparent) 1.55rem calc(1.55rem + 1px)
   );
 }
 

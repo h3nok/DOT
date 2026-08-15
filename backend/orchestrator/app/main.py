@@ -9,6 +9,7 @@ import slowapi
 import slowapi.errors
 
 import app.api.v1.auth as _auth_router
+import app.api.v1.commerce as _commerce_router
 import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
 import app.api.v1.join as _join_router
@@ -82,6 +83,10 @@ def create_app() -> fastapi.FastAPI:
                 "description": "Member funding for the movement. Amounts are set server-side.",
             },
             {
+                "name": "commerce",
+                "description": "Authenticated first-party purchases and product delivery.",
+            },
+            {
                 "name": "join",
                 "description": (
                     "Verified requests to join. Addresses are sealed at rest and the "
@@ -127,6 +132,7 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_sitecontent_router.public_router)
     fapp.include_router(_sitecontent_router.router)
     fapp.include_router(_support_router.router)
+    fapp.include_router(_commerce_router.router)
     fapp.include_router(_join_router.router)
     fapp.include_router(_twin_router.public_router)
     fapp.include_router(_twin_router.router)

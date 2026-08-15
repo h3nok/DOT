@@ -349,11 +349,9 @@ function SectionReader({
 
   return (
     <div
-      className={`mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-16 ${
-        focusMode
-          ? "max-w-[56rem] lg:grid-cols-[minmax(0,760px)]"
-          : "max-w-7xl lg:grid-cols-[260px_minmax(0,760px)]"
-      }`}
+      className="book-reading-grid mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-16"
+      data-layout={focusMode ? "focus" : "contents"}
+      data-rail="wide"
     >
       <aside className="book-focus-hidden hidden lg:block">
         <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">

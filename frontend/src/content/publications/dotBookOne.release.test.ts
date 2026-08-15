@@ -12,6 +12,7 @@ const manuscriptPath = join(
   "../docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx",
 );
 const downloadsRoot = join(process.cwd(), "public/books");
+const protectedBooksRoot = join(process.cwd(), "../backend/orchestrator/private/books");
 const retiredPublicWordPath = join(
   downloadsRoot,
   "consciousness-a-digital-organism-book-one-v2.docx",
@@ -20,10 +21,7 @@ const retiredPublicPdfPath = join(
   downloadsRoot,
   "consciousness-a-digital-organism-book-one-v2.pdf",
 );
-const publicPdfPath = join(
-  downloadsRoot,
-  "digital-organism-theory-book-one-digital-edition.pdf",
-);
+const protectedPdfPath = join(protectedBooksRoot, "digital-organism-theory-book-one.pdf");
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),
 ) as {
@@ -61,17 +59,15 @@ describe("Book One edition v2", () => {
     ).toBe(true);
   });
 
-  it("publishes one PDF while keeping the editable manuscript private", () => {
+  it("publishes one protected PDF while keeping public downloads and DOCX private", () => {
     const sourceDigest = createHash("sha256")
       .update(readFileSync(manuscriptPath))
       .digest("hex");
-    const pdf = readFileSync(publicPdfPath);
+    const pdf = readFileSync(protectedPdfPath);
 
     expect(existsSync(retiredPublicWordPath)).toBe(false);
     expect(existsSync(retiredPublicPdfPath)).toBe(false);
-    expect(readdirSync(downloadsRoot)).toEqual([
-      "digital-organism-theory-book-one-digital-edition.pdf",
-    ]);
+    expect(readdirSync(downloadsRoot)).toEqual([]);
     expect(sourceDigest).toBe(manifest.source.sha256);
     expect(pdf.subarray(0, 5).toString("ascii")).toBe("%PDF-");
     expect(pdf.byteLength).toBeGreaterThan(100_000);

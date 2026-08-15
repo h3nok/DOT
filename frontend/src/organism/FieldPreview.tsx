@@ -100,6 +100,36 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
         </g>
       )}
 
+      {/* Rings from two sources; the fringes are where they cross, which is
+          the whole point and so is drawn rather than faked. */}
+      {field === "interference" && (
+        <g stroke={stroke} fill="none">
+          {[6, 12, 18, 24].map((r) => (
+            <circle key={`a${r}`} cx="15" cy="16" r={r} strokeOpacity={0.42 - r * 0.011} />
+          ))}
+          {[6, 12, 18, 24].map((r) => (
+            <circle key={`b${r}`} cx="34" cy="17" r={r} strokeOpacity={0.36 - r * 0.009} />
+          ))}
+        </g>
+      )}
+
+      {field === "flow" && (
+        <g stroke={stroke} fill="none" strokeLinecap="round" strokeWidth="1">
+          <path d="M4 22 Q13 12, 22 16 T42 9" strokeOpacity="0.55" />
+          <path d="M4 27 Q14 19, 23 22 T43 15" strokeOpacity="0.4" />
+          <path d="M5 15 Q14 7, 24 10 T44 5" strokeOpacity="0.32" />
+          <path d="M6 30 Q17 25, 26 28" strokeOpacity="0.22" />
+        </g>
+      )}
+
+      {field === "strata" && (
+        <g fill={dot}>
+          <path d="M0 12 Q12 8, 24 12 T48 10 L48 32 L0 32 Z" fillOpacity="0.12" />
+          <path d="M0 19 Q14 15, 26 19 T48 17 L48 32 L0 32 Z" fillOpacity="0.16" />
+          <path d="M0 26 Q13 22, 25 26 T48 24 L48 32 L0 32 Z" fillOpacity="0.22" />
+        </g>
+      )}
+
       {field === "off" && (
         <line
           x1="14"

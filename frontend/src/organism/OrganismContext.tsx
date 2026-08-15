@@ -12,12 +12,19 @@ import {
   DEFAULT_VITALS,
   ORGANISM_STORAGE_KEY,
   resolveContrast,
+  resolveDial,
+  resolveMeasure,
+  resolvePaperTone,
+  resolveParagraphStyle,
   resolvePreset,
+  resolveReadingFont,
+  resolveTint,
   type OrganismConfig,
   type OrganismContextValue,
   type OrganismMood,
   type VitalSigns,
 } from "./types";
+import { defaultConfigFor } from "./themePresets";
 import { useReducedMotion } from "./signals/useReducedMotion";
 import { useCircadian } from "./signals/useCircadian";
 import { useArousal } from "./signals/useArousal";
@@ -28,20 +35,46 @@ const OrganismContext = createContext<OrganismContextValue | null>(null);
 const BACKEND_SIGNALS_ENABLED =
   import.meta.env.VITE_ORGANISM_BACKEND_SIGNALS === "1";
 
+/**
+ * What a first-time reader gets, before they have chosen anything.
+ *
+ * The two bases want genuinely different colour, so the starting environment
+ * is picked from whichever one their system asked for. Everything outside the
+ * environment's remit — measure, leading, size, alignment — stays at
+ * {@link DEFAULT_CONFIG}, because those are reading decisions rather than
+ * decisions about light.
+ */
+function firstVisitConfig(): OrganismConfig {
+  const dark =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  const stored = typeof window !== "undefined" && window.localStorage.getItem("dot_theme");
+  const base = stored === "dark" || stored === "light" ? stored : dark ? "dark" : "light";
+  return defaultConfigFor(base);
+}
+
 function loadConfig(): OrganismConfig {
   if (typeof window === "undefined") return DEFAULT_CONFIG;
   try {
     const raw = window.localStorage.getItem(ORGANISM_STORAGE_KEY);
-    if (!raw) return DEFAULT_CONFIG;
+    if (!raw) return firstVisitConfig();
     const saved = JSON.parse(raw) as Partial<OrganismConfig>;
     return {
       ...DEFAULT_CONFIG,
       ...saved,
       preset: resolvePreset(saved.preset),
       contrast: resolveContrast(saved.contrast),
+      tint: resolveTint(saved.tint),
+      readingFont: resolveReadingFont(saved.readingFont),
+      readingMeasure: resolveMeasure(saved.readingMeasure),
+      paragraphStyle: resolveParagraphStyle(saved.paragraphStyle),
+      paperTone: resolvePaperTone(saved.paperTone),
+      fieldScale: resolveDial(saved.fieldScale, 0.5, 1.6, DEFAULT_CONFIG.fieldScale),
+      fieldSpeed: resolveDial(saved.fieldSpeed, 0, 1.6, DEFAULT_CONFIG.fieldSpeed),
+      fieldContrast: resolveDial(saved.fieldContrast, 0.5, 2, DEFAULT_CONFIG.fieldContrast),
     };
   } catch {
-    return DEFAULT_CONFIG;
+    return firstVisitConfig();
   }
 }
 
@@ -141,11 +174,17 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
     root.dataset.reading = config.readingFont;
     root.dataset.leading = config.readingLeading;
     root.dataset.align = config.readingAlign;
+    root.dataset.measure = config.readingMeasure;
+    root.dataset.paragraph = config.paragraphStyle;
+    root.dataset.paper = config.paperTone;
     root.style.setProperty("--reading-scale", config.readingScale.toFixed(2));
   }, [
+    config.paperTone,
+    config.paragraphStyle,
     config.readingAlign,
     config.readingFont,
     config.readingLeading,
+    config.readingMeasure,
     config.readingScale,
   ]);
 

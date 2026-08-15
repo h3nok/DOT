@@ -31,6 +31,90 @@ import { StepOneUnlearning } from "./StepOneUnlearning";
 import { ArchitectureDiagram } from "./ArchitectureDiagram";
 import "./home.css";
 
+const HERO_STATEMENTS = [
+  {
+    full: "Feeling is data, but feeling is not automatically truth.",
+    compact: "Feeling is data—not automatically truth.",
+  },
+  {
+    full: "No method removes the observer from existence.",
+    compact: "Science cannot remove the observer.",
+  },
+  {
+    full: "Fear can narrow the hypothesis space.",
+    compact: "Fear narrows the questions we can ask.",
+  },
+  {
+    full: "You can notice a proposed action without becoming it.",
+    compact: "An impulse is not your only option.",
+  },
+  {
+    full: "Love is the condition in which Fear no longer governs you.",
+    compact: "Love means Fear no longer governs.",
+  },
+] as const;
+
+function HeroTypewriter({ reducedMotion }: { reducedMotion: boolean }) {
+  const [heroStatementIndex, setHeroStatementIndex] = useState(0);
+  const [heroTypedLength, setHeroTypedLength] = useState(0);
+  const [useCompactStatement, setUseCompactStatement] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 640,
+  );
+
+  useEffect(() => {
+    const syncStatementLength = () => setUseCompactStatement(window.innerWidth < 640);
+    window.addEventListener("resize", syncStatementLength, { passive: true });
+    return () => window.removeEventListener("resize", syncStatementLength);
+  }, []);
+
+  const heroStatement = HERO_STATEMENTS[heroStatementIndex];
+  const displayedStatement = useCompactStatement
+    ? heroStatement.compact
+    : heroStatement.full;
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    if (heroTypedLength < displayedStatement.length) {
+      const timer = window.setTimeout(() => {
+        setHeroTypedLength((current) => current + 1);
+      }, 42);
+
+      return () => window.clearTimeout(timer);
+    }
+
+    if (heroStatementIndex >= HERO_STATEMENTS.length - 1) return;
+
+    const timer = window.setTimeout(() => {
+      setHeroStatementIndex((current) => current + 1);
+      setHeroTypedLength(0);
+    }, 2200);
+
+    return () => window.clearTimeout(timer);
+  }, [displayedStatement, heroStatementIndex, heroTypedLength, reducedMotion]);
+
+  const visibleHeroStatement = reducedMotion
+    ? displayedStatement
+    : displayedStatement.slice(0, heroTypedLength);
+  const heroSequenceSettled =
+    heroStatementIndex === HERO_STATEMENTS.length - 1 &&
+    visibleHeroStatement.length === displayedStatement.length;
+
+  return (
+    <p className="home-hero-lede mt-5" aria-label={heroStatement.full}>
+      <span
+        className="home-hero-typewriter"
+        data-static={reducedMotion ? "true" : "false"}
+        data-settled={heroSequenceSettled ? "true" : "false"}
+        aria-hidden="true"
+      >
+        <span className="home-hero-typewriter-text">{visibleHeroStatement}</span>
+        <span className="home-hero-typewriter-cursor" />
+      </span>
+    </p>
+  );
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
   const { isOwner, logout, refresh: refreshAuth } = useAuth();
@@ -121,7 +205,7 @@ export default function HomePage() {
         <div className="home-hero-stage" aria-hidden="true">
           <span className="home-hero-axis home-hero-axis-horizontal" />
           <span className="home-hero-stage-label home-hero-stage-label-time">
-            emergence over time
+            state persists through change
           </span>
           <div className="home-hero-state-trace">
             <span />
@@ -148,12 +232,9 @@ export default function HomePage() {
               <span className="mt-2 block">Reality is information.</span>
             </h1>
 
-            <p className="home-hero-lede mt-5 max-w-lg">
-              A practical framework for understanding what you are,
-              how you got here, and what you can still change.
-            </p>
+            <HeroTypewriter reducedMotion={reducedMotion} />
 
-            <div className="mt-8 w-full max-w-xl">
+            <div className="home-hero-ask mt-8 w-full max-w-xl">
             <HeroAsk
               className="w-full"
               onAsk={(request) => {
@@ -178,15 +259,13 @@ export default function HomePage() {
 
               <Link
                 to="/doctrine"
-                className="dot-graph-destination group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg border px-6 text-sm font-semibold text-foreground transition-all active:scale-[0.98]"
+                className="home-hero-secondary-link group inline-flex min-h-12 items-center justify-center gap-2.5 px-2 text-sm font-semibold text-foreground transition-colors"
               >
                 <Network
                   className="h-4 w-4 text-[color:var(--organism-accent-strong)]"
                   aria-hidden="true"
                 />
-                <span>
-                  <span className="hidden sm:inline">Explore the </span>Concept Map
-                </span>
+                <span>Inspect the Concept Map</span>
               </Link>
             </div>
 
@@ -194,7 +273,7 @@ export default function HomePage() {
         </div>
 
         <a className="home-scroll-cue" href="#unlearning-experiment">
-          <span>Begin with a lived claim</span>
+          <span>Continue</span>
           <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </a>
       </motion.section>
@@ -216,30 +295,32 @@ export default function HomePage() {
         className="home-environment home-reality-environment scroll-mt-24"
       >
         <div className="home-reality-layout dot-page-container dot-page-wide">
-          <div>
+          <div className="home-reality-heading">
             <span className="home-inverse-label dot-label">The Reality Frame</span>
             <h2 className="home-inverse-heading mt-4 text-balance">
-              You are already playing.
+              You are already <span>playing.</span>
             </h2>
           </div>
           <div className="home-reality-copy">
             <p className="text-balance">
-              DOT models the physical world as a developmental environment — a
-              Reality Frame where every action meets real consequence. You cannot
-              spectate this. You are in it. The only question is whether you see
-              the rules or are governed by them without knowing.
+              DOT models the physical world as a Reality Frame: a developmental
+              environment where action meets consequence. You cannot spectate it.
+              You are already inside the conditions that shape you.
             </p>
             <p className="mt-5 text-balance text-sm leading-relaxed opacity-70 sm:text-base">
-              Book One does not ask you to believe this. It marks each claim as
-              observation, model, or hypothesis so you can see exactly what is
-              being proposed and where the argument is still open.
+              Book One marks every claim as observation, model, or hypothesis.
+              The point is not belief, but seeing what is proposed and where it
+              remains open.
             </p>
             <Link
               to="/applied"
-              className="home-inverse-link mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
+              className="home-inverse-link group mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
             >
               See where the argument is open
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </Link>
           </div>
         </div>
@@ -258,17 +339,17 @@ export default function HomePage() {
         <div className="dot-page-container dot-page-wide">
           <div className="home-section-heading-row">
             <div>
-              <span className="dot-label">A working vocabulary · 10 concepts</span>
+              <span className="dot-label">The language of the model · 10 concepts</span>
               <h2
                 id="orientation-title"
                 className="dot-page-heading mt-3 text-balance"
               >
-                The terms the argument depends on.
+                Learn the terms before judging the model.
               </h2>
             </div>
             <p className="dot-lede max-w-lg">
-              Move through the vocabulary before deciding whether the framework
-              holds. Each term retains the claim level assigned in Book One.
+              Each concept keeps the claim level assigned in Book One, so a model
+              is never presented as an observation or a hypothesis as fact.
             </p>
           </div>
           <div className="mt-10">
@@ -291,41 +372,31 @@ export default function HomePage() {
         <div className="mx-auto max-w-2xl text-center">
           <span className="dot-label">Continue from here</span>
           <h2 className="dot-page-heading mt-2 text-balance">
-            Two ways into the work.
+            Begin with the argument.
           </h2>
           <p className="dot-lede mx-auto mt-4 max-w-xl">
-            Read the sustained argument, or inspect its structure before deciding
-            where to begin.
+            Book One gives the framework in its intended order. The concept map
+            remains available when you need to inspect its structure.
           </p>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-3xl gap-3 sm:grid-cols-2">
+        <div className="home-path-actions mx-auto mt-10 max-w-3xl">
           <Link
             to="/book/digital-organism-theory"
-            className="home-entrance group"
+            className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold"
           >
-            <span className="home-entrance-icon">
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-              <h3 className="dot-section-heading">Read Book One</h3>
-              <p className="dot-caption mt-1">The complete argument, in its intended order and with its notes.</p>
-            </span>
-            <ArrowRight className="home-entrance-arrow" aria-hidden="true" />
+            <BookOpen className="h-4 w-4" aria-hidden="true" />
+            Read Book One
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
 
           <Link
             to="/doctrine"
-            className="home-entrance group"
+            className="home-path-secondary group"
           >
-            <span className="home-entrance-icon">
-              <Network className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="min-w-0">
-              <h3 className="dot-section-heading">Explore the Concept Map</h3>
-              <p className="dot-caption mt-1">Definitions, claim levels, and exact links back to the source text.</p>
-            </span>
-            <ArrowRight className="home-entrance-arrow" aria-hidden="true" />
+            <Network className="h-4 w-4" aria-hidden="true" />
+            Inspect definitions and claim levels
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
         </div>
@@ -342,21 +413,20 @@ export default function HomePage() {
         className="home-environment home-invitation-environment scroll-mt-24"
       >
         <div className="dot-page-container dot-page-wide">
-        <div className="max-w-3xl">
-          <span className="dot-label">Open inquiry</span>
+        <div className="home-invitation-content mx-auto max-w-3xl text-center">
+          <span className="dot-label">Open inquiry · Optional participation</span>
           <h2
             id="invitation-title"
             className="dot-page-heading mt-3 text-balance"
           >
-            Stay with the work.
+            Honest scrutiny belongs here.
           </h2>
-          <p className="dot-lede mt-4 max-w-2xl text-balance">
+          <p className="dot-lede mx-auto mt-4 max-w-2xl text-balance">
             DOT is being built in public as a book, a critical practice, and a
-            community for people who want to learn without surrendering their
-            attention. You do not need to agree to take part; honest scrutiny is
-            part of the work.
+            community that protects attention. Agreement is not the price of
+            entry; careful disagreement is part of the work.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               to="/join"
               className="dot-reading-action inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 text-sm font-semibold"

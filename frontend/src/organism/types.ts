@@ -77,7 +77,17 @@ export interface VitalSigns {
  * and stay out of the reading. None of them scatter arbitrary links across the
  * viewport — every mark has a rule behind it.
  */
-export type OrganismPreset = "field" | "aurora" | "dots" | "topology" | "ink" | "lattice" | "off";
+export type OrganismPreset =
+  | "field"
+  | "aurora"
+  | "dots"
+  | "topology"
+  | "interference"
+  | "flow"
+  | "strata"
+  | "ink"
+  | "lattice"
+  | "off";
 
 export interface OrganismPresetSpec {
   label: string;
@@ -126,6 +136,32 @@ export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
     linkFactor: 0,
     alpha: 0.85,
   },
+  interference: {
+    // "Interference" is the accurate word and two characters too many for the
+    // card, where it truncated to "Interfer…". The hint carries the physics.
+    label: "Ripples",
+    hint: "Two streams meeting — crests reinforcing, troughs cancelling.",
+    density: 0,
+    speed: 0.32,
+    linkFactor: 0,
+    alpha: 0.95,
+  },
+  flow: {
+    label: "Current",
+    hint: "Tracers carried by a slow field — the Reality Stream, drawn.",
+    density: 1,
+    speed: 0.7,
+    linkFactor: 0,
+    alpha: 0.9,
+  },
+  strata: {
+    label: "Strata",
+    hint: "Settled layers — interpretation accumulating over time.",
+    density: 0,
+    speed: 0.2,
+    linkFactor: 0,
+    alpha: 0.9,
+  },
   ink: {
     label: "Intent",
     hint: "Calligraphic strokes — directed action dissolving.",
@@ -171,8 +207,86 @@ export function resolvePreset(value: unknown): OrganismPreset {
 /** Accent hue source: follow the circadian arc, or pin a hue in degrees. */
 export type OrganismTint = "auto" | number;
 
-/** Reading surface typography the member owns. */
-export type ReadingFont = "serif" | "sans";
+/**
+ * The panel offers named hues and a wheel, so any degree can reach storage.
+ * Normalise it onto [0, 360) rather than trusting it — an out-of-range hue
+ * silently breaks every `oklch()` the accent feeds.
+ */
+export function resolveTint(value: unknown): OrganismTint {
+  if (value === "auto") return "auto";
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return DEFAULT_CONFIG.tint;
+  }
+  return ((value % 360) + 360) % 360;
+}
+
+/**
+ * Reading surface typography the member owns.
+ *
+ * Every face here is either already bundled (`@fontsource`) or resolved from
+ * the operating system, so choosing one costs no download. `humanist` is the
+ * accessibility option: a wide-set, open-countered system sans with looser
+ * tracking, which is what most dyslexia typography guidance actually asks for.
+ */
+export type ReadingFont = "serif" | "sans" | "humanist" | "mono";
+
+const READING_FONTS: ReadingFont[] = ["serif", "sans", "humanist", "mono"];
+
+export function resolveReadingFont(value: unknown): ReadingFont {
+  return READING_FONTS.includes(value as ReadingFont)
+    ? (value as ReadingFont)
+    : DEFAULT_CONFIG.readingFont;
+}
+
+/**
+ * Line length. The one reading control with a defended right answer — prose is
+ * easiest to read somewhere near 60–75 characters — and therefore the one most
+ * worth letting a reader move, because the right answer depends on their type
+ * size, their screen, and how far away they sit.
+ */
+export type ReadingMeasure = "narrow" | "standard" | "wide";
+
+const READING_MEASURES: ReadingMeasure[] = ["narrow", "standard", "wide"];
+
+export function resolveMeasure(value: unknown): ReadingMeasure {
+  return READING_MEASURES.includes(value as ReadingMeasure)
+    ? (value as ReadingMeasure)
+    : DEFAULT_CONFIG.readingMeasure;
+}
+
+/**
+ * How paragraphs separate. `spaced` is the web convention and scans well;
+ * `indented` is the convention of the printed book this text came from, and
+ * reads as continuous argument rather than a stack of blocks.
+ */
+export type ParagraphStyle = "spaced" | "indented";
+
+export function resolveParagraphStyle(value: unknown): ParagraphStyle {
+  return value === "indented" ? "indented" : "spaced";
+}
+
+/**
+ * The colour of the page itself, independent of light/dark.
+ *
+ * Not decoration: a warm ground at night and a cool one under daylight are the
+ * difference between finishing a chapter and stopping halfway. The tone shifts
+ * paper and ink together so contrast is preserved at every setting.
+ */
+export type PaperTone = "neutral" | "warm" | "sepia" | "cool";
+
+const PAPER_TONES: PaperTone[] = ["neutral", "warm", "sepia", "cool"];
+
+export function resolvePaperTone(value: unknown): PaperTone {
+  return PAPER_TONES.includes(value as PaperTone)
+    ? (value as PaperTone)
+    : DEFAULT_CONFIG.paperTone;
+}
+
+/** Clamp a stored dial back into range; a bad value must not blank the field. */
+export function resolveDial(value: unknown, min: number, max: number, fallback: number): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
+  return Math.min(max, Math.max(min, value));
+}
 
 /**
  * Line height on reading surfaces. Not a cosmetic preference: leading is what
@@ -213,6 +327,23 @@ export interface OrganismConfig {
   tint: OrganismTint;
   /** Hold the field still without disabling it (motion sensitivity, focus). */
   stillness: boolean;
+  /**
+   * Pattern scale [0.5..1.6]. Below 1 the field is sparser and larger-grained,
+   * above 1 denser and finer. Separate from intensity: how *much* structure
+   * there is, rather than how strongly it is drawn.
+   */
+  fieldScale: number;
+  /** Drift tempo [0..1.6]. 0 leaves the field composed but motionless. */
+  fieldSpeed: number;
+  /**
+   * How strongly the field reads against the page [0.5..2].
+   *
+   * The membrane is corrected for the fact that a mark reads far weaker on a
+   * light ground than a dark one, but "far weaker" is a population average and
+   * the right answer depends on the screen, the room, and the eyes. This is the
+   * reader's own correction on top of ours.
+   */
+  fieldContrast: number;
   /** Contrast treatment shared by interface, diagrams, and reading surfaces. */
   contrast: AppearanceContrast;
   /** UI surface style — how cards, borders, and interactive elements feel. */
@@ -225,6 +356,12 @@ export interface OrganismConfig {
   readingLeading: ReadingLeading;
   /** Ragged-right or justified prose. */
   readingAlign: ReadingAlign;
+  /** Column width on reading surfaces. */
+  readingMeasure: ReadingMeasure;
+  /** Spaced blocks or indented continuous prose. */
+  paragraphStyle: ParagraphStyle;
+  /** Colour temperature of the page, applied in both light and dark. */
+  paperTone: PaperTone;
 }
 
 export interface OrganismContextValue {
@@ -272,12 +409,18 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   showHud: false,
   tint: "auto",
   stillness: false,
+  fieldScale: 1,
+  fieldSpeed: 1,
+  fieldContrast: 1,
   contrast: "standard",
   uiStyle: "default",
   readingFont: "serif",
   readingScale: 1,
   readingLeading: "standard",
   readingAlign: "left",
+  readingMeasure: "standard",
+  paragraphStyle: "spaced",
+  paperTone: "neutral",
 };
 
 export const ORGANISM_STORAGE_KEY = "dot_organism";

@@ -62,13 +62,15 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
   // the start of the argument, not wherever the sequence would have ended.
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [hasEntered, setHasEntered] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
-    if (!autoAdvance || paused || index >= last) return; // Still, reading, or arrived.
+    if (!autoAdvance || !hasEntered || paused || hasInteracted || index >= last) return;
 
     const timer = window.setTimeout(() => setIndex((i) => i + 1), DWELL_MS);
     return () => window.clearTimeout(timer);
-  }, [index, last, autoAdvance, paused]);
+  }, [index, last, autoAdvance, paused, hasEntered, hasInteracted]);
 
   // While the steward is writing, every line is visible and addressable at once.
   if (editMode) {
@@ -95,12 +97,19 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
 
   const current = HERO_CONCEPTS[index];
 
+  const selectConcept = (nextIndex: number) => {
+    setIndex(nextIndex);
+    setHasInteracted(true);
+  };
+
   return (
-    <div
+    <motion.div
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onViewportEnter={() => setHasEntered(true)}
+      viewport={{ once: true, margin: "-80px" }}
       className="home-concept-stage text-center"
     >
       <ul className="sr-only">
@@ -112,53 +121,47 @@ export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) 
         ))}
       </ul>
 
-      <div aria-hidden="true" className="relative min-h-[14rem] sm:min-h-[12rem]">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={autoAdvance ? { opacity: 0, y: 8 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute inset-x-0 top-0 flex flex-col items-center justify-center text-center gap-2.5"
-          >
-            <LevelBadge level={current.level} index={index} total={HERO_CONCEPTS.length} />
-            <span className="dot-section-heading block">
-              {current.term}
-            </span>
-            <span className="dot-lede block max-w-xl text-balance mx-auto">
-              {resolve(current.id, current.text)}
-            </span>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      <div className="home-concept-instrument">
+        <ol className="home-concept-index">
+          {HERO_CONCEPTS.map((concept, i) => (
+            <li key={concept.id}>
+              <button
+                type="button"
+                onClick={() => selectConcept(i)}
+                aria-label={concept.term}
+                aria-pressed={i === index}
+                title={concept.term}
+                className="home-concept-index-button"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </button>
+            </li>
+          ))}
+        </ol>
 
-      {/* Position, and a way to step through it. Finite by design: the last dot
-          is the end, not a wrap point. */}
-      {/* The dot is the indicator, not the target. Ten 6px dots were unhittable
-          on a phone, so each button carries a 44px-tall transparent hit area
-          around a mark that stays small. */}
-      <ol className="mt-2 flex items-center justify-center">
-        {HERO_CONCEPTS.map((concept, i) => (
-          <li key={concept.id}>
-            <button
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-label={concept.term}
-              aria-current={i === index}
-              className="group flex h-11 w-6 items-center justify-center"
+        <div aria-hidden="true" className="home-concept-readout">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={autoAdvance ? { opacity: 0, y: 8 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="home-concept-readout-panel"
             >
-              <span
-                className={`block h-1.5 rounded-full transition-all ${
-                  i === index
-                    ? "w-5 bg-[color:var(--organism-accent-strong)]"
-                    : "w-1.5 bg-border group-hover:bg-muted-foreground"
-                }`}
+              <LevelBadge
+                level={current.level}
+                index={index}
+                total={HERO_CONCEPTS.length}
               />
-            </button>
-          </li>
-        ))}
-      </ol>
-    </div>
+              <span className="dot-section-heading block">{current.term}</span>
+              <span className="dot-lede block max-w-xl text-balance mx-auto">
+                {resolve(current.id, current.text)}
+              </span>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
   );
 }

@@ -15,6 +15,8 @@ const DEV_OWNER_ID: string =
 export interface AuthedInit extends Omit<RequestInit, "body"> {
   /** Development-only owner assertion. Ignored in production builds. */
   ownerId?: string;
+  /** Use the signed session cookie in development instead of asserting a dev owner. */
+  sessionOnly?: boolean;
   /** Serialized as a JSON body with the matching content type. */
   json?: unknown;
   /** Sent as a UTF-8 text body. Mutually exclusive with `json`. */
@@ -24,7 +26,16 @@ export interface AuthedInit extends Omit<RequestInit, "body"> {
 }
 
 export function authedFetch(url: string, init: AuthedInit = {}): Promise<Response> {
-  const { ownerId, json, text, contentType, idempotencyKey, headers, ...rest } = init;
+  const {
+    ownerId,
+    sessionOnly = false,
+    json,
+    text,
+    contentType,
+    idempotencyKey,
+    headers,
+    ...rest
+  } = init;
 
   if (json !== undefined && text !== undefined) {
     throw new Error("An orchestrator request cannot contain both JSON and text.");
@@ -33,7 +44,7 @@ export function authedFetch(url: string, init: AuthedInit = {}): Promise<Respons
   const merged: Record<string, string> = {
     ...(headers as Record<string, string> | undefined),
   };
-  if (import.meta.env.DEV) merged["X-Owner-Id"] = ownerId ?? DEV_OWNER_ID;
+  if (import.meta.env.DEV && !sessionOnly) merged["X-Owner-Id"] = ownerId ?? DEV_OWNER_ID;
   if (json !== undefined) merged["Content-Type"] = "application/json";
   if (text !== undefined) merged["Content-Type"] = contentType ?? "text/plain; charset=utf-8";
   if (idempotencyKey) merged["Idempotency-Key"] = idempotencyKey;

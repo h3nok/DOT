@@ -1,4 +1,4 @@
-import type { OrganismConfig } from "./types";
+import { DEFAULT_CONFIG, type OrganismConfig } from "./types";
 
 /**
  * Reading environments — the appearance panel's front door.
@@ -11,15 +11,26 @@ import type { OrganismConfig } from "./types";
  * Choosing one is not a mode. It writes the same config the individual controls
  * write, so the next adjustment refines it instead of leaving it — the panel
  * simply stops showing a preset as current once its values no longer match.
+ *
+ * Every environment here is a state of the organism rather than an imitation of
+ * some other medium. An earlier set included a printed-paper pastiche and a flat
+ * product-console look; both were the site pretending to be something it is not,
+ * and neither survived. What is left runs from Meridian's full daylight vitality
+ * to Clarity's deliberate stillness, and the ones in between are lit, fluid, and
+ * quietly alive. Four take the `neural` surface — glass with a living edge whose
+ * glow is driven by the organism's own vitals — because that is what this place
+ * actually feels like when it is working.
  */
 
 export type ThemePresetId =
-  | "vellum"
-  | "midnight"
-  | "studio"
-  | "nocturne"
   | "meridian"
-  | "clarity";
+  | "membrane"
+  | "aperture"
+  | "clarity"
+  | "midnight"
+  | "synapse"
+  | "nocturne"
+  | "ember";
 
 /** The config keys a preset speaks for. Anything else is left as the reader set it. */
 export type PresetConfig = Pick<
@@ -30,6 +41,7 @@ export type PresetConfig = Pick<
   | "intensity"
   | "contrast"
   | "readingFont"
+  | "paperTone"
   | "stillness"
   | "showMembrane"
   | "enabled"
@@ -53,84 +65,13 @@ const PRESET_KEYS: Array<keyof PresetConfig> = [
   "intensity",
   "contrast",
   "readingFont",
+  "paperTone",
   "stillness",
   "showMembrane",
   "enabled",
 ];
 
 export const THEME_PRESETS: ThemePreset[] = [
-  {
-    id: "vellum",
-    label: "Vellum",
-    hint: "Warm paper and ink. The quietest way to read a long chapter.",
-    base: "light",
-    config: {
-      preset: "ink",
-      uiStyle: "editorial",
-      tint: 32,
-      intensity: 0.55,
-      contrast: "standard",
-      readingFont: "serif",
-      stillness: false,
-      showMembrane: true,
-      enabled: true,
-    },
-    swatch: { surface: "hsl(38 42% 95%)", ink: "hsl(28 18% 22%)", accent: "hsl(28 62% 48%)" },
-  },
-  {
-    id: "midnight",
-    label: "Midnight",
-    hint: "Deep indigo under soft light. Reading after the day has ended.",
-    base: "dark",
-    config: {
-      preset: "aurora",
-      uiStyle: "default",
-      tint: 212,
-      intensity: 0.85,
-      contrast: "standard",
-      readingFont: "serif",
-      stillness: false,
-      showMembrane: true,
-      enabled: true,
-    },
-    swatch: { surface: "hsl(222 34% 12%)", ink: "hsl(214 30% 88%)", accent: "hsl(212 62% 62%)" },
-  },
-  {
-    id: "studio",
-    label: "Studio",
-    hint: "Flat, exact, and cool. For working through the argument rather than sitting with it.",
-    base: "light",
-    config: {
-      preset: "lattice",
-      uiStyle: "minimal",
-      tint: 190,
-      intensity: 0.65,
-      contrast: "standard",
-      readingFont: "sans",
-      stillness: false,
-      showMembrane: true,
-      enabled: true,
-    },
-    swatch: { surface: "hsl(210 18% 97%)", ink: "hsl(215 22% 20%)", accent: "hsl(190 58% 42%)" },
-  },
-  {
-    id: "nocturne",
-    label: "Nocturne",
-    hint: "Dark ground, violet depth, contours moving slowly behind the text.",
-    base: "dark",
-    config: {
-      preset: "topology",
-      uiStyle: "cinematic",
-      tint: 265,
-      intensity: 0.9,
-      contrast: "standard",
-      readingFont: "serif",
-      stillness: false,
-      showMembrane: true,
-      enabled: true,
-    },
-    swatch: { surface: "hsl(258 26% 10%)", ink: "hsl(260 22% 86%)", accent: "hsl(265 58% 66%)" },
-  },
   {
     id: "meridian",
     label: "Meridian",
@@ -143,11 +84,50 @@ export const THEME_PRESETS: ThemePreset[] = [
       intensity: 0.85,
       contrast: "standard",
       readingFont: "serif",
+      paperTone: "warm",
       stillness: false,
       showMembrane: true,
       enabled: true,
     },
     swatch: { surface: "hsl(48 30% 96%)", ink: "hsl(200 20% 20%)", accent: "hsl(158 44% 42%)" },
+  },
+  {
+    id: "membrane",
+    label: "Membrane",
+    hint: "Warm light behind lit glass, taking its colour from the hour.",
+    base: "light",
+    config: {
+      preset: "aurora",
+      uiStyle: "neural",
+      tint: "auto",
+      intensity: 0.85,
+      contrast: "standard",
+      readingFont: "serif",
+      paperTone: "warm",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(42 34% 96%)", ink: "hsl(30 16% 21%)", accent: "hsl(168 48% 42%)" },
+  },
+  {
+    id: "aperture",
+    label: "Aperture",
+    hint: "The Reality Frame, gently warped. Structure you can see through.",
+    base: "light",
+    config: {
+      preset: "lattice",
+      uiStyle: "neural",
+      tint: 202,
+      intensity: 0.72,
+      contrast: "standard",
+      readingFont: "sans",
+      paperTone: "neutral",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(210 24% 97%)", ink: "hsl(212 26% 18%)", accent: "hsl(202 62% 46%)" },
   },
   {
     id: "clarity",
@@ -161,13 +141,122 @@ export const THEME_PRESETS: ThemePreset[] = [
       intensity: 0.35,
       contrast: "high",
       readingFont: "sans",
+      paperTone: "neutral",
       stillness: true,
       showMembrane: false,
       enabled: true,
     },
     swatch: { surface: "hsl(0 0% 100%)", ink: "hsl(0 0% 8%)", accent: "hsl(212 72% 42%)" },
   },
+  {
+    id: "midnight",
+    label: "Midnight",
+    hint: "Deep indigo behind lit glass. Reading after the day has ended.",
+    base: "dark",
+    config: {
+      preset: "aurora",
+      uiStyle: "neural",
+      tint: 212,
+      intensity: 0.85,
+      contrast: "standard",
+      readingFont: "serif",
+      paperTone: "cool",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(222 34% 12%)", ink: "hsl(214 30% 88%)", accent: "hsl(212 62% 62%)" },
+  },
+  {
+    id: "synapse",
+    label: "Synapse",
+    hint: "Centres of experience firing in the dark. The organism at full vitality.",
+    base: "dark",
+    config: {
+      preset: "dots",
+      uiStyle: "neural",
+      tint: 288,
+      intensity: 0.95,
+      contrast: "standard",
+      readingFont: "sans",
+      paperTone: "neutral",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(266 30% 9%)", ink: "hsl(268 24% 88%)", accent: "hsl(288 66% 68%)" },
+  },
+  {
+    id: "nocturne",
+    label: "Nocturne",
+    hint: "Dark ground, violet depth, contours moving slowly behind the text.",
+    base: "dark",
+    config: {
+      preset: "topology",
+      uiStyle: "cinematic",
+      tint: 265,
+      intensity: 0.9,
+      contrast: "standard",
+      readingFont: "serif",
+      paperTone: "neutral",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(258 26% 10%)", ink: "hsl(260 22% 86%)", accent: "hsl(265 58% 66%)" },
+  },
+  {
+    id: "ember",
+    label: "Ember",
+    hint: "Warm dark and slow strokes. The long night reading, without the glare.",
+    base: "dark",
+    config: {
+      preset: "ink",
+      uiStyle: "organic",
+      tint: 26,
+      intensity: 0.7,
+      contrast: "standard",
+      readingFont: "serif",
+      paperTone: "sepia",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(26 22% 11%)", ink: "hsl(34 26% 87%)", accent: "hsl(26 72% 58%)" },
+  },
 ];
+
+/**
+ * The environment a reader lands in before they have chosen anything.
+ *
+ * Both are the same idea in the two lights: Painting as the ground (no points
+ * to track — the kindest field to read prose over), the neural surface so the
+ * page is visibly the organism, and Source Serif for long-form. They differ
+ * only where the two bases genuinely want different things — daylight takes a
+ * warm page and the hour's own accent, night takes a cooler page and a pinned
+ * indigo, because an unpinned accent has less chroma to spend and a dark
+ * ground shows colour less readily.
+ *
+ * Naming the defaults as environments rather than as a loose bag of values is
+ * deliberate: a reader who opens the panel on their first visit sees the
+ * environment they are actually in, selected, instead of "Custom" — which
+ * would describe a choice they never made.
+ */
+export const DEFAULT_ENVIRONMENT: Record<"light" | "dark", ThemePresetId> = {
+  light: "membrane",
+  dark: "midnight",
+};
+
+/**
+ * The full starting config for a base: the default environment, over the
+ * neutral reading defaults it does not speak for.
+ *
+ * Used for a reader's first visit and for Reset, so "back to how it was" and
+ * "how it was" are the same values rather than two nearby guesses.
+ */
+export function defaultConfigFor(base: "light" | "dark"): OrganismConfig {
+  return { ...DEFAULT_CONFIG, ...themePreset(DEFAULT_ENVIRONMENT[base]).config };
+}
 
 export function themePreset(id: ThemePresetId): ThemePreset {
   const found = THEME_PRESETS.find((preset) => preset.id === id);

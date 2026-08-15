@@ -212,13 +212,8 @@ function BookReader({
   return (
     <>
       <div
-        className={`book-reading-grid mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-14 ${
-          focusMode
-            ? "max-w-[56rem] lg:grid-cols-[minmax(0,760px)]"
-            : companionOpen
-            ? "max-w-[52rem] lg:grid-cols-[minmax(0,720px)]"
-            : "max-w-[68rem] lg:grid-cols-[220px_minmax(0,720px)]"
-        }`}
+        className="book-reading-grid mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-14"
+        data-layout={focusMode ? "focus" : companionOpen ? "companion" : "contents"}
       >
         <aside
           className={

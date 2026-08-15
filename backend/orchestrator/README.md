@@ -82,3 +82,22 @@ cd backend/orchestrator
 ```
 
 The first migration creates durable run tables and Publication Studio MVP tables.
+
+## Book One digital edition commerce
+
+The complete web reader remains public. The downloadable PDF is a $20 one-time purchase
+delivered only to an authenticated member with an active entitlement.
+
+Configure:
+
+```bash
+ORCHESTRATOR_STRIPE_SECRET_KEY=...
+ORCHESTRATOR_STRIPE_WEBHOOK_SECRET=...
+ORCHESTRATOR_BOOK_ONE_PDF_PATH=/app/private/books/digital-organism-theory-book-one.pdf
+```
+
+The production image includes the protected PDF at the default path. Stripe must send
+`checkout.session.completed`, `checkout.session.async_payment_succeeded`, and
+`charge.refunded` to `POST /v1/support/webhook`. That endpoint verifies the Stripe
+signature before dispatching support events or commerce entitlement events. A checkout
+return URL is never proof of payment.

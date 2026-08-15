@@ -8,6 +8,241 @@
  * stylesheet order, which is what makes an override reliable.
  */
 
+/* ── The reading face ───────────────────────────────────────────────────────
+   Every face is either bundled with the app or resolved from the operating
+   system, so switching costs no download and cannot flash unstyled text.
+   Overriding the two font variables moves the whole reading hierarchy at once
+   — body, headings, references, pull quotes — rather than each surface having
+   to know which face is current. */
+
+html[data-reading="sans"] .book-surface {
+  --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --book-reading-heading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Wide-set, open-countered, and loosely tracked. Dyslexia typography guidance
+   converges on these properties rather than on one proprietary typeface, and
+   every family named here already ships with the operating system. */
+html[data-reading="humanist"] .book-surface {
+  --book-reading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
+  --book-reading-heading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
+}
+
+html[data-reading="mono"] .book-surface {
+  --book-reading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --book-reading-heading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Verdana runs wide and Source Serif's leading was set for a narrower face, so
+   the humanist option buys its legibility back with space rather than size. */
+html[data-reading="humanist"] .book-prose p,
+html[data-reading="humanist"] .book-prose li,
+html[data-reading="humanist"] .book-reading-copy {
+  letter-spacing: 0.012em;
+  word-spacing: 0.06em;
+}
+
+/* Mono has no italic worth the name and justifies badly; keep it ragged and
+   let emphasis carry on colour and weight instead. */
+html[data-reading="mono"] .book-prose p,
+html[data-reading="mono"] .book-prose li {
+  text-align: left;
+  text-justify: auto;
+  letter-spacing: -0.01em;
+}
+
+/* Old-style figures are a Source Serif feature. Anywhere else they either do
+   not exist or arrive as a synthesised approximation. */
+html[data-reading="sans"] .book-prose,
+html[data-reading="humanist"] .book-prose,
+html[data-reading="mono"] .book-prose {
+  font-variant-numeric: normal;
+}
+
+/* The ink-pressed-into-paper text shadow is tuned for a serif's stem contrast;
+   on a sans or a mono it just looks like a rendering fault. */
+html[data-reading="humanist"] .book-prose,
+html[data-reading="mono"] .book-prose {
+  text-shadow: none;
+}
+
+/* ── Measure ────────────────────────────────────────────────────────────────
+   Line length is the reading setting with the most defended right answer —
+   roughly 60 to 75 characters — and therefore the one most worth moving, since
+   where that lands depends on the reader's type size, screen, and distance.
+   Published as a variable so the reader's column survives every layout that
+   composes the reading surface. */
+
+html {
+  --reading-measure: 45rem;
+}
+
+html[data-measure="narrow"] {
+  --reading-measure: 36rem;
+}
+
+html[data-measure="standard"] {
+  --reading-measure: 45rem;
+}
+
+html[data-measure="wide"] {
+  --reading-measure: 54rem;
+}
+
+/* The reading column is the measure; everything else in the grid is chrome.
+   Stating the layout here rather than in utility classes is what lets the
+   column follow the reader's choice — the widths were previously literals in
+   three different ternaries, which is why measure could not move at all. */
+
+.book-reading-grid {
+  --reading-rail: 13.75rem;
+  max-width: min(
+    100%,
+    calc(var(--reading-measure) + var(--reading-rail) + 9.5rem)
+  );
+}
+
+.book-reading-grid[data-rail="wide"] {
+  --reading-rail: 16.25rem;
+}
+
+/* Without the contents rail the page is just the column, so it keeps only the
+   slack the gutters need. */
+.book-reading-grid[data-layout="focus"],
+.book-reading-grid[data-layout="companion"] {
+  max-width: min(100%, calc(var(--reading-measure) + 8.5rem));
+}
+
+@media (width >= 64rem) {
+  .book-reading-grid[data-layout="contents"] {
+    grid-template-columns: var(--reading-rail) minmax(0, var(--reading-measure));
+  }
+
+  .book-reading-grid[data-layout="focus"],
+  .book-reading-grid[data-layout="companion"] {
+    grid-template-columns: minmax(0, var(--reading-measure));
+  }
+}
+
+/* ── Paragraph style ────────────────────────────────────────────────────────
+   Spaced blocks scan; indented paragraphs read as continuous argument, which
+   is the convention of the printed book this text came from. The first
+   paragraph after a heading is never indented — the heading already marked the
+   break, and indenting it opens a hole under the title. */
+
+html[data-paragraph="indented"] .book-prose p {
+  margin-bottom: 0;
+  text-indent: 1.4em;
+}
+
+html[data-paragraph="indented"] .book-prose h1 + p,
+html[data-paragraph="indented"] .book-prose h2 + p,
+html[data-paragraph="indented"] .book-prose h3 + p,
+html[data-paragraph="indented"] .book-prose h4 + p,
+html[data-paragraph="indented"] .book-prose blockquote + p,
+html[data-paragraph="indented"] .book-prose figure + p,
+html[data-paragraph="indented"] .book-prose hr + p,
+html[data-paragraph="indented"] .book-prose > p:first-child {
+  text-indent: 0;
+}
+
+/* Set solid, paragraphs still need air before the next structural element. */
+html[data-paragraph="indented"] .book-prose p:last-child,
+html[data-paragraph="indented"] .book-prose p:has(+ h1),
+html[data-paragraph="indented"] .book-prose p:has(+ h2),
+html[data-paragraph="indented"] .book-prose p:has(+ h3),
+html[data-paragraph="indented"] .book-prose p:has(+ blockquote),
+html[data-paragraph="indented"] .book-prose p:has(+ figure) {
+  margin-bottom: 1.65rem;
+}
+
+/* A drop cap and an indent are two solutions to the same problem. */
+html[data-paragraph="indented"] .book-prose--chapter > p:first-child,
+html[data-paragraph="indented"] .book-prose--chapter > h2:first-child + p {
+  text-indent: 0;
+}
+
+/* ── Paper tone ─────────────────────────────────────────────────────────────
+   The colour of the page, independent of light and dark. A warm ground at
+   night and a cool one under daylight are the difference between finishing a
+   chapter and stopping halfway, and the preference is genuinely personal.
+
+   Tone moves paper and ink together, always toward the same hue, so contrast
+   is preserved at every setting rather than traded away for warmth. The mixes
+   are deliberately small: this is a cast, not a colour scheme. */
+
+/* Mixed in oklab, not oklch, and that is load-bearing — for two separate
+   reasons, both of which paint the wrong colour entirely.
+
+   1. `oklch` interpolates hue around the wheel by the shorter arc, and the page
+      ground is a near-white whose nominal hue is 210. Interpolating 210° toward
+      an amber at 72° travels down through 170°, so a sepia mixed in oklch
+      renders *green*.
+
+   2. Fading a colour toward `transparent` in a polar space drops the hue to
+      `none`, which paints as 0° — red. Every `--book-paper` fade in this
+      codebase is therefore mixed in oklab too. It was invisible for as long as
+      the paper token was near-achromatic; giving it a tone is what surfaced it,
+      and a cool paper came out pink.
+
+   oklab is the same colour space in rectangular coordinates, so there is no
+   hue channel to travel or to lose. Keep these mixes there. */
+
+html[data-paper="warm"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 88%, oklch(0.85 0.09 76));
+  --book-ink: color-mix(in oklab, var(--foreground) 94%, oklch(0.3 0.03 55));
+}
+
+html[data-paper="sepia"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 72%, oklch(0.82 0.1 72));
+  --book-ink: color-mix(in oklab, var(--foreground) 86%, oklch(0.26 0.05 46));
+  --book-vellum: color-mix(in oklab, var(--background) 64%, oklch(0.74 0.09 68));
+}
+
+html[data-paper="cool"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 87%, oklch(0.82 0.06 232));
+  --book-ink: color-mix(in oklab, var(--foreground) 93%, oklch(0.28 0.04 248));
+}
+
+/* In the dark the same tones have to work in reverse: the ground is what takes
+   the cast, and the ink stays light or the text sinks into the page.
+   The mixed-in colours are far more saturated than their light-mode
+   counterparts and barely lighter than the ground — at this lightness a tint
+   has to buy its visibility in chroma, because buying it in lightness would
+   just make the page grey. */
+html.dark[data-paper="warm"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 82%, oklch(0.3 0.11 62));
+  --book-ink: color-mix(in oklab, var(--foreground) 92%, oklch(0.93 0.045 82));
+}
+
+html.dark[data-paper="sepia"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 70%, oklch(0.3 0.12 54));
+  --book-ink: color-mix(in oklab, var(--foreground) 86%, oklch(0.91 0.065 78));
+  --book-vellum: color-mix(in oklab, var(--background) 60%, oklch(0.36 0.1 58));
+}
+
+html.dark[data-paper="cool"] .book-surface {
+  --book-paper: color-mix(in oklab, var(--background) 82%, oklch(0.32 0.09 245));
+  --book-ink: color-mix(in oklab, var(--foreground) 92%, oklch(0.92 0.035 230));
+}
+
+/* The reading surface is transparent by design so the member's field shows
+   through it, and the page panel behind the column is the only thing actually
+   painting `--book-paper`. At 78% a tone barely survived that dilution, so a
+   chosen tone raises the panel's opacity until the page reads as paper —
+   still short of opaque, so the field is present at the margins. */
+html[data-paper]:not([data-paper="neutral"]) .book-reader::before {
+  background: color-mix(in oklab, var(--book-paper) 94%, transparent);
+}
+
+/* High contrast is a stated accessibility need and outranks a colour
+   preference: keep the tone on the paper, hand the ink back to the token. The
+   extra attribute is load-bearing — it wins on specificity rather than on
+   stylesheet order, which is not ours to depend on. */
+html[data-contrast="high"][data-paper] .book-surface {
+  --book-ink: var(--foreground);
+}
+
 /* ── Leading ────────────────────────────────────────────────────────────────
    Line height decides whether a long paragraph is a wall or a sequence of
    lines the eye can find its way back into. Tight suits a wide screen and a
@@ -44,6 +279,7 @@ html[data-leading="loose"] .book-prose p {
 html[data-align="justify"] .book-prose p,
 html[data-align="justify"] .book-prose li {
   text-align: justify;
+  text-align-last: left;
   text-justify: inter-word;
   hyphens: auto;
   -webkit-hyphens: auto;
@@ -81,7 +317,9 @@ html[data-align="justify"] .book-prose h3 {
   --appearance-select: color-mix(in oklch, var(--organism-accent-strong) 7%, transparent);
 
   --reading-scale: 1;
-  max-height: min(34rem, calc(100svh - 6rem));
+  /* The panel grew a room's worth of controls; give it the height to show a
+     section and a half at a time, so scrolling reveals rather than searches. */
+  max-height: min(41rem, calc(100svh - 5rem));
   background: var(--appearance-ground);
   border: 1px solid var(--appearance-hairline);
   box-shadow:

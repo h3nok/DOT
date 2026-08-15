@@ -2,26 +2,43 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   AlignJustify,
   AlignLeft,
+  Bookmark,
   Check,
   Moon,
   Palette,
+  Plus,
   RotateCcw,
   Sparkles,
   Sun,
+  Trash2,
   X,
 } from "lucide-react";
 import { useTheme } from "../shared/contexts/SimpleThemeContext";
 import { useOrganism } from "./OrganismContext";
+import { EnvironmentSwatch } from "./EnvironmentSwatch";
 import { FieldPreview } from "./FieldPreview";
-import { THEME_PRESETS, matchThemePreset } from "./themePresets";
+import { THEME_PRESETS, defaultConfigFor, matchThemePreset } from "./themePresets";
 import {
-  DEFAULT_CONFIG,
+  MAX_ENVIRONMENT_NAME,
+  MAX_SAVED_ENVIRONMENTS,
+  loadEnvironments,
+  matchSavedEnvironment,
+  normaliseName,
+  persistEnvironments,
+  removeEnvironment,
+  upsertEnvironment,
+  type SavedEnvironment,
+} from "./savedEnvironments";
+import {
   ORGANISM_PRESETS,
   type OrganismPreset,
   type OrganismTint,
+  type PaperTone,
+  type ParagraphStyle,
   type ReadingAlign,
   type ReadingFont,
   type ReadingLeading,
+  type ReadingMeasure,
   type UIStyle,
 } from "./types";
 import "./appearance.css";
@@ -59,6 +76,68 @@ const LEADINGS: Array<{ value: ReadingLeading; label: string; gap: number }> = [
   { value: "standard", label: "Normal", gap: 4.5 },
   { value: "loose", label: "Loose", gap: 6 },
 ];
+
+/** Faces, with the stack each one previews in so the sample is honest. */
+const READING_FONTS: Array<{
+  value: ReadingFont;
+  label: string;
+  face: string;
+  stack: string;
+}> = [
+  { value: "serif", label: "Serif", face: "Source Serif", stack: '"Source Serif 4", Georgia, serif' },
+  { value: "sans", label: "Sans", face: "Inter", stack: '"Inter", system-ui, sans-serif' },
+  {
+    value: "humanist",
+    label: "Open",
+    face: "Wide-set sans",
+    stack: 'Verdana, Tahoma, "DejaVu Sans", sans-serif',
+  },
+  {
+    value: "mono",
+    label: "Mono",
+    face: "JetBrains Mono",
+    stack: '"JetBrains Mono", ui-monospace, monospace',
+  },
+];
+
+/** Measure, described by what it does to the line rather than in rem. */
+const MEASURES: Array<{
+  value: ReadingMeasure;
+  label: string;
+  hint: string;
+  bars: number;
+}> = [
+  { value: "narrow", label: "Narrow", hint: "Around 55 characters a line", bars: 0.6 },
+  { value: "standard", label: "Standard", hint: "Around 70 characters a line", bars: 0.8 },
+  { value: "wide", label: "Wide", hint: "Around 85 characters a line", bars: 1 },
+];
+
+const PARAGRAPHS: Array<{ value: ParagraphStyle; label: string; hint: string }> = [
+  { value: "spaced", label: "Spaced", hint: "A blank line between paragraphs" },
+  { value: "indented", label: "Indented", hint: "Set continuous, as in print" },
+];
+
+/** Paper tones, previewed with the ground and ink each one actually produces. */
+const PAPER_TONES: Array<{
+  value: PaperTone;
+  label: string;
+  light: string;
+  dark: string;
+}> = [
+  { value: "neutral", label: "Neutral", light: "hsl(40 6% 97%)", dark: "hsl(220 14% 12%)" },
+  { value: "warm", label: "Warm", light: "hsl(40 42% 95%)", dark: "hsl(30 16% 13%)" },
+  { value: "sepia", label: "Sepia", light: "hsl(38 54% 91%)", dark: "hsl(28 20% 14%)" },
+  { value: "cool", label: "Cool", light: "hsl(215 30% 96%)", dark: "hsl(220 20% 12%)" },
+];
+
+/** The hue wheel, drawn once for the accent slider's track. */
+const HUE_TRACK = `linear-gradient(to right, ${Array.from(
+  { length: 13 },
+  (_, i) => `hsl(${i * 30} 62% 55%)`,
+).join(", ")})`;
+
+/** Where the wheel starts when a reader leaves "auto" without a hue in mind. */
+const DEFAULT_PINNED_HUE = 212;
 
 const Section: React.FC<{
   title: string;
@@ -104,9 +183,13 @@ export const AppearanceControl: React.FC<{
   const { config, setConfig } = useOrganism();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"environment" | "reading">("environment");
+  const [environments, setEnvironments] = useState<SavedEnvironment[]>(loadEnvironments);
+  const [naming, setNaming] = useState(false);
+  const [draftName, setDraftName] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) {
@@ -130,10 +213,31 @@ export const AppearanceControl: React.FC<{
     };
   }, [open]);
 
+  useEffect(() => {
+    if (naming) nameRef.current?.focus();
+  }, [naming]);
+
   const isDark = theme === "dark";
+  const base = isDark ? "dark" : "light";
   const fields = Object.keys(ORGANISM_PRESETS) as OrganismPreset[];
   const inline = placement === "inline";
-  const activePreset = matchThemePreset(config, isDark ? "dark" : "light");
+  const activePreset = matchThemePreset(config, base);
+  const activeSaved = matchSavedEnvironment(environments, config, base);
+  const atEnvironmentLimit = environments.length >= MAX_SAVED_ENVIRONMENTS;
+
+  /** Saved environments are the reader's, so every write goes straight to disk. */
+  const commitEnvironments = (next: SavedEnvironment[]) => {
+    setEnvironments(next);
+    persistEnvironments(next);
+  };
+
+  const saveEnvironment = () => {
+    const name = normaliseName(draftName);
+    if (!name) return;
+    commitEnvironments(upsertEnvironment(environments, { name, base, config }));
+    setDraftName("");
+    setNaming(false);
+  };
 
   return (
     <div
@@ -237,7 +341,10 @@ export const AppearanceControl: React.FC<{
             {tab === "environment" ? (
               <>
                 {/* Presets — one considered answer, before any dials. */}
-                <Section title="Environment" hint={activePreset ? undefined : "Custom"}>
+                <Section
+                  title="Environment"
+                  hint={activePreset || activeSaved ? undefined : "Custom"}
+                >
                   <div className="grid grid-cols-2 gap-1.5">
                     {THEME_PRESETS.map((preset) => {
                       const selected = activePreset === preset.id;
@@ -253,28 +360,7 @@ export const AppearanceControl: React.FC<{
                           title={preset.hint}
                           className={optionClass(selected)}
                         >
-                          <span
-                            className="appearance-preset-page block h-11 w-full p-1.5"
-                            style={{ background: preset.swatch.surface, color: preset.swatch.ink }}
-                            aria-hidden="true"
-                          >
-                            <span
-                              className="block h-[3px] w-3/5 rounded-full"
-                              style={{ background: preset.swatch.accent }}
-                            />
-                            <span
-                              className="mt-1.5 block h-[2px] w-full rounded-full opacity-45"
-                              style={{ background: "currentColor" }}
-                            />
-                            <span
-                              className="mt-1 block h-[2px] w-11/12 rounded-full opacity-35"
-                              style={{ background: "currentColor" }}
-                            />
-                            <span
-                              className="mt-1 block h-[2px] w-2/3 rounded-full opacity-25"
-                              style={{ background: "currentColor" }}
-                            />
-                          </span>
+                          <EnvironmentSwatch preset={preset} />
                           <span className="mt-1.5 flex items-center gap-1">
                             <span className="text-xs font-medium">{preset.label}</span>
                             {selected && (
@@ -288,6 +374,98 @@ export const AppearanceControl: React.FC<{
                       );
                     })}
                   </div>
+
+                  {/* The reader's own environments, kept beside ours because
+                      by the second visit theirs is the one they want. */}
+                  {environments.length > 0 && (
+                    <ul className="mt-2.5 space-y-1">
+                      {environments.map((entry) => {
+                        const selected = activeSaved === entry.id;
+                        return (
+                          <li key={entry.id} className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setTheme(entry.base);
+                                setConfig(entry.config);
+                              }}
+                              aria-pressed={selected}
+                              className={`${optionClass(selected)} flex min-w-0 flex-1 items-center gap-2 px-2.5 py-1.5`}
+                            >
+                              <Bookmark
+                                className="h-3 w-3 shrink-0 text-[color:var(--organism-accent-strong)]"
+                                aria-hidden="true"
+                              />
+                              <span className="truncate text-xs font-medium">
+                                {entry.name}
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                commitEnvironments(removeEnvironment(environments, entry.id))
+                              }
+                              aria-label={`Forget ${entry.name}`}
+                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                              <Trash2 className="h-3 w-3" aria-hidden="true" />
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+
+                  {/* Saving is the whole point of the dials below: tune it once,
+                      name it, and it is waiting the next time. */}
+                  {naming ? (
+                    <form
+                      className="mt-2 flex items-center gap-1.5"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        saveEnvironment();
+                      }}
+                    >
+                      <input
+                        ref={nameRef}
+                        value={draftName}
+                        onChange={(event) => setDraftName(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Escape") {
+                            event.stopPropagation();
+                            setNaming(false);
+                            setDraftName("");
+                          }
+                        }}
+                        maxLength={MAX_ENVIRONMENT_NAME}
+                        placeholder="Name this environment"
+                        aria-label="Name this environment"
+                        className="min-w-0 flex-1 rounded-lg border border-border/40 bg-transparent px-2.5 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/70 focus:border-[color:var(--organism-accent-soft)] focus:outline-none"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!normaliseName(draftName)}
+                        className="rounded-lg border border-[color:var(--organism-accent-soft)] px-2.5 py-1.5 text-xs font-medium text-foreground transition-opacity disabled:opacity-40"
+                      >
+                        Save
+                      </button>
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setNaming(true)}
+                      disabled={atEnvironmentLimit}
+                      title={
+                        atEnvironmentLimit
+                          ? `You can keep ${MAX_SAVED_ENVIRONMENTS} environments. Forget one to save another.`
+                          : undefined
+                      }
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
+                    >
+                      <Plus className="h-3 w-3" aria-hidden="true" />
+                      Save this environment
+                    </button>
+                  )}
                 </Section>
 
                 {/* Base + accent — one row, because they are one decision. */}
@@ -343,6 +521,70 @@ export const AppearanceControl: React.FC<{
                       })}
                     </div>
                   </div>
+
+                  {/* Eight named hues answer most of it; the wheel is there so
+                      "most" is not the ceiling. Moving it pins the accent,
+                      which is the same thing the swatches do. */}
+                  <label className="mt-3 flex items-center gap-3">
+                    <span className="w-14 shrink-0 text-xs text-muted-foreground">
+                      {config.tint === "auto" ? "Auto" : `${Math.round(config.tint)}°`}
+                    </span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={359}
+                      step={1}
+                      value={config.tint === "auto" ? DEFAULT_PINNED_HUE : config.tint}
+                      onChange={(e) => setConfig({ tint: Number(e.target.value) })}
+                      aria-label="Accent hue"
+                      className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
+                      style={{
+                        background: HUE_TRACK,
+                        opacity: config.tint === "auto" ? 0.45 : 1,
+                      }}
+                    />
+                  </label>
+                </Section>
+
+                {/* The page itself. Warmth at night is not decoration — it is
+                    the difference between finishing a chapter and stopping. */}
+                <Section title="Paper" hint="The colour of the page">
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {PAPER_TONES.map((tone) => {
+                      const selected = config.paperTone === tone.value;
+                      return (
+                        <button
+                          key={tone.value}
+                          type="button"
+                          onClick={() => setConfig({ paperTone: tone.value })}
+                          aria-pressed={selected}
+                          aria-label={`${tone.label} paper`}
+                          className={`${optionClass(selected)} flex flex-col items-center gap-1.5 p-1.5`}
+                        >
+                          <span
+                            className="appearance-preset-page block h-8 w-full p-1.5"
+                            style={{
+                              background: isDark ? tone.dark : tone.light,
+                              color: isDark ? "hsl(40 12% 88%)" : "hsl(30 14% 22%)",
+                            }}
+                            aria-hidden="true"
+                          >
+                            <span
+                              className="block h-[2px] w-full rounded-full opacity-45"
+                              style={{ background: "currentColor" }}
+                            />
+                            <span
+                              className="mt-1 block h-[2px] w-3/4 rounded-full opacity-30"
+                              style={{ background: "currentColor" }}
+                            />
+                          </span>
+                          <span className="w-full truncate text-center text-xs font-medium">
+                            {tone.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </Section>
 
                 <Section title="Background" hint={ORGANISM_PRESETS[config.preset].label}>
@@ -373,6 +615,40 @@ export const AppearanceControl: React.FC<{
                       );
                     })}
                   </div>
+
+                  {/* The pattern's own dials. Contrast is here rather than
+                      under Presence because it answers a question the reader
+                      asks about the background specifically: whether they can
+                      see it at all. Our correction for light grounds is a
+                      population average; this is theirs. */}
+                  {config.preset !== "off" && (
+                    <div className="mt-3 space-y-2.5">
+                      {(
+                        [
+                          ["fieldContrast", "Presence", 0.5, 2, "How strongly the pattern reads"],
+                          ["fieldScale", "Scale", 0.5, 1.6, "Finer or coarser structure"],
+                          ["fieldSpeed", "Tempo", 0, 1.6, "How fast it drifts"],
+                        ] as const
+                      ).map(([key, label, min, max, hint]) => (
+                        <label key={key} className="flex items-center gap-3">
+                          <span className="w-14 shrink-0 text-xs text-muted-foreground">
+                            {label}
+                          </span>
+                          <input
+                            type="range"
+                            min={min}
+                            max={max}
+                            step={0.05}
+                            value={config[key]}
+                            onChange={(e) => setConfig({ [key]: Number(e.target.value) })}
+                            aria-label={`${label} — ${hint}`}
+                            title={hint}
+                            className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </Section>
 
                 <Section title="Surface">
@@ -478,12 +754,7 @@ export const AppearanceControl: React.FC<{
               <>
                 <Section title="Type">
                   <div className="grid grid-cols-2 gap-1.5">
-                    {(
-                      [
-                        ["serif", "Serif", "Source Serif"],
-                        ["sans", "Sans", "Inter"],
-                      ] as Array<[ReadingFont, string, string]>
-                    ).map(([value, label, face]) => {
+                    {READING_FONTS.map(({ value, label, face, stack }) => {
                       const selected = config.readingFont === value;
                       return (
                         <button
@@ -491,17 +762,21 @@ export const AppearanceControl: React.FC<{
                           type="button"
                           onClick={() => setConfig({ readingFont: value })}
                           aria-pressed={selected}
+                          aria-label={label}
                           className={`${optionClass(selected)} px-3 py-2`}
                         >
+                          {/* The sample is set in the face it selects, so the
+                              choice is made by looking rather than by name. */}
                           <span
-                            className={`block text-lg leading-none ${
-                              value === "serif" ? "font-serif" : "font-sans"
-                            }`}
+                            className="block text-lg leading-none"
+                            style={{ fontFamily: stack }}
                           >
                             Ag
                           </span>
                           <span className="mt-1.5 block text-xs font-medium">{label}</span>
-                          <span className="block text-xs text-muted-foreground">{face}</span>
+                          <span className="block truncate text-xs text-muted-foreground">
+                            {face}
+                          </span>
                         </button>
                       );
                     })}
@@ -533,6 +808,44 @@ export const AppearanceControl: React.FC<{
                   </div>
                 </Section>
 
+                {/* Measure sits next to size because they are one decision:
+                    bigger text in the same column is a different read. */}
+                <Section title="Measure" hint="Line length">
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {MEASURES.map(({ value, label, hint, bars }) => {
+                      const selected = config.readingMeasure === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setConfig({ readingMeasure: value })}
+                          aria-pressed={selected}
+                          aria-label={`Line length ${label}`}
+                          title={hint}
+                          className={`${optionClass(selected)} flex flex-col items-center gap-1 p-2`}
+                        >
+                          <svg viewBox="0 0 32 20" className="h-5 w-full" aria-hidden="true">
+                            {[0, 1, 2, 3].map((line) => (
+                              <line
+                                key={line}
+                                x1={16 - (bars * 24) / 2}
+                                x2={16 + (bars * 24) / 2}
+                                y1={4 + line * 4}
+                                y2={4 + line * 4}
+                                stroke="currentColor"
+                                strokeOpacity="0.5"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                              />
+                            ))}
+                          </svg>
+                          <span className="text-xs font-medium">{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Section>
+
                 <Section title="Leading" hint="Space between lines">
                   <div className="grid grid-cols-3 gap-1.5">
                     {LEADINGS.map(({ value, label, gap }) => {
@@ -554,6 +867,55 @@ export const AppearanceControl: React.FC<{
                                 x2="28"
                                 y1={4 + line * gap}
                                 y2={4 + line * gap}
+                                stroke="currentColor"
+                                strokeOpacity="0.5"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                              />
+                            ))}
+                          </svg>
+                          <span className="text-xs font-medium">{label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Section>
+
+                <Section title="Paragraphs">
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {PARAGRAPHS.map(({ value, label, hint }) => {
+                      const selected = config.paragraphStyle === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setConfig({ paragraphStyle: value })}
+                          aria-pressed={selected}
+                          aria-label={`${label} paragraphs`}
+                          title={hint}
+                          className={`${optionClass(selected)} flex flex-col items-center gap-1 p-2`}
+                        >
+                          <svg viewBox="0 0 32 20" className="h-5 w-full" aria-hidden="true">
+                            {(value === "spaced"
+                              ? [
+                                  [4, 3],
+                                  [4, 7],
+                                  [4, 14],
+                                  [4, 18],
+                                ]
+                              : [
+                                  [4, 3],
+                                  [4, 7],
+                                  [9, 11],
+                                  [4, 15],
+                                ]
+                            ).map(([x, y], line) => (
+                              <line
+                                key={line}
+                                x1={x}
+                                x2="28"
+                                y1={y}
+                                y2={y}
                                 stroke="currentColor"
                                 strokeOpacity="0.5"
                                 strokeWidth="1.4"
@@ -624,13 +986,15 @@ export const AppearanceControl: React.FC<{
                   </div>
                 </Section>
 
-                {/* The settings are about this; show it rather than describe it. */}
+                {/* The settings are about this; show it rather than describe it.
+                    Two paragraphs, because one cannot show what separates them. */}
                 <Section title="Preview">
-                  <p
-                    className={`book-reading-copy text-sm text-muted-foreground ${
-                      config.readingFont === "serif" ? "font-serif" : "font-sans"
-                    }`}
+                  <div
+                    className="text-muted-foreground"
                     style={{
+                      fontFamily: READING_FONTS.find(
+                        (font) => font.value === config.readingFont,
+                      )?.stack,
                       fontSize: `${0.86 * config.readingScale}rem`,
                       lineHeight:
                         config.readingLeading === "tight"
@@ -642,9 +1006,21 @@ export const AppearanceControl: React.FC<{
                       hyphens: config.readingAlign === "justify" ? "auto" : "manual",
                     }}
                   >
-                    Feeling is data about an interpreter's relationship to reality, and
-                    feeling is not automatically truth.
-                  </p>
+                    <p>
+                      Feeling is data about an interpreter's relationship to reality, and
+                      feeling is not automatically truth.
+                    </p>
+                    <p
+                      style={
+                        config.paragraphStyle === "indented"
+                          ? { textIndent: "1.4em" }
+                          : { marginTop: "0.75em" }
+                      }
+                    >
+                      To exclude feeling is to discard evidence from inside the phenomenon
+                      being studied.
+                    </p>
+                  </div>
                 </Section>
               </>
             )}
@@ -653,7 +1029,7 @@ export const AppearanceControl: React.FC<{
           <div className="shrink-0 border-t border-border/30 px-5 py-2.5">
             <button
               type="button"
-              onClick={() => setConfig(DEFAULT_CONFIG)}
+              onClick={() => setConfig(defaultConfigFor(base))}
               className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <RotateCcw className="h-3 w-3" />

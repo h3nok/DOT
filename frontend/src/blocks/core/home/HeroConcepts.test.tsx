@@ -8,8 +8,8 @@
  * frame rather than the show.
  */
 
-import { act, render, screen } from "@testing-library/react";
-import type { ElementType, ReactNode } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { useEffect, type ElementType, type ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // framer-motion drives exits on rAF, which fake timers do not advance — the
@@ -22,13 +22,30 @@ vi.mock("framer-motion", () => {
     const Tag = tag as unknown as ElementType;
     const Passthrough = (props: AnyProps) => {
       // Motion-only props would land on the DOM node and warn.
-      const { children, initial, animate, exit, transition, mode, style, ...rest } = props;
+      const {
+        children,
+        initial,
+        animate,
+        exit,
+        transition,
+        mode,
+        style,
+        onViewportEnter,
+        viewport,
+        ...rest
+      } = props;
       void initial;
       void animate;
       void exit;
       void transition;
       void mode;
       void style;
+      void viewport;
+
+      useEffect(() => {
+        if (typeof onViewportEnter === "function") onViewportEnter();
+      }, [onViewportEnter]);
+
       return <Tag {...rest}>{children}</Tag>;
     };
     return Passthrough;
@@ -108,6 +125,21 @@ describe("HeroConcepts", () => {
       vi.advanceTimersByTime(DWELL_MS);
     });
     expect(visibleLine(HERO_CONCEPTS[1].text)).toBe(true);
+  });
+
+  it("yields to a reader's selection and does not resume advancing", () => {
+    render(<HeroConcepts />);
+
+    const chosen = HERO_CONCEPTS[4];
+    fireEvent.click(screen.getByRole("button", { name: chosen.term }));
+
+    expect(visibleLine(chosen.text)).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+
+    act(() => {
+      vi.advanceTimersByTime(DWELL_MS * HERO_CONCEPTS.length);
+    });
+    expect(visibleLine(chosen.text)).toBe(true);
   });
 
   it("gives assistive technology every concept at once", () => {
