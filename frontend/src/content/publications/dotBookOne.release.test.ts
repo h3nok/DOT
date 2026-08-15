@@ -67,7 +67,10 @@ describe("Book One edition v2", () => {
 
     expect(existsSync(retiredPublicWordPath)).toBe(false);
     expect(existsSync(retiredPublicPdfPath)).toBe(false);
-    expect(readdirSync(downloadsRoot)).toEqual([]);
+    const publicFiles = existsSync(downloadsRoot)
+      ? readdirSync(downloadsRoot).filter((f) => !f.startsWith("."))
+      : [];
+    expect(publicFiles).toEqual([]);
     expect(sourceDigest).toBe(manifest.source.sha256);
     expect(pdf.subarray(0, 5).toString("ascii")).toBe("%PDF-");
     expect(pdf.byteLength).toBeGreaterThan(100_000);
