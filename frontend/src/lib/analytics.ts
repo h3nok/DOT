@@ -19,7 +19,7 @@
  * request is made. There is no default domain and no silent fallback.
  */
 
-/** Plausible's hosted script. Override to run a self-hosted instance. */
+/** Plausible's legacy hosted script. Existing sites remain supported. */
 const DEFAULT_SRC = "https://plausible.io/js/script.js";
 
 const DOMAIN = import.meta.env.VITE_PLAUSIBLE_DOMAIN?.trim() ?? "";
@@ -31,10 +31,44 @@ const MARKER = "data-dot-analytics";
 /** A bare hostname — `dotheory.org`. Not a URL, and never a wildcard. */
 const DOMAIN_PATTERN = /^[a-z0-9.-]+\.[a-z]{2,}$/i;
 
+type PlausibleQueue = ((...args: unknown[]) => void) & {
+  init?: (options?: Record<string, unknown>) => void;
+  o?: Record<string, unknown>;
+  q?: unknown[][];
+};
+
+type AnalyticsWindow = Window & { plausible?: PlausibleQueue };
+
 /** True when a measurable domain is configured. */
 export const ANALYTICS_DOMAIN: string | null = DOMAIN_PATTERN.test(DOMAIN)
   ? DOMAIN
   : null;
+
+/**
+ * Install Plausible's tiny command queue before the remote script executes.
+ *
+ * New Plausible sites receive a unique `pa-XXXXX.js` URL and require
+ * `plausible.init()`. The same queue is harmless for legacy `script.js` sites,
+ * which continue to read `data-domain`. Supporting both lets an existing site
+ * keep counting while a new one can paste its current site-specific URL.
+ */
+function initializePlausible(win: AnalyticsWindow | null): void {
+  if (!win) return;
+
+  if (!win.plausible) {
+    const queue: PlausibleQueue = (...args: unknown[]) => {
+      queue.q ??= [];
+      queue.q.push(args);
+    };
+    win.plausible = queue;
+  }
+
+  const plausible = win.plausible;
+  plausible.init ??= (options = {}) => {
+    plausible.o = options;
+  };
+  plausible.init();
+}
 
 /**
  * Inject the counter, once, if one is configured.
@@ -52,6 +86,7 @@ export function initAnalytics(doc: Document | undefined = globalThis.document): 
   script.src = SRC;
   script.setAttribute("data-domain", ANALYTICS_DOMAIN);
   script.setAttribute(MARKER, "");
+  initializePlausible(doc.defaultView as AnalyticsWindow | null);
   doc.head.appendChild(script);
   return true;
 }

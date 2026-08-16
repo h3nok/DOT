@@ -19,6 +19,7 @@ async function loadAnalytics(env: Record<string, string> = {}) {
 afterEach(() => {
   vi.unstubAllEnvs();
   document.head.querySelectorAll("script[data-dot-analytics]").forEach((s) => s.remove());
+  delete (window as typeof window & { plausible?: unknown }).plausible;
 });
 
 describe("analytics", () => {
@@ -82,6 +83,21 @@ describe("analytics", () => {
       VITE_PLAUSIBLE_SRC: "http://analytics.example.com/js/script.js",
     });
     expect(insecure.initAnalytics(document)).toBe(false);
+  });
+
+  it("initializes the current site-specific tracker snippet", async () => {
+    const { initAnalytics } = await loadAnalytics({
+      VITE_PLAUSIBLE_DOMAIN: "dotheory.org",
+      VITE_PLAUSIBLE_SRC: "https://plausible.io/js/pa-EXAMPLE.js",
+    });
+
+    expect(initAnalytics(document)).toBe(true);
+    const plausible = (
+      window as typeof window & {
+        plausible?: { o?: Record<string, unknown> };
+      }
+    ).plausible;
+    expect(plausible?.o).toEqual({});
   });
 
   it("never reaches for an identifier (ADR-0024, ADR-0004 L9)", async () => {

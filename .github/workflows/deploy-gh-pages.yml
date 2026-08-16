@@ -62,6 +62,12 @@ jobs:
         VITE_PROFILE_DELIVERY_SLUG: henok-profile
         VITE_SITE_URL: https://dotheory.org
       run: |
+        # The official public release always measures aggregate readership.
+        # Forks remain unmeasured unless their steward deliberately configures
+        # a domain of their own (ADR-0024).
+        if [[ -z "$VITE_PLAUSIBLE_DOMAIN" && "$GITHUB_REPOSITORY" == "h3nok/DOT" ]]; then
+          export VITE_PLAUSIBLE_DOMAIN=dotheory.org
+        fi
         # An orchestrator is optional: the canon, the concept map and the seams
         # register are static, so the reading surfaces ship without a backend.
         # What is not optional is that any backend we do name is HTTPS — the
