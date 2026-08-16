@@ -73,16 +73,21 @@ def _mint_session_jwt(member: app.db.models.Member, email: str) -> str:
 async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> bool:
     """Send via Resend; fall back to console log in dev.
 
-    Shared with the join queue, which needs the same delivery but must not tell
-    someone they are signing in when they are asking to be let in.
+    Shared with the join queue (ADR-0019) and the reader list (ADR-0025), which
+    need the same delivery but must each say what they are: someone confirming a
+    mailing list is not signing in, and is not asking to be let in either.
     """
-    joining: bool = purpose == "join"
-    subject: str = f"Confirm your DOT request: {code}" if joining else f"Your DOT code: {code}"
-    lead: str = (
-        "Confirm the address for your request to join DOT"
-        if joining
-        else "Your sign-in code for DOT"
-    )
+    copy: dict[str, tuple[str, str]] = {
+        "join": (
+            f"Confirm your DOT request: {code}",
+            "Confirm the address for your request to join DOT",
+        ),
+        "reader": (
+            f"Confirm your DOT reader list subscription: {code}",
+            "Confirm your address to hear when there is more DOT to read",
+        ),
+    }
+    subject, lead = copy.get(purpose, (f"Your DOT code: {code}", "Your sign-in code for DOT"))
     api_key: str = os.environ.get("RESEND_API_KEY", "").strip()
     delivery_configured = bool(api_key and api_key != "disabled")
     environment = os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development")

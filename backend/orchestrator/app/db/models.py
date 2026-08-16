@@ -892,3 +892,59 @@ class JoinRequest(Base, TimestampMixin):
     status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(16), nullable=False, default="pending"
     )
+
+
+# ── Reader list ───────────────────────────────────────────────────────────────
+
+
+class ReaderSubscription(Base, TimestampMixin):
+    """Someone who wants to hear when there is more to read.
+
+    The second door (ADR-0025). `JoinRequest` above is a request for membership
+    and is answered by a human; this is not. Reading and belonging are different
+    relationships, and the two tables are never joined.
+
+    The address is sealed with a blind index beside it, exactly as the queue does
+    (ADR-0007) — a dump must not yield a mailing list. `confirmed_at` is the
+    double opt-in: until it is set the row is not a subscriber and is never sent
+    to, because an unconfirmed list is a list anyone can add anyone else to.
+
+    `unsubscribe_token_hash` is what makes leaving free. The token itself lives
+    only in the mail; the server keeps its SHA-256, so the link works without a
+    session and a database dump still does not let anyone unsubscribe the list on
+    a reader's behalf.
+    """
+
+    __tablename__ = "reader_subscriptions"
+    __table_args__ = (
+        sqlalchemy.UniqueConstraint("email_hash", name="uq_reader_subscriptions_email_hash"),
+    )
+
+    id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), primary_key=True, default=lambda: make_id("reader")
+    )
+    #: Blind index over the lowercased address — the only searchable handle.
+    email_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), nullable=False, index=True
+    )
+    #: Fernet-sealed address. Readable only by a service holding the key.
+    email_sealed: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Text, nullable=False
+    )
+    #: Set once they prove the address is theirs. Null means never send here.
+    confirmed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    #: Set when they leave. The row is kept, not deleted, so a later re-subscribe
+    #: cannot be silently overridden by a stale export of the old list.
+    unsubscribed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )
+    #: SHA-256 of the unsubscribe token. Indexed because the link is looked up by
+    #: it, and one-way because it is a bearer capability.
+    unsubscribe_token_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(64), nullable=False, index=True
+    )
+    #: Where they subscribed from — "book", "talk", "front" — so the steward can
+    #: tell which surfaces reach people. A coarse label, never a per-person trail.
+    source: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32))

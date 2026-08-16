@@ -26,6 +26,7 @@ tried on open, so a rotation does not strand pending requests.
 from __future__ import annotations
 
 import hashlib
+import hmac
 import os
 
 import cryptography.fernet
@@ -55,6 +56,31 @@ def sealing_available() -> bool:
 def blind_index(email: str) -> str:
     """Stable lookup handle. Matches the posture `Member.email_hash` takes."""
     return hashlib.sha256(email.strip().lower().encode()).hexdigest()
+
+
+def derive_unsubscribe_token(subscription_id: str) -> str:
+    """The token that lets a reader leave the list with no session (ADR-0025).
+
+    Derived rather than stored, because an unsubscribe link has to be *re-issued*
+    in every message the list ever sends. A random token would have to be kept in
+    plaintext to be mailed twice, which is precisely what this module exists to
+    avoid. Deriving it from the sealing key means any send can rebuild the same
+    link, while the database holds only its fingerprint.
+
+    Domain-separated from every other use of the key, so a token can never be
+    replayed as anything but an unsubscribe.
+    """
+    keys = _keys()
+    if not keys:
+        raise ContactSealUnavailable("JOIN_CONTACT_KEY is not configured.")
+    return hmac.new(
+        keys[0].encode(), f"unsubscribe:{subscription_id}".encode(), hashlib.sha256
+    ).hexdigest()
+
+
+def token_fingerprint(token: str) -> str:
+    """What the database stores for a bearer token: a one-way handle to match on."""
+    return hashlib.sha256(token.strip().encode()).hexdigest()
 
 
 def seal(email: str) -> str:

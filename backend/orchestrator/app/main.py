@@ -14,6 +14,7 @@ import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
 import app.api.v1.join as _join_router
 import app.api.v1.publications as _publications_router
+import app.api.v1.readers as _readers_router
 import app.api.v1.runs as _runs_router
 import app.api.v1.sitecontent as _sitecontent_router
 import app.api.v1.support as _support_router
@@ -134,6 +135,7 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_support_router.router)
     fapp.include_router(_commerce_router.router)
     fapp.include_router(_join_router.router)
+    fapp.include_router(_readers_router.router)
     fapp.include_router(_twin_router.public_router)
     fapp.include_router(_twin_router.router)
     fapp.include_router(_vault_router.router)
