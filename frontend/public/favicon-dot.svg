@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
   <!-- Outer field ring -->
-  <circle cx="50" cy="50" r="44" fill="none" stroke="#8a8a8a" stroke-width="1.35" opacity="0.32"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="#b8956a" stroke-width="1.35" opacity="0.45"/>
   <!-- Mid ring -->
-  <circle cx="50" cy="50" r="30" fill="none" stroke="#555" stroke-width="1.55" opacity="0.5"/>
+  <circle cx="50" cy="50" r="30" fill="none" stroke="#c6873e" stroke-width="1.55" opacity="0.62"/>
   <!-- Right arc (bolder) -->
-  <path d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84" fill="none" stroke="#333" stroke-width="2.25" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84" fill="none" stroke="#d4872a" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
   <!-- Left arc (lighter) -->
-  <path d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round" opacity="0.5"/>
+  <path d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16" fill="none" stroke="#c6873e" stroke-width="1.8" stroke-linecap="round" opacity="0.56"/>
   <!-- Inner ring -->
-  <circle cx="50" cy="50" r="15" fill="none" stroke="#333" stroke-width="1.4" opacity="0.36"/>
+  <circle cx="50" cy="50" r="15" fill="none" stroke="#d4872a" stroke-width="1.4" opacity="0.4"/>
   <!-- Core dot -->
-  <circle cx="50" cy="50" r="7.5" fill="#333"/>
+  <circle cx="50" cy="50" r="7.5" fill="#d4872a"/>
   <!-- Eye -->
-  <circle cx="50" cy="50" r="3.25" fill="white" opacity="0.72"/>
+  <circle cx="50" cy="50" r="3.25" fill="white" opacity="0.8"/>
 </svg>
