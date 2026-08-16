@@ -38,9 +38,7 @@ def upgrade() -> None:
             nullable=False,
         ),
         sqlalchemy.Column("updated_at", sqlalchemy.DateTime(timezone=True)),
-        sqlalchemy.UniqueConstraint(
-            "email_hash", name="uq_reader_subscriptions_email_hash"
-        ),
+        sqlalchemy.UniqueConstraint("email_hash", name="uq_reader_subscriptions_email_hash"),
     )
     alembic.op.create_index(
         "ix_reader_subscriptions_email_hash", "reader_subscriptions", ["email_hash"]
@@ -58,7 +56,5 @@ def downgrade() -> None:
     alembic.op.drop_index(
         "ix_reader_subscriptions_unsubscribe_token_hash", table_name="reader_subscriptions"
     )
-    alembic.op.drop_index(
-        "ix_reader_subscriptions_email_hash", table_name="reader_subscriptions"
-    )
+    alembic.op.drop_index("ix_reader_subscriptions_email_hash", table_name="reader_subscriptions")
     alembic.op.drop_table("reader_subscriptions")
