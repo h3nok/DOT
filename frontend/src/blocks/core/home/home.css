@@ -1310,6 +1310,20 @@ html:has(.home-journey) {
   opacity: 0.76;
 }
 
+.arch-loop-flow {
+  fill: none;
+  stroke: var(--organism-accent-strong);
+  stroke-dasharray: 0.13 0.87;
+  stroke-linecap: round;
+  stroke-width: 2.15;
+  opacity: 0.9;
+  filter: drop-shadow(
+    0 0 3px color-mix(in oklch, var(--organism-accent-strong) 42%, transparent)
+  );
+  pointer-events: none;
+  animation: arch-arrow-flow 1.45s linear infinite;
+}
+
 .arch-edge-label {
   fill: var(--muted-foreground);
   paint-order: stroke;
@@ -1326,20 +1340,28 @@ html:has(.home-journey) {
 .arch-residual-link {
   fill: none;
   stroke: var(--muted-foreground);
-  stroke-dasharray: 2 6;
+  stroke-dasharray: 0.035 0.06;
   stroke-linecap: round;
-  stroke-width: 0.95;
-  opacity: 0.32;
+  stroke-width: 1;
+  opacity: 0.38;
   transition:
     opacity 180ms ease,
     stroke 180ms ease,
-    stroke-width 180ms ease;
+    stroke-width 180ms ease,
+    filter 180ms ease;
 }
 
 .arch-residual-link.is-active {
   stroke: var(--organism-accent-strong);
-  stroke-width: 1.35;
-  opacity: 0.86;
+  stroke-width: 1.45;
+  opacity: 0.94;
+  filter: drop-shadow(
+    0 0 2px color-mix(in oklch, var(--organism-accent-strong) 36%, transparent)
+  );
+}
+
+.arch-residual-link.is-flowing {
+  animation: arch-feedback-flow 1.15s linear infinite;
 }
 
 .arch-svg-return-caption {
@@ -1423,63 +1445,73 @@ html:has(.home-journey) {
   text-align: center;
 }
 
-/* The frame enters as one system: field, observer, paths, then equal-weight stages. */
+/* The model explains itself once: observer, state, residual, transition, repeat. */
 .arch-standalone-card:not(.is-entered) .arch-reality-frame,
 .arch-standalone-card:not(.is-entered) .arch-center-nexus,
-.arch-standalone-card:not(.is-entered) .arch-residual-group,
+.arch-standalone-card:not(.is-entered) .arch-residual-step,
 .arch-standalone-card:not(.is-entered) .arch-edge-group,
 .arch-standalone-card:not(.is-entered) .arch-node-group,
 .arch-standalone-card:not(.is-entered) .arch-mobile-observer,
-.arch-standalone-card:not(.is-entered) .arch-mobile-step,
+.arch-standalone-card:not(.is-entered) .arch-mobile-node,
+.arch-standalone-card:not(.is-entered) .arch-mobile-edge,
 .arch-standalone-card:not(.is-entered) .arch-bottom-panel {
   opacity: 0;
 }
 
-.arch-standalone-card.is-entered .arch-reality-frame {
-  animation: arch-system-reveal 520ms ease-out 80ms both;
-}
-
 .arch-standalone-card.is-entered .arch-center-nexus {
-  animation: arch-system-reveal 520ms ease-out 150ms both;
+  animation: arch-nucleus-reveal 560ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
 }
 
-.arch-standalone-card.is-entered .arch-residual-group {
-  animation: arch-system-reveal 540ms ease-out 210ms both;
+.arch-standalone-card.is-entered .arch-mobile-observer {
+  animation: arch-surface-reveal 520ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
 }
 
-.arch-standalone-card.is-entered .arch-edge-group {
-  animation: arch-system-reveal 540ms ease-out 220ms both;
-}
-
-.arch-standalone-card.is-entered .arch-edge-group > path {
-  animation: arch-path-reveal 700ms ease-out 220ms both;
+.arch-standalone-card.is-entered .arch-reality-frame {
+  animation: arch-system-reveal 480ms ease-out 260ms both;
 }
 
 .arch-standalone-card.is-entered .arch-node-group {
-  animation: arch-system-reveal 520ms ease-out 300ms both;
+  animation: arch-system-reveal 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(560ms + var(--arch-step-delay, 0ms));
 }
 
-.arch-standalone-card.is-entered .arch-mobile-observer,
-.arch-standalone-card.is-entered .arch-mobile-step,
+.arch-standalone-card.is-entered .arch-mobile-node {
+  animation: arch-surface-reveal 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(560ms + var(--arch-step-delay, 0ms));
+}
+
+.arch-standalone-card.is-entered .arch-residual-step {
+  animation: arch-system-reveal 360ms ease-out both;
+  animation-delay: calc(760ms + var(--arch-step-delay, 0ms));
+}
+
+.arch-standalone-card.is-entered .arch-edge-group,
+.arch-standalone-card.is-entered .arch-mobile-edge {
+  animation: arch-system-reveal 420ms ease-out both;
+  animation-delay: calc(900ms + var(--arch-step-delay, 0ms));
+}
+
+.arch-standalone-card.is-entered .arch-edge-group > .arch-loop-path {
+  animation: arch-path-reveal 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(900ms + var(--arch-step-delay, 0ms));
+}
+
 .arch-standalone-card.is-entered .arch-bottom-panel {
-  animation: arch-surface-reveal 460ms ease-out both;
+  animation: arch-surface-reveal 460ms ease-out 3.3s both;
 }
 
-.arch-standalone-card.is-entered .arch-mobile-step:nth-of-type(2) {
-  animation-delay: 80ms;
-}
+@keyframes arch-nucleus-reveal {
+  from {
+    opacity: 0;
+    filter: blur(4px) drop-shadow(0 0 0 transparent);
+  }
 
-.arch-standalone-card.is-entered .arch-mobile-step:nth-of-type(3) {
-  animation-delay: 140ms;
-}
-
-.arch-standalone-card.is-entered .arch-mobile-step:nth-of-type(4) {
-  animation-delay: 200ms;
-}
-
-.arch-standalone-card.is-entered .arch-mobile-step:nth-of-type(5),
-.arch-standalone-card.is-entered .arch-bottom-panel {
-  animation-delay: 260ms;
+  to {
+    opacity: 1;
+    filter: blur(0) drop-shadow(
+      0 0 8px color-mix(in oklch, var(--organism-accent-strong) 22%, transparent)
+    );
+  }
 }
 
 @keyframes arch-system-reveal {
@@ -1516,6 +1548,26 @@ html:has(.home-journey) {
   }
 }
 
+@keyframes arch-arrow-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes arch-feedback-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -0.095;
+  }
+}
+
 /* ── High Contrast & Reduced Motion ────────────────────────────────── */
 html[data-contrast="high"] .arch-standalone-card,
 html[data-contrast="high"] .arch-bottom-panel,
@@ -1528,6 +1580,7 @@ html[data-contrast="high"] .arch-mobile-detail {
   .arch-node-card-bg,
   .arch-node-depth-plane,
   .arch-loop-path,
+  .arch-loop-flow,
   .arch-residual-link,
   .arch-mobile-node {
     transition: none;
@@ -1535,16 +1588,27 @@ html[data-contrast="high"] .arch-mobile-detail {
 
   .arch-standalone-card.is-entered .arch-reality-frame,
   .arch-standalone-card.is-entered .arch-center-nexus,
-  .arch-standalone-card.is-entered .arch-residual-group,
+  .arch-standalone-card.is-entered .arch-residual-step,
   .arch-standalone-card.is-entered .arch-edge-group,
-  .arch-standalone-card.is-entered .arch-edge-group > path,
+  .arch-standalone-card.is-entered .arch-edge-group > .arch-loop-path,
   .arch-standalone-card.is-entered .arch-node-group,
   .arch-standalone-card.is-entered .arch-mobile-observer,
-  .arch-standalone-card.is-entered .arch-mobile-step,
+  .arch-standalone-card.is-entered .arch-mobile-node,
+  .arch-standalone-card.is-entered .arch-mobile-edge,
   .arch-standalone-card.is-entered .arch-bottom-panel {
     opacity: 1;
     animation: none;
     transform: none;
+    filter: none;
+  }
+
+  .arch-loop-flow {
+    display: none;
+    animation: none;
+  }
+
+  .arch-residual-link.is-flowing {
+    animation: none;
   }
 }
 
@@ -1572,6 +1636,33 @@ html[data-contrast="high"] .arch-mobile-detail {
 @media (max-width: 719px) {
   .home-architecture-environment {
     padding: 4.5rem 0;
+  }
+
+  .arch-mobile-node {
+    position: relative;
+    grid-template-columns: 1fr;
+    width: min(11rem, 62vw);
+    aspect-ratio: 1;
+    justify-items: center;
+    align-content: center;
+    gap: 0.45rem;
+    padding: 1.4rem;
+    border-radius: 999px;
+    text-align: center;
+  }
+
+  .arch-mobile-node.is-active {
+    border-radius: 999px;
+  }
+
+  .arch-mobile-node-copy {
+    align-items: center;
+  }
+
+  .arch-mobile-detail {
+    margin-top: 0.65rem;
+    border-top: 1px solid color-mix(in oklch, var(--organism-accent-strong) 78%, var(--border));
+    border-radius: 0.75rem;
   }
 
 }

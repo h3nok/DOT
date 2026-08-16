@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const PLAIN_TEXT =
-  "Love is the absence of Fear. In DOT, Fear names the governing contraction that organizes perception around defense, control, and the preservation of identity at the expense of truth. Inquiry conducted under that governance is structurally corrupted — you see what you need to be there, not what is there. Love is the condition in which that governance lifts. It does not make inquiry soft. It makes inquiry harder to corrupt. In this sense, Love is not only a moral aspiration. It is an epistemic necessity.";
+  "Love is the absence of Fear. In DOT, Fear names the governing contraction that organizes perception around defense, control, and the preservation of identity at the expense of truth. Inquiry conducted under that governance is structurally corrupted — you see what you need to be there, not what is there. Love is the condition in which that governance lifts. It does not make inquiry soft. It makes inquiry harder to corrupt. In this sense, Love is not only a moral aspiration. It is also an epistemic necessity.";
 
 const TERM_STYLE =
   "underline decoration-[color:var(--organism-accent-soft)] decoration-1 underline-offset-[3px] transition-colors hover:text-[color:var(--organism-accent-strong)] hover:decoration-[color:var(--organism-accent-strong)]";
@@ -21,7 +21,7 @@ const SEGMENTS: Segment[] = [
   { text: "Love", link: "/doctrine/love" },
   { text: " is the condition in which that governance lifts. It does not make inquiry soft. It makes inquiry harder to corrupt. In this sense, " },
   { text: "Love", link: "/doctrine/love" },
-  { text: " is not only a moral aspiration. It is an epistemic necessity." },
+  { text: " is not only a moral aspiration. It is also an epistemic necessity." },
 ];
 
 const CHARS_PER_SECOND = 48;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import {
   ArrowDown,
   Box,
@@ -102,7 +102,7 @@ const EDGES: EdgeItem[] = [
     to: "painting",
     label: "Interpret State",
     sublabel: "Frame state meets memory",
-    pathD: "M 261 125 L 459 125",
+    pathD: "M 245 125 L 475 125",
     badgeX: 360,
     badgeY: 108,
   },
@@ -112,7 +112,7 @@ const EDGES: EdgeItem[] = [
     to: "intent",
     label: "Form Intent",
     sublabel: "Intent commits choice",
-    pathD: "M 545 170 L 545 330",
+    pathD: "M 545 195 L 545 305",
     badgeX: 603,
     badgeY: 250,
   },
@@ -122,7 +122,7 @@ const EDGES: EdgeItem[] = [
     to: "return",
     label: "Apply Consequence",
     sublabel: "Intent enters the Frame",
-    pathD: "M 459 375 L 261 375",
+    pathD: "M 475 375 L 245 375",
     badgeX: 360,
     badgeY: 392,
   },
@@ -132,7 +132,7 @@ const EDGES: EdgeItem[] = [
     to: "stream",
     label: "Update State",
     sublabel: "Consequence changes the start",
-    pathD: "M 175 330 L 175 170",
+    pathD: "M 175 305 L 175 195",
     badgeX: 117,
     badgeY: 250,
   },
@@ -230,7 +230,6 @@ export function ArchitectureDiagram() {
           className={`arch-standalone-card mt-12 ${
             hasEntered || reducedMotion ? "is-entered" : ""
           }`}
-          onPointerEnter={pauseAutomation}
           onPointerDown={pauseAutomation}
           onFocusCapture={pauseAutomation}
         >
@@ -247,14 +246,24 @@ export function ArchitectureDiagram() {
               const Icon = node.icon;
               const isActive = node.id === selectedNodeId;
               return (
-                <div className="arch-mobile-step" key={node.id}>
+                <div
+                  className="arch-mobile-step"
+                  key={node.id}
+                  style={
+                    {
+                      "--arch-step-delay": `${index * 620}ms`,
+                    } as CSSProperties
+                  }
+                >
                   <button
                     type="button"
                     aria-pressed={isActive}
                     onClick={() => selectNode(node.id)}
                     className={`arch-mobile-node ${isActive ? "is-active" : ""}`}
                   >
-                    <span className="arch-mobile-node-number">{node.num}</span>
+                    <span className="arch-mobile-node-number">
+                      Step {node.num}
+                    </span>
                     <span className="arch-mobile-node-copy">
                       <strong>{node.title}</strong>
                       <small>{node.shortDesc}</small>
@@ -339,7 +348,25 @@ export function ArchitectureDiagram() {
                   />
                 </marker>
                 <marker
-                  id="arrow-head-residual"
+                  id="arrow-head-feedback"
+                  markerWidth="7"
+                  markerHeight="7"
+                  refX="5.5"
+                  refY="3.5"
+                  orient="auto"
+                  markerUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M 1 1 L 5.5 3.5 L 1 6"
+                    fill="none"
+                    stroke="var(--muted-foreground)"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </marker>
+                <marker
+                  id="arrow-head-feedback-active"
                   markerWidth="7"
                   markerHeight="7"
                   refX="5.5"
@@ -351,7 +378,7 @@ export function ArchitectureDiagram() {
                     d="M 1 1 L 5.5 3.5 L 1 6"
                     fill="none"
                     stroke="var(--organism-accent-strong)"
-                    strokeWidth="1"
+                    strokeWidth="1.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -392,16 +419,31 @@ export function ArchitectureDiagram() {
 
               {/* Residual links: every state reports inward to the observer. */}
               <g className="arch-residual-group" aria-hidden="true">
-                {RESIDUAL_LINKS.map((link) => {
+                {RESIDUAL_LINKS.map((link, index) => {
                   const isActive = link.id === selectedNodeId;
                   return (
-                    <path
+                    <g
                       key={link.id}
-                      d={link.pathD}
-                      pathLength="1"
-                      className={`arch-residual-link ${isActive ? "is-active" : ""}`}
-                      markerEnd="url(#arrow-head-residual)"
-                    />
+                      className="arch-residual-step"
+                      style={
+                        {
+                          "--arch-step-delay": `${index * 620}ms`,
+                        } as CSSProperties
+                      }
+                    >
+                      <path
+                        d={link.pathD}
+                        pathLength="1"
+                        className={`arch-residual-link ${isActive ? "is-active" : ""} ${
+                          isActive && isPlaying ? "is-flowing" : ""
+                        }`}
+                        markerEnd={
+                          isActive
+                            ? "url(#arrow-head-feedback-active)"
+                            : "url(#arrow-head-feedback)"
+                        }
+                      />
+                    </g>
                   );
                 })}
               </g>
@@ -433,9 +475,18 @@ export function ArchitectureDiagram() {
               </g>
 
               {/* ── Directed Interaction Edges (Causal Flows) ─────────── */}
-              {EDGES.map((edge) => {
+              {EDGES.map((edge, index) => {
+                const isActive = edge.from === selectedNodeId;
                 return (
-                  <g key={edge.id} className="arch-edge-group">
+                  <g
+                    key={edge.id}
+                    className="arch-edge-group"
+                    style={
+                      {
+                        "--arch-step-delay": `${index * 620}ms`,
+                      } as CSSProperties
+                    }
+                  >
                     <path
                       d={edge.pathD}
                       pathLength="1"
@@ -443,6 +494,15 @@ export function ArchitectureDiagram() {
                       className="arch-loop-path"
                       markerEnd="url(#arrow-head-loop)"
                     />
+
+                    {isActive && isPlaying && !reducedMotion ? (
+                      <path
+                        d={edge.pathD}
+                        pathLength="1"
+                        className="arch-loop-flow"
+                        aria-hidden="true"
+                      />
+                    ) : null}
 
                     <text
                       x={edge.badgeX}
@@ -458,7 +518,7 @@ export function ArchitectureDiagram() {
               })}
 
               {/* ── Graph Node Cards ──────────────────────────────────── */}
-              {NODES.map((node) => {
+              {NODES.map((node, index) => {
                 const isActive = node.id === selectedNodeId;
                 const Icon = node.icon;
 
@@ -478,23 +538,25 @@ export function ArchitectureDiagram() {
                       }
                     }}
                     className={`arch-node-group ${isActive ? "is-active" : ""}`}
+                    style={
+                      {
+                        "--arch-step-delay": `${index * 620}ms`,
+                      } as CSSProperties
+                    }
                   >
-                    {/* Layered state tile: depth plane, surface, then a light-catching edge. */}
-                    <rect
-                      x="-86"
-                      y="-39"
-                      width="172"
-                      height="90"
-                      rx="12"
+                    {/* Circular state: every stage is one DOT in the automaton. */}
+                    <circle
+                      cy="6"
+                      r="67"
                       className="arch-node-depth-plane"
                     />
-                    <rect
-                      x="-86"
-                      y="-45"
-                      width="172"
-                      height="90"
-                      rx="12"
-                      fill={isActive ? "url(#arch-node-surface-active)" : "url(#arch-node-surface)"}
+                    <circle
+                      r="67"
+                      fill={
+                        isActive
+                          ? "url(#arch-node-surface-active)"
+                          : "url(#arch-node-surface)"
+                      }
                       stroke={
                         isActive
                           ? "color-mix(in oklch, var(--organism-accent-strong) 76%, var(--border))"
@@ -503,44 +565,23 @@ export function ArchitectureDiagram() {
                       strokeWidth={isActive ? "1.6" : "1"}
                       className="arch-node-card-bg"
                     />
-                    <line
-                      x1="-70"
-                      y1="-43.5"
-                      x2="70"
-                      y2="-43.5"
-                      className="arch-node-highlight-edge"
-                    />
-                    <line
-                      x1="-70"
-                      y1="43.5"
-                      x2="70"
-                      y2="43.5"
-                      className="arch-node-base-edge"
-                    />
 
                     {/* HTML Content Overlay within SVG */}
-                    <foreignObject x="-76" y="-36" width="152" height="72">
-                      <div className="flex h-full w-full flex-col justify-between select-none">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 font-mono uppercase">
-                            <span className="text-[0.58rem] font-semibold text-[color:var(--organism-accent-strong)]">
-                              {node.num}
-                            </span>
-                            <span className="text-[0.5rem] font-normal tracking-[0.1em] text-[color:var(--muted-foreground)]">
-                              {node.scope}
-                            </span>
-                          </div>
-                          <Icon className="h-3 w-3 text-[color:var(--organism-accent-strong)] opacity-75" />
+                    <foreignObject x="-52" y="-52" width="104" height="104">
+                      <div className="flex h-full w-full select-none flex-col items-center justify-center text-center">
+                        <div className="flex items-center gap-1.5 font-mono text-[0.48rem] font-semibold uppercase tracking-[0.08em] text-[color:var(--organism-accent-strong)]">
+                          <span>Step {node.num}</span>
+                          <Icon className="h-2.5 w-2.5 opacity-70" aria-hidden="true" />
                         </div>
-
-                        <div>
-                          <div className="font-serif text-[0.82rem] font-medium leading-[1.12] text-[color:var(--foreground)]">
-                            {node.title}
-                          </div>
-                          <div className="mt-0.5 font-mono text-[0.51rem] font-normal tracking-[0.06em] uppercase text-[color:var(--muted-foreground)]">
-                            {node.shortDesc}
-                          </div>
-                        </div>
+                        <span className="mt-1 font-mono text-[0.4rem] uppercase tracking-[0.09em] text-[color:var(--muted-foreground)]">
+                          {node.scope}
+                        </span>
+                        <strong className="mt-1.5 max-w-[6rem] font-serif text-[0.78rem] font-medium leading-[1.08] text-[color:var(--foreground)]">
+                          {node.title}
+                        </strong>
+                        <small className="mt-1 max-w-[5.6rem] font-mono text-[0.38rem] uppercase leading-[1.2] tracking-[0.035em] text-[color:var(--muted-foreground)]">
+                          {node.shortDesc}
+                        </small>
                       </div>
                     </foreignObject>
                   </g>
