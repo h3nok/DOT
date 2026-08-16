@@ -94,10 +94,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "membrane",
     label: "Membrane",
-    hint: "Warm light behind lit glass, taking its colour from the hour.",
+    hint: "Warm light behind lit glass, with the raw stream drifting through it.",
     base: "light",
     config: {
-      preset: "aurora",
+      preset: "field",
       uiStyle: "neural",
       tint: "auto",
       intensity: 0.85,
@@ -151,10 +151,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "midnight",
     label: "Midnight",
-    hint: "Deep indigo behind lit glass. Reading after the day has ended.",
+    hint: "Deep indigo behind lit glass, with the raw stream drifting through it.",
     base: "dark",
     config: {
-      preset: "aurora",
+      preset: "field",
       uiStyle: "neural",
       tint: 212,
       intensity: 0.85,

@@ -150,12 +150,22 @@ export const OrganismMembrane: React.FC = () => {
      * experience arrives unjoined until something interprets it.
      */
     const buildField = () => {
-      const budget = Math.min(160, Math.max(48, Math.round((w * h) / 16000)));
+      // Spacing has to fall well below the bias field's wavelength or the
+      // pattern cannot be seen. At one glyph per 16,000px² — the old budget —
+      // a 1440×900 viewport carried 81 bits, roughly one sample per patch, so
+      // the structure was there in the field and invisible on the screen. One
+      // per ~3,100px² puts several glyphs across the narrowest feature, which
+      // is what turns the noise into something the eye reads as pattern.
+      const budget = Math.round(
+        Math.min(460, Math.max(140, (w * h) / 3100)) * config.fieldScale,
+      );
       points = Array.from({ length: budget }, (_, i) => {
         const depth = DEPTHS[i % DEPTHS.length];
+        const x = Math.random() * w;
+        const y = Math.random() * h;
         return {
-          x: Math.random() * w,
-          y: Math.random() * h,
+          x,
+          y,
           hx: 0,
           hy: 0,
           vx: 0,
@@ -163,7 +173,10 @@ export const OrganismMembrane: React.FC = () => {
           r: 1,
           depth,
           phase: Math.random() * Math.PI * 2,
-          bit: Math.random() < 0.5 ? ("0" as const) : ("1" as const),
+          // Drawn against the same field the animation reads, so a Canvas that
+          // is never allowed to move — stillness, or reduced motion — still
+          // opens as a composed pattern rather than as even snow.
+          bit: Math.random() < fieldBias(x, y, 0) ? ("1" as const) : ("0" as const),
           flipAt: Math.random() * 10,
         };
       });
@@ -197,6 +210,29 @@ export const OrganismMembrane: React.FC = () => {
         c * (1 - fx) * fy +
         d * fx * fy
       );
+    };
+
+    /**
+     * Local bias of the stream, in [0, 1]. Two octaves of the same value noise
+     * every other field reads, drifting slowly against the rising bits.
+     *
+     * This is what makes the Canvas a *pattern* rather than static. Uniformly
+     * random bits at uniform opacity read as television snow: every region
+     * looks like every other, so the eye finds nothing to rest on and the
+     * ground goes dead. Sampling a smooth field instead gives the randomness
+     * structure at a scale larger than any single glyph — patches leaning to 1,
+     * patches leaning to 0, dense drifts and near-empty voids — while each
+     * individual bit stays genuinely unpredictable. Order at one scale, chance
+     * at another, which is the claim the Canvas is making in the first place.
+     *
+     * Declared up here with `valueNoise` for the same reason it is: the Canvas
+     * seeds its bits from this at build time, inside the first `resize()`, and
+     * a `const` further down would not be initialised yet.
+     */
+    const fieldBias = (x: number, y: number, t: number): number => {
+      const coarse = valueNoise(x / 320, y / 320 + t);
+      const fine = valueNoise(x / 110 + t * 0.6, y / 110);
+      return coarse * 0.68 + fine * 0.32;
     };
 
     /**
@@ -450,6 +486,7 @@ export const OrganismMembrane: React.FC = () => {
       alpha: number,
       animate: boolean,
     ) => {
+      fieldTime += animate ? 0.00035 * spec.speed : 0;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (const p of points) {
@@ -465,27 +502,43 @@ export const OrganismMembrane: React.FC = () => {
           }
           if (p.x < -20) p.x = w + 20;
           if (p.x > w + 20) p.x = -20;
-          // A bit flips when its time comes — a delta in the stream.
+        }
+        const bias = fieldBias(p.x, p.y, fieldTime);
+        if (animate) {
+          // A bit flips when its time comes — a delta in the stream. Which way
+          // it lands is drawn against the local bias, so a region that leans to
+          // 1 accumulates 1s without ever being made of them: the patch is a
+          // tendency, not a stamp, and it dissolves as the field drifts past.
           p.flipAt -= 1 / 60;
           if (p.flipAt <= 0) {
-            p.bit = p.bit === "0" ? "1" : "0";
+            p.bit = Math.random() < bias ? "1" : "0";
             p.flipAt = 4 + Math.random() * 10;
           }
         }
         const mask = clearance(p.x, p.y);
-        const a = alpha * mask * (0.16 + p.depth * 0.22);
+        // Presence follows the same field, so the stream thickens and thins in
+        // drifts rather than sitting at one even density everywhere.
+        const presence = 0.45 + bias * 1.05;
+        const a = alpha * mask * (0.16 + p.depth * 0.22) * presence;
         if (a <= 0.005) continue;
-        const size = 9 + p.depth * 5;
+        const size = (9 + p.depth * 5) * (0.88 + bias * 0.24);
         ctx.font = `${size}px ui-monospace, monospace`;
         ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
         ctx.fillText(p.bit, p.x, p.y);
       }
       // Faint threads between nearby bits — the stream beginning to cohere.
+      //
+      // Nearest-neighbour search is O(n²), which was free at the old budget of
+      // ~80 bits and is not at ~420. The threads are an accent, not the
+      // subject, so a fixed subset carries them: the points are placed at
+      // random, so the first slice is already scattered across the viewport and
+      // the accent stays even as the glyph field gets denser.
+      const threaded = Math.min(points.length, 150);
       ctx.lineWidth = 0.5;
-      for (let i = 0; i < points.length; i++) {
+      for (let i = 0; i < threaded; i++) {
         const a = points[i];
         const nearest = { d2: 90 * 90, j: -1 };
-        for (let j = i + 1; j < points.length; j++) {
+        for (let j = i + 1; j < threaded; j++) {
           const b = points[j];
           const dx = a.x - b.x;
           const dy = a.y - b.y;
@@ -568,7 +621,30 @@ export const OrganismMembrane: React.FC = () => {
         ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2);
         ctx.fill();
 
-        // 2. Extra radiating awareness ring for "You"
+        // 2. The reach of each centre — concentric rings travelling outward.
+        //
+        // Scattered glows alone have no pattern: every node is a blob and the
+        // composition is just where the blobs happen to be. Giving each centre
+        // a rhythm of expanding rings puts recurring structure into the field
+        // without adding a single new element, and it is the claim the preset
+        // is making — a Little c is not a point, it has a reach.
+        //
+        // The travel is offset by each node's own phase so the rings never
+        // expand in unison, which would read as one mechanism firing rather
+        // than as many separate centres of experience.
+        const RINGS = 3;
+        for (let ring = 0; ring < RINGS; ring++) {
+          const travel = (t * 0.13 * spec.speed + p.phase * 0.16 + ring / RINGS) % 1;
+          const ringAlpha = dotAlpha * 0.34 * (1 - travel) * (1 - travel);
+          if (ringAlpha <= 0.004) continue;
+          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 14}%, ${ringAlpha})`;
+          ctx.lineWidth = 0.7;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r * (1.4 + travel * 5.2), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // 3. Extra radiating awareness ring for "You"
         if (isYou) {
           const breatheR = r * (1.6 + 0.5 * Math.sin(t * 2));
           ctx.strokeStyle = `hsla(${(hue + 25) % 360}, ${sat + 25}%, ${light + 22}%, ${dotAlpha * 0.75})`;
@@ -578,13 +654,13 @@ export const OrganismMembrane: React.FC = () => {
           ctx.stroke();
         }
 
-        // 3. Solid conscious core body
+        // 4. Solid conscious core body
         ctx.fillStyle = `hsla(${hue + (isYou ? 15 : 0)}, ${sat + (isYou ? 25 : 10)}%, ${light + (isYou ? 20 : 10)}%, ${dotAlpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
 
-        // 4. Luminous pinpoint spark at the centre of consciousness
+        // 5. Luminous pinpoint spark at the centre of consciousness
         const sparkLight = light > 50 ? 98 : 95;
         ctx.fillStyle = `hsla(${(hue + 30) % 360}, 40%, ${sparkLight}%, ${dotAlpha * 0.9})`;
         ctx.beginPath();
@@ -715,6 +791,8 @@ export const OrganismMembrane: React.FC = () => {
       width: number;
       phase: number;
     }
+    /** How far the Canvas's bias field has drifted. Slower than the bits. */
+    let fieldTime = 0;
     let topoTime = 0;
     const inkStrokes: InkStroke[] = [];
     let inkTimer = 0;

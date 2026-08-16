@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
 import PrivateReaderNote from "../../attention-os/reader/PrivateReaderNote";
+import { ReaderListForm } from "../../dot/ReaderListForm";
 import { useReadingFocus } from "../../attention-os/reader/useReadingFocus";
 import { DotWordmark } from "../../shared/DotWordmark";
 import {
@@ -354,7 +355,14 @@ function SectionReader({
       data-rail="wide"
     >
       <aside className="book-focus-hidden hidden lg:block">
-        <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+        {/* The chapter rail needs a surface of its own now that the Canvas is
+            the default ground. `clearance` thins the field across the middle of
+            the viewport, which is where the reading card already sits — the
+            rail lives out at the edge, where the field is at full strength, so
+            drifting bits were landing on the chapter titles. Glass rather than
+            a solid fill: the ground stays visible behind the navigation, which
+            is the point of having a living background at all. */}
+        <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-2xl bg-background/72 px-4 py-5 backdrop-blur-[6px]">
           <Link
             to={bookRoute(manifest)}
             className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -422,6 +430,11 @@ function SectionReader({
               </div>
             </div>
           )}
+
+          {/* The one moment a reader is most likely to want more, and the only
+              place the open door is offered (ADR-0025). Renders nothing when the
+              list is closed or unreachable. */}
+          {isLast && <ReaderListForm source="book" />}
 
           <div className="mb-10">
             <PrivateReaderNote
