@@ -1,20 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
 /**
  * ADR-0004 as an executable gate.
  *
  * The manifesto laws are binding, but prose cannot fail a build. This scans the
- * frontend source for the mechanisms L2-L6 and L9 forbid.
+ * frontend for the mechanisms L2-L6 and L9 forbid.
  *
  * `QUARANTINE` lists violations that predate the gate. It is a ratchet: a new
  * violation fails, and a quarantined file that no longer violates *also* fails,
  * so the list can only shrink. Never add to it to make a build pass -- removing
  * the mechanism is the only sanctioned fix.
+ *
+ * `public/` is scanned as well as `src/`, and `.js` as well as `.ts(x)`. That is
+ * not thoroughness for its own sake: `public/sw.js` shipped `push` and
+ * `notificationclick` handlers calling `showNotification` with
+ * `requireInteraction: true` — a textbook L4 violation, matching a pattern this
+ * file already carried — and went unseen for months because the scan started at
+ * `src`. A gate that only looks where violations are unlikely is decoration.
+ * Everything the build serves is in scope.
  */
 
-const SRC = join(process.cwd(), "src");
+/** Roots to scan, relative to the frontend package. */
+const ROOTS = ["src", "public"];
 
 interface Law {
   id: string;
@@ -71,7 +80,7 @@ const LAWS: Law[] = [
 /** Pre-existing violations, each awaiting a product change. Only ever shrinks. */
 const QUARANTINE: { file: string; lawId: string; note: string }[] = [
   {
-    file: "shared/contexts/ReadingContext.tsx",
+    file: "src/shared/contexts/ReadingContext.tsx",
     lawId: "streaks",
     note: "Reading streaks predate the gate. Removing them is a product change; see ADR-0004 L6.",
   },
@@ -86,18 +95,28 @@ function sourceFiles(dir: string, found: string[] = []): string[] {
       if (!IGNORED_DIRS.has(entry)) sourceFiles(full, found);
       continue;
     }
-    if (/\.(ts|tsx)$/.test(entry) && !/\.(test|spec)\.tsx?$/.test(entry)) {
+    if (/\.(ts|tsx|js|mjs)$/.test(entry) && !/\.(test|spec)\.(ts|tsx|js)$/.test(entry)) {
       found.push(full);
     }
   }
   return found;
 }
 
+/** Every scanned file, across all roots. */
+function scannedFiles(): string[] {
+  return ROOTS.flatMap((root) => {
+    const dir = join(process.cwd(), root);
+    return existsSync(dir) ? sourceFiles(dir) : [];
+  });
+}
+
 function findViolations(): { file: string; lawId: string; law: Law }[] {
   const hits: { file: string; lawId: string; law: Law }[] = [];
-  for (const file of sourceFiles(SRC)) {
+  for (const file of scannedFiles()) {
     const contents = readFileSync(file, "utf8");
-    const rel = relative(SRC, file).split(sep).join("/");
+    // Relative to the package, not to a root, so "src/x.ts" and "public/sw.js"
+    // cannot collide and a quarantine entry always says which tree it is in.
+    const rel = relative(process.cwd(), file).split(sep).join("/");
     for (const law of LAWS) {
       if (law.pattern.test(contents)) hits.push({ file: rel, lawId: law.id, law });
     }

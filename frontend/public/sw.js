@@ -134,7 +134,11 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(request)),
     );
   }
-});
+
+  // Handle static assets (CSS, JS, images)
+  if (
+    request.destination === "style" ||
+    request.destination === "script" ||
     request.destination === "image"
   ) {
     event.respondWith(
@@ -222,42 +226,17 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-// Push notification handling
-self.addEventListener("push", (event) => {
-  console.log("[Service Worker] Push received:", event);
-
-  const options = {
-    body: event.data ? event.data.text() : "New update available!",
-    icon: "/favicon.ico",
-    badge: "/favicon.ico",
-    tag: "dot-notification",
-    requireInteraction: true,
-    actions: [
-      {
-        action: "view",
-        title: "View",
-        icon: "/favicon.ico",
-      },
-      {
-        action: "dismiss",
-        title: "Dismiss",
-      },
-    ],
-  };
-
-  event.waitUntil(self.registration.showNotification("DOT Platform", options));
-});
-
-// Notification click handling
-self.addEventListener("notificationclick", (event) => {
-  console.log("[Service Worker] Notification clicked:", event);
-
-  event.notification.close();
-
-  if (event.action === "view") {
-    event.waitUntil(self.clients.openWindow("/"));
-  }
-});
+// There is deliberately no `push` or `notificationclick` handler here.
+//
+// ADR-0004 L4 forbids interruption: signals are pulled, never pushed. This file
+// used to register both, with `requireInteraction: true` — a notification that
+// stays on screen until it is dealt with, which is the most demanding form the
+// mechanism takes. It never actually fired, because a stray `});` above left
+// the file unparseable and the worker never installed. Repairing the syntax
+// without removing these would have shipped the violation for the first time.
+//
+// `manifesto-laws.test.ts` now scans this file, so re-adding them fails the
+// build rather than waiting to be noticed.
 
 // Helper functions for background sync
 async function syncBlogPosts() {
