@@ -25,12 +25,17 @@ import "@fontsource/source-serif-4/700.css";
 
 import { HelmetProvider } from "react-helmet-async";
 import "./App.css";
+import { initAnalytics } from "./lib/analytics";
 import App from "./AppOptimized";
 import "./index.css";
 import { OrganismProvider } from "./organism";
 import "./organism/organism.css";
 import { AppProviders } from "./shared/contexts";
 import { ThemeProvider } from "./shared/contexts/SimpleThemeContext";
+
+// Aggregate readership only, and only when a domain is configured (ADR-0024).
+// Nothing is stored on the reader's device and no profile exists to unseal.
+initAnalytics();
 
 if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {

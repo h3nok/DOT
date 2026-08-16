@@ -55,6 +55,8 @@ jobs:
         VITE_ORCHESTRATOR_URL: ${{ vars.VITE_ORCHESTRATOR_URL }}
         VITE_SUPPORT_PAYMENT_LINK: ${{ vars.VITE_SUPPORT_PAYMENT_LINK }}
         VITE_JOIN_URL: ${{ vars.VITE_JOIN_URL }}
+        VITE_PLAUSIBLE_DOMAIN: ${{ vars.VITE_PLAUSIBLE_DOMAIN }}
+        VITE_PLAUSIBLE_SRC: ${{ vars.VITE_PLAUSIBLE_SRC }}
         VITE_ORCHESTRATOR_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_OWNER_ID: henok
         VITE_PROFILE_DELIVERY_SLUG: henok-profile
@@ -79,6 +81,20 @@ jobs:
         if [[ -n "$VITE_JOIN_URL" && ! "$VITE_JOIN_URL" =~ ^https:// && ! "$VITE_JOIN_URL" =~ ^mailto: ]]; then
           echo "::error::VITE_JOIN_URL must be an HTTPS or mailto URL."
           exit 1
+        fi
+        # Plausible is bound to a bare hostname, not a URL. A pasted
+        # "https://dotheory.org" silently counts nothing, which is the one
+        # failure mode a measurement tool must never have (ADR-0024).
+        if [[ -n "$VITE_PLAUSIBLE_DOMAIN" && ! "$VITE_PLAUSIBLE_DOMAIN" =~ ^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+          echo "::error::VITE_PLAUSIBLE_DOMAIN must be a bare hostname such as dotheory.org — no scheme, no path."
+          exit 1
+        fi
+        if [[ -n "$VITE_PLAUSIBLE_SRC" && ! "$VITE_PLAUSIBLE_SRC" =~ ^https:// ]]; then
+          echo "::error::VITE_PLAUSIBLE_SRC must be an HTTPS URL."
+          exit 1
+        fi
+        if [[ -z "$VITE_PLAUSIBLE_DOMAIN" ]]; then
+          echo "::notice::No VITE_PLAUSIBLE_DOMAIN set — this release counts no readers."
         fi
         if [[ -z "$VITE_SUPPORT_PAYMENT_LINK" && -z "$VITE_ORCHESTRATOR_URL" ]]; then
           echo "::warning::Neither a payment link nor an orchestrator is configured — this release has no way to accept support."

@@ -12,6 +12,8 @@ interface ImportMetaEnv {
   readonly VITE_SITE_URL?: string;
   readonly VITE_SUPPORT_PAYMENT_LINK?: string;
   readonly VITE_JOIN_URL?: string;
+  readonly VITE_PLAUSIBLE_DOMAIN?: string;
+  readonly VITE_PLAUSIBLE_SRC?: string;
 }
 
 interface ImportMeta {
