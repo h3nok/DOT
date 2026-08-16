@@ -287,6 +287,78 @@ html[data-minty-modal="true"] [data-appearance-control] {
   opacity: 0;
 }
 
+/* Minty's grounded answers share the book's mathematical grammar. Inline
+   notation stays in the sentence; display notation becomes a quiet inspection
+   field that can scroll on narrow sidecars without widening the conversation. */
+.minty-answer .katex {
+  color: var(--foreground);
+  font-size: 0.98em;
+}
+
+.minty-answer .katex-display {
+  max-width: 100%;
+  margin: 1rem 0 1.2rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid color-mix(in oklch, var(--organism-accent-strong) 22%, var(--border));
+  border-bottom: 1px solid color-mix(in oklch, var(--organism-accent-strong) 14%, var(--border));
+  background: color-mix(in oklch, var(--foreground) 2.5%, transparent);
+  text-align: center;
+  scrollbar-width: thin;
+}
+
+.minty-answer .katex-display > .katex {
+  min-width: max-content;
+  font-size: 1.04em;
+}
+
+.minty-answer-label {
+  padding-left: 0.85rem;
+  border-left: 1px solid color-mix(in oklch, var(--organism-accent-strong) 32%, var(--border));
+}
+
+.minty-answer-label > strong:first-child {
+  display: block;
+  margin-bottom: 0.12rem;
+  color: var(--organism-accent-strong);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78em;
+  font-weight: 650;
+  letter-spacing: 0.075em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+@keyframes mintyAnswerCaret {
+  0%,
+  45% {
+    opacity: 0.9;
+  }
+  55%,
+  100% {
+    opacity: 0.18;
+  }
+}
+
+.minty-answer--streaming > :last-child::after {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 0.22rem;
+  background: var(--organism-accent-strong);
+  content: "";
+  vertical-align: -0.08em;
+  animation: mintyAnswerCaret 900ms steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minty-answer--streaming > :last-child::after {
+    opacity: 0.72;
+    animation: none;
+  }
+}
+
 /* Book One — a finite, still reading surface. */
 .book-surface {
   --book-paper: var(--background);

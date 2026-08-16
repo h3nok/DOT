@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -203,6 +203,74 @@ describe("TwinSurface", () => {
 
     await waitFor(() => expect(screen.getAllByRole("table")).toHaveLength(1));
     expect(screen.getByRole("columnheader", { name: "Model" })).toBeVisible();
+  });
+
+  it("typesets mathematical notation and structures labeled explanations", async () => {
+    vi.mocked(loadEphemeralTurns).mockReturnValueOnce([
+      {
+        id: "mathematical-answer",
+        role: "twin",
+        content: [
+          "**Rendering Latency:** Intent precedes bodily change, $RL \\ge 0$.",
+          "",
+          "$$",
+          "T \\times E",
+          "$$",
+        ].join("\n"),
+        citations: [],
+        refusal_code: null,
+      },
+    ]);
+
+    const { container } = renderMinty();
+
+    await waitFor(() =>
+      expect(container.querySelectorAll(".minty-answer .katex")).toHaveLength(2),
+    );
+    expect(container.querySelector(".minty-answer .katex-display")).toBeVisible();
+    expect(screen.getByText("Rendering Latency:").parentElement).toHaveClass(
+      "minty-answer-label",
+    );
+  });
+
+  it("typesets complete notation while an answer is still streaming", async () => {
+    let finishStream: (() => void) | undefined;
+    vi.mocked(sendMessageStream).mockImplementationOnce(
+      async (_question, _history, _lens, onDelta) => {
+        onDelta("The state updates as $S_{t + 1} = F(S_t)$.");
+        return new Promise((resolve) => {
+          finishStream = () =>
+            resolve({
+              ephemeral: true,
+              turn: {
+                id: "streamed-math",
+                role: "twin",
+                content: "The state updates as $S_{t + 1} = F(S_t)$.",
+                citations: [],
+                refusal_code: null,
+              },
+            });
+        });
+      },
+    );
+
+    const { container } = renderMinty();
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+
+    const composer = screen.getByRole("textbox", { name: /Ask Minty/i });
+    fireEvent.change(composer, { target: { value: "Show the state update." } });
+    fireEvent.keyDown(composer, { key: "Enter" });
+
+    await waitFor(() =>
+      expect(
+        container.querySelector(".minty-answer--streaming .katex"),
+      ).toBeVisible(),
+    );
+    expect(container.querySelector(".minty-answer--streaming")).not.toHaveTextContent(
+      "$S_",
+    );
+
+    await act(async () => finishStream?.());
   });
 
   it("keeps book and academic provenance distinct", async () => {

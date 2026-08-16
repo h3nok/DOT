@@ -1,8 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Children,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import {
   ArrowUp,
   BookOpen,
@@ -37,6 +47,7 @@ import {
 import type { ReadingPosition } from "./bookCompanion";
 import type { AgentLens } from "./agent";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
+import "katex/dist/katex.min.css";
 
 /** Whether this release names a backend at all; see the note in the empty state. */
 const HAS_ORCHESTRATOR = Boolean(import.meta.env.VITE_ORCHESTRATOR_URL);
@@ -340,11 +351,38 @@ const Citations: React.FC<{
   );
 };
 
-const AnswerMarkdown: React.FC<{ children: string }> = ({ children }) => (
-  <div className="minty-answer font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
+function answerText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(answerText).join("");
+  if (isValidElement(node)) {
+    return answerText((node.props as { children?: ReactNode }).children);
+  }
+  return "";
+}
+
+function isLabeledAnswerParagraph(children: ReactNode): boolean {
+  const first = Children.toArray(children).find(
+    (child) => !(typeof child === "string" && child.trim() === ""),
+  );
+  return Boolean(
+    isValidElement(first) &&
+      answerText(first).trim().endsWith(":"),
+  );
+}
+
+const AnswerMarkdown: React.FC<{ children: string; streaming?: boolean }> = ({
+  children,
+  streaming = false,
+}) => (
+  <div
+    className={`minty-answer font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8${
+      streaming ? " minty-answer--streaming" : ""
+    }`}
+  >
     <ReactMarkdown
       skipHtml
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex]}
       components={{
         h1: ({ children: heading }) => (
           <h2 className="mb-2 mt-5 text-xl font-semibold first:mt-0">{heading}</h2>
@@ -355,9 +393,18 @@ const AnswerMarkdown: React.FC<{ children: string }> = ({ children }) => (
         h3: ({ children: heading }) => (
           <h3 className="mb-2 mt-4 text-base font-semibold">{heading}</h3>
         ),
-        p: ({ children: paragraph }) => (
-          <p className="mb-3 whitespace-pre-wrap last:mb-0">{paragraph}</p>
-        ),
+        p: ({ children: paragraph }) => {
+          const labeled = isLabeledAnswerParagraph(paragraph);
+          return (
+            <p
+              className={`mb-3 whitespace-pre-wrap last:mb-0${
+                labeled ? " minty-answer-label" : ""
+              }`}
+            >
+              {paragraph}
+            </p>
+          );
+        },
         // Quoted Book One passages. Set apart from Minty's own sentences by a
         // rule and a tint, so a reader can always see where the book stops and
         // the companion starts. The trailing "— Heading" line is dimmed and
@@ -1242,14 +1289,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 <NucleusMark size={18} thinking reducedMotion={reducedMotion} />
                 Minty
               </p>
-              <div className="font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8">
-                <span className="whitespace-pre-wrap">{smoothedStream}</span>
-                <span
-                  className="ml-0.5 inline-block h-4 w-[2px] animate-pulse align-middle"
-                  style={{ background: "var(--organism-accent-strong)" }}
-                  aria-hidden="true"
-                />
-              </div>
+              <AnswerMarkdown streaming>{smoothedStream}</AnswerMarkdown>
             </motion.article>
           ) : busy ? (
             /* The DOT mark itself at work while Minty gathers the thread: the
