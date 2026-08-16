@@ -79,11 +79,6 @@ const LAWS: Law[] = [
 
 /** Pre-existing violations, each awaiting a product change. Only ever shrinks. */
 const QUARANTINE: { file: string; lawId: string; note: string }[] = [
-  {
-    file: "src/shared/contexts/ReadingContext.tsx",
-    lawId: "streaks",
-    note: "Reading streaks predate the gate. Removing them is a product change; see ADR-0004 L6.",
-  },
 ];
 
 const IGNORED_DIRS = new Set(["node_modules", "dist", "coverage", "assets"]);

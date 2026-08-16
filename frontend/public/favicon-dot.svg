@@ -1,16 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
-  <!-- Outer field ring -->
-  <circle cx="50" cy="50" r="44" fill="none" stroke="#b8956a" stroke-width="1.35" opacity="0.45"/>
-  <!-- Mid ring -->
-  <circle cx="50" cy="50" r="30" fill="none" stroke="#c6873e" stroke-width="1.55" opacity="0.62"/>
-  <!-- Right arc (bolder) -->
-  <path d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84" fill="none" stroke="#d4872a" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
-  <!-- Left arc (lighter) -->
-  <path d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16" fill="none" stroke="#c6873e" stroke-width="1.8" stroke-linecap="round" opacity="0.56"/>
-  <!-- Inner ring -->
-  <circle cx="50" cy="50" r="15" fill="none" stroke="#d4872a" stroke-width="1.4" opacity="0.4"/>
-  <!-- Core dot -->
-  <circle cx="50" cy="50" r="7.5" fill="#d4872a"/>
-  <!-- Eye -->
-  <circle cx="50" cy="50" r="3.25" fill="white" opacity="0.8"/>
+  <style>
+    .f-outer { stroke: #b8956a; }
+    .f-mid { stroke: #c6873e; }
+    .f-arc-r { stroke: #d4872a; }
+    .f-arc-l { stroke: #c6873e; }
+    .f-inner { stroke: #d4872a; }
+    .f-core { fill: #d4872a; }
+    .f-eye { fill: white; }
+    @media (prefers-color-scheme: dark) {
+      .f-outer { stroke: #d4a56a; }
+      .f-mid { stroke: #e0a050; }
+      .f-arc-r { stroke: #f0a030; }
+      .f-arc-l { stroke: #e0a050; }
+      .f-inner { stroke: #f0a030; }
+      .f-core { fill: #f0a030; }
+      .f-eye { fill: #1a1a1a; }
+    }
+  </style>
+  <circle cx="50" cy="50" r="44" fill="none" class="f-outer" stroke-width="1.35" opacity="0.45"/>
+  <circle cx="50" cy="50" r="30" fill="none" class="f-mid" stroke-width="1.55" opacity="0.62"/>
+  <path d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84" fill="none" class="f-arc-r" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+  <path d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16" fill="none" class="f-arc-l" stroke-width="1.8" stroke-linecap="round" opacity="0.56"/>
+  <circle cx="50" cy="50" r="15" fill="none" class="f-inner" stroke-width="1.4" opacity="0.4"/>
+  <circle cx="50" cy="50" r="7.5" class="f-core"/>
+  <circle cx="50" cy="50" r="3.25" class="f-eye" opacity="0.8"/>
 </svg>

@@ -213,12 +213,14 @@ export default function BookAccessPage() {
                     ? "Digital edition purchase is unavailable"
                   : user
                     ? `Purchase the PDF · ${price}`
-                    : `Sign in to purchase · ${price}`}
+                    : `Digital ownership coming soon · ${price}`}
               </span>
               <span className="book-reading-copy mt-1 block text-sm leading-relaxed text-muted-foreground">
                 {entitled
                   ? "Your authenticated, tagged, searchable PDF is ready."
-                  : "One-time purchase. Access is tied to your member account."}
+                  : user
+                    ? "One-time purchase. Access is tied to your member account."
+                    : "Accounts and purchasing will open with private membership."}
               </span>
             </span>
             <ArrowRight

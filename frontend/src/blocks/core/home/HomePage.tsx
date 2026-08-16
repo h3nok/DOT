@@ -464,7 +464,7 @@ export default function HomePage() {
           <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
           <p className="text-xs leading-relaxed text-muted-foreground/50">
             Written by Henok Ghebrechristos · offered as a construction, not a revelation.
-            No ads, no tracking, no data sales.
+            No ads, no profiling, no data sales.
           </p>
         </div>
       </footer>

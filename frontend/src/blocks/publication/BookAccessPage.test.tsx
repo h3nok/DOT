@@ -48,7 +48,7 @@ describe("BookAccessPage", () => {
       screen.getByRole("link", { name: /Read the complete living edition/ }),
     ).toHaveAttribute("href", "/book/digital-organism-theory");
     expect(
-      await screen.findByRole("button", { name: /Sign in to purchase/ }),
+      await screen.findByRole("button", { name: /Digital ownership coming soon/ }),
     ).toBeInTheDocument();
     expect(container.querySelector('a[href$=".pdf"]')).not.toBeInTheDocument();
     expect(container.querySelector('a[href$=".docx"]')).not.toBeInTheDocument();

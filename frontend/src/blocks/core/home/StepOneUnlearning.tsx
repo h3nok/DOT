@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -24,18 +24,56 @@ const SEGMENTS: Segment[] = [
   { text: " is not only a moral aspiration. It is an epistemic necessity." },
 ];
 
-function LinkedStatement() {
+const CHARS_PER_SECOND = 48;
+
+function LinkedStatement({ reveal }: { reveal: boolean }) {
+  const [charCount, setCharCount] = useState(0);
+  const reducedMotion = useReducedMotion();
+  const timerRef = useRef<number | null>(null);
+  const totalChars = PLAIN_TEXT.length;
+  const showAll = Boolean(reducedMotion) || !reveal;
+
+  useEffect(() => {
+    if (showAll || charCount >= totalChars) {
+      if (showAll) setCharCount(totalChars);
+      return;
+    }
+    if (!reveal) return;
+
+    timerRef.current = window.setInterval(() => {
+      setCharCount((c) => {
+        const next = c + 1;
+        if (next >= totalChars && timerRef.current) clearInterval(timerRef.current);
+        return next;
+      });
+    }, 1000 / CHARS_PER_SECOND);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [reveal, showAll, charCount, totalChars]);
+
+  let consumed = 0;
+
   return (
     <p className="home-preface-statement" aria-label={PLAIN_TEXT}>
       {SEGMENTS.map((seg, i) => {
+        const segStart = consumed;
+        consumed += seg.text.length;
+        if (segStart >= charCount) return null;
+        const visible = seg.text.slice(0, charCount - segStart);
+
         return seg.link ? (
           <Link key={i} to={seg.link} className={TERM_STYLE}>
-            {seg.text}
+            {visible}
           </Link>
         ) : (
-          <span key={i}>{seg.text}</span>
+          <span key={i}>{visible}</span>
         );
       })}
+      {charCount < totalChars && (
+        <span className="home-preface-cursor" aria-hidden="true" />
+      )}
     </p>
   );
 }
@@ -43,6 +81,7 @@ function LinkedStatement() {
 export function StepOneUnlearning() {
   const reducedMotion = useReducedMotion();
   const [titleEntered, setTitleEntered] = useState(false);
+  const [passageEntered, setPassageEntered] = useState(false);
   const revealTitle = Boolean(reducedMotion) || titleEntered;
 
   return (
@@ -97,8 +136,9 @@ export function StepOneUnlearning() {
           whileInView={{ opacity: 1, x: 0, scale: 1 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: reducedMotion ? 0 : 0.55, delay: reducedMotion ? 0 : 0.18 }}
+          onViewportEnter={() => setPassageEntered(true)}
         >
-          <LinkedStatement />
+          <LinkedStatement reveal={passageEntered} />
         </motion.blockquote>
       </div>
     </motion.section>

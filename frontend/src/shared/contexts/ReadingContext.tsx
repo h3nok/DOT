@@ -16,8 +16,6 @@ export interface ReadingState {
   readingGoals: {
     dailyMinutes?: number;
     weeklyArticles?: number;
-    currentStreak: number;
-    longestStreak: number;
   };
   readingSettings: {
     autoProgress: boolean;
@@ -44,8 +42,6 @@ export type ReadingAction =
   | { type: 'CLEAR_HISTORY' }
   | { type: 'UPDATE_READING_GOALS'; payload: Partial<ReadingState['readingGoals']> }
   | { type: 'UPDATE_READING_SETTINGS'; payload: Partial<ReadingState['readingSettings']> }
-  | { type: 'INCREMENT_STREAK' }
-  | { type: 'RESET_STREAK' }
   | { type: 'RESET_READING_STATE' };
 
 // Initial state
@@ -55,10 +51,7 @@ const initialState: ReadingContextState = {
     readingProgress: {},
     bookmarks: [],
     readingHistory: [],
-    readingGoals: {
-      currentStreak: 0,
-      longestStreak: 0,
-    },
+    readingGoals: {},
     readingSettings: {
       autoProgress: true,
       showProgress: true,
@@ -187,33 +180,6 @@ function readingReducer(state: ReadingContextState, action: ReadingAction): Read
         lastUpdated: Date.now(),
       };
 
-    case 'INCREMENT_STREAK': {
-      const newStreak = state.reading.readingGoals.currentStreak + 1;
-      const longestStreak = Math.max(newStreak, state.reading.readingGoals.longestStreak);
-      return {
-        ...state,
-        reading: {
-          ...state.reading,
-          readingGoals: {
-            ...state.reading.readingGoals,
-            currentStreak: newStreak,
-            longestStreak,
-          },
-        },
-        lastUpdated: Date.now(),
-      };
-    }
-
-    case 'RESET_STREAK':
-      return {
-        ...state,
-        reading: {
-          ...state.reading,
-          readingGoals: { ...state.reading.readingGoals, currentStreak: 0 },
-        },
-        lastUpdated: Date.now(),
-      };
-
     case 'RESET_READING_STATE':
       return {
         ...initialState,
@@ -240,8 +206,6 @@ interface ReadingContextType {
   clearHistory: () => void;
   updateReadingGoals: (goals: Partial<ReadingState['readingGoals']>) => void;
   updateReadingSettings: (settings: Partial<ReadingState['readingSettings']>) => void;
-  incrementStreak: () => void;
-  resetStreak: () => void;
   // Computed properties
   isBookmarked: (articleId: string) => boolean;
   getProgress: (articleId: string) => number;
@@ -322,14 +286,6 @@ export function ReadingProvider({ children }: ReadingProviderProps) {
     dispatch({ type: 'UPDATE_READING_SETTINGS', payload: settings });
   };
 
-  const incrementStreak = () => {
-    dispatch({ type: 'INCREMENT_STREAK' });
-  };
-
-  const resetStreak = () => {
-    dispatch({ type: 'RESET_STREAK' });
-  };
-
   // Computed properties
   const isBookmarked = (articleId: string) => {
     return state.reading.bookmarks.includes(articleId);
@@ -356,8 +312,6 @@ export function ReadingProvider({ children }: ReadingProviderProps) {
     clearHistory,
     updateReadingGoals,
     updateReadingSettings,
-    incrementStreak,
-    resetStreak,
     isBookmarked,
     getProgress,
     getRecentHistory,

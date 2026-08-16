@@ -822,6 +822,21 @@ html:has(.home-journey) {
   text-wrap: pretty;
 }
 
+.home-preface-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 1px;
+  background: var(--organism-accent-strong);
+  vertical-align: text-bottom;
+  animation: preface-blink 0.72s steps(2) infinite;
+}
+
+@keyframes preface-blink {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 .home-love-heading {
   max-width: 100%;
   line-height: 1.02;
