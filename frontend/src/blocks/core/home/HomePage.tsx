@@ -117,7 +117,7 @@ function HeroTypewriter({ reducedMotion }: { reducedMotion: boolean }) {
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { isOwner, logout, refresh: refreshAuth } = useAuth();
+  const { isOwner, logout } = useAuth();
   const { config, reducedMotion: organismReducedMotion } = useOrganism();
   const pulse = useOrganismPulse();
   const [signInOpen, setSignInOpen] = useState(false);
@@ -474,10 +474,6 @@ export default function HomePage() {
           <SignIn
             reducedMotion={reducedMotion}
             onClose={() => setSignInOpen(false)}
-            onSignedIn={() => {
-              setSignInOpen(false);
-              void refreshAuth();
-            }}
           />
         )}
       </AnimatePresence>

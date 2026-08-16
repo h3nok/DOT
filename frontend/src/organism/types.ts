@@ -404,7 +404,7 @@ export const DEFAULT_VITALS: VitalSigns = {
 export const DEFAULT_CONFIG: OrganismConfig = {
   enabled: true,
   intensity: 0.85,
-  preset: "field",
+  preset: "flow",
   showMembrane: true,
   showHud: false,
   tint: "auto",

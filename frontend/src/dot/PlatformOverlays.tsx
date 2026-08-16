@@ -122,7 +122,6 @@ interface ModalOverlaysProps {
   rootLabel: string;
   isOwner: boolean;
   onCloseSignIn: () => void;
-  onSignedIn: () => void;
   onCloseInvite: () => void;
   onClosePresence: () => void;
   onOpenConversations: () => void;
@@ -141,7 +140,6 @@ export const ModalOverlays: React.FC<ModalOverlaysProps> = ({
   invited,
   rootLabel,
   onCloseSignIn,
-  onSignedIn,
   onCloseInvite,
   onClosePresence,
   onOpenConversations,
@@ -156,7 +154,6 @@ export const ModalOverlays: React.FC<ModalOverlaysProps> = ({
           origin={origin}
           reducedMotion={reducedMotion}
           onClose={onCloseSignIn}
-          onSignedIn={onSignedIn}
         />
       )}
     </AnimatePresence>

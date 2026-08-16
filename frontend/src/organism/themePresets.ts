@@ -94,10 +94,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "membrane",
     label: "Membrane",
-    hint: "Warm light behind lit glass, with the raw stream drifting through it.",
+    hint: "Warm light behind lit glass, with the Reality Stream drawn slowly beneath it.",
     base: "light",
     config: {
-      preset: "field",
+      preset: "flow",
       uiStyle: "neural",
       tint: "auto",
       intensity: 0.85,
@@ -151,10 +151,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "midnight",
     label: "Midnight",
-    hint: "Deep indigo behind lit glass, with the raw stream drifting through it.",
+    hint: "Deep indigo behind lit glass, with the Reality Stream drawn slowly beneath it.",
     base: "dark",
     config: {
-      preset: "field",
+      preset: "flow",
       uiStyle: "neural",
       tint: 212,
       intensity: 0.85,
@@ -229,13 +229,13 @@ export const THEME_PRESETS: ThemePreset[] = [
 /**
  * The environment a reader lands in before they have chosen anything.
  *
- * Both are the same idea in the two lights: Painting as the ground (no points
- * to track — the kindest field to read prose over), the neural surface so the
- * page is visibly the organism, and Source Serif for long-form. They differ
- * only where the two bases genuinely want different things — daylight takes a
- * warm page and the hour's own accent, night takes a cooler page and a pinned
- * indigo, because an unpinned accent has less chroma to spend and a dark
- * ground shows colour less readily.
+ * Both are the same idea in the two lights: Current as the ground (slow tracers
+ * carried by the Reality Stream), the neural surface so the page is visibly
+ * the organism, and Source Serif for long-form. They differ only where the two
+ * bases genuinely want different things — daylight takes a warm page and the
+ * hour's own accent, night takes a cooler page and a pinned indigo, because an
+ * unpinned accent has less chroma to spend and a dark ground shows colour less
+ * readily.
  *
  * Naming the defaults as environments rather than as a loose bag of values is
  * deliberate: a reader who opens the panel on their first visit sees the

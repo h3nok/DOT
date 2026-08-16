@@ -6,7 +6,7 @@ import {
   matchThemePreset,
   themePreset,
 } from "./themePresets";
-import { DEFAULT_CONFIG } from "./types";
+import { DEFAULT_CONFIG, ORGANISM_PRESETS } from "./types";
 
 describe("default environment", () => {
   it("has a default for each base, and it belongs to that base", () => {
@@ -41,22 +41,15 @@ describe("default environment", () => {
     }
   });
 
-  it("defaults to the Canvas, and relies on the mask to keep it out of the prose", () => {
-    // Reversed deliberately. The default used to be Painting — pure light, no
-    // glyphs — on the reasoning that drifting 0s and 1s invite the eye to read
-    // them instead of the chapter. That risk is real and has not gone away;
-    // what changed is the judgement that the Canvas is the composition the
-    // book should open on, and that two existing mechanisms are enough to hold
-    // it back: `clearance` thins every mark to CLEARANCE_FLOOR across the
-    // centre column where content lives, and the reading probe damps the whole
-    // field while a chapter is open.
-    //
-    // So this assertion is load-bearing in both directions. If either
-    // mechanism is ever weakened, the honest fix is to revisit this default —
-    // not to widen the mask until the glyphs are tolerable.
+  it("defaults to Current, the Reality Stream drawn as a quiet field", () => {
+    // Current gives the first visit motion with a direction rather than
+    // scattered marks to decode. The reading probe still damps the field while
+    // a chapter is open, so the default can feel alive without competing with
+    // the prose.
     for (const base of ["light", "dark"] as const) {
-      expect(defaultConfigFor(base).preset).toBe("field");
+      expect(defaultConfigFor(base).preset).toBe("flow");
     }
+    expect(ORGANISM_PRESETS[defaultConfigFor("light").preset].label).toBe("Current");
   });
 
   it("defaults to long-form type and never to a forced high contrast", () => {

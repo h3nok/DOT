@@ -30,7 +30,7 @@ const FALLBACK_PRICE = "$20.00";
 
 /** The complete reader is public; authenticated ownership unlocks the stable PDF. */
 export default function BookAccessPage() {
-  const { user, loading: authLoading, refresh } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [product, setProduct] = useState<BookOneProduct | null>(null);
   const [productLoading, setProductLoading] = useState(true);
   const [entitled, setEntitled] = useState(false);
@@ -255,12 +255,7 @@ export default function BookAccessPage() {
         </Link>
       </section>
       {signInOpen ? (
-        <SignIn
-          onClose={() => setSignInOpen(false)}
-          onSignedIn={() => {
-            void refresh();
-          }}
-        />
+        <SignIn onClose={() => setSignInOpen(false)} />
       ) : null}
     </main>
   );

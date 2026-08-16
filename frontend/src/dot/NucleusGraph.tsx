@@ -66,7 +66,7 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion() ?? false;
   const devOwner = useOwnerMode();
-  const { user, isOwner, logout, refresh: refreshAuth } = useAuth();
+  const { user, isOwner, logout } = useAuth();
   const pulse = useOrganismPulse();
   // Authoring unlocks for an authenticated owner; `?owner=1` stays a local dev
   // escape hatch (it cannot publish to the server without a real session).
@@ -702,10 +702,6 @@ export const NucleusGraph: React.FC<NucleusGraphProps> = ({ root: seed }) => {
         rootLabel={root.label}
         isOwner={isOwner}
         onCloseSignIn={() => setSignInOpen(false)}
-        onSignedIn={() => {
-          setSignInOpen(false);
-          void refreshAuth();
-        }}
         onCloseInvite={() => setInviteOpen(false)}
         onClosePresence={() => setPresenceOpen(false)}
         onOpenConversations={() => {

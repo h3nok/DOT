@@ -7,7 +7,7 @@ import { useAuth } from "../../../dot/useAuth";
 import { DotWordmark } from "../../../shared/DotWordmark";
 
 export function StudioAuthGate({ children }: { children: ReactNode }) {
-  const { user, loading, refresh } = useAuth();
+  const { user, loading } = useAuth();
   const [signInOpen, setSignInOpen] = useState(false);
 
   if (loading) {
@@ -32,7 +32,8 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
         </p>
         <h1 className="mt-2 font-serif text-3xl font-semibold">Publication Studio</h1>
         <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          Sign in to open your manuscripts, revisions, and release controls.
+          The private studio is not open in this release. Public reading remains
+          available while membership is being prepared.
         </p>
         <button
           type="button"
@@ -40,18 +41,12 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
           className="mt-7 inline-flex min-h-11 items-center gap-2 bg-foreground px-5 text-sm font-semibold text-background"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />
-          Sign in
+          Membership coming soon
         </button>
       </section>
 
       {signInOpen && (
-        <SignIn
-          onClose={() => setSignInOpen(false)}
-          onSignedIn={() => {
-            setSignInOpen(false);
-            void refresh();
-          }}
-        />
+        <SignIn onClose={() => setSignInOpen(false)} />
       )}
     </main>
   );
