@@ -44,7 +44,6 @@ import { siteConfig } from "../../content/site.config";
 import { AppearanceControl } from "../../organism";
 import BookCitation from "./BookCitation";
 import BookLanding from "./BookLanding";
-import ExperienceLoop from "./ExperienceLoop";
 import { TwinSurface } from "../../dot/TwinSurface";
 import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
 
@@ -320,17 +319,6 @@ function BookReader({
             concepts={bookConceptsForSection(section)}
             references={references}
             variant={section.kind === "references" ? "references" : "chapter"}
-            afterHeading={
-              section.slug === "the-canvas"
-                ? {
-                    "the-experience-loop": (
-                      <div className="book-reader-experience-loop">
-                        <ExperienceLoop initialStep="Reality Stream" />
-                      </div>
-                    ),
-                  }
-                : undefined
-            }
           />
 
           <footer className="book-focus-hidden border-t border-border/60 pt-8">
