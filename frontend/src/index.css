@@ -317,10 +317,10 @@ html[data-minty-modal="true"] [data-appearance-control] {
   --book-halo: color-mix(in oklch, var(--organism-accent) 12%, transparent);
   --book-reading-font: "Source Serif 4", Charter, Georgia, serif;
   --book-reading-heading-font: "Playfair Display", Georgia, serif;
-  /* The page must not seal itself off from the organism: the ambient membrane
-     (the member's chosen background — the field of bits by default) shows
-     through, so the Appearance panel governs this surface like every other. */
   background: transparent;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* When the membrane is off, the book keeps its own quiet paper grain instead. */
@@ -435,10 +435,15 @@ html[data-contrast="high"] .book-surface {
 
 .book-reading-copy {
   font-family: var(--book-reading-font);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  font-variant-ligatures: common-ligatures contextual;
+  font-variant-numeric: oldstyle-nums proportional-nums;
 }
 
 .book-reading-heading {
   font-family: var(--book-reading-heading-font);
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-variant-ligatures: common-ligatures;
   letter-spacing: 0;
 }
 
@@ -1666,7 +1671,8 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose blockquote {
-  margin-block: 2.25rem;
+  position: relative;
+  margin-block: 2.5rem;
   border-left-width: 2px;
   border-left-color: color-mix(in oklch, var(--book-cinnabar) 64%, var(--book-hairline));
   background: linear-gradient(
@@ -1674,8 +1680,11 @@ html[data-motion="still"] .dot-emergence-signal {
     color-mix(in oklch, var(--book-gold) 8%, transparent),
     transparent 72%
   );
-  padding: 1.35rem 1.5rem;
-  font-size: calc(1.12rem * var(--reading-scale, 1));
+  padding: 1.5rem 1.75rem;
+  font-family: var(--book-reading-font);
+  font-size: calc(1.1rem * var(--reading-scale, 1));
+  font-style: italic;
+  line-height: 1.7;
 }
 
 .book-prose blockquote > :last-child {
@@ -1699,13 +1708,13 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-prose--chapter > p:first-child::first-letter,
 .book-prose--chapter > h2:first-child + p::first-letter {
   float: left;
-  margin: 0.12em 0.14em 0 0;
+  margin: 0.08em 0.12em 0 0;
   font-family: var(--book-reading-heading-font);
-  font-size: 3.15em;
-  font-weight: 650;
-  line-height: 0.76;
+  font-size: 3.4em;
+  font-weight: 700;
+  line-height: 0.72;
   color: var(--book-cinnabar);
-  text-shadow: none;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 .book-prose--references > p:first-child {
@@ -1858,8 +1867,39 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose hr {
-  margin-block: 3rem;
-  border-color: var(--book-hairline);
+  margin-block: 3.5rem;
+  border: 0;
+  border-top: 1px solid var(--book-hairline);
+  text-align: center;
+}
+
+.book-prose hr::after {
+  position: relative;
+  top: -0.65em;
+  padding: 0 0.75em;
+  background: var(--book-paper, var(--background));
+  color: var(--book-cinnabar);
+  content: "·";
+  font-size: 1.25rem;
+}
+
+/* Golden edition typographic refinements */
+.book-prose p,
+.book-prose li {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 6 3 2;
+  orphans: 2;
+  widows: 2;
+}
+
+.book-prose blockquote {
+  hanging-punctuation: first;
+}
+
+.book-prose--chapter h2 {
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 640px) {
@@ -2114,6 +2154,9 @@ html[data-motion="still"] .dot-emergence-signal {
     line-height: 1.5;
     color: #000;
     text-align: justify;
+    hyphens: auto;
+    orphans: 3;
+    widows: 3;
   }
 
   .book-reading-heading,
