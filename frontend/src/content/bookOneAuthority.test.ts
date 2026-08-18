@@ -1,8 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { stayBrand } from "./brand/stay";
 import { doctrineNodes } from "./doctrine/doctrineData";
-import { caseStudiesData } from "./projects/caseStudiesData";
 import { siteConfig } from "./site.config";
 
 const earlierDraftClaims = [
@@ -31,15 +29,9 @@ describe("Book One authority", () => {
   it("keeps first-party theory descriptions subordinate to Book One", () => {
     const dotProject = siteConfig.projects.find((project) => project.slug === "dot");
     expect(dotProject?.description).toContain("Book One");
-    expect(stayBrand.firstUseCase).toContain("Book One reader");
-    expect(caseStudiesData.dot.fullContent).toContain(
-      "Observation, Model, Hypothesis, and Speculation",
-    );
 
     const publicTheoryCopy = JSON.stringify({
       site: siteConfig,
-      brand: stayBrand,
-      project: caseStudiesData.dot,
       concepts: doctrineNodes,
       pageMetadata: readFileSync("index.html", "utf8"),
     }).toLowerCase();

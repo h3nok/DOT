@@ -1,6 +1,7 @@
-import { ArrowUp, GitBranch, Scale, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { GitBranch, Scale, X } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { InkNib, InkStroke } from "../../../shared/Ink";
 import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
 import type { AgentLens } from "../../../dot/agent";
 
@@ -20,6 +21,27 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   const [selectedLens, setSelectedLens] = useState<AgentLens>("ground");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [strokeWidth, setStrokeWidth] = useState(0);
+
+  /**
+   * The stroke is exactly as long as what has been written.
+   *
+   * A rule spanning the whole field underlines mostly empty paper, which is a
+   * form control's habit, not a pen's — ink only exists where the nib has been.
+   * Width is measured from a mirror of the text in the same face and size,
+   * because the input itself will not report the width of its own value.
+   */
+  useLayoutEffect(() => {
+    const mirror = measureRef.current;
+    const input = inputRef.current;
+    if (!mirror || !input) return;
+    // A touched-down nib leaves a mark before any letter does; an empty focused
+    // field gets that and nothing more.
+    const written = mirror.offsetWidth;
+    const room = input.clientWidth;
+    setStrokeWidth(query ? Math.min(written, room) : 0);
+  }, [query, isFocused]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -80,28 +102,26 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   };
 
   const showCommands = query.trim() === "" || query.trim() === "/";
+  const sendable = Boolean(query.trim()) && query.trim() !== "/";
+
+  /**
+   * Where the writing has got to, in the mark's terms rather than the form's.
+   * `poised` is a nib touched to paper; `writing` is a stroke being laid down;
+   * `striking` is the hand lifting away. The CSS reads only this attribute, so
+   * the appearance never has to re-derive the form's booleans.
+   */
+  const penState = isSubmitting
+    ? "striking"
+    : sendable
+      ? "writing"
+      : isFocused
+        ? "poised"
+        : "resting";
 
   return (
     <div className={`space-y-3 ${className}`}>
       <form onSubmit={submit} className="relative w-full">
-        <div
-          className={`dot-surface flex items-center gap-2.5 rounded-2xl border px-3.5 backdrop-blur-xl transition-all duration-300 shadow-lg ${
-            isFocused
-              ? "border-[color:var(--organism-accent-strong)]/50 bg-background/70 shadow-[color:var(--organism-accent-strong)]/8 ring-1 ring-[color:var(--organism-accent-soft)]/20"
-              : "border-border/20 bg-background/40 shadow-black/[0.03] hover:border-border/40 hover:bg-background/55"
-          }`}
-        >
-          {/* Accent dot / pulse indicator */}
-          <span
-            className={`h-2 w-2 shrink-0 rounded-full transition-all duration-500 ${
-              isSubmitting
-                ? "scale-150 bg-[color:var(--organism-accent-strong)] shadow-[0_0_12px_var(--organism-accent-strong)]"
-                : isFocused
-                ? "bg-[color:var(--organism-accent-strong)] shadow-[0_0_8px_var(--organism-accent-soft)]"
-                : "bg-[color:var(--organism-accent-strong)]/40"
-            }`}
-          />
-
+        <div className="home-ask" data-pen={penState}>
           <input
             ref={inputRef}
             value={query}
@@ -115,8 +135,17 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
                 : "Ask Minty about Book One…"
             }
             aria-label="Ask a question about Digital Organism Theory"
-            className="h-12 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/60 sm:h-14"
+            className="home-ask__input placeholder:text-muted-foreground/55"
           />
+
+          {/* Mirrors the value in the same face so the stroke can be measured
+              against real text rather than an estimate. */}
+          <span ref={measureRef} className="home-ask__measure" aria-hidden="true">
+            {query}
+          </span>
+
+          {/* The mark the pen leaves. It is the whole of the pen we show. */}
+          <InkStroke width={strokeWidth} className="home-ask__stroke" />
 
           {/* Lens stance mode toggle */}
           <button
@@ -171,15 +200,11 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
 
           <button
             type="submit"
-            disabled={!query.trim() || query.trim() === "/" || isSubmitting}
+            disabled={!sendable || isSubmitting}
             aria-label="Send"
-            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-              query.trim() && query.trim() !== "/"
-                ? "bg-[color:var(--organism-accent-strong)] text-background shadow-md shadow-[color:var(--organism-accent-strong)]/25 hover:scale-[1.03] active:scale-[0.97]"
-                : "bg-foreground/[0.06] text-muted-foreground/40"
-            }`}
+            className="home-ask__nib"
           >
-            <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
+            <InkNib charged={sendable} className="home-ask__nib-mark" />
           </button>
         </div>
 

@@ -101,6 +101,9 @@ describe("TwinSurface", () => {
         "ground",
         expect.any(Function),
         null,
+        // The retrieval sink: the stream reports which sections it opened
+        // before it writes, and the surface names them while the reader waits.
+        expect.any(Function),
       ),
     );
   });
@@ -125,6 +128,7 @@ describe("TwinSurface", () => {
         "ground",
         expect.any(Function),
         { section: "the-canvas", title: "The Canvas" },
+        expect.any(Function),
       ),
     );
   });

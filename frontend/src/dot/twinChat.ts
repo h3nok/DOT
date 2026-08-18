@@ -183,8 +183,10 @@ function turnFrom(
 
 /** Server-sent events the public streaming endpoint emits. */
 interface TwinStreamEvent {
-  event: "delta" | "done" | "refused";
+  event: "retrieval" | "delta" | "done" | "refused";
   text?: string;
+  /** Section labels actually opened, sent before generation begins. */
+  sources?: string[];
   answer?: string;
   citations?: TwinCitation[];
   grounded?: boolean;
@@ -204,6 +206,7 @@ export async function sendMessageStream(
   lens: AgentLens = "ground",
   onDelta: (accumulated: string) => void,
   reading?: ReadingPosition | null,
+  onRetrieval?: (sources: string[]) => void,
 ): Promise<SendOutcome | null> {
   let response: Response;
   try {
@@ -231,7 +234,11 @@ export async function sendMessageStream(
   let final: TwinStreamEvent | null = null;
 
   const handle = (event: TwinStreamEvent) => {
-    if (event.event === "delta" && typeof event.text === "string") {
+    if (event.event === "retrieval") {
+      // Arrives before any prose. Optional by design: an older orchestrator
+      // simply never sends it, and the caller shows the plain waiting state.
+      if (Array.isArray(event.sources)) onRetrieval?.(event.sources);
+    } else if (event.event === "delta" && typeof event.text === "string") {
       accumulated += event.text;
       onDelta(accumulated);
     } else if (event.event === "done" || event.event === "refused") {

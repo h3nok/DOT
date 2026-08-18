@@ -5648,3 +5648,74 @@ html[data-motion="still"] .dot-emergence-signal {
     word-break: break-all;
   }
 }
+
+/* ── Minty, writing ───────────────────────────────────────────────────────────
+ *
+ * The waiting state sits in the answer's slot, so everything here is sized and
+ * spaced to match the prose that replaces it. Nothing may shift when the first
+ * token lands.
+ */
+
+.minty-writing {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  /* The height a first line of answer prose occupies, held open so the column
+     does not grow underneath the reader mid-sentence. */
+  min-height: 2.6rem;
+  padding-top: 0.35rem;
+}
+
+.minty-writing__stroke {
+  height: 6px;
+  color: var(--organism-accent-strong);
+  opacity: 0.85;
+}
+
+.minty-writing__note {
+  font-family: var(--book-reading-font, "Source Serif 4", Georgia, serif);
+  font-style: italic;
+  font-size: 0.94rem;
+  color: var(--muted-foreground);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion="full"] .minty-writing__stroke {
+    /* Slower than the hero's stroke: that one follows a hand that is already
+       moving, this one is a hand deciding what to write. */
+    transition: width 900ms cubic-bezier(0.33, 0.9, 0.4, 1);
+  }
+}
+
+/* ── The mark at work, in one rhythm ──────────────────────────────────────────
+ *
+ * The four parts used to run at 9s, 2.8s, 2.1s and 1.4s. Every pair is out of
+ * phase with every other, so the composite never repeats and the mark reads as
+ * four things animating rather than as one thing thinking. Harmonising them on
+ * a single 1.6s beat — core every beat, ring and field every two, arcs every
+ * eight — gives the mark a pulse instead of a flicker, and it resolves often
+ * enough that the eye can settle on it.
+ */
+.nucleus-mark[data-thinking="true"] .nucleus-mark-core {
+  animation-duration: 1.6s;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-inner {
+  animation-duration: 3.2s;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-field {
+  animation-duration: 3.2s;
+  animation-delay: -1.6s;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-arcs {
+  animation-duration: 12.8s;
+}
+
+/* The sections Minty opened. Set in the reading face, because they are titles
+   from the book rather than interface labels. */
+.minty-writing__opened {
+  font-style: normal;
+  color: color-mix(in oklch, var(--muted-foreground) 70%, var(--organism-accent-strong));
+}

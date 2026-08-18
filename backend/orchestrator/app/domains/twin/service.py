@@ -553,6 +553,25 @@ def _partial_answer(raw: str) -> str:
     return "".join(out)
 
 
+def _retrieved_labels(passages: typing.Sequence[retriever.Passage], limit: int = 4) -> list[str]:
+    """The distinct sources a question reached, in retrieval order.
+
+    Deduped and capped: the reader is being told what is being read, not handed
+    a search dump, and a long list during a short wait is noise rather than
+    information.
+    """
+
+    labels: list[str] = []
+    for passage in passages:
+        label: str = passage.label.strip()
+        if not label or label in labels:
+            continue
+        labels.append(label)
+        if len(labels) == limit:
+            break
+    return labels
+
+
 async def ask_stream(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     requester: app.auth.dependencies.OwnerContext,
@@ -589,6 +608,14 @@ async def ask_stream(
         yield {"event": "refused", "answer": refusal.answer, "refusal_code": refusal.refusal_code}
         return
     passages, scholarship_available = await _with_scholarship(passages, payload.question)
+    # What was actually opened, before a word is generated.
+    #
+    # Grounding is the whole claim this companion makes, and it was the one part
+    # the reader could not see: the wait showed a spinner, which is a promise
+    # that something is happening rather than evidence of it. These are the same
+    # labels the terminal `done` event carries as citations, so nothing new is
+    # disclosed — they simply arrive while they are still worth knowing.
+    yield {"event": "retrieval", "sources": _retrieved_labels(passages)}
 
     fragments: list[dict[str, typing.Any]] = retriever.passages_to_fragments(passages)
     user_message: str = (

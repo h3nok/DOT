@@ -47,6 +47,7 @@ import {
 import type { ReadingPosition } from "./bookCompanion";
 import type { AgentLens } from "./agent";
 import type { AgentWorkspaceRequest } from "./AgentWorkspace";
+import { MintyWriting } from "./MintyWriting";
 import "katex/dist/katex.min.css";
 
 /** Whether this release names a backend at all; see the note in the empty state. */
@@ -541,6 +542,8 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
   const [busy, setBusy] = useState(false);
   // The in-progress answer text while a public answer streams in. Null when idle.
   const [streamingText, setStreamingText] = useState<string | null>(null);
+  /** Sources Minty opened for the question in flight. Cleared on each ask. */
+  const [retrieved, setRetrieved] = useState<string[]>([]);
   const sidecar = variant === "sidecar";
   const [wideViewport, setWideViewport] = useState(() =>
     typeof window === "undefined"
@@ -793,6 +796,9 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
     if (trimmed.length < 2 || busy) return;
     setValue("");
     setBusy(true);
+    // Last question's sources are not this question's. Clearing here rather
+    // than on completion means the wait never opens showing the wrong reading.
+    setRetrieved([]);
     // Asking is itself a request to see the answer, so re-follow even if the
     // reader had scrolled up to re-read something before typing.
     stickToBottom.current = true;
@@ -824,6 +830,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
                 requestedLens,
                 (text) => setStreamingText(text),
                 reading,
+                setRetrieved,
               );
               setStreamingText(null);
               // A null means streaming was unavailable; fall back to the
@@ -1292,20 +1299,31 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               <AnswerMarkdown streaming>{smoothedStream}</AnswerMarkdown>
             </motion.article>
           ) : busy ? (
-            /* The DOT mark itself at work while Minty gathers the thread: the
-               same identity the site is built around, thinking. */
-            <motion.div
+            /* Waiting sits in the answer's own place.
+             *
+             * This used to be an 86px mark centred under ten rems of padding,
+             * which meant the first token landing threw the whole column: a
+             * large centred spinner became a small left-aligned byline, and the
+             * reader's eye had to find the sentence again. Holding the answer's
+             * exact slot — same label, same mark, same alignment — means nothing
+             * moves when the prose arrives. It simply begins.
+             *
+             * The mark is the site's own, and the stroke is the hero's ink: the
+             * reader wrote the question with it, and Minty answers in the same
+             * hand. */
+            <motion.article
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center gap-5 py-10"
+              className="max-w-full"
               aria-live="polite"
               role="status"
             >
-              <NucleusMark size={86} thinking reducedMotion={reducedMotion} />
-              <span className="font-serif text-base italic text-muted-foreground">
-                Tracing the question through its sources…
-              </span>
-            </motion.div>
+              <p className="mb-2 flex items-center gap-2 dot-label">
+                <NucleusMark size={18} thinking reducedMotion={reducedMotion} />
+                Minty
+              </p>
+              <MintyWriting reducedMotion={reducedMotion} sources={retrieved} />
+            </motion.article>
           ) : null}
           <div ref={endRef} />
         </motion.div>

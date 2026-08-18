@@ -2210,3 +2210,266 @@ html[data-contrast="high"] .home-environment::after {
     display: none;
   }
 }
+
+/* ── The ask, written in ink ──────────────────────────────────────────────────
+ *
+ * The pen is not drawn here. It is evidenced, by the mark it leaves.
+ *
+ * A first pass built the pen out of hardware — cap, clip, grip section, plated
+ * nib — and it read as four chrome props sitting on a glass pill, because that
+ * is what it was. Parts are not what makes an object feel expensive; a single
+ * material, held consistently, is. So the hardware is gone and what remains is
+ * a sheet of paper, a stroke, and one stamped mark.
+ *
+ * It is also the truer reading of the phrase. A pen outlasts a sword because of
+ * what it writes, not because of what it is milled from.
+ *
+ * Three rules hold it together:
+ *   · One accent. Ink is the organism's living accent and nothing else is
+ *     coloured, so the eye has exactly one thing to follow.
+ *   · No gradients on the marks. Ink is flat. Gradients on a mark are what made
+ *     the nib read as a rendered icon rather than as something stamped.
+ *   · Every edge is either paper or ink. There is no third material.
+ */
+
+.home-ask {
+  --ask-ink: var(--organism-accent-strong);
+  /* Paper is a tint of the page, never a slab of white dropped on top: the
+     surface has to belong to the environment it is sitting in. */
+  --ask-paper: color-mix(in oklch, var(--background) 82%, transparent);
+  --ask-edge: color-mix(in oklch, var(--foreground) 13%, transparent);
+  --ask-lift: 0 1px 2px color-mix(in oklch, var(--foreground) 6%, transparent),
+    0 12px 28px -20px color-mix(in oklch, var(--foreground) 34%, transparent);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-inline: 1.15rem 0.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--ask-edge);
+  background: var(--ask-paper);
+  box-shadow: var(--ask-lift);
+  backdrop-filter: blur(18px);
+  transition:
+    border-color 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Focus is a sheet lifting very slightly toward the reader, not a ring drawn
+   around it. Rings are UI; paper moves. */
+.home-ask[data-pen="poised"],
+.home-ask[data-pen="writing"] {
+  border-color: color-mix(in oklch, var(--ask-ink) 34%, var(--ask-edge));
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--foreground) 7%, transparent),
+    0 18px 40px -24px color-mix(in oklch, var(--ask-ink) 46%, transparent);
+}
+
+/* The question is set in the book's own face. Asking about Book One in the
+   type Book One is set in is the cheapest premium cue available, and the only
+   one here that costs nothing at all. */
+.home-ask__input {
+  min-width: 0;
+  flex: 1;
+  height: 3.4rem;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--foreground);
+  font-family: var(--book-reading-font, "Source Serif 4", Georgia, serif);
+  font-size: 1.02rem;
+  letter-spacing: 0.004em;
+}
+
+/* ── The stroke ─────────────────────────────────────────────────────────────
+ *
+ * The mark under the question. It is a filled shape rather than a stroked line
+ * because a pen stroke has width that varies along its length — blunt where the
+ * nib lands, full where the hand is at speed, a hairline as it lifts. A uniform
+ * 1px rule is a form field's underline, and that single detail is most of what
+ * made the earlier version read as cheap.
+ *
+ * It is revealed with an inset clip so the stroke is *laid down* left to right,
+ * the direction it would actually be written.
+ */
+.home-ask__stroke {
+  position: absolute;
+  left: 1.2rem;
+  bottom: 0.62rem;
+  height: 6px;
+  max-width: calc(100% - 4.8rem);
+  color: var(--ask-ink);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* A nib touched to paper leaves a mark before any letter does. */
+.home-ask[data-pen="poised"] .home-ask__stroke {
+  width: 0.85rem !important;
+}
+
+/* The hand lifting: the stroke carries on past the end of the word and thins
+   away, rather than blinking out. */
+.home-ask[data-pen="striking"] .home-ask__stroke {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+/* Mirrors the input's text purely to be measured. Out of flow, unpainted, and
+   hidden from assistive tech — it exists so the stroke can know how long the
+   sentence is. */
+.home-ask__measure {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  white-space: pre;
+  visibility: hidden;
+  pointer-events: none;
+  font-family: var(--book-reading-font, "Source Serif 4", Georgia, serif);
+  font-size: 1.02rem;
+  letter-spacing: 0.004em;
+}
+
+/* ── The send mark ──────────────────────────────────────────────────────────── */
+
+.home-ask__nib {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  /* The mark is small; the target is not. */
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 0.55rem;
+  color: var(--ask-ink);
+  cursor: pointer;
+}
+
+.home-ask__nib:disabled {
+  cursor: default;
+  color: color-mix(in oklch, var(--foreground) 34%, transparent);
+}
+
+.home-ask__nib:focus-visible {
+  outline: 2px solid var(--ask-ink);
+  outline-offset: 3px;
+}
+
+.home-ask__nib-mark {
+  width: 1.6rem;
+  height: 1.26rem;
+  overflow: visible;
+}
+
+/* Dry: the outline alone. Charged: it floods. One property carries the whole
+   state change, which is why it reads as a single decision rather than as a
+   widget lighting up. */
+.ink-nib-shape {
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+}
+
+.home-ask__nib-mark[data-charged="true"] .ink-nib-shape {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0.9;
+}
+
+/* ── Themed ─────────────────────────────────────────────────────────────────
+ *
+ * Paper takes its tint from the environment's own paper tone, which is the
+ * setting it was already there to describe. Ink is always the living accent.
+ * Nothing else varies, because nothing else is a material.
+ */
+
+:root[data-paper="warm"] .home-ask {
+  --ask-paper: color-mix(in oklch, var(--background) 78%, oklch(0.9 0.035 82));
+}
+
+:root[data-paper="sepia"] .home-ask {
+  --ask-paper: color-mix(in oklch, var(--background) 76%, oklch(0.84 0.045 62));
+}
+
+:root[data-paper="cool"] .home-ask {
+  --ask-paper: color-mix(in oklch, var(--background) 80%, oklch(0.88 0.02 235));
+}
+
+/* Clarity asks for nothing between the reader and the words, so the sheet stops
+   pretending to float: no blur, no lift, a plain ruled edge. */
+:root[data-ui-style="minimal"] .home-ask {
+  --ask-lift: none;
+  border-radius: 0.4rem;
+  border-color: color-mix(in oklch, var(--foreground) 42%, transparent);
+  background: color-mix(in oklch, var(--background) 94%, transparent);
+  backdrop-filter: none;
+}
+
+:root[data-ui-style="organic"] .home-ask {
+  border-radius: 1.35rem;
+  backdrop-filter: blur(9px);
+}
+
+/* Nocturne: a sheet lit in a dark room, so the drop is deeper and the edge
+   catches slightly more light than it otherwise would. */
+:root[data-ui-style="cinematic"] .home-ask {
+  --ask-edge: color-mix(in oklch, var(--foreground) 22%, transparent);
+  --ask-lift: 0 1px 2px color-mix(in oklch, oklch(0 0 0) 40%, transparent),
+    0 26px 54px -28px color-mix(in oklch, oklch(0 0 0) 82%, transparent);
+}
+
+:root[data-contrast="high"] .home-ask {
+  --ask-edge: color-mix(in oklch, var(--foreground) 58%, transparent);
+}
+
+:root[data-contrast="high"] .home-ask__stroke {
+  opacity: 1;
+}
+
+/* Motion is opt-in twice: the OS preference, and the reader's own Stillness
+   switch. Honouring only the first would animate for someone who asked this
+   site specifically to hold still. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="full"] .home-ask__stroke {
+    /* Ink accelerates away from the nib and settles; it does not ease evenly.
+       The curve is the difference between a stroke and a progress bar. */
+    transition:
+      width 260ms cubic-bezier(0.16, 0.84, 0.28, 1),
+      opacity 260ms ease,
+      transform 380ms cubic-bezier(0.32, 0, 0.67, 0);
+  }
+
+  :root[data-motion="full"] .ink-nib-shape {
+    transition:
+      fill 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      stroke-width 320ms ease;
+  }
+
+  :root[data-motion="full"] .home-ask__nib-mark {
+    transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  :root[data-motion="full"] .home-ask__nib:not(:disabled):hover .home-ask__nib-mark {
+    transform: translateX(2px);
+  }
+
+  :root[data-motion="full"] .home-ask[data-pen="striking"] .home-ask__nib-mark {
+    transform: translateX(7px);
+  }
+}
+
+@media (max-width: 26rem) {
+  .home-ask {
+    padding-inline: 0.85rem 0.35rem;
+  }
+
+  .home-ask__stroke {
+    left: 0.9rem;
+    right: 3rem;
+  }
+}
