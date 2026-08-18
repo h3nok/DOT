@@ -152,20 +152,6 @@ html[data-minty-resizing] * {
 }
 
 /* Glassmorphic responsive scrollbar utilities */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in oklch, var(--border) 30%, transparent);
-  border-radius: 9999px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklch, var(--primary) 50%, transparent);
-}
 
 /* Holographic breathing glow animation */
 @keyframes holographicGlow {
@@ -184,10 +170,6 @@ html[data-minty-resizing] * {
   }
 }
 
-.animate-holo-glow {
-  animation: holographicGlow 4s ease-in-out infinite;
-}
-
 /* Shimmer light-sweep effect for high-tech premium buttons/capsules */
 @keyframes shimmerSweep {
   0% {
@@ -197,24 +179,6 @@ html[data-minty-resizing] * {
   100% {
     transform: translateX(150%) skewX(-20deg);
   }
-}
-
-.shimmer-sweep-element {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.08) 30%,
-    rgba(255, 255, 255, 0.18) 50%,
-    rgba(255, 255, 255, 0.08) 70%,
-    transparent 100%
-  );
-  transform: translateX(-150%) skewX(-20deg);
-  pointer-events: none;
 }
 
 /* Subtle breathing border/pulse animation for the Sovereign Digital Twin capsule */
@@ -228,10 +192,6 @@ html[data-minty-resizing] * {
     border-color: color-mix(in oklch, var(--foreground) 32%, transparent);
     box-shadow: 0 0 20px color-mix(in oklch, var(--foreground) 10%, transparent);
   }
-}
-
-.animate-border-pulse {
-  animation: borderPulse 4s ease-in-out infinite;
 }
 
 /* Entry reveal for the front door's copy.
@@ -250,10 +210,6 @@ html[data-minty-resizing] * {
   }
 }
 
-.dot-rise {
-  animation: dotRise 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
 /* The blank field the organism arrives into, lifting to reveal the living
    background behind it. */
 @keyframes dotVeilLift {
@@ -262,20 +218,6 @@ html[data-minty-resizing] * {
   }
   to {
     opacity: 0;
-  }
-}
-
-.dot-veil {
-  animation: dotVeilLift 1600ms ease-out 500ms both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dot-rise,
-  .dot-veil {
-    animation: none;
-  }
-  .dot-veil {
-    display: none;
   }
 }
 
@@ -1178,38 +1120,8 @@ html[data-motion="still"] .book-substrate-flow {
    above; the field is allowed to be visible; and legibility is bought locally,
    behind the words themselves, rather than by washing out the whole middle. */
 
-.book-engraved-frontispiece {
-  position: relative;
-  background: transparent;
-  color: var(--foreground);
-}
-
 /* Legibility, bought where it is needed. A column-width scrim sits behind the
    words only; everywhere else the field is left alone. */
-.book-frontispiece-wash {
-  --cover-scrim: color-mix(in oklch, var(--background) 74%, transparent);
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    var(--cover-scrim) 14%,
-    var(--cover-scrim) 78%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 16%,
-    #000 84%,
-    transparent 100%
-  );
-}
 
 /* The field is the only thing on this page that is uniquely this book's. It
    was held at 0.32 and then veiled; here it is simply allowed to be seen. */
@@ -1221,46 +1133,7 @@ html[data-contrast="high"] .book-engraved-frontispiece .dot-emergence-field {
   opacity: 0.24;
 }
 
-html[data-contrast="high"] .book-frontispiece-wash {
-  --cover-scrim: color-mix(in oklch, var(--background) 90%, transparent);
-}
-
 /* The epigraph, promoted out of the footnote it was set in. */
-.book-frontispiece-epigraph {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-style: italic;
-  color: color-mix(in oklch, var(--foreground) 62%, transparent);
-}
-
-.book-frontispiece-epigraph::before,
-.book-frontispiece-epigraph::after {
-  content: "";
-  display: inline-block;
-  width: clamp(1.25rem, 4vw, 2.5rem);
-  height: 1px;
-  vertical-align: middle;
-  background: var(--book-hairline);
-}
-
-.book-frontispiece-epigraph::before {
-  margin-right: 0.75rem;
-}
-
-.book-frontispiece-epigraph::after {
-  margin-left: 0.75rem;
-}
-
-.book-model-orientation {
-  background: color-mix(in oklch, var(--book-paper) 90%, var(--book-verdigris));
-}
-
-.book-model-movement-step {
-  border-bottom: 1px solid var(--book-hairline);
-}
-
-.book-model-movement-step:last-child {
-  border-bottom: 0;
-}
 
 .book-reader {
   position: relative;
@@ -1380,18 +1253,6 @@ html[data-contrast="high"] .book-reader::before {
   opacity: 0.56;
 }
 
-.dot-emergence-stage-one {
-  opacity: 0.28;
-}
-
-.dot-emergence-stage-two {
-  opacity: 0.36;
-}
-
-.dot-emergence-stage-3 {
-  opacity: 0.72;
-}
-
 .dot-emergence-matrix {
   fill: none;
   stroke: currentColor;
@@ -1501,11 +1362,6 @@ html[data-motion="still"] .dot-emergence-signal {
   display: none;
 }
 
-.dot-emergence-field--cover {
-  --dot-field-ink: color-mix(in oklch, var(--foreground) 80%, var(--background));
-  opacity: 0.92;
-}
-
 .dot-emergence-field--cover .dot-emergence-stage-3,
 .dot-emergence-field--cover .dot-emergence-memory,
 .dot-emergence-field--cover .dot-emergence-local {
@@ -1576,34 +1432,6 @@ html[data-motion="still"] .dot-emergence-signal {
   outline-offset: 3px;
 }
 
-.book-frontispiece-secondary-action {
-  color: color-mix(in oklch, var(--organism-accent-strong) 68%, var(--foreground));
-  text-decoration-color: color-mix(in oklch, var(--organism-accent) 62%, transparent);
-}
-
-.book-frontispiece-secondary-action svg {
-  color: var(--organism-accent-strong);
-}
-
-.book-frontispiece-secondary-action:hover,
-.book-frontispiece-secondary-action:focus-visible {
-  color: var(--foreground);
-  text-decoration-color: var(--organism-accent-strong);
-}
-
-.book-frontispiece-download-action {
-  color: color-mix(in oklch, var(--organism-accent) 46%, var(--muted-foreground));
-}
-
-.book-frontispiece-download-action svg {
-  color: var(--organism-accent-strong);
-}
-
-.book-frontispiece-download-action:hover,
-.book-frontispiece-download-action:focus-visible {
-  color: var(--foreground);
-}
-
 .book-digital-cover {
   background:
     radial-gradient(
@@ -1645,651 +1473,6 @@ html[data-motion="still"] .dot-emergence-signal {
       color-mix(in oklch, var(--book-paper) 88%, var(--foreground) 4%),
       color-mix(in oklab, var(--book-paper) 96%, transparent)
     );
-}
-
-.book-depth-field {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      color-mix(in oklch, var(--organism-accent-soft) 9%, transparent) 50%,
-      transparent
-    ),
-    repeating-linear-gradient(
-      115deg,
-      transparent 0 2.75rem,
-      color-mix(in oklch, var(--foreground) 5%, transparent) 2.75rem 2.82rem
-    );
-  mask-image: linear-gradient(180deg, black, black 74%, transparent);
-  opacity: 0.9;
-}
-
-.book-hero-nucleus {
-  position: absolute;
-  right: -4rem;
-  top: 50%;
-  color: var(--book-ink);
-  opacity: 0.2;
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.book-hero-stage {
-  position: relative;
-  min-height: clamp(22rem, 42vw, 38rem);
-  isolation: isolate;
-  perspective: 1100px;
-  transform-style: preserve-3d;
-}
-
-.book-hero-stage::before,
-.book-hero-stage::after {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  pointer-events: none;
-  content: "";
-  transform: translate(-50%, -50%) rotateX(62deg) rotateZ(-14deg);
-}
-
-.book-hero-stage::before {
-  z-index: -1;
-  width: min(84%, 31rem);
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background: conic-gradient(
-    from 220deg,
-    color-mix(in oklch, oklch(0.72 0.13 230) 22%, transparent),
-    color-mix(in oklch, oklch(0.68 0.16 40) 18%, transparent),
-    color-mix(in oklch, oklch(0.78 0.13 85) 20%, transparent),
-    color-mix(in oklch, oklch(0.72 0.12 165) 18%, transparent),
-    color-mix(in oklch, oklch(0.68 0.14 300) 20%, transparent),
-    color-mix(in oklch, oklch(0.72 0.13 230) 22%, transparent)
-  );
-  filter: blur(20px);
-  opacity: 0.62;
-}
-
-.book-hero-stage::after {
-  width: min(58%, 21.5rem);
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in oklch, var(--foreground) 12%, transparent);
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    transparent 42%,
-    color-mix(in oklch, var(--book-gold) 12%, transparent) 43%,
-    transparent 45%
-  );
-  opacity: 0.9;
-}
-
-.book-depth-grid,
-.book-hero-ring,
-.book-manuscript,
-.book-loop-node {
-  position: absolute;
-}
-
-.book-depth-grid {
-  inset: 9% 5% 5%;
-  background-image:
-    linear-gradient(
-      color-mix(in oklch, var(--foreground) 7%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      color-mix(in oklch, var(--foreground) 7%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 3rem 3rem;
-  mask-image: linear-gradient(180deg, transparent, black 24%, black 74%, transparent);
-  opacity: 0.58;
-  transform: rotateX(64deg) rotateZ(-12deg) translateY(1rem);
-  transform-origin: 50% 70%;
-}
-
-.book-hero-ring {
-  inset: 50% auto auto 50%;
-  border: 1px solid color-mix(in oklch, var(--book-gold) 26%, transparent);
-  border-radius: 9999px;
-  transform: translate(-50%, -50%) rotateX(62deg) rotateZ(-14deg);
-}
-
-.book-hero-ring-outer {
-  width: min(92%, 34rem);
-  aspect-ratio: 1;
-  border-style: solid;
-  border-color: color-mix(in oklch, var(--book-gold) 34%, transparent);
-  box-shadow:
-    0 0 70px color-mix(in oklch, var(--book-gold) 14%, transparent),
-    inset 0 0 30px color-mix(in oklab, var(--book-ink) 6%, transparent);
-}
-
-.book-hero-ring-inner {
-  width: min(62%, 23rem);
-  aspect-ratio: 1;
-  border-color: color-mix(in oklch, var(--book-cinnabar) 32%, transparent);
-}
-
-.book-manuscript {
-  inset: 50% auto auto 50%;
-  width: clamp(14rem, 26.5vw, 23.5rem);
-  aspect-ratio: 0.72;
-  transform: translate(-53%, -50%) rotateX(55deg) rotateZ(-17deg);
-  transform-style: preserve-3d;
-}
-
-.book-manuscript-plane {
-  position: absolute;
-  inset: 0;
-  border: 1px solid color-mix(in oklch, var(--book-gold) 52%, var(--book-hairline));
-  background:
-    repeating-linear-gradient(
-      90deg,
-      color-mix(in oklch, var(--foreground) 5%, transparent) 0 1px,
-      transparent 1px 1.25rem
-    ),
-    repeating-linear-gradient(
-      0deg,
-      color-mix(in oklch, var(--foreground) 4%, transparent) 0 1px,
-      transparent 1px 1.25rem
-    ),
-    linear-gradient(
-      135deg,
-      color-mix(in oklch, var(--book-vellum) 62%, var(--foreground) 20%),
-      color-mix(in oklch, var(--book-paper) 84%, var(--foreground) 7%)
-    );
-  box-shadow:
-    0 2.8rem 5.2rem color-mix(in oklch, black 56%, transparent),
-    0 0 5.8rem color-mix(in oklch, var(--book-gold) 18%, transparent),
-    0 0 0 0.85rem color-mix(in oklab, var(--book-paper) 50%, transparent),
-    inset 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent);
-  transform-style: preserve-3d;
-}
-
-.book-manuscript-plane::before,
-.book-manuscript-plane::after {
-  position: absolute;
-  content: "";
-}
-
-.book-manuscript-plane::before {
-  inset: 0 auto 0 0;
-  width: 0.78rem;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--book-gold) 26%, transparent),
-    color-mix(in oklch, var(--book-cinnabar) 18%, transparent)
-  );
-}
-
-.book-manuscript-plane::after {
-  inset: auto 0 -0.9rem 0.9rem;
-  height: 0.9rem;
-  border: 1px solid color-mix(in oklch, var(--book-hairline) 80%, transparent);
-  background: color-mix(in oklch, var(--book-paper) 70%, black 12%);
-  transform: skewX(-42deg);
-  transform-origin: top;
-}
-
-.book-manuscript-face {
-  position: absolute;
-  inset: 1.1rem 1.1rem 1.4rem 1.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  color: var(--book-ink);
-  text-align: center;
-  transform: translateZ(1.5rem);
-}
-
-.book-manuscript-face::before,
-.book-manuscript-face::after {
-  position: absolute;
-  pointer-events: none;
-  content: "";
-}
-
-.book-manuscript-face::before {
-  inset: 0.7rem;
-  border: 1px solid color-mix(in oklch, var(--book-gold) 20%, transparent);
-  background:
-    linear-gradient(
-      90deg,
-      transparent calc(50% - 0.5px),
-      color-mix(in oklch, var(--book-gold) 16%, transparent) 50%,
-      transparent calc(50% + 0.5px)
-    ),
-    linear-gradient(
-      0deg,
-      transparent calc(50% - 0.5px),
-      color-mix(in oklch, var(--book-gold) 13%, transparent) 50%,
-      transparent calc(50% + 0.5px)
-    );
-  opacity: 0.7;
-}
-
-.book-manuscript-face::after {
-  bottom: 1.05rem;
-  left: 50%;
-  width: 5.5rem;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in oklch, var(--book-gold) 70%, transparent),
-    transparent
-  );
-  transform: translateX(-50%);
-}
-
-.book-manuscript-mark {
-  --organism-accent: var(--book-dot);
-  --organism-accent-strong: var(--book-dot-bright);
-  position: relative;
-  opacity: 1;
-  filter:
-    drop-shadow(0 0 1.15rem color-mix(in oklch, var(--book-dot-bright) 72%, transparent))
-    drop-shadow(0 0 4.4rem color-mix(in oklch, var(--book-dot) 32%, transparent));
-}
-
-.book-manuscript-mark svg {
-  overflow: visible;
-}
-
-.book-manuscript-mark svg circle {
-  stroke-width: 1.35;
-}
-
-.book-manuscript-mark svg circle:not([fill]) {
-  opacity: 0.9;
-}
-
-.book-manuscript-mark svg circle[fill] {
-  fill: var(--book-dot-bright);
-  opacity: 1;
-}
-
-.book-manuscript-label,
-.book-manuscript-subline,
-.book-loop-node {
-  font-family: "JetBrains Mono", monospace;
-  text-transform: uppercase;
-}
-
-.book-manuscript-label {
-  font-size: 0.66rem;
-  letter-spacing: 0.22em;
-  color: color-mix(in oklch, var(--book-gold) 76%, var(--book-ink));
-}
-
-.book-manuscript-subline {
-  max-width: 11rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
-  line-height: 1.6;
-  color: var(--book-muted);
-}
-
-.book-loop-node {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.44rem;
-  overflow: hidden;
-  isolation: isolate;
-  border: 1px solid color-mix(in oklch, var(--step-color, var(--book-gold)) 45%, var(--book-hairline));
-  border-radius: 9999px;
-  background: color-mix(in oklab, var(--book-paper) 88%, transparent);
-  box-shadow:
-    0 1rem 2.2rem color-mix(in oklch, black 24%, transparent),
-    0 0 1.4rem color-mix(in oklch, var(--step-color, var(--book-gold)) 18%, transparent);
-  padding: 0.36rem 0.72rem 0.36rem 0.38rem;
-  font-size: 0.64rem;
-  font-weight: 650;
-  letter-spacing: 0;
-  color: color-mix(in oklch, var(--step-color, var(--book-muted)) 60%, var(--book-ink));
-  backdrop-filter: blur(18px);
-}
-
-.book-loop-node::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklch, var(--step-color, var(--book-gold)) 18%, transparent),
-    transparent 65%
-  );
-  content: "";
-}
-
-.book-loop-node-orb {
-  display: grid;
-  width: 1.45rem;
-  height: 1.45rem;
-  flex-shrink: 0;
-  place-items: center;
-  border: 1px solid color-mix(in oklch, var(--step-color, var(--book-gold)) 58%, transparent);
-  border-radius: 9999px;
-  background: color-mix(in oklch, var(--step-color, var(--book-gold)) 13%, var(--book-paper));
-  box-shadow: 0 0 1rem color-mix(in oklch, var(--step-color, var(--book-gold)) 24%, transparent);
-}
-
-.book-loop-node-icon {
-  width: 0.76rem;
-  height: 0.76rem;
-  flex-shrink: 0;
-  color: var(--step-color, var(--book-cinnabar));
-}
-
-.book-loop-node-text {
-  position: relative;
-  text-transform: none;
-}
-
-.book-loop-node-0 {
-  left: 42%;
-  top: 2%;
-}
-
-.book-loop-node-1 {
-  right: 6%;
-  top: 31%;
-}
-
-.book-loop-node-2 {
-  bottom: 5%;
-  right: 23%;
-}
-
-.book-loop-node-3 {
-  bottom: 9%;
-  left: 12%;
-}
-
-.book-loop-node-4 {
-  left: 5%;
-  top: 34%;
-}
-
-.book-hero-masthead {
-  position: relative;
-  display: flex;
-  width: fit-content;
-  max-width: 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1.45rem;
-  border-block: 1px solid color-mix(in oklch, var(--book-hairline) 80%, transparent);
-  padding-block: 0.48rem;
-}
-
-.book-seal {
-  display: inline-flex;
-  max-width: 100%;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in oklch, var(--book-ink) 68%, var(--book-cinnabar));
-}
-
-.book-seal > span {
-  box-shadow: 0 0 0.9rem color-mix(in oklch, var(--book-gold) 42%, transparent);
-}
-
-.book-overline {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  color: color-mix(in oklch, var(--book-ink) 66%, var(--book-muted));
-}
-
-.book-label-pill {
-  display: inline-flex;
-  max-width: 100%;
-  align-items: center;
-  border-left: 1px solid color-mix(in oklch, var(--book-gold) 36%, transparent);
-  padding: 0.1rem 0 0.1rem 0.9rem;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: color-mix(in oklch, var(--book-ink) 58%, var(--book-muted));
-}
-
-.book-hero-title {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 1.05rem;
-  max-width: 41rem;
-  color: var(--book-ink);
-  letter-spacing: 0;
-}
-
-.book-hero-title-main {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(3.1rem, 7vw, 5.35rem);
-  font-weight: 720;
-  line-height: 0.9;
-  color: var(--book-ink);
-  text-wrap: balance;
-}
-
-.book-hero-wordmark {
-  position: relative;
-  display: flex;
-  width: fit-content;
-  max-width: 100%;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.52rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.46rem;
-}
-
-.book-hero-wordmark::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklab, var(--book-ink) 28%, transparent),
-    color-mix(in oklch, var(--book-gold) 54%, transparent) 45%,
-    transparent
-  );
-  content: "";
-}
-
-.book-hero-title-article {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.45rem, 2.7vw, 2.1rem);
-  font-weight: 650;
-  line-height: 1;
-  color: var(--book-ink);
-}
-
-.book-hero-title-digital {
-  position: relative;
-  width: fit-content;
-  padding: 0 0.12rem 0.08rem;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 54%,
-      color-mix(in oklch, var(--book-dot) 14%, transparent) 54% 88%,
-      transparent 88%
-    );
-  font-family: "JetBrains Mono", monospace;
-  font-size: clamp(1.45rem, 2.8vw, 2.16rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0;
-  color: color-mix(in oklch, var(--book-ink) 84%, var(--book-dot));
-  text-shadow: 0 0 12px color-mix(in oklch, var(--book-dot) 18%, transparent);
-  box-shadow: 0 0.8rem 1.55rem -1.25rem color-mix(in oklch, var(--book-dot) 28%, transparent);
-}
-
-.book-hero-title-organism {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.55rem, 3vw, 2.35rem);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--book-ink);
-  text-wrap: balance;
-}
-
-.book-hero-thesis {
-  margin-top: 1.6rem;
-  max-width: 34rem;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.55rem, 3vw, 2.25rem);
-  font-weight: 500;
-  line-height: 1.15;
-  color: var(--book-ink);
-}
-
-.book-hero-sub {
-  margin-top: 1.25rem;
-  max-width: 32rem;
-  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
-  line-height: 1.72;
-  color: var(--book-muted);
-}
-
-.book-hero-byline {
-  margin-top: 1.1rem;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--book-ink);
-}
-
-.book-primary-action {
-  display: inline-flex;
-  min-height: 3.1rem;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid color-mix(in oklch, var(--book-gold) 40%, var(--book-hairline));
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  background:
-    linear-gradient(
-      150deg,
-      color-mix(in oklch, var(--book-gold) 10%, transparent),
-      color-mix(in oklab, var(--book-paper) 82%, transparent)
-    );
-  box-shadow:
-    0 0.8rem 2rem color-mix(in oklab, var(--book-ink) 10%, transparent),
-    inset 0 1px 0 color-mix(in oklch, white 12%, transparent);
-  font-size: 0.88rem;
-  font-weight: 650;
-  color: var(--book-ink);
-  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
-}
-
-.book-primary-action:hover,
-.book-primary-action:focus-visible {
-  border-color: var(--book-gold);
-  background: color-mix(in oklch, var(--book-gold) 10%, var(--book-paper));
-}
-
-.book-primary-action:focus-visible,
-.book-secondary-action:focus-visible,
-.book-path-card:focus-visible,
-.book-chapter-plane:focus-visible {
-  outline: 2px solid color-mix(in oklch, var(--book-dot) 78%, var(--book-ink));
-  outline-offset: 3px;
-}
-
-.book-secondary-action {
-  display: inline-flex;
-  min-height: 3.1rem;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 0.25rem;
-  font-size: 0.88rem;
-  color: var(--book-muted);
-  border-bottom: 1px solid var(--book-hairline);
-  transition: color 180ms ease;
-}
-
-.book-secondary-action:hover,
-.book-secondary-action:focus-visible {
-  color: var(--book-ink);
-}
-
-.book-section-heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--book-hairline);
-  padding-bottom: 1.5rem;
-}
-
-.book-section-title {
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(1.65rem, 3vw, 2.4rem);
-  font-weight: 650;
-  line-height: 1.05;
-  color: var(--book-ink);
-  text-wrap: balance;
-  letter-spacing: -0.015em;
-}
-
-.book-edition-ribbon {
-  margin-bottom: 0;
-  transform: none;
-  box-shadow: 0 1rem 2.8rem color-mix(in oklch, black 12%, transparent);
-}
-
-.book-edition-ribbon > div {
-  min-height: 5.1rem;
-  background: color-mix(in oklab, var(--book-paper) 84%, transparent);
-  padding: 1rem 1.2rem;
-  backdrop-filter: blur(22px);
-}
-
-.book-edition-ribbon span,
-.book-edition-ribbon strong {
-  display: block;
-}
-
-.book-edition-ribbon span {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--book-muted);
-}
-
-.book-edition-ribbon strong {
-  margin-top: 0.35rem;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 1.18rem;
-  font-weight: 650;
-  color: var(--book-ink);
-}
-
-.book-model-threshold {
-  padding-top: 4rem;
 }
 
 @keyframes bookAgencyBreathe {
@@ -2853,16 +2036,6 @@ html[data-motion="still"] .dot-emergence-signal {
 
   .book-prose [data-editorial-form="epistemic-key"] > p:nth-child(n + 2):not(:last-child) {
     border-left: 0;
-  }
-}
-
-@media (min-width: 640px) {
-  .book-model-movement-step:nth-child(odd) {
-    border-right: 1px solid var(--book-hairline);
-  }
-
-  .book-model-movement-step:nth-last-child(-n + 2) {
-    border-bottom: 0;
   }
 }
 

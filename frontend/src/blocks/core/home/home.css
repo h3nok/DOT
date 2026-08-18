@@ -1364,15 +1364,6 @@ html:has(.home-journey) {
   animation: arch-feedback-flow 1.15s linear infinite;
 }
 
-.arch-svg-return-caption {
-  fill: var(--muted-foreground);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 8.5px;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
 /* ── Focused Bottom Transition Panel ───────────────────────────────── */
 .arch-bottom-panel {
   display: none;
