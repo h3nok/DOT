@@ -41,41 +41,34 @@ describe("default environment", () => {
     }
   });
 
-  it("defaults to Current, the Reality Stream drawn as a quiet field", () => {
-    // Current gives the first visit motion with a direction rather than
-    // scattered marks to decode. The reading probe still damps the field while
-    // a chapter is open, so the default can feel alive without competing with
-    // the prose.
-    for (const base of ["light", "dark"] as const) {
-      expect(defaultConfigFor(base).preset).toBe("flow");
-    }
-    expect(ORGANISM_PRESETS[defaultConfigFor("light").preset].label).toBe("Current");
+  it("defaults to Clarity for light and Current for dark", () => {
+    expect(defaultConfigFor("light").preset).toBe("off");
+    expect(defaultConfigFor("dark").preset).toBe("flow");
+    expect(ORGANISM_PRESETS[defaultConfigFor("dark").preset].label).toBe("Current");
   });
 
-  it("defaults to long-form type and never to a forced high contrast", () => {
-    for (const base of ["light", "dark"] as const) {
-      const cfg = defaultConfigFor(base);
-      expect(cfg.readingFont).toBe("serif");
-      // High contrast is an accessibility choice, not a look to impose.
-      expect(cfg.contrast).toBe("standard");
-      // The organism should be alive on arrival, but never forced into motion
-      // for someone who asked their system for less of it.
-      expect(cfg.enabled).toBe(true);
-      expect(cfg.stillness).toBe(false);
-    }
+  it("defaults to long-form type for dark and sans for Clarity light", () => {
+    const dark = defaultConfigFor("dark");
+    expect(dark.readingFont).toBe("serif");
+    expect(dark.contrast).toBe("standard");
+    expect(dark.enabled).toBe(true);
+    expect(dark.stillness).toBe(false);
+
+    const light = defaultConfigFor("light");
+    expect(light.readingFont).toBe("sans");
+    expect(light.contrast).toBe("high");
+    expect(light.stillness).toBe(true);
+    expect(light.enabled).toBe(true);
   });
 
-  it("gives the dark default a pinned accent", () => {
-    // An unpinned accent has a lower chroma floor, and a dark ground shows
-    // colour less readily — "auto" at night drifts toward grey.
+  it("gives the dark default a pinned accent and Clarity a fixed tint", () => {
     expect(defaultConfigFor("dark").tint).toBe(212);
-    expect(defaultConfigFor("light").tint).toBe("auto");
+    expect(defaultConfigFor("light").tint).toBe(212);
   });
 
-  it("keeps both defaults on the surface the project is named for", () => {
-    for (const base of ["light", "dark"] as const) {
-      expect(defaultConfigFor(base).uiStyle).toBe("neural");
-    }
+  it("uses the neural surface for dark and minimal for Clarity", () => {
+    expect(defaultConfigFor("dark").uiStyle).toBe("neural");
+    expect(defaultConfigFor("light").uiStyle).toBe("minimal");
   });
 
   it("still offers an environment on the other side of every default", () => {

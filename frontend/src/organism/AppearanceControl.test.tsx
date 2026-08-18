@@ -207,6 +207,9 @@ describe("AppearanceControl", () => {
     renderAppearance();
     fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
 
+    // Clarity default has no pattern; switch to one that does.
+    fireEvent.click(screen.getByRole("button", { name: ORGANISM_PRESETS.flow.label }));
+
     fireEvent.change(screen.getByLabelText(/^Presence —/), { target: { value: "1.6" } });
     fireEvent.change(screen.getByLabelText(/^Scale —/), { target: { value: "1.4" } });
     fireEvent.change(screen.getByLabelText(/^Tempo —/), { target: { value: "0.3" } });

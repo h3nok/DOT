@@ -243,7 +243,7 @@ export const THEME_PRESETS: ThemePreset[] = [
  * would describe a choice they never made.
  */
 export const DEFAULT_ENVIRONMENT: Record<"light" | "dark", ThemePresetId> = {
-  light: "membrane",
+  light: "clarity",
   dark: "midnight",
 };
 
