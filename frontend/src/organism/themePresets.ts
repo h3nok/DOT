@@ -136,7 +136,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     base: "light",
     config: {
       preset: "off",
-      uiStyle: "minimal",
+      uiStyle: "organic",
       tint: 212,
       intensity: 0.35,
       contrast: "high",

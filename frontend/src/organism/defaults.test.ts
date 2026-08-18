@@ -66,9 +66,9 @@ describe("default environment", () => {
     expect(defaultConfigFor("light").tint).toBe(212);
   });
 
-  it("uses the neural surface for dark and minimal for Clarity", () => {
+  it("uses the neural surface for dark and organic for Clarity", () => {
     expect(defaultConfigFor("dark").uiStyle).toBe("neural");
-    expect(defaultConfigFor("light").uiStyle).toBe("minimal");
+    expect(defaultConfigFor("light").uiStyle).toBe("organic");
   });
 
   it("still offers an environment on the other side of every default", () => {
