@@ -334,6 +334,12 @@ html[data-contrast="high"].dark {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .dot-gradient-text {
+    animation: none;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

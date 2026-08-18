@@ -147,8 +147,8 @@ export function UserPreferencesProvider({
       try {
         const preferences = JSON.parse(stored);
         dispatch({ type: 'UPDATE_PREFERENCES', payload: preferences });
-      } catch (error) {
-        console.warn('Failed to load user preferences from localStorage:', error);
+      } catch {
+        // Stored preferences were corrupt; start fresh.
       }
     }
   }, []);

@@ -234,8 +234,8 @@ export function ReadingProvider({ children }: ReadingProviderProps) {
             dispatch(action);
           }
         });
-      } catch (error) {
-        console.warn('Failed to load reading data from localStorage:', error);
+      } catch {
+        // Stored reading data was corrupt; start fresh.
       }
     }
   }, []);
