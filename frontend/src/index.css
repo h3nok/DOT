@@ -1490,6 +1490,26 @@ html[data-motion="still"] .dot-emergence-signal {
   50% { border-color: color-mix(in oklch, var(--book-dot) 56%, var(--book-hairline)); }
 }
 
+/* The prose surface inherits the member's reading-font choice so that the
+   Appearance panel's Serif / Sans / Open / Mono selector reaches every
+   paragraph, heading, and blockquote without each element needing the
+   book-reading-copy utility class. */
+.book-prose {
+  font-family: var(--book-reading-font);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  font-variant-ligatures: common-ligatures contextual;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+.book-prose h1,
+.book-prose h2,
+.book-prose h3,
+.book-prose h4 {
+  font-family: var(--book-reading-heading-font);
+  font-feature-settings: "kern" 1, "liga" 1;
+  font-variant-ligatures: common-ligatures;
+}
+
 /* Book One has an epistemic grammar as well as a typographic hierarchy. These
    treatments are intentionally sparse: they identify what kind of passage a
    reader has reached without turning the manuscript into a collection of UI. */
@@ -1572,10 +1592,102 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-prose [data-editorial-form="distinction"] > p:not(:first-child),
 .book-prose [data-editorial-form="cadence"] > p:not(:first-child) {
   font-family: var(--book-reading-heading-font);
-  font-size: calc(1.15rem * var(--reading-scale, 1));
-  font-weight: 620;
+  font-size: calc(1.1rem * var(--reading-scale, 1));
+  /* 620 on Playfair is close to its heaviest and reads as a proclamation. A
+     distinction is a definition; it needs to be set apart, not shouted. */
+  font-weight: 560;
   text-align: center;
   text-align-last: center;
+}
+
+/* The parts already sit inside an emphasised block, so a `**bold**` in the
+   manuscript stacks weight on weight. One of the three refrains is written that
+   way and the other two are not; this makes them render alike either way. */
+.book-prose [data-editorial-form="distinction"] > p strong,
+.book-prose [data-editorial-form="cadence"] > p strong {
+  font-weight: inherit;
+}
+
+/* ── A distinction, held apart ────────────────────────────────────────────────
+ *
+ * "Keep this distinction" asks the reader to hold two things separate, and the
+ * form was stacking them: two centred sentences, one above the other, which is
+ * the layout of a list rather than of a contrast. Nothing on the page did the
+ * work the label was asking for.
+ *
+ * A two-part block is now set as two columns with a rule between them, so the
+ * page shows the separation the sentence is describing. Text goes left-aligned
+ * in that mode — centred prose that wraps leaves orphans ("…from moment to /
+ * moment."), and a definition is read, not declaimed.
+ *
+ * The shape is counted rather than declared: the label is the first paragraph,
+ * so a pair is three children and a triad is four. That keeps the manuscript
+ * free of layout instructions — the DOCX stays prose, and the reader's page
+ * adapts to what was written.
+ */
+@media (width >= 46rem) {
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child) {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    align-items: start;
+    gap: 0 clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child)
+    > p:first-child {
+    grid-column: 1 / -1;
+  }
+
+  /* The rule is the distinction, drawn. */
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child)::after {
+    content: "";
+    grid-row: 2;
+    grid-column: 2;
+    align-self: stretch;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklch, var(--foreground) 22%, transparent) 22%,
+      color-mix(in oklch, var(--foreground) 22%, transparent) 78%,
+      transparent
+    );
+  }
+
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child)
+    > p:not(:first-child) {
+    grid-row: 2;
+    margin: 0;
+    text-align: left;
+    text-align-last: left;
+    text-wrap: pretty;
+  }
+
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child)
+    > p:nth-child(2) {
+    grid-column: 1;
+  }
+
+  .book-prose
+    [data-editorial-form="distinction"]:has(> p:nth-child(3):last-child)
+    > p:nth-child(3) {
+    grid-column: 3;
+  }
+}
+
+/* Three short beats are a refrain, not a contrast — "The Canvas carries. The
+   Painting interprets. Character acts." Kept centred, because each line is
+   short enough not to wrap, but tightened so the three read as one movement
+   rather than as three separate pronouncements. */
+.book-prose
+  [data-editorial-form="distinction"]:has(> p:nth-child(4):last-child)
+  > p:not(:first-child) {
+  margin-block: 0.35em;
+  text-wrap: balance;
 }
 
 .book-prose [data-editorial-form="cadence"] > p:not(:first-child) {
@@ -1883,6 +1995,37 @@ html[data-motion="still"] .dot-emergence-signal {
   font-size: 1.25rem;
 }
 
+/* Reading size, at every width.
+ *
+ * These lived inside `@media (max-width: 640px)`, among the grid rules for the
+ * chapter nav plane — so above 640px nothing gave prose a font-size at all and
+ * it fell back to an inherited 16px. `--reading-scale` had nothing to multiply,
+ * which is why the Size control appeared to move headings and not the body: the
+ * heading rules (`.book-reading-heading.text-*`) were never scoped to a width.
+ *
+ * That the phone was set larger than the desktop — 17px against 16px — is the
+ * tell that this was misplacement rather than a decision.
+ *
+ * Size only. Leading owns line-height through `html[data-leading="…"]
+ * .book-prose p`, and a base declaration here is not harmless: the
+ * `> p:first-child` rule below outranks the leading selector on the opening
+ * paragraph, so stating a line-height at all pinned the first paragraph of
+ * every chapter and the Leading control stopped moving it.
+ */
+.book-prose p,
+.book-prose li {
+  font-size: calc(1.0625rem * var(--reading-scale, 1));
+}
+
+.book-prose > p:first-child,
+.book-prose > h2:first-child + p {
+  font-size: calc(1.1rem * var(--reading-scale, 1));
+}
+
+.book-prose h2 {
+  font-size: calc(1.4rem * var(--reading-scale, 1));
+}
+
 /* Golden edition typographic refinements */
 .book-prose p,
 .book-prose li {
@@ -2049,21 +2192,8 @@ html[data-motion="still"] .dot-emergence-signal {
     grid-row: 1 / -1;
   }
 
-  .book-prose p,
-  .book-prose li {
-    font-size: calc(1.0625rem * var(--reading-scale, 1));
-    line-height: 1.65;
-  }
-
-  .book-prose > p:first-child,
-  .book-prose > h2:first-child + p {
-    font-size: calc(1.1rem * var(--reading-scale, 1));
-    line-height: 1.68;
-  }
-
   .book-prose h2 {
     margin-top: 2.75rem;
-    font-size: calc(1.4rem * var(--reading-scale, 1));
   }
 
   .book-prose blockquote {
@@ -2277,4 +2407,149 @@ html[data-motion="still"] .dot-emergence-signal {
 .minty-writing__opened {
   font-style: normal;
   color: color-mix(in oklch, var(--muted-foreground) 70%, var(--organism-accent-strong));
+}
+
+/* ── Contents ─────────────────────────────────────────────────────────────────
+ *
+ * A book's contents list is a planning tool, not a menu. The reader is deciding
+ * what to do with the next twenty minutes, so the list has to answer "where am
+ * I", "what is next", and "how long is it" — and the last of those was the one
+ * it never answered, though the manifest has carried reading times all along.
+ *
+ * The entry used to be two lines: a mono label ("Chapter 3") above the title.
+ * The label restated the position a number already gives, so eight sections
+ * cost sixteen lines and told the reader nothing about the book's shape. Now
+ * the number sits in the gutter, the title leads, and the second line is the
+ * cost rather than a restatement.
+ */
+
+.book-contents {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Structure, spoken quietly. */
+.book-contents__part {
+  margin-bottom: 0.5rem;
+  padding-left: 0.15rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--muted-foreground) 78%, transparent);
+}
+
+.book-contents__entry {
+  display: grid;
+  grid-template-columns: 1.35rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.15rem;
+  padding: 0.4rem 0.5rem 0.45rem 0.15rem;
+  border-radius: 0.5rem;
+  color: var(--muted-foreground);
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.book-contents__entry:hover,
+.book-contents__entry:focus-visible {
+  color: var(--foreground);
+  background: color-mix(in oklch, var(--foreground) 4%, transparent);
+  outline: none;
+}
+
+/* Where you are: the number takes the accent and the title takes full weight.
+   No panel behind it — on glass, a filled block reads as a second surface. */
+.book-contents__entry[data-active="true"] {
+  color: var(--foreground);
+}
+
+.book-contents__marker {
+  font-family: var(--book-reading-font, Georgia, serif);
+  font-size: 0.82rem;
+  font-variant-numeric: oldstyle-nums;
+  color: color-mix(in oklch, var(--muted-foreground) 62%, transparent);
+}
+
+.book-contents__entry[data-active="true"] .book-contents__marker {
+  color: var(--organism-accent-strong);
+}
+
+.book-contents__body {
+  min-width: 0;
+}
+
+/* Only where a title cannot say it — the Preface, whose title is good and
+   tells a reader nothing about where they would be standing. */
+.book-contents__label {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
+}
+
+.book-contents__title {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.book-contents__entry[data-active="true"] .book-contents__title {
+  font-weight: 600;
+}
+
+/* The cost of entering, stated before the reader commits to it. */
+.book-contents__cost {
+  display: block;
+  margin-top: 0.1rem;
+  font-family: var(--book-reading-font, Georgia, serif);
+  font-size: 0.72rem;
+  font-variant-numeric: oldstyle-nums;
+  color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+}
+
+/* ── The chapter coda ─────────────────────────────────────────────────────────
+ *
+ * What sits under a finished chapter: the reader's own margin, the concepts it
+ * touched, how to cite it, and where to go next.
+ *
+ * These were three panels with three different headings — an eyebrow plus an
+ * h2 on one, a plain label on another, a cinnabar label on the third — stacked
+ * above a bordered two-column nav. Four boxes, each announcing itself, so the
+ * end of a chapter read as an admin screen rather than as an ending.
+ *
+ * One label treatment now serves all of them. Apparatus is apparatus: it is
+ * quiet, evenly spaced, and it does not compete with the one thing a reader at
+ * the foot of a chapter actually wants, which is to keep going.
+ */
+
+.book-coda__label {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--muted-foreground) 76%, transparent);
+}
+
+/* Continue outranks Previous. Both halves were identical, which left the
+   forward step — the reason the reader is down here at all — as a coin toss
+   against the way back. */
+.book-coda__next {
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklch, var(--organism-accent-strong) 7%, transparent)
+  );
+}
+
+.book-coda__next:hover,
+.book-coda__next:focus-visible {
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklch, var(--organism-accent-strong) 14%, transparent)
+  );
 }
