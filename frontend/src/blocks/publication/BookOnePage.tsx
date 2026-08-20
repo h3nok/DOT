@@ -53,6 +53,39 @@ function sectionLabel(section: BookReleaseSection): string {
   return "Notes and sources";
 }
 
+/**
+ * The label a contents entry needs *beside* its title, or null when the title
+ * and the part heading already say it.
+ *
+ * A chapter carries its number in the gutter, so "Chapter 3" stacked above
+ * "Architecture of Continuity" spends a line restating what the number gives.
+ * References was worse than redundant: the part heading read "Notes and
+ * Sources", the label read "Notes and sources", and the title read
+ * "References" — one section announcing itself three times, in two casings.
+ *
+ * The Preface keeps its label. "The Observer Belongs in the Inquiry" is a good
+ * title and says nothing about where in the book a reader would be standing.
+ */
+function contentsLabel(section: BookReleaseSection): string | null {
+  return section.kind === "preface" ? "Preface" : null;
+}
+
+/**
+ * "17 min" — what a chapter costs, said before it is entered.
+ *
+ * `reading_time_minutes` has been on every section all along and the contents
+ * ignored it, so a reader learned a chapter's length only after committing to
+ * it. Here that matters more than usual: The Painting runs 6,327 words against
+ * the Preface's 1,368, and nothing in the list let you see it coming. Showing
+ * the cost up front is L2 — everything has a natural end — applied to the act
+ * of choosing rather than to the act of reading.
+ */
+function readingCost(section: BookReleaseSection): string | null {
+  const minutes = section.reading_time_minutes;
+  if (typeof minutes !== "number" || minutes < 1) return null;
+  return `${Math.round(minutes)} min`;
+}
+
 function formatWordCount(words: number): string {
   return new Intl.NumberFormat(undefined, {
     maximumFractionDigits: 0,
@@ -117,13 +150,14 @@ function BookContents({
   const groups = groupBookSectionsByPart(manifest.sections);
 
   return (
-    <nav aria-label="Book contents" className="space-y-6">
+    <nav aria-label="Book contents" className="book-contents">
       {groups.map((group) => (
         <section key={group.part}>
-          <h2 className="mb-3 dot-label text-[var(--book-cinnabar)]">
-            {group.part}
-          </h2>
-          <ol className="space-y-0.5">
+          {/* The part names the structure; the chapters are the content. This
+              heading was set in cinnabar over muted titles, which gave the
+              louder voice to the smaller idea. */}
+          <h2 className="book-contents__part">{group.part}</h2>
+          <ol>
             {group.sections.map((section) => {
               const active = section.slug === currentSlug;
               const sectionRoute = bookSectionRoute(section);
@@ -131,23 +165,33 @@ function BookContents({
                 path && positionOf(path, section.slug) >= 0
                   ? `${sectionRoute}?path=${path.id}`
                   : sectionRoute;
+              const label = contentsLabel(section);
+              const cost = readingCost(section);
               return (
                 <li key={section.id}>
                   <Link
                     to={destination}
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
-                    className={`group flex flex-col rounded-lg border-l-2 px-3 py-2.5 transition-colors ${
-                      active
-                        ? "border-[var(--book-cinnabar)] bg-foreground/[0.05] text-foreground"
-                        : "border-transparent text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
-                    }`}
+                    className="book-contents__entry"
+                    data-active={active ? "true" : undefined}
                   >
-                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">
-                      {sectionLabel(section)}
+                    {/* One marker, not two. Every entry carried a left rule and
+                        the active one a filled panel as well; a number is the
+                        better mark because it also says where you are. */}
+                    <span className="book-contents__marker" aria-hidden="true">
+                      {section.kind === "chapter" ? section.number : ""}
                     </span>
-                    <span className="mt-0.5 text-[13px] font-medium leading-snug">
-                      {section.title}
+                    <span className="book-contents__body">
+                      {label && (
+                        <span className="book-contents__label">{label}</span>
+                      )}
+                      <span className="book-contents__title">
+                        {section.title}
+                      </span>
+                      {cost && (
+                        <span className="book-contents__cost">{cost}</span>
+                      )}
                     </span>
                   </Link>
                 </li>
@@ -350,9 +394,7 @@ function BookReader({
 
             {section.related_concepts.length > 0 ? (
               <div className="mb-10 border-b border-border/60 pb-8">
-                <p className="dot-label">
-                  Related concepts
-                </p>
+                <p className="book-coda__label">Related concepts</p>
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
                   {section.related_concepts.map((concept) => (
                     <span
@@ -388,10 +430,8 @@ function BookReader({
                 >
                   <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
                   <span>
-                    <span className="dot-label text-muted-foreground">
-                      Previous
-                    </span>
-                    <span className="mt-1 block text-sm font-medium leading-tight text-foreground">
+                    <span className="book-coda__label">Previous</span>
+                    <span className="mt-1 block text-sm font-normal leading-tight text-muted-foreground">
                       {previous.title}
                     </span>
                   </span>
@@ -403,17 +443,17 @@ function BookReader({
               {next ? (
                 <Link
                   to={step(next)}
-                  className="group flex min-h-20 items-center justify-end gap-3 px-4 py-4 text-right transition-all hover:bg-foreground/[0.03]"
+                  className="book-coda__next group flex min-h-20 items-center justify-end gap-3 px-4 py-4 text-right transition-all"
                 >
                   <span>
-                    <span className="dot-label text-muted-foreground">
+                    <span className="book-coda__label">
                       {path ? path.label : "Continue"}
                     </span>
-                    <span className="mt-1 block text-sm font-semibold leading-tight text-foreground">
+                    <span className="mt-1 block text-base font-semibold leading-tight text-foreground">
                       {next.title}
                     </span>
                   </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight className="h-4 w-4 shrink-0 text-[var(--organism-accent-strong)] transition-transform group-hover:translate-x-0.5" />
                 </Link>
               ) : (
                 <Link

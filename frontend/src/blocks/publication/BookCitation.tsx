@@ -68,7 +68,7 @@ export default function BookCitation({
         aria-labelledby="section-citation-title"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="dot-label text-[var(--book-cinnabar)]" id="section-citation-title">
+          <p className="book-coda__label" id="section-citation-title">
             Cite {what}
           </p>
           <div className="flex items-center gap-1 rounded-full border border-border/40 p-0.5" role="group" aria-label="Citation format">

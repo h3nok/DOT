@@ -1,4 +1,4 @@
-import { NotebookPen, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
 const NOTE_KEY_PREFIX = "dot.reader-note.v1";
@@ -40,20 +40,21 @@ export function PrivateReaderNote({ storageId }: { storageId: string }) {
       aria-labelledby="private-reader-note-title"
     >
       <div className="flex items-start justify-between gap-4">
+        {/* No icon. Four coda sections now share one label treatment, and this
+            was the only one wearing a glyph — in cinnabar, on the quietest of
+            them, which pulled the eye to the least consequential thing at the
+            foot of a chapter. */}
         <div className="flex items-start gap-3">
-          <NotebookPen
-            className="mt-0.5 h-4 w-4 text-[var(--book-cinnabar)]"
-            aria-hidden="true"
-          />
-          <div>
-            <p className="dot-label">Private margin</p>
-            <h2
-              id="private-reader-note-title"
-              className="book-reading-heading mt-1 text-lg font-semibold text-foreground"
-            >
-              Notes for this section
-            </h2>
-          </div>
+          {/* One name, not two. "Private margin" above "Notes for this
+              section" was a label and a heading doing the same job, and the
+              placeholder below already says what to write. The margin is the
+              better of the two: it is what the thing is called in a book. */}
+          <h2
+            id="private-reader-note-title"
+            className="book-coda__label"
+          >
+            Private margin
+          </h2>
         </div>
         {note ? (
           <button
@@ -75,10 +76,13 @@ export function PrivateReaderNote({ storageId }: { storageId: string }) {
         placeholder="A thought, question, or passage to revisit…"
         className="book-recall-note mt-5 w-full resize-y border-x-0 border-b border-t bg-transparent px-0 py-3 text-base leading-7 text-foreground outline-none placeholder:text-muted-foreground/60 focus:border-[var(--book-cinnabar)]"
       />
+      {/* "Stored only in this browser" and "Saved on this device" were the same
+          fact twice — one as a promise, one as a status. The promise is stated
+          once; the live region keeps only what actually changes. */}
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2 font-mono dot-micro uppercase tracking-[0.1em] text-muted-foreground">
-        <span>Stored only in this browser</span>
+        <span>Private to this browser</span>
         <span aria-live="polite">
-          {storageAvailable ? "Saved on this device" : "Local saving unavailable"}
+          {storageAvailable ? "Saved on this device" : "Saving unavailable"}
         </span>
       </div>
     </section>
