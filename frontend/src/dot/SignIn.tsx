@@ -1,14 +1,8 @@
-import { ArrowRight, Orbit } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
 
 import { BloomSurface } from "./BloomSurface";
-
-/**
- * The public doorway for the private layer of DOT.
- *
- * Membership is deliberately not available in this release. Keeping the
- * notice in the shared BloomSurface means every old sign-in entry point tells
- * the same truth, with no inactive form or implied wait-list.
- */
+import { useAuth } from "./useAuth";
 
 interface SignInProps {
   origin?: { x: number; y: number };
@@ -20,42 +14,129 @@ export const SignIn: React.FC<SignInProps> = ({
   origin,
   reducedMotion = false,
   onClose,
-}) => (
-  <BloomSurface
-    kicker="private membership"
-    title="Sign in is coming soon."
-    description="The private layer is being prepared with the same care as the public work."
-    origin={origin}
-    reducedMotion={reducedMotion}
-    zIndex={50}
-    size="sm"
-    onClose={onClose}
-  >
-    <div className="flex flex-col items-center text-center">
-      <div
-        className="relative grid h-24 w-24 place-items-center rounded-full border border-[color:var(--organism-accent-soft)] bg-background/35 shadow-[inset_0_1px_0_rgb(255_255_255/0.18),0_18px_48px_var(--organism-accent-soft)]"
-        aria-hidden="true"
-      >
-        <span className="absolute inset-2 rounded-full border border-[color:var(--organism-accent-soft)]/70" />
-        <span className="absolute inset-5 rounded-full bg-[color:var(--organism-accent-soft)]/45 blur-md" />
-        <Orbit className="relative h-8 w-8 text-[color:var(--organism-accent-strong)]" />
-      </div>
+}) => {
+  const { requestCode, verifyCode } = useAuth();
+  const [step, setStep] = useState<"email" | "code">("email");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const codeRef = useRef<HTMLInputElement>(null);
 
-      <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted-foreground">
-        Book One, the concept library, and Minty remain open. No account is
-        needed to explore the public work.
-      </p>
+  const handleRequestCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || busy) return;
+    setBusy(true);
+    setError(null);
+    const result = await requestCode(email.trim());
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "Could not send code.");
+      return;
+    }
+    // In dev mode the code is returned directly.
+    if (result.devCode) setCode(result.devCode);
+    setStep("code");
+    requestAnimationFrame(() => codeRef.current?.focus());
+  };
 
-      <button
-        type="button"
-        onClick={onClose}
-        className="mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--organism-accent-soft)] bg-foreground/[0.07] px-4 text-sm font-semibold text-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition-[background-color,transform] hover:bg-foreground/[0.11] active:translate-y-px"
-      >
-        Continue exploring
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </button>
-    </div>
-  </BloomSurface>
-);
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!code.trim() || busy) return;
+    setBusy(true);
+    setError(null);
+    const result = await verifyCode(email.trim(), code.trim());
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.error ?? "Could not verify.");
+      return;
+    }
+    // Signed in — reload so every provider picks up the session.
+    window.location.reload();
+  };
+
+  const inputClass =
+    "min-h-11 w-full rounded-lg border border-border/60 bg-background/70 px-3.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]";
+  const submitClass =
+    "mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-foreground px-5 text-sm font-semibold text-background disabled:opacity-50";
+
+  return (
+    <BloomSurface
+      kicker="private membership"
+      title={step === "email" ? "Sign in" : "Enter your code"}
+      description={
+        step === "email"
+          ? "A one-time code will be sent to your email."
+          : `A code was sent to ${email}.`
+      }
+      origin={origin}
+      reducedMotion={reducedMotion}
+      zIndex={50}
+      size="sm"
+      onClose={onClose}
+    >
+      {step === "email" ? (
+        <form onSubmit={handleRequestCode}>
+          <label className="sr-only" htmlFor="signin-email">
+            Email address
+          </label>
+          <input
+            id="signin-email"
+            type="email"
+            required
+            autoFocus
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
+          {error && (
+            <p className="mt-2 text-xs text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+          <button type="submit" disabled={busy || !email.trim()} className={submitClass}>
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Continue <ArrowRight className="h-4 w-4" /></>}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleVerifyCode}>
+          <label className="sr-only" htmlFor="signin-code">
+            One-time code
+          </label>
+          <input
+            ref={codeRef}
+            id="signin-code"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            required
+            autoComplete="one-time-code"
+            placeholder="6-digit code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className={inputClass}
+          />
+          {error && (
+            <p className="mt-2 text-xs text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+          <button type="submit" disabled={busy || !code.trim()} className={submitClass}>
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
+          </button>
+          <button
+            type="button"
+            onClick={() => { setStep("email"); setCode(""); setError(null); }}
+            className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-foreground"
+          >
+            Use a different email
+          </button>
+        </form>
+      )}
+    </BloomSurface>
+  );
+};
 
 export default SignIn;

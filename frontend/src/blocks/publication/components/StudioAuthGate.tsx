@@ -32,8 +32,8 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
         </p>
         <h1 className="mt-2 font-serif text-3xl font-semibold">Publication Studio</h1>
         <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          The private studio is not open in this release. Public reading remains
-          available while membership is being prepared.
+          Sign in to open the private workspace. Public reading remains
+          available without an account.
         </p>
         <button
           type="button"
@@ -41,7 +41,7 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
           className="mt-7 inline-flex min-h-11 items-center gap-2 bg-foreground px-5 text-sm font-semibold text-background"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />
-          Membership coming soon
+          Sign in
         </button>
       </section>
 
