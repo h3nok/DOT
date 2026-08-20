@@ -376,7 +376,10 @@ const AnswerMarkdown: React.FC<{ children: string; streaming?: boolean }> = ({
   streaming = false,
 }) => (
   <div
-    className={`minty-answer font-serif text-base leading-7 text-foreground sm:text-[17px] sm:leading-8${
+    // Type lives in `.minty-answer` now. The Tailwind utilities here asked for
+    // `font-serif` — which is Playfair in this project — and pinned the size
+    // with literals, so neither the Type nor the Size control could reach it.
+    className={`minty-answer text-foreground${
       streaming ? " minty-answer--streaming" : ""
     }`}
   >
@@ -1390,7 +1393,7 @@ export const TwinSurface: React.FC<TwinSurfaceProps> = ({
               rows={1}
               // The same page the home composer is: a cinnabar margin rule down the
               // inside edge, and the reader's words in the book's own serif.
-              className="min-h-11 min-w-0 flex-1 resize-none rounded-lg border border-border/60 border-l-2 border-l-[color:var(--organism-accent-strong)]/45 bg-background/70 px-3.5 py-2.5 font-serif text-base leading-relaxed text-foreground outline-none transition-colors placeholder:font-sans placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:border-l-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]"
+              className="minty-composer min-h-11 min-w-0 flex-1 resize-none rounded-lg border border-border/60 border-l-2 border-l-[color:var(--organism-accent-strong)]/45 bg-background/70 px-3.5 py-2.5 text-foreground outline-none transition-colors placeholder:font-sans placeholder:text-muted-foreground focus:border-[color:var(--organism-accent-strong)] focus:border-l-[color:var(--organism-accent-strong)] focus:ring-1 focus:ring-[color:var(--organism-accent-soft)]"
             />
             <button
               type="submit"

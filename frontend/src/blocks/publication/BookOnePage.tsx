@@ -86,12 +86,6 @@ function readingCost(section: BookReleaseSection): string | null {
   return `${Math.round(minutes)} min`;
 }
 
-function formatWordCount(words: number): string {
-  return new Intl.NumberFormat(undefined, {
-    maximumFractionDigits: 0,
-  }).format(words);
-}
-
 function conceptLabel(concept: string): string {
   return concept
     .split("-")
@@ -290,20 +284,21 @@ function BookReader({
             </Link>
           </div>
 
+          {/* Everything between a chapter's title and its first sentence is
+              competing with the act of starting to read.
+             
+              This carried the chapter number, the part, the word count and the
+              reading time — each of which the contents rail now states — above
+              a progress bar reading "Complete edition · 2 / 8" while the rail
+              said "Chapter 1". Both were true (chapter 1 is the second section)
+              and they read as a contradiction.
+             
+              What is left is what a reader opening a chapter actually needs:
+              which chapter, how long it will take, and the title. */}
           <header className="book-chapter-header border-b pb-9 text-center">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <p className="dot-label">
-                {sectionLabel(section)} · {section.part}
-              </p>
-              <span
-                className="hidden h-1 w-1 rounded-full bg-[var(--book-cinnabar)] opacity-55 sm:block"
-                aria-hidden="true"
-              />
-              <p className="dot-label">
-                {formatWordCount(section.word_count)} words · about{" "}
-                {section.reading_time_minutes} min
-              </p>
-            </div>
+            <p className="dot-label">
+              {sectionLabel(section)} · about {section.reading_time_minutes} min
+            </p>
             <h1 className="book-reading-heading mx-auto mt-5 max-w-2xl text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
               {section.title}
             </h1>
@@ -312,6 +307,13 @@ function BookReader({
                 {section.subtitle}
               </p>
             )}
+            {/* Only on a curated path. Following one is the case where position
+                is genuinely not obvious — the rail lists the whole book, not
+                the route the reader chose through it. On the complete edition
+                the rail already says where you are, and a second counter that
+                numbers sections while the rail numbers chapters only invites
+                the reader to reconcile them. */}
+            {pathPosition >= 0 && path && (
             <div className="book-reading-progress mt-8">
               <div className="mb-2 flex items-center justify-between gap-4 dot-label">
                 <span>{readingSequenceLabel}</span>
@@ -333,30 +335,8 @@ function BookReader({
                 />
               </div>
             </div>
+            )}
           </header>
-
-          <nav
-            aria-label="Reading tools"
-            className="book-focus-hidden book-reader-quick-tools flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-xl border border-[var(--book-hairline)] bg-foreground/[0.02] px-4 py-3 print:hidden"
-          >
-            <button
-              type="button"
-              onClick={() => onOpenMinty()}
-              className="inline-flex min-h-10 items-center gap-2 text-xs font-semibold text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
-            >
-              <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
-              Ask about this chapter
-            </button>
-            <Link
-              to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
-              className="inline-flex min-h-10 items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <Library className="h-4 w-4" aria-hidden="true" />
-              {sourceCount > 0
-                ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
-                : "Notes & sources"}
-            </Link>
-          </nav>
 
           <BookMarkdown
             content={content}
@@ -384,6 +364,34 @@ function BookReader({
                 </div>
               </div>
             )}
+
+            {/* Moved out from between the title and the first sentence. A
+                reader arriving at a chapter is trying to start, and a toolbar
+                there is something to get past first. Minty stays one click away
+                in the header throughout, so nothing became harder to reach — it
+                simply stopped standing in the doorway. */}
+            <nav
+              aria-label="Reading tools"
+              className="book-focus-hidden book-reader-quick-tools mb-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-xl border border-[var(--book-hairline)] bg-foreground/[0.02] px-4 py-3 print:hidden"
+            >
+              <button
+                type="button"
+                onClick={() => onOpenMinty()}
+                className="inline-flex min-h-10 items-center gap-2 text-xs font-semibold text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
+              >
+                <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+                Ask about this chapter
+              </button>
+              <Link
+                to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
+                className="inline-flex min-h-10 items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Library className="h-4 w-4" aria-hidden="true" />
+                {sourceCount > 0
+                  ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
+                  : "Notes & sources"}
+              </Link>
+            </nav>
 
             <div className="mb-10">
               <PrivateReaderNote

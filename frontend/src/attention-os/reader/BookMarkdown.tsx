@@ -368,10 +368,23 @@ export function BookMarkdown({
             ),
             p: ({ children }) => {
               const presentation = paragraphPresentation(children);
+              // A drop cap needs lines to wrap around it. The chapter cap is
+              // 3.4em at 0.72 line-height — roughly three lines tall — and it
+              // is applied to the opening paragraph whatever that paragraph is.
+              // Chapter 1 opens with "Something is happening.": one short line
+              // beside a three-line letter, which leaves a notch of empty space
+              // where the text should have closed around it.
+              //
+              // Measured in characters rather than lines because the renderer
+              // cannot know the column width. The threshold is deliberately
+              // generous: a cap that is dropped where it should not have been
+              // is far more conspicuous than one that was skipped.
+              const short = nodeText(children).trim().length < 180;
               return (
                 <p
                   className={presentation.className}
                   data-claim-level={presentation.claimLevel}
+                  data-short-opening={short ? "true" : undefined}
                   style={presentationStyle(presentation)}
                 >
                   {withConceptLinks(children)}

@@ -1817,8 +1817,23 @@ html[data-motion="still"] .dot-emergence-signal {
   font-family: "JetBrains Mono", monospace;
 }
 
-.book-prose--chapter > p:first-child::first-letter,
-.book-prose--chapter > h2:first-child + p::first-letter {
+/* Only where there is text for it to sit in — see the note in BookMarkdown. A
+   one-line opening takes a lead-line treatment instead, which is what a printed
+   book does when the first sentence is too short to carry a cap. */
+.book-prose--chapter > p:first-child[data-short-opening]:not([data-short-opening="undefined"]),
+.book-prose--chapter > h2:first-child + p[data-short-opening] {
+  /* The float on the dropped cap used to hold the opening away from the
+     heading. Without it the lead line sits up against the title and reads as a
+     subtitle rather than as the first sentence. */
+  margin-top: 1.15em;
+  font-size: calc(1.34rem * var(--reading-scale, 1));
+  line-height: 1.45;
+  letter-spacing: 0.004em;
+  color: var(--foreground);
+}
+
+.book-prose--chapter > p:first-child:not([data-short-opening])::first-letter,
+.book-prose--chapter > h2:first-child + p:not([data-short-opening])::first-letter {
   float: left;
   margin: 0.08em 0.12em 0 0;
   font-family: var(--book-reading-heading-font);
@@ -2552,4 +2567,40 @@ html[data-motion="still"] .dot-emergence-signal {
     transparent,
     color-mix(in oklch, var(--organism-accent-strong) 14%, transparent)
   );
+}
+
+/* ── Minty's reading type ─────────────────────────────────────────────────────
+ *
+ * Minty answered in Playfair Display at 16px. Not by choice — the markup asked
+ * for Tailwind's `font-serif`, and in this project that utility resolves to
+ * Playfair, the display face. The book itself was moved off Playfair for
+ * exactly this reason: small x-height and high stroke contrast thin out badly
+ * across long prose. The companion was left behind on it, at a smaller size and
+ * tighter leading than the chapters it is quoting.
+ *
+ * It reads in the book's face now, and at the book's size, because that is what
+ * it is doing: reading the book back to you. `--book-reading-font` also means
+ * the Type control reaches it, and `--reading-scale` means the Size control
+ * does — neither did before, since the sizes were Tailwind literals.
+ */
+
+.minty-answer {
+  font-family: var(--book-reading-font, "Source Serif 4", Charter, Georgia, serif);
+  font-size: calc(1.0125rem * var(--reading-scale, 1));
+  line-height: 1.72;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/* Answers quote passages and carry equations; the measure has to stay readable
+   in a sidecar that the reader can drag narrow. */
+.minty-answer p {
+  text-wrap: pretty;
+}
+
+/* What the reader writes sits in the same face as what comes back. */
+.minty-composer {
+  font-family: var(--book-reading-font, "Source Serif 4", Charter, Georgia, serif);
+  font-size: calc(1rem * var(--reading-scale, 1));
+  line-height: 1.6;
 }

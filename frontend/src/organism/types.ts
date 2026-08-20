@@ -415,10 +415,16 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   contrast: "standard",
   uiStyle: "default",
   readingFont: "serif",
+  // Medium is 1; the S/M/L/XL scale is 0.92 / 1 / 1.12 / 1.26.
   readingScale: 1,
-  readingLeading: "standard",
-  readingAlign: "left",
-  readingMeasure: "standard",
+  // A wide measure with generous leading and justified, spaced paragraphs —
+  // the settings of a printed book rather than of a web page. Justification is
+  // only safe here because `.book-prose p` already carries `hyphens: auto` with
+  // `hyphenate-limit-chars: 6 3 2`; justified text without hyphenation opens
+  // rivers of white space down the column.
+  readingLeading: "loose",
+  readingAlign: "justify",
+  readingMeasure: "wide",
   paragraphStyle: "spaced",
   paperTone: "neutral",
 };
