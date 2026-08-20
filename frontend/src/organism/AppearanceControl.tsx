@@ -84,8 +84,21 @@ const READING_FONTS: Array<{
   face: string;
   stack: string;
 }> = [
-  { value: "serif", label: "Serif", face: "Source Serif", stack: '"Source Serif 4", Georgia, serif' },
-  { value: "sans", label: "Sans", face: "Inter", stack: '"Inter", system-ui, sans-serif' },
+  // The caption names both faces where a face sets headings and another sets
+  // prose. Saying only "Source Serif" described half the hierarchy, which is
+  // why the headings looked like they were ignoring the control.
+  {
+    value: "serif",
+    label: "Serif",
+    face: "Source Serif · Playfair",
+    stack: '"Source Serif 4", Georgia, serif',
+  },
+  {
+    value: "sans",
+    label: "Sans",
+    face: "Inter · Space Grotesk",
+    stack: '"Inter", system-ui, sans-serif',
+  },
   {
     value: "humanist",
     label: "Open",
@@ -774,7 +787,7 @@ export const AppearanceControl: React.FC<{
                             Ag
                           </span>
                           <span className="mt-1.5 block text-xs font-medium">{label}</span>
-                          <span className="block truncate text-xs text-muted-foreground">
+                          <span className="block text-[0.68rem] leading-tight text-muted-foreground">
                             {face}
                           </span>
                         </button>

@@ -15,14 +15,36 @@
    — body, headings, references, pull quotes — rather than each surface having
    to know which face is current. */
 
+/* The default pairing, stated rather than inherited.
+ *
+ * Serif had no rule at all — it fell through to the `:root` values, so the one
+ * option a reader is most likely to be using was the only one whose typography
+ * was not written down anywhere. Naming it here also makes the pairing legible
+ * to the next person: Source Serif sets the prose, Playfair sets the headings.
+ *
+ * Playfair is a display face. Its small x-height and high stroke contrast thin
+ * out badly across a 3,000-word chapter, which is why it carries headings and
+ * not body — the two faces are doing different jobs, not competing. */
+html[data-reading="serif"] .book-surface {
+  --book-reading-font: "Source Serif 4", Charter, Georgia, serif;
+  --book-reading-heading-font: "Playfair Display", Georgia, serif;
+}
+
+/* Sans keeps the same text/display split rather than flattening to one face.
+   Inter is a superb text face and a flat heading face; Space Grotesk is already
+   bundled and gives headings the shift in voice the serif option gets. */
 html[data-reading="sans"] .book-surface {
   --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --book-reading-heading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --book-reading-heading-font: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
 }
 
 /* Wide-set, open-countered, and loosely tracked. Dyslexia typography guidance
    converges on these properties rather than on one proprietary typeface, and
    every family named here already ships with the operating system. */
+/* Deliberately one face, unlike serif and sans. This option exists for
+   legibility, and a second face is a second set of shapes to decode — contrast
+   between heading and body is a luxury the reader who picked this did not ask
+   for. Same reasoning for Mono below: a display mono is a contradiction. */
 html[data-reading="humanist"] .book-surface {
   --book-reading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
   --book-reading-heading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
