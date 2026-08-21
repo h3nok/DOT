@@ -1,5 +1,6 @@
 import {
   Check,
+  Clock3,
   Eye,
   FilePenLine,
   Loader2,
@@ -29,6 +30,10 @@ import {
 } from "../../../services/OrchestratorPublicationService";
 import { EditorialToolbar, type InlineFormat } from "./EditorialToolbar";
 import {
+  MarkdownManuscriptEditor,
+  type MarkdownManuscriptEditorHandle,
+} from "./MarkdownManuscriptEditor";
+import {
   insertMarkdownBlock,
   prefixMarkdownLines,
   wrapMarkdownSelection,
@@ -40,6 +45,7 @@ type EditorMode = "write" | "preview" | "split";
 interface SectionEditorProps {
   section: PublicationSectionRead | null;
   onRefresh: () => Promise<void>;
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 const modeButton =
@@ -49,7 +55,7 @@ function countWords(value: string): number {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
 }
 
-export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
+export function SectionEditor({ section, onRefresh, onDirtyChange }: SectionEditorProps) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [savedTitle, setSavedTitle] = useState("");
@@ -59,7 +65,7 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saved" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<MarkdownManuscriptEditorHandle>(null);
 
   useEffect(() => {
     if (!section) {
@@ -95,6 +101,11 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
   }, [section]);
 
   const dirty = title !== savedTitle || body !== savedBody;
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+    return () => onDirtyChange?.(false);
+  }, [dirty, onDirtyChange]);
 
   useEffect(() => {
     if (!dirty) return;
@@ -152,16 +163,15 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
     setBody(edit.value);
     setSaveState("idle");
     requestAnimationFrame(() => {
-      textareaRef.current?.focus();
-      textareaRef.current?.setSelectionRange(edit.selectionStart, edit.selectionEnd);
+      editorRef.current?.setSelection(edit.selectionStart, edit.selectionEnd);
     });
   };
 
   const selection = () => {
-    const textarea = textareaRef.current;
+    const range = editorRef.current?.getSelection();
     return {
-      start: textarea?.selectionStart ?? body.length,
-      end: textarea?.selectionEnd ?? body.length,
+      start: range?.start ?? body.length,
+      end: range?.end ?? body.length,
     };
   };
 
@@ -193,6 +203,7 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
   };
 
   const words = useMemo(() => countWords(body), [body]);
+  const readingMinutes = Math.max(1, Math.ceil(words / 220));
 
   if (!section) {
     return (
@@ -210,8 +221,8 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
   const previewVisible = mode !== "write";
 
   return (
-    <section className="book-surface flex h-full min-w-0 flex-col bg-background text-foreground">
-      <header className="flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b border-border/60 px-4 py-2 sm:px-5">
+    <section className="book-surface publication-studio__editor flex h-full min-w-0 flex-col bg-background text-foreground">
+      <header className="appearance-ui-chrome flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b px-4 py-2 sm:px-5">
         <input
           type="text"
           value={title}
@@ -226,15 +237,15 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
         <div className="flex items-center border border-border/60" aria-label="Editor view">
           <button type="button" className={modeButton} data-active={mode === "write"} onClick={() => setMode("write")}>
             <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
-            Write
+            Manuscript
           </button>
           <button type="button" className={modeButton} data-active={mode === "preview"} onClick={() => setMode("preview")}>
             <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-            Preview
+            Reader
           </button>
           <button type="button" className={`${modeButton} hidden lg:inline-flex`} data-active={mode === "split"} onClick={() => setMode("split")}>
             <SplitSquareHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-            Split
+            Both
           </button>
         </div>
       </header>
@@ -253,6 +264,11 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
                 const { start, end } = selection();
                 applyEdit(prefixMarkdownLines(body, start, end, "> ", "Quoted passage"));
               }}
+              onEquation={() => {
+                const { start, end } = selection();
+                const equation = body.slice(start, end) || "S_{t + 1} = F(S_t, x_t, a_t, \\Delta_t)";
+                applyEdit(insertMarkdownBlock(body, start, end, `$$\n${equation}\n$$`));
+              }}
               onEditorialForm={applyEditorialForm}
               onClaimLevel={applyClaimLevel}
             />
@@ -263,14 +279,11 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
                   <span className="sr-only">Opening section draft</span>
                 </div>
               ) : (
-                <textarea
-                  ref={textareaRef}
-                  className="h-full w-full resize-none bg-transparent px-5 py-6 font-mono text-sm leading-7 text-foreground outline-none placeholder:text-muted-foreground/50 sm:px-8"
-                  placeholder="Write the section in Markdown..."
+                <MarkdownManuscriptEditor
+                  ref={editorRef}
                   value={body}
-                  spellCheck="true"
-                  onChange={(event) => {
-                    setBody(event.target.value);
+                  onChange={(value) => {
+                    setBody(value);
                     setSaveState("idle");
                   }}
                 />
@@ -281,13 +294,21 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
 
         {previewVisible && (
           <div className="min-h-0 min-w-0 overflow-y-auto bg-[color:var(--book-paper)]">
-            <article className="book-reader mx-auto w-full max-w-[760px] px-6 pb-20 pt-10 sm:px-10">
-              <p className="font-mono uppercase text-[color:var(--book-cinnabar)]">
-                Reader preview
-              </p>
-              <h1 className="book-reading-heading mt-3 text-center font-serif text-3xl font-semibold sm:text-4xl">
-                {title || "Untitled section"}
-              </h1>
+            <article className="book-reader mx-auto w-full max-w-[760px] px-6 pb-20 pt-10 sm:px-10 lg:px-12">
+              <header className="border-b border-border/70 pb-8 text-center">
+                <div className="mb-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono dot-micro uppercase text-muted-foreground">
+                  <span className="text-[color:var(--book-cinnabar)]">Draft reader</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{words.toLocaleString()} words</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock3 className="h-3 w-3" aria-hidden="true" />
+                    {readingMinutes} min
+                  </span>
+                </div>
+                <h1 className="book-reading-heading mx-auto max-w-[18ch] text-balance font-serif text-4xl font-semibold leading-[1.05] tracking-[-0.025em] sm:text-5xl">
+                  {title || "Untitled section"}
+                </h1>
+              </header>
               <BookMarkdown content={body || "*This section has no text yet.*"} />
             </article>
           </div>
@@ -296,7 +317,7 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
 
       <footer className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border/60 px-4 py-2 dot-micro text-muted-foreground sm:px-5">
         <div className="flex items-center gap-3 font-mono uppercase">
-          <span>{words.toLocaleString()} words</span>
+          <span>{words.toLocaleString()} words · {readingMinutes} min read</span>
           <span>{section.status}</span>
           {dirty && <span className="text-[color:var(--book-cinnabar)]">Unsaved</span>}
           {saveState === "saved" && (
@@ -315,7 +336,7 @@ export function SectionEditor({ section, onRefresh }: SectionEditorProps) {
             type="button"
             onClick={() => void handleSave()}
             disabled={isSaving || loadingBody || !dirty}
-            className="inline-flex min-h-8 items-center gap-2 bg-foreground px-3 text-xs font-semibold text-background disabled:opacity-40"
+            className="dot-reading-action inline-flex min-h-8 items-center gap-2 px-3 text-xs disabled:opacity-40"
           >
             {isSaving ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />

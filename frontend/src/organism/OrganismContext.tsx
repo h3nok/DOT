@@ -11,14 +11,7 @@ import {
   DEFAULT_CONFIG,
   DEFAULT_VITALS,
   ORGANISM_STORAGE_KEY,
-  resolveContrast,
-  resolveDial,
-  resolveMeasure,
-  resolvePaperTone,
-  resolveParagraphStyle,
-  resolvePreset,
-  resolveReadingFont,
-  resolveTint,
+  resolveOrganismConfig,
   type OrganismConfig,
   type OrganismContextValue,
   type OrganismMood,
@@ -58,21 +51,7 @@ function loadConfig(): OrganismConfig {
   try {
     const raw = window.localStorage.getItem(ORGANISM_STORAGE_KEY);
     if (!raw) return firstVisitConfig();
-    const saved = JSON.parse(raw) as Partial<OrganismConfig>;
-    return {
-      ...DEFAULT_CONFIG,
-      ...saved,
-      preset: resolvePreset(saved.preset),
-      contrast: resolveContrast(saved.contrast),
-      tint: resolveTint(saved.tint),
-      readingFont: resolveReadingFont(saved.readingFont),
-      readingMeasure: resolveMeasure(saved.readingMeasure),
-      paragraphStyle: resolveParagraphStyle(saved.paragraphStyle),
-      paperTone: resolvePaperTone(saved.paperTone),
-      fieldScale: resolveDial(saved.fieldScale, 0.5, 1.6, DEFAULT_CONFIG.fieldScale),
-      fieldSpeed: resolveDial(saved.fieldSpeed, 0, 1.6, DEFAULT_CONFIG.fieldSpeed),
-      fieldContrast: resolveDial(saved.fieldContrast, 0.5, 2, DEFAULT_CONFIG.fieldContrast),
-    };
+    return resolveOrganismConfig(JSON.parse(raw));
   } catch {
     return firstVisitConfig();
   }
@@ -190,7 +169,7 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setConfig = useCallback((patch: Partial<OrganismConfig>) => {
     setConfigState((prev) => {
-      const next = { ...prev, ...patch };
+      const next = resolveOrganismConfig({ ...prev, ...patch });
       try {
         window.localStorage.setItem(ORGANISM_STORAGE_KEY, JSON.stringify(next));
       } catch {

@@ -32,6 +32,9 @@ describe("BookMarkdown", () => {
     expect(
       screen.getByRole("heading", { name: "Love Creates Room for Truth" }),
     ).toHaveAttribute("id", "love-creates-room-for-truth");
+    expect(
+      container.querySelector(".book-section-heading__marker"),
+    ).toHaveTextContent("§ 01");
     expect(container.querySelector(".katex")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Research" })).toHaveAttribute(
       "rel",
@@ -137,7 +140,27 @@ describe("BookMarkdown", () => {
       '[data-editorial-form="epistemic-key"]',
     );
     expect(passage).toHaveClass("book-editorial-form");
+    expect(passage).toHaveAttribute("aria-label", "Epistemic key");
     expect(passage).toHaveTextContent("Some are observations. Some are models.");
+  });
+
+  it("keeps wide tables inside the reading measure", () => {
+    const { container } = render(
+      <BookMarkdown
+        content={[
+          "| Claim | Status |",
+          "| --- | --- |",
+          "| Experience occurs | Observation |",
+        ].join("\n")}
+      />,
+    );
+
+    const table = screen.getByRole("table");
+    expect(table.parentElement).toHaveClass("book-table-scroll");
+    expect(container.querySelector(".book-table-scroll")).toHaveAttribute(
+      "tabindex",
+      "0",
+    );
   });
 
   it("renders explicit claim levels through the shared editorial grammar", () => {

@@ -56,41 +56,36 @@ const manifest: DotBookOneManifest = {
 describe("BookLanding", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("states the proposal before offering finite ways into the book", () => {
+  it("presents one clear threshold before the finite book index", () => {
     render(
       <MemoryRouter>
         <BookLanding manifest={manifest} />
       </MemoryRouter>,
     );
 
-    // The Codex: automaton is central, title overlaid, thesis stated.
-    expect(screen.getByText(/What you do meets consequence/)).toBeInTheDocument();
+    // The cover and proposition share one composition; the reader gets one
+    // primary way into the complete edition rather than a second CTA section.
     expect(
       screen.getByText(/A construction, not a revelation/),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Begin reading/ }))
+    expect(screen.getByRole("link", { name: /Begin with the Preface/ }))
       .toHaveAttribute("href", "/book/digital-organism-theory/preface");
-    expect(
-      screen.getByRole("link", { name: /Entrances/i }),
-    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /PDF/ })).toBeInTheDocument();
-    expect(screen.getByText("A life is shaped, acts, and is shaped again.")).toBeInTheDocument();
-    expect(screen.getByText("Not every claim carries the same weight.")).toBeInTheDocument();
     expect(
-      screen.getByText("Read the argument or explore its structure."),
+      screen.getByRole("heading", {
+        name: "Consciousness, treated as architecture.",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Read Book One/ })).toHaveAttribute(
-      "href",
-      "/book/digital-organism-theory/preface",
-    );
-    expect(screen.getByRole("link", { name: /Concept Map/ })).toHaveAttribute(
+    expect(
+      screen.queryByText("A life is shaped, acts, and is shaped again."),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Read the claim at the level it earns.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open the concept map/ })).toHaveAttribute(
       "href",
       "/doctrine",
     );
-    expect(screen.getByText("Contents")).toBeInTheDocument();
-    expect(screen.queryByText("A reader's method")).not.toBeInTheDocument();
-    expect(screen.queryByText("An atlas of the argument")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Select a chapter to see the concepts/)).not.toBeInTheDocument();
+    expect(screen.getByText("A finite sequence.")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Entrances/i })).not.toBeInTheDocument();
   });
 
   it("continues an existing local reading path", () => {
@@ -106,14 +101,5 @@ describe("BookLanding", () => {
       "href",
       "/book/digital-organism-theory/the-canvas?path=start-where-you-live",
     );
-    expect(screen.getByRole("link", { name: /Continue Book One/ })).toHaveAttribute(
-      "href",
-      "/book/digital-organism-theory/the-canvas?path=start-where-you-live",
-    );
-    expect(
-      screen.getByText(
-        "Begin with lived experience, section 2 of 8: The Canvas.",
-      ),
-    ).toBeInTheDocument();
   });
 });

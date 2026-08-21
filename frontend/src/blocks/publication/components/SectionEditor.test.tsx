@@ -17,6 +17,33 @@ vi.mock("../../../services/OrchestratorPublicationService", async () => {
   return { ...actual, ...publicationApi };
 });
 
+vi.mock("./MarkdownManuscriptEditor", async () => {
+  const React = await import("react");
+  return {
+    MarkdownManuscriptEditor: React.forwardRef<
+      { getSelection: () => { start: number; end: number }; setSelection: (start: number, end: number) => void },
+      { value: string; onChange: (value: string) => void; ariaLabel?: string }
+    >(function MockMarkdownEditor({ value, onChange, ariaLabel }, forwardedRef) {
+      const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+      React.useImperativeHandle(forwardedRef, () => ({
+        getSelection: () => ({
+          start: textareaRef.current?.selectionStart ?? value.length,
+          end: textareaRef.current?.selectionEnd ?? value.length,
+        }),
+        setSelection: (start, end) => textareaRef.current?.setSelectionRange(start, end),
+      }));
+      return (
+        <textarea
+          ref={textareaRef}
+          aria-label={ariaLabel ?? "Manuscript Markdown editor"}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      );
+    }),
+  };
+});
+
 const section: PublicationSectionRead = {
   id: "sec_1",
   project_id: "pub_1",
@@ -80,7 +107,7 @@ describe("SectionEditor", () => {
     );
 
     await screen.findByDisplayValue(/Experience changes what comes next/);
-    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+    fireEvent.click(screen.getByRole("button", { name: "Reader" }));
 
     expect(
       container.querySelector('[data-editorial-form="plain-language"]'),

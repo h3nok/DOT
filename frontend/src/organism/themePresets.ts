@@ -6,7 +6,7 @@ import { DEFAULT_CONFIG, type OrganismConfig } from "./types";
  * Every knob in the panel is worth having, and nobody arrives wanting to set
  * eight of them. A preset is one considered answer to "what should this feel
  * like to read in": a base, a background, a surface treatment, an accent, and a
- * type choice that were decided together rather than dialled independently.
+ * paper tone that were decided together rather than dialled independently.
  *
  * Choosing one is not a mode. It writes the same config the individual controls
  * write, so the next adjustment refines it instead of leaving it — the panel
@@ -39,8 +39,6 @@ export type PresetConfig = Pick<
   | "uiStyle"
   | "tint"
   | "intensity"
-  | "contrast"
-  | "readingFont"
   | "paperTone"
   | "stillness"
   | "showMembrane"
@@ -63,8 +61,6 @@ const PRESET_KEYS: Array<keyof PresetConfig> = [
   "uiStyle",
   "tint",
   "intensity",
-  "contrast",
-  "readingFont",
   "paperTone",
   "stillness",
   "showMembrane",
@@ -81,9 +77,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "field",
       uiStyle: "organic",
       tint: "auto",
-      intensity: 0.85,
-      contrast: "standard",
-      readingFont: "serif",
+      intensity: 0.58,
       paperTone: "warm",
       stillness: false,
       showMembrane: true,
@@ -100,9 +94,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "flow",
       uiStyle: "neural",
       tint: "auto",
-      intensity: 0.85,
-      contrast: "standard",
-      readingFont: "serif",
+      intensity: 0.35,
       paperTone: "warm",
       stillness: false,
       showMembrane: true,
@@ -119,9 +111,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "lattice",
       uiStyle: "neural",
       tint: 202,
-      intensity: 0.72,
-      contrast: "standard",
-      readingFont: "sans",
+      intensity: 0.55,
       paperTone: "neutral",
       stillness: false,
       showMembrane: true,
@@ -132,15 +122,13 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "clarity",
     label: "Clarity",
-    hint: "Nothing behind the words, nothing moving, maximum contrast.",
+    hint: "Nothing behind the words and nothing moving. A quiet daylight page.",
     base: "light",
     config: {
       preset: "off",
       uiStyle: "organic",
       tint: 212,
       intensity: 0.35,
-      contrast: "high",
-      readingFont: "sans",
       paperTone: "neutral",
       stillness: true,
       showMembrane: false,
@@ -157,9 +145,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "flow",
       uiStyle: "neural",
       tint: 212,
-      intensity: 0.85,
-      contrast: "standard",
-      readingFont: "serif",
+      intensity: 0.62,
       paperTone: "cool",
       stillness: false,
       showMembrane: true,
@@ -176,9 +162,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "dots",
       uiStyle: "neural",
       tint: 288,
-      intensity: 0.95,
-      contrast: "standard",
-      readingFont: "sans",
+      intensity: 0.72,
       paperTone: "neutral",
       stillness: false,
       showMembrane: true,
@@ -195,9 +179,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "topology",
       uiStyle: "cinematic",
       tint: 265,
-      intensity: 0.9,
-      contrast: "standard",
-      readingFont: "serif",
+      intensity: 0.64,
       paperTone: "neutral",
       stillness: false,
       showMembrane: true,
@@ -214,9 +196,7 @@ export const THEME_PRESETS: ThemePreset[] = [
       preset: "ink",
       uiStyle: "organic",
       tint: 26,
-      intensity: 0.7,
-      contrast: "standard",
-      readingFont: "serif",
+      intensity: 0.56,
       paperTone: "sepia",
       stillness: false,
       showMembrane: true,
@@ -243,7 +223,7 @@ export const THEME_PRESETS: ThemePreset[] = [
  * would describe a choice they never made.
  */
 export const DEFAULT_ENVIRONMENT: Record<"light" | "dark", ThemePresetId> = {
-  light: "clarity",
+  light: "membrane",
   dark: "midnight",
 };
 

@@ -49,6 +49,13 @@ jobs:
 
     - name: Release Book One from the Word manuscript
       run: make release-book
+
+    - name: Verify release frontend
+      working-directory: frontend
+      run: |
+        pnpm lint
+        pnpm typecheck
+        pnpm exec vitest run
         
     - name: Build
       env:

@@ -22,7 +22,7 @@ import {
 } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
-import { EmergenceMark } from "./EmergenceMark";
+import { AutomataLoop } from "../../publication/AutomataLoop";
 import { HeroConcepts } from "./HeroConcepts";
 import { HeroAsk } from "./HeroAsk";
 import { HomeJourneyNav } from "./HomeJourneyNav";
@@ -30,90 +30,6 @@ import type { HeroAskRequest } from "./heroData";
 import { StepOneUnlearning } from "./StepOneUnlearning";
 import { ArchitectureDiagram } from "./ArchitectureDiagram";
 import "./home.css";
-
-const HERO_STATEMENTS = [
-  {
-    full: "Feeling is data, but feeling is not automatically truth.",
-    compact: "Feeling is data—not automatically truth.",
-  },
-  {
-    full: "No method removes the observer from existence.",
-    compact: "Science cannot remove the observer.",
-  },
-  {
-    full: "Fear can narrow the hypothesis space.",
-    compact: "Fear narrows the questions we can ask.",
-  },
-  {
-    full: "You can notice a proposed action without becoming it.",
-    compact: "An impulse is not your only option.",
-  },
-  {
-    full: "Love is the condition in which Fear no longer governs you.",
-    compact: "Love means Fear no longer governs.",
-  },
-] as const;
-
-function HeroTypewriter({ reducedMotion }: { reducedMotion: boolean }) {
-  const [heroStatementIndex, setHeroStatementIndex] = useState(0);
-  const [heroTypedLength, setHeroTypedLength] = useState(0);
-  const [useCompactStatement, setUseCompactStatement] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 640,
-  );
-
-  useEffect(() => {
-    const syncStatementLength = () => setUseCompactStatement(window.innerWidth < 640);
-    window.addEventListener("resize", syncStatementLength, { passive: true });
-    return () => window.removeEventListener("resize", syncStatementLength);
-  }, []);
-
-  const heroStatement = HERO_STATEMENTS[heroStatementIndex];
-  const displayedStatement = useCompactStatement
-    ? heroStatement.compact
-    : heroStatement.full;
-
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    if (heroTypedLength < displayedStatement.length) {
-      const timer = window.setTimeout(() => {
-        setHeroTypedLength((current) => current + 1);
-      }, 42);
-
-      return () => window.clearTimeout(timer);
-    }
-
-    if (heroStatementIndex >= HERO_STATEMENTS.length - 1) return;
-
-    const timer = window.setTimeout(() => {
-      setHeroStatementIndex((current) => current + 1);
-      setHeroTypedLength(0);
-    }, 2200);
-
-    return () => window.clearTimeout(timer);
-  }, [displayedStatement, heroStatementIndex, heroTypedLength, reducedMotion]);
-
-  const visibleHeroStatement = reducedMotion
-    ? displayedStatement
-    : displayedStatement.slice(0, heroTypedLength);
-  const heroSequenceSettled =
-    heroStatementIndex === HERO_STATEMENTS.length - 1 &&
-    visibleHeroStatement.length === displayedStatement.length;
-
-  return (
-    <p className="home-hero-lede mt-5" aria-label={heroStatement.full}>
-      <span
-        className="home-hero-typewriter"
-        data-static={reducedMotion ? "true" : "false"}
-        data-settled={heroSequenceSettled ? "true" : "false"}
-        aria-hidden="true"
-      >
-        <span className="home-hero-typewriter-text">{visibleHeroStatement}</span>
-        <span className="home-hero-typewriter-cursor" />
-      </span>
-    </p>
-  );
-}
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -197,60 +113,37 @@ export default function HomePage() {
       <motion.section
         id="threshold"
         aria-label="Introduction"
-        initial={{ opacity: 0, y: 12 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{
+          duration: reducedMotion ? 0 : 0.72,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        data-hero-motion={reducedMotion ? "still" : "full"}
         className="home-environment home-hero-environment"
       >
-        <div className="home-hero-stage" aria-hidden="true">
-          <span className="home-hero-axis home-hero-axis-horizontal" />
-          <span className="home-hero-stage-label home-hero-stage-label-time">
-            state persists through change
-          </span>
-          <div className="home-hero-state-trace">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="home-hero-mark">
-            <EmergenceMark size={380} settled={reducedMotion} />
-          </div>
-        </div>
-
-        <div className="home-hero-content dot-page-container dot-page-wide">
+        <div className="home-hero-layout dot-page-container dot-page-wide">
           <div className="home-hero-copy">
-            <p className="dot-label">
-              <span className="font-bold text-[color:var(--organism-accent-strong)]">D</span>igital{" "}
-              <span className="font-bold text-[color:var(--organism-accent-strong)]">O</span>rganism{" "}
-              <span className="font-bold text-[color:var(--organism-accent-strong)]">T</span>heory
+            <p className="home-hero-kicker dot-label">
+              Digital Organism Theory <span aria-hidden="true">·</span> Book One
             </p>
 
-            <h1 className="home-hero-title mt-5 text-balance">
-              <span className="block">
-                We are <span className="home-hero-title-code">digital.</span>
-              </span>
-              <span className="mt-2 block">Reality is information.</span>
+            <h1 className="home-hero-title mt-5">
+              <span>The observer belongs</span>
+              <span>in the inquiry.</span>
             </h1>
 
-            <HeroTypewriter reducedMotion={reducedMotion} />
-
-            <div className="home-hero-ask mt-8 w-full max-w-xl">
-            <HeroAsk
-              className="w-full"
-              onAsk={(request) => {
-                pulse(0.8);
-                setAsk({ ...request, id: Date.now() });
-              }}
-            />
-            </div>
+            <p className="home-hero-lede mt-5">
+              A framework where first-person experience is data—not automatically truth.
+            </p>
 
             <div className="home-hero-actions mt-6 w-full">
               <Link
-                to="/book/digital-organism-theory"
+                to="/book/digital-organism-theory/preface"
                 className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold transition-all active:scale-[0.98]"
               >
                 <BookOpen className="h-4 w-4" aria-hidden="true" />
-                <span>Read Book One</span>
+                <span>Read the argument</span>
                 <ArrowRight
                   className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"
@@ -269,7 +162,31 @@ export default function HomePage() {
               </Link>
             </div>
 
+            <div className="home-hero-ask mt-7 w-full max-w-xl">
+              <HeroAsk
+                className="w-full"
+                onAsk={(request) => {
+                  pulse(0.8);
+                  setAsk({ ...request, id: Date.now() });
+                }}
+              />
+            </div>
           </div>
+
+          <figure className="home-hero-stage">
+            <figcaption className="sr-only">
+              E is the field of possibility. Big C emerges from E, with RF₀ and
+              Little c nested inside its proposed architecture.
+            </figcaption>
+            <div className="home-hero-architecture-figure">
+              <AutomataLoop variant="hero" settled={reducedMotion} />
+            </div>
+          </figure>
+        </div>
+
+        <div className="home-hero-e-field" aria-hidden="true">
+          <span>E</span>
+          <span>Field of possibilities</span>
         </div>
 
         <a className="home-scroll-cue" href="#unlearning-experiment">

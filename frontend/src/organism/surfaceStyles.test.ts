@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { UI_STYLE_OPTIONS } from "./appearanceOptions";
+import { UI_STYLE_IDS } from "./types";
 
 /**
  * The surface styles reach onto the reading surface by class name, and a class
@@ -31,6 +33,8 @@ function collectMarkup(dir: string, out: string[] = []): string[] {
 
 describe("surface styles", () => {
   const markup = collectMarkup(SRC).join("\n");
+  const indexCss = readFileSync(join(SRC, "index.css"), "utf8");
+  const organismCss = readFileSync(join(SRC, "organism/organism.css"), "utf8");
 
   it("only styles reading-surface classes that something actually renders", () => {
     const orphans: string[] = [];
@@ -60,31 +64,26 @@ describe("surface styles", () => {
     expect(orphans).toEqual([]);
   });
 
-  it("keeps the primary entrance distinguishable in every surface style", () => {
-    // Each style paints the two entrances with one shared treatment. Whenever
-    // that treatment covers the ground the modifiers use to tell them apart,
-    // the style owes the primary a distinction of its own — otherwise the
-    // landing page offers two identical cards and no primary action.
-    const css = readFileSync(join(SRC, "organism/organism.css"), "utf8");
-    const styles = new Set(
-      [...css.matchAll(/html\[data-ui-style="([a-z]+)"\] \.book-entrance\b(?!-)/g)].map(
-        (m) => m[1],
-      ),
-    );
-    expect(styles.size).toBeGreaterThan(0);
+  it("connects every selectable surface style to the shared UI contract", () => {
+    expect(UI_STYLE_OPTIONS.map((option) => option.value)).toEqual(UI_STYLE_IDS);
 
-    for (const style of styles) {
-      const block = new RegExp(
-        `html\\[data-ui-style="${style}"\\] \\.book-entrance[^{]*\\{([^}]*)\\}`,
-      );
-      const shared = css.match(block)?.[1] ?? "";
-      const flattensGround = /(^|;|\s)background\s*:/.test(shared);
-      if (!flattensGround) continue;
-
-      const hasPrimaryRule = new RegExp(
-        `html\\[data-ui-style="${style}"\\] \\.book-entrance--primary`,
-      ).test(css);
-      expect(hasPrimaryRule, `${style} flattens the entrance ground`).toBe(true);
+    for (const style of UI_STYLE_IDS.filter((value) => value !== "default")) {
+      expect(organismCss).toContain(`html[data-ui-style="${style}"]`);
     }
+
+    for (const role of [
+      "appearance-ui-panel",
+      "appearance-ui-chrome",
+      "appearance-ui-control",
+    ]) {
+      expect(organismCss).toContain(`.${role}`);
+      expect(markup).toContain(role);
+    }
+  });
+
+  it("keeps translucent edge accents out of manuscript foreground text", () => {
+    expect(indexCss).not.toMatch(/color:\s*var\(--book-verdigris\)/);
+    expect(indexCss).toContain("color: var(--book-ink);");
+    expect(indexCss).toContain("font-size: 0.8em;");
   });
 });

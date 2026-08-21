@@ -131,7 +131,8 @@ html[data-measure="wide"] {
 /* Without the contents rail the page is just the column, so it keeps only the
    slack the gutters need. */
 .book-reading-grid[data-layout="focus"],
-.book-reading-grid[data-layout="companion"] {
+.book-reading-grid[data-layout="companion"],
+.book-reading-grid[data-layout="reader"] {
   max-width: min(100%, calc(var(--reading-measure) + 8.5rem));
 }
 
@@ -141,7 +142,8 @@ html[data-measure="wide"] {
   }
 
   .book-reading-grid[data-layout="focus"],
-  .book-reading-grid[data-layout="companion"] {
+  .book-reading-grid[data-layout="companion"],
+  .book-reading-grid[data-layout="reader"] {
     grid-template-columns: minmax(0, var(--reading-measure));
   }
 }
@@ -293,12 +295,11 @@ html[data-leading="loose"] .book-prose p {
 }
 
 /* ── Alignment ──────────────────────────────────────────────────────────────
-   Justified prose is the typographic convention of the printed book this text
-   came from, and it is only tolerable with hyphenation — without it the words
-   space out into rivers. Ragged right stays the default because it is easier
-   to read on a screen at any measure. */
+   Justified prose is the editorial default for this edition, but only for the
+   running argument and only with hyphenation. Epistemic interventions own
+   their alignment, and Focus/Open can return the page to a ragged edge. */
 
-html[data-align="justify"] .book-prose p,
+html[data-align="justify"] .book-prose > p,
 html[data-align="justify"] .book-prose li {
   text-align: justify;
   text-align-last: left;
@@ -307,16 +308,23 @@ html[data-align="justify"] .book-prose li {
   -webkit-hyphens: auto;
 }
 
-/* Never justify what is not running prose: a pull quote, a heading, or a
-   caption set justified reads as a layout fault. */
-html[data-align="justify"] .book-prose blockquote p,
-html[data-align="justify"] .book-prose figcaption,
-html[data-align="justify"] .book-prose h1,
-html[data-align="justify"] .book-prose h2,
-html[data-align="justify"] .book-prose h3 {
+html[data-align="left"] .book-prose > p,
+html[data-align="left"] .book-prose li {
   text-align: left;
-  hyphens: manual;
-  -webkit-hyphens: manual;
+  text-align-last: auto;
+  text-justify: auto;
+}
+
+/* A phone column is too narrow to absorb justification without opening rivers
+   through the page. The editorial preset therefore keeps its composed edge on
+   larger pages and becomes ragged-right where the measure cannot support it. */
+@media (max-width: 40rem) {
+  html[data-align="justify"] .book-prose > p,
+  html[data-align="justify"] .book-prose li {
+    text-align: left;
+    text-align-last: auto;
+    text-justify: auto;
+  }
 }
 
 /* ── The appearance panel ───────────────────────────────────────────────────
@@ -331,12 +339,21 @@ html[data-align="justify"] .book-prose h3 {
    more transparent, a brighter edge to catch the light, and a deeper cast. */
 
 .appearance-panel {
-  --appearance-ground: color-mix(in oklch, var(--background) 96%, transparent);
+  /* `--background` is itself a live expression with calculated organism
+     channels. Chromium rejects it when that expression is passed through a
+     second custom property in a background shorthand, silently handing the
+     panel back to Neural's 45% glass. This instrument therefore owns a solid
+     neutral ground; the active theme still reaches its borders and selection. */
+  --appearance-ground: oklch(0.985 0.002 210);
   --appearance-hairline: color-mix(in oklch, var(--foreground) 14%, transparent);
   --appearance-divider: color-mix(in oklch, var(--foreground) 9%, transparent);
   --appearance-rail: color-mix(in oklch, var(--foreground) 20%, transparent);
   --appearance-rail-hover: color-mix(in oklch, var(--foreground) 34%, transparent);
   --appearance-select: color-mix(in oklch, var(--organism-accent-strong) 7%, transparent);
+  --appearance-shadow:
+    0 1px 2px rgb(0 0 0 / 0.05),
+    0 16px 40px -12px rgb(0 0 0 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.7);
 
   --reading-scale: 1;
   /* The panel grew a room's worth of controls; give it the height to show a
@@ -344,24 +361,40 @@ html[data-align="justify"] .book-prose h3 {
   max-height: min(41rem, calc(100svh - 5rem));
   background: var(--appearance-ground);
   border: 1px solid var(--appearance-hairline);
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 0.05),
-    0 16px 40px -12px rgb(0 0 0 / 0.16),
-    inset 0 1px 0 rgb(255 255 255 / 0.7);
+  box-shadow: var(--appearance-shadow);
 }
 
 html.dark .appearance-panel {
-  --appearance-ground: color-mix(in oklch, var(--background) 86%, transparent);
+  --appearance-ground: oklch(0.075 0.008 212);
   --appearance-hairline: color-mix(in oklch, var(--foreground) 18%, transparent);
   --appearance-divider: color-mix(in oklch, var(--foreground) 12%, transparent);
   --appearance-rail: color-mix(in oklch, var(--foreground) 26%, transparent);
   --appearance-rail-hover: color-mix(in oklch, var(--foreground) 42%, transparent);
   --appearance-select: color-mix(in oklch, var(--organism-accent-strong) 16%, transparent);
-
-  box-shadow:
+  --appearance-shadow:
     0 1px 2px rgb(0 0 0 / 0.5),
     0 22px 50px -14px rgb(0 0 0 / 0.65),
     inset 0 1px 0 rgb(255 255 255 / 0.07);
+}
+
+/* Surface themes legitimately restyle ordinary dialogs, but this dialog is
+   the instrument used to choose those themes. Letting Neural or Cinematic
+   turn it into translucent glass puts the book's text through its controls,
+   especially on a phone. Its own ground and hierarchy therefore outrank every
+   selected surface style. */
+html[data-ui-style] .appearance-panel[role="dialog"] {
+  border-color: var(--appearance-hairline);
+  background: oklch(0.985 0.002 210);
+  box-shadow: var(--appearance-shadow);
+  backdrop-filter: blur(24px) saturate(112%);
+  -webkit-backdrop-filter: blur(24px) saturate(112%);
+}
+
+/* Neural's dark-dialog selector carries one extra class and is loaded after
+   this module. Match that specificity with `.dark` so source order cannot
+   return the panel to translucent glass. */
+html.dark[data-ui-style] .appearance-panel[role="dialog"] {
+  background: oklch(0.075 0.008 212);
 }
 
 /* Every rule inside the panel is one of two weights, so the panel reads as
@@ -422,6 +455,176 @@ html.dark .appearance-panel {
   background: linear-gradient(160deg, rgb(255 255 255 / 0.16), transparent 62%);
   pointer-events: none;
 }
+
+/* The option catalogue exposes stable identities; CSS owns their paint. This
+   keeps the configuration reusable and prevents the settings component from
+   becoming a second, inline theme engine. */
+.appearance-tint[data-tint="auto"] {
+  background: conic-gradient(
+    hsl(212 52% 55%),
+    hsl(265 48% 60%),
+    hsl(348 52% 58%),
+    hsl(28 62% 55%),
+    hsl(158 42% 45%),
+    hsl(212 52% 55%)
+  );
+}
+
+.appearance-tint[data-tint="indigo"] { background: hsl(212 52% 55%); }
+.appearance-tint[data-tint="violet"] { background: hsl(265 48% 60%); }
+.appearance-tint[data-tint="jade"] { background: hsl(158 42% 45%); }
+.appearance-tint[data-tint="amber"] { background: hsl(28 62% 55%); }
+.appearance-tint[data-tint="rose"] { background: hsl(348 52% 58%); }
+.appearance-tint[data-tint="cyan"] { background: hsl(190 55% 50%); }
+.appearance-tint[data-tint="sage"] { background: hsl(82 35% 48%); }
+
+.appearance-hue-track {
+  background: linear-gradient(
+    to right,
+    hsl(0 62% 55%),
+    hsl(30 62% 55%),
+    hsl(60 62% 55%),
+    hsl(90 62% 55%),
+    hsl(120 62% 55%),
+    hsl(150 62% 55%),
+    hsl(180 62% 55%),
+    hsl(210 62% 55%),
+    hsl(240 62% 55%),
+    hsl(270 62% 55%),
+    hsl(300 62% 55%),
+    hsl(330 62% 55%),
+    hsl(360 62% 55%)
+  );
+}
+
+.appearance-hue-track[data-auto="true"] { opacity: 0.45; }
+
+.appearance-preset-page[data-base="light"] { color: hsl(30 14% 22%); }
+.appearance-preset-page[data-base="dark"] { color: hsl(40 12% 88%); }
+.appearance-preset-page[data-base="light"][data-paper-tone="neutral"] { background: hsl(40 6% 97%); }
+.appearance-preset-page[data-base="light"][data-paper-tone="warm"] { background: hsl(40 42% 95%); }
+.appearance-preset-page[data-base="light"][data-paper-tone="sepia"] { background: hsl(38 54% 91%); }
+.appearance-preset-page[data-base="light"][data-paper-tone="cool"] { background: hsl(215 30% 96%); }
+.appearance-preset-page[data-base="dark"][data-paper-tone="neutral"] { background: hsl(220 14% 12%); }
+.appearance-preset-page[data-base="dark"][data-paper-tone="warm"] { background: hsl(30 16% 13%); }
+.appearance-preset-page[data-base="dark"][data-paper-tone="sepia"] { background: hsl(28 20% 14%); }
+.appearance-preset-page[data-base="dark"][data-paper-tone="cool"] { background: hsl(220 20% 12%); }
+
+/* Reading styles are arrangements, not decorative themes. Their previews use
+   one quiet glyph and the actual line geometry each choice will produce, so
+   the difference between Print, Focus, and Open can be seen before it is read. */
+.appearance-reading-style {
+  min-height: 8.4rem;
+}
+
+.appearance-reading-preview {
+  display: flex;
+  height: 3.5rem;
+  align-items: center;
+  gap: 0.7rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, currentColor 12%, transparent);
+  border-radius: 0.65rem;
+  padding: 0.65rem;
+  background:
+    linear-gradient(145deg, color-mix(in oklch, currentColor 4%, transparent), transparent),
+    color-mix(in oklch, var(--background) 82%, transparent);
+}
+
+.appearance-reading-preview__glyph {
+  flex: none;
+  color: var(--foreground);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.appearance-reading-preview__lines {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4.5px;
+  transform-origin: left center;
+}
+
+.appearance-reading-preview__lines > span {
+  display: block;
+  height: 1px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.42;
+}
+
+.appearance-reading-preview__lines > span:nth-child(1) { width: 100%; }
+.appearance-reading-preview__lines > span:nth-child(2) { width: 82%; }
+.appearance-reading-preview__lines > span:nth-child(3) { width: 93%; }
+.appearance-reading-preview__lines > span:nth-child(4) { width: 68%; }
+
+.appearance-reading-preview[data-measure="narrow"] .appearance-reading-preview__lines {
+  transform: scaleX(0.72);
+}
+
+.appearance-reading-preview[data-measure="standard"] .appearance-reading-preview__lines {
+  transform: scaleX(0.88);
+}
+
+.appearance-reading-preview[data-leading="tight"] .appearance-reading-preview__lines { gap: 3px; }
+.appearance-reading-preview[data-leading="loose"] .appearance-reading-preview__lines { gap: 6px; }
+
+.appearance-reading-preview[data-paragraph="indented"]
+  .appearance-reading-preview__lines > span:nth-child(3) {
+  margin-left: 12%;
+}
+
+.appearance-reading-preview[data-align="justify"]
+  .appearance-reading-preview__lines
+  > span:not(:last-child) {
+  width: 100% !important;
+}
+
+.appearance-reading-preview[data-reading="serif"],
+.appearance-font-sample[data-reading="serif"],
+.appearance-reading-sample[data-reading="serif"] {
+  font-family: "Source Serif 4", Charter, Georgia, serif;
+}
+
+.appearance-reading-preview[data-reading="sans"],
+.appearance-font-sample[data-reading="sans"],
+.appearance-reading-sample[data-reading="sans"] {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.appearance-reading-preview[data-reading="humanist"],
+.appearance-font-sample[data-reading="humanist"],
+.appearance-reading-sample[data-reading="humanist"] {
+  font-family: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
+}
+
+.appearance-reading-preview[data-reading="mono"],
+.appearance-font-sample[data-reading="mono"],
+.appearance-reading-sample[data-reading="mono"] {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.appearance-size-sample[data-size="s"] { font-size: 0.644rem; }
+.appearance-size-sample[data-size="m"] { font-size: 0.7rem; }
+.appearance-size-sample[data-size="l"] { font-size: 0.784rem; }
+.appearance-size-sample[data-size="xl"] { font-size: 0.882rem; }
+
+.appearance-reading-sample { font-size: 0.86rem; }
+.appearance-reading-sample[data-scale="0.92"] { font-size: 0.791rem; }
+.appearance-reading-sample[data-scale="1.12"] { font-size: 0.963rem; }
+.appearance-reading-sample[data-scale="1.26"] { font-size: 1.084rem; }
+.appearance-reading-sample[data-leading="tight"] { line-height: 1.48; }
+.appearance-reading-sample[data-leading="standard"] { line-height: 1.68; }
+.appearance-reading-sample[data-leading="loose"] { line-height: 1.92; }
+.appearance-reading-sample[data-align="left"] { hyphens: manual; text-align: left; }
+.appearance-reading-sample[data-align="justify"] { hyphens: auto; text-align: justify; }
+.appearance-reading-sample[data-paragraph="spaced"] p + p { margin-top: 0.75em; }
+.appearance-reading-sample[data-paragraph="indented"] p + p { text-indent: 1.4em; }
 
 /* A selected control is marked by its own accent rather than by a border that
    changes the element's size — nothing in the panel should shift as it is used.

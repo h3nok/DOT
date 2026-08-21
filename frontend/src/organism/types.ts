@@ -295,18 +295,47 @@ export function resolveDial(value: unknown, min: number, max: number, fallback: 
  */
 export type ReadingLeading = "tight" | "standard" | "loose";
 
+const READING_LEADINGS: ReadingLeading[] = ["tight", "standard", "loose"];
+
+export function resolveReadingLeading(value: unknown): ReadingLeading {
+  return READING_LEADINGS.includes(value as ReadingLeading)
+    ? (value as ReadingLeading)
+    : DEFAULT_CONFIG.readingLeading;
+}
+
 /** Ragged-right or justified prose, as the reader prefers to be read to. */
 export type ReadingAlign = "left" | "justify";
+
+export function resolveReadingAlign(value: unknown): ReadingAlign {
+  return value === "left" || value === "justify"
+    ? value
+    : DEFAULT_CONFIG.readingAlign;
+}
 
 /** Accessible contrast treatment across interface and reading surfaces. */
 export type AppearanceContrast = "standard" | "high";
 
 /**
  * UI surface style — how cards, borders, and interactive elements feel.
- * Each style applies a CSS class to <html> that organism.css uses to restyle
+ * Each style publishes a data attribute on <html> that organism.css uses to restyle
  * shared surface tokens (border-radius, backdrop, shadow, border treatment).
  */
 export type UIStyle = "default" | "neural" | "minimal" | "organic" | "editorial" | "cinematic";
+
+export const UI_STYLE_IDS: readonly UIStyle[] = [
+  "default",
+  "editorial",
+  "minimal",
+  "organic",
+  "cinematic",
+  "neural",
+];
+
+export function resolveUIStyle(value: unknown): UIStyle {
+  return UI_STYLE_IDS.includes(value as UIStyle)
+    ? (value as UIStyle)
+    : DEFAULT_CONFIG.uiStyle;
+}
 
 export function resolveContrast(value: unknown): AppearanceContrast {
   return value === "high" ? "high" : "standard";
@@ -417,16 +446,61 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   readingFont: "serif",
   // Medium is 1; the S/M/L/XL scale is 0.92 / 1 / 1.12 / 1.26.
   readingScale: 1,
-  // A wide measure with generous leading and justified, spaced paragraphs —
-  // the settings of a printed book rather than of a web page. Justification is
-  // only safe here because `.book-prose p` already carries `hyphens: auto` with
-  // `hyphenate-limit-chars: 6 3 2`; justified text without hyphenation opens
-  // rivers of white space down the column.
-  readingLeading: "loose",
+  // Editorial is the book's composed screen arrangement: a defended line
+  // length, enough leading to return to the next line, and restrained
+  // justification supported by hyphenation. Focus and Open remain ragged-right
+  // alternatives for readers who track more comfortably that way.
+  readingLeading: "standard",
   readingAlign: "justify",
-  readingMeasure: "wide",
+  readingMeasure: "standard",
   paragraphStyle: "spaced",
   paperTone: "neutral",
 };
 
 export const ORGANISM_STORAGE_KEY = "dot_organism";
+
+function resolveBoolean(value: unknown, fallback: boolean): boolean {
+  return typeof value === "boolean" ? value : fallback;
+}
+
+/**
+ * One boundary for every appearance configuration entering the app.
+ *
+ * Local storage and named environments can outlive the UI that wrote them.
+ * Reconstructing every field here prevents a stale or hand-edited value from
+ * becoming a document attribute that no stylesheet understands. The control,
+ * persistence layer, and first-visit presets therefore all resolve to the same
+ * complete shape rather than maintaining parallel partial validators.
+ */
+export function resolveOrganismConfig(value: unknown): OrganismConfig {
+  const saved = value && typeof value === "object"
+    ? (value as Partial<OrganismConfig>)
+    : {};
+
+  return {
+    enabled: resolveBoolean(saved.enabled, DEFAULT_CONFIG.enabled),
+    intensity: resolveDial(saved.intensity, 0, 1, DEFAULT_CONFIG.intensity),
+    preset: resolvePreset(saved.preset),
+    showMembrane: resolveBoolean(saved.showMembrane, DEFAULT_CONFIG.showMembrane),
+    showHud: resolveBoolean(saved.showHud, DEFAULT_CONFIG.showHud),
+    tint: resolveTint(saved.tint),
+    stillness: resolveBoolean(saved.stillness, DEFAULT_CONFIG.stillness),
+    fieldScale: resolveDial(saved.fieldScale, 0.5, 1.6, DEFAULT_CONFIG.fieldScale),
+    fieldSpeed: resolveDial(saved.fieldSpeed, 0, 1.6, DEFAULT_CONFIG.fieldSpeed),
+    fieldContrast: resolveDial(
+      saved.fieldContrast,
+      0.5,
+      2,
+      DEFAULT_CONFIG.fieldContrast,
+    ),
+    contrast: resolveContrast(saved.contrast),
+    uiStyle: resolveUIStyle(saved.uiStyle),
+    readingFont: resolveReadingFont(saved.readingFont),
+    readingScale: resolveDial(saved.readingScale, 0.9, 1.3, DEFAULT_CONFIG.readingScale),
+    readingLeading: resolveReadingLeading(saved.readingLeading),
+    readingAlign: resolveReadingAlign(saved.readingAlign),
+    readingMeasure: resolveMeasure(saved.readingMeasure),
+    paragraphStyle: resolveParagraphStyle(saved.paragraphStyle),
+    paperTone: resolvePaperTone(saved.paperTone),
+  };
+}

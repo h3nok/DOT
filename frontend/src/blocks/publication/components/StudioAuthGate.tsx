@@ -30,15 +30,15 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
         <p className="mt-8 font-mono dot-micro uppercase text-[color:var(--organism-accent-strong)]">
           Private workspace
         </p>
-        <h1 className="mt-2 font-serif text-3xl font-semibold">Publication Studio</h1>
-        <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+        <h1 className="dot-page-heading mt-2">Publication Studio</h1>
+        <p className="dot-caption mx-auto mt-4 max-w-sm">
           Sign in to open the private workspace. Public reading remains
           available without an account.
         </p>
         <button
           type="button"
           onClick={() => setSignInOpen(true)}
-          className="mt-7 inline-flex min-h-11 items-center gap-2 bg-foreground px-5 text-sm font-semibold text-background"
+          className="dot-reading-action mt-7"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />
           Sign in

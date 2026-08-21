@@ -48,10 +48,23 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           cy={50}
           r={46}
           fill="url(#emergence-halo)"
-          initial={settled ? false : { opacity: 0, scale: 0.2 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={settled ? false : { opacity: 0, scale: 0.12 }}
+          animate={
+            settled
+              ? { opacity: 1, scale: 1 }
+              : { opacity: [0, 1, 0.82], scale: [0.12, 1.06, 1] }
+          }
           style={{ transformOrigin: "50px 50px" }}
-          transition={t(0.15, 2.4)}
+          transition={
+            settled
+              ? { duration: 0 }
+              : {
+                  delay: 0.1,
+                  duration: 3.1,
+                  times: [0, 0.72, 1],
+                  ease: "easeOut",
+                }
+          }
         />
 
         {/* 1 — the dot. Nothing else exists yet. */}
@@ -61,10 +74,21 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           r={7.5}
           fill={ACCENT_STRONG}
           initial={settled ? false : { scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          animate={
+            settled
+              ? { scale: 1, opacity: 1 }
+              : { scale: [0, 1.22, 1], opacity: [0, 1, 1] }
+          }
           style={{ transformOrigin: "50px 50px" }}
           transition={
-            settled ? { duration: 0 } : { delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }
+            settled
+              ? { duration: 0 }
+              : {
+                  delay: 0.18,
+                  duration: 1.15,
+                  times: [0, 0.72, 1],
+                  ease: [0.16, 1, 0.3, 1],
+                }
           }
         />
 
@@ -76,9 +100,27 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           stroke={ACCENT_STRONG}
           strokeWidth={1.4}
           vectorEffect="non-scaling-stroke"
-          initial={settled ? false : { pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.36 }}
-          transition={t(0.85, 0.9)}
+          initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.8 }}
+          animate={
+            settled
+              ? { pathLength: 1, opacity: 0.36, scale: 1 }
+              : {
+                  pathLength: 1,
+                  opacity: 0.36,
+                  scale: [0.8, 1, 1.08, 1],
+                }
+          }
+          style={{ transformOrigin: "50px 50px" }}
+          transition={
+            settled
+              ? { duration: 0 }
+              : {
+                  delay: 0.72,
+                  duration: 2.25,
+                  times: [0, 0.38, 0.72, 1],
+                  ease: "easeOut",
+                }
+          }
         />
 
         {/* 3 — the two arcs: structure that is not yet closed. */}
@@ -88,9 +130,10 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           strokeWidth={2.25}
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
-          initial={settled ? false : { pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.9 }}
-          transition={t(1.15, 1.2)}
+          initial={settled ? false : { pathLength: 0, opacity: 0, rotate: -9 }}
+          animate={{ pathLength: 1, opacity: 0.9, rotate: 0 }}
+          style={{ transformOrigin: "50px 50px" }}
+          transition={t(1.05, 1.45)}
         />
         <motion.path
           d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16"
@@ -98,9 +141,10 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           strokeWidth={1.8}
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
-          initial={settled ? false : { pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.56 }}
-          transition={t(1.45, 1.2)}
+          initial={settled ? false : { pathLength: 0, opacity: 0, rotate: 9 }}
+          animate={{ pathLength: 1, opacity: 0.56, rotate: 0 }}
+          style={{ transformOrigin: "50px 50px" }}
+          transition={t(1.3, 1.55)}
         />
 
         {/* 4 — the field it now sits inside. */}
@@ -111,9 +155,10 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           stroke={ACCENT}
           strokeWidth={1.55}
           vectorEffect="non-scaling-stroke"
-          initial={settled ? false : { pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.62 }}
-          transition={t(1.9, 1)}
+          initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.9 }}
+          animate={{ pathLength: 1, opacity: 0.62, scale: 1 }}
+          style={{ transformOrigin: "50px 50px" }}
+          transition={t(1.75, 1.25)}
         />
         <motion.circle
           cx={50}
@@ -122,9 +167,50 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
           stroke={ACCENT_SOFT}
           strokeWidth={1.35}
           vectorEffect="non-scaling-stroke"
-          initial={settled ? false : { pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={t(2.15, 1.1)}
+          initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.92 }}
+          animate={
+            settled
+              ? { pathLength: 1, opacity: 1, scale: 1 }
+              : { pathLength: 1, opacity: 1, scale: [0.92, 1.025, 1] }
+          }
+          style={{ transformOrigin: "50px 50px" }}
+          transition={
+            settled
+              ? { duration: 0 }
+              : {
+                  delay: 2,
+                  duration: 2.1,
+                  times: [0, 0.7, 1],
+                  ease: "easeOut",
+                }
+          }
+        />
+
+        {/* One finite acknowledgement: the completed organism changes its field. */}
+        <motion.circle
+          cx={50}
+          cy={50}
+          r={10}
+          stroke={ACCENT_STRONG}
+          strokeWidth={1}
+          vectorEffect="non-scaling-stroke"
+          initial={settled ? false : { opacity: 0, scale: 0.7 }}
+          animate={
+            settled
+              ? { opacity: 0, scale: 1 }
+              : { opacity: [0, 0.46, 0], scale: [0.7, 1.45, 2.35] }
+          }
+          style={{ transformOrigin: "50px 50px" }}
+          transition={
+            settled
+              ? { duration: 0 }
+              : {
+                  delay: 2.85,
+                  duration: 1.7,
+                  times: [0, 0.28, 1],
+                  ease: "easeOut",
+                }
+          }
         />
 
         {/* The interior the mark keeps for itself — the page showing through. */}

@@ -32,8 +32,11 @@ export default function PublicationStudioIndexPage() {
       <header className="border-b border-border/60 pb-8">
         <p className="dot-label">Private workspace</p>
         <h1 className="dot-page-heading mt-2">Publication studio</h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-          Open a manuscript project to revise its sections and prepare a finite release.
+        <p className="dot-lede mt-3 max-w-2xl">
+          Manuscript, evidence, edition.
+        </p>
+        <p className="dot-caption mt-3 max-w-xl">
+          Write in durable Markdown, distinguish observation from model and hypothesis, then inspect the exact reader experience before publishing a finite edition.
         </p>
       </header>
 
@@ -65,15 +68,17 @@ export default function PublicationStudioIndexPage() {
                   to={`/studio/${encodeURIComponent(project.id)}`}
                   className="group flex min-h-24 items-center gap-4 py-5 transition-colors hover:text-[color:var(--organism-accent-strong)]"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border/60 text-muted-foreground">
+                  <span className="dot-surface flex h-10 w-10 shrink-0 items-center justify-center text-muted-foreground">
                     <FileText className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-serif text-xl text-foreground">
+                    <span className="dot-section-heading block truncate">
                       {project.title}
                     </span>
-                    <span className="mt-1 block font-mono dot-micro uppercase text-muted-foreground">
-                      {project.type} · {project.status} · {project.visibility}
+                    <span className="mt-1.5 flex flex-wrap gap-1.5">
+                      <span className="dot-chip">{project.type}</span>
+                      <span className="dot-chip">{project.status}</span>
+                      <span className="dot-chip">{project.visibility}</span>
                     </span>
                   </span>
                   <ArrowRight

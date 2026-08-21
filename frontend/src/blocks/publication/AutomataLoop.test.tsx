@@ -22,4 +22,17 @@ describe("AutomataLoop", () => {
       ).toBeInTheDocument();
     }
   });
+
+  it("reduces to the containment figure in the home hero", () => {
+    render(<AutomataLoop variant="hero" />);
+
+    expect(
+      screen.getByLabelText(/DOT's proposed architecture/),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/architectural hypothesis/i)).toBeInTheDocument();
+    expect(screen.getByText(/not an observed finding/i)).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Experience loop controls"),
+    ).not.toBeInTheDocument();
+  });
 });

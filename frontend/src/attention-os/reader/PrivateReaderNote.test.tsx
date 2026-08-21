@@ -12,7 +12,8 @@ describe("PrivateReaderNote", () => {
     });
 
     fireEvent.change(note, { target: { value: "Return to this distinction." } });
-    expect(screen.getByText("Saved on this device")).toBeInTheDocument();
+    expect(screen.getByText("Saved")).toBeInTheDocument();
+    expect(screen.getByText(/Saved only in this browser/)).toBeInTheDocument();
     unmount();
 
     render(<PrivateReaderNote storageId="book-one.preface" />);

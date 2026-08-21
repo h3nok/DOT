@@ -14,6 +14,7 @@ import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import {
+  EDITORIAL_FORMS,
   claimLevelFromLabel,
   editorialFormFromText,
 } from "./editorialGrammar";
@@ -210,7 +211,7 @@ function ReaderSheet({
         <Dialog.Overlay className="fixed inset-0 z-[55] bg-background/40 backdrop-blur-xs" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="dot-surface book-reference-sheet fixed inset-x-3 bottom-3 z-[56] ml-auto max-h-[70svh] max-w-xl overflow-y-auto rounded-2xl border border-[var(--book-hairline)] bg-background/95 p-5 shadow-2xl backdrop-blur-xl sm:inset-x-6 sm:bottom-6 sm:p-7"
+          className="appearance-ui-panel dot-surface book-reference-sheet fixed inset-x-3 bottom-3 z-[56] ml-auto max-h-[70svh] max-w-xl overflow-y-auto border p-5 sm:inset-x-6 sm:bottom-6 sm:p-7"
         >
           <div className="flex items-start justify-between gap-5">
             <div className="flex items-center gap-3">
@@ -327,6 +328,12 @@ export function BookMarkdown({
 }) {
   const [activeAside, setActiveAside] = useState<ReaderAside | null>(null);
   const linkedConceptIds = new Set<string>();
+  const sectionHeadingNumbers = new Map(
+    Array.from(content.matchAll(/^##[ \t]+(.+?)\s*#*\s*$/gm), (match, index) => [
+      headingSlug(match[1].replace(/[*_`]/g, "")),
+      index + 1,
+    ]),
+  );
   const withConceptLinks = (children: ReactNode) =>
     linkConcepts(children, concepts, linkedConceptIds, (concept) =>
       setActiveAside({ kind: "concept", concept }),
@@ -347,17 +354,25 @@ export function BookMarkdown({
             ),
             h2: ({ children }) => {
               const id = headingId(children);
+              const sectionNumber = sectionHeadingNumbers.get(id) ?? 1;
+              const terminal = id === "conclusion";
               return (
                 <>
-                  <h2 id={id} className="scroll-mt-24">
-                    {children}
+                  <h2 id={id} className="book-section-heading scroll-mt-24">
+                    <span className="book-section-heading__marker" aria-hidden="true">
+                      {terminal ? "Coda" : `§ ${String(sectionNumber).padStart(2, "0")}`}
+                    </span>
+                    <span className="book-section-heading__title">{children}</span>
                   </h2>
                   {afterHeading?.[id]}
                 </>
               );
             },
             h3: ({ children }) => (
-              <h3 id={headingId(children)} className="scroll-mt-24">
+              <h3
+                id={headingId(children)}
+                className="book-subsection-heading scroll-mt-24"
+              >
                 {children}
               </h3>
             ),
@@ -392,12 +407,21 @@ export function BookMarkdown({
               );
             },
             li: ({ children }) => <li>{withConceptLinks(children)}</li>,
+            table: ({ children }) => (
+              <div className="book-table-scroll" tabIndex={0}>
+                <table>{children}</table>
+              </div>
+            ),
             blockquote: ({ children }) => {
               const form = editorialFormFromText(nodeText(children));
+              const definition = EDITORIAL_FORMS.find(
+                (candidate) => candidate.id === form,
+              );
               return (
                 <blockquote
                   className={form ? "book-editorial-form" : undefined}
                   data-editorial-form={form}
+                  aria-label={definition?.label}
                 >
                   {children}
                 </blockquote>

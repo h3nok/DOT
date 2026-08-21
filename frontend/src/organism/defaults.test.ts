@@ -41,34 +41,40 @@ describe("default environment", () => {
     }
   });
 
-  it("defaults to Clarity for light and Current for dark", () => {
-    expect(defaultConfigFor("light").preset).toBe("off");
-    expect(defaultConfigFor("dark").preset).toBe("flow");
-    expect(ORGANISM_PRESETS[defaultConfigFor("dark").preset].label).toBe("Current");
+  it("defaults to Current for both light and dark", () => {
+    for (const base of ["light", "dark"] as const) {
+      expect(defaultConfigFor(base).preset).toBe("flow");
+      expect(ORGANISM_PRESETS[defaultConfigFor(base).preset].label).toBe("Current");
+    }
   });
 
-  it("defaults to long-form type for dark and sans for Clarity light", () => {
-    const dark = defaultConfigFor("dark");
-    expect(dark.readingFont).toBe("serif");
-    expect(dark.contrast).toBe("standard");
-    expect(dark.enabled).toBe(true);
-    expect(dark.stillness).toBe(false);
-
-    const light = defaultConfigFor("light");
-    expect(light.readingFont).toBe("sans");
-    expect(light.contrast).toBe("high");
-    expect(light.stillness).toBe(true);
-    expect(light.enabled).toBe(true);
+  it("opens both defaults as living long-form environments", () => {
+    for (const base of ["light", "dark"] as const) {
+      const config = defaultConfigFor(base);
+      expect(config.readingFont).toBe("serif");
+      expect(config.contrast).toBe("standard");
+      expect(config.stillness).toBe(false);
+      expect(config.enabled).toBe(true);
+    }
   });
 
-  it("gives the dark default a pinned accent and Clarity a fixed tint", () => {
+  it("starts with a balanced screen-reading measure", () => {
+    for (const base of ["light", "dark"] as const) {
+      const config = defaultConfigFor(base);
+      expect(config.readingMeasure).toBe("standard");
+      expect(config.readingLeading).toBe("standard");
+      expect(config.readingAlign).toBe("justify");
+    }
+  });
+
+  it("lets daylight follow the hour while night keeps a pinned accent", () => {
     expect(defaultConfigFor("dark").tint).toBe(212);
-    expect(defaultConfigFor("light").tint).toBe(212);
+    expect(defaultConfigFor("light").tint).toBe("auto");
   });
 
-  it("uses the neural surface for dark and organic for Clarity", () => {
+  it("uses the neural surface for both living defaults", () => {
     expect(defaultConfigFor("dark").uiStyle).toBe("neural");
-    expect(defaultConfigFor("light").uiStyle).toBe("organic");
+    expect(defaultConfigFor("light").uiStyle).toBe("neural");
   });
 
   it("still offers an environment on the other side of every default", () => {

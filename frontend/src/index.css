@@ -530,13 +530,509 @@ html[data-contrast="high"] .book-chrome {
 }
 
 .book-chapter-header {
+  position: relative;
+  max-width: 46rem;
+  margin-bottom: 0;
+  margin-inline: auto;
+  padding-bottom: 3rem;
   border-color: var(--book-hairline);
+  border-bottom: 1px solid var(--book-hairline);
+  text-align: center;
+}
+
+.book-chapter-header::after {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 4rem;
+  height: 1px;
+  background: var(--book-cinnabar);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.book-chrome-action {
+  border: 1px solid transparent;
+}
+
+.book-chrome-action:hover,
+.book-chrome-action:focus-visible {
+  border-color: var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 72%, var(--foreground) 4%);
+  outline: none;
+}
+
+.book-contents-dialog {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--book-cinnabar) 4%, transparent),
+      transparent 18rem
+    ),
+    var(--book-paper);
+}
+
+.book-contents-dialog .book-contents {
+  gap: 2rem;
+}
+
+.book-contents-dialog .book-contents__part {
+  margin-bottom: 0.75rem;
+  color: color-mix(in oklch, var(--book-muted) 86%, var(--book-ink));
+}
+
+.book-contents-dialog .book-contents__entry {
+  grid-template-columns: 1.8rem minmax(0, 1fr);
+  gap: 0.35rem;
+  margin: 0 -0.5rem;
+  padding: 0.65rem 0.55rem;
+}
+
+.book-contents-dialog .book-contents__entry[data-active="true"] {
+  background: color-mix(in oklch, var(--book-cinnabar) 7%, transparent);
+  box-shadow: inset 2px 0 0 var(--book-cinnabar);
+}
+
+.book-contents-dialog .book-contents__title {
+  font-family: var(--book-reading-font);
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.book-contents-dialog .book-contents__cost {
+  margin-top: 0.2rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* E is the opening volume itself. The two leaves occupy the whole threshold,
    so there is one boundary, not a book object floating inside another frame. */
 .book-opening-volume {
   isolation: isolate;
+}
+
+/* Book One is presented as one bounded object, not a panel of controls. The
+   field continues behind it, while the cover resolves the same material into
+   a finite, authored form. */
+.book-cover-threshold-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 38% 52% at 50% 46%,
+      color-mix(in oklch, var(--book-cinnabar) 10%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 96% 82% at 50% 48%,
+      color-mix(in oklch, var(--book-paper) 96%, var(--foreground)) 0%,
+      var(--book-paper) 78%
+    );
+}
+
+.book-cover-threshold-field::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 74% 72% at 50% 48%,
+    transparent 42%,
+    color-mix(in oklch, var(--book-paper) 84%, var(--foreground)) 100%
+  );
+  content: "";
+}
+
+.book-cover-threshold-field .book-substrate {
+  inset: 0;
+  border-radius: 0;
+  clip-path: none;
+  opacity: 0.46;
+}
+
+.book-cover-threshold-field .book-substrate-flow {
+  animation-duration: 2.8s;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.book-cover-threshold-field .book-substrate-flow--return {
+  animation-duration: 3.4s;
+}
+
+.book-cover-presentation {
+  padding-block: clamp(2.75rem, 5.5vh, 4.5rem) 2rem;
+}
+
+.book-one-cover {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  aspect-ratio: 7 / 10;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--book-cinnabar) 34%, var(--book-hairline));
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at 50% 49%,
+      color-mix(in oklch, var(--book-cinnabar) 13%, transparent) 0%,
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in oklch, var(--book-paper) 93%, var(--book-ink)) 0%,
+      var(--book-paper) 48%,
+      color-mix(in oklch, var(--book-paper) 88%, var(--book-ink)) 100%
+    );
+  color: var(--book-ink);
+  box-shadow:
+    -0.55rem 0.7rem 0 color-mix(in oklch, var(--book-ink) 72%, var(--book-paper)),
+    -0.82rem 0.98rem 0 color-mix(in oklch, var(--book-ink) 18%, transparent),
+    0 2.2rem 5rem color-mix(in oklch, var(--book-ink) 28%, transparent),
+    0 0 4rem color-mix(in oklch, var(--book-cinnabar) 12%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--book-ink) 10%, transparent);
+}
+
+.book-one-cover::before {
+  position: absolute;
+  inset: 0.55rem;
+  z-index: 3;
+  border: 1px solid color-mix(in oklch, var(--book-cinnabar) 17%, transparent);
+  content: "";
+  pointer-events: none;
+}
+
+.book-one-cover::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-ink) 11%, transparent),
+      transparent 3.5% 96%,
+      color-mix(in oklch, var(--book-ink) 6%, transparent)
+    ),
+    radial-gradient(ellipse 82% 74% at 50% 50%, transparent 54%, color-mix(in oklch, var(--book-ink) 9%, transparent));
+  content: "";
+  pointer-events: none;
+}
+
+.book-one-cover-substrate {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-ink));
+}
+
+.book-one-cover-grid,
+.book-one-cover-traces {
+  fill: none;
+  stroke: currentColor;
+  vector-effect: non-scaling-stroke;
+}
+
+.book-one-cover-grid {
+  stroke-width: 0.6;
+  opacity: 0.1;
+}
+
+.book-one-cover-traces {
+  stroke-width: 1;
+  opacity: 0.34;
+}
+
+.book-one-cover-vias {
+  fill: var(--book-paper);
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.62;
+  vector-effect: non-scaling-stroke;
+}
+
+.book-one-cover-scan {
+  position: absolute;
+  top: -18%;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 16%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in oklch, var(--book-cinnabar) 7%, transparent),
+    transparent
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.book-one-cover-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 4;
+  width: 0.38rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--book-ink) 76%, var(--book-paper)),
+    color-mix(in oklch, var(--book-cinnabar) 38%, var(--book-ink)),
+    transparent
+  );
+  opacity: 0.72;
+}
+
+.book-one-cover-content {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  height: 100%;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  padding: 7.8cqi 8.8cqi 8.4cqi 10.5cqi;
+}
+
+.book-one-cover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--book-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(0.42rem, 2.05cqi, 0.58rem);
+  letter-spacing: 0.19em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.book-one-cover-header span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-one-cover-header span:last-child {
+  flex: none;
+  color: var(--book-cinnabar);
+}
+
+.book-one-cover-title-lockup {
+  margin-top: 7.5cqi;
+  text-align: left;
+}
+
+.book-one-cover-kicker {
+  display: block;
+  color: var(--book-cinnabar);
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(0.72rem, 3.7cqi, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.book-one-cover-title {
+  display: block;
+  max-width: 92%;
+  margin: 2.1cqi 0 0;
+  color: var(--book-ink);
+  font-family: "Space Grotesk", var(--font-sans, sans-serif);
+  font-size: clamp(1.65rem, 9.6cqi, 2.7rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.93;
+  text-wrap: balance;
+}
+
+.book-one-cover-organism {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1cqi;
+}
+
+.book-one-cover-organism svg {
+  width: min(69%, 15rem);
+  overflow: visible;
+}
+
+.book-one-cover-field-ring,
+.book-one-cover-architecture,
+.book-one-cover-feedback,
+.book-one-cover-core-boundary {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.book-one-cover-field-ring {
+  stroke: color-mix(in oklch, var(--book-cinnabar) 50%, var(--book-hairline));
+  stroke-dasharray: 1 7;
+  stroke-width: 0.8;
+  opacity: 0.48;
+}
+
+.book-one-cover-architecture {
+  stroke: var(--book-cinnabar);
+  stroke-linecap: round;
+  stroke-width: 1.75;
+}
+
+.book-one-cover-architecture path:nth-child(even) {
+  opacity: 0.62;
+}
+
+.book-one-cover-feedback {
+  stroke: color-mix(in oklch, var(--book-cinnabar) 62%, var(--book-ink));
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+  stroke-width: 1.2;
+  opacity: 0.7;
+}
+
+.book-one-cover-core-boundary {
+  stroke: color-mix(in oklch, var(--book-cinnabar) 76%, var(--book-ink));
+  stroke-width: 1.2;
+}
+
+.book-one-cover-core {
+  fill: var(--book-cinnabar);
+  filter: drop-shadow(0 0 0.9rem color-mix(in oklch, var(--book-cinnabar) 64%, transparent));
+}
+
+.book-one-cover-core-seed {
+  fill: var(--book-paper);
+}
+
+.book-one-cover-organism > span {
+  margin-top: -0.5cqi;
+  color: var(--book-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(0.38rem, 1.9cqi, 0.54rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.book-one-cover-footer {
+  border-top: 1px solid color-mix(in oklch, var(--book-cinnabar) 26%, var(--book-hairline));
+  padding-top: 4.2cqi;
+}
+
+.book-one-cover-footer > p {
+  max-width: 32ch;
+  margin: 0;
+  color: var(--book-muted);
+  font-family: var(--font-serif, serif);
+  font-size: clamp(0.52rem, 2.55cqi, 0.72rem);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.book-one-cover-footer > div {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 4cqi;
+}
+
+.book-one-cover-footer strong {
+  font-family: "Space Grotesk", var(--font-sans, sans-serif);
+  font-size: clamp(0.58rem, 2.8cqi, 0.82rem);
+  font-weight: 500;
+}
+
+.book-one-cover-footer span {
+  color: var(--book-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(0.36rem, 1.72cqi, 0.5rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .book-one-cover-scan {
+    animation: book-cover-scan 1.8s ease-out 0.35s 1 both;
+  }
+
+  html:not([data-motion="still"]) .book-one-cover-grid,
+  html:not([data-motion="still"]) .book-one-cover-traces,
+  html:not([data-motion="still"]) .book-one-cover-vias {
+    animation: book-cover-materialize 900ms ease-out 0.2s both;
+  }
+
+  html:not([data-motion="still"]) .book-one-cover-field-ring,
+  html:not([data-motion="still"]) .book-one-cover-feedback {
+    animation: book-cover-materialize 720ms ease-out 0.75s both;
+  }
+
+  html:not([data-motion="still"]) .book-one-cover-architecture path {
+    stroke-dasharray: 170;
+    stroke-dashoffset: 170;
+    animation: book-cover-draw 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.82s both;
+  }
+
+  html:not([data-motion="still"]) .book-one-cover-core,
+  html:not([data-motion="still"]) .book-one-cover-core-seed,
+  html:not([data-motion="still"]) .book-one-cover-core-boundary {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: book-cover-core-arrive 620ms cubic-bezier(0.16, 1, 0.3, 1) 1.35s both;
+  }
+}
+
+@keyframes book-cover-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(720%);
+  }
+}
+
+@keyframes book-cover-materialize {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes book-cover-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes book-cover-core-arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.25);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+html[data-contrast="high"] .book-one-cover {
+  box-shadow: -0.45rem 0.55rem 0 var(--book-ink);
+}
+
+@media (max-width: 639px) {
+  .book-cover-presentation {
+    padding-top: 3.75rem;
+  }
+
+  .book-cover-primary-actions {
+    max-width: 21rem;
+  }
 }
 
 html:has(.book-opening-volume) {
@@ -982,47 +1478,6 @@ html[data-motion="still"] .book-substrate-flow {
   top: 88%;
 }
 
-.book-entrance {
-  border-color: var(--book-hairline);
-  background: color-mix(in oklab, var(--book-vellum) 32%, transparent);
-}
-
-.book-entrance-icon {
-  border-color: var(--book-hairline);
-}
-
-.book-entrance--primary {
-  border-color: color-mix(in oklch, var(--book-cinnabar) 36%, var(--book-hairline));
-  background:
-    linear-gradient(
-      105deg,
-      color-mix(in oklch, var(--book-cinnabar) 9%, transparent),
-      transparent 56%
-    ),
-    color-mix(in oklab, var(--book-vellum) 48%, transparent);
-  box-shadow: inset 2px 0 0 color-mix(in oklch, var(--book-cinnabar) 68%, transparent);
-}
-
-.book-entrance--primary .book-entrance-icon {
-  border-color: color-mix(in oklch, var(--book-cinnabar) 42%, var(--book-hairline));
-  background: color-mix(in oklch, var(--book-cinnabar) 9%, transparent);
-}
-
-.book-entrance--secondary {
-  color: color-mix(in oklch, var(--book-ink) 88%, var(--book-muted));
-}
-
-.book-entrance:hover,
-.book-entrance:focus-visible {
-  border-color: color-mix(in oklch, var(--book-cinnabar) 62%, var(--book-hairline));
-  background-color: var(--book-vellum);
-  outline: none;
-}
-
-.book-entrance:focus-visible {
-  box-shadow: 0 0 0 2px var(--book-paper), 0 0 0 4px var(--book-cinnabar);
-}
-
 .book-contents-part + .book-contents-part {
   margin-top: 2.75rem;
 }
@@ -1109,6 +1564,262 @@ html[data-motion="still"] .book-substrate-flow {
   }
 
   .book-contents-part-heading::after {
+    display: none;
+  }
+}
+
+/* ── Book One volume overview ───────────────────────────────────────────────
+ *
+ * The overview is one reading threshold, not a landing page followed by a
+ * second landing page. The cover and proposition share the first composition;
+ * everything below it is either the reader contract, the finite index, or
+ * publication apparatus. No parallel set of entrance cards competes with the
+ * primary act of beginning the book.
+ */
+
+.book-volume {
+  background: color-mix(in oklab, var(--book-paper) 96%, transparent);
+}
+
+.book-volume-hero {
+  isolation: isolate;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--book-paper) 92%, transparent),
+      color-mix(in oklch, var(--book-paper) 72%, transparent) 48%,
+      color-mix(in oklch, var(--book-cinnabar) 4%, var(--book-paper))
+    );
+}
+
+.book-volume-hero::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 48% 60% at 28% 48%,
+    color-mix(in oklch, var(--book-cinnabar) 8%, transparent),
+    transparent 72%
+  );
+  content: "";
+}
+
+.book-volume-hero__layout {
+  isolation: isolate;
+}
+
+.book-volume-hero__cover {
+  perspective: 70rem;
+}
+
+.book-volume-hero__cover .book-one-cover {
+  transform: rotateY(1.5deg) rotateZ(-0.35deg);
+  box-shadow:
+    -1.2rem 1.5rem 3.5rem color-mix(in oklch, #000 32%, transparent),
+    0 0 3rem color-mix(in oklch, var(--book-cinnabar) 11%, transparent);
+}
+
+.book-volume-position {
+  position: relative;
+}
+
+.book-volume-position::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 3.25rem;
+  height: 1px;
+  background: var(--book-cinnabar);
+  content: "";
+}
+
+.book-volume-facts > span + span::before {
+  margin-right: 1.75rem;
+  color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-muted));
+  content: "/";
+}
+
+.book-volume-scroll {
+  opacity: 0.72;
+}
+
+.book-volume-body {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--book-cinnabar) 2.5%, transparent),
+      transparent 24rem
+    ),
+    var(--book-paper);
+}
+
+.book-volume-guide {
+  align-items: start;
+}
+
+.book-volume-claims {
+  align-self: stretch;
+}
+
+.book-volume-claim {
+  transition: background-color 160ms ease;
+}
+
+.book-volume-claim:hover {
+  background: color-mix(in oklch, var(--book-cinnabar) 3.5%, transparent);
+}
+
+.book-volume-contents {
+  background: color-mix(in oklch, var(--book-vellum) 28%, transparent);
+}
+
+.book-volume-part + .book-volume-part {
+  margin-top: 2.75rem;
+}
+
+.book-volume-section {
+  position: relative;
+}
+
+.book-volume-section::before {
+  position: absolute;
+  inset: 0 -0.75rem;
+  z-index: -1;
+  border-radius: 0.3rem;
+  background: color-mix(in oklch, var(--book-cinnabar) 5%, transparent);
+  opacity: 0;
+  content: "";
+  transition: opacity 160ms ease;
+}
+
+.book-volume-section:hover::before,
+.book-volume-section:focus-visible::before {
+  opacity: 1;
+}
+
+.book-volume-section:focus-visible {
+  outline: none;
+}
+
+.book-volume-section:focus-visible::after {
+  position: absolute;
+  inset: 0 -0.75rem;
+  border: 1px solid color-mix(in oklch, var(--book-cinnabar) 55%, transparent);
+  border-radius: 0.3rem;
+  content: "";
+}
+
+.book-volume-section__number {
+  letter-spacing: 0.12em;
+  transition: color 160ms ease;
+}
+
+.book-volume-section:hover .book-volume-section__number,
+.book-volume-section:focus-visible .book-volume-section__number {
+  color: var(--book-cinnabar);
+}
+
+.book-volume-apparatus {
+  align-items: start;
+}
+
+.book-volume-apparatus > :last-child {
+  margin: 0;
+}
+
+.book-volume-end {
+  position: relative;
+}
+
+.book-volume-end::before {
+  position: absolute;
+  top: -1px;
+  left: 1.5rem;
+  width: 5rem;
+  height: 1px;
+  background: var(--book-cinnabar);
+  content: "";
+}
+
+@media (max-width: 1023px) {
+  .book-volume-hero {
+    min-height: auto;
+    padding-top: 7rem;
+    padding-bottom: 6rem;
+  }
+
+  .book-volume-hero__layout {
+    max-width: 44rem;
+  }
+
+  .book-volume-hero__copy {
+    text-align: center;
+  }
+
+  .book-volume-hero__copy > p,
+  .book-volume-position {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .book-volume-hero__copy > div:not(.book-volume-position) {
+    justify-content: center;
+  }
+
+  .book-volume-scroll {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .book-volume-hero {
+    padding: 5.75rem 1.25rem 4.5rem;
+  }
+
+  .book-volume-hero__layout {
+    gap: 2.4rem;
+  }
+
+  .book-volume-hero__cover .book-one-cover {
+    width: min(14.5rem, 60vw);
+  }
+
+  .book-volume-hero__copy h1 {
+    margin-top: 1rem;
+    font-size: clamp(2.45rem, 11vw, 3rem);
+  }
+
+  .book-volume-hero__copy > p:nth-of-type(2) {
+    margin-top: 1.25rem;
+    font-size: 1.05rem;
+  }
+
+  .book-volume-position {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .book-volume-facts {
+    flex-direction: column;
+  }
+
+  .book-volume-facts > span + span::before {
+    display: none;
+  }
+
+  .book-volume-claim:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .book-volume-section {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .book-volume-section > :last-child {
     display: none;
   }
 }
@@ -1510,17 +2221,185 @@ html[data-motion="still"] .dot-emergence-signal {
   font-variant-ligatures: common-ligatures;
 }
 
+/* The page carries an argument, not a stream of unseparated text. Tailwind's
+   reset removes native manuscript spacing, so the reader has to restore an
+   explicit book rhythm: paragraph, section, subsection, then apparatus. The
+   indented reading preset can still collapse these margins in appearance.css. */
+.book-prose > p {
+  margin-block: 0 1.18em;
+}
+
+.book-prose > p:last-child {
+  margin-bottom: 0;
+}
+
+.book-prose .book-section-heading {
+  display: flex;
+  max-width: 38rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 5.5rem auto 1.75rem;
+  color: var(--book-ink);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.book-prose > .book-section-heading:first-child {
+  margin-top: 0.5rem;
+}
+
+.book-prose .book-section-heading__marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(0.62rem * var(--reading-scale, 1));
+  font-weight: 600;
+  line-height: 1;
+  color: var(--book-cinnabar);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.book-prose .book-section-heading__marker::before,
+.book-prose .book-section-heading__marker::after {
+  width: 1.35rem;
+  height: 1px;
+  background: color-mix(in oklch, var(--book-cinnabar) 52%, var(--book-hairline));
+  content: "";
+}
+
+.book-prose .book-section-heading__title {
+  display: block;
+}
+
+.book-prose .book-subsection-heading {
+  margin: 3.6rem 0 1.25rem;
+  color: var(--book-ink);
+  font-size: calc(1.3rem * var(--reading-scale, 1));
+  font-weight: 600;
+  line-height: 1.28;
+  text-wrap: balance;
+}
+
+/* Chapter subsections belong to the same centred editorial axis as section
+   openings. Notes and Sources keeps its denser, left-aligned reference heads. */
+.book-prose--chapter .book-subsection-heading {
+  max-width: 32rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.book-prose h4 {
+  margin: 2.6rem 0 1rem;
+  color: var(--book-ink);
+  font-size: calc(1.08rem * var(--reading-scale, 1));
+  font-weight: 650;
+}
+
+.book-prose ul,
+.book-prose ol {
+  margin-block: 1.45rem 1.75rem;
+  padding-left: 1.55rem;
+}
+
+.book-prose ul {
+  list-style: disc;
+}
+
+.book-prose ol {
+  list-style: decimal;
+}
+
+.book-prose li {
+  margin-block: 0.45rem;
+  padding-left: 0.35rem;
+}
+
+.book-prose li::marker {
+  color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-muted));
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.78em;
+}
+
+.book-prose li > ul,
+.book-prose li > ol {
+  margin-block: 0.55rem;
+}
+
+.book-prose strong {
+  color: color-mix(in oklch, var(--book-ink) 94%, var(--book-cinnabar));
+  font-weight: 680;
+}
+
+.book-prose .book-table-scroll {
+  width: 100%;
+  margin-block: 2.25rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.book-prose .book-table-scroll:focus-visible {
+  outline: 1px solid var(--book-cinnabar);
+  outline-offset: 0.3rem;
+}
+
+.book-prose table {
+  width: 100%;
+  min-width: 32rem;
+  border-collapse: collapse;
+  font-family: var(--book-reading-font);
+  font-size: calc(0.92rem * var(--reading-scale, 1));
+  line-height: 1.55;
+}
+
+.book-prose th,
+.book-prose td {
+  border-bottom: 1px solid var(--book-hairline);
+  padding: 0.75rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.book-prose th {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72em;
+  color: var(--book-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.book-prose :not(pre) > code {
+  border: 1px solid var(--book-hairline);
+  border-radius: 0.22rem;
+  background: color-mix(in oklch, var(--book-paper) 84%, var(--foreground) 4%);
+  padding: 0.08em 0.32em;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.82em;
+}
+
+.book-prose pre {
+  margin-block: 2rem;
+  overflow-x: auto;
+  border: 1px solid var(--book-hairline);
+  background: color-mix(in oklch, var(--book-paper) 82%, var(--foreground) 4%);
+  padding: 1.25rem;
+  font-size: calc(0.82rem * var(--reading-scale, 1));
+  line-height: 1.65;
+}
+
 /* Book One has an epistemic grammar as well as a typographic hierarchy. These
    treatments are intentionally sparse: they identify what kind of passage a
    reader has reached without turning the manuscript into a collection of UI. */
 .book-prose .book-editorial-form {
   position: relative;
   display: block;
-  margin-block: 2.75rem;
+  margin-block: 3.25rem;
   border: 0;
   border-block: 1px solid var(--book-hairline);
-  background: color-mix(in oklab, var(--book-paper) 74%, transparent);
-  padding: 1.4rem 1.25rem 1.5rem;
+  background: color-mix(in oklab, var(--book-paper) 82%, transparent);
+  padding: 1.65rem clamp(1rem, 4vw, 2.25rem) 1.75rem;
 }
 
 .book-prose .book-editorial-form > p {
@@ -1530,14 +2409,32 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose .book-editorial-form > p:first-child {
-  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 0 0 1.25rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: calc(0.66rem * var(--reading-scale, 1));
   font-weight: 650;
   line-height: 1.4;
   color: var(--book-cinnabar);
-  text-align: left;
+  letter-spacing: 0.16em;
+  text-align: center;
   text-transform: uppercase;
+}
+
+.book-prose .book-editorial-form > p:first-child::before,
+.book-prose .book-editorial-form > p:first-child::after {
+  width: clamp(1rem, 6vw, 3rem);
+  height: 1px;
+  background: color-mix(in oklch, var(--book-cinnabar) 42%, var(--book-hairline));
+  content: "";
+}
+
+.book-prose .book-editorial-form > p:first-child strong {
+  color: inherit;
+  font-weight: inherit;
 }
 
 .book-prose .book-editorial-form > p:last-child {
@@ -1547,11 +2444,11 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-prose [data-editorial-form="epistemic-key"] {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
+  gap: 0.55rem;
   background: linear-gradient(
     135deg,
-    color-mix(in oklch, var(--book-verdigris) 7%, var(--book-paper)),
-    color-mix(in oklch, var(--book-gold) 5%, var(--book-paper))
+    color-mix(in oklch, var(--book-verdigris) 5%, var(--book-paper)),
+    color-mix(in oklch, var(--book-gold) 4%, var(--book-paper))
   );
 }
 
@@ -1562,21 +2459,24 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-prose [data-editorial-form="epistemic-key"] > p:nth-child(n + 2):not(:last-child) {
   margin: 0;
-  border-top: 1px solid color-mix(in oklch, var(--book-hairline) 66%, transparent);
-  padding: 0.8rem 0.9rem 0.8rem 1rem;
-  font-family: var(--book-reading-heading-font);
-  font-size: calc(1rem * var(--reading-scale, 1));
-  font-weight: 650;
-  text-align: left;
+  border: 1px solid color-mix(in oklch, var(--book-hairline) 76%, transparent);
+  background: color-mix(in oklab, var(--book-paper) 66%, transparent);
+  padding: 0.9rem 1rem;
+  font-family: var(--book-reading-font);
+  font-size: calc(0.96rem * var(--reading-scale, 1));
+  font-weight: 570;
+  text-align: center;
+  text-align-last: center;
 }
 
 .book-prose [data-editorial-form="epistemic-key"] > p:nth-child(2n + 3):not(:last-child) {
-  border-left: 1px solid color-mix(in oklch, var(--book-hairline) 66%, transparent);
+  border-left-color: color-mix(in oklch, var(--book-hairline) 76%, transparent);
 }
 
 .book-prose [data-editorial-form="epistemic-key"] > p:last-child {
-  border-top: 1px solid var(--book-hairline);
-  padding-top: 1rem;
+  margin-top: 0.45rem;
+  border-top: 0;
+  padding-top: 0.8rem;
   color: var(--book-muted);
   font-style: italic;
   text-align: center;
@@ -1731,6 +2631,29 @@ html[data-motion="still"] .dot-emergence-signal {
   color: color-mix(in oklch, var(--book-ink) 93%, var(--book-verdigris));
 }
 
+.book-prose .book-inline-definition > strong:first-child,
+.book-prose .book-claim-level-statement > strong:first-child {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 680;
+  text-transform: uppercase;
+}
+
+.book-prose .book-inline-definition > strong:first-child {
+  /* `--book-verdigris` is a translucent edge token. Used directly as text it
+     fell to 28% opacity in Neural light mode, making compact lead-ins such as
+     “Input”, “Intent”, and “Rendering” nearly disappear. Foreground emphasis
+     must be drawn from opaque book ink; the verdigris remains on the
+     border where translucency is appropriate. */
+  color: var(--book-ink);
+  font-size: 0.8em;
+  letter-spacing: 0.06em;
+}
+
+.book-prose .book-claim-level-statement > strong:first-child {
+  font-size: 0.7em;
+  letter-spacing: 0.09em;
+}
+
 .book-prose .book-claim-ledger-label {
   margin: 2.4rem 0 1rem;
   border-top: 1px solid var(--book-hairline);
@@ -1753,13 +2676,22 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose .book-claim-level-statement {
-  margin-bottom: 1rem;
+  margin-block: 1.75rem;
   border-left: 2px solid var(--book-hairline);
-  padding: 0.25rem 0 0.25rem 1.15rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--book-claim-tone, var(--book-cinnabar)) 4%, transparent),
+    transparent 68%
+  );
+  padding: 0.65rem 0.85rem 0.7rem 1.15rem;
 }
 
 .book-prose .book-claim-level-statement[data-claim-level] {
   border-left-color: color-mix(in oklch, var(--book-claim-tone) 64%, var(--book-hairline));
+}
+
+.book-prose .book-claim-level-statement[data-claim-level] > strong:first-child {
+  color: var(--book-claim-tone);
 }
 
 .book-prose .book-theory-debt {
@@ -2038,7 +2970,9 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose h2 {
-  font-size: calc(1.4rem * var(--reading-scale, 1));
+  font-size: calc(2.05rem * var(--reading-scale, 1));
+  font-weight: 520;
+  line-height: 1.16;
 }
 
 /* Golden edition typographic refinements */
@@ -2056,8 +2990,8 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose--chapter h2 {
-  font-variant-caps: small-caps;
-  letter-spacing: 0.04em;
+  font-variant-caps: normal;
+  letter-spacing: -0.015em;
 }
 
 @media (max-width: 640px) {
@@ -2208,7 +3142,8 @@ html[data-motion="still"] .dot-emergence-signal {
   }
 
   .book-prose h2 {
-    margin-top: 2.75rem;
+    margin-top: 3.75rem;
+    font-size: calc(1.72rem * var(--reading-scale, 1));
   }
 
   .book-prose blockquote {
@@ -2220,7 +3155,7 @@ html[data-motion="still"] .dot-emergence-signal {
   }
 
   .book-prose [data-editorial-form="epistemic-key"] > p:nth-child(n + 2):not(:last-child) {
-    border-left: 0;
+    border-left: 1px solid color-mix(in oklch, var(--book-hairline) 76%, transparent);
   }
 }
 
@@ -2445,14 +3380,14 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 /* Structure, spoken quietly. */
+/* Layout only. Type is `dot-label dot-micro` in the markup — the system's
+   label idiom at the system's smallest step. This class carried its own size,
+   tracking, weight and colour, which made it a fourth label style competing
+   with `dot-label`, and at 0.66rem it sat under the 11px floor `dot-micro`
+   exists to state. */
 .book-contents__part {
   margin-bottom: 0.5rem;
   padding-left: 0.15rem;
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: color-mix(in oklch, var(--muted-foreground) 78%, transparent);
 }
 
 .book-contents__entry {
@@ -2500,7 +3435,8 @@ html[data-motion="still"] .dot-emergence-signal {
    tells a reader nothing about where they would be standing. */
 .book-contents__label {
   display: block;
-  font-size: 0.6rem;
+  /* 0.6875rem is the floor `.dot-micro` names. This sat under it. */
+  font-size: 0.6875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: color-mix(in oklch, var(--muted-foreground) 70%, transparent);
@@ -2541,18 +3477,333 @@ html[data-motion="still"] .dot-emergence-signal {
  * the foot of a chapter actually wants, which is to keep going.
  */
 
-.book-coda__label {
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
+.book-coda {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--book-hairline);
+  color: var(--book-ink);
+}
+
+.book-coda__completion {
+  border-bottom: 1px solid var(--book-hairline);
+  padding: 1.5rem 0;
+}
+
+.book-coda__completion-mark,
+.book-coda__tool-mark,
+.book-coda__author-mark {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--book-hairline);
+  color: var(--book-cinnabar);
+}
+
+.book-coda__completion-mark {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+}
+
+.book-coda__tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid var(--book-hairline);
+}
+
+.book-coda__tool {
+  display: grid;
+  min-width: 0;
+  min-height: 6.4rem;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.2rem 1.25rem;
+  color: var(--book-muted);
+  text-align: left;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.book-coda__tool + .book-coda__tool {
+  border-left: 1px solid var(--book-hairline);
+}
+
+.book-coda__tool--primary {
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklch, var(--book-cinnabar) 7%, transparent),
+    transparent 72%
+  );
+  color: var(--book-ink);
+}
+
+.book-coda__tool:hover,
+.book-coda__tool:focus-visible {
+  background-color: color-mix(in oklch, var(--book-ink) 3.5%, transparent);
+  color: var(--book-ink);
+  outline: none;
+}
+
+.book-coda__tool-mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.4rem;
+}
+
+.book-coda__tool strong,
+.book-coda__tool small {
+  display: block;
+}
+
+.book-coda__tool strong {
+  color: var(--book-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.book-coda__tool small {
+  margin-top: 0.25rem;
+  color: var(--book-muted);
+  font-family: var(--book-reading-font);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.book-coda__section {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 0.34fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  border-bottom: 1px solid var(--book-hairline);
+  padding-block: clamp(1.85rem, 4vw, 2.4rem);
+}
+
+.book-coda__section-heading,
+.book-coda__section-body {
+  min-width: 0;
+}
+
+.book-coda__section-title {
+  margin: 0;
+  color: var(--book-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 680;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
   text-transform: uppercase;
-  color: color-mix(in oklch, var(--muted-foreground) 76%, transparent);
+}
+
+.book-coda__section-purpose {
+  max-width: 17ch;
+  margin-top: 0.55rem;
+  color: var(--book-muted);
+  font-family: var(--book-reading-font);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.book-private-note__field {
+  position: relative;
+  border: 1px solid var(--book-hairline);
+  background: color-mix(in oklab, var(--book-paper) 82%, transparent);
+  padding: 0.9rem 2.75rem 0.9rem 1rem;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.book-private-note__field:focus-within {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 58%, var(--book-ink));
+  background: var(--book-paper);
+}
+
+.book-recall-note {
+  min-height: 7.5rem;
+  border: 0;
+}
+
+.book-private-note__clear {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  color: var(--book-muted);
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.book-private-note__clear:hover,
+.book-private-note__clear:focus-visible {
+  background: color-mix(in oklch, var(--book-ink) 5%, transparent);
+  color: var(--book-ink);
+  outline: none;
+}
+
+.book-private-note__status {
+  margin-top: 0.55rem;
+  color: var(--book-muted);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.book-private-note__status[data-error="true"] {
+  color: var(--destructive);
+}
+
+.book-coda__concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.book-coda__concept {
+  display: inline-flex;
+  min-height: 2.35rem;
+  align-items: center;
+  border: 1px solid var(--book-hairline);
+  border-radius: 0.35rem;
+  background: color-mix(in oklab, var(--book-paper) 78%, transparent);
+  padding: 0.45rem 0.72rem;
+  color: var(--book-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 570;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.book-coda__concept:hover,
+.book-coda__concept:focus-visible {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 54%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-cinnabar) 6%, var(--book-paper));
+  outline: none;
+}
+
+.book-coda__text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  color: var(--book-muted);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-decoration-color: var(--book-hairline);
+  text-underline-offset: 0.25rem;
+  transition: color 160ms ease;
+}
+
+.book-coda__text-link:hover,
+.book-coda__text-link:focus-visible {
+  color: var(--book-ink);
+  outline: none;
+}
+
+.book-citation__formats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border: 1px solid var(--book-hairline);
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+}
+
+.book-citation__format {
+  min-height: 2rem;
+  border-radius: 0.24rem;
+  padding-inline: 0.75rem;
+  color: var(--book-muted);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.book-citation__format[aria-pressed="true"] {
+  background: var(--book-ink);
+  color: var(--book-paper);
+}
+
+.book-citation__format:hover,
+.book-citation__format:focus-visible {
+  color: var(--book-ink);
+  outline: none;
+}
+
+.book-citation__format[aria-pressed="true"]:hover,
+.book-citation__format[aria-pressed="true"]:focus-visible {
+  color: var(--book-paper);
+}
+
+.book-citation__text {
+  margin-top: 0.9rem;
+  border: 1px solid var(--book-hairline);
+  border-left: 2px solid color-mix(in oklch, var(--book-cinnabar) 58%, var(--book-ink));
+  background: color-mix(in oklab, var(--book-paper) 76%, transparent);
+  padding: 1rem;
+}
+
+.book-citation__copy {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  border: 1px solid var(--book-hairline);
+  border-radius: 0.35rem;
+  padding-inline: 0.8rem;
+  color: var(--book-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.book-citation__copy:hover,
+.book-citation__copy:focus-visible {
+  border-color: color-mix(in oklch, var(--book-cinnabar) 54%, var(--book-hairline));
+  background: color-mix(in oklch, var(--book-cinnabar) 6%, transparent);
+  outline: none;
+}
+
+.book-coda__navigation {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-bottom: 1px solid var(--book-hairline);
+}
+
+.book-coda__previous,
+.book-coda__next {
+  display: flex;
+  min-height: 7rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.35rem 1.25rem;
+  transition: background-color 160ms ease;
+}
+
+.book-coda__previous {
+  border-right: 1px solid var(--book-hairline);
+  text-align: left;
+}
+
+.book-coda__previous:hover,
+.book-coda__previous:focus-visible {
+  background: color-mix(in oklch, var(--book-ink) 3%, transparent);
+  outline: none;
 }
 
 /* Continue outranks Previous. Both halves were identical, which left the
    forward step — the reason the reader is down here at all — as a coin toss
    against the way back. */
 .book-coda__next {
+  justify-content: flex-end;
+  color: var(--book-ink);
+  text-align: right;
   background: linear-gradient(
     to right,
     transparent,
@@ -2567,6 +3818,74 @@ html[data-motion="still"] .dot-emergence-signal {
     transparent,
     color-mix(in oklch, var(--organism-accent-strong) 14%, transparent)
   );
+  outline: none;
+}
+
+.book-coda__author {
+  display: flex;
+  min-height: 4.75rem;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--book-muted);
+  transition: color 160ms ease;
+}
+
+.book-coda__author:hover,
+.book-coda__author:focus-visible {
+  color: var(--book-ink);
+  outline: none;
+}
+
+.book-coda__author-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+}
+
+.book-coda__author small,
+.book-coda__author strong {
+  display: block;
+}
+
+.book-coda__author small {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.book-coda__author strong {
+  margin-top: 0.15rem;
+  color: var(--book-ink);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 570;
+}
+
+@media (max-width: 640px) {
+  .book-coda__tools,
+  .book-coda__navigation {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .book-coda__tool + .book-coda__tool {
+    border-top: 1px solid var(--book-hairline);
+    border-left: 0;
+  }
+
+  .book-coda__section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+  }
+
+  .book-coda__section-purpose {
+    max-width: 32rem;
+  }
+
+  .book-coda__previous {
+    border-right: 0;
+    border-bottom: 1px solid var(--book-hairline);
+  }
 }
 
 /* ── Minty's reading type ─────────────────────────────────────────────────────
@@ -2603,4 +3922,42 @@ html[data-motion="still"] .dot-emergence-signal {
   font-family: var(--book-reading-font, "Source Serif 4", Charter, Georgia, serif);
   font-size: calc(1rem * var(--reading-scale, 1));
   line-height: 1.6;
+}
+
+/* ── Focus mode ───────────────────────────────────────────────────────────────
+ *
+ * Restored. These rules were removed by 76548b5 ("remove 2,657 lines of dead
+ * Experience Loop CSS") — present at 5a44f2b, absent immediately after. The
+ * `book-focus-hidden` class stayed on six elements in the reader, so the sweep
+ * saw selectors matching nothing it recognised, while the markup went on
+ * asking for a rule that no longer existed.
+ *
+ * The result was a focus mode that half worked: entering it dropped the
+ * contents rail, because that comes from `data-layout="focus"` on the grid, and
+ * left the header, footer, reading tools and appearance dock in place. The one
+ * control the reading experience has for removing distraction was itself
+ * distracted.
+ *
+ * A class with no rule is invisible to a stylesheet audit and to every test, so
+ * `focus-mode.test.ts` beside this now asserts the pairing directly.
+ */
+
+.book-surface[data-book-focus="true"] {
+  padding-right: 0 !important;
+}
+
+.book-surface[data-book-focus="true"] .book-focus-hidden {
+  display: none !important;
+}
+
+.book-surface[data-book-focus="true"] .book-reading-grid {
+  padding-top: clamp(2.5rem, 7vh, 5.5rem);
+}
+
+.book-surface[data-book-focus="true"] .book-reader::before {
+  inset: -2rem -3rem -4rem;
+}
+
+.book-focus-exit {
+  border-radius: 0.35rem;
 }

@@ -1,27 +1,31 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-// Import Fontsource packages for local, high-fidelity offline fonts
-import "@fontsource/inter/300.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/inter/700.css";
-import "@fontsource/jetbrains-mono/300.css";
-import "@fontsource/jetbrains-mono/400.css";
-import "@fontsource/jetbrains-mono/500.css";
-import "@fontsource/space-grotesk/400.css";
-import "@fontsource/space-grotesk/500.css";
-import "@fontsource/playfair-display/400.css";
-import "@fontsource/playfair-display/700.css";
-import "@fontsource/playfair-display/900.css";
+// The published manuscript is English. Loading Fontsource's unscoped files
+// emitted every Cyrillic, Greek, Vietnamese, and Latin Extended face at every
+// weight into the release even though the browser never requested them. Keep
+// the same local/offline typography while shipping only the glyph set this
+// edition uses; future translated editions can add their own subset explicitly.
+import "@fontsource/inter/latin-300.css";
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-500.css";
+import "@fontsource/inter/latin-600.css";
+import "@fontsource/inter/latin-700.css";
+import "@fontsource/jetbrains-mono/latin-300.css";
+import "@fontsource/jetbrains-mono/latin-400.css";
+import "@fontsource/jetbrains-mono/latin-500.css";
+import "@fontsource/space-grotesk/latin-400.css";
+import "@fontsource/space-grotesk/latin-500.css";
+import "@fontsource/playfair-display/latin-400.css";
+import "@fontsource/playfair-display/latin-700.css";
+import "@fontsource/playfair-display/latin-900.css";
 // Source Serif 4 sets long-form chapter prose. Playfair is a display face —
 // small x-height and high stroke contrast — which thins out badly across the
 // 3,000-word chapters it was carrying. It stays on headings, where it belongs.
-import "@fontsource/source-serif-4/400.css";
-import "@fontsource/source-serif-4/400-italic.css";
-import "@fontsource/source-serif-4/600.css";
-import "@fontsource/source-serif-4/700.css";
+import "@fontsource/source-serif-4/latin-400.css";
+import "@fontsource/source-serif-4/latin-400-italic.css";
+import "@fontsource/source-serif-4/latin-600.css";
+import "@fontsource/source-serif-4/latin-700.css";
 
 import { HelmetProvider } from "react-helmet-async";
 import "./App.css";

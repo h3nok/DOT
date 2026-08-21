@@ -17,7 +17,17 @@ import { useTheme } from "../shared/contexts/SimpleThemeContext";
 import { useOrganism } from "./OrganismContext";
 import { EnvironmentSwatch } from "./EnvironmentSwatch";
 import { FieldPreview } from "./FieldPreview";
-import { THEME_PRESETS, defaultConfigFor, matchThemePreset } from "./themePresets";
+import {
+  THEME_PRESETS,
+  defaultConfigFor,
+  matchThemePreset,
+  themePreset,
+} from "./themePresets";
+import {
+  READING_PRESETS,
+  matchReadingPreset,
+  type ReadingPreset,
+} from "./readingPresets";
 import {
   MAX_ENVIRONMENT_NAME,
   MAX_SAVED_ENVIRONMENTS,
@@ -30,127 +40,22 @@ import {
   type SavedEnvironment,
 } from "./savedEnvironments";
 import {
+  DEFAULT_PINNED_HUE,
+  LEADING_OPTIONS,
+  MEASURE_OPTIONS,
+  PAPER_TONE_OPTIONS,
+  PARAGRAPH_OPTIONS,
+  READING_FONT_OPTIONS,
+  READING_SIZE_OPTIONS,
+  TINT_OPTIONS,
+  UI_STYLE_OPTIONS,
+} from "./appearanceOptions";
+import {
   ORGANISM_PRESETS,
   type OrganismPreset,
-  type OrganismTint,
-  type PaperTone,
-  type ParagraphStyle,
   type ReadingAlign,
-  type ReadingFont,
-  type ReadingLeading,
-  type ReadingMeasure,
-  type UIStyle,
 } from "./types";
 import "./appearance.css";
-
-const UI_STYLES: Array<{ value: UIStyle; label: string; hint: string }> = [
-  { value: "default", label: "Glass", hint: "Translucent surfaces, soft blur" },
-  { value: "editorial", label: "Editorial", hint: "Typographic, high contrast" },
-  { value: "minimal", label: "Minimal", hint: "Flat, sharp, no effects" },
-  { value: "organic", label: "Organic", hint: "Warm, rounded, tinted" },
-  { value: "cinematic", label: "Cinematic", hint: "Deep shadows, dramatic" },
-  { value: "neural", label: "Neural", hint: "Lit edges, network surfaces" },
-];
-
-/** Pinned tints. Named for what they feel like, not their degrees. */
-const TINTS: Array<{ value: OrganismTint; label: string; swatch: string }> = [
-  { value: "auto", label: "Follow the time of day", swatch: "" },
-  { value: 212, label: "Indigo", swatch: "hsl(212 52% 55%)" },
-  { value: 265, label: "Violet", swatch: "hsl(265 48% 60%)" },
-  { value: 158, label: "Jade", swatch: "hsl(158 42% 45%)" },
-  { value: 28, label: "Amber", swatch: "hsl(28 62% 55%)" },
-  { value: 348, label: "Rose", swatch: "hsl(348 52% 58%)" },
-  { value: 190, label: "Cyan", swatch: "hsl(190 55% 50%)" },
-  { value: 82, label: "Sage", swatch: "hsl(82 35% 48%)" },
-];
-
-const READING_SIZES: Array<{ value: number; label: string }> = [
-  { value: 0.92, label: "S" },
-  { value: 1, label: "M" },
-  { value: 1.12, label: "L" },
-  { value: 1.26, label: "XL" },
-];
-
-const LEADINGS: Array<{ value: ReadingLeading; label: string; gap: number }> = [
-  { value: "tight", label: "Tight", gap: 3 },
-  { value: "standard", label: "Normal", gap: 4.5 },
-  { value: "loose", label: "Loose", gap: 6 },
-];
-
-/** Faces, with the stack each one previews in so the sample is honest. */
-const READING_FONTS: Array<{
-  value: ReadingFont;
-  label: string;
-  face: string;
-  stack: string;
-}> = [
-  // The caption names both faces where a face sets headings and another sets
-  // prose. Saying only "Source Serif" described half the hierarchy, which is
-  // why the headings looked like they were ignoring the control.
-  {
-    value: "serif",
-    label: "Serif",
-    face: "Source Serif · Playfair",
-    stack: '"Source Serif 4", Georgia, serif',
-  },
-  {
-    value: "sans",
-    label: "Sans",
-    face: "Inter · Space Grotesk",
-    stack: '"Inter", system-ui, sans-serif',
-  },
-  {
-    value: "humanist",
-    label: "Open",
-    face: "Wide-set sans",
-    stack: 'Verdana, Tahoma, "DejaVu Sans", sans-serif',
-  },
-  {
-    value: "mono",
-    label: "Mono",
-    face: "JetBrains Mono",
-    stack: '"JetBrains Mono", ui-monospace, monospace',
-  },
-];
-
-/** Measure, described by what it does to the line rather than in rem. */
-const MEASURES: Array<{
-  value: ReadingMeasure;
-  label: string;
-  hint: string;
-  bars: number;
-}> = [
-  { value: "narrow", label: "Narrow", hint: "Around 55 characters a line", bars: 0.6 },
-  { value: "standard", label: "Standard", hint: "Around 70 characters a line", bars: 0.8 },
-  { value: "wide", label: "Wide", hint: "Around 85 characters a line", bars: 1 },
-];
-
-const PARAGRAPHS: Array<{ value: ParagraphStyle; label: string; hint: string }> = [
-  { value: "spaced", label: "Spaced", hint: "A blank line between paragraphs" },
-  { value: "indented", label: "Indented", hint: "Set continuous, as in print" },
-];
-
-/** Paper tones, previewed with the ground and ink each one actually produces. */
-const PAPER_TONES: Array<{
-  value: PaperTone;
-  label: string;
-  light: string;
-  dark: string;
-}> = [
-  { value: "neutral", label: "Neutral", light: "hsl(40 6% 97%)", dark: "hsl(220 14% 12%)" },
-  { value: "warm", label: "Warm", light: "hsl(40 42% 95%)", dark: "hsl(30 16% 13%)" },
-  { value: "sepia", label: "Sepia", light: "hsl(38 54% 91%)", dark: "hsl(28 20% 14%)" },
-  { value: "cool", label: "Cool", light: "hsl(215 30% 96%)", dark: "hsl(220 20% 12%)" },
-];
-
-/** The hue wheel, drawn once for the accent slider's track. */
-const HUE_TRACK = `linear-gradient(to right, ${Array.from(
-  { length: 13 },
-  (_, i) => `hsl(${i * 30} 62% 55%)`,
-).join(", ")})`;
-
-/** Where the wheel starts when a reader leaves "auto" without a hue in mind. */
-const DEFAULT_PINNED_HUE = 212;
 
 const Section: React.FC<{
   title: string;
@@ -175,6 +80,30 @@ const optionClass = (selected: boolean) =>
       ? "border-transparent text-foreground"
       : "border-border/30 text-muted-foreground hover:border-border/60 hover:bg-foreground/[0.04] hover:text-foreground"
   }`;
+
+/** A reading arrangement, shown as a page rather than as another icon. */
+const ReadingStylePreview: React.FC<{ preset: ReadingPreset }> = ({ preset }) => {
+  const { config } = preset;
+
+  return (
+    <span
+      className="appearance-reading-preview"
+      data-reading={config.readingFont}
+      data-align={config.readingAlign}
+      data-leading={config.readingLeading}
+      data-measure={config.readingMeasure}
+      data-paragraph={config.paragraphStyle}
+      aria-hidden="true"
+    >
+      <span className="appearance-reading-preview__glyph">Aa</span>
+      <span className="appearance-reading-preview__lines">
+        {[0, 1, 2, 3].map((index) => (
+          <span key={`${preset.id}-${index}`} />
+        ))}
+      </span>
+    </span>
+  );
+};
 
 /**
  * The appearance control — DOT's living theme, made the reader's.
@@ -235,6 +164,7 @@ export const AppearanceControl: React.FC<{
   const fields = Object.keys(ORGANISM_PRESETS) as OrganismPreset[];
   const inline = placement === "inline";
   const activePreset = matchThemePreset(config, base);
+  const activeReadingPreset = matchReadingPreset(config);
   const activeSaved = matchSavedEnvironment(environments, config, base);
   const atEnvironmentLimit = environments.length >= MAX_SAVED_ENVIRONMENTS;
 
@@ -269,7 +199,7 @@ export const AppearanceControl: React.FC<{
         aria-label="Appearance settings"
         aria-expanded={open}
         title="Make it yours — environment, background, accent, type"
-        className={`organism-alive group flex items-center justify-center rounded-full border border-border/40 bg-background/60 text-foreground/70 backdrop-blur-xl transition-all hover:border-[color:var(--organism-accent-strong)]/30 hover:text-foreground hover:shadow-lg hover:shadow-[color:var(--organism-accent-strong)]/10 ${
+        className={`appearance-ui-control organism-alive group flex items-center justify-center border bg-background/60 text-foreground/70 backdrop-blur-xl transition-all hover:border-[color:var(--organism-accent-strong)]/30 hover:text-foreground hover:shadow-lg hover:shadow-[color:var(--organism-accent-strong)]/10 ${
           inline ? "h-9 w-9" : "gap-2 px-3.5 py-2.5 shadow-lg"
         }`}
       >
@@ -387,6 +317,12 @@ export const AppearanceControl: React.FC<{
                       );
                     })}
                   </div>
+
+                  {activePreset && (
+                    <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
+                      {themePreset(activePreset).hint}
+                    </p>
+                  )}
 
                   {/* The reader's own environments, kept beside ours because
                       by the second visit theirs is the one they want. */}
@@ -508,7 +444,7 @@ export const AppearanceControl: React.FC<{
                     </div>
                     <span className="h-5 w-px bg-border/50" aria-hidden="true" />
                     <div className="flex flex-wrap items-center gap-1.5">
-                      {TINTS.map((t) => {
+                      {TINT_OPTIONS.map((t) => {
                         const selected = config.tint === t.value;
                         return (
                           <button
@@ -518,17 +454,12 @@ export const AppearanceControl: React.FC<{
                             aria-pressed={selected}
                             aria-label={t.label}
                             title={t.label}
-                            className={`h-6 w-6 rounded-full border-2 transition-transform ${
+                            data-tint={t.id}
+                            className={`appearance-tint h-6 w-6 rounded-full border-2 transition-transform ${
                               selected
                                 ? "scale-110 border-foreground/70 shadow-sm"
                                 : "border-transparent hover:scale-105"
                             }`}
-                            style={{
-                              background:
-                                t.value === "auto"
-                                  ? "conic-gradient(hsl(212 52% 55%), hsl(265 48% 60%), hsl(348 52% 58%), hsl(28 62% 55%), hsl(158 42% 45%), hsl(212 52% 55%))"
-                                  : t.swatch,
-                            }}
                           />
                         );
                       })}
@@ -550,11 +481,8 @@ export const AppearanceControl: React.FC<{
                       value={config.tint === "auto" ? DEFAULT_PINNED_HUE : config.tint}
                       onChange={(e) => setConfig({ tint: Number(e.target.value) })}
                       aria-label="Accent hue"
-                      className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
-                      style={{
-                        background: HUE_TRACK,
-                        opacity: config.tint === "auto" ? 0.45 : 1,
-                      }}
+                      data-auto={config.tint === "auto" ? "true" : "false"}
+                      className="appearance-hue-track h-1.5 flex-1 cursor-pointer appearance-none rounded-full [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
                     />
                   </label>
                 </Section>
@@ -563,7 +491,7 @@ export const AppearanceControl: React.FC<{
                     the difference between finishing a chapter and stopping. */}
                 <Section title="Paper" hint="The colour of the page">
                   <div className="grid grid-cols-4 gap-1.5">
-                    {PAPER_TONES.map((tone) => {
+                    {PAPER_TONE_OPTIONS.map((tone) => {
                       const selected = config.paperTone === tone.value;
                       return (
                         <button
@@ -576,20 +504,12 @@ export const AppearanceControl: React.FC<{
                         >
                           <span
                             className="appearance-preset-page block h-8 w-full p-1.5"
-                            style={{
-                              background: isDark ? tone.dark : tone.light,
-                              color: isDark ? "hsl(40 12% 88%)" : "hsl(30 14% 22%)",
-                            }}
+                            data-paper-tone={tone.value}
+                            data-base={isDark ? "dark" : "light"}
                             aria-hidden="true"
                           >
-                            <span
-                              className="block h-[2px] w-full rounded-full opacity-45"
-                              style={{ background: "currentColor" }}
-                            />
-                            <span
-                              className="mt-1 block h-[2px] w-3/4 rounded-full opacity-30"
-                              style={{ background: "currentColor" }}
-                            />
+                            <span className="block h-[2px] w-full rounded-full bg-current opacity-45" />
+                            <span className="mt-1 block h-[2px] w-3/4 rounded-full bg-current opacity-30" />
                           </span>
                           <span className="w-full truncate text-center text-xs font-medium">
                             {tone.label}
@@ -666,7 +586,7 @@ export const AppearanceControl: React.FC<{
 
                 <Section title="Surface">
                   <div className="grid grid-cols-3 gap-1.5">
-                    {UI_STYLES.map(({ value, label, hint }) => {
+                    {UI_STYLE_OPTIONS.map(({ value, label, hint }) => {
                       const selected = config.uiStyle === value;
                       return (
                         <button
@@ -765,9 +685,49 @@ export const AppearanceControl: React.FC<{
               </>
             ) : (
               <>
+                <Section
+                  title="Reading style"
+                  hint={
+                    activeReadingPreset
+                      ? READING_PRESETS.find((preset) => preset.id === activeReadingPreset)?.label
+                      : "Custom"
+                  }
+                >
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {READING_PRESETS.map((preset) => {
+                      const selected = activeReadingPreset === preset.id;
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          onClick={() => setConfig(preset.config)}
+                          aria-pressed={selected}
+                          aria-label={`${preset.label} reading style`}
+                          title={preset.hint}
+                          className={`${optionClass(selected)} appearance-reading-style p-2.5`}
+                        >
+                          <ReadingStylePreview preset={preset} />
+                          <span className="mt-2 flex items-center gap-1.5">
+                            <span className="text-xs font-medium">{preset.label}</span>
+                            {selected && (
+                              <Check
+                                className="h-3 w-3 text-[color:var(--organism-accent-strong)]"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                          <span className="mt-0.5 block text-[0.68rem] leading-snug text-muted-foreground">
+                            {preset.hint}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Section>
+
                 <Section title="Type">
                   <div className="grid grid-cols-2 gap-1.5">
-                    {READING_FONTS.map(({ value, label, face, stack }) => {
+                    {READING_FONT_OPTIONS.map(({ value, label, face }) => {
                       const selected = config.readingFont === value;
                       return (
                         <button
@@ -781,8 +741,8 @@ export const AppearanceControl: React.FC<{
                           {/* The sample is set in the face it selects, so the
                               choice is made by looking rather than by name. */}
                           <span
-                            className="block text-lg leading-none"
-                            style={{ fontFamily: stack }}
+                            className="appearance-font-sample block text-lg leading-none"
+                            data-reading={value}
                           >
                             Ag
                           </span>
@@ -798,7 +758,7 @@ export const AppearanceControl: React.FC<{
 
                 <Section title="Size">
                   <div className="grid grid-cols-4 gap-1.5">
-                    {READING_SIZES.map((s) => {
+                    {READING_SIZE_OPTIONS.map((s) => {
                       const selected = config.readingScale === s.value;
                       return (
                         <button
@@ -810,8 +770,8 @@ export const AppearanceControl: React.FC<{
                           className={`${optionClass(selected)} flex h-11 items-center justify-center p-0`}
                         >
                           <span
-                            className="font-serif font-medium leading-none"
-                            style={{ fontSize: `${0.7 * s.value}rem` }}
+                            className="appearance-size-sample font-serif font-medium leading-none"
+                            data-size={s.id}
                           >
                             {s.label}
                           </span>
@@ -825,7 +785,7 @@ export const AppearanceControl: React.FC<{
                     bigger text in the same column is a different read. */}
                 <Section title="Measure" hint="Line length">
                   <div className="grid grid-cols-3 gap-1.5">
-                    {MEASURES.map(({ value, label, hint, bars }) => {
+                    {MEASURE_OPTIONS.map(({ value, label, hint, bars }) => {
                       const selected = config.readingMeasure === value;
                       return (
                         <button
@@ -861,7 +821,7 @@ export const AppearanceControl: React.FC<{
 
                 <Section title="Leading" hint="Space between lines">
                   <div className="grid grid-cols-3 gap-1.5">
-                    {LEADINGS.map(({ value, label, gap }) => {
+                    {LEADING_OPTIONS.map(({ value, label, gap }) => {
                       const selected = config.readingLeading === value;
                       return (
                         <button
@@ -896,7 +856,7 @@ export const AppearanceControl: React.FC<{
 
                 <Section title="Paragraphs">
                   <div className="grid grid-cols-2 gap-1.5">
-                    {PARAGRAPHS.map(({ value, label, hint }) => {
+                    {PARAGRAPH_OPTIONS.map(({ value, label, hint }) => {
                       const selected = config.paragraphStyle === value;
                       return (
                         <button
@@ -1003,33 +963,18 @@ export const AppearanceControl: React.FC<{
                     Two paragraphs, because one cannot show what separates them. */}
                 <Section title="Preview">
                   <div
-                    className="text-muted-foreground"
-                    style={{
-                      fontFamily: READING_FONTS.find(
-                        (font) => font.value === config.readingFont,
-                      )?.stack,
-                      fontSize: `${0.86 * config.readingScale}rem`,
-                      lineHeight:
-                        config.readingLeading === "tight"
-                          ? 1.48
-                          : config.readingLeading === "loose"
-                            ? 1.92
-                            : 1.68,
-                      textAlign: config.readingAlign === "justify" ? "justify" : "left",
-                      hyphens: config.readingAlign === "justify" ? "auto" : "manual",
-                    }}
+                    className="appearance-reading-sample text-muted-foreground"
+                    data-reading={config.readingFont}
+                    data-scale={String(config.readingScale)}
+                    data-leading={config.readingLeading}
+                    data-align={config.readingAlign}
+                    data-paragraph={config.paragraphStyle}
                   >
                     <p>
                       Feeling is data about an interpreter's relationship to reality, and
                       feeling is not automatically truth.
                     </p>
-                    <p
-                      style={
-                        config.paragraphStyle === "indented"
-                          ? { textIndent: "1.4em" }
-                          : { marginTop: "0.75em" }
-                      }
-                    >
+                    <p>
                       To exclude feeling is to discard evidence from inside the phenomenon
                       being studied.
                     </p>

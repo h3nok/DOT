@@ -62,10 +62,10 @@ export default function PublicationStudioPage() {
       <div className="flex h-screen flex-col items-center justify-center bg-background text-foreground">
         <p className="text-destructive mb-4">{error || "Project not found"}</p>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/studio")}
           className="text-sm underline text-muted-foreground"
         >
-          Return Home
+          Return to publication studio
         </button>
       </div>
     );

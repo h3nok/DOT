@@ -6,6 +6,7 @@ import {
   Italic,
   Link2,
   Quote,
+  Sigma,
 } from "lucide-react";
 
 import {
@@ -22,6 +23,7 @@ interface EditorialToolbarProps {
   onInlineFormat: (format: InlineFormat) => void;
   onHeading: () => void;
   onQuote: () => void;
+  onEquation: () => void;
   onEditorialForm: (form: EditorialFormId) => void;
   onClaimLevel: (level: ClaimLevel) => void;
 }
@@ -33,7 +35,7 @@ const menuButtonClass =
   "inline-flex h-8 items-center gap-1.5 px-2.5 dot-meta font-medium text-muted-foreground transition-colors hover:bg-foreground/[0.05] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--organism-accent-soft)] disabled:opacity-40";
 
 const menuContentClass =
-  "z-[70] min-w-64 border border-border/70 bg-background p-1.5 shadow-xl";
+  "dot-surface z-[70] min-w-64 p-1.5";
 
 const menuItemClass =
   "group cursor-default px-3 py-2.5 outline-none transition-colors data-[highlighted]:bg-foreground/[0.06]";
@@ -68,6 +70,7 @@ export function EditorialToolbar({
   onInlineFormat,
   onHeading,
   onQuote,
+  onEquation,
   onEditorialForm,
   onClaimLevel,
 }: EditorialToolbarProps) {
@@ -103,6 +106,9 @@ export function EditorialToolbar({
       </ToolButton>
       <ToolButton label="Quote" disabled={disabled} onClick={onQuote}>
         <Quote className="h-4 w-4" aria-hidden="true" />
+      </ToolButton>
+      <ToolButton label="Display equation" disabled={disabled} onClick={onEquation}>
+        <Sigma className="h-4 w-4" aria-hidden="true" />
       </ToolButton>
 
       <span className="mx-1 h-5 w-px bg-border/70" aria-hidden="true" />

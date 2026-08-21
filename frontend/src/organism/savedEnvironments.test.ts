@@ -75,6 +75,30 @@ describe("saved environments", () => {
     expect(loaded.config.paperTone).toBe(DEFAULT_CONFIG.paperTone);
   });
 
+  it("rejects appearance values that no current UI can render", () => {
+    window.localStorage.setItem(
+      SAVED_ENVIRONMENTS_KEY,
+      JSON.stringify([
+        {
+          name: "Old surface",
+          base: "dark",
+          config: {
+            uiStyle: "holographic",
+            readingLeading: "compressed",
+            readingAlign: "center",
+            readingScale: 99,
+          },
+        },
+      ]),
+    );
+
+    const [loaded] = loadEnvironments();
+    expect(loaded.config.uiStyle).toBe(DEFAULT_CONFIG.uiStyle);
+    expect(loaded.config.readingLeading).toBe(DEFAULT_CONFIG.readingLeading);
+    expect(loaded.config.readingAlign).toBe(DEFAULT_CONFIG.readingAlign);
+    expect(loaded.config.readingScale).toBe(1.3);
+  });
+
   it("drops unusable entries without losing the usable ones", () => {
     window.localStorage.setItem(
       SAVED_ENVIRONMENTS_KEY,

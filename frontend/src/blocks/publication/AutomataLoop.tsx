@@ -82,11 +82,20 @@ const PROCESS_SWEEP = (() => {
   return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${R_PROCESS} ${R_PROCESS} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
 })();
 
-export function AutomataLoop() {
+interface AutomataLoopProps {
+  variant?: "full" | "hero";
+  settled?: boolean;
+}
+
+export function AutomataLoop({
+  variant = "full",
+  settled = false,
+}: AutomataLoopProps) {
   const [activeId, setActiveId] = useState<ProcessPhase["id"]>("shaped");
   const [userPaused, setUserPaused] = useState(false);
   const [interactionPaused, setInteractionPaused] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = settled || Boolean(prefersReducedMotion);
   const paused = userPaused || interactionPaused;
 
   const activeIndex = Math.max(
@@ -97,6 +106,7 @@ export function AutomataLoop() {
 
   useEffect(() => {
     if (paused || reducedMotion) return;
+
     const timer = window.setInterval(() => {
       setActiveId((prev) => {
         const idx = PROCESS_PHASES.findIndex((p) => p.id === prev);
@@ -116,17 +126,22 @@ export function AutomataLoop() {
           setInteractionPaused(false);
         }
       }}
-      className="relative flex w-full max-w-[min(88vw,28rem)] flex-col items-center justify-center select-none"
-      aria-label="The nested architecture: E, Big C, the Reality Frame, and Little c"
+      data-variant={variant}
+      data-motion={reducedMotion ? "still" : "full"}
+      className={`automata-loop relative flex w-full flex-col items-center justify-center select-none ${
+        variant === "hero" ? "max-w-none" : "max-w-[min(88vw,28rem)]"
+      }`}
+      aria-label="DOT's proposed architecture: E, Big C, RF₀, and Little c"
     >
       {/* Screen reader transcription of the scope and the process */}
       <div className="sr-only">
         <p>
-          Scope, drawn as containment. E is the field of possibility and holds
-          everything on this page. Within E, Big C instantiates many Little c and
-          structures RF₀, the Reality Frame they share. RF₀ streams reality inward
-          to Little c; action and consequence return outward. One Little c is
-          opened at the centre; the smaller rings around it are its siblings.
+          This architectural hypothesis treats E as the unbounded field of
+          possibility and the background of the diagram. Big C is proposed as
+          emerging from E and developing RF₀. RF₀ supplies lawful constraints and
+          a situated Reality Stream. Little c interprets, forms Intent, acts
+          through the body, encounters consequence, and carries change on the
+          Canvas. This architecture is a hypothesis, not an observed finding.
         </p>
         <ul>
           {PROCESS_PHASES.map((p) => (
@@ -181,14 +196,29 @@ export function AutomataLoop() {
           </defs>
 
           {/* Each scope is a region; the innermost is the one being opened. */}
-          <circle cx={C} cy={C} r={R_FRAME} fill="var(--architecture-shade)" />
-          <circle cx={C} cy={C} r={R_LITTLE_C} fill="var(--architecture-core)" />
+          <circle
+            className="automata-frame-region"
+            cx={C}
+            cy={C}
+            r={R_FRAME}
+            fill="var(--architecture-shade)"
+          />
+          <circle
+            className="automata-core-region"
+            cx={C}
+            cy={C}
+            r={R_LITTLE_C}
+            fill="var(--architecture-core)"
+          />
 
           {/* Each boundary, gapped at twelve o'clock to seat its own label */}
           {CONTAINMENT.map((ring) => (
             <path
               key={ring.key}
+              className="automata-containment-ring"
+              data-scope={ring.key}
               d={ringArc(ring.r, ring.gapDeg)}
+              pathLength={1}
               fill="none"
               stroke={
                 ring.key === "little-c"
@@ -204,12 +234,14 @@ export function AutomataLoop() {
           {CONTAINMENT.map((ring) => (
             <text
               key={`${ring.key}-label`}
+              className="automata-containment-label"
+              data-scope={ring.key}
               x={C}
               y={C - ring.r}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize="15"
-              letterSpacing="1.8"
+              fontSize={variant === "hero" ? "20" : "15"}
+              letterSpacing={variant === "hero" ? "2.2" : "1.8"}
               fontFamily="var(--font-mono, monospace)"
               fill={
                 ring.key === "little-c"
@@ -222,7 +254,7 @@ export function AutomataLoop() {
           ))}
 
           {/* Big C instantiates many Little c. The centre is one of them, opened. */}
-          <g>
+          <g className="automata-siblings">
             {SIBLING_ANGLES.map((a) => {
               const [sx, sy] = polar(a, R_SIBLING);
               return (
@@ -248,7 +280,7 @@ export function AutomataLoop() {
           </g>
 
           {/* The Frame streams reality inward to Little c */}
-          <g strokeLinecap="round">
+          <g className="automata-streams" strokeLinecap="round">
             {STREAM_IN_ANGLES.map((a) => {
               const [x1, y1] = polar(a, R_STREAM_OUTER);
               const [x2, y2] = polar(a, R_STREAM_INNER);
@@ -311,6 +343,7 @@ export function AutomataLoop() {
 
           {/* The process runs inside Little c: a quarter turn per phase. */}
           <circle
+            className="automata-process-track"
             cx={C}
             cy={C}
             r={R_PROCESS}
@@ -321,6 +354,7 @@ export function AutomataLoop() {
             opacity="0.5"
           />
           <g
+            className="automata-process-sweep"
             style={{
               transform: `rotate(${activeIndex * 90}deg)`,
               transformOrigin: `${C}px ${C}px`,
@@ -341,7 +375,7 @@ export function AutomataLoop() {
         </svg>
 
         {/* Little c — the phase currently running */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[28%] text-center">
+        <div className="automata-phase-readout pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[28%] text-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={current.id}
@@ -362,65 +396,69 @@ export function AutomataLoop() {
         </div>
       </div>
 
-      {/* The active state, given room to be read */}
-      <div className="mt-6 flex min-h-[5rem] w-full max-w-md flex-col items-center px-4">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={current.id}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="text-center font-serif text-base leading-relaxed text-[var(--book-ink)] sm:text-lg"
-          >
-            {current.line}
-          </motion.p>
-        </AnimatePresence>
-      </div>
+      {variant === "full" && (
+        <>
+          {/* The active state, given room to be read */}
+          <div className="mt-6 flex min-h-[5rem] w-full max-w-md flex-col items-center px-4">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={current.id}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="text-center font-serif text-base leading-relaxed text-[var(--book-ink)] sm:text-lg"
+              >
+                {current.line}
+              </motion.p>
+            </AnimatePresence>
+          </div>
 
-      {/* Large hit areas preserve the quiet visual rhythm on touch and keyboard. */}
-      <div className="mt-1 flex items-center" aria-label="Experience loop controls">
-        {PROCESS_PHASES.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => setActiveId(p.id)}
-            aria-label={`${p.step} — ${p.line}`}
-            aria-pressed={p.id === activeId}
-            className="group inline-flex h-9 w-9 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--book-cinnabar)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--book-paper)]"
-          >
-            <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                p.id === activeId
-                  ? "w-6 bg-[var(--book-cinnabar)]"
-                  : "w-1.5 bg-[var(--architecture-line)] group-hover:bg-[var(--book-muted)]"
-              }`}
-              aria-hidden="true"
-            />
-          </button>
-        ))}
-        {!reducedMotion && (
-          <button
-            type="button"
-            onClick={() => setUserPaused((value) => !value)}
-            className="ml-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--book-muted)] outline-none transition-colors hover:text-[var(--book-ink)] focus-visible:ring-2 focus-visible:ring-[var(--book-cinnabar)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--book-paper)]"
-            aria-label={userPaused ? "Resume loop animation" : "Pause loop animation"}
-            title={userPaused ? "Resume loop animation" : "Pause loop animation"}
-          >
-            {userPaused ? (
-              <Play className="h-3.5 w-3.5" aria-hidden="true" />
-            ) : (
-              <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+          {/* Large hit areas preserve the quiet visual rhythm on touch and keyboard. */}
+          <div className="mt-1 flex items-center" aria-label="Experience loop controls">
+            {PROCESS_PHASES.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActiveId(p.id)}
+                aria-label={`${p.step} — ${p.line}`}
+                aria-pressed={p.id === activeId}
+                className="group inline-flex h-9 w-9 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--book-cinnabar)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--book-paper)]"
+              >
+                <span
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    p.id === activeId
+                      ? "w-6 bg-[var(--book-cinnabar)]"
+                      : "w-1.5 bg-[var(--architecture-line)] group-hover:bg-[var(--book-muted)]"
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            ))}
+            {!reducedMotion && (
+              <button
+                type="button"
+                onClick={() => setUserPaused((value) => !value)}
+                className="ml-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--book-muted)] outline-none transition-colors hover:text-[var(--book-ink)] focus-visible:ring-2 focus-visible:ring-[var(--book-cinnabar)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--book-paper)]"
+                aria-label={userPaused ? "Resume loop animation" : "Pause loop animation"}
+                title={userPaused ? "Resume loop animation" : "Pause loop animation"}
+              >
+                {userPaused ? (
+                  <Play className="h-3.5 w-3.5" aria-hidden="true" />
+                ) : (
+                  <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+                )}
+              </button>
             )}
-          </button>
-        )}
-      </div>
+          </div>
 
-      {/* The movement in plain language; technical scope remains in the figure. */}
-      <p className="mt-5 max-w-lg text-center text-[13px] leading-relaxed text-[var(--book-muted)]">
-        Experience enters. Interpretation shapes action. Consequence changes
-        what returns.
-      </p>
+          {/* The movement in plain language; technical scope remains in the figure. */}
+          <p className="mt-5 max-w-lg text-center text-[13px] leading-relaxed text-[var(--book-muted)]">
+            Experience enters. Interpretation shapes action. Consequence changes
+            what returns.
+          </p>
+        </>
+      )}
     </div>
   );
 }

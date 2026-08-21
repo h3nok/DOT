@@ -24,7 +24,7 @@ import {
   getBookOneProduct,
   type BookOneProduct,
 } from "../../services/OrchestratorCommerceService";
-import DotEmergenceField from "./DotEmergenceField";
+import BookOneCover from "./BookOneCover";
 
 const FALLBACK_PRICE = "$20.00";
 
@@ -117,30 +117,7 @@ export default function BookAccessPage() {
       </header>
 
       <section className="mx-auto flex max-w-4xl flex-col items-center pb-12 pt-14 text-center sm:pt-20">
-        <div className="book-digital-cover relative aspect-[3/4] w-[min(18rem,72vw)] overflow-hidden border border-[var(--book-hairline)] text-foreground shadow-2xl">
-          <DotEmergenceField variant="cover" className="absolute inset-0" />
-          <span className="book-digital-cover-wash absolute inset-0" aria-hidden="true" />
-          <div className="relative flex h-full flex-col items-center px-6 pb-20 pt-20">
-            <p className="mt-8 dot-label text-[var(--book-muted)]">
-              Digital Organism Theory · Book One
-            </p>
-            <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight">
-              Consciousness:
-              <span className="book-digital-subtitle mt-2 block text-sm font-medium text-[var(--book-muted)]">
-                A Digital Organism
-              </span>
-            </h1>
-            <div className="book-cover-colophon mt-auto w-full">
-              <span className="mx-auto block h-px w-16 bg-foreground/40" aria-hidden="true" />
-              <p className="mt-4 font-serif text-sm font-semibold">
-                Henok Ghebrechristos
-              </p>
-              <p className="mt-2 dot-label text-[10px] text-[var(--book-muted)]">
-                Digital Edition · Version 2
-              </p>
-            </div>
-          </div>
-        </div>
+        <BookOneCover className="w-[min(19rem,78vw)]" />
 
         <p className="dot-label mt-12 text-[var(--book-cinnabar)]">
           Free complete reader · Paid digital ownership

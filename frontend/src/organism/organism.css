@@ -470,6 +470,134 @@ html[data-organism=\"on\"][data-organism-mood=\"active\"] .dot-surface {
    UI Styles — surface treatments applied via data-ui-style on <html>.
    ==================================================================== */
 
+/* One token contract for application chrome. Components opt into a semantic
+   role; the selected surface style supplies the paint. This is intentionally
+   separate from reading typography and from the ambient field. */
+html {
+  --appearance-surface-base: var(--card);
+  --appearance-ui-control-radius: 0.75rem;
+  --appearance-ui-panel-radius: 1rem;
+  --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 88%, transparent);
+  --appearance-ui-border: var(--border);
+  --appearance-ui-shadow: 0 12px 40px -18px rgb(0 0 0 / 0.18);
+  --appearance-ui-backdrop: blur(12px) saturate(120%);
+  --appearance-ui-control-background: color-mix(
+    in oklch,
+    var(--appearance-surface-base) 72%,
+    transparent
+  );
+  --appearance-ui-control-shadow: 0 4px 16px -10px rgb(0 0 0 / 0.22);
+}
+
+.book-surface {
+  --appearance-surface-base: var(--book-paper);
+}
+
+.appearance-ui-panel,
+.appearance-ui-chrome {
+  border-color: var(--appearance-ui-border);
+  background: var(--appearance-ui-background);
+  box-shadow: var(--appearance-ui-shadow);
+  backdrop-filter: var(--appearance-ui-backdrop);
+  -webkit-backdrop-filter: var(--appearance-ui-backdrop);
+}
+
+.appearance-ui-panel {
+  border-radius: var(--appearance-ui-panel-radius);
+}
+
+.appearance-ui-control {
+  border-color: var(--appearance-ui-border);
+  border-radius: var(--appearance-ui-control-radius);
+  background: var(--appearance-ui-control-background);
+  box-shadow: var(--appearance-ui-control-shadow);
+  backdrop-filter: var(--appearance-ui-backdrop);
+  -webkit-backdrop-filter: var(--appearance-ui-backdrop);
+}
+
+html[data-ui-style="neural"] {
+  --appearance-ui-control-radius: 999px;
+  --appearance-ui-panel-radius: 1.25rem;
+  --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 62%, transparent);
+  --appearance-ui-border: var(--organism-accent-soft);
+  --appearance-ui-shadow:
+    0 0 calc(6px + var(--organism-glow, 0px)) var(--organism-accent-soft),
+    0 24px 60px -20px rgb(0 0 0 / 0.28),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  --appearance-ui-backdrop: blur(20px) saturate(150%);
+  --appearance-ui-control-background: color-mix(
+    in oklch,
+    var(--appearance-surface-base) 52%,
+    transparent
+  );
+  --appearance-ui-control-shadow: 0 0 calc(3px + var(--organism-glow, 0px))
+    var(--organism-accent-soft);
+}
+
+html[data-ui-style="minimal"] {
+  --appearance-ui-control-radius: 0.2rem;
+  --appearance-ui-panel-radius: 0.25rem;
+  --appearance-ui-background: var(--appearance-surface-base);
+  --appearance-ui-border: var(--border);
+  --appearance-ui-shadow: none;
+  --appearance-ui-backdrop: none;
+  --appearance-ui-control-background: var(--appearance-surface-base);
+  --appearance-ui-control-shadow: none;
+}
+
+html[data-ui-style="organic"] {
+  --appearance-ui-control-radius: 999px;
+  --appearance-ui-panel-radius: 1.5rem;
+  --appearance-ui-background: color-mix(
+    in oklch,
+    var(--appearance-surface-base) 88%,
+    var(--organism-accent)
+  );
+  --appearance-ui-border: color-mix(
+    in oklch,
+    var(--border) 50%,
+    var(--organism-accent-soft)
+  );
+  --appearance-ui-shadow:
+    0 20px 52px -16px color-mix(in oklch, var(--organism-accent) 18%, rgb(0 0 0 / 0.1)),
+    inset 0 1px 0 rgb(255 255 255 / 0.12);
+  --appearance-ui-backdrop: blur(12px);
+  --appearance-ui-control-background: color-mix(
+    in oklch,
+    var(--appearance-surface-base) 78%,
+    var(--organism-accent)
+  );
+  --appearance-ui-control-shadow: none;
+}
+
+html[data-ui-style="editorial"] {
+  --appearance-ui-control-radius: 0;
+  --appearance-ui-panel-radius: 0;
+  --appearance-ui-background: transparent;
+  --appearance-ui-border: var(--foreground);
+  --appearance-ui-shadow: none;
+  --appearance-ui-backdrop: none;
+  --appearance-ui-control-background: transparent;
+  --appearance-ui-control-shadow: none;
+}
+
+html[data-ui-style="cinematic"] {
+  --appearance-ui-control-radius: 0.45rem;
+  --appearance-ui-panel-radius: 0.65rem;
+  --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 48%, transparent);
+  --appearance-ui-border: color-mix(in oklch, var(--foreground) 10%, transparent);
+  --appearance-ui-shadow:
+    0 32px 80px -24px rgb(0 0 0 / 0.48),
+    inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --appearance-ui-backdrop: blur(30px) saturate(115%) brightness(95%);
+  --appearance-ui-control-background: color-mix(
+    in oklch,
+    var(--appearance-surface-base) 48%,
+    transparent
+  );
+  --appearance-ui-control-shadow: 0 8px 24px -14px rgb(0 0 0 / 0.55);
+}
+
 /* --- Neural: fluid glass, living borders, synaptic glow -------------- */
 html[data-ui-style="neural"] {
   --radius: 1rem;
@@ -785,46 +913,10 @@ html[data-ui-style="neural"] .book-reader::before {
     0 0 calc(10px + var(--organism-glow, 0px) * 2) color-mix(in oklch, var(--organism-accent) 16%, transparent);
 }
 
-/* A generous corner, not a pill: these are tall cards, and 999px on a
-   9rem-high grid turns the ends into lozenges. */
-html[data-ui-style="neural"] .book-reader-quick-tools,
-html[data-ui-style="neural"] .book-entrance {
-  border-radius: 1.25rem;
-  border-color: color-mix(in oklch, var(--organism-accent-soft) 60%, transparent);
-  background: color-mix(in oklab, var(--book-paper) 55%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  box-shadow: 0 0 calc(3px + var(--organism-glow, 0px)) color-mix(in oklch, var(--organism-accent) 22%, transparent);
-}
-
-/* Glass is the same for both entrances, so the primary action has to be said
-   in the other thing neural has: the strength of its lit edge. */
-html[data-ui-style="neural"] .book-entrance--primary {
-  border-color: var(--organism-accent-strong);
-  box-shadow: 0 0 calc(8px + var(--organism-glow, 0px) * 2) color-mix(in oklch, var(--organism-accent) 42%, transparent);
-}
-
-html[data-ui-style="neural"] .book-entrance:hover {
-  border-color: var(--organism-accent-strong);
-  box-shadow: 0 0 calc(7px + var(--organism-glow, 0px) * 1.5) color-mix(in oklch, var(--organism-accent) 38%, transparent);
-}
-
 /* --- Organic: warm, rounded, no glass ------------------------------- */
 
 html[data-ui-style="organic"] .book-reader::before {
   border-radius: 1.75rem;
-}
-
-html[data-ui-style="organic"] .book-reader-quick-tools {
-  border-radius: 1.5rem;
-  border-color: color-mix(in oklch, var(--organism-accent-soft) 42%, var(--book-hairline));
-  background: color-mix(in oklch, var(--organism-accent) 5%, var(--book-paper));
-}
-
-/* Rounder and warmer, but still wearing its own ground, so the primary
-   entrance stays the primary entrance. */
-html[data-ui-style="organic"] .book-entrance {
-  border-radius: 1.5rem;
 }
 
 /* --- Cinematic: deep shadow, hard ground, no lit edges -------------- */
@@ -837,10 +929,6 @@ html[data-ui-style="cinematic"] .book-reader::before {
 html[data-ui-style="cinematic"] .book-chrome {
   border-bottom-color: transparent;
   box-shadow: 0 12px 32px -20px rgb(0 0 0 / 0.7);
-}
-
-html[data-ui-style="cinematic"] .book-reader-quick-tools {
-  border-radius: 0.5rem;
 }
 
 /* --- Minimal: flat, sharp, opaque -----------------------------------
@@ -859,27 +947,6 @@ html[data-ui-style="minimal"] .book-chrome {
 }
 
 html[data-ui-style="minimal"] .book-reader::before {
-  border-radius: var(--radius);
-  box-shadow: none;
-}
-
-html[data-ui-style="minimal"] .book-reader-quick-tools {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-radius: var(--radius);
-  border: 1px solid var(--book-hairline);
-  background: color-mix(in oklab, var(--book-paper) 94%, transparent);
-  box-shadow: none;
-}
-
-/* The entrances keep whatever ground their own modifier gives them — the
-   primary one is tinted so it reads as the primary action, and flattening
-   both to the same fill would leave two identical cards and no answer to
-   "which of these am I meant to press". Minimal squares the corners and
-   takes away the lift; it does not take away the distinction. */
-html[data-ui-style="minimal"] .book-entrance {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border-radius: var(--radius);
   box-shadow: none;
 }
@@ -904,46 +971,31 @@ html[data-ui-style="editorial"] .book-reader::before {
   box-shadow: none;
 }
 
-html[data-ui-style="editorial"] .book-reader-quick-tools {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: none;
-  border-top: 2px solid color-mix(in oklab, var(--book-ink) 70%, transparent);
-  border-radius: 0;
-  background: transparent;
-  padding: 1.1rem 0 0;
-  box-shadow: none;
-}
-
-/* The entrances are actions, not surfaces: editorial keeps their outline
-   and squares it, rather than dissolving a call to action into a rule. */
-html[data-ui-style="editorial"] .book-entrance {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-radius: 0;
-  border-color: color-mix(in oklab, var(--book-ink) 45%, transparent);
-  background: transparent;
-  box-shadow: none;
-}
-
-/* Editorial has no fills to distinguish the primary action with, so it says
-   it the way the rest of this style says everything: with weight. */
-html[data-ui-style="editorial"] .book-entrance--primary {
-  border-width: 2px;
-  border-color: color-mix(in oklab, var(--book-ink) 85%, transparent);
-}
-
-html[data-ui-style="editorial"] .book-entrance-icon {
-  border-radius: 0;
-}
-
 /* High contrast is a stated need and outranks any surface treatment: a
    glow around a card is decoration, and decoration loses to legibility. */
 html[data-contrast="high"] .book-chrome,
-html[data-contrast="high"] .book-reader::before,
-html[data-contrast="high"] .book-reader-quick-tools,
-html[data-contrast="high"] .book-entrance {
+html[data-contrast="high"] .book-reader::before {
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+/* The chooser is an instrument, not a demonstration canvas. It remains clear
+   while the page behind it changes, so every option can be compared from the
+   same legible control surface. This rule follows the broad dialog treatments
+   above deliberately. */
+html[data-ui-style] .appearance-panel[role="dialog"] {
+  border: 1px solid var(--appearance-hairline);
+  border-radius: 1rem;
+  background: var(--appearance-ground);
+  padding-top: 0;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 20px 52px -16px rgb(0 0 0 / 0.38);
+  backdrop-filter: blur(24px) saturate(112%);
+  -webkit-backdrop-filter: blur(24px) saturate(112%);
+}
+
+.publication-studio__panel {
+  border-radius: 0;
 }

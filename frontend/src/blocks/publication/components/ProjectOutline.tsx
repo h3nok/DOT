@@ -16,25 +16,27 @@ interface ProjectOutlineProps {
 
 export function ProjectOutline({ project, sections, activeSectionId, onSelectSection, onRefresh }: ProjectOutlineProps) {
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCreateSection = async () => {
     try {
       setIsCreating(true);
+      setError(null);
       const newSection = await createPublicationSection(project.id, {
         title: "Untitled Section",
         order: sections.length,
       });
-      onRefresh();
+      await onRefresh();
       onSelectSection(newSection.id);
-    } catch (err) {
-      alert("Failed to create section");
+    } catch (reason: unknown) {
+      setError(reason instanceof Error ? reason.message : "The section could not be created.");
     } finally {
       setIsCreating(false);
     }
   };
 
   return (
-    <aside className="flex h-full flex-col bg-background">
+    <aside className="appearance-ui-panel publication-studio__panel flex h-full flex-col">
       <div className="border-b border-border/60 px-4 py-3">
         <p className="font-mono dot-micro uppercase text-muted-foreground">Manuscript</p>
         <h2 className="mt-1 truncate font-serif text-sm font-semibold">{project.title}</h2>
@@ -51,7 +53,7 @@ export function ProjectOutline({ project, sections, activeSectionId, onSelectSec
                 <button
                   type="button"
                   onClick={() => onSelectSection(section.id)}
-                  className={`grid w-full grid-cols-[1.5rem_minmax(0,1fr)] gap-2 border-l-2 px-3 py-2.5 text-left text-sm transition-colors ${
+                  className={`group grid w-full grid-cols-[1.5rem_minmax(0,1fr)_0.5rem] items-center gap-2 border-l-2 px-3 py-3 text-left text-sm transition-colors ${
                     activeSectionId === section.id
                       ? "border-[color:var(--organism-accent-strong)] bg-foreground/[0.04] text-foreground"
                       : "border-transparent text-muted-foreground hover:bg-foreground/[0.03] hover:text-foreground"
@@ -59,6 +61,14 @@ export function ProjectOutline({ project, sections, activeSectionId, onSelectSec
                 >
                   <span className="pt-0.5 font-mono opacity-60">{String(index + 1).padStart(2, "0")}</span>
                   <span className="min-w-0 truncate font-serif text-sm font-medium">{section.title}</span>
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                      activeSectionId === section.id
+                        ? "bg-[color:var(--organism-accent-strong)]"
+                        : "bg-border group-hover:bg-muted-foreground/50"
+                    }`}
+                    aria-hidden="true"
+                  />
                 </button>
               </li>
             ))}
@@ -66,11 +76,16 @@ export function ProjectOutline({ project, sections, activeSectionId, onSelectSec
         )}
       </div>
       <div className="border-t border-border/60 p-3">
+        {error && (
+          <p className="mb-3 text-xs leading-relaxed text-destructive" role="alert">
+            {error}
+          </p>
+        )}
         <button
           type="button"
           onClick={handleCreateSection}
           disabled={isCreating}
-          className="flex min-h-9 w-full items-center justify-center gap-2 border border-border/70 px-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+          className="flex min-h-9 w-full items-center justify-center gap-2 dot-pill disabled:opacity-50"
         >
           {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <FilePlus2 className="h-4 w-4" />}
           New section

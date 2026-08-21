@@ -156,10 +156,10 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
                 ? "Lens: Ground (cite source passages) — click to switch to Test"
                 : "Lens: Test (scrutinize & find weak points) — click to switch to Ground"
             }
-            className={`hidden sm:inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors ${
+            className={`hidden sm:inline-flex items-center gap-1 border-l border-border/35 py-1 pl-2.5 pr-1 text-[10px] font-mono uppercase tracking-wider transition-colors ${
               selectedLens === "test"
-                ? "border-[color:var(--organism-accent-strong)]/40 bg-[color:var(--organism-accent-strong)]/10 text-[color:var(--organism-accent-strong)] font-semibold"
-                : "border-border/30 text-muted-foreground/60 hover:text-foreground"
+                ? "text-[color:var(--organism-accent-strong)] font-semibold"
+                : "text-muted-foreground/60 hover:text-foreground"
             }`}
           >
             {selectedLens === "test" ? (
@@ -185,17 +185,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
-          )}
-
-          {/* Quick slash shortcut indicator */}
-          {!query.trim() && !isFocused && (
-            <kbd
-              aria-hidden="true"
-              className="hidden sm:inline-flex shrink-0 items-center justify-center rounded-md border border-border/30 bg-foreground/[0.03] px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/50 select-none"
-              title="Press / to search"
-            >
-              /
-            </kbd>
           )}
 
           <button

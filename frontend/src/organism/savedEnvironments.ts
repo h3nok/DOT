@@ -1,13 +1,6 @@
 import {
   DEFAULT_CONFIG,
-  resolveContrast,
-  resolveDial,
-  resolveMeasure,
-  resolvePaperTone,
-  resolveParagraphStyle,
-  resolvePreset,
-  resolveReadingFont,
-  resolveTint,
+  resolveOrganismConfig,
   type OrganismConfig,
 } from "./types";
 
@@ -57,21 +50,7 @@ export function normaliseName(raw: string): string {
  * rather than invalidating the whole environment.
  */
 function reviveConfig(raw: unknown): OrganismConfig {
-  const saved = (raw ?? {}) as Partial<OrganismConfig>;
-  return {
-    ...DEFAULT_CONFIG,
-    ...saved,
-    preset: resolvePreset(saved.preset),
-    contrast: resolveContrast(saved.contrast),
-    tint: resolveTint(saved.tint),
-    readingFont: resolveReadingFont(saved.readingFont),
-    readingMeasure: resolveMeasure(saved.readingMeasure),
-    paragraphStyle: resolveParagraphStyle(saved.paragraphStyle),
-    paperTone: resolvePaperTone(saved.paperTone),
-    fieldScale: resolveDial(saved.fieldScale, 0.5, 1.6, DEFAULT_CONFIG.fieldScale),
-    fieldSpeed: resolveDial(saved.fieldSpeed, 0, 1.6, DEFAULT_CONFIG.fieldSpeed),
-    fieldContrast: resolveDial(saved.fieldContrast, 0.5, 2, DEFAULT_CONFIG.fieldContrast),
-  };
+  return resolveOrganismConfig(raw);
 }
 
 function reviveEnvironment(raw: unknown): SavedEnvironment | null {

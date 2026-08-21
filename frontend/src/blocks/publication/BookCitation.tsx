@@ -64,53 +64,61 @@ export default function BookCitation({
     <>
       <section
         id="section-citation"
-        className="book-citation scroll-mt-24 print:hidden"
+        className="book-citation book-coda__section scroll-mt-24 print:hidden"
         aria-labelledby="section-citation-title"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="book-coda__label" id="section-citation-title">
+        <header className="book-coda__section-heading">
+          <h2 className="book-coda__section-title" id="section-citation-title">
             Cite {what}
+          </h2>
+          <p className="book-coda__section-purpose">
+            Digital edition · version {manifest.release.version}
           </p>
-          <div className="flex items-center gap-1 rounded-full border border-border/40 p-0.5" role="group" aria-label="Citation format">
+        </header>
+
+        <div className="book-coda__section-body">
+          <div
+            className="book-citation__formats"
+            role="group"
+            aria-label="Citation format"
+          >
             {FORMATS.map((entry) => (
               <button
                 key={entry.id}
                 type="button"
                 onClick={() => setFormat(entry.id)}
                 aria-pressed={format === entry.id}
-                className={`min-h-8 rounded-full px-3 text-xs transition-colors ${
-                  format === entry.id
-                    ? "bg-foreground/[0.08] font-semibold text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="book-citation__format"
               >
                 {entry.label}
               </button>
             ))}
           </div>
-        </div>
 
-        <div className="mt-4 rounded-xl border border-[var(--book-hairline)] bg-foreground/[0.02] p-4">
-          <pre className="min-w-0 overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-foreground/70">
+          <div className="book-citation__text">
+            <pre className="min-w-0 overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-[var(--book-ink)]">
             {citation}
-          </pre>
-        </div>
+            </pre>
+          </div>
 
-        <button
-          type="button"
-          onClick={copy}
-          className="mt-3 inline-flex min-h-10 items-center gap-2 text-xs font-medium text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
-        >
-          {copied ? (
-            <Check className="h-3.5 w-3.5" aria-hidden="true" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" aria-hidden="true" />
-          )}
-          {copied ? "Copied" : `Copy ${format === "bibtex" ? "BibTeX" : "reference"}`}
-        </button>
-        <p aria-live="polite" className="sr-only">
-          {copied ? "Citation copied to the clipboard." : ""}
-        </p>
+          <button
+            type="button"
+            onClick={copy}
+            className="book-citation__copy"
+          >
+            {copied ? (
+              <Check className="h-3.5 w-3.5" aria-hidden="true" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+            {copied
+              ? "Copied"
+              : `Copy ${format === "bibtex" ? "BibTeX" : "reference"}`}
+          </button>
+          <p aria-live="polite" className="sr-only">
+            {copied ? "Citation copied to the clipboard." : ""}
+          </p>
+        </div>
       </section>
 
       {/* A printed chapter has to say where it came from. */}

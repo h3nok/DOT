@@ -14,12 +14,19 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    visualizer({
-      filename: "dist/stats.html",
-      open: false,
-      gzipSize: true,
-      brotliSize: true,
-    }),
+    // A bundle map is useful locally and is also a 1 MB implementation map we
+    // have no reason to publish beside the book. Generate it only for the
+    // explicit analysis command, never for a normal release.
+    ...(process.env.ANALYZE === "1"
+      ? [
+          visualizer({
+            filename: "dist/stats.html",
+            open: false,
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   resolve: {
     alias: {

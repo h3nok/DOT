@@ -4,10 +4,10 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
-  BookOpen,
   Check,
   ChevronLeft,
   ExternalLink,
+  FilePenLine,
   Library,
   Linkedin,
   List,
@@ -45,6 +45,7 @@ import { AppearanceControl } from "../../organism";
 import BookCitation from "./BookCitation";
 import BookLanding from "./BookLanding";
 import { TwinSurface } from "../../dot/TwinSurface";
+import { useAuth } from "../../dot/useAuth";
 import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
 
 function sectionLabel(section: BookReleaseSection): string {
@@ -105,7 +106,7 @@ function LoadingState() {
       className="book-surface min-h-screen bg-background text-foreground"
       aria-live="polite"
     >
-      <header className="book-chrome h-16 border-b border-[var(--book-hairline)]">
+      <header className="appearance-ui-chrome book-chrome h-16 border-b border-[var(--book-hairline)]">
         <div className="mx-auto flex h-full max-w-7xl items-center px-5 sm:px-8">
           <span className="book-dot-link inline-flex items-center gap-2 text-xs font-medium">
             <span className="book-dot-link-mark" aria-hidden="true" />
@@ -150,7 +151,7 @@ function BookContents({
           {/* The part names the structure; the chapters are the content. This
               heading was set in cinnabar over muted titles, which gave the
               louder voice to the smaller idea. */}
-          <h2 className="book-contents__part">{group.part}</h2>
+          <h2 className="dot-label dot-micro book-contents__part">{group.part}</h2>
           <ol>
             {group.sections.map((section) => {
               const active = section.slug === currentSlug;
@@ -249,41 +250,10 @@ function BookReader({
   return (
     <>
       <div
-        className="book-reading-grid mx-auto grid w-full gap-10 px-5 pb-24 pt-10 sm:px-8 lg:justify-center lg:gap-14"
-        data-layout={focusMode ? "focus" : companionOpen ? "companion" : "contents"}
+        className="book-reading-grid mx-auto grid w-full px-5 pb-24 pt-12 sm:px-8 sm:pt-16 lg:justify-center"
+        data-layout={focusMode ? "focus" : companionOpen ? "companion" : "reader"}
       >
-        <aside
-          className={
-            companionOpen || focusMode ? "hidden" : "book-focus-hidden hidden print:hidden lg:block"
-          }
-        >
-          <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
-            <Link
-              to={DOT_BOOK_ONE_ROUTE}
-              className="mb-7 inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              Book overview
-            </Link>
-            <BookContents
-              manifest={manifest}
-              currentSlug={section.slug}
-              path={path}
-            />
-          </div>
-        </aside>
-
         <article id="book-main" className="book-reader min-w-0">
-          <div className="book-focus-hidden mb-8 print:hidden lg:hidden">
-            <Link
-              to={DOT_BOOK_ONE_ROUTE}
-              className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              Overview
-            </Link>
-          </div>
-
           {/* Everything between a chapter's title and its first sentence is
               competing with the act of starting to read.
              
@@ -295,15 +265,17 @@ function BookReader({
              
               What is left is what a reader opening a chapter actually needs:
               which chapter, how long it will take, and the title. */}
-          <header className="book-chapter-header border-b pb-9 text-center">
-            <p className="dot-label">
-              {sectionLabel(section)} · about {section.reading_time_minutes} min
-            </p>
-            <h1 className="book-reading-heading mx-auto mt-5 max-w-2xl text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+          <header className="book-chapter-header">
+            <div className="book-chapter-header__meta flex flex-wrap items-center justify-center gap-x-4 gap-y-1 dot-label text-[var(--book-muted)]">
+              <span className="text-[var(--book-cinnabar)]">{sectionLabel(section)}</span>
+              <span aria-hidden="true">/</span>
+              <span>About {section.reading_time_minutes} min</span>
+            </div>
+            <h1 className="book-reading-heading mx-auto mt-6 max-w-2xl text-balance text-4xl font-medium leading-[1.06] tracking-[-0.025em] text-foreground sm:text-5xl">
               {section.title}
             </h1>
             {section.subtitle && (
-              <p className="book-reading-copy mx-auto mt-4 max-w-2xl text-xl italic leading-relaxed text-muted-foreground">
+              <p className="book-reading-copy mx-auto mt-5 max-w-2xl text-balance text-xl italic leading-relaxed text-muted-foreground">
                 {section.subtitle}
               </p>
             )}
@@ -314,27 +286,27 @@ function BookReader({
                 numbers sections while the rail numbers chapters only invites
                 the reader to reconcile them. */}
             {pathPosition >= 0 && path && (
-            <div className="book-reading-progress mt-8">
-              <div className="mb-2 flex items-center justify-between gap-4 dot-label">
-                <span>{readingSequenceLabel}</span>
-                <span className="tabular-nums">
-                  {readingPosition} / {readingTotal}
-                </span>
+              <div className="book-reading-progress mt-8">
+                <div className="mb-2 flex items-center justify-between gap-4 dot-label">
+                  <span>{readingSequenceLabel}</span>
+                  <span className="tabular-nums">
+                    {readingPosition} / {readingTotal}
+                  </span>
+                </div>
+                <div
+                  className="h-0.5 overflow-hidden rounded-full bg-[var(--book-hairline)]"
+                  role="progressbar"
+                  aria-label={`${readingSequenceLabel}, section ${readingPosition} of ${readingTotal}`}
+                  aria-valuemin={1}
+                  aria-valuemax={readingTotal}
+                  aria-valuenow={readingPosition}
+                >
+                  <span
+                    className="block h-full rounded-full bg-[var(--book-cinnabar)] transition-[width] duration-500 ease-out"
+                    style={{ width: `${readingProgress}%` }}
+                  />
+                </div>
               </div>
-              <div
-                className="h-0.5 overflow-hidden rounded-full bg-[var(--book-hairline)]"
-                role="progressbar"
-                aria-label={`${readingSequenceLabel}, section ${readingPosition} of ${readingTotal}`}
-                aria-valuemin={1}
-                aria-valuemax={readingTotal}
-                aria-valuenow={readingPosition}
-              >
-                <span
-                  className="block h-full rounded-full bg-[var(--book-cinnabar)] transition-[width] duration-500 ease-out"
-                  style={{ width: `${readingProgress}%` }}
-                />
-              </div>
-            </div>
             )}
           </header>
 
@@ -345,11 +317,11 @@ function BookReader({
             variant={section.kind === "references" ? "references" : "chapter"}
           />
 
-          <footer className="book-focus-hidden border-t border-border/60 pt-8">
+          <footer className="book-coda book-focus-hidden print:hidden">
             {section.kind === "references" && (
-              <div className="dot-surface mb-8 rounded-xl border border-[var(--organism-accent-soft)] bg-foreground/[0.03] p-6">
+              <div className="book-coda__completion">
                 <div className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">
+                  <span className="book-coda__completion-mark">
                     <Check className="h-3.5 w-3.5" />
                   </span>
                   <div>
@@ -372,73 +344,95 @@ function BookReader({
                 simply stopped standing in the doorway. */}
             <nav
               aria-label="Reading tools"
-              className="book-focus-hidden book-reader-quick-tools mb-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-xl border border-[var(--book-hairline)] bg-foreground/[0.02] px-4 py-3 print:hidden"
+              className="book-coda__tools"
             >
               <button
                 type="button"
                 onClick={() => onOpenMinty()}
-                className="inline-flex min-h-10 items-center gap-2 text-xs font-semibold text-foreground transition-colors hover:text-[var(--book-cinnabar)]"
+                className="book-coda__tool book-coda__tool--primary"
               >
-                <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
-                Ask about this chapter
+                <span className="book-coda__tool-mark">
+                  <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span>
+                  <strong>Ask about this chapter</strong>
+                  <small>Open Minty with this chapter in context.</small>
+                </span>
               </button>
               <Link
                 to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
-                className="inline-flex min-h-10 items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                className="book-coda__tool"
               >
-                <Library className="h-4 w-4" aria-hidden="true" />
-                {sourceCount > 0
-                  ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
-                  : "Notes & sources"}
+                <span className="book-coda__tool-mark">
+                  <Library className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <span>
+                  <strong>
+                    {sourceCount > 0
+                      ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
+                      : "Notes & sources"}
+                  </strong>
+                  <small>Review the evidence and source record.</small>
+                </span>
               </Link>
             </nav>
 
-            <div className="mb-10">
-              <PrivateReaderNote
-                key={section.slug}
-                storageId={`${manifest.release.id}.${section.slug}`}
-              />
-            </div>
+            <PrivateReaderNote
+              key={section.slug}
+              storageId={`${manifest.release.id}.${section.slug}`}
+            />
 
             {section.related_concepts.length > 0 ? (
-              <div className="mb-10 border-b border-border/60 pb-8">
-                <p className="book-coda__label">Related concepts</p>
-                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-                  {section.related_concepts.map((concept) => (
-                    <span
-                      key={concept}
-                      className="book-concept text-sm text-muted-foreground"
-                    >
-                      {conceptLabel(concept)}
-                    </span>
-                  ))}
+              <section
+                className="book-coda__section"
+                aria-labelledby="book-related-concepts-title"
+              >
+                <header className="book-coda__section-heading">
+                  <h2
+                    id="book-related-concepts-title"
+                    className="book-coda__section-title"
+                  >
+                    Related concepts
+                  </h2>
+                  <p className="book-coda__section-purpose">
+                    Terms this chapter develops or depends on.
+                  </p>
+                </header>
+
+                <div className="book-coda__section-body">
+                  <div className="book-coda__concepts">
+                    {section.related_concepts.map((concept) => (
+                      <Link
+                        key={concept}
+                        to={`/doctrine/${encodeURIComponent(concept)}`}
+                        className="book-coda__concept"
+                      >
+                        {conceptLabel(concept)}
+                      </Link>
+                    ))}
+                  </div>
+                  <Link to="/doctrine" className="book-coda__text-link">
+                    Explore the complete concept graph
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
                 </div>
-                <Link
-                  to="/doctrine"
-                  className="mt-4 inline-flex items-center gap-2 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[var(--organism-accent-strong)]"
-                >
-                  Explore these ideas in the concept graph
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
+              </section>
             ) : null}
 
-            <div className="mb-10">
-              <BookCitation manifest={manifest} section={section} />
-            </div>
+            <BookCitation manifest={manifest} section={section} />
 
             <nav
               aria-label="Chapter navigation"
-              className="grid rounded-xl border border-[var(--book-hairline)] overflow-hidden print:hidden sm:grid-cols-2"
+              className="book-coda__navigation"
             >
               {previous ? (
                 <Link
                   to={step(previous)}
-                  className="group flex min-h-20 items-center gap-3 border-b px-4 py-4 text-left transition-all hover:bg-foreground/[0.03] sm:border-b-0 sm:border-r sm:border-[var(--book-hairline)]"
+                  className="book-coda__previous group"
                 >
                   <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
                   <span>
-                    <span className="book-coda__label">Previous</span>
+                    <span className="dot-label dot-micro">Previous</span>
                     <span className="mt-1 block text-sm font-normal leading-tight text-muted-foreground">
                       {previous.title}
                     </span>
@@ -451,10 +445,10 @@ function BookReader({
               {next ? (
                 <Link
                   to={step(next)}
-                  className="book-coda__next group flex min-h-20 items-center justify-end gap-3 px-4 py-4 text-right transition-all"
+                  className="book-coda__next group"
                 >
                   <span>
-                    <span className="book-coda__label">
+                    <span className="dot-label dot-micro">
                       {path ? path.label : "Continue"}
                     </span>
                     <span className="mt-1 block text-base font-semibold leading-tight text-foreground">
@@ -466,7 +460,7 @@ function BookReader({
               ) : (
                 <Link
                   to={DOT_BOOK_ONE_ROUTE}
-                  className="inline-flex min-h-20 items-center justify-end gap-2 px-4 py-4 text-sm font-semibold text-foreground transition-all hover:bg-foreground/[0.03]"
+                  className="book-coda__next group"
                 >
                   Return to the book
                   <ArrowRight className="h-4 w-4" />
@@ -478,11 +472,16 @@ function BookReader({
               href={siteConfig.social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground print:hidden"
+              className="book-coda__author"
             >
-              <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
-              Henok Ghebrechristos · author profile and résumé
-              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              <span className="book-coda__author-mark">
+                <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <span>
+                <small>About the author</small>
+                <strong>Henok Ghebrechristos · profile and résumé</strong>
+              </span>
+              <ExternalLink className="ml-auto h-3 w-3" aria-hidden="true" />
             </a>
           </footer>
         </article>
@@ -502,6 +501,7 @@ export default function BookOnePage() {
   );
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion() ?? false;
+  const { isOwner } = useAuth();
   const [manifest, setManifest] = useState<DotBookOneManifest | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -725,30 +725,49 @@ export default function BookOnePage() {
         Skip to book
       </a>
       {section ? (
-        <header className="book-chrome book-focus-hidden sticky top-0 z-30 print:hidden">
-          <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-5 sm:px-8">
-            <Link
-              to="/"
-              className="book-dot-link inline-flex items-center gap-2 text-xs font-medium transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span className="book-dot-link-mark" aria-hidden="true" />
-              <span>DOT</span>
-            </Link>
+        <header className="appearance-ui-chrome book-chrome book-focus-hidden sticky top-0 z-30 print:hidden">
+          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
             <Link
               to={DOT_BOOK_ONE_ROUTE}
-              className="hidden truncate text-center font-mono dot-micro uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground md:block"
+              className="book-dot-link group inline-flex min-w-0 items-center gap-2.5 text-xs font-medium transition-colors"
             >
-              Book One · {section.title}
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-x-0.5" />
+              <span className="book-dot-link-mark" aria-hidden="true" />
+              <span className="truncate">Book One</span>
+              <span className="hidden text-[var(--book-hairline)] sm:inline" aria-hidden="true">/</span>
+              <span className="hidden max-w-52 truncate text-muted-foreground sm:inline lg:max-w-72">
+                {section.title}
+              </span>
             </Link>
-            <div className="flex items-center gap-3 justify-self-end">
+            <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+              {isOwner && (
+                <Link
+                  to="/studio"
+                  className="appearance-ui-control book-chrome-action hidden h-9 items-center gap-2 border border-transparent px-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
+                  title="Open publication studio"
+                >
+                  <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
+                  Studio
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={openContents}
+                aria-haspopup="dialog"
+                aria-label="Open book contents"
+                title="Open book contents"
+                className="appearance-ui-control book-chrome-action inline-flex h-9 items-center gap-2 border border-transparent px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:px-3"
+              >
+                <List className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Contents</span>
+              </button>
               <AppearanceControl placement="inline" />
               <button
                 type="button"
                 onClick={() => void enterFocusMode()}
-                title="Read in fullscreen focus mode"
-                aria-label="Enter fullscreen reading mode"
-                className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+                title="Read in fullscreen focus mode — press F"
+                aria-label="Enter fullscreen reading mode. Keyboard shortcut: F"
+                className="appearance-ui-control book-chrome-action inline-flex h-9 w-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -757,18 +776,10 @@ export default function BookOnePage() {
                 onClick={() => openMinty()}
                 title="Ask Minty about what you're reading"
                 aria-label="Ask Minty about this book"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="appearance-ui-control book-chrome-action inline-flex h-9 items-center gap-1.5 border border-transparent px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:px-3"
               >
                 <MessageCircleQuestion className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden sm:inline">Ask Minty</span>
-              </button>
-              <button
-                type="button"
-                onClick={openContents}
-                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
-              >
-                <List className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden sm:inline">Contents</span>
+                <span className="hidden md:inline">Ask Minty</span>
               </button>
             </div>
           </div>
@@ -784,6 +795,16 @@ export default function BookOnePage() {
             <span>DOT</span>
           </Link>
           <AppearanceControl placement="inline" />
+          {isOwner && (
+            <Link
+              to="/studio"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+              title="Open publication studio"
+            >
+              <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Studio</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => openMinty()}
@@ -816,8 +837,8 @@ export default function BookOnePage() {
         <button
           type="button"
           onClick={() => void exitFocusMode()}
-          title="Leave fullscreen reading mode"
-          aria-label="Exit fullscreen reading mode"
+          title="Leave fullscreen reading mode — press F or Escape"
+          aria-label="Exit fullscreen reading mode. Keyboard shortcut: F or Escape"
           className="book-focus-exit fixed right-4 top-4 z-50 inline-flex h-10 w-10 items-center justify-center border border-[var(--book-hairline)] bg-background/90 text-muted-foreground shadow-sm backdrop-blur-md transition-colors hover:text-foreground sm:right-6 sm:top-6"
         >
           <Minimize2 className="h-4 w-4" aria-hidden="true" />
@@ -825,32 +846,33 @@ export default function BookOnePage() {
       ) : null}
 
       {contentsOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
+        <div className="book-contents-overlay fixed inset-0 z-50 flex justify-end">
           <button
             type="button"
             aria-label="Close contents"
             tabIndex={-1}
             onClick={closeContents}
-            className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/68 backdrop-blur-sm"
           />
           <aside
             ref={contentsPanelRef}
-            className="relative h-full w-full max-w-sm overflow-y-auto border-l border-border/60 bg-background px-6 py-7 shadow-2xl"
+            className="appearance-ui-panel book-contents-dialog relative h-full w-full max-w-md overflow-y-auto border-l px-6 py-7 sm:px-8"
             role="dialog"
             aria-modal="true"
             aria-labelledby="book-contents-title"
           >
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-9 flex items-start justify-between border-b border-[var(--book-hairline)] pb-6">
               <div>
-                <p className="dot-label">
-                  Finite reading path
-                </p>
+                <p className="dot-label text-[var(--book-cinnabar)]">Book One</p>
                 <h2
                   id="book-contents-title"
-                  className="book-reading-heading mt-1 text-2xl text-foreground"
+                  className="book-reading-heading mt-2 text-3xl font-medium text-foreground"
                 >
-                  Contents
+                  The argument
                 </h2>
+                <p className="book-reading-copy mt-2 text-sm text-muted-foreground">
+                  A finite edition. Choose a section deliberately.
+                </p>
               </div>
               <button
                 type="button"

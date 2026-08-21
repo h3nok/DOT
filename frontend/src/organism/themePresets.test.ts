@@ -47,14 +47,16 @@ describe("theme presets", () => {
     expect(neural.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("leaves the reader's own typography alone", () => {
-    // Size, leading, and alignment are chosen while reading, not while
-    // choosing a look; a preset that reset them would undo that work.
+  it("leaves the reader's own typography and contrast alone", () => {
+    // Type, contrast, size, leading, and alignment are chosen while reading,
+    // not while choosing a look; a preset that reset them would undo that work.
     const larger: OrganismConfig = {
       ...configFor("midnight"),
+      readingFont: "humanist",
       readingScale: 1.26,
       readingLeading: "loose",
       readingAlign: "justify",
+      contrast: "high",
     };
     expect(matchThemePreset(larger, "dark")).toBe("midnight");
   });
@@ -64,9 +66,8 @@ describe("theme presets", () => {
     expect(bases).toEqual(new Set(["light", "dark"]));
   });
 
-  it("keeps the accessible environment free of motion and background", () => {
+  it("keeps the clarity environment free of motion and background", () => {
     const clarity = themePreset("clarity");
-    expect(clarity.config.contrast).toBe("high");
     expect(clarity.config.stillness).toBe(true);
     expect(clarity.config.preset).toBe("off");
     expect(clarity.config.showMembrane).toBe(false);

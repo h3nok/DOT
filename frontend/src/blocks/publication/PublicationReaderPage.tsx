@@ -19,6 +19,7 @@ import PrivateReaderNote from "../../attention-os/reader/PrivateReaderNote";
 import { ReaderListForm } from "../../dot/ReaderListForm";
 import { useReadingFocus } from "../../attention-os/reader/useReadingFocus";
 import { DotWordmark } from "../../shared/DotWordmark";
+import { AppearanceControl } from "../../organism";
 import {
   DOT_BOOK_ONE_OWNER,
   DOT_BOOK_ONE_ROUTE,
@@ -115,7 +116,7 @@ function ProvenancePanel({ manifest }: { manifest: Manifest }) {
   const sha = project.meta?.source?.sha256;
 
   return (
-    <div className="rounded-2xl border border-border/50 bg-foreground/[0.02] p-5">
+    <div className="appearance-ui-panel border p-5">
       <div className="flex items-center gap-2 text-muted-foreground">
         <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
         <span className="font-mono dot-micro uppercase tracking-[0.2em]">
@@ -230,11 +231,11 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
               {meta.series_title}
             </p>
           )}
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-6xl">
+          <h1 className="book-reading-heading text-balance text-4xl font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-6xl">
             {manifest.project.title}
           </h1>
           {meta?.subtitle && (
-            <p className="mt-5 font-serif text-xl italic leading-relaxed text-muted-foreground sm:text-2xl">
+            <p className="book-reading-copy mt-5 text-xl italic leading-relaxed text-muted-foreground sm:text-2xl">
               {meta.subtitle}
             </p>
           )}
@@ -377,7 +378,7 @@ function SectionReader({
         </div>
       </aside>
 
-      <article id="reader-main" className="min-w-0">
+      <article id="reader-main" className="book-reader min-w-0">
         <button
           type="button"
           onClick={onOpenContents}
@@ -399,11 +400,11 @@ function SectionReader({
               </p>
             )}
           </div>
-          <h1 className="mx-auto mt-5 max-w-2xl font-serif text-4xl font-semibold leading-tight tracking-normal text-foreground sm:text-5xl">
+          <h1 className="book-reading-heading mx-auto mt-5 max-w-2xl text-balance text-4xl font-semibold leading-tight tracking-[-0.025em] text-foreground sm:text-5xl">
             {section.title}
           </h1>
           {section.meta?.subtitle && (
-            <p className="mx-auto mt-4 max-w-2xl font-serif text-xl italic leading-relaxed text-muted-foreground">
+            <p className="book-reading-copy mx-auto mt-4 max-w-2xl text-balance text-xl italic leading-relaxed text-muted-foreground">
               {section.meta.subtitle}
             </p>
           )}
@@ -419,7 +420,7 @@ function SectionReader({
                   <Check className="h-3.5 w-3.5" />
                 </span>
                 <div>
-                  <h2 className="font-serif text-xl text-foreground">
+                  <h2 className="book-reading-heading text-xl text-foreground">
                     You have reached the end of this edition.
                   </h2>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -698,7 +699,7 @@ function PublicationReaderPage() {
         Skip to content
       </a>
 
-      <header className="book-focus-hidden sticky top-0 z-30 border-b border-transparent bg-transparent backdrop-blur-md">
+      <header className="appearance-ui-chrome book-chrome book-focus-hidden sticky top-0 z-30">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <Link
             to="/"
@@ -712,39 +713,40 @@ function PublicationReaderPage() {
             className="min-w-0 text-center"
             aria-label="Edition home"
           >
-            <span className="block truncate font-serif text-sm font-semibold text-foreground">
+            <span className="book-reading-heading block truncate text-sm font-semibold text-foreground">
               {manifest.project.title}
             </span>
             <span className="block font-mono dot-micro uppercase tracking-[0.16em] text-muted-foreground">
               {meta?.label ?? `Version ${manifest.release.version}`}
             </span>
           </Link>
-          {section ? (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setContentsOpen(false);
-                  void readingFocus.enter();
-                }}
-                title="Read in fullscreen focus mode"
-                aria-label="Enter fullscreen reading mode"
-                className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setContentsOpen(true)}
-                className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
-              >
-                <List className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Contents</span>
-              </button>
-            </div>
-          ) : (
-            <span className="w-14" aria-hidden="true" />
-          )}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <AppearanceControl placement="inline" />
+            {section && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setContentsOpen(false);
+                    void readingFocus.enter();
+                  }}
+                  title="Read in fullscreen focus mode"
+                  aria-label="Enter fullscreen reading mode"
+                  className="appearance-ui-control inline-flex h-9 w-9 items-center justify-center border border-transparent text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setContentsOpen(true)}
+                  className="appearance-ui-control inline-flex items-center gap-2 border border-transparent px-2.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground lg:invisible"
+                >
+                  <List className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Contents</span>
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </header>
 
@@ -793,7 +795,7 @@ function PublicationReaderPage() {
                 </p>
                 <h2
                   id="reader-contents-title"
-                  className="mt-1 font-serif text-2xl text-foreground"
+                  className="book-reading-heading mt-1 text-2xl text-foreground"
                 >
                   Contents
                 </h2>

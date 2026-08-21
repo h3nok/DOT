@@ -12,13 +12,14 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "analyze": "pnpm build && open dist/stats.html",
+    "analyze": "ANALYZE=1 pnpm build",
     "analyze:server": "pnpm build && npx serve dist",
     "predeploy": "pnpm build",
     "deploy": "cd .. && gh-pages -d frontend/dist",
     "deploy:github": "pnpm predeploy && pnpm deploy"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.5.2",
     "@fontsource/inter": "^5.2.6",
     "@fontsource/jetbrains-mono": "^5.2.6",
     "@fontsource/playfair-display": "^5.2.6",
@@ -56,6 +57,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "codemirror": "^6.0.2",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.15.0",

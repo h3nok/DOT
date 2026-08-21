@@ -22,6 +22,7 @@ describe("AppearanceControl", () => {
     window.localStorage.clear();
     document.documentElement.className = "";
     delete document.documentElement.dataset.contrast;
+    delete document.documentElement.dataset.uiStyle;
     delete document.documentElement.dataset.motion;
     delete document.documentElement.dataset.reading;
     delete document.documentElement.dataset.leading;
@@ -97,6 +98,27 @@ describe("AppearanceControl", () => {
     );
   });
 
+  it("publishes a surface choice to the application UI and persistence", async () => {
+    renderAppearance();
+    fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Minimal" }));
+
+    await waitFor(() => {
+      expect(document.documentElement.dataset.uiStyle).toBe("minimal");
+    });
+    expect(JSON.parse(window.localStorage.getItem(ORGANISM_STORAGE_KEY) ?? "{}"))
+      .toMatchObject({ uiStyle: "minimal" });
+  });
+
+  it("renders appearance previews from configuration hooks rather than inline styles", () => {
+    const { container } = renderAppearance();
+    fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
+    expect(container.querySelector("[data-appearance-control] [style]")).toBeNull();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Reading" }));
+    expect(container.querySelector("[data-appearance-control] [style]")).toBeNull();
+  });
+
   it("carries leading and alignment onto the reading surfaces", async () => {
     renderAppearance();
     fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
@@ -124,6 +146,39 @@ describe("AppearanceControl", () => {
       expect(document.documentElement.dataset.measure).toBe("narrow");
       expect(document.documentElement.dataset.paragraph).toBe("indented");
       expect(document.documentElement.dataset.paper).toBe("warm");
+    });
+  });
+
+  it("offers complete reading arrangements before the individual controls", async () => {
+    renderAppearance();
+    fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Reading" }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Focus reading style" }));
+
+    await waitFor(() => {
+      expect(document.documentElement.dataset.reading).toBe("sans");
+      expect(document.documentElement.dataset.measure).toBe("narrow");
+      expect(document.documentElement.dataset.leading).toBe("loose");
+    });
+    expect(screen.getByRole("button", { name: "Focus reading style" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("does not reset reading choices when the visual environment changes", async () => {
+    renderAppearance();
+    fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Reading" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open reading style" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Environment" }));
+    fireEvent.click(screen.getByRole("button", { name: /midnight/i }));
+
+    await waitFor(() => {
+      expect(document.documentElement).toHaveClass("dark");
+      expect(document.documentElement.dataset.reading).toBe("humanist");
+      expect(document.documentElement.dataset.contrast).toBe("high");
     });
   });
 
