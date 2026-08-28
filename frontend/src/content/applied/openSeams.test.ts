@@ -22,7 +22,7 @@ import {
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v2",
+  "public/publications/henok/digital-organism-theory/v3",
 );
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),

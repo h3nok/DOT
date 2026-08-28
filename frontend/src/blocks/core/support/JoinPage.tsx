@@ -14,6 +14,7 @@ export default function JoinPage() {
   return (
     <JoinSurface
       reducedMotion={reducedMotion}
+      titleAs="h1"
       onClose={() => navigate("/", { replace: true })}
     />
   );

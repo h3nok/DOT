@@ -148,9 +148,9 @@ function Seam({ seam, index }: { seam: OpenSeam; index: number }) {
           </h2>
 
           <Field label="Not established">{seam.notEstablished}</Field>
-          {seam.alternative && (
-            <Field label="The account this does not defeat">
-              {seam.alternative}
+          {seam.accountToRecover && (
+            <Field label="Established account DOT must recover">
+              {seam.accountToRecover}
             </Field>
           )}
           <Field label="What would settle it">{seam.wouldSettleIt}</Field>
@@ -229,9 +229,7 @@ export default function AppliedPage() {
       }
     >
       <div id="applied-main">
-        <p className="dot-label">
-          Open seams · Edition v2
-        </p>
+        <p className="dot-label">Open seams · Edition v3</p>
         <h1 className="dot-page-heading mt-4 max-w-2xl">
           What Book One does not establish
         </h1>

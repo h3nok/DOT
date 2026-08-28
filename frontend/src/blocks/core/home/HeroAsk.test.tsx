@@ -17,7 +17,7 @@ describe("HeroAsk", () => {
   it("keeps the send mark a real, named submit control", () => {
     render(<HeroAsk onAsk={vi.fn()} />);
 
-    const nib = screen.getByRole("button", { name: /send/i });
+    const nib = screen.getByRole("button", { name: /ask book one/i });
     expect(nib).toHaveAttribute("type", "submit");
     // Nothing written yet, so it is not usable — and says so to assistive tech
     // rather than only by being drawn dry.
@@ -34,19 +34,17 @@ describe("HeroAsk", () => {
     });
 
     expect(nibMark()).toHaveAttribute("data-charged", "true");
-    expect(screen.getByRole("button", { name: /send/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /ask book one/i })).toBeEnabled();
   });
 
-  it("treats a bare slash as no question, not as a short one", () => {
+  it("keeps the writing line free of redundant chrome", () => {
     render(<HeroAsk onAsk={vi.fn()} />);
 
-    fireEvent.change(screen.getByLabelText(/ask a question/i), {
-      target: { value: "/" },
-    });
-
-    // "/" opens the command menu; it is not itself a thing to ask.
-    expect(nibMark()).toHaveAttribute("data-charged", "false");
-    expect(screen.getByRole("button", { name: /send/i })).toBeDisabled();
+    // Suggestions are a focus affordance, not permanent furniture.
+    expect(
+      screen.queryByRole("button", { name: "State the core claim" }),
+    ).toBeNull();
+    expect(document.querySelector(".home-inquiry__header")).toBeNull();
   });
 
   it("measures the stroke against the text actually written", () => {
@@ -78,22 +76,43 @@ describe("HeroAsk", () => {
     expect(field()).toHaveAttribute("data-pen", "writing");
   });
 
-  it("sends the question, then lifts", () => {
-    vi.useFakeTimers();
+  it("sends the question immediately with the selected lens", () => {
     const onAsk = vi.fn();
-    try {
-      render(<HeroAsk onAsk={onAsk} />);
-      const input = screen.getByLabelText(/ask a question/i);
-      fireEvent.change(input, { target: { value: "What is Big C?" } });
-      fireEvent.submit(input.closest("form")!);
+    render(<HeroAsk onAsk={onAsk} />);
+    const input = screen.getByLabelText(/ask a question/i);
+    fireEvent.click(screen.getByRole("button", { name: "Test" }));
+    fireEvent.change(input, { target: { value: "What is Big C?" } });
+    fireEvent.submit(input.closest("form")!);
 
-      expect(field()).toHaveAttribute("data-pen", "striking");
+    expect(onAsk).toHaveBeenCalledWith({ query: "What is Big C?", lens: "test" });
+    expect(input).toHaveValue("");
+    expect(field()).toHaveAttribute("data-pen", "resting");
+  });
 
-      vi.runAllTimers();
-      expect(onAsk).toHaveBeenCalledWith({ query: "What is Big C?", lens: "ground" });
-    } finally {
-      vi.useRealTimers();
-    }
+  it("dispatches suggested questions with their assigned lens", () => {
+    const onAsk = vi.fn();
+    render(<HeroAsk onAsk={onAsk} />);
+
+    fireEvent.focus(screen.getByLabelText(/ask a question/i));
+    fireEvent.click(screen.getByRole("button", { name: "Find the weak point" }));
+
+    expect(onAsk).toHaveBeenCalledWith({
+      query: "Where is the argument weakest?",
+      lens: "test",
+    });
+  });
+
+  it("keeps both inquiry lenses available as pressed-state controls", () => {
+    render(<HeroAsk onAsk={vi.fn()} />);
+
+    const ground = screen.getByRole("button", { name: "Ground" });
+    const test = screen.getByRole("button", { name: "Test" });
+    expect(ground).toHaveAttribute("aria-pressed", "true");
+    expect(test).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(test);
+    expect(ground).toHaveAttribute("aria-pressed", "false");
+    expect(test).toHaveAttribute("aria-pressed", "true");
   });
 
   it("hides the marks from assistive tech", () => {

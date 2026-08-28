@@ -20,6 +20,7 @@ export default function SupportPage() {
   return (
     <SupportSurface
       reducedMotion={reducedMotion}
+      titleAs="h1"
       onClose={() => navigate("/", { replace: true })}
     />
   );

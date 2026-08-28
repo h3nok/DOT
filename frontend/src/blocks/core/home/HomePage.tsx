@@ -22,9 +22,10 @@ import {
 } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
-import { AutomataLoop } from "../../publication/AutomataLoop";
+import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroConcepts } from "./HeroConcepts";
 import { HeroAsk } from "./HeroAsk";
+import { HeroProposition } from "./HeroProposition";
 import { HomeJourneyNav } from "./HomeJourneyNav";
 import type { HeroAskRequest } from "./heroData";
 import { StepOneUnlearning } from "./StepOneUnlearning";
@@ -63,7 +64,7 @@ export default function HomePage() {
             : "bg-transparent py-5"
         }`}
       >
-        <div className="dot-page-container dot-page-wide flex items-center justify-between">
+        <div className="home-header-layout dot-page-container dot-page-wide flex items-center justify-between">
         <Link
           to="/"
           // -my-2.5 keeps the header its original height while the link itself
@@ -110,59 +111,17 @@ export default function HomePage() {
       <HomeJourneyNav />
 
       {/* ── The Hero: a proposition inside a living digital field ───────────── */}
-      <motion.section
+      <section
         id="threshold"
         aria-label="Introduction"
-        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: reducedMotion ? 0 : 0.72,
-          ease: [0.22, 1, 0.36, 1],
-        }}
         data-hero-motion={reducedMotion ? "still" : "full"}
         className="home-environment home-hero-environment"
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
           <div className="home-hero-copy">
-            <p className="home-hero-kicker dot-label">
-              Digital Organism Theory <span aria-hidden="true">·</span> Book One
-            </p>
+            <HeroProposition reducedMotion={reducedMotion} />
 
-            <h1 className="home-hero-title mt-5">
-              <span>The observer belongs</span>
-              <span>in the inquiry.</span>
-            </h1>
-
-            <p className="home-hero-lede mt-5">
-              A framework where first-person experience is data—not automatically truth.
-            </p>
-
-            <div className="home-hero-actions mt-6 w-full">
-              <Link
-                to="/book/digital-organism-theory/preface"
-                className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold transition-all active:scale-[0.98]"
-              >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
-                <span>Read the argument</span>
-                <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </Link>
-
-              <Link
-                to="/doctrine"
-                className="home-hero-secondary-link group inline-flex min-h-12 items-center justify-center gap-2.5 px-2 text-sm font-semibold text-foreground transition-colors"
-              >
-                <Network
-                  className="h-4 w-4 text-[color:var(--organism-accent-strong)]"
-                  aria-hidden="true"
-                />
-                <span>Inspect the Concept Map</span>
-              </Link>
-            </div>
-
-            <div className="home-hero-ask mt-7 w-full max-w-xl">
+            <div className="home-hero-ask">
               <HeroAsk
                 className="w-full"
                 onAsk={(request) => {
@@ -173,27 +132,16 @@ export default function HomePage() {
             </div>
           </div>
 
-          <figure className="home-hero-stage">
-            <figcaption className="sr-only">
-              E is the field of possibility. Big C emerges from E, with RF₀ and
-              Little c nested inside its proposed architecture.
-            </figcaption>
-            <div className="home-hero-architecture-figure">
-              <AutomataLoop variant="hero" settled={reducedMotion} />
-            </div>
-          </figure>
-        </div>
-
-        <div className="home-hero-e-field" aria-hidden="true">
-          <span>E</span>
-          <span>Field of possibilities</span>
+          <div className="home-hero-stage">
+            <HeroArchitecture />
+          </div>
         </div>
 
         <a className="home-scroll-cue" href="#unlearning-experiment">
           <span>Continue</span>
           <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </a>
-      </motion.section>
+      </section>
 
       {/* ── Step 1: Perceptual Unlearning Experiment ─────────────────── */}
       <StepOneUnlearning />

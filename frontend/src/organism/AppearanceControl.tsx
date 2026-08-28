@@ -409,7 +409,7 @@ export const AppearanceControl: React.FC<{
                           ? `You can keep ${MAX_SAVED_ENVIRONMENTS} environments. Forget one to save another.`
                           : undefined
                       }
-                      className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
+                      className="appearance-save mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 disabled:hover:text-muted-foreground"
                     >
                       <Plus className="h-3 w-3" aria-hidden="true" />
                       Save this environment
@@ -988,7 +988,7 @@ export const AppearanceControl: React.FC<{
             <button
               type="button"
               onClick={() => setConfig(defaultConfigFor(base))}
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="appearance-reset inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <RotateCcw className="h-3 w-3" />
               Reset

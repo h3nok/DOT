@@ -72,8 +72,8 @@ export interface OpenSeam {
   notEstablished: string;
   /** What the book says would have to be shown. */
   wouldSettleIt: string;
-  /** The competing account the book does not defeat, where it names one. */
-  alternative?: string;
+  /** Established downstream science the derivation must fully recover. */
+  accountToRecover?: string;
   source: SeamSource;
   /** Work recorded against this seam. Empty is the honest state, not a stub. */
   work: AppliedWork[];
@@ -92,19 +92,36 @@ const source = (
 
 export const openSeams: OpenSeam[] = [
   {
-    id: "physicalist-alternative",
-    title: "The physicalist account is not defeated",
+    id: "frame-to-physics-derivation",
+    title: "The Frame generator has not yet yielded measured physics",
     claimLevel: "Hypothesis",
     notEstablished:
-      "Book One does not show that a nonphysical Little c is required to explain anything it describes at the psychological level.",
-    alternative:
-      "Everything DOT describes may arise from biological cognition, learning, memory, prediction, and metacognition, with no nonphysical experiencer involved.",
+      "Book One specifies the minimum architecture of a Reality Frame and places physical law downstream of it. It does not yet derive the measured equations, constants, symmetries, or quantum statistics of RF₀ from that generator.",
+    accountToRecover:
+      "The physical sciences already describe RF₀'s observable regularities with extraordinary precision. DOT must recover that body of law as generated Frame behavior, including the domains in which existing theories remain incomplete or mutually unresolved.",
     wouldSettleIt:
-      "The book asks to be judged by whether it can eventually distinguish its stronger claims from this alternative. Until such a distinction can be drawn and measured, the alternative stands unrefuted.",
+      "Explicit bridge principles from the Frame's state-space and transition structure to known physical invariants, followed by novel constraints that can fail against public measurement.",
+    source: source(
+      "reality-frames",
+      "Reality Frames",
+      "world-invariants",
+    ),
+    work: [],
+  },
+  {
+    id: "physics-to-biology-derivation",
+    title: "The bridge from physical invariants to living interfaces is incomplete",
+    claimLevel: "Hypothesis",
+    notEstablished:
+      "Book One locates chemistry, biology, bodies, and nervous systems within one derivation, but it does not yet show how RF₀'s physical regularities yield self-preserving biological organization or the specific interface used by Little c.",
+    accountToRecover:
+      "Chemistry, evolutionary biology, physiology, and neuroscience describe stable composition, adaptation, embodiment, and neural execution inside RF₀. Their established mechanisms remain binding constraints on DOT's interface architecture.",
+    wouldSettleIt:
+      "A continuous derivation from permitted physical organization to self-preserving life and embodied experience, with operational signatures that distinguish an interface account from one that treats the interface as the complete experiencer.",
     source: source(
       "the-digital-organism",
       "The Digital Organism",
-      "what-chapter-1-has-and-has-not-established",
+      "the-derivation-contract",
     ),
     work: [],
   },
@@ -114,10 +131,10 @@ export const openSeams: OpenSeam[] = [
     claimLevel: "Hypothesis",
     notEstablished:
       "Readiness-potential timing records that brain preparation can precede a reported decision. It does not identify the origin of authorship, and it does not establish DOT's preferred causal order either.",
-    alternative:
-      "A brain-first account, in which the averaged readiness potential reflects stochastic accumulation rather than a settled unconscious decision.",
+    accountToRecover:
+      "Neuroscience's account of preparation, stochastic accumulation, firing, movement, and report is the measurable execution layer DOT must recover in full.",
     wouldSettleIt:
-      "DOT must identify what could distinguish an awareness-first account from a brain-first account. Until that distinction can be measured, the Decoupling Principle remains a hypothesis rather than a finding.",
+      "A derived, preregistered signature of the proposed handoff that differs from the complete neural execution sequence and can be measured independently of retrospective report.",
     source: source(
       "the-decoupling-principle",
       "The Decoupling Principle",
@@ -142,12 +159,12 @@ export const openSeams: OpenSeam[] = [
   },
   {
     id: "sentience-criterion",
-    title: "No discriminating criterion for sentience",
+    title: "Sentience has no accepted external measure",
     claimLevel: "Model",
     notEstablished:
-      "Digital Organism names a functional class: state-bearing, information-sensitive persistence. A thermostat responds to changing input in a minimal sense, and that alone does not make it conscious.",
+      "DOT locates sentience at consequential difference becoming present to the continuing process itself. The framework does not yet provide an accepted way for an external observer to detect that inward presence.",
     wouldSettleIt:
-      "DOT needs a criterion that discriminates sentience from adaptive response. Without one, the attribution of sentience to Big C or Little c remains a separate hypothesis rather than a consequence of the definition.",
+      "An operational method that discriminates first-person consequence from adaptive regulation alone and produces convergent results across observers and systems.",
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -161,12 +178,14 @@ export const openSeams: OpenSeam[] = [
     claimLevel: "Speculation",
     notEstablished:
       "Book One lists this among the claims that remain speculative until they can be operationalized or distinguished from alternatives.",
+    accountToRecover:
+      "Biological memory, inheritance, and the effects of substrate loss define the in-Frame evidence DOT must explain before any claim of persistence beyond embodiment can carry weight.",
     wouldSettleIt:
-      "An operational measure of the Canvas that survives the loss of its biological substrate, or a way to distinguish persistence from the memory and inheritance effects a physicalist account already predicts.",
+      "An operational measure of Canvas continuity that survives the loss of its biological interface and cannot be accounted for by ordinary memory, inheritance, recording, or information leakage.",
     source: source(
       "the-digital-organism",
       "The Digital Organism",
-      "what-chapter-1-has-and-has-not-established",
+      "the-derivation-contract",
     ),
     work: [],
   },
@@ -181,7 +200,7 @@ export const openSeams: OpenSeam[] = [
     source: source(
       "the-digital-organism",
       "The Digital Organism",
-      "what-chapter-1-has-and-has-not-established",
+      "the-derivation-contract",
     ),
     work: [],
   },

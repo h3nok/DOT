@@ -61,9 +61,9 @@ export const siteConfig = {
       role: "Creator & Systems Architect",
       period: "2024–Present",
       status: "Active Research",
-      tagline: "A framework for consciousness and conscious authorship.",
+      tagline: "A foundational architecture of reality and experience.",
       description:
-        "Book One develops a bounded model of consciousness, conditioning, Reality Frames, the Canvas, the Painting, and Intent while keeping observations, hypotheses, and open debts distinct.",
+        "Book One begins with fundamental consciousness and develops one derivation through Reality Frames, physical invariants, biological interfaces, conditioning, and conscious authorship while keeping its hypotheses and unfinished bridges visible.",
       stack: [
         "Book One",
         "Systems Theory",

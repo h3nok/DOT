@@ -29,7 +29,7 @@ import app.domains.publication.service
 OWNER_ID: str = os.environ.get("BOOK_OWNER_ID", "henok")
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 MANIFEST_PATH = REPO_ROOT / (
-    "frontend/public/publications/henok/digital-organism-theory/v2/manifest.json"
+    "frontend/public/publications/henok/digital-organism-theory/v3/manifest.json"
 )
 SECTIONS_DIR = MANIFEST_PATH.parent / "sections"
 

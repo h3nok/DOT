@@ -17,6 +17,17 @@ export const SAMPLE_QUESTIONS: ReadonlyArray<{
   { text: "Is this science, philosophy, or faith?", category: "Foundations", lens: "test" },
 ];
 
+export const HERO_STATEMENTS = [
+  "A framework where first-person experience is data—not automatically truth.",
+  "No method removes the observer from existence.",
+  "Fear can narrow the hypothesis space.",
+  "You can notice a proposed action without becoming it.",
+  "Love is the condition in which Fear no longer governs you.",
+] as const;
+
+export const HERO_TYPE_INTERVAL_MS = 32;
+export const HERO_STATEMENT_DWELL_MS = 1800;
+
 type ClaimLevel = "observation" | "model" | "hypothesis";
 
 export interface Concept {
@@ -72,13 +83,13 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.frame",
     term: "Reality Frame",
-    text: "A rule-bound environment in which action meets consequence. Consequence is what gives experience weight.",
+    text: "A generated, rule-bound environment whose invariants the physical sciences formalize. Consequence gives experience weight.",
     level: "model",
   },
   {
     id: "home.concept.bigc",
     term: "Big C and Little c",
-    text: "Life as a fundamental, self-preserving process, differentiated into local centres of experience. Held as hypothesis, not finding.",
+    text: "Fundamental consciousness differentiates local centres of experience and develops Reality Frames. A public hypothesis; DOT's governing postulate.",
     level: "hypothesis",
   },
   {

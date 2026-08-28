@@ -1,14 +1,13 @@
-import { GitBranch, Scale, X } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { InkNib, InkStroke } from "../../../shared/Ink";
 import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
 import type { AgentLens } from "../../../dot/agent";
 
-const FEATURED_COMMANDS = [
-  { command: "/claim", question: SAMPLE_QUESTIONS[0] },
-  { command: "/critique", question: SAMPLE_QUESTIONS[2] },
-] as const;
+const MAX_QUESTION_LENGTH = 500;
+
+const FEATURED_QUESTIONS = [SAMPLE_QUESTIONS[0], SAMPLE_QUESTIONS[2]] as const;
 
 interface HeroAskProps {
   onAsk: (request: HeroAskRequest) => void;
@@ -19,7 +18,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [selectedLens, setSelectedLens] = useState<AgentLens>("ground");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
   const [strokeWidth, setStrokeWidth] = useState(0);
@@ -43,22 +41,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
     setStrokeWidth(query ? Math.min(written, room) : 0);
   }, [query, isFocused]);
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key === "/" &&
-        document.activeElement?.tagName !== "INPUT" &&
-        document.activeElement?.tagName !== "TEXTAREA" &&
-        !(document.activeElement as HTMLElement)?.isContentEditable
-      ) {
-        event.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
   const handleClear = () => {
     setQuery("");
     inputRef.current?.focus();
@@ -77,21 +59,10 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     const trimmed = query.trim();
-    if (!trimmed || trimmed === "/" || isSubmitting) return;
+    if (!trimmed) return;
 
-    const command = FEATURED_COMMANDS.find(
-      (item) => item.command === trimmed.toLowerCase(),
-    );
-    const request = command
-      ? { query: command.question.text, lens: command.question.lens }
-      : { query: trimmed, lens: selectedLens };
-
-    setIsSubmitting(true);
-    setTimeout(() => {
-      onAsk(request);
-      setQuery("");
-      setIsSubmitting(false);
-    }, 120);
+    onAsk({ query: trimmed, lens: selectedLens });
+    setQuery("");
   };
 
   const handlePromptClick = (question: (typeof SAMPLE_QUESTIONS)[number]) => {
@@ -101,27 +72,23 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
     onAsk({ query: question.text, lens: question.lens });
   };
 
-  const showCommands = query.trim() === "" || query.trim() === "/";
-  const sendable = Boolean(query.trim()) && query.trim() !== "/";
+  const sendable = Boolean(query.trim());
 
   /**
    * Where the writing has got to, in the mark's terms rather than the form's.
-   * `poised` is a nib touched to paper; `writing` is a stroke being laid down;
-   * `striking` is the hand lifting away. The CSS reads only this attribute, so
-   * the appearance never has to re-derive the form's booleans.
+    * The CSS reads only this attribute, so appearance never has to re-derive the
+    * form's booleans.
    */
-  const penState = isSubmitting
-    ? "striking"
-    : sendable
-      ? "writing"
-      : isFocused
-        ? "poised"
-        : "resting";
+  const penState = sendable ? "writing" : isFocused ? "poised" : "resting";
 
   return (
-    <div className={`space-y-3 ${className}`}>
-      <form onSubmit={submit} className="relative w-full">
-        <div className="home-ask" data-pen={penState}>
+    <div className={`home-inquiry ${className}`}>
+      <form onSubmit={submit} className="relative w-full" aria-describedby="hero-ask-description">
+        <div className="appearance-ui-control home-ask" data-pen={penState}>
+          <span className="home-ask__mark" aria-hidden="true">
+            <span />
+          </span>
+
           <input
             ref={inputRef}
             value={query}
@@ -129,12 +96,13 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             onKeyDown={handleInputKeyDown}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder={
-              isFocused
-                ? "Ask Minty or enter a / command…"
-                : "Ask Minty about Book One…"
-            }
+            placeholder="Ask Book One…"
             aria-label="Ask a question about Digital Organism Theory"
+            name="book-one-question"
+            autoComplete="off"
+            enterKeyHint="send"
+            maxLength={MAX_QUESTION_LENGTH}
+            spellCheck="true"
             className="home-ask__input placeholder:text-muted-foreground/55"
           />
 
@@ -147,41 +115,33 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
           {/* The mark the pen leaves. It is the whole of the pen we show. */}
           <InkStroke width={strokeWidth} className="home-ask__stroke" />
 
-          {/* Lens stance mode toggle */}
-          <button
-            type="button"
-            onClick={() => setSelectedLens((prev) => (prev === "ground" ? "test" : "ground"))}
-            title={
-              selectedLens === "ground"
-                ? "Lens: Ground (cite source passages) — click to switch to Test"
-                : "Lens: Test (scrutinize & find weak points) — click to switch to Ground"
-            }
-            className={`hidden sm:inline-flex items-center gap-1 border-l border-border/35 py-1 pl-2.5 pr-1 text-[10px] font-mono uppercase tracking-wider transition-colors ${
-              selectedLens === "test"
-                ? "text-[color:var(--organism-accent-strong)] font-semibold"
-                : "text-muted-foreground/60 hover:text-foreground"
-            }`}
-          >
-            {selectedLens === "test" ? (
-              <>
-                <Scale className="h-3 w-3" aria-hidden="true" />
-                <span>Test</span>
-              </>
-            ) : (
-              <>
-                <GitBranch className="h-3 w-3" aria-hidden="true" />
-                <span>Ground</span>
-              </>
-            )}
-          </button>
+          <fieldset className="home-ask__lenses" aria-label="Inquiry lens">
+            <button
+              type="button"
+              aria-pressed={selectedLens === "ground"}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setSelectedLens("ground")}
+              title="Ground the answer in source passages"
+            >
+              Ground
+            </button>
+            <button
+              type="button"
+              aria-pressed={selectedLens === "test"}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setSelectedLens("test")}
+              title="Test the claim and expose weak points"
+            >
+              Test
+            </button>
+          </fieldset>
 
-          {/* Clear button when query is present */}
           {query.trim() && (
             <button
               type="button"
               onClick={handleClear}
-              aria-label="Clear search input"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-muted-foreground/50 hover:bg-foreground/[0.04] hover:text-foreground transition-colors"
+              aria-label="Clear question"
+              className="home-ask__clear"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -189,34 +149,32 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
 
           <button
             type="submit"
-            disabled={!sendable || isSubmitting}
-            aria-label="Send"
+            disabled={!sendable}
+            aria-label="Ask Book One"
             className="home-ask__nib"
           >
             <InkNib charged={sendable} className="home-ask__nib-mark" />
           </button>
         </div>
 
-        {showCommands && (
-          <div
-            id="minty-command-suggestions"
-            className="home-ask-command-menu"
-            aria-label="Sample Minty commands"
-          >
-            {FEATURED_COMMANDS.map(({ command, question }) => (
+        {isFocused && !query.trim() && (
+          <div className="home-ask__prompts" aria-label="Suggested questions">
+            {FEATURED_QUESTIONS.map((question) => (
               <button
-                key={command}
+                key={question.text}
                 type="button"
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => handlePromptClick(question)}
-                className="home-ask-command"
               >
-                <kbd>{command}</kbd>
-                <span>{question.text}</span>
+                {question.lens === "test" ? "Find the weak point" : "State the core claim"}
               </button>
             ))}
           </div>
         )}
+
+        <p id="hero-ask-description" className="sr-only">
+          Answers open in a focused panel and cite passages from the released Book One text.
+        </p>
       </form>
     </div>
   );

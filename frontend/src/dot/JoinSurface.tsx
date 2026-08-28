@@ -25,6 +25,8 @@ import { useJoin } from "./useJoin";
 interface JoinSurfaceProps {
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
+  /** "h1" on the /join route, where this surface is the page itself. */
+  titleAs?: "h1" | "h2";
   onClose: () => void;
 }
 
@@ -36,6 +38,7 @@ const ACTION =
 export const JoinSurface: React.FC<JoinSurfaceProps> = ({
   origin,
   reducedMotion = false,
+  titleAs,
   onClose,
 }) => {
   const { available, request, verify } = useJoin();
@@ -50,6 +53,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
   const shell = {
     origin,
     reducedMotion,
+    titleAs,
     zIndex: 58,
     size: "sm" as const,
     onClose,

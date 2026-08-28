@@ -11,7 +11,7 @@ const RELEASED_COVER = {
   subtitle: "A Framework for Consciousness, Conditioning, and Conscious Authorship",
   author: "Henok Ghebrechristos",
   edition: "Digital Edition",
-  version: 2,
+  version: 3,
 } as const;
 
 /**

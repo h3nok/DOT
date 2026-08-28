@@ -128,3 +128,9 @@ __pycache__/
 # Optional: Backup files
 *.bak
 *.backup
+
+# Playwright
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
+frontend/.playwright/

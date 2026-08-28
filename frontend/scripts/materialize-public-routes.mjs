@@ -13,18 +13,18 @@ const RELEASE_MANIFEST = path.join(
   "publications",
   "henok",
   "digital-organism-theory",
-  "v2",
+  "v3",
   "manifest.json",
 );
 
 const BOOK_DESCRIPTION =
-  "Read Book One of Digital Organism Theory with its evidence boundaries, references, and concept trails in view.";
+  "Read Digital Organism Theory's foundational architecture of consciousness, physical law, biology, and lived experience with its evidence boundaries in view.";
 
 const STATIC_ROUTES = [
   {
     route: "/applied",
     title: "Open Questions — Digital Organism Theory",
-    description: "The evidence boundaries, open seams, and strongest alternatives in DOT Book One.",
+    description: "The evidence boundaries, unfinished derivations, and open seams in DOT Book One.",
   },
   {
     route: "/doctrine",
@@ -59,7 +59,7 @@ const STATIC_ROUTES = [
  * Duplicated from `src/content/doctrine/doctrineData.ts` because this script
  * runs on plain Node against the built bundle and cannot import TypeScript;
  * the test keeps the two in step. The names have to be here: without them all
- * sixteen concept URLs share one title and one description, so a shared
+ * seventeen concept URLs share one title and one description, so a shared
  * concept link and a search result cannot say which concept they lead to.
  */
 export const DOCTRINE_CONCEPTS = [
@@ -79,7 +79,7 @@ export const DOCTRINE_CONCEPTS = [
     id: "big-c",
     name: "The Big C Hypothesis",
     oneLine:
-      "Consciousness may be fundamental: a persistent conscious process rather than a late product of an otherwise unconscious reality.",
+      "Consciousness is fundamental: the persistent process from which Reality Frames and local experience arise.",
   },
   {
     id: "little-c",
@@ -98,6 +98,12 @@ export const DOCTRINE_CONCEPTS = [
     name: "Reality Frame",
     oneLine:
       "A rule-bound experiential environment in which action meets consequence.",
+  },
+  {
+    id: "world-invariants",
+    name: "Physical Sciences as Frame Derivations",
+    oneLine:
+      "Physical sciences formalize RF₀'s generated regularities; DOT must derive those regularities from the Frame architecture.",
   },
   {
     id: "reality-stream",

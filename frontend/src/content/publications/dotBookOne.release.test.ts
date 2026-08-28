@@ -5,11 +5,11 @@ import { describe, expect, it } from "vitest";
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v2",
+  "public/publications/henok/digital-organism-theory/v3",
 );
 const manuscriptPath = join(
   process.cwd(),
-  "../docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx",
+  "../docs/blueprint/DOT-Book-One-Digital-Edition-v3.docx",
 );
 const downloadsRoot = join(process.cwd(), "public/books");
 const protectedBooksRoot = join(process.cwd(), "../backend/orchestrator/private/books");
@@ -32,7 +32,7 @@ const manifest = JSON.parse(
   sections: Array<{ content_path: string }>;
 };
 
-describe("Book One edition v2", () => {
+describe("Book One edition v3", () => {
   it("is generated from the canonical digital-edition manuscript", () => {
     const digest = createHash("sha256")
       .update(readFileSync(manuscriptPath))
@@ -40,9 +40,9 @@ describe("Book One edition v2", () => {
 
     expect(manifest.source.sha256).toBe(digest);
     expect(manifest.source.name).toBe(
-      "DOT-Book-One-Digital-Edition-v2.docx",
+      "DOT-Book-One-Digital-Edition-v3.docx",
     );
-    expect(manifest.release.version).toBe(2);
+    expect(manifest.release.version).toBe(3);
     expect(manifest.release.label).toBe("Digital edition");
   });
 

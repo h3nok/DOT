@@ -649,3 +649,36 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Touch ergonomics ───────────────────────────────────────────────────────
+   A finger needs more room than a cursor. The swatches stay visually small —
+   growing them would wreck the density the panel depends on — so the hit area
+   is widened underneath the mark instead. */
+@media (pointer: coarse), (max-width: 40rem) {
+  button[aria-label="Appearance settings"] {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .appearance-panel button {
+    position: relative;
+  }
+
+  .appearance-tint::after,
+  .appearance-panel button[aria-label="Close appearance panel"]::after,
+  .appearance-panel button[aria-label="Hold the background still"]::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    transform: translate(-50%, -50%);
+    content: "";
+  }
+
+  /* Text rows sit at 16px; they need a real row to be tappable. */
+  .appearance-panel .appearance-save,
+  .appearance-panel .appearance-reset {
+    min-height: 2.75rem;
+  }
+}

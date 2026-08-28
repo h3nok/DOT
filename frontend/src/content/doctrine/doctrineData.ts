@@ -45,7 +45,7 @@ export interface DoctrineNode {
   body: string;
   weight: number; // 0..1, conceptual centrality; never derived from traffic
   status: "released";
-  version: 2;
+  version: 3;
   source: DoctrineSource;
   related: DoctrineRelation[];
 }
@@ -77,7 +77,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 1,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -99,11 +99,11 @@ export const doctrineNodes: DoctrineNode[] = [
     body: [
       "Digital does not mean electronic, binary, or made of silicon. The book uses computational language as handles for state, consequential difference, response, persistence, feedback, and adaptation.",
       "Digital Organism names a functional class. A process carries state, detects differences that matter to it, responds, preserves some continuity, and can change future behavior through what it encounters.",
-      "That definition does not establish sentience. Adaptive response and subjective awareness remain separate questions, and the book names a discriminating criterion for sentience as an unpaid theoretical debt.",
+      "DOT locates sentience at consequential difference becoming present to the continuing process itself. The conceptual threshold is defined; an accepted method for detecting that inward presence from outside the process remains an open scientific problem.",
     ].join("\n\n"),
     weight: 0.98,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -121,15 +121,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "The Big C Hypothesis",
     oneLine:
-      "Consciousness may be fundamental: a persistent conscious process rather than a late product of an otherwise unconscious reality.",
+      "Consciousness is fundamental: the persistent process from which Reality Frames and local experience arise.",
     body: [
-      "Big C is the book's organizing hypothesis. It proposes a larger conscious process within which individuated centers of experience and Reality Frames arise.",
-      "Persistence does not prove consciousness, and the model does not identify a physical implementation. Big C is marked as hypothesis, not smuggled in as an observation.",
-      "The hypothesis earns value only through the distinctions it makes possible and the questions it exposes. It remains answerable to physicalist explanations and to future methods capable of distinguishing the competing accounts.",
+      "Big C is DOT's organizing postulate: a larger conscious process that differentiates localized centers of experience and develops Reality Frames.",
+      "Its epistemic status and its architectural role are distinct. Relative to current public evidence, fundamental consciousness remains a hypothesis. Within DOT, it is the ground from which physical invariants, biological interfaces, and local experience must be derived.",
+      "The postulate earns explanatory force only if those downstream sciences can be recovered without importing a second foundation. Measurement inside RF₀ constrains whether that derivation is adequate.",
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -151,12 +151,12 @@ export const doctrineNodes: DoctrineNode[] = [
       "The hypothesized local experiencer that receives experience, forms Intent, participates through a body, and changes through consequence.",
     body: [
       "Little c names the first-person center in DOT's architecture. The body is modeled as the local interface through which this center encounters and acts within a Reality Frame.",
-      "The distinction is not a denial of biology. Injury, chemistry, development, and neural activity shape experience. DOT's additional claim is that dependence on an interface does not by itself settle whether the interface produces the experiencer.",
-      "A nonphysical Little c has not been independently measured. Its existence and causal role remain hypotheses, and the neural account remains a live alternative.",
+      "The distinction contains biology rather than denying it. Injury, chemistry, development, and neural activity shape experience because they are properties of the embodied interface DOT must derive and recover in full.",
+      "Little c follows from DOT's foundational architecture. Its causal handoff to the biological interface has not been independently measured, so the externally discriminating signature remains an open hypothesis.",
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -179,11 +179,11 @@ export const doctrineNodes: DoctrineNode[] = [
     body: [
       "Readiness-potential experiments establish a measured temporal order, but they do not directly observe the origin of authorship. The book separates the measurement from interpretations placed on it.",
       "DOT proposes Rendering Latency: a minimal interval between Intent in Little c and the first measurable bodily change recruited for execution. That interval is not currently measured independently.",
-      "This is one of DOT's strongest ontological claims and one of its least established. The decoupling account must remain open to the alternative that the full sequence is produced within the nervous system.",
+      "The nervous system may account for the complete measurable execution sequence because it is the local interface. DOT's unresolved burden is to derive and measure a signature of the proposed handoff without treating a successful account of the interface as the source of the experiencer.",
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-decoupling-principle",
       "The Decoupling Principle",
@@ -205,12 +205,12 @@ export const doctrineNodes: DoctrineNode[] = [
       "A rule-bound experiential environment in which action meets consequence.",
     body: [
       "A Reality Frame names the structured environment of participation: a ruleset, stable world invariants, agency mechanics, and lawful consequence.",
-      "The model distinguishes a shared changing world from one participant's situated experience of it. A Frame constrains what can happen; it does not imply that one person's action determines the whole world-state.",
-      "Calling our physical universe RF0 is a DOT hypothesis. The computational analogy clarifies architecture, but it is not evidence of a literal external computer or designer.",
+      "A minimal Frame requires a state-space, local ordering or cadence, transition rules, invariants, and a delivery relation that situates each Little c within a Reality Stream.",
+      "RF₀ names our physical universe inside DOT's foundational hypothesis. The computational language identifies functional architecture; it does not imply a literal human-made computer or a designer external to Big C.",
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -219,8 +219,34 @@ export const doctrineNodes: DoctrineNode[] = [
     ),
     related: [
       { to: "reality-stream", type: "defines", strength: 0.92 },
+      { to: "world-invariants", type: "defines", strength: 0.9 },
       { to: "experience-loop", type: "leads-to", strength: 0.84 },
       { to: "intent", type: "applies", strength: 0.72 },
+    ],
+  },
+  {
+    id: "world-invariants",
+    kind: "claim",
+    title: "Physical Sciences as Frame Derivations",
+    oneLine:
+      "Physical sciences formalize RF₀'s generated regularities; DOT must derive those regularities from the Frame architecture.",
+    body: [
+      "Physics maps causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law inside RF₀ with exact public methods. DOT treats those successes as descriptions of generated world invariants, not as an independent ontology.",
+      "The relationship is containment, not competition. A mature DOT must show how the Frame's state-space and transition structure yield the regularities physical science measures, and how chemistry and biology become possible within them.",
+      "Book One establishes that derivation contract but does not yet produce every measured equation, constant, or bridge principle. Known physics constrains the RF₀ generator; new consequences of the generator must remain vulnerable to measurement.",
+    ].join("\n\n"),
+    weight: 0.93,
+    status: "released",
+    version: 3,
+    source: source(
+      "reality-frames",
+      "Reality Frames",
+      "world-invariants",
+      "Hypothesis",
+    ),
+    related: [
+      { to: "reality-frame", type: "depends-on", strength: 0.94 },
+      { to: "limits-and-debts", type: "depends-on", strength: 0.9 },
     ],
   },
   {
@@ -236,7 +262,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.78,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -258,11 +284,11 @@ export const doctrineNodes: DoctrineNode[] = [
     body: [
       "Thoughts, impulses, images, and rehearsals can remain drafts. Intent names the commitment that recruits the body toward action.",
       "Within the model, freedom does not require unlimited options. It appears as the capacity to notice available drafts, interrupt inherited defaults, and commit differently within real constraints.",
-      "The distinction between draft and commitment is operational. DOT's further claim that Intent originates in a nonphysical Little c is a hypothesis and must not be confused with the observable distinction itself.",
+      "The distinction between draft and commitment is operational. Within DOT, Intent originates in Little c and is rendered through the body; the unresolved hypothesis is how that handoff can be distinguished and measured from outside.",
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -289,7 +315,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -316,7 +342,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.92,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -343,7 +369,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-painting",
       "The Painting",
@@ -370,7 +396,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.76,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -396,7 +422,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -422,7 +448,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -448,7 +474,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-painting",
       "The Painting",
@@ -469,17 +495,17 @@ export const doctrineNodes: DoctrineNode[] = [
     oneLine:
       "The book separates what is observed, modeled, hypothesized, and still speculative so the framework can be criticized without becoming self-sealing.",
     body: [
-      "Book One does not prove that consciousness is fundamental, that Little c is nonphysical, that RF0 is one of many Reality Frames, or that Rendering Latency exists as proposed.",
+      "Fundamental consciousness and Big C's development of RF₀ remain hypotheses relative to current public evidence even though they function as postulates inside DOT. Multiple Reality Frames, Canvas persistence beyond embodiment, and Rendering Latency remain incompletely operationalized.",
       "Its equations formalize dependencies and measured orderings. They are not discovered laws, and most DOT variables do not yet have accepted operational measures.",
-      "The framework still owes discriminating tests, clearer sentience criteria, and methods capable of separating its preferred explanations from neural and physicalist alternatives. A theory becomes pseudoscientific when its claims exceed the domain its methods can honestly examine.",
+      "The framework owes bridge principles from T × E through Frame invariants, chemistry, biology, embodiment, and experience; operational measures for sentience and the body handoff; and novel constraints that can fail. Incomplete derivation is an open seam, not permission to install a downstream science as a competing foundation.",
     ].join("\n\n"),
     weight: 0.88,
     status: "released",
-    version: 2,
+    version: 3,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
-      "what-chapter-1-has-and-has-not-established",
+      "the-derivation-contract",
       "Hypothesis",
     ),
     related: [

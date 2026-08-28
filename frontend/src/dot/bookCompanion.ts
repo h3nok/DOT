@@ -288,7 +288,7 @@ const INTENTS: readonly Intent[] = [
     match:
       /what (?:does|do).{0,20}(?:dot|theory|this|it).{0,20}(?:claim|say|argue|propose)|what is (?:dot|this)\b|summar|overview|in a nutshell/i,
     headings: [
-      "What Chapter 1 Has—and Has Not—Established",
+      "The Derivation Contract",
       "The Subjective Data Principle",
       "Why Call It Digital?",
     ],
@@ -310,7 +310,7 @@ const INTENTS: readonly Intent[] = [
     id: "weakest",
     match: /weak|strongest objection|falsif|debt|wrong|criticis|criticiz|flaw|hole/i,
     headings: [
-      "What Chapter 1 Has—and Has Not—Established",
+      "The Derivation Contract",
       "The Limit of Knowledge",
       "What the Timing Puzzle Establishes",
     ],
@@ -426,8 +426,11 @@ function rankPassages(
     .trim();
   const terms = termsFor(query, lens);
   const intent = intentFor(query);
-  const intentHeadings = new Set(
-    (intent?.headings ?? []).map((heading) => heading.toLowerCase()),
+  const intentHeadings = new Map(
+    (intent?.headings ?? []).map((heading, index, headings) => [
+      heading.toLowerCase(),
+      60 + (headings.length - index - 1) * 10,
+    ]),
   );
 
   // What the visitor actually typed, minus the terms this module added. A
@@ -448,8 +451,11 @@ function rankPassages(
       // A heading the intent names outranks any amount of incidental overlap,
       // so a plainly-worded question cannot be beaten by a passage that merely
       // repeats one of its words.
-      const headingHit = intentHeadings.has(passage.headingTitle.trim().toLowerCase());
-      if (headingHit) score += 60;
+      const headingPriority = intentHeadings.get(
+        passage.headingTitle.trim().toLowerCase(),
+      );
+      const headingHit = headingPriority !== undefined;
+      if (headingPriority !== undefined) score += headingPriority;
       for (const term of terms) {
         score += occurrences(heading, term) * 5;
         score += Math.min(occurrences(body, term), 4);
@@ -512,7 +518,7 @@ function citationFor(passage: BookPassage): BookCitation {
     kind: "book",
     label: `${passage.sectionTitle} · ${passage.headingTitle}`,
     locator: {
-      edition: "digital-organism-theory-v2",
+      edition: "digital-organism-theory-v3",
       section: passage.sectionSlug,
       title: passage.sectionTitle,
       heading: passage.heading,

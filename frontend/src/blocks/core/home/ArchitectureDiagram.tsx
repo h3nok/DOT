@@ -212,16 +212,15 @@ export function ArchitectureDiagram() {
         {/* ── Section Header ────────────────────────────────────────── */}
         <div className="home-section-heading-row">
           <div>
-            <span className="dot-label">Frame development · State-machine hypothesis</span>
+            <span className="dot-label">The experience loop · Model</span>
             <h2 className="dot-page-heading mt-3 text-balance">
-              Big C develops the Frame. RF₀ carries the loop.
+              Every moment runs the same four steps.
             </h2>
           </div>
           <p className="dot-lede max-w-lg">
-            DOT proposes that Big C works upstream—shaping RF₀'s generator,
-            transition rules, consequences, feedback, and Canvas-update
-            mechanisms. Little c then experiences and acts within those
-            conditions.
+            Reality arrives. The Painting interprets it before you think. Intent
+            commits. Consequence returns and changes what you carry into the
+            next moment.
           </p>
         </div>
 
@@ -294,7 +293,7 @@ export function ArchitectureDiagram() {
             <svg
               viewBox="0 0 720 500"
               className="arch-svg"
-              aria-label="Four-state RF₀ automaton with residual links toward Little c"
+              aria-label="The four-step experience loop inside RF₀, returning to Little c"
             >
               <defs>
                 <linearGradient id="arch-node-surface" x1="0" y1="0" x2="0" y2="1">
@@ -401,7 +400,7 @@ export function ArchitectureDiagram() {
                 />
 
                 <text x="26" y="34" className="arch-svg-field-label">
-                  RF₀ · experiential state machine
+                  RF₀ · the experience loop
                 </text>
                 <text
                   x="694"
@@ -409,7 +408,7 @@ export function ArchitectureDiagram() {
                   textAnchor="end"
                   className="arch-svg-field-label arch-svg-field-label--hypothesis"
                 >
-                  Frame-development model · hypothesis
+                  Model
                 </text>
 
                 {/* Quiet guides keep the automaton geometrically legible. */}

@@ -27,6 +27,8 @@ import { formatAmount, useSupport, type SupportTier } from "./useSupport";
 interface SupportSurfaceProps {
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
+  /** "h1" on the /support route, where this surface is the page itself. */
+  titleAs?: "h1" | "h2";
   onClose: () => void;
 }
 
@@ -58,6 +60,7 @@ function readCheckoutReturn(): { state: ReturnState; sessionId: string | null } 
 export const SupportSurface: React.FC<SupportSurfaceProps> = ({
   origin,
   reducedMotion = false,
+  titleAs,
   onClose,
 }) => {
   const { options, loading, available, createCheckout, getCheckoutStatus } = useSupport();
@@ -110,6 +113,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         kicker="support"
         title="Checking with Stripe"
         description="Confirming the checkout without treating a redirect as proof of payment."
+        titleAs={titleAs}
         origin={origin}
         reducedMotion={reducedMotion}
         zIndex={58}
@@ -146,6 +150,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         kicker={content.kicker}
         title={content.title}
         description={content.description}
+        titleAs={titleAs}
         origin={origin}
         reducedMotion={reducedMotion}
         zIndex={58}
@@ -172,6 +177,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         kicker="independent work"
         title="Support the work"
         description="DOT sells no advertising and no attention, so it is funded by the people who find it worth funding."
+        titleAs={titleAs}
         origin={origin}
         reducedMotion={reducedMotion}
         zIndex={58}
@@ -213,6 +219,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         kicker="support"
         title="Not open yet"
         description="Contributions are not being accepted until checkout and receipts are configured."
+        titleAs={titleAs}
         origin={origin}
         reducedMotion={reducedMotion}
         zIndex={58}
@@ -232,6 +239,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
       kicker="independent work"
       title="Support the work"
       description="I am fundraising to make Minty reliable, deepen the Book One reader, and prepare DOT for a careful public release."
+      titleAs={titleAs}
       origin={origin}
       reducedMotion={reducedMotion}
       zIndex={58}
