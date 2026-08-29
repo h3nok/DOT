@@ -63,10 +63,17 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
       : -1;
   const savedPathComplete =
     savedPath !== null && savedPosition === savedPath.steps.length - 1;
+  const livedExperiencePath = findPath("start-where-you-live");
+  const writtenOrderPath = findPath("start-with-the-architecture");
   const primaryHref =
     savedPath && savedProgress
       ? readingPathHref(savedPath.id, savedProgress.sectionSlug)
-      : bookSectionRoute(firstSection);
+      : livedExperiencePath
+        ? readingPathHref(livedExperiencePath.id, firstSection.slug)
+        : bookSectionRoute(firstSection);
+  const writtenOrderHref = writtenOrderPath
+    ? readingPathHref(writtenOrderPath.id, firstSection.slug)
+    : bookSectionRoute(firstSection);
 
   return (
     <main id="book-main" className="book-volume w-full pb-24">
@@ -102,7 +109,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               id="book-landing-title"
               className="book-reading-heading mt-5 text-[clamp(2.7rem,5vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.035em] text-[var(--book-ink)]"
             >
-              A foundational architecture of reality.
+              A proposed architecture of consciousness.
             </h1>
             <p className="book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
               DOT begins with consciousness, places physical law and biology as
@@ -113,7 +120,8 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             <div className="book-volume-position mt-8 grid max-w-xl grid-cols-[auto_minmax(0,1fr)] gap-4 border-y border-[var(--book-hairline)] py-5">
               <span className="dot-label pt-1 text-[var(--book-cinnabar)]">Position</span>
               <p className="book-reading-copy text-base italic leading-relaxed text-[var(--book-ink)]">
-                One architecture. Every downstream layer must be derived.
+                One proposed architecture. Every downstream layer must be
+                derived and tested.
               </p>
             </div>
 
@@ -128,7 +136,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                     ? savedPathComplete
                       ? "Review your path"
                       : "Continue reading"
-                    : "Begin with the Preface"}
+                    : "Begin with lived experience"}
                 </span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
@@ -140,6 +148,17 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 PDF edition
               </Link>
             </div>
+            {!savedPath && (
+              <p className="book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
+                Prefer to build the theory from its foundations?{" "}
+                <Link
+                  to={writtenOrderHref}
+                  className="text-[var(--book-ink)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
+                >
+                  Read in written order.
+                </Link>
+              </p>
+            )}
 
             <div className="book-volume-facts mt-8 flex flex-wrap gap-x-7 gap-y-2 dot-label text-[var(--book-muted)]">
               <span>{manifest.extent.chapters} chapters</span>

@@ -324,6 +324,8 @@ html[data-align="left"] .book-prose li {
     text-align: left;
     text-align-last: auto;
     text-justify: auto;
+    hyphens: manual;
+    -webkit-hyphens: manual;
   }
 }
 

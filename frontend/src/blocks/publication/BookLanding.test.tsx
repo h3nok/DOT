@@ -65,15 +65,23 @@ describe("BookLanding", () => {
 
     // The cover and proposition share one composition; the reader gets one
     // primary way into the complete edition rather than a second CTA section.
-    expect(
-      screen.getByText(/Every downstream layer must be derived/),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Begin with the Preface/ }))
-      .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+    expect(screen.getByText(/Every downstream layer must be/)).toHaveTextContent(
+      "Every downstream layer must be derived and tested.",
+    );
+    expect(screen.getByRole("link", { name: /Begin with lived experience/ }))
+      .toHaveAttribute(
+        "href",
+        "/book/digital-organism-theory/preface?path=start-where-you-live",
+      );
+    expect(screen.getByRole("link", { name: /Read in written order/ }))
+      .toHaveAttribute(
+        "href",
+        "/book/digital-organism-theory/preface?path=start-with-the-architecture",
+      );
     expect(screen.getByRole("link", { name: /PDF/ })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "A foundational architecture of reality.",
+        name: "A proposed architecture of consciousness.",
       }),
     ).toBeInTheDocument();
     expect(
