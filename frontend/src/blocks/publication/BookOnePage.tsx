@@ -6,10 +6,8 @@ import {
   ArrowRight,
   Check,
   ChevronLeft,
-  ExternalLink,
   FilePenLine,
   Library,
-  Linkedin,
   List,
   Loader2,
   Maximize2,
@@ -40,7 +38,6 @@ import {
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
 import { bookConceptsForSection } from "../../content/publications/dotBookConcepts";
-import { siteConfig } from "../../content/site.config";
 import { AppearanceControl } from "../../organism";
 import BookCitation from "./BookCitation";
 import BookLanding from "./BookLanding";
@@ -337,6 +334,56 @@ function BookReader({
               </div>
             )}
 
+            {/* Reaching the end of a chapter should first reveal the next
+                deliberate move. The optional apparatus follows it, so the
+                reader can finish without walking through a small dashboard. */}
+            <nav
+              aria-label="Chapter navigation"
+              className="book-coda__navigation"
+            >
+              {previous ? (
+                <Link
+                  to={step(previous)}
+                  className="book-coda__previous group"
+                >
+                  <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
+                  <span>
+                    <span className="dot-label dot-micro">Previous</span>
+                    <span className="mt-1 block text-sm font-normal leading-tight text-muted-foreground">
+                      {previous.title}
+                    </span>
+                  </span>
+                </Link>
+              ) : (
+                <span className="hidden sm:block" />
+              )}
+
+              {next ? (
+                <Link
+                  to={step(next)}
+                  className="book-coda__next group"
+                >
+                  <span>
+                    <span className="dot-label dot-micro">
+                      {path ? path.label : "Continue"}
+                    </span>
+                    <span className="mt-1 block text-base font-semibold leading-tight text-foreground">
+                      {next.title}
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-[var(--organism-accent-strong)] transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              ) : (
+                <Link
+                  to={DOT_BOOK_ONE_ROUTE}
+                  className="book-coda__next group"
+                >
+                  Return to the book
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
+            </nav>
+
             {/* Moved out from between the title and the first sentence. A
                 reader arriving at a chapter is trying to start, and a toolbar
                 there is something to get past first. Minty stays one click away
@@ -420,69 +467,6 @@ function BookReader({
             ) : null}
 
             <BookCitation manifest={manifest} section={section} />
-
-            <nav
-              aria-label="Chapter navigation"
-              className="book-coda__navigation"
-            >
-              {previous ? (
-                <Link
-                  to={step(previous)}
-                  className="book-coda__previous group"
-                >
-                  <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-0.5" />
-                  <span>
-                    <span className="dot-label dot-micro">Previous</span>
-                    <span className="mt-1 block text-sm font-normal leading-tight text-muted-foreground">
-                      {previous.title}
-                    </span>
-                  </span>
-                </Link>
-              ) : (
-                <span className="hidden sm:block" />
-              )}
-
-              {next ? (
-                <Link
-                  to={step(next)}
-                  className="book-coda__next group"
-                >
-                  <span>
-                    <span className="dot-label dot-micro">
-                      {path ? path.label : "Continue"}
-                    </span>
-                    <span className="mt-1 block text-base font-semibold leading-tight text-foreground">
-                      {next.title}
-                    </span>
-                  </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-[var(--organism-accent-strong)] transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              ) : (
-                <Link
-                  to={DOT_BOOK_ONE_ROUTE}
-                  className="book-coda__next group"
-                >
-                  Return to the book
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
-            </nav>
-
-            <a
-              href={siteConfig.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="book-coda__author"
-            >
-              <span className="book-coda__author-mark">
-                <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              <span>
-                <small>About the author</small>
-                <strong>Henok Ghebrechristos · profile and résumé</strong>
-              </span>
-              <ExternalLink className="ml-auto h-3 w-3" aria-hidden="true" />
-            </a>
           </footer>
         </article>
 

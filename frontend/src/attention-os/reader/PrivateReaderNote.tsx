@@ -36,7 +36,7 @@ export function PrivateReaderNote({ storageId }: { storageId: string }) {
   return (
     <section
       id="private-reader-note"
-      className="book-coda__section book-private-note print:hidden"
+      className="book-coda__section book-private-note scroll-mt-24 print:hidden"
       aria-labelledby="private-reader-note-title"
     >
       <header className="book-coda__section-heading">
