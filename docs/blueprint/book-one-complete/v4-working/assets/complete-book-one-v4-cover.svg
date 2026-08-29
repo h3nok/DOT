@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2700" viewBox="0 0 1800 2700" role="img" aria-labelledby="title description">
+  <title id="title">Consciousness: A Digital Organism — Complete Book One</title>
+  <desc id="description">Editorial manuscript cover using the Digital Organism Theory grid, state traces, concentric organism, and teal core.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f7f1"/>
+      <stop offset="0.52" stop-color="#f1f4ef"/>
+      <stop offset="1" stop-color="#e5ece7"/>
+    </linearGradient>
+    <radialGradient id="field" cx="50%" cy="49%" r="45%">
+      <stop offset="0" stop-color="#16706f" stop-opacity="0.16"/>
+      <stop offset="0.5" stop-color="#16706f" stop-opacity="0.045"/>
+      <stop offset="1" stop-color="#16706f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#172522"/>
+      <stop offset="0.45" stop-color="#155856"/>
+      <stop offset="1" stop-color="#155856" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="150" height="150" patternUnits="userSpaceOnUse">
+      <path d="M150 0H0V150" fill="none" stroke="#16706f" stroke-opacity="0.08" stroke-width="2"/>
+      <circle cx="0" cy="0" r="4" fill="#16706f" fill-opacity="0.10"/>
+    </pattern>
+    <filter id="coreGlow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1800" height="2700" fill="url(#paper)"/>
+  <rect width="1800" height="2700" fill="url(#grid)"/>
+  <rect width="1800" height="2700" fill="url(#field)"/>
+  <rect x="0" y="0" width="34" height="2700" fill="url(#spine)"/>
+  <rect x="52" y="52" width="1696" height="2596" fill="none" stroke="#16706f" stroke-opacity="0.28" stroke-width="3"/>
+
+  <g fill="none" stroke="#16706f" stroke-width="5" stroke-opacity="0.38">
+    <path d="M0 390H290V470H500"/>
+    <path d="M1800 520H1515V610H1370"/>
+    <path d="M0 2100H315V2015H520"/>
+    <path d="M1800 2225H1510V2120H1340"/>
+    <path d="M235 0V210H390V330"/>
+    <path d="M1535 2700V2480H1400V2350"/>
+  </g>
+  <g fill="#f4f5ef" stroke="#16706f" stroke-width="5" opacity="0.72">
+    <circle cx="290" cy="390" r="13"/><circle cx="500" cy="470" r="17"/>
+    <circle cx="1515" cy="520" r="13"/><circle cx="1370" cy="610" r="17"/>
+    <circle cx="315" cy="2100" r="13"/><circle cx="520" cy="2015" r="17"/>
+    <circle cx="1510" cy="2225" r="13"/><circle cx="1340" cy="2120" r="17"/>
+  </g>
+
+  <g font-family="Noto Sans Mono, monospace" font-weight="700" letter-spacing="10" font-size="34" fill="#536663">
+    <text x="170" y="185">DIGITAL ORGANISM THEORY</text>
+    <text x="1630" y="185" text-anchor="end" fill="#16706f">BOOK / 01</text>
+  </g>
+
+  <g transform="translate(170 335)">
+    <text x="0" y="0" font-family="Noto Sans Mono, monospace" font-size="48" font-weight="700" letter-spacing="12" fill="#16706f">CONSCIOUSNESS:</text>
+    <text x="0" y="160" font-family="Noto Sans, sans-serif" font-size="164" font-weight="700" letter-spacing="-6" fill="#172522">A DIGITAL</text>
+    <text x="0" y="322" font-family="Noto Sans, sans-serif" font-size="164" font-weight="700" letter-spacing="-6" fill="#172522">ORGANISM</text>
+    <line x1="0" y1="395" x2="840" y2="395" stroke="#16706f" stroke-width="5"/>
+    <text x="0" y="470" font-family="Noto Serif, serif" font-size="45" font-style="italic" fill="#455b57">Foundations, Agency, and Research</text>
+  </g>
+
+  <g transform="translate(900 1545)">
+    <g fill="none" stroke="#16706f">
+      <circle r="390" stroke-width="3" stroke-dasharray="5 28" stroke-opacity="0.34"/>
+      <circle r="300" stroke-width="3" stroke-dasharray="5 24" stroke-opacity="0.48"/>
+      <circle r="210" stroke-width="3" stroke-dasharray="5 20" stroke-opacity="0.62"/>
+      <g stroke-width="10" stroke-linecap="round">
+        <path d="M0-390A390 390 0 0 1 338-195"/>
+        <path d="M390 0A390 390 0 0 1 195 338" opacity="0.66"/>
+        <path d="M0 390A390 390 0 0 1-338 195"/>
+        <path d="M-390 0A390 390 0 0 1-195-338" opacity="0.66"/>
+        <path d="M0-300A300 300 0 0 1 260-150"/>
+        <path d="M300 0A300 300 0 0 1 150 260" opacity="0.66"/>
+        <path d="M0 300A300 300 0 0 1-260 150"/>
+        <path d="M-300 0A300 300 0 0 1-150-260" opacity="0.66"/>
+      </g>
+      <g stroke-width="7" stroke-dasharray="12 20" stroke-linecap="round" opacity="0.72">
+        <path d="M0-285V-150"/><path d="M285 0H150"/><path d="M0 285V150"/><path d="M-285 0H-150"/>
+      </g>
+      <circle r="118" stroke-width="6" stroke-opacity="0.78"/>
+    </g>
+    <circle r="72" fill="#16706f" fill-opacity="0.18" filter="url(#coreGlow)"/>
+    <circle r="47" fill="#16706f"/>
+    <circle r="14" fill="#f4f5ef"/>
+    <text x="0" y="495" text-anchor="middle" font-family="Noto Sans Mono, monospace" font-size="28" font-weight="700" letter-spacing="8" fill="#536663">STATE PERSISTS THROUGH CHANGE</text>
+  </g>
+
+  <g transform="translate(170 2350)">
+    <line x1="0" y1="0" x2="1460" y2="0" stroke="#16706f" stroke-opacity="0.42" stroke-width="4"/>
+    <text x="0" y="105" font-family="Noto Sans, sans-serif" font-size="52" font-weight="700" fill="#172522">Henok Ghebrechristos</text>
+    <text x="1460" y="102" text-anchor="end" font-family="Noto Sans Mono, monospace" font-size="28" font-weight="700" letter-spacing="5" fill="#536663">COMPLETE BOOK ONE</text>
+    <text x="1460" y="154" text-anchor="end" font-family="Noto Sans Mono, monospace" font-size="25" letter-spacing="4" fill="#16706f">EDITORIAL MANUSCRIPT · V4.2</text>
+  </g>
+</svg>
