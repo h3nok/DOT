@@ -8,7 +8,7 @@ import {
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v2",
+  "public/publications/henok/digital-organism-theory/v3",
 );
 
 const manifest = JSON.parse(
@@ -42,11 +42,11 @@ function headingsFor(node: DoctrineNode): string[] {
 }
 
 describe("Book One concept map", () => {
-  it("derives every node from a resolvable passage in edition v2", () => {
-    expect(manifest.release.version).toBe(2);
+  it("derives every node from a resolvable passage in edition v3", () => {
+    expect(manifest.release.version).toBe(3);
 
     for (const node of doctrineNodes) {
-      expect(node.version).toBe(2);
+      expect(node.version).toBe(3);
       expect(node.status).toBe("released");
       expect(headingsFor(node)).toContain(node.source.heading);
       expect(node.source.href).toBe(

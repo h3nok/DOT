@@ -12,6 +12,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:install": "playwright install --with-deps chromium",
     "analyze": "ANALYZE=1 pnpm build",
     "analyze:server": "pnpm build && npx serve dist",
     "predeploy": "pnpm build",
@@ -89,6 +92,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.62.1",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.0",
     "@types/katex": "^0.16.7",

@@ -25,7 +25,7 @@ DCTERMS_NS = "http://purl.org/dc/terms/"
 CP_NS = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
 VT_NS = "http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"
 
-DEFAULT_SOURCE = pathlib.Path("docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx")
+DEFAULT_SOURCE = pathlib.Path("docs/blueprint/DOT-Book-One-Digital-Edition-v3.docx")
 DEFAULT_OUTPUT = pathlib.Path("artifacts/book-proof")
 PROOF_DOCX = "DOT-Book-One-Publication-Proof.docx"
 PROOF_PDF = "DOT-Book-One-Publication-Proof.pdf"

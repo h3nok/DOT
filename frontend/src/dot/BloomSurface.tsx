@@ -19,6 +19,8 @@ interface BloomSurfaceProps {
   kicker: string;
   title: string;
   description?: string;
+  /** "h1" when this surface is the whole page, not an overlay above one. */
+  titleAs?: "h1" | "h2";
   /** Screen-space nucleus centre, so the bloom originates there. */
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
@@ -36,6 +38,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
   kicker,
   title,
   description,
+  titleAs: TitleTag = "h2",
   origin,
   reducedMotion = false,
   zIndex = 40,
@@ -170,9 +173,9 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
                 {kicker}
               </span>
             </div>
-            <h2 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
+            <TitleTag className="font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
               {title}
-            </h2>
+            </TitleTag>
             {description && (
               <p className="mt-2 text-sm italic leading-relaxed text-muted-foreground">
                 {description}

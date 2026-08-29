@@ -33,7 +33,7 @@ PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public")
 OUT_PATH = os.path.join(PUBLIC_DIR, "og-image.png")
 CHAPTER_OUT_DIR = os.path.join(PUBLIC_DIR, "og", "book")
 RELEASE_MANIFEST = os.path.join(
-    PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v2", "manifest.json"
+    PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v3", "manifest.json"
 )
 
 SERIF_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"

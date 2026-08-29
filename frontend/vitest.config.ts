@@ -8,6 +8,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    // e2e/ belongs to Playwright; vitest's default glob would otherwise claim it.
+    exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'lcov'],

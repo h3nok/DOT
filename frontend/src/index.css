@@ -2631,6 +2631,42 @@ html[data-motion="still"] .dot-emergence-signal {
   color: color-mix(in oklch, var(--book-ink) 93%, var(--book-verdigris));
 }
 
+/* ── Stacked one-sentence runs ──────────────────────────────────────────────
+   Asyndeton: bare lines with no conjunctions, as when the Canvas raises
+   competing pre-Intent drafts. They are one cluster, so they are set as one —
+   tightened against each other and held slightly off the measure. No bullets:
+   a list implies a menu being surveyed, when the claim is that these surface
+   unbidden and unranked. */
+.book-prose .book-draft-line {
+  margin-block: 0;
+  padding: 0.2em 0 0.2em 1.15rem;
+  color: color-mix(in oklch, var(--book-ink) 88%, var(--book-verdigris));
+  font-style: italic;
+  text-indent: 0;
+}
+
+.book-prose .book-draft-line[data-draft-position="first"] {
+  margin-block-start: 1.9rem;
+}
+
+.book-prose .book-draft-line[data-draft-position="last"] {
+  margin-block-end: 1.9rem;
+}
+
+/* One quiet rule spans the whole run rather than one per line. */
+.book-prose .book-draft-line::before {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: color-mix(in oklch, var(--book-verdigris) 46%, transparent);
+  content: "";
+}
+
+.book-prose .book-draft-line {
+  position: relative;
+}
+
 .book-prose .book-inline-definition > strong:first-child,
 .book-prose .book-claim-level-statement > strong:first-child {
   font-family: "JetBrains Mono", ui-monospace, monospace;

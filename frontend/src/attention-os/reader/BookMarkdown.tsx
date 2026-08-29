@@ -19,6 +19,7 @@ import {
   editorialFormFromText,
 } from "./editorialGrammar";
 import { headingSlug } from "./headingSlug";
+import { remarkStichicRuns } from "./remarkStichicRuns";
 import type {
   ReaderConceptDefinition,
   ReaderReference,
@@ -344,7 +345,7 @@ export function BookMarkdown({
       <div className={`book-prose book-prose--${variant} py-12`}>
         <ReactMarkdown
           skipHtml
-          remarkPlugins={[remarkGfm, remarkMath]}
+          remarkPlugins={[remarkGfm, remarkMath, remarkStichicRuns]}
           rehypePlugins={[rehypeKatex]}
           components={{
             h1: ({ children }) => (
@@ -381,8 +382,16 @@ export function BookMarkdown({
                 {children}
               </h4>
             ),
-            p: ({ children }) => {
+            p: ({ children, className: incoming, ...rest }) => {
               const presentation = paragraphPresentation(children);
+              // Runs of stacked one-sentence lines arrive already marked by
+              // remarkStichicRuns; keep that class alongside the content-derived one.
+              const draftPosition = (rest as Record<string, unknown>)[
+                "data-draft-position"
+              ] as string | undefined;
+              const className =
+                [incoming, presentation.className].filter(Boolean).join(" ") ||
+                undefined;
               // A drop cap needs lines to wrap around it. The chapter cap is
               // 3.4em at 0.72 line-height — roughly three lines tall — and it
               // is applied to the opening paragraph whatever that paragraph is.
@@ -397,8 +406,9 @@ export function BookMarkdown({
               const short = nodeText(children).trim().length < 180;
               return (
                 <p
-                  className={presentation.className}
+                  className={className}
                   data-claim-level={presentation.claimLevel}
+                  data-draft-position={draftPosition}
                   data-short-opening={short ? "true" : undefined}
                   style={presentationStyle(presentation)}
                 >

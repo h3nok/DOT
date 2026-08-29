@@ -6,7 +6,7 @@ import { answerFromCorpus, buildBookCorpus } from "./bookCompanion";
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v2",
+  "public/publications/henok/digital-organism-theory/v3",
 );
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),
@@ -67,7 +67,7 @@ describe("Minty's answers to the entry's own questions", () => {
   it("does not answer 'what does DOT claim' with its most speculative hypothesis", () => {
     const headings = headingsFor("What does DOT actually claim?");
 
-    expect(headings).toContain("What Chapter 1 Has—and Has Not—Established");
+    expect(headings).toContain("The Derivation Contract");
     expect(headings).not.toContain("The Big C Hypothesis");
   });
 

@@ -1,9 +1,9 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
 #: Whose canon and graph the local stack serves.
 OWNER ?= henok
-BOOK_MANUSCRIPT ?= docs/blueprint/DOT-Book-One-Digital-Edition-v2.docx
+BOOK_MANUSCRIPT ?= docs/blueprint/DOT-Book-One-Digital-Edition-v3.docx
 
 help:
 	@echo "Available targets:"
@@ -30,6 +30,7 @@ help:
 	@echo "  make lint              Lint frontend"
 	@echo "  make typecheck         Typecheck frontend"
 	@echo "  make test              Test frontend"
+	@echo "  make test-e2e          Browser tests (Playwright)"
 	@echo "  make verify            Run every gate (lint, types, tests, build, backend)"
 	@echo "  make format            Autoformat frontend and backend"
 	@echo "  make audit             Dependency vulnerability audit"
@@ -108,8 +109,13 @@ typecheck:
 test:
 	pnpm --dir frontend exec vitest run
 
+# Browser-level checks: the rendered document, not the source. Needs a one-time
+# `pnpm --dir frontend test:e2e:install` for the Chromium binary.
+test-e2e:
+	pnpm --dir frontend exec playwright test
+
 # The definition of done. Agents and humans run the same gate.
-verify: lint typecheck test build lint-orchestrator test-orchestrator
+verify: lint typecheck test build test-e2e lint-orchestrator test-orchestrator
 	@echo "All gates passed."
 
 audit:

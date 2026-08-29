@@ -70,7 +70,10 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
   return (
     <main id="book-main" className="book-volume w-full pb-24">
-      <section className="book-volume-hero e-field relative flex min-h-[100svh] items-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-24 sm:px-8">
+      <section
+        className="book-volume-hero e-field relative flex min-h-[100svh] items-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-24 sm:px-8"
+        aria-labelledby="book-landing-title"
+      >
         <div className="book-cover-threshold-field" aria-hidden="true">
           <BookSubstrate />
         </div>
@@ -95,19 +98,22 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             <p className="dot-label text-[var(--book-cinnabar)]">
               Digital Organism Theory · Book One
             </p>
-            <h1 className="book-reading-heading mt-5 text-[clamp(2.7rem,5vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.035em] text-[var(--book-ink)]">
-              Consciousness, treated as architecture.
+            <h1
+              id="book-landing-title"
+              className="book-reading-heading mt-5 text-[clamp(2.7rem,5vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.035em] text-[var(--book-ink)]"
+            >
+              A foundational architecture of reality.
             </h1>
             <p className="book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
-              A framework for consciousness, conditioning, and conscious
-              authorship—presented as an argument to examine, not a doctrine to
-              inherit.
+              DOT begins with consciousness, places physical law and biology as
+              downstream layers of a Reality Frame, and follows consequence
+              into conditioning and conscious authorship.
             </p>
 
             <div className="book-volume-position mt-8 grid max-w-xl grid-cols-[auto_minmax(0,1fr)] gap-4 border-y border-[var(--book-hairline)] py-5">
               <span className="dot-label pt-1 text-[var(--book-cinnabar)]">Position</span>
               <p className="book-reading-copy text-base italic leading-relaxed text-[var(--book-ink)]">
-                A construction, not a revelation.
+                One architecture. Every downstream layer must be derived.
               </p>
             </div>
 
@@ -233,7 +239,11 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
 
             <div className="book-volume-index">
             {sectionGroups.map((group, groupIndex) => (
-              <section key={group.part} className="book-volume-part">
+              <section
+                key={group.part}
+                className="book-volume-part"
+                aria-label={group.part}
+              >
                 <div className="book-volume-part__heading grid grid-cols-[4rem_minmax(0,1fr)] gap-4 border-b border-[var(--book-hairline)] pb-3">
                   <span className="dot-label tabular-nums text-[var(--book-muted)]">
                     {String(groupIndex + 1).padStart(2, "0")}
@@ -276,7 +286,10 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           </div>
         </motion.section>
 
-        <section className="book-volume-apparatus relative z-10 mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[0.72fr_1.28fr] md:px-8 lg:gap-20 lg:py-28">
+        <section
+          className="book-volume-apparatus relative z-10 mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[0.72fr_1.28fr] md:px-8 lg:gap-20 lg:py-28"
+          aria-label="A note before reading, and how to cite Book One"
+        >
           <div>
             <p className="dot-label text-[var(--book-cinnabar)]">A note before reading</p>
             <Editable

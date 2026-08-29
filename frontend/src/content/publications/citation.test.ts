@@ -9,7 +9,7 @@ const manifest = JSON.parse(
   readFileSync(
     join(
       process.cwd(),
-      "public/publications/henok/digital-organism-theory/v2/manifest.json",
+      "public/publications/henok/digital-organism-theory/v3/manifest.json",
     ),
     "utf8",
   ),
@@ -21,13 +21,13 @@ const accessed = new Date("2026-08-13T00:00:00Z");
 describe("citing Book One", () => {
   it("cites the whole edition by author, year, edition, and URL", () => {
     expect(formatReference(manifest, null)).toBe(
-      "Ghebrechristos, H. (2026). Consciousness: A Digital Organism (Digital edition, version 2). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory",
+      "Ghebrechristos, H. (2026). Consciousness: A Digital Organism (Digital edition, version 3). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory",
     );
   });
 
   it("cites a chapter inside the edition it was read in", () => {
     expect(formatReference(manifest, canvas)).toBe(
-      `Ghebrechristos, H. (2026). ${canvas.title}. In Consciousness: A Digital Organism (Digital edition, version 2). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory/the-canvas`,
+      `Ghebrechristos, H. (2026). ${canvas.title}. In Consciousness: A Digital Organism (Digital edition, version 3). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory/the-canvas`,
     );
   });
 
@@ -42,7 +42,7 @@ describe("citing Book One", () => {
     expect(bibtex.startsWith("@inbook{ghebrechristos2026thecanvas,")).toBe(true);
     expect(bibtex).toContain("author    = {Ghebrechristos, Henok},");
     expect(bibtex).toContain("booktitle = {Consciousness: A Digital Organism},");
-    expect(bibtex).toContain("edition   = {Digital edition, version 2},");
+    expect(bibtex).toContain("edition   = {Digital edition, version 3},");
     expect(bibtex).toContain("urldate   = {2026-08-13},");
   });
 

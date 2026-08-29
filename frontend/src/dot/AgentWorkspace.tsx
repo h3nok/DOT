@@ -142,7 +142,7 @@ export const AgentWorkspace: React.FC<AgentWorkspaceProps> = ({
                 <div className="mt-3 space-y-2">
                   <div className="agent-scope-row">
                     <BookOpen className="h-4 w-4" aria-hidden="true" />
-                    <span>Book One · Edition v2</span>
+                    <span>Book One · Edition v3</span>
                   </div>
                   <div className="agent-scope-row">
                     <ShieldCheck className="h-4 w-4" aria-hidden="true" />

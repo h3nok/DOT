@@ -76,7 +76,7 @@ export const DOT_BOOK_ONE_OWNER = "henok";
 export const DOT_BOOK_ONE_SLUG = "digital-organism-theory";
 
 const DOT_BOOK_ONE_ASSET_ROOT =
-  `publications/${DOT_BOOK_ONE_OWNER}/${DOT_BOOK_ONE_SLUG}/v2`;
+  `publications/${DOT_BOOK_ONE_OWNER}/${DOT_BOOK_ONE_SLUG}/v3`;
 
 const publicAssetUrl = (path: string) => {
   const base = import.meta.env.BASE_URL.endsWith("/")

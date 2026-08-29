@@ -16,13 +16,13 @@ const earlierDraftClaims = [
 ];
 
 describe("Book One authority", () => {
-  it("keeps both delivery and canon ingestion on edition v2", () => {
+  it("keeps both delivery and canon ingestion on edition v3", () => {
     const liveReleaseInputs = [
       readFileSync("src/content/publications/dotBookOne.ts", "utf8"),
       readFileSync("../backend/orchestrator/scripts/ingest_canon.py", "utf8"),
     ].join("\n");
 
-    expect(liveReleaseInputs).toContain("digital-organism-theory/v2");
+    expect(liveReleaseInputs).toContain("digital-organism-theory/v3");
     expect(liveReleaseInputs).not.toContain("digital-organism-theory/v1");
   });
 

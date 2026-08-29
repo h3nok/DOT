@@ -30,7 +30,7 @@ if configured_canon_root:
     EDITION_ROOT = pathlib.Path(configured_canon_root)
 else:
     repo_root = pathlib.Path(__file__).resolve().parents[2]
-    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v2"
+    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v3"
 
 #: Declared by the author, section by section. Absent means undeclared.
 CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
