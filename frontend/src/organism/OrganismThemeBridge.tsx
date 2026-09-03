@@ -25,10 +25,18 @@ export const OrganismThemeBridge: React.FC = () => {
 
     // A pinned tint is the member's choice and outranks the circadian arc;
     // synaptic firing still bends it, so the organism stays legible.
-    const hueOf = (v: VitalSigns) =>
-      tint === "auto"
+    const hueOf = (v: VitalSigns) => {
+      if (tint === "mono") return 0;
+      return tint === "auto"
         ? hueFor(v)
         : circularMix(tint, 290, v.synapsis * 0.3 + v.synapticPulse * 0.25);
+    };
+
+    root.style.setProperty("--organism-accent-chroma-floor", tint === "mono" ? "0" : "0.02");
+    root.style.setProperty(
+      "--organism-accent-strong-chroma-floor",
+      tint === "mono" ? "0" : "0.03",
+    );
 
     // Eased display values so we never snap between frames.
     const shown = {
@@ -51,7 +59,10 @@ export const OrganismThemeBridge: React.FC = () => {
         (1 - 0.45 * v.calm);
       // Same floors as the animated path; reduced motion changes the tempo,
       // not the palette.
-      const chroma = Math.max(tint === "auto" ? 0.045 : 0.06, rawStaticChroma);
+      const chroma =
+        tint === "mono"
+          ? 0
+          : Math.max(tint === "auto" ? 0.045 : 0.06, rawStaticChroma);
       // Reduced motion never flashes: drop any pending/queued pulse silently.
       v.pendingPulse = false;
       v.pulseDeferred = false;
@@ -102,7 +113,10 @@ export const OrganismThemeBridge: React.FC = () => {
       const rawChroma =
         0.14 * v.metabolism * config.intensity * (1 - 0.5 * v.strain) *
         (1 - 0.45 * calm);
-      const targetChroma = Math.max(tint === "auto" ? 0.045 : 0.06, rawChroma);
+      const targetChroma =
+        tint === "mono"
+          ? 0
+          : Math.max(tint === "auto" ? 0.045 : 0.06, rawChroma);
       shown.chroma += (targetChroma - shown.chroma) * k;
       shown.luma += (v.daylight - shown.luma) * k;
       shown.arousal += (v.arousal - shown.arousal) * 0.1;

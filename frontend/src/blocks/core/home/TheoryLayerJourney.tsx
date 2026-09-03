@@ -1,0 +1,340 @@
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDown } from "lucide-react";
+import { GuidedArgument } from "../../../shared/GuidedArgument";
+import { ReadingPathwayCard } from "../../../shared/ReadingPathwayCard";
+import { ReadingPathwayGroup } from "../../../shared/ReadingPathwayGroup";
+
+const BOOK_ROOT = "/book/digital-organism-theory";
+const MEMORY_PATH = ["Possibility", "Persistence", "Consequence", "Choice"] as const;
+
+const THEORY_LAYERS = [
+  {
+    id: "possibility-field",
+    layer: "origin",
+    term: "T · E",
+    status: "Starting assumption",
+    title: "Continuity and possibility come first.",
+    lede:
+      "I begin with one assumption: continuity and possibility exist. I call them T and E.",
+    humanStakes:
+      "This is not a remote question. Every account of your life already assumes that something can persist and something can become possible.",
+    memoryWord: "Possibility",
+    memoryLine: "Continuity carries. Possibility opens.",
+    handoff: "From possibility to persistence",
+    conventional:
+      "Standard cosmology reconstructs physical evolution from the earliest measurable states; it does not claim to establish why reality or its laws exist.",
+    scope: "Earliest measurable physical states",
+    question: "What grounds the Big Bang—and the possibility of any universe?",
+    model:
+      "I place T and E before Big C. Within them, Big C emerged and persisted. In this model, the Big Bang may mark the beginning of RF₀—our physical universe—not the beginning of everything.",
+    boundary:
+      "No ultimate source has been publicly measured. T and E remain proposed conditions, not observed entities.",
+    prerequisite: null,
+    bookReading: [
+      {
+        label: "Book One · The Boot Sequence of RF₀",
+        href: `${BOOK_ROOT}/architecture-of-continuity#the-boot-sequence-of-rf0`,
+      },
+    ],
+    externalReading: [
+      {
+        label: "Planck 2018 Results · Cosmological Parameters",
+        context: "Planck Collaboration · Astronomy & Astrophysics · 2020",
+        href: "https://doi.org/10.1051/0004-6361/201833910",
+      },
+    ],
+  },
+  {
+    id: "big-c",
+    layer: "big-c",
+    term: "Big C",
+    status: "Proposed explanation",
+    title: "Big C is the first conscious organism.",
+    lede:
+      "I use Big C to name a proposed conscious process that persists and develops through change.",
+    humanStakes:
+      "Your experience is not debris beside the universe. It is part of what any complete account of reality must explain.",
+    memoryWord: "Persistence",
+    memoryLine: "Consciousness persists, develops, and generates.",
+    handoff: "From persistence to consequence",
+    conventional:
+      "Most neuroscientific and physicalist accounts ground consciousness in physical brain-body processes.",
+    scope: "Physical brain and body processes",
+    question: "Why is any physical process accompanied by experience?",
+    model:
+      "I propose that Big C emerged within T and E, learned to maintain itself, and created Reality Frames with local experiencers.",
+    boundary:
+      "DOT treats the world’s virtual character as directly examinable: you encounter a rendered field of experience, not reality unmediated. Its open debt is a public method that distinguishes generation by Big C from competing explanations.",
+    prerequisite: { label: "T · E", href: "#possibility-field" },
+    bookReading: [
+      {
+        label: "Book One · The Big C Hypothesis",
+        href: `${BOOK_ROOT}/the-digital-organism#the-big-c-hypothesis`,
+      },
+    ],
+    externalReading: [
+      {
+        label: "Theories of Consciousness",
+        context: "Seth & Bayne · Nature Reviews Neuroscience · 2022",
+        href: "https://doi.org/10.1038/s41583-022-00587-4",
+      },
+      {
+        label: "Adversarial Testing of Two Leading Theories",
+        context: "Cogitate Consortium · Nature · 2025",
+        href: "https://doi.org/10.1038/s41586-025-08888-1",
+      },
+    ],
+  },
+  {
+    id: "reality-frame",
+    layer: "reality-frame",
+    term: "RF₀",
+    status: "Observed universe; proposed origin",
+    title: "RF₀ is exactly the physical universe.",
+    lede:
+      "RF₀ is my name for this physical universe. I propose that it is generated rather than fundamental; generated does not mean unreal.",
+    humanStakes:
+      "Generated does not mean disposable. Within this world, consequence is real, and your choices meet it.",
+    memoryWord: "Consequence",
+    memoryLine: "A generated world is still a consequential world.",
+    handoff: "From consequence to choice",
+    conventional:
+      "Physics and cosmology model the physical universe as spacetime governed by fields and laws.",
+    scope: "The physical universe as measured from within",
+    question: "What generates spacetime and its laws—and is the physical universe fundamental?",
+    model:
+      "I treat RF₀ as a lawful, consequential environment generated by Big C. Other Reality Frames may exist, but I do not assume they share our physics.",
+    boundary:
+      "Public evidence supports spacetime structure and stable physical regularities. That this universe is generated by Big C rather than fundamental—and that further Frames exist—remain hypotheses.",
+    prerequisite: { label: "Big C", href: "#big-c" },
+    bookReading: [
+      {
+        label: "Book One · Why Model a Reality Frame?",
+        href: `${BOOK_ROOT}/reality-frames#why-model-a-reality-frame`,
+      },
+      {
+        label: "Book One · World Invariants",
+        href: `${BOOK_ROOT}/reality-frames#world-invariants`,
+      },
+    ],
+    externalReading: [
+      {
+        label: "Planck 2018 Results · Cosmological Parameters",
+        context: "Planck Collaboration · Astronomy & Astrophysics · 2020",
+        href: "https://doi.org/10.1051/0004-6361/201833910",
+      },
+    ],
+  },
+  {
+    id: "little-c",
+    layer: "little-c",
+    term: "Little c",
+    status: "Proposed local experiencer",
+    title: "Experience is local, embodied, and consequential.",
+    lede:
+      "I use Little c to name the private point of view each of us experiences through one body.",
+    humanStakes:
+      "This is the claim closest to your own life: you inherit one body and one history, yet still meet a space in which to choose.",
+    memoryWord: "Choice",
+    memoryLine: "You experience locally, choose through a body, and change through consequence.",
+    handoff: null,
+    conventional:
+      "Neuroscience studies the self and experience through embodied brain processes.",
+    scope: "Brain, body, and first-person experience",
+    question: "Why is experience privately given and stably bounded to one perspective?",
+    model:
+      "I propose that Little c receives one stream of experience through the body. It forms intent, acts within RF₀, and meets the consequences through that same body.",
+    boundary:
+      "DOT holds that consciousness can decouple from bodily identification and that this can be examined first-person. It still owes a reproducible public method that distinguishes decoupling from altered embodied cognition.",
+    prerequisite: { label: "RF₀", href: "#reality-frame" },
+    bookReading: [
+      {
+        label: "Book One · The Junction We Cannot Yet See",
+        href: `${BOOK_ROOT}/the-decoupling-principle#the-junction-we-cannot-yet-see`,
+      },
+      {
+        label: "Book One · Where Freedom Lives",
+        href: `${BOOK_ROOT}/the-decoupling-principle#where-freedom-lives`,
+      },
+    ],
+    externalReading: [
+      {
+        label: "Theories of Consciousness",
+        context: "Seth & Bayne · Nature Reviews Neuroscience · 2022",
+        href: "https://doi.org/10.1038/s41583-022-00587-4",
+      },
+      {
+        label: "The Timing of the Conscious Intention to Move",
+        context: "Matsuhashi & Hallett · European Journal of Neuroscience · 2008",
+        href: "https://doi.org/10.1111/j.1460-9568.2008.06525.x",
+      },
+    ],
+  },
+] as const;
+
+interface TheoryLayerJourneyProps {
+  reducedMotion?: boolean;
+}
+
+/** The hero architecture in miniature: the section's own ring is lit. */
+function LayerGlyph({ active }: { active: string }) {
+  return (
+    <svg viewBox="0 0 36 36" className="home-theory-layer-glyph" aria-hidden="true">
+      <circle cx="18" cy="18" r="16" data-glyph="origin" data-active={active === "origin" || undefined} />
+      <circle cx="18" cy="18" r="12" data-glyph="big-c" data-active={active === "big-c" || undefined} />
+      <circle cx="18" cy="18" r="8" data-glyph="reality-frame" data-active={active === "reality-frame" || undefined} />
+      <circle cx="18" cy="18" r="2.8" data-glyph="little-c" data-active={active === "little-c" || undefined} />
+    </svg>
+  );
+}
+
+function ConceptMemoryPath({ activeIndex }: { activeIndex: number }) {
+  return (
+    <div
+      className="home-theory-memory-path"
+      aria-label={`Concept path: ${MEMORY_PATH.join(", ")}`}
+    >
+      {MEMORY_PATH.map((word, index) => (
+        <span
+          key={word}
+          data-active={index === activeIndex || undefined}
+          data-past={index < activeIndex || undefined}
+        >
+          {word}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+export function TheoryLayerJourney({
+  reducedMotion: reducedMotionOverride = false,
+}: TheoryLayerJourneyProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = Boolean(reducedMotionOverride || prefersReducedMotion);
+
+  return (
+    <div className="home-theory-layers">
+      {THEORY_LAYERS.map((item, index) => (
+        <motion.section
+          id={item.id}
+          key={item.id}
+          data-layer={item.layer}
+          aria-labelledby={`${item.id}-title`}
+          initial={reducedMotion ? false : { y: 12 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: reducedMotion ? 0 : 0.5 }}
+          className="home-environment home-theory-layer-environment scroll-mt-24"
+        >
+          <div className="dot-page-container dot-page-wide">
+            <article className="home-theory-layer-card">
+              <header className="home-theory-layer-identity">
+                <LayerGlyph active={item.layer} />
+                <ConceptMemoryPath activeIndex={index} />
+                <span className="home-theory-layer-term">{item.term}</span>
+                <span className="home-theory-layer-status">{item.status}</span>
+              </header>
+
+              <div className="home-theory-layer-copy">
+                {item.prerequisite && (
+                  <div className="home-theory-layer-prerequisite">
+                    <span>Builds on</span>
+                    <a href={item.prerequisite.href}>{item.prerequisite.label}</a>
+                  </div>
+                )}
+                <div className="home-theory-layer-thesis">
+                  <h2 id={`${item.id}-title`} className="dot-page-heading text-balance">
+                    {item.title}
+                  </h2>
+                  <p className="home-theory-layer-lede">{item.lede}</p>
+                  <p className="home-theory-layer-human-stakes">
+                    {item.humanStakes}
+                  </p>
+                </div>
+
+                <blockquote className="home-theory-layer-memory">
+                  <span className="home-theory-layer-memory-word">
+                    {item.memoryWord}
+                  </span>
+                  <p>{item.memoryLine}</p>
+                </blockquote>
+
+                <GuidedArgument
+                  ariaLabel={`${item.term} argument`}
+                  known={item.conventional}
+                  scope={item.scope}
+                  question={item.question}
+                  proposal={item.model}
+                  boundary={item.boundary}
+                />
+
+                <footer className="home-theory-layer-sources">
+                  <div className="home-theory-layer-reading-columns">
+                    <ReadingPathwayGroup
+                      title="Independent evidence"
+                      description="Read outside DOT."
+                      tone="external"
+                      className="home-theory-layer-external-reading"
+                    >
+                      <ul className="home-theory-layer-reading-list">
+                        {item.externalReading.map((source) => (
+                          <li key={source.href}>
+                            <ReadingPathwayCard
+                              label="Independent source"
+                              title={source.label}
+                              context={source.context}
+                              href={source.href}
+                              rel="noopener noreferrer"
+                              className="home-theory-layer-source-card"
+                              tone="external"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </ReadingPathwayGroup>
+
+                    <ReadingPathwayGroup
+                      title="DOT · Book One"
+                      description="Follow the claim in the fixed edition."
+                      tone="dot"
+                      className="home-theory-layer-book-reading"
+                    >
+                      <div className="home-theory-layer-book-links">
+                        {item.bookReading.map((source) => (
+                          <ReadingPathwayCard
+                            key={source.href}
+                            label="Book One · Fixed edition"
+                            title={source.label}
+                            to={source.href}
+                            className="home-theory-layer-book-card"
+                            tone="dot"
+                          />
+                        ))}
+                      </div>
+                    </ReadingPathwayGroup>
+                  </div>
+
+                  {index < THEORY_LAYERS.length - 1 && (
+                    <a
+                      href={`#${THEORY_LAYERS[index + 1].id}`}
+                      className="home-theory-layer-next"
+                    >
+                      <span>
+                        <small>{item.handoff}</small>
+                        Next concept: <strong>{THEORY_LAYERS[index + 1].term}</strong>
+                      </span>
+                      <ArrowDown aria-hidden="true" />
+                    </a>
+                  )}
+                </footer>
+              </div>
+            </article>
+          </div>
+        </motion.section>
+      ))}
+    </div>
+  );
+}
+
+export default TheoryLayerJourney;

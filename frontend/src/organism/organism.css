@@ -23,19 +23,21 @@
   --organism-breath: 8s; /* breathing cadence */
   --organism-glow: 1px; /* living-border glow radius — a whisper, not a beacon */
   --organism-intensity: 0.85; /* global dial */
+  --organism-accent-chroma-floor: 0;
+  --organism-accent-strong-chroma-floor: 0;
 
   /* A ready-to-use living accent the UI can opt into anywhere. */
   --organism-accent: oklch(
     calc(0.52 + 0.16 * var(--organism-luma))
-      calc(var(--organism-chroma) + 0.02) var(--organism-hue)
+      calc(var(--organism-chroma) + var(--organism-accent-chroma-floor)) var(--organism-hue)
   );
   --organism-accent-strong: oklch(
     calc(0.6 + 0.12 * var(--organism-luma))
-      calc(var(--organism-chroma) * 1.5 + 0.03) var(--organism-hue)
+      calc(var(--organism-chroma) * 1.5 + var(--organism-accent-strong-chroma-floor)) var(--organism-hue)
   );
   --organism-accent-soft: oklch(
     calc(0.55 + 0.14 * var(--organism-luma))
-      calc(var(--organism-chroma) + 0.015) var(--organism-hue) / 0.28
+      calc(var(--organism-chroma) + var(--organism-accent-chroma-floor)) var(--organism-hue) / 0.28
   );
 }
 
@@ -466,6 +468,187 @@ html[data-organism=\"on\"][data-organism-mood=\"active\"] .dot-surface {
   color: var(--muted-foreground);
 }
 
+/* --- The mark: DOT's signature dot ------------------------------------
+   The brand is literal: a single accent dot. One element, one shape.
+   Composes before any label. `data-tone="quiet"` mutes it for secondary
+   labels; default is the live organism accent. */
+.dot-mark {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  border-radius: 9999px;
+  background: var(--organism-accent-strong);
+  box-shadow: 0 0 0.5rem var(--organism-accent-soft);
+}
+
+.dot-mark[data-tone="quiet"] {
+  background: color-mix(in oklch, var(--muted-foreground) 70%, var(--foreground));
+  box-shadow: none;
+}
+
+/* Live variant: the organism is present and working. Stillness wins. */
+@media (prefers-reduced-motion: no-preference) {
+  .dot-mark[data-live] {
+    animation: dot-mark-pulse 2.2s ease-in-out infinite;
+  }
+}
+
+@keyframes dot-mark-pulse {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* --- Epistemic badge: the claim-level vocabulary ------------------------
+   One pill for every claim level the Academy standard names. Colour carries
+   epistemic weight: only publicly grounded levels borrow the accent; every
+   proposed level stays quiet. Tones key off data-epistemic-status so a badge
+   can never invent a level CSS does not know. */
+.dot-epistemic-badge {
+  border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+  background: color-mix(in oklch, var(--foreground) 3%, transparent);
+  color: var(--muted-foreground);
+}
+
+.dot-epistemic-badge[data-epistemic-status="observation"],
+.dot-epistemic-badge[data-epistemic-status="evidence"],
+.dot-epistemic-badge[data-epistemic-status="grounded"] {
+  border-color: color-mix(in oklch, var(--organism-accent-strong) 40%, transparent);
+  background: color-mix(in oklch, var(--organism-accent-soft) 40%, transparent);
+  color: color-mix(in oklch, var(--organism-accent-strong) 85%, var(--foreground));
+}
+
+.dot-epistemic-badge[data-epistemic-status="model"],
+.dot-epistemic-badge[data-epistemic-status="explanation"] {
+  border-color: color-mix(in oklch, var(--border) 90%, var(--foreground));
+  color: var(--foreground);
+}
+
+.dot-epistemic-badge[data-epistemic-status="speculation"] {
+  border-color: color-mix(in oklch, var(--border) 55%, transparent);
+  background: transparent;
+  color: color-mix(in oklch, var(--muted-foreground) 80%, transparent);
+}
+
+/* --- Card: DOT's bounded surface ---------------------------------------
+   The one container for claims, citations, and pathways. Everything it
+   holds — label, badge, body — stays inside its boundary. The top hairline
+   that fades from the accent is the brand signature; the radius is the
+   surface-scale token, never a pill. `--dot-card-accent` retints the
+   signature per layer without new CSS. */
+.dot-card {
+  --dot-card-accent: var(--organism-accent-strong);
+
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--dot-card-accent) 22%, var(--border));
+  border-radius: var(--dot-card-radius);
+  background: color-mix(in oklch, var(--dot-card-accent) 3.5%, transparent);
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.dot-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 38%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--dot-card-accent), transparent);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.dot-card:where(a, button):hover,
+a.dot-card:hover,
+button.dot-card:hover {
+  border-color: color-mix(in oklch, var(--dot-card-accent) 55%, var(--border));
+  background: color-mix(in oklch, var(--dot-card-accent) 8%, transparent);
+  box-shadow: 0 6px 20px -8px color-mix(in oklch, var(--dot-card-accent) 24%, transparent);
+}
+
+/* Card kicker: dot mark + mono label locked together inside the card. */
+.dot-card-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* --- Switch and slider: the two continuous controls -------------------
+   Every toggle and range in the product draws from here, so "on" always
+   means the accent and a thumb is always the same thumb. */
+.dot-switch {
+  position: relative;
+  width: 2.25rem;
+  height: 1.25rem;
+  flex: none;
+  border-radius: 9999px;
+  background: var(--border);
+  transition: background-color 180ms ease;
+}
+
+.dot-switch[data-checked] {
+  background: var(--organism-accent-strong);
+}
+
+.dot-switch__thumb {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background: var(--background);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+  transition: transform 180ms ease;
+}
+
+.dot-switch[data-checked] .dot-switch__thumb {
+  transform: translateX(1rem);
+}
+
+.dot-slider {
+  height: 0.375rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  background: var(--border);
+}
+
+.dot-slider::-webkit-slider-thumb {
+  width: 1rem;
+  height: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid var(--background);
+  border-radius: 9999px;
+  background: var(--organism-accent-strong);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+}
+
+.dot-slider::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--background);
+  border-radius: 9999px;
+  background: var(--organism-accent-strong);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+}
+
 /* ====================================================================
    UI Styles — surface treatments applied via data-ui-style on <html>.
    ==================================================================== */
@@ -477,6 +660,9 @@ html {
   --appearance-surface-base: var(--card);
   --appearance-ui-control-radius: 0.75rem;
   --appearance-ui-panel-radius: 1rem;
+  /* Surface-scale radius for cards. Never a pill: cards carry paragraphs,
+     and text collides with pill corners. UI styles may tune it slightly. */
+  --dot-card-radius: 0.75rem;
   --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 88%, transparent);
   --appearance-ui-border: var(--border);
   --appearance-ui-shadow: 0 12px 40px -18px rgb(0 0 0 / 0.18);
@@ -518,6 +704,7 @@ html {
 html[data-ui-style="neural"] {
   --appearance-ui-control-radius: 999px;
   --appearance-ui-panel-radius: 1.25rem;
+  --dot-card-radius: 1rem;
   --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 62%, transparent);
   --appearance-ui-border: var(--organism-accent-soft);
   --appearance-ui-shadow:
@@ -537,6 +724,7 @@ html[data-ui-style="neural"] {
 html[data-ui-style="minimal"] {
   --appearance-ui-control-radius: 0.2rem;
   --appearance-ui-panel-radius: 0.25rem;
+  --dot-card-radius: 0.25rem;
   --appearance-ui-background: var(--appearance-surface-base);
   --appearance-ui-border: var(--border);
   --appearance-ui-shadow: none;
@@ -548,6 +736,7 @@ html[data-ui-style="minimal"] {
 html[data-ui-style="organic"] {
   --appearance-ui-control-radius: 999px;
   --appearance-ui-panel-radius: 1.5rem;
+  --dot-card-radius: 1.25rem;
   --appearance-ui-background: color-mix(
     in oklch,
     var(--appearance-surface-base) 88%,
@@ -573,6 +762,7 @@ html[data-ui-style="organic"] {
 html[data-ui-style="editorial"] {
   --appearance-ui-control-radius: 0;
   --appearance-ui-panel-radius: 0;
+  --dot-card-radius: 0;
   --appearance-ui-background: transparent;
   --appearance-ui-border: var(--foreground);
   --appearance-ui-shadow: none;
@@ -584,6 +774,7 @@ html[data-ui-style="editorial"] {
 html[data-ui-style="cinematic"] {
   --appearance-ui-control-radius: 0.45rem;
   --appearance-ui-panel-radius: 0.65rem;
+  --dot-card-radius: 0.55rem;
   --appearance-ui-background: color-mix(in oklch, var(--appearance-surface-base) 48%, transparent);
   --appearance-ui-border: color-mix(in oklch, var(--foreground) 10%, transparent);
   --appearance-ui-shadow:

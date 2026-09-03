@@ -212,15 +212,15 @@ export function ArchitectureDiagram() {
         {/* ── Section Header ────────────────────────────────────────── */}
         <div className="home-section-heading-row">
           <div>
-            <span className="dot-label">The experience loop · Model</span>
+            <span className="dot-label">Little c inside RF₀ · Model</span>
             <h2 className="dot-page-heading mt-3 text-balance">
-              Every moment runs the same four steps.
+              Intent becomes consequential through action.
             </h2>
           </div>
           <p className="dot-lede max-w-lg">
-            Reality arrives. The Painting interprets it before you think. Intent
-            commits. Consequence returns and changes what you carry into the
-            next moment.
+            You were shaped before you could choose. Conscious authorship begins
+            when another response becomes possible; the body carries that response
+            into RF₀, and consequence updates the next moment.
           </p>
         </div>
 

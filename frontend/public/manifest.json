@@ -1,7 +1,7 @@
 {
   "name": "DOT — Digital Organism Theory",
   "short_name": "DOT",
-  "description": "Read Consciousness: A Digital Organism, and trace every concept back to the passage it came from.",
+  "description": "The living intellectual home of Digital Organism Theory: definitions, hypotheses, objections, experiments, essays, and fixed publications.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -31,6 +31,12 @@
     }
   ],
   "shortcuts": [
+    {
+      "name": "DOT Academy",
+      "short_name": "Academy",
+      "description": "Enter the living inquiry around Digital Organism Theory",
+      "url": "/academy"
+    },
     {
       "name": "Book One",
       "short_name": "Book One",

@@ -1,6 +1,9 @@
+import os from 'os';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+
+const maxForks = Math.max(1, Math.floor(os.cpus().length * 0.75));
 
 export default defineConfig({
   plugins: [react()],
@@ -10,6 +13,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     // e2e/ belongs to Playwright; vitest's default glob would otherwise claim it.
     exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
+    maxWorkers: maxForks,
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'lcov'],

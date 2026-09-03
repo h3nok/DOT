@@ -5,28 +5,19 @@ export type HeroAskRequest = {
   lens: AgentLens;
 };
 
-/** Four openings: the claim, the reader, the weak point, the epistemic status. */
-export const SAMPLE_QUESTIONS: ReadonlyArray<{
+export interface HeroArgument {
+  id: string;
+  stance: string;
   text: string;
-  category: string;
-  lens: AgentLens;
-}> = [
-  { text: "What does DOT actually claim?", category: "Core Claim", lens: "ground" },
-  { text: "What does 'digital' mean here?", category: "Definition", lens: "ground" },
-  { text: "Where is the argument weakest?", category: "Critique", lens: "test" },
-  { text: "Is this science, philosophy, or faith?", category: "Foundations", lens: "test" },
-];
+}
 
-export const HERO_STATEMENTS = [
-  "A framework where first-person experience is data—not automatically truth.",
-  "No method removes the observer from existence.",
-  "Fear can narrow the hypothesis space.",
-  "You can notice a proposed action without becoming it.",
-  "Love is the condition in which Fear no longer governs you.",
-] as const;
+export const HERO_TYPE_INTERVAL_MS = 22;
 
-export const HERO_TYPE_INTERVAL_MS = 32;
-export const HERO_STATEMENT_DWELL_MS = 1800;
+export const HERO_ARGUMENT: HeroArgument = {
+  id: "home.argument.subjective-data",
+  stance: "The first discipline",
+  text: "Feeling must be treated as data — but feeling is not automatically truth.",
+};
 
 type ClaimLevel = "observation" | "model" | "hypothesis";
 
@@ -99,5 +90,3 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
     level: "model",
   },
 ];
-
-export const DWELL_MS = 6000;

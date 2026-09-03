@@ -1,4 +1,4 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project seed-academy ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
 #: Whose canon and graph the local stack serves.
@@ -21,6 +21,7 @@ help:
 	@echo "  make migrate-orchestrator Apply orchestrator migrations"
 	@echo "  make seed-profile-delivery Seed one published profile delivery release"
 	@echo "  make seed-book-project    Seed Book One as a studio project"
+	@echo "  make seed-academy         Seed DOT Academy as institution kernel space 1"
 	@echo "  make ingest-canon      Load Book One so the copilot can cite it"
 	@echo "  make release-book      Rebuild the web reader and digital PDF from the DOCX"
 	@echo "  make release-book-artifacts Refresh the digital PDF from the DOCX"
@@ -78,6 +79,10 @@ seed-profile-delivery:
 
 seed-book-project:
 	cd backend/orchestrator && ../../.venv/bin/python3 scripts/seed_book_project.py
+
+# An institution is a row plus a policy, never a codepath (ADR-0032). Idempotent.
+seed-academy:
+	cd backend/orchestrator && ../../.venv/bin/python3 scripts/seed_academy_space.py
 
 # Released canon becomes citable by the twin (ADR-0017). Safe to re-run.
 ingest-canon:

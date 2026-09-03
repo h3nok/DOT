@@ -23,10 +23,12 @@ import { DEFAULT_CONFIG, type OrganismConfig } from "./types";
  */
 
 export type ThemePresetId =
+  | "quiet"
   | "meridian"
   | "membrane"
   | "aperture"
   | "clarity"
+  | "quiet-night"
   | "midnight"
   | "synapse"
   | "nocturne"
@@ -68,6 +70,23 @@ const PRESET_KEYS: Array<keyof PresetConfig> = [
 ];
 
 export const THEME_PRESETS: ThemePreset[] = [
+  {
+    id: "quiet",
+    label: "Quiet",
+    hint: "Monochrome daylight. Colour appears only when it carries meaning.",
+    base: "light",
+    config: {
+      preset: "flow",
+      uiStyle: "editorial",
+      tint: "mono",
+      intensity: 0.32,
+      paperTone: "neutral",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(0 0% 98%)", ink: "hsl(0 0% 10%)", accent: "hsl(0 0% 42%)" },
+  },
   {
     id: "meridian",
     label: "Meridian",
@@ -135,6 +154,23 @@ export const THEME_PRESETS: ThemePreset[] = [
       enabled: true,
     },
     swatch: { surface: "hsl(0 0% 100%)", ink: "hsl(0 0% 8%)", accent: "hsl(212 72% 42%)" },
+  },
+  {
+    id: "quiet-night",
+    label: "Quiet Night",
+    hint: "Monochrome night. The same field, with no coloured cast.",
+    base: "dark",
+    config: {
+      preset: "flow",
+      uiStyle: "editorial",
+      tint: "mono",
+      intensity: 0.38,
+      paperTone: "neutral",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: "hsl(0 0% 9%)", ink: "hsl(0 0% 90%)", accent: "hsl(0 0% 62%)" },
   },
   {
     id: "midnight",
@@ -209,13 +245,9 @@ export const THEME_PRESETS: ThemePreset[] = [
 /**
  * The environment a reader lands in before they have chosen anything.
  *
- * Both are the same idea in the two lights: Current as the ground (slow tracers
- * carried by the Reality Stream), the neural surface so the page is visibly
- * the organism, and Source Serif for long-form. They differ only where the two
- * bases genuinely want different things — daylight takes a warm page and the
- * hour's own accent, night takes a cooler page and a pinned indigo, because an
- * unpinned accent has less chroma to spend and a dark ground shows colour less
- * readily.
+ * Both are the same idea in two lights: a monochrome Current field, an editorial
+ * surface, and Source Serif for long-form. Colour remains available as a reader
+ * choice and for semantics, but it does not tint the first encounter.
  *
  * Naming the defaults as environments rather than as a loose bag of values is
  * deliberate: a reader who opens the panel on their first visit sees the
@@ -223,8 +255,8 @@ export const THEME_PRESETS: ThemePreset[] = [
  * would describe a choice they never made.
  */
 export const DEFAULT_ENVIRONMENT: Record<"light" | "dark", ThemePresetId> = {
-  light: "membrane",
-  dark: "midnight",
+  light: "quiet",
+  dark: "quiet-night",
 };
 
 /**

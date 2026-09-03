@@ -1,5 +1,9 @@
 # Implementation Roadmap
 
+> **Superseded as a plan (ADR-0032, 2026-09-02).** The current execution order lives in
+> `15-PLATFORM-IMPLEMENTATION-PLAN.md`. This file is retained as history; its status
+> claims about the orchestrator are stale.
+
 > The current build plan for the self-contained Stay/DOT system. This document turns the
 > design decisions in the blueprint into an execution order, starting with the FastAPI
 > orchestrator and Publication Studio.

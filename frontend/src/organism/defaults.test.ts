@@ -67,14 +67,14 @@ describe("default environment", () => {
     }
   });
 
-  it("lets daylight follow the hour while night keeps a pinned accent", () => {
-    expect(defaultConfigFor("dark").tint).toBe(212);
-    expect(defaultConfigFor("light").tint).toBe("auto");
+  it("starts both bases in monochrome", () => {
+    expect(defaultConfigFor("dark").tint).toBe("mono");
+    expect(defaultConfigFor("light").tint).toBe("mono");
   });
 
-  it("uses the neural surface for both living defaults", () => {
-    expect(defaultConfigFor("dark").uiStyle).toBe("neural");
-    expect(defaultConfigFor("light").uiStyle).toBe("neural");
+  it("uses the editorial surface for both quiet defaults", () => {
+    expect(defaultConfigFor("dark").uiStyle).toBe("editorial");
+    expect(defaultConfigFor("light").uiStyle).toBe("editorial");
   });
 
   it("still offers an environment on the other side of every default", () => {

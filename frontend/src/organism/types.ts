@@ -204,8 +204,8 @@ export function resolvePreset(value: unknown): OrganismPreset {
   return LEGACY_PRESETS[value] ?? DEFAULT_CONFIG.preset;
 }
 
-/** Accent hue source: follow the circadian arc, or pin a hue in degrees. */
-export type OrganismTint = "auto" | number;
+/** Accent source: monochrome, the circadian arc, or a pinned hue in degrees. */
+export type OrganismTint = "mono" | "auto" | number;
 
 /**
  * The panel offers named hues and a wheel, so any degree can reach storage.
@@ -213,7 +213,7 @@ export type OrganismTint = "auto" | number;
  * silently breaks every `oklch()` the accent feeds.
  */
 export function resolveTint(value: unknown): OrganismTint {
-  if (value === "auto") return "auto";
+  if (value === "mono" || value === "auto") return value;
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return DEFAULT_CONFIG.tint;
   }
@@ -352,7 +352,7 @@ export interface OrganismConfig {
   showMembrane: boolean;
   /** Render the diagnostic vital-signs instrument. */
   showHud: boolean;
-  /** Accent hue: `"auto"` follows the time of day, a number pins it. */
+  /** Accent source: monochrome, the time of day, or a pinned hue. */
   tint: OrganismTint;
   /** Hold the field still without disabling it (motion sensitivity, focus). */
   stillness: boolean;

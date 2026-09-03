@@ -128,6 +128,8 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.organism = config.enabled ? "on" : "off";
+    root.dataset.field =
+      config.enabled && config.showMembrane ? config.preset : "off";
     root.dataset.organismMood = mood;
     root.dataset.contrast = config.contrast;
     root.dataset.uiStyle = config.uiStyle;
@@ -140,6 +142,8 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
     config.contrast,
     config.enabled,
     config.intensity,
+    config.preset,
+    config.showMembrane,
     config.stillness,
     config.uiStyle,
     mood,

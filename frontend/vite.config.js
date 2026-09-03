@@ -36,11 +36,55 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Split vendor chunks for better caching
-          vendor: ["react", "react-dom"],
-          router: ["react-router-dom"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+
+          // Keep the entry's actual runtime together. The old entry-based
+          // vendor chunk captured only React's wrapper modules (and therefore
+          // emitted empty) while react-dom/client stayed in the application
+          // chunk.
+          if (
+            id.includes("/node_modules/react/") ||
+            id.includes("/node_modules/react-dom/") ||
+            id.includes("/node_modules/scheduler/")
+          ) {
+            return "framework";
+          }
+
+          if (
+            id.includes("/node_modules/react-router/") ||
+            id.includes("/node_modules/react-router-dom/")
+          ) {
+            return "router";
+          }
+
+          // Motion is shared by several lazy public surfaces. Keeping it out
+          // of the entry prevents a visitor who opens a quiet route from
+          // paying for every animation feature before that route is known.
+          if (
+            id.includes("/node_modules/framer-motion/") ||
+            id.includes("/node_modules/motion-dom/") ||
+            id.includes("/node_modules/motion-utils/")
+          ) {
+            return "motion";
+          }
+
+          // These substantial capabilities belong to the routes that use
+          // them. In particular, Radix used to capture React's JSX runtime and
+          // become an unconditional modulepreload on the public homepage.
+          if (
+            id.includes("/node_modules/@radix-ui/") ||
+            id.includes("/node_modules/@floating-ui/") ||
+            id.includes("/node_modules/react-remove-scroll/") ||
+            id.includes("/node_modules/react-remove-scroll-bar/") ||
+            id.includes("/node_modules/react-style-singleton/") ||
+            id.includes("/node_modules/use-callback-ref/") ||
+            id.includes("/node_modules/use-sidecar/")
+          ) {
+            return "radix";
+          }
+
+          return undefined;
         },
       },
     },

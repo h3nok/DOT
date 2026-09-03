@@ -68,6 +68,24 @@ describe("public route metadata", () => {
     }
   });
 
+  it("describes the Academy as a collection rather than as the book", () => {
+    const route = routes.find((candidate) => candidate.route === "/academy");
+    expect(route).toBeDefined();
+    const academy = nodeOfType(route!, "CollectionPage");
+    expect(academy?.name).toBe("DOT Academy");
+    expect(route?.structuredData["@graph"].some((node) => node["@type"] === "Book")).toBe(
+      false,
+    );
+  });
+
+  it("gives the Book One landing its own share image", () => {
+    const route = routes.find(
+      (candidate) => candidate.route === "/book/digital-organism-theory",
+    );
+    expect(route?.image).toBe("/og/book-one.png");
+    expect(existsSync(join("public", route!.image!))).toBe(true);
+  });
+
   it("states each chapter as a chapter of the book at its own URL", () => {
     for (const section of manifest.sections) {
       const route = routes.find(

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
-  { id: "threshold", label: "The proposition" },
-  { id: "unlearning-experiment", label: "Love and inquiry" },
-  { id: "architecture-diagram", label: "Architecture of experience" },
-  { id: "mandate", label: "The Reality Frame" },
-  { id: "orientation", label: "Working vocabulary" },
-  { id: "choose-path", label: "Enter the work" },
-  { id: "invitation", label: "Join the inquiry" },
+  { id: "threshold", label: "The proposed architecture" },
+  { id: "possibility-field", label: "T · E: continuity and possibility" },
+  { id: "big-c", label: "Big C: the foundation" },
+  { id: "reality-frame", label: "RF₀: the physical universe" },
+  { id: "little-c", label: "Little c: the local experiencer" },
+  { id: "epistemic-boundary", label: "The evidence boundary" },
+  { id: "choose-path", label: "Continue the inquiry" },
 ] as const;
 
 type HomeSectionId = (typeof HOME_SECTIONS)[number]["id"];
@@ -49,23 +49,22 @@ export function HomeJourneyNav() {
 
   return (
     <nav className="home-journey-nav" aria-label="On this page">
-      <ol>
+      <div className="home-journey-nav__links">
         {HOME_SECTIONS.map((section) => {
           const active = section.id === activeId;
           return (
-            <li key={section.id}>
-              <a
-                href={`#${section.id}`}
-                aria-label={section.label}
-                aria-current={active ? "location" : undefined}
-                title={section.label}
-              >
-                <span aria-hidden="true" />
-              </a>
-            </li>
+            <a
+              key={section.id}
+              href={`#${section.id}`}
+              aria-label={section.label}
+              aria-current={active ? "location" : undefined}
+              title={section.label}
+            >
+              <span aria-hidden="true" />
+            </a>
           );
         })}
-      </ol>
+      </div>
     </nav>
   );
 }

@@ -1,8 +1,10 @@
 """Generate the Open Graph share images for dotheory.org.
 
-The card mirrors the platform identity: off-white paper, the cinnabar
-fingerprint dot (the NucleusMark), and the serif book title. Output is a
-1200x630 PNG — the Open Graph / Twitter `summary_large_image` size.
+The cards mirror the platform identity: off-white paper, the cinnabar
+fingerprint dot (the NucleusMark), and editorial serif titles. Output is a
+1200x630 PNG — the Open Graph / Twitter `summary_large_image` size. The site
+card names the Academy; Book One has its own card so the two objects are never
+collapsed in a shared link.
 
 A chapter link is the thing people actually share, so each chapter also gets
 its own card naming that chapter. One card for the whole book would make every
@@ -10,6 +12,7 @@ shared chapter look like every other one.
 
 Run:  .venv/bin/python scripts/generate_og_image.py
 Output: frontend/public/og-image.png
+        frontend/public/og/book-one.png
         frontend/public/og/book/<section-slug>.png (one per released section)
 """
 
@@ -31,6 +34,7 @@ HAIRLINE = (26, 26, 24)  # foreground hairline, applied at low alpha
 WIDTH, HEIGHT = 1200, 630
 PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public")
 OUT_PATH = os.path.join(PUBLIC_DIR, "og-image.png")
+BOOK_OUT_PATH = os.path.join(PUBLIC_DIR, "og", "book-one.png")
 CHAPTER_OUT_DIR = os.path.join(PUBLIC_DIR, "og", "book")
 RELEASE_MANIFEST = os.path.join(
     PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v3", "manifest.json"
@@ -173,11 +177,41 @@ def chapter_card(section: dict, manifest: dict) -> Image.Image:
 
 
 def main() -> None:
+    # The public site: a living Academy, not the book cover.
     img, draw = _new_card()
 
-    # Title block on the right two-thirds.
     text_x = 420
     text_width = WIDTH - text_x - 52
+    title_lines = ("The intellectual", "home of DOT.")
+    title_font = _fitted_font(draw, SERIF_BOLD, title_lines, 68, text_width)
+    detail_font = _fitted_font(
+        draw,
+        SERIF,
+        ("Definitions · Diagrams · Hypotheses · Critical inquiry",),
+        25,
+        text_width,
+    )
+
+    draw.text((text_x, 150), "DOT ACADEMY · LIVING INQUIRY", font=_font(SERIF_BOLD, 25), fill=CINNABAR)
+    draw.text((text_x, 218), title_lines[0], font=title_font, fill=INK)
+    draw.text((text_x, 296), title_lines[1], font=title_font, fill=INK)
+    draw.text(
+        (text_x, 410),
+        "Definitions · Diagrams · Hypotheses · Critical inquiry",
+        font=detail_font,
+        fill=INK_SOFT,
+    )
+    draw.text(
+        (text_x, 478),
+        "Books remain distinct, fixed publications.",
+        font=_font(SERIF, 24),
+        fill=INK_SOFT,
+    )
+
+    _save(img, OUT_PATH)
+
+    # Book One keeps a share identity of its own.
+    img, draw = _new_card()
     title_lines = ("Consciousness:", "A Digital Organism")
     title_font = _fitted_font(draw, SERIF_BOLD, title_lines, 72, text_width)
     subtitle_font = _fitted_font(
@@ -213,7 +247,7 @@ def main() -> None:
         fill=INK_SOFT,
     )
 
-    _save(img, OUT_PATH)
+    _save(img, BOOK_OUT_PATH)
 
     # One card per released section, named by the manifest the reader serves.
     with open(RELEASE_MANIFEST, encoding="utf-8") as handle:

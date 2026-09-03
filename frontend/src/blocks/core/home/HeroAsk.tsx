@@ -2,12 +2,10 @@ import { X } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 
 import { InkNib, InkStroke } from "../../../shared/Ink";
-import { SAMPLE_QUESTIONS, type HeroAskRequest } from "./heroData";
+import type { HeroAskRequest } from "./heroData";
 import type { AgentLens } from "../../../dot/agent";
 
 const MAX_QUESTION_LENGTH = 500;
-
-const FEATURED_QUESTIONS = [SAMPLE_QUESTIONS[0], SAMPLE_QUESTIONS[2]] as const;
 
 interface HeroAskProps {
   onAsk: (request: HeroAskRequest) => void;
@@ -63,13 +61,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
 
     onAsk({ query: trimmed, lens: selectedLens });
     setQuery("");
-  };
-
-  const handlePromptClick = (question: (typeof SAMPLE_QUESTIONS)[number]) => {
-    setSelectedLens(question.lens);
-    setIsFocused(false);
-    inputRef.current?.blur();
-    onAsk({ query: question.text, lens: question.lens });
   };
 
   const sendable = Boolean(query.trim());
@@ -156,21 +147,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
             <InkNib charged={sendable} className="home-ask__nib-mark" />
           </button>
         </div>
-
-        {isFocused && !query.trim() && (
-          <div className="home-ask__prompts" aria-label="Suggested questions">
-            {FEATURED_QUESTIONS.map((question) => (
-              <button
-                key={question.text}
-                type="button"
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => handlePromptClick(question)}
-              >
-                {question.lens === "test" ? "Find the weak point" : "State the core claim"}
-              </button>
-            ))}
-          </div>
-        )}
 
         <p id="hero-ask-description" className="sr-only">
           Answers open in a focused panel and cite passages from the released Book One text.

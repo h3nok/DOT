@@ -34,12 +34,13 @@ export const UI_STYLE_OPTIONS: readonly UIStyleOption[] = [
 
 export interface TintOption {
   value: OrganismTint;
-  id: "auto" | "indigo" | "violet" | "jade" | "amber" | "rose" | "cyan" | "sage";
+  id: "mono" | "auto" | "indigo" | "violet" | "jade" | "amber" | "rose" | "cyan" | "sage";
   label: string;
 }
 
 /** Pinned tints are named for their character, not their degrees. */
 export const TINT_OPTIONS: readonly TintOption[] = [
+  { value: "mono", id: "mono", label: "Monochrome" },
   { value: "auto", id: "auto", label: "Follow the time of day" },
   { value: 212, id: "indigo", label: "Indigo" },
   { value: 265, id: "violet", label: "Violet" },

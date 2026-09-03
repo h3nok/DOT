@@ -89,19 +89,6 @@ describe("HeroAsk", () => {
     expect(field()).toHaveAttribute("data-pen", "resting");
   });
 
-  it("dispatches suggested questions with their assigned lens", () => {
-    const onAsk = vi.fn();
-    render(<HeroAsk onAsk={onAsk} />);
-
-    fireEvent.focus(screen.getByLabelText(/ask a question/i));
-    fireEvent.click(screen.getByRole("button", { name: "Find the weak point" }));
-
-    expect(onAsk).toHaveBeenCalledWith({
-      query: "Where is the argument weakest?",
-      lens: "test",
-    });
-  });
-
   it("keeps both inquiry lenses available as pressed-state controls", () => {
     render(<HeroAsk onAsk={vi.fn()} />);
 

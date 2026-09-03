@@ -17,6 +17,7 @@ const STATIC_ASSETS = [
 
 // Routes to cache dynamically
 const DYNAMIC_ROUTES = [
+  "/academy",
   "/doctrine",
   "/applied",
   "/support",

@@ -3,6 +3,7 @@ import { expect, type Page } from "@playwright/test";
 /** Every public route, as a route-under-test plus a human name for the report. */
 export const PUBLIC_ROUTES = [
   { path: "/", name: "home" },
+  { path: "/academy", name: "academy" },
   { path: "/doctrine", name: "doctrine" },
   { path: "/applied", name: "applied" },
   { path: "/join", name: "join" },

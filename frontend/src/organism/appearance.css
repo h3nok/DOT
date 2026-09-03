@@ -25,7 +25,9 @@
  * Playfair is a display face. Its small x-height and high stroke contrast thin
  * out badly across a 3,000-word chapter, which is why it carries headings and
  * not body — the two faces are doing different jobs, not competing. */
-html[data-reading="serif"] .book-surface {
+html[data-reading="serif"] .book-surface,
+html[data-reading="serif"] .home-theory-layer-card,
+html[data-reading="serif"] .home-reality-environment {
   --book-reading-font: "Source Serif 4", Charter, Georgia, serif;
   --book-reading-heading-font: "Playfair Display", Georgia, serif;
 }
@@ -33,7 +35,9 @@ html[data-reading="serif"] .book-surface {
 /* Sans keeps the same text/display split rather than flattening to one face.
    Inter is a superb text face and a flat heading face; Space Grotesk is already
    bundled and gives headings the shift in voice the serif option gets. */
-html[data-reading="sans"] .book-surface {
+html[data-reading="sans"] .book-surface,
+html[data-reading="sans"] .home-theory-layer-card,
+html[data-reading="sans"] .home-reality-environment {
   --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
   --book-reading-heading-font: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
 }
@@ -45,12 +49,16 @@ html[data-reading="sans"] .book-surface {
    legibility, and a second face is a second set of shapes to decode — contrast
    between heading and body is a luxury the reader who picked this did not ask
    for. Same reasoning for Mono below: a display mono is a contradiction. */
-html[data-reading="humanist"] .book-surface {
+html[data-reading="humanist"] .book-surface,
+html[data-reading="humanist"] .home-theory-layer-card,
+html[data-reading="humanist"] .home-reality-environment {
   --book-reading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
   --book-reading-heading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
 }
 
-html[data-reading="mono"] .book-surface {
+html[data-reading="mono"] .book-surface,
+html[data-reading="mono"] .home-theory-layer-card,
+html[data-reading="mono"] .home-reality-environment {
   --book-reading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --book-reading-heading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
@@ -211,6 +219,93 @@ html[data-paragraph="indented"] .book-prose--chapter > h2:first-child + p {
 
    oklab is the same colour space in rectangular coordinates, so there is no
    hue channel to travel or to lose. Keep these mixes there. */
+
+/* The landing is the threshold to the reading experience, not unrelated
+   marketing chrome. Publish the chosen paper cast at page scope so the hero
+   and theory journey can answer the same preference. The book keeps its more
+   specific paper variables below. */
+html {
+  --appearance-page-tone: var(--background);
+  --appearance-page-ink: var(--foreground);
+}
+
+html[data-paper="warm"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 88%,
+    oklch(0.85 0.09 76)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 94%,
+    oklch(0.3 0.03 55)
+  );
+}
+
+html[data-paper="sepia"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 72%,
+    oklch(0.82 0.1 72)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 86%,
+    oklch(0.26 0.05 46)
+  );
+}
+
+html[data-paper="cool"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 87%,
+    oklch(0.82 0.06 232)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 93%,
+    oklch(0.28 0.04 248)
+  );
+}
+
+html.dark[data-paper="warm"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 82%,
+    oklch(0.3 0.11 62)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 92%,
+    oklch(0.93 0.045 82)
+  );
+}
+
+html.dark[data-paper="sepia"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 70%,
+    oklch(0.3 0.12 54)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 86%,
+    oklch(0.91 0.065 78)
+  );
+}
+
+html.dark[data-paper="cool"] {
+  --appearance-page-tone: color-mix(
+    in oklab,
+    var(--background) 82%,
+    oklch(0.32 0.09 245)
+  );
+  --appearance-page-ink: color-mix(
+    in oklab,
+    var(--foreground) 92%,
+    oklch(0.92 0.035 230)
+  );
+}
 
 html[data-paper="warm"] .book-surface {
   --book-paper: color-mix(in oklab, var(--background) 88%, oklch(0.85 0.09 76));
@@ -405,6 +500,53 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   border-top: 1px solid var(--appearance-divider);
 }
 
+.appearance-fine-tune {
+  border-top: 1px solid var(--appearance-divider);
+}
+
+.appearance-fine-tune > summary {
+  display: flex;
+  min-height: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 550;
+  list-style: none;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.appearance-fine-tune > summary::-webkit-details-marker {
+  display: none;
+}
+
+.appearance-fine-tune > summary:hover,
+.appearance-fine-tune > summary:focus-visible {
+  background: color-mix(in oklch, var(--foreground) 4%, transparent);
+  color: var(--foreground);
+}
+
+.appearance-fine-tune > summary:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: -2px;
+}
+
+.appearance-fine-tune > summary svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: none;
+}
+
+.appearance-fine-tune[open] > summary {
+  color: var(--foreground);
+}
+
+.appearance-fine-tune__body > .appearance-section:first-child {
+  border-top: 1px solid var(--appearance-divider);
+}
+
 .appearance-tabs {
   border: 1px solid var(--appearance-divider);
   background: color-mix(in oklch, var(--foreground) 5%, transparent);
@@ -472,6 +614,10 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   );
 }
 
+.appearance-tint[data-tint="mono"] {
+  background: linear-gradient(135deg, hsl(0 0% 12%), hsl(0 0% 88%));
+}
+
 .appearance-tint[data-tint="indigo"] { background: hsl(212 52% 55%); }
 .appearance-tint[data-tint="violet"] { background: hsl(265 48% 60%); }
 .appearance-tint[data-tint="jade"] { background: hsl(158 42% 45%); }
@@ -480,7 +626,7 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
 .appearance-tint[data-tint="cyan"] { background: hsl(190 55% 50%); }
 .appearance-tint[data-tint="sage"] { background: hsl(82 35% 48%); }
 
-.appearance-hue-track {
+.dot-slider.appearance-hue-track {
   background: linear-gradient(
     to right,
     hsl(0 62% 55%),

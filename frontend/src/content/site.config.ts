@@ -22,10 +22,10 @@ export const siteConfig = {
   name: "Henok Ghebrechristos",
   tagline: "Writing Digital Organism Theory",
   description:
-    "Consciousness: A Digital Organism — Book One of Digital Organism Theory. Free to read, with its sources, its hypotheses, and its open questions kept visible.",
+    "The living intellectual home of Digital Organism Theory: definitions, diagrams, hypotheses, objections, experiments, essays, and fixed publications.",
   url: "https://dotheory.org",
   email: "",
-  bio: "I write about consciousness and conditioning, and build the software this site runs on. Book One is where that work currently stands — finished, but not settled.",
+  bio: "I write about consciousness and conditioning, and build the software this Academy runs on. Book One is a fixed statement of where that work stood; the inquiry remains open.",
   social: {
     github: "https://github.com/h3nok",
     linkedin:
@@ -63,7 +63,7 @@ export const siteConfig = {
       status: "Active Research",
       tagline: "A foundational architecture of reality and experience.",
       description:
-        "Book One begins with fundamental consciousness and develops one derivation through Reality Frames, physical invariants, biological interfaces, conditioning, and conscious authorship while keeping its hypotheses and unfinished bridges visible.",
+        "The DOT Academy develops a foundational architecture of reality and experience through definitions, diagrams, hypotheses, criticism, and experiments. Book One remains its own fixed publication.",
       stack: [
         "Book One",
         "Systems Theory",

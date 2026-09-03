@@ -79,8 +79,14 @@ async def seed_book() -> None:
             section_meta = {
                 k: section_data[k]
                 for k in (
-                    "slug", "kind", "number", "subtitle", "part",
-                    "word_count", "reading_time_minutes", "related_concepts",
+                    "slug",
+                    "kind",
+                    "number",
+                    "subtitle",
+                    "part",
+                    "word_count",
+                    "reading_time_minutes",
+                    "related_concepts",
                 )
                 if k in section_data and section_data[k] is not None
             }
@@ -104,11 +110,17 @@ async def seed_book() -> None:
                     await app.domains.publication.service.set_section_body(
                         session, owner, section.id, body_text
                     )
-                    print(f"  Section {section_data['order']}: {section_data['title']} ({len(body_text)} chars)")
+                    print(
+                        f"  Section {section_data['order']}: {section_data['title']} ({len(body_text)} chars)"
+                    )
                 else:
-                    print(f"  Section {section_data['order']}: {section_data['title']} (no file at {md_path})")
+                    print(
+                        f"  Section {section_data['order']}: {section_data['title']} (no file at {md_path})"
+                    )
             else:
-                print(f"  Section {section_data['order']}: {section_data['title']} (no content_path)")
+                print(
+                    f"  Section {section_data['order']}: {section_data['title']} (no content_path)"
+                )
 
         try:
             release = await app.domains.publication.service.create_release(

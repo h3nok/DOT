@@ -8,12 +8,14 @@ import {
   Palette,
   Plus,
   RotateCcw,
+  SlidersHorizontal,
   Sparkles,
   Sun,
   Trash2,
   X,
 } from "lucide-react";
 import { useTheme } from "../shared/contexts/SimpleThemeContext";
+import { DotSlider, DotSwitch } from "../shared/DotControls";
 import { useOrganism } from "./OrganismContext";
 import { EnvironmentSwatch } from "./EnvironmentSwatch";
 import { FieldPreview } from "./FieldPreview";
@@ -22,6 +24,7 @@ import {
   defaultConfigFor,
   matchThemePreset,
   themePreset,
+  type ThemePreset,
 } from "./themePresets";
 import {
   READING_PRESETS,
@@ -80,6 +83,51 @@ const optionClass = (selected: boolean) =>
       ? "border-transparent text-foreground"
       : "border-border/30 text-muted-foreground hover:border-border/60 hover:bg-foreground/[0.04] hover:text-foreground"
   }`;
+
+const PRIMARY_THEME_PRESET_IDS: ReadonlySet<ThemePreset["id"]> = new Set([
+  "quiet",
+  "meridian",
+  "quiet-night",
+  "midnight",
+]);
+
+const FineTune: React.FC<{
+  label: string;
+  children: React.ReactNode;
+}> = ({ label, children }) => (
+  <details className="appearance-fine-tune">
+    <summary>
+      <SlidersHorizontal aria-hidden="true" />
+      <span>{label}</span>
+    </summary>
+    <div className="appearance-fine-tune__body">{children}</div>
+  </details>
+);
+
+const EnvironmentOption: React.FC<{
+  preset: ThemePreset;
+  selected: boolean;
+  onSelect: () => void;
+}> = ({ preset, selected, onSelect }) => (
+  <button
+    type="button"
+    onClick={onSelect}
+    aria-pressed={selected}
+    title={preset.hint}
+    className={optionClass(selected)}
+  >
+    <EnvironmentSwatch preset={preset} />
+    <span className="mt-1.5 flex items-center gap-1">
+      <span className="text-xs font-medium">{preset.label}</span>
+      {selected && (
+        <Check
+          className="h-3 w-3 text-[color:var(--organism-accent-strong)]"
+          aria-hidden="true"
+        />
+      )}
+    </span>
+  </button>
+);
 
 /** A reading arrangement, shown as a page rather than as another icon. */
 const ReadingStylePreview: React.FC<{ preset: ReadingPreset }> = ({ preset }) => {
@@ -167,6 +215,12 @@ export const AppearanceControl: React.FC<{
   const activeReadingPreset = matchReadingPreset(config);
   const activeSaved = matchSavedEnvironment(environments, config, base);
   const atEnvironmentLimit = environments.length >= MAX_SAVED_ENVIRONMENTS;
+  const primaryThemePresets = THEME_PRESETS.filter((preset) =>
+    PRIMARY_THEME_PRESET_IDS.has(preset.id),
+  );
+  const secondaryThemePresets = THEME_PRESETS.filter(
+    (preset) => !PRIMARY_THEME_PRESET_IDS.has(preset.id),
+  );
 
   /** Saved environments are the reader's, so every write goes straight to disk. */
   const commitEnvironments = (next: SavedEnvironment[]) => {
@@ -226,7 +280,10 @@ export const AppearanceControl: React.FC<{
           }`}
         >
           <div className="flex shrink-0 items-center justify-between gap-3 px-5 pt-4">
-            <span className="dot-label font-semibold">Appearance</span>
+            <span className="dot-card-kicker">
+              <span className="dot-mark" aria-hidden="true" />
+              <span className="dot-label font-semibold">Appearance</span>
+            </span>
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -289,31 +346,18 @@ export const AppearanceControl: React.FC<{
                   hint={activePreset || activeSaved ? undefined : "Custom"}
                 >
                   <div className="grid grid-cols-2 gap-1.5">
-                    {THEME_PRESETS.map((preset) => {
+                    {primaryThemePresets.map((preset) => {
                       const selected = activePreset === preset.id;
                       return (
-                        <button
+                        <EnvironmentOption
                           key={preset.id}
-                          type="button"
-                          onClick={() => {
+                          preset={preset}
+                          selected={selected}
+                          onSelect={() => {
                             setTheme(preset.base);
                             setConfig(preset.config);
                           }}
-                          aria-pressed={selected}
-                          title={preset.hint}
-                          className={optionClass(selected)}
-                        >
-                          <EnvironmentSwatch preset={preset} />
-                          <span className="mt-1.5 flex items-center gap-1">
-                            <span className="text-xs font-medium">{preset.label}</span>
-                            {selected && (
-                              <Check
-                                className="h-3 w-3 text-[color:var(--organism-accent-strong)]"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </span>
-                        </button>
+                        />
                       );
                     })}
                   </div>
@@ -323,6 +367,29 @@ export const AppearanceControl: React.FC<{
                       {themePreset(activePreset).hint}
                     </p>
                   )}
+                </Section>
+
+                <FineTune label="Fine tune environment">
+                  <Section title="More environments">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {secondaryThemePresets.map((preset) => {
+                        const selected = activePreset === preset.id;
+                        return (
+                          <EnvironmentOption
+                            key={preset.id}
+                            preset={preset}
+                            selected={selected}
+                            onSelect={() => {
+                              setTheme(preset.base);
+                              setConfig(preset.config);
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </Section>
+
+                  <Section title="Saved environments">
 
                   {/* The reader's own environments, kept beside ours because
                       by the second visit theirs is the one they want. */}
@@ -471,18 +538,25 @@ export const AppearanceControl: React.FC<{
                       which is the same thing the swatches do. */}
                   <label className="mt-3 flex items-center gap-3">
                     <span className="w-14 shrink-0 text-xs text-muted-foreground">
-                      {config.tint === "auto" ? "Auto" : `${Math.round(config.tint)}°`}
+                      {config.tint === "mono"
+                        ? "Mono"
+                        : config.tint === "auto"
+                          ? "Auto"
+                          : `${Math.round(config.tint)}°`}
                     </span>
-                    <input
-                      type="range"
+                    <DotSlider
                       min={0}
                       max={359}
                       step={1}
-                      value={config.tint === "auto" ? DEFAULT_PINNED_HUE : config.tint}
-                      onChange={(e) => setConfig({ tint: Number(e.target.value) })}
-                      aria-label="Accent hue"
+                      value={
+                        typeof config.tint === "number"
+                          ? config.tint
+                          : DEFAULT_PINNED_HUE
+                      }
+                      onChange={(value) => setConfig({ tint: value })}
+                      label="Accent hue"
                       data-auto={config.tint === "auto" ? "true" : "false"}
-                      className="appearance-hue-track h-1.5 flex-1 cursor-pointer appearance-none rounded-full [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
+                      className="appearance-hue-track"
                     />
                   </label>
                 </Section>
@@ -567,16 +641,13 @@ export const AppearanceControl: React.FC<{
                           <span className="w-14 shrink-0 text-xs text-muted-foreground">
                             {label}
                           </span>
-                          <input
-                            type="range"
+                          <DotSlider
                             min={min}
                             max={max}
-                            step={0.05}
                             value={config[key]}
-                            onChange={(e) => setConfig({ [key]: Number(e.target.value) })}
-                            aria-label={`${label} — ${hint}`}
+                            onChange={(value) => setConfig({ [key]: value })}
+                            label={`${label} — ${hint}`}
                             title={hint}
-                            className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
                           />
                         </label>
                       ))}
@@ -643,15 +714,12 @@ export const AppearanceControl: React.FC<{
                   <div className="space-y-3">
                     <label className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span className="w-14 shrink-0">Intensity</span>
-                      <input
-                        type="range"
+                      <DotSlider
                         min={0.2}
                         max={1}
-                        step={0.05}
                         value={config.intensity}
-                        onChange={(e) => setConfig({ intensity: Number(e.target.value) })}
-                        aria-label="Background intensity"
-                        className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[color:var(--organism-accent-strong)] [&::-webkit-slider-thumb]:shadow-md"
+                        onChange={(value) => setConfig({ intensity: value })}
+                        label="Background intensity"
                       />
                     </label>
                     <div className="flex items-center justify-between gap-3">
@@ -661,27 +729,15 @@ export const AppearanceControl: React.FC<{
                           nothing moves
                         </span>
                       </span>
-                      <button
-                        type="button"
-                        role="switch"
-                        aria-checked={config.stillness}
-                        aria-label="Hold the background still"
-                        onClick={() => setConfig({ stillness: !config.stillness })}
-                        className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                          config.stillness
-                            ? "bg-[color:var(--organism-accent-strong)]"
-                            : "bg-border"
-                        }`}
-                      >
-                        <span
-                          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${
-                            config.stillness ? "translate-x-4" : ""
-                          }`}
-                        />
-                      </button>
+                      <DotSwitch
+                        checked={config.stillness}
+                        onChange={() => setConfig({ stillness: !config.stillness })}
+                        label="Hold the background still"
+                      />
                     </div>
                   </div>
                 </Section>
+                </FineTune>
               </>
             ) : (
               <>
@@ -716,7 +772,7 @@ export const AppearanceControl: React.FC<{
                               />
                             )}
                           </span>
-                          <span className="mt-0.5 block text-[0.68rem] leading-snug text-muted-foreground">
+                          <span className="dot-micro mt-0.5 block text-muted-foreground">
                             {preset.hint}
                           </span>
                         </button>
@@ -725,6 +781,49 @@ export const AppearanceControl: React.FC<{
                   </div>
                 </Section>
 
+                <Section title="Size">
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {READING_SIZE_OPTIONS.map((size) => {
+                      const selected = config.readingScale === size.value;
+                      return (
+                        <button
+                          key={size.label}
+                          type="button"
+                          onClick={() => setConfig({ readingScale: size.value })}
+                          aria-pressed={selected}
+                          aria-label={`Text size ${size.label}`}
+                          className={`${optionClass(selected)} flex h-11 items-center justify-center p-0`}
+                        >
+                          <span
+                            className="appearance-size-sample font-serif font-medium leading-none"
+                            data-size={size.id}
+                          >
+                            {size.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Section>
+
+                <Section title="Contrast">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs text-muted-foreground">
+                      Stronger text and edges
+                    </span>
+                    <DotSwitch
+                      checked={config.contrast === "high"}
+                      onChange={() =>
+                        setConfig({
+                          contrast: config.contrast === "high" ? "standard" : "high",
+                        })
+                      }
+                      label="High contrast"
+                    />
+                  </div>
+                </Section>
+
+                <FineTune label="Fine tune reading">
                 <Section title="Type">
                   <div className="grid grid-cols-2 gap-1.5">
                     {READING_FONT_OPTIONS.map(({ value, label, face }) => {
@@ -747,33 +846,8 @@ export const AppearanceControl: React.FC<{
                             Ag
                           </span>
                           <span className="mt-1.5 block text-xs font-medium">{label}</span>
-                          <span className="block text-[0.68rem] leading-tight text-muted-foreground">
+                          <span className="dot-micro block text-muted-foreground">
                             {face}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </Section>
-
-                <Section title="Size">
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {READING_SIZE_OPTIONS.map((s) => {
-                      const selected = config.readingScale === s.value;
-                      return (
-                        <button
-                          key={s.label}
-                          type="button"
-                          onClick={() => setConfig({ readingScale: s.value })}
-                          aria-pressed={selected}
-                          aria-label={`Text size ${s.label}`}
-                          className={`${optionClass(selected)} flex h-11 items-center justify-center p-0`}
-                        >
-                          <span
-                            className="appearance-size-sample font-serif font-medium leading-none"
-                            data-size={s.id}
-                          >
-                            {s.label}
                           </span>
                         </button>
                       );
@@ -929,36 +1003,6 @@ export const AppearanceControl: React.FC<{
                   </div>
                 </Section>
 
-                <Section title="Contrast">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs text-muted-foreground">
-                      Stronger text and edges
-                    </span>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={config.contrast === "high"}
-                      aria-label="High contrast"
-                      onClick={() =>
-                        setConfig({
-                          contrast: config.contrast === "high" ? "standard" : "high",
-                        })
-                      }
-                      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                        config.contrast === "high"
-                          ? "bg-[color:var(--organism-accent-strong)]"
-                          : "bg-border"
-                      }`}
-                    >
-                      <span
-                        className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${
-                          config.contrast === "high" ? "translate-x-4" : ""
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </Section>
-
                 {/* The settings are about this; show it rather than describe it.
                     Two paragraphs, because one cannot show what separates them. */}
                 <Section title="Preview">
@@ -980,6 +1024,7 @@ export const AppearanceControl: React.FC<{
                     </p>
                   </div>
                 </Section>
+                </FineTune>
               </>
             )}
           </div>

@@ -19,7 +19,7 @@ import { useOrganism } from "./OrganismContext";
  */
 
 // Route prefixes that are primarily reading surfaces.
-const READING_ROUTES = ["/book", "/read", "/doctrine"];
+const READING_ROUTES = ["/academy", "/book", "/read", "/doctrine"];
 
 export const OrganismReadingProbe: React.FC = () => {
   const { pathname } = useLocation();

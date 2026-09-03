@@ -1,5 +1,9 @@
 # Public Launch Sprint Plan
 
+> **Superseded as a plan (ADR-0032, 2026-09-02).** Current execution lives in
+> `15-PLATFORM-IMPLEMENTATION-PLAN.md`; the Gate A (public reading) and data-rights
+> obligations defined here remain valid and are referenced from there. Retained as history.
+
 > End-to-end execution plan to take the platform from "runs locally" to public use.
 > This plan operationalizes `06-IMPLEMENTATION-ROADMAP.md` for launch. It is grounded in a
 > verified code audit (2026-08-04), not aspiration.

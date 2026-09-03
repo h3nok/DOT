@@ -3,43 +3,36 @@ import {
   ArrowRight,
   BookOpen,
   ChevronDown,
-  HeartHandshake,
   LogIn,
   Network,
-  UserPlus,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { SignIn } from "../../../dot/SignIn";
 import { TwinSurface } from "../../../dot/TwinSurface";
 import { useAuth } from "../../../dot/useAuth";
-import { SUPPORT_PAYMENT_LINK } from "../../../dot/supportLink";
-import {
-  AppearanceControl,
-  useOrganism,
-  useOrganismPulse,
-} from "../../../organism";
+import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
-import { HeroArchitecture } from "./HeroArchitecture";
-import { HeroConcepts } from "./HeroConcepts";
+import { EpistemicBadge } from "../../../shared/EpistemicBadge";
 import { HeroAsk } from "./HeroAsk";
+import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
-import { HomeJourneyNav } from "./HomeJourneyNav";
 import type { HeroAskRequest } from "./heroData";
-import { StepOneUnlearning } from "./StepOneUnlearning";
-import { ArchitectureDiagram } from "./ArchitectureDiagram";
+import { HomeJourneyNav } from "./HomeJourneyNav";
+import { TheoryLayerJourney } from "./TheoryLayerJourney";
 import "./home.css";
 
 export default function HomePage() {
-  const navigate = useNavigate();
   const { isOwner, logout } = useAuth();
   const { config, reducedMotion: organismReducedMotion } = useOrganism();
-  const pulse = useOrganismPulse();
   const [signInOpen, setSignInOpen] = useState(false);
-  const [ask, setAsk] = useState<(HeroAskRequest & { id: number }) | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [heroCompanionRequest, setHeroCompanionRequest] = useState<
+    (HeroAskRequest & { id: number }) | null
+  >(null);
+  const [heroCompanionOpen, setHeroCompanionOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,58 +46,63 @@ export default function HomePage() {
   // page too, so treat it as equivalent to reduced motion for the emergence.
   const reducedMotion = organismReducedMotion || config.stillness || !config.enabled;
 
+  const askFromHero = (request: HeroAskRequest) => {
+    setHeroCompanionRequest({ ...request, id: Date.now() });
+    setHeroCompanionOpen(true);
+  };
+
   return (
     <main className="home-journey relative min-h-screen">
       {/* ── Dynamic Scroll-Aware Header ───────────────────────────────────────── */}
       <header
         aria-label="Site Header"
-        className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
           scrolled
             ? "bg-background/70 py-3.5 backdrop-blur-xl border-b border-border/30 shadow-sm"
             : "bg-transparent py-5"
         }`}
       >
         <div className="home-header-layout dot-page-container dot-page-wide flex items-center justify-between">
-        <Link
-          to="/"
-          // -my-2.5 keeps the header its original height while the link itself
-          // reaches a thumb-sized target.
-          className="-my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
-        >
-          <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
-        </Link>
+          <Link
+            to="/"
+            // -my-2.5 keeps the header its original height while the link itself
+            // reaches a thumb-sized target.
+            className="-my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
+          >
+            <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
+          </Link>
 
-        <div className="flex items-center gap-3">
-          <AppearanceControl placement="inline" />
-          <EditModeToggle />
+          <div className="flex items-center gap-3">
+            <AppearanceControl placement="inline" />
+            <EditModeToggle />
 
-          {isOwner ? (
-            <div className="flex items-center gap-2">
-              <Link
-                to="/studio"
-                className="dot-pill dot-label text-foreground/80"
-              >
-                Studio
-              </Link>
+            {isOwner ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/studio"
+                  className="home-header-action dot-pill dot-label text-foreground/80"
+                >
+                  Studio
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => void logout()}
+                  className="home-header-action dot-pill dot-label"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
               <button
                 type="button"
-                onClick={() => void logout()}
-                className="dot-pill dot-label"
+                onClick={() => setSignInOpen(true)}
+                className="home-header-action dot-pill text-foreground/80"
               >
-                Sign out
+                <LogIn className="h-3 w-3" aria-hidden="true" />
+                <span>Sign in</span>
               </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setSignInOpen(true)}
-              className="dot-pill text-foreground/80"
-            >
-              <LogIn className="h-3 w-3" aria-hidden="true" />
-              <span>Sign in</span>
-            </button>
-          )}
-        </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -119,17 +117,10 @@ export default function HomePage() {
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
           <div className="home-hero-copy">
-            <HeroProposition reducedMotion={reducedMotion} />
-
-            <div className="home-hero-ask">
-              <HeroAsk
-                className="w-full"
-                onAsk={(request) => {
-                  pulse(0.8);
-                  setAsk({ ...request, id: Date.now() });
-                }}
-              />
-            </div>
+            <HeroProposition
+              reducedMotion={organismReducedMotion}
+              inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
+            />
           </div>
 
           <div className="home-hero-stage">
@@ -137,51 +128,96 @@ export default function HomePage() {
           </div>
         </div>
 
-        <a className="home-scroll-cue" href="#unlearning-experiment">
+        <a className="home-scroll-cue" href="#possibility-field">
           <span>Continue</span>
           <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </a>
       </section>
 
-      {/* ── Step 1: Perceptual Unlearning Experiment ─────────────────── */}
-      <StepOneUnlearning />
+      <AnimatePresence>
+        {heroCompanionOpen && (
+          <TwinSurface
+            reducedMotion={reducedMotion}
+            initialRequest={heroCompanionRequest}
+            onClose={() => setHeroCompanionOpen(false)}
+            onOpenNode={() => setHeroCompanionOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* ── Visual Model Architecture Diagram ────────────────────────── */}
-      <ArchitectureDiagram />
+      {/* ── The theory, in the same outside-to-inside order as the hero ─ */}
+      <TheoryLayerJourney reducedMotion={reducedMotion} />
 
-      {/* ── Honest Warning / The Mandate ─────────────────────────────── */}
+      {/* ── The theory's evidence boundary ───────────────────────────── */}
       <motion.section
-        id="mandate"
-        aria-label="An Honest Warning"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        id="epistemic-boundary"
+        aria-label="The evidence boundary"
+        initial={reducedMotion ? false : { y: 12 }}
+        whileInView={{ y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: reducedMotion ? 0 : 0.5 }}
         className="home-environment home-reality-environment scroll-mt-24"
       >
         <div className="home-reality-layout dot-page-container dot-page-wide">
           <div className="home-reality-heading">
-            <span className="home-inverse-label dot-label">The Reality Frame</span>
+            <span className="home-inverse-label dot-label">The evidence boundary</span>
             <h2 className="home-inverse-heading mt-4 text-balance">
-              You are already <span>playing.</span>
+              The model must show where evidence ends.
             </h2>
           </div>
           <div className="home-reality-copy">
-            <p className="text-balance">
-              DOT models the physical world as a Reality Frame: a developmental
-              environment where action meets consequence. You cannot spectate it.
-              You are already inside the conditions that shape you.
+            <p className="home-evidence-invitation text-balance">
+              I did not receive these ideas; I earned them the hard way, wrong
+              turn by wrong turn. I know what is running through your mind right
+              now — I have been there.
             </p>
-            <p className="mt-5 text-balance text-sm leading-relaxed opacity-70 sm:text-base">
-              Book One marks every claim as observation, model, or hypothesis.
-              The point is not belief, but seeing what is proposed and where it
-              remains open.
+            <p className="home-evidence-address">
+              No one can walk this for you: not this site, not the book, not me.
+              This is your game to play. Test DOT with your own attention.
+              Revise it. Keep what survives; leave what does not.
             </p>
+
+            <dl className="home-evidence-claims">
+              <div data-status="grounded">
+                <dt>
+                  <span>Publicly grounded</span>
+                  {" "}
+                  <EpistemicBadge status="evidence">Evidence</EpistemicBadge>
+                </dt>
+                <dd>
+                  At observed scales, the physical universe is modeled as a lawful
+                  spacetime continuum. Cognition depends on embodied processes.
+                  First-person experience is bounded to a local perspective.
+                </dd>
+              </div>
+              <div data-status="proposed">
+                <dt>
+                  <span>Still proposed</span>
+                  {" "}
+                  <EpistemicBadge status="hypothesis">Hypothesis</EpistemicBadge>
+                </dt>
+                <dd>
+                  DOT proposes T and E as primordial conditions; Big C as a developed
+                  conscious organism; this physical universe as RF₀, a generated virtual
+                  Reality Frame; possible further Frames; and Little c as a nonphysical
+                  experiencer.
+                </dd>
+              </div>
+            </dl>
+
+            <div className="home-evidence-standard">
+              <span>Academy standard</span>
+              <p>
+                Every contribution separates observation, model, hypothesis, and
+                speculation at the point of use. DOT receives no exemption from that
+                standard.
+              </p>
+            </div>
             <Link
               to="/applied"
-              className="home-inverse-link group mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
+              className="home-inverse-link group inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
             >
-              See where the argument is open
+              Test the strongest objections
               <ArrowRight
                 className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
                 aria-hidden="true"
@@ -191,135 +227,48 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* ── Orientation: 10 Core Claims ─────────────────────────────── */}
-      <motion.section
-        id="orientation"
-        aria-labelledby="orientation-title"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5 }}
-        className="home-environment home-language-environment scroll-mt-24"
-      >
-        <div className="dot-page-container dot-page-wide">
-          <div className="home-section-heading-row">
-            <div>
-              <span className="dot-label">The language of the model · 10 concepts</span>
-              <h2
-                id="orientation-title"
-                className="dot-page-heading mt-3 text-balance"
-              >
-                Learn the terms before judging the model.
-              </h2>
-            </div>
-            <p className="dot-lede max-w-lg">
-              Each concept keeps the claim level assigned in Book One, so a model
-              is never presented as an observation or a hypothesis as fact.
-            </p>
-          </div>
-          <div className="mt-10">
-            <HeroConcepts autoAdvance={!reducedMotion} />
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ── Choose Your Door / Visitor Intent Pathways ───────────────── */}
+      {/* ── Final invitation into the living inquiry ─────────────────── */}
       <motion.section
         id="choose-path"
-        aria-label="How to approach this work"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        aria-label="Continue to the DOT Academy"
+        initial={reducedMotion ? false : { y: 12 }}
+        whileInView={{ y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: reducedMotion ? 0 : 0.5 }}
         className="home-environment home-entrances-environment scroll-mt-24"
       >
         <div className="dot-page-container">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="dot-label">Continue from here</span>
-          <h2 className="dot-page-heading mt-2 text-balance">
-            Begin with the argument.
-          </h2>
-          <p className="dot-lede mx-auto mt-4 max-w-xl">
-            Book One gives the framework in its intended order. The concept map
-            remains available when you need to inspect its structure.
-          </p>
-        </div>
-
-        <div className="home-path-actions mx-auto mt-10 max-w-3xl">
-          <Link
-            to="/book/digital-organism-theory"
-            className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold"
-          >
-            <BookOpen className="h-4 w-4" aria-hidden="true" />
-            Read Book One
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-
-          <Link
-            to="/doctrine"
-            className="home-path-secondary group"
-          >
-            <Network className="h-4 w-4" aria-hidden="true" />
-            Inspect definitions and claim levels
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </div>
-        </div>
-      </motion.section>
-
-      {/* ── An Invitation ──────────────────────────────────────────── */}
-      <motion.section
-        id="invitation"
-        aria-labelledby="invitation-title"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5 }}
-        className="home-environment home-invitation-environment scroll-mt-24"
-      >
-        <div className="dot-page-container dot-page-wide">
-        <div className="home-invitation-content mx-auto max-w-3xl text-center">
-          <span className="dot-label">Open inquiry · Optional participation</span>
-          <h2
-            id="invitation-title"
-            className="dot-page-heading mt-3 text-balance"
-          >
-            Honest scrutiny belongs here.
-          </h2>
-          <p className="dot-lede mx-auto mt-4 max-w-2xl text-balance">
-            DOT is being built in public as a book, a critical practice, and a
-            community that protects attention. Agreement is not the price of
-            entry; careful disagreement is part of the work.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              to="/join"
-              className="dot-reading-action inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 text-sm font-semibold"
-            >
-              <UserPlus className="h-4 w-4" aria-hidden="true" />
-              Join
-            </Link>
-            {SUPPORT_PAYMENT_LINK ? (
-              <a
-                href={SUPPORT_PAYMENT_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dot-graph-destination inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border px-6 text-sm font-semibold"
-              >
-                <HeartHandshake className="h-4 w-4" aria-hidden="true" />
-                Support the work
-              </a>
-            ) : (
-              <Link
-                to="/support"
-                className="dot-graph-destination inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border px-6 text-sm font-semibold"
-              >
-                <HeartHandshake className="h-4 w-4" aria-hidden="true" />
-                Support the work
-              </Link>
-            )}
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="home-ending-label dot-label">The living inquiry</span>
+            <h2 className="dot-page-heading mt-2 text-balance">
+              Continue with the Academy.
+            </h2>
+            <p className="dot-lede mx-auto mt-4 max-w-xl">
+              The website is DOT's intellectual home: definitions can sharpen,
+              objections remain visible, and experiments can fail in public. Book One
+              stays a fixed edition.
+            </p>
           </div>
-        </div>
+
+          <div className="home-path-actions mx-auto mt-10 max-w-3xl">
+            <Link
+              to="/academy"
+              className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold"
+            >
+              <Network className="h-4 w-4" aria-hidden="true" />
+              Enter DOT Academy
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+
+            <Link
+              to="/book/digital-organism-theory"
+              className="home-path-secondary group"
+            >
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
+              Read Book One as a fixed edition
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       </motion.section>
 
@@ -343,19 +292,6 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {ask && (
-          <TwinSurface
-            reducedMotion={reducedMotion}
-            initialRequest={ask}
-            onClose={() => setAsk(null)}
-            onOpenNode={(nodeId) => {
-              setAsk(null);
-              navigate(`/doctrine/${encodeURIComponent(nodeId)}`);
-            }}
-          />
-        )}
-      </AnimatePresence>
     </main>
   );
 }

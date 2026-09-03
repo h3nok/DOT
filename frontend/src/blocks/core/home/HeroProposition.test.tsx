@@ -1,21 +1,16 @@
-import { act, fireEvent, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { HeroProposition } from "./HeroProposition";
 import {
-  HERO_STATEMENT_DWELL_MS,
-  HERO_STATEMENTS,
+  HERO_ARGUMENT,
   HERO_TYPE_INTERVAL_MS,
 } from "./heroData";
-
-const visibleStatement = () =>
-  document.querySelector(".home-hero-statement-copy")?.textContent;
-
-beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
+import { HeroProposition } from "./HeroProposition";
 
 describe("HeroProposition", () => {
+  afterEach(() => vi.useRealTimers());
+
   const renderProposition = (reducedMotion = false) =>
     render(
       <MemoryRouter>
@@ -23,61 +18,63 @@ describe("HeroProposition", () => {
       </MemoryRouter>,
     );
 
-  const typeStatement = (statement: string) => {
-    for (let index = 0; index < statement.length; index += 1) {
-      act(() => vi.advanceTimersByTime(HERO_TYPE_INTERVAL_MS));
-    }
-  };
-
-  it("types the first-person data proposition character by character", () => {
-    renderProposition();
-
-    expect(visibleStatement()).toBe("");
-    act(() => vi.advanceTimersByTime(HERO_TYPE_INTERVAL_MS));
-    expect(visibleStatement()).toBe("A");
-
-    typeStatement(HERO_STATEMENTS[0].slice(1));
-    expect(visibleStatement()).toBe(
-      "A framework where first-person experience is data—not automatically truth.",
-    );
-    expect(document.querySelector(".home-hero-statement-nav")).toBeNull();
-  });
-
-  it("advances once through the finite sequence and stops", () => {
-    renderProposition();
-
-    for (let index = 0; index < HERO_STATEMENTS.length; index += 1) {
-      typeStatement(HERO_STATEMENTS[index]);
-      expect(visibleStatement()).toBe(HERO_STATEMENTS[index]);
-
-      if (index === HERO_STATEMENTS.length - 1) break;
-      act(() => vi.advanceTimersByTime(HERO_STATEMENT_DWELL_MS));
-      expect(visibleStatement()).toBe("");
-    }
-
-    expect(vi.getTimerCount()).toBe(0);
-    act(() => vi.advanceTimersByTime(HERO_STATEMENT_DWELL_MS * 3));
-    expect(visibleStatement()).toBe(HERO_STATEMENTS.at(-1));
-  });
-
-  it("pauses typing while the statement is being attended to", () => {
-    renderProposition();
-    const stage = document.querySelector(".home-hero-statement")!;
-
-    fireEvent.mouseEnter(stage);
-    act(() => vi.advanceTimersByTime(HERO_TYPE_INTERVAL_MS * 10));
-    expect(visibleStatement()).toBe("");
-
-    fireEvent.mouseLeave(stage);
-    act(() => vi.advanceTimersByTime(HERO_TYPE_INTERVAL_MS));
-    expect(visibleStatement()).toBe("A");
-  });
-
-  it("stays on the opening statement when stillness is requested", () => {
+  it("shows the complete observation without motion when reduced motion is requested", () => {
     renderProposition(true);
 
-    act(() => vi.advanceTimersByTime(HERO_STATEMENT_DWELL_MS * 5));
-    expect(visibleStatement()).toBe(HERO_STATEMENTS[0]);
+    expect(
+      screen.getByRole("heading", {
+        name: "The observer belongs in the inquiry.",
+      }),
+    ).toBeVisible();
+    expect(screen.getByText(HERO_ARGUMENT.text)).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
+  });
+
+  it("types the observation once and then rests", () => {
+    vi.useFakeTimers();
+    renderProposition();
+
+    expect(document.querySelector(".home-hero-typewriter-cursor")).not.toBeNull();
+    act(() =>
+      vi.advanceTimersByTime(HERO_ARGUMENT.text.length * HERO_TYPE_INTERVAL_MS + 20),
+    );
+
+    expect(document.querySelector(".home-hero-argument-text")?.textContent).toBe(
+      HERO_ARGUMENT.text,
+    );
+    expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
+    expect(screen.queryByRole("button", { name: /show the/i })).toBeNull();
+  });
+
+  it("offers the fixed book first and the assembling Academy second", () => {
+    renderProposition();
+
+    expect(screen.getByRole("link", { name: /read book one/i })).toHaveAttribute(
+      "href",
+      "/book/digital-organism-theory/preface",
+    );
+    expect(screen.getByRole("link", { name: /preview the academy/i })).toHaveAttribute(
+      "href",
+      "/academy",
+    );
+    expect(screen.getAllByRole("link")).toHaveLength(2);
+  });
+
+  it("states the thesis boldly while labelling it an open hypothesis", () => {
+    renderProposition();
+
+    expect(screen.getByText("The thesis")).toBeVisible();
+    expect(
+      screen.getByText("Held as hypothesis · Open to challenge"),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/consciousness is fundamental/i),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/the interface — not the source/i),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/person reading this/i),
+    ).toBeVisible();
   });
 });

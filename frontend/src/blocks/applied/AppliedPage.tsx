@@ -8,6 +8,7 @@ import {
   Map,
 } from "lucide-react";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { EpistemicBadge, type EpistemicStatus } from "../../shared/EpistemicBadge";
 import {
   openSeams,
   seamWork,
@@ -31,11 +32,11 @@ import {
  * closer to a ledger than to a page.
  */
 
-const CLAIM_TONE: Record<ClaimLevel, string> = {
-  Observation: "border-[color:var(--organism-accent-strong)]/40 text-[color:var(--organism-accent-strong)] bg-[color:var(--organism-accent-soft)]",
-  Model: "border-border/60 text-foreground bg-foreground/[0.03]",
-  Hypothesis: "border-border/50 text-muted-foreground bg-foreground/[0.02]",
-  Speculation: "border-border/40 text-muted-foreground/80 bg-transparent",
+const CLAIM_STATUS: Record<ClaimLevel, EpistemicStatus> = {
+  Observation: "observation",
+  Model: "model",
+  Hypothesis: "hypothesis",
+  Speculation: "speculation",
 };
 
 const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
@@ -48,12 +49,12 @@ const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
 
 function ClaimChip({ level }: { level: ClaimLevel }) {
   return (
-    <span
-      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 dot-label ${CLAIM_TONE[level]}`}
+    <EpistemicBadge
+      status={CLAIM_STATUS[level]}
       title={`Book One assigns this claim the level: ${level}`}
     >
       {level}
-    </span>
+    </EpistemicBadge>
   );
 }
 

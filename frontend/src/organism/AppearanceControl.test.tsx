@@ -119,6 +119,27 @@ describe("AppearanceControl", () => {
     expect(container.querySelector("[data-appearance-control] [style]")).toBeNull();
   });
 
+  it("ships curated choices first and keeps expert controls collapsed", () => {
+    renderAppearance();
+    fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));
+
+    const environmentFineTune = screen
+      .getByText("Fine tune environment")
+      .closest("details");
+    expect(environmentFineTune).not.toHaveAttribute("open");
+    expect(screen.getByRole("button", { name: /^quiet$/i })).toBeVisible();
+    expect(screen.getByRole("button", { name: /^meridian$/i })).toBeVisible();
+    expect(screen.getByRole("button", { name: /^quiet night$/i })).toBeVisible();
+    expect(screen.getByRole("button", { name: /^midnight$/i })).toBeVisible();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Reading" }));
+    const readingFineTune = screen.getByText("Fine tune reading").closest("details");
+    expect(readingFineTune).not.toHaveAttribute("open");
+    expect(screen.getByRole("button", { name: "Editorial reading style" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Text size M" })).toBeVisible();
+    expect(screen.getByRole("switch", { name: "High contrast" })).toBeVisible();
+  });
+
   it("carries leading and alignment onto the reading surfaces", async () => {
     renderAppearance();
     fireEvent.click(screen.getByRole("button", { name: "Appearance settings" }));

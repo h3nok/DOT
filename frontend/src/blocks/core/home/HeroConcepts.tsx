@@ -1,26 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-
-import { Editable, useSiteContent } from "../../../content/editable";
-import { DWELL_MS, HERO_CONCEPTS, type Concept } from "./heroData";
-
-/**
- * The core vocabulary, arriving one term at a time and then stopping.
- *
- * Every line is the book's own wording, and every card carries the claim level
- * Book One assigns it — observation, model, or hypothesis. That is not
- * decoration: the preface says the distinction "governs the entire book", so a
- * surface that recited the vocabulary without it would misrepresent the work on
- * its own front page.
- *
- * The sequence **settles** on the last card and does not loop. A hero that
- * cycles forever is a small autoplay engine; this one finishes, which is the
- * same promise the book makes about itself. It also pauses on hover and focus,
- * because a line that moves while you are reading it is hostile.
- *
- * Screen readers get the whole list at once — a card rotating under a reader who
- * cannot see it rotate is noise — so the visual rotator is hidden from them.
- */
+import { Editable } from "../../../content/editable";
+import { HERO_CONCEPTS, type Concept } from "./heroData";
 
 type ClaimLevel = Concept["level"];
 
@@ -30,138 +9,44 @@ const LEVEL_LABEL: Record<ClaimLevel, string> = {
   hypothesis: "Hypothesis",
 };
 
-function LevelBadge({ level, index, total }: { level: ClaimLevel; index?: number; total?: number }) {
-  return (
-    <div className="flex items-center justify-center gap-2">
-      {typeof index === "number" && typeof total === "number" && (
-        <span className="dot-label text-muted-foreground/70">
-          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-        </span>
-      )}
-      <span
-        className="dot-chip"
-        title="Book One marks every claim as observation, model, hypothesis, or speculation."
-      >
-        {LEVEL_LABEL[level]}
-      </span>
-    </div>
-  );
-}
-
 /**
- * @param autoAdvance Whether the sequence may move on its own. This is a motion
- * decision only. It must never be tied to "the emergence already played in this
- * tab" — that flag once reached this component and froze the slideshow on its
- * final card for every reload, so a returning reader met the most abstract idea
- * in the book ("a restraint on certainty…") and nothing else.
+ * A finite, open ledger of Book One's vocabulary.
+ *
+ * Nothing rotates or waits behind interaction: the reader can compare every
+ * definition and its epistemic level at once. The typography carries the
+ * hierarchy, so these read as entries in an argument rather than a card wall.
  */
-export function HeroConcepts({ autoAdvance = true }: { autoAdvance?: boolean }) {
-  const { resolve, editMode } = useSiteContent();
-  const last = HERO_CONCEPTS.length - 1;
-  // Always opens on the first card. A reader who cannot see it move should get
-  // the start of the argument, not wherever the sequence would have ended.
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [hasEntered, setHasEntered] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+export function HeroConcepts() {
+  return (
+    <ol className="home-concept-ledger" aria-label="Book One concept index">
+      {HERO_CONCEPTS.map((concept, index) => (
+        <li key={concept.id} className="home-concept-ledger-item">
+          <span className="home-concept-ledger-number" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
 
-  useEffect(() => {
-    if (!autoAdvance || !hasEntered || paused || hasInteracted || index >= last) return;
-
-    const timer = window.setTimeout(() => setIndex((i) => i + 1), DWELL_MS);
-    return () => window.clearTimeout(timer);
-  }, [index, last, autoAdvance, paused, hasEntered, hasInteracted]);
-
-  // While the steward is writing, every line is visible and addressable at once.
-  if (editMode) {
-    return (
-      <ul className="space-y-6 text-center">
-        {HERO_CONCEPTS.map((concept) => (
-          <li key={concept.id}>
-            <LevelBadge level={concept.level} />
-            <span className="dot-section-heading mt-2 block">
-              {concept.term}
-            </span>
+          <div className="home-concept-ledger-entry">
+            <div className="home-concept-ledger-heading">
+              <h3>{concept.term}</h3>
+              <span
+                className="home-concept-level"
+                title="Book One distinguishes observation, model, hypothesis, and speculation."
+              >
+                {LEVEL_LABEL[concept.level]}
+              </span>
+            </div>
             <Editable
               id={concept.id}
-              as="span"
+              as="p"
               multiline
               text={concept.text}
-              className="mt-1 block text-balance text-base leading-relaxed text-foreground/75"
+              className="home-concept-ledger-definition"
             />
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  const current = HERO_CONCEPTS[index];
-
-  const selectConcept = (nextIndex: number) => {
-    setIndex(nextIndex);
-    setHasInteracted(true);
-  };
-
-  return (
-    <motion.div
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-      onViewportEnter={() => setHasEntered(true)}
-      viewport={{ once: true, margin: "-80px" }}
-      className="home-concept-stage text-center"
-    >
-      <ul className="sr-only">
-        {HERO_CONCEPTS.map((concept) => (
-          <li key={concept.id}>
-            {concept.term} ({LEVEL_LABEL[concept.level]}):{" "}
-            {resolve(concept.id, concept.text)}
-          </li>
-        ))}
-      </ul>
-
-      <div className="home-concept-instrument">
-        <ol className="home-concept-index">
-          {HERO_CONCEPTS.map((concept, i) => (
-            <li key={concept.id}>
-              <button
-                type="button"
-                onClick={() => selectConcept(i)}
-                aria-label={concept.term}
-                aria-pressed={i === index}
-                title={concept.term}
-                className="home-concept-index-button"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </button>
-            </li>
-          ))}
-        </ol>
-
-        <div aria-hidden="true" className="home-concept-readout">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.id}
-              initial={autoAdvance ? { opacity: 0, y: 8 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-              className="home-concept-readout-panel"
-            >
-              <LevelBadge
-                level={current.level}
-                index={index}
-                total={HERO_CONCEPTS.length}
-              />
-              <span className="dot-section-heading block">{current.term}</span>
-              <span className="dot-lede block max-w-xl text-balance mx-auto">
-                {resolve(current.id, current.text)}
-              </span>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-    </motion.div>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
+
+export default HeroConcepts;

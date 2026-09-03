@@ -8,6 +8,7 @@ import sentry_sdk
 import slowapi
 import slowapi.errors
 
+import app.api.v1.academy as _academy_router
 import app.api.v1.auth as _auth_router
 import app.api.v1.commerce as _commerce_router
 import app.api.v1.graph as _graph_router
@@ -124,6 +125,8 @@ def create_app() -> fastapi.FastAPI:
         expose_headers=["X-Request-ID"],
     )
     fapp.include_router(_health_router.router)
+    fapp.include_router(_academy_router.public_router)
+    fapp.include_router(_academy_router.router)
     fapp.include_router(_auth_router.router)
     fapp.include_router(_graph_router.public_router)
     fapp.include_router(_graph_router.router)

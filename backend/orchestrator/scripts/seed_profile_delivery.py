@@ -44,9 +44,7 @@ async def get_or_create_project(
     owner: app.auth.dependencies.OwnerContext,
 ) -> app.db.models.PublicationProject:
     async with app.db.session.AsyncSessionLocal() as session:
-        result: sqlalchemy.Result[
-            tuple[app.db.models.PublicationProject]
-        ] = await session.execute(
+        result: sqlalchemy.Result[tuple[app.db.models.PublicationProject]] = await session.execute(
             sqlalchemy.select(app.db.models.PublicationProject).where(
                 app.db.models.PublicationProject.owner_id == owner.owner_id,
                 app.db.models.PublicationProject.slug == PROJECT_SLUG,
