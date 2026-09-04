@@ -86,4 +86,3 @@ reports, datasets, and direct historical sources over tertiary summaries.
   comparative and adversarial standard the DOT research program should meet.
 - The 2025 Cogitate results challenge important predictions of both IIT and
   GNWT; they do not choose a final metaphysics of consciousness.
-

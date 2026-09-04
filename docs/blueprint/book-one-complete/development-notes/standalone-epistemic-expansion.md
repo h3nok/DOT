@@ -502,4 +502,3 @@ the book must pay for that proposal.
 This distance between datum and ontology is not a weakness to conceal.
 
 It is the work.
-

@@ -94,4 +94,3 @@ Practical usefulness can motivate a model; it cannot establish its ontology.
 The budget is a constraint against both compression and inflation. A chapter
 earns more space through unresolved argumentative burden, not because its theme
 is emotionally important.
-

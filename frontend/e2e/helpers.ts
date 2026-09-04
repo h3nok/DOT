@@ -37,7 +37,13 @@ export function collectPageProblems(page: Page) {
   page.on("console", (message) => {
     if (message.type() !== "error") return;
     const text = message.text();
-    if (IGNORED_CONSOLE.some((pattern) => pattern.test(text))) return;
+    const sourceUrl = message.location().url;
+    if (
+      IGNORED_CONSOLE.some(
+        (pattern) => pattern.test(text) || pattern.test(sourceUrl),
+      )
+    )
+      return;
     problems.push(`console: ${text}`);
   });
 

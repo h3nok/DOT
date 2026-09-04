@@ -45,4 +45,3 @@ an observation merely because later prose depends on it.
 7. If no observation can discriminate a claim in principle, label the claim
    metaphysical and evaluate it by coherence, scope, and parsimony rather than
    calling it empirically confirmed.
-
