@@ -10,7 +10,7 @@ describe("homepage movement narrative", () => {
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
     expect(home.indexOf("<TheoryLayerJourney />")).toBeLessThan(
-      home.indexOf('id="epistemic-boundary"'),
+      home.indexOf('id="choose-path"'),
     );
     expect(home).not.toContain("<ArchitectureDiagram />");
     expect(layers.indexOf('id: "possibility-field"')).toBeLessThan(
@@ -58,18 +58,22 @@ describe("homepage movement narrative", () => {
     expect(layers).toContain("You experience locally, choose through a body");
     expect(layers.match(/memoryWord:/g) ?? []).toHaveLength(4);
     expect(layers.match(/memoryLine:/g) ?? []).toHaveLength(4);
-    expect(layers).toContain("ConceptMemoryPath");
-    expect(layers).toContain('"Possibility", "Persistence", "Consequence", "Choice"');
+    // The rail identifies each layer with figure, term, and status only; the
+    // page nav carries orientation, so no second index or breadcrumb.
+    expect(layers).not.toContain("ConceptMemoryPath");
+    expect(layers).not.toContain("home-theory-layer-prerequisite");
     expect(layers).toContain("From possibility to persistence");
     expect(layers).toContain("From persistence to consequence");
     expect(layers).toContain("From consequence to choice");
+    // The Little c figure reads as a loop, not only a containment diagram.
+    expect(layers).toContain("Consequence");
+    expect(layers).toContain("returns.");
     expect(layers).toContain("<GuidedArgument");
     expect(layers).toContain("<ReadingPathwayGroup");
     expect(layers).toContain("Starting assumption");
     expect(layers).toContain("Proposed explanation");
     expect(layers).not.toContain("CircleAlert");
     expect(layers).not.toContain("home-theory-layer-progress");
-    expect(layers).toContain("home-theory-layer-prerequisite");
     expect(layers).toContain("home-theory-layer-sources");
     expect(layers).toContain("Independent evidence");
     expect(layers).toContain("DOT · Book One");
@@ -83,7 +87,6 @@ describe("homepage movement narrative", () => {
     expect(layers.match(/conventional:/g) ?? []).toHaveLength(4);
     expect(layers.match(/scope:/g) ?? []).toHaveLength(4);
     expect(layers.match(/question:/g) ?? []).toHaveLength(4);
-    expect(layers.match(/prerequisite:/g) ?? []).toHaveLength(4);
     expect(layers.match(/bookReading:/g) ?? []).toHaveLength(4);
     expect(layers.match(/externalReading:/g) ?? []).toHaveLength(4);
     expect(layers).not.toContain("Not existential closure");
@@ -113,29 +116,27 @@ describe("homepage movement narrative", () => {
 
   it("keeps claim levels explicit and the funding ask away from the front door", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
+    const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
+    const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
-    expect(home).toContain("Every contribution separates observation, model, hypothesis, and");
+    expect(proposition).toContain("Held as hypothesis · Open to challenge");
+    expect(layers.match(/status:/g) ?? []).toHaveLength(4);
     expect(home).not.toContain("SUPPORT_PAYMENT_LINK");
     expect(home).not.toContain("Support the work");
   });
 
-  it("moves from the evidence boundary directly to the Academy invitation", () => {
+  it("moves from the theory directly to the Academy invitation", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
+    const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
-    expect(home.indexOf('id="epistemic-boundary"')).toBeLessThan(
-      home.indexOf('id="choose-path"'),
-    );
+    // The standalone boundary section is retired; each panel carries its own
+    // test boundary and the hero badge declares the claim level (ADR-0026).
+    expect(home).not.toContain('id="epistemic-boundary"');
+    expect(home).not.toContain("Publicly grounded");
+    expect(layers.match(/boundary:/g) ?? []).toHaveLength(4);
     expect(home).not.toContain('id="orientation"');
     expect(home).not.toContain("Intellectual renewal · Spiritual grounding");
     expect(home).not.toContain("A shared vocabulary · 10 concepts");
-    expect(home).toContain("The model must show where evidence ends.");
-    expect(home).toContain("the hard way");
-    expect(home).toContain("I have been there");
-    expect(home).toContain("This is your game to play");
-    expect(home).toContain("Keep what survives; leave what does not");
-    expect(home).toContain("Publicly grounded");
-    expect(home).toContain("Still proposed");
-    expect(home).toContain("Academy standard");
     expect(home.toLowerCase()).not.toContain("belief");
     expect(home.toLowerCase()).not.toContain("believe");
   });

@@ -1,16 +1,10 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import {
-  HERO_ARGUMENT,
-  HERO_TYPE_INTERVAL_MS,
-} from "./heroData";
 import { HeroProposition } from "./HeroProposition";
 
 describe("HeroProposition", () => {
-  afterEach(() => vi.useRealTimers());
-
   const renderProposition = (reducedMotion = false) =>
     render(
       <MemoryRouter>
@@ -18,7 +12,7 @@ describe("HeroProposition", () => {
       </MemoryRouter>,
     );
 
-  it("shows the complete observation without motion when reduced motion is requested", () => {
+  it("opens with the title and no self-advancing copy", () => {
     renderProposition(true);
 
     expect(
@@ -26,24 +20,8 @@ describe("HeroProposition", () => {
         name: "The observer belongs in the inquiry.",
       }),
     ).toBeVisible();
-    expect(screen.getByText(HERO_ARGUMENT.text)).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
-  });
-
-  it("types the observation once and then rests", () => {
-    vi.useFakeTimers();
-    renderProposition();
-
-    expect(document.querySelector(".home-hero-typewriter-cursor")).not.toBeNull();
-    act(() =>
-      vi.advanceTimersByTime(HERO_ARGUMENT.text.length * HERO_TYPE_INTERVAL_MS + 20),
-    );
-
-    expect(document.querySelector(".home-hero-argument-text")?.textContent).toBe(
-      HERO_ARGUMENT.text,
-    );
-    expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
-    expect(screen.queryByRole("button", { name: /show the/i })).toBeNull();
+    expect(document.querySelector(".home-hero-statement")).toBeNull();
   });
 
   it("offers the fixed book first and the assembling Academy second", () => {
@@ -74,7 +52,7 @@ describe("HeroProposition", () => {
       screen.getByText(/the interface — not the source/i),
     ).toBeVisible();
     expect(
-      screen.getByText(/person reading this/i),
+      screen.getByText(/consciousness reading this/i),
     ).toBeVisible();
   });
 });

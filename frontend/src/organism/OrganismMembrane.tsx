@@ -475,9 +475,11 @@ export const OrganismMembrane: React.FC = () => {
     };
 
     /**
-     * The field of bits — glyphs rising like experience arriving, each
-     * occasionally flipping. No links: this stream is not yet interpreted.
-     * Quieter than the other fields — it's a weather, not a structure.
+     * The field of bits — dots rising like experience arriving, each
+     * occasionally flipping. A filled dot carries 1, a hollow ring carries 0:
+     * the mark of the site is also the unit of its stream, so the ground never
+     * reads as borrowed "code rain". No links: this stream is not yet
+     * interpreted. Quieter than the other fields — a weather, not a structure.
      */
     const drawField = (
       hue: number,
@@ -487,8 +489,6 @@ export const OrganismMembrane: React.FC = () => {
       animate: boolean,
     ) => {
       fieldTime += animate ? 0.00035 * spec.speed : 0;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
       for (const p of points) {
         if (animate) {
           // Slow rise with a gentle sway; wrap at the edges so the stream
@@ -521,10 +521,19 @@ export const OrganismMembrane: React.FC = () => {
         const presence = 0.45 + bias * 1.05;
         const a = alpha * mask * (0.16 + p.depth * 0.22) * presence;
         if (a <= 0.005) continue;
-        const size = (9 + p.depth * 5) * (0.88 + bias * 0.24);
-        ctx.font = `${size}px ui-monospace, monospace`;
-        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
-        ctx.fillText(p.bit, p.x, p.y);
+        const radius = (1.6 + p.depth * 1.5) * (0.88 + bias * 0.24);
+        if (p.bit === "1") {
+          ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light + 8}%, ${a})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
       }
       // Faint threads between nearby bits — the stream beginning to cohere.
       //

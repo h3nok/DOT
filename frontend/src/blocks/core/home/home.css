@@ -1,12 +1,28 @@
 /* ====================================================================
    Home journey — a sequence of environments, not a stack of cards.
 
-   The public threshold stays visibly digital and alive; the book route owns
-   the quieter paper metaphor. Every colour is derived from the active theme,
-   so changing Appearance changes the atmosphere without breaking the sequence.
+   THE PUBLIC ENTRY'S DESIGN SYSTEM, in one place:
+
+   · Voices (exactly three)
+     display  — Space Grotesk   headings, terms, actions, structural labels
+     reading  — Source Serif 4  sentences meant to be read slowly
+     annotate — JetBrains Mono  claim labels, figure notes, citations, micro
+   · Colour is never literal: theme vars + the four --theory-* layer accents.
+     One accent per section; the organism accent is Little c's.
+   · One diagram grammar: hairline strokes, dashed = proposed/potential,
+     solid = claimed structure, filled dot = an experiencer.
+   · Marks: .dot-mark is the brand atom; layer doors reshape it per section.
+   · Motion: arrives once, settles, never loops (splash + hero emergence
+     honour reduced motion and the Appearance stillness switch).
+
+   Every colour derives from the active theme, so changing Appearance changes
+   the atmosphere without breaking the sequence.
    ==================================================================== */
 
 .home-journey {
+  --home-public-display-font: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --home-public-reading-font: "Source Serif 4", var(--font-serif, ui-serif, Georgia, serif);
+  --home-public-annotate-font: "JetBrains Mono", ui-monospace, monospace;
   --theory-origin: color-mix(
     in oklch,
     var(--chart-5) 76%,
@@ -71,11 +87,6 @@
         var(--organism-accent)
       )
       46%,
-    transparent
-  );
-  --home-ground-reality: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--foreground) 90%, var(--organism-accent)) 82%,
     transparent
   );
   isolation: isolate;
@@ -250,15 +261,24 @@ html:has(.home-journey) {
   --architecture-thread-width: 1.1;
   --architecture-wash-opacity: 0.8;
   --architecture-grid-opacity: 0.58;
-  --architecture-stage-glow-opacity: 1;
-  --architecture-stage-blur: 0.65rem;
   --architecture-frame-wash-opacity: 0.04;
   --architecture-local-wash-opacity: 0.12;
   display: flex;
   min-height: 100svh;
   align-items: center;
   overflow: hidden;
-  background-color: var(--home-ground-threshold);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--foreground) 7%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      color-mix(in oklch, var(--foreground) 5%, transparent) 1px,
+      transparent 1px
+    ),
+    var(--home-ground-threshold);
+  background-size: 5.5rem 5.5rem;
 }
 
 .home-hero-environment::before {
@@ -304,35 +324,32 @@ html:has(.home-journey) {
 }
 
 .home-hero-layout {
-  display: grid;
+  display: block;
   width: 100%;
-  max-width: 86rem;
-  grid-template-columns: minmax(29rem, 0.88fr) minmax(36rem, 1.12fr);
-  gap: clamp(1rem, 2.8vw, 3rem);
-  align-items: center;
-  padding-top: 7rem;
+  max-width: 80rem;
+  padding-top: 4.75rem;
   padding-bottom: 5.25rem;
 }
 
-.home-hero-copy {
-  position: relative;
-  z-index: 2;
-  min-width: 0;
-  max-width: 38rem;
+/* Masthead: centred, spare, above the plate. */
+.home-hero-masthead {
+  max-width: 54rem;
+  margin-inline: auto;
+  text-align: center;
 }
 
-.home-hero-copy::before {
-  position: absolute;
-  inset: -3rem -4rem;
-  z-index: -1;
-  background: radial-gradient(
-    ellipse at 36% 50%,
-    color-mix(in oklch, var(--home-ground-threshold) 98%, transparent) 0%,
-    color-mix(in oklch, var(--home-ground-threshold) 90%, transparent) 64%,
-    transparent 85%
-  );
-  content: "";
-  pointer-events: none;
+.home-hero-entry {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin: 1.5rem auto 0;
+}
+
+.home-hero-entry > a {
+  max-width: 100%;
+  white-space: normal;
 }
 
 .home-hero-kicker {
@@ -352,27 +369,41 @@ html:has(.home-journey) {
   max-width: 100%;
   margin-top: 1.35rem;
   color: var(--foreground);
-  font-family: var(--book-reading-heading-font, var(--font-serif, ui-serif, Georgia, serif));
-  font-size: clamp(3.2rem, 4.05vw, 4.1rem);
-  font-weight: 400;
-  letter-spacing: -0.042em;
-  line-height: 0.94;
-  text-wrap: pretty;
+  font-family: var(--home-public-display-font);
+  font-size: 4rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .home-hero-title > span {
-  display: block;
-  white-space: nowrap;
+  display: inline;
+  white-space: normal;
 }
 
-.home-hero-title > span + span {
-  margin-top: 0.035em;
+/* Dossier: the claim beside the acts, beneath the plate, above the fold-out. */
+.home-hero-dossier {
+  display: grid;
+  max-width: 72rem;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(1.75rem, 4vw, 4rem);
+  align-items: start;
+  margin: clamp(2rem, 3.5vw, 3rem) auto 0;
+  padding-top: clamp(1.5rem, 2.5vw, 2.25rem);
+  border-top: 1px solid color-mix(in oklch, var(--foreground) 12%, transparent);
+}
+
+.home-hero-dossier-claim,
+.home-hero-dossier-act {
+  min-width: 0;
 }
 
 .home-hero-reversal {
-  max-width: 34rem;
-  margin-top: 1.35rem;
+  max-width: 40rem;
+  margin-top: 0;
   padding: 0.9rem 1rem 0.95rem;
+  border-top: 1px solid color-mix(in oklch, var(--organism-accent-strong) 62%, transparent);
   border-left: 2px solid var(--organism-accent-strong);
   background: linear-gradient(
     90deg,
@@ -396,35 +427,31 @@ html:has(.home-journey) {
 .home-hero-reversal p {
   max-width: 51ch;
   margin-top: 0.42rem;
-  color: color-mix(in oklch, var(--foreground) 86%, var(--muted-foreground));
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  font-size: 0.94rem;
-  line-height: 1.55;
+  color: color-mix(in oklch, var(--foreground) 94%, var(--muted-foreground));
+  font-family: var(--home-public-reading-font);
+  font-size: 1.05rem;
+  line-height: 1.62;
 }
 
 .home-hero-lede {
-  max-width: 34rem;
-  margin-top: 1.55rem;
-  color: color-mix(in oklch, var(--foreground) 70%, transparent);
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  font-size: clamp(1rem, 1.25vw, 1.12rem);
+  max-width: 42rem;
+  margin-top: 1.35rem;
+  margin-inline: auto;
+  color: color-mix(in oklch, var(--foreground) 80%, transparent);
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1.05rem, 1.35vw, 1.2rem);
   font-weight: 400;
   letter-spacing: 0.004em;
-  line-height: 1.58;
+  line-height: 1.62;
+  text-align: center;
   text-wrap: pretty;
-}
-
-.home-hero-statement {
-  width: 100%;
-  max-width: 34rem;
-  margin-top: 1.1rem;
 }
 
 .home-hero-ask {
   width: 100%;
-  max-width: 32rem;
+  max-width: none;
   margin-top: 0.85rem;
-  opacity: 0.78;
+  opacity: 0.94;
   transition: opacity 180ms ease;
 }
 
@@ -432,57 +459,14 @@ html:has(.home-journey) {
   opacity: 1;
 }
 
-/* ─ The argument sequence: finite auto-type, then rests ───────────────── */
-
-.home-hero-arguments {
-  padding-top: 1rem;
-  border-top: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
-}
-
-.home-hero-argument-stance {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  color: color-mix(in oklch, var(--organism-accent-strong) 78%, var(--foreground));
-}
-
-.home-hero-argument-text {
-  min-height: 3.1em;
-  margin-top: 0.55rem;
-  color: color-mix(in oklch, var(--foreground) 84%, transparent);
-  font-family: var(--book-reading-heading-font, var(--font-serif, ui-serif, Georgia, serif));
-  font-size: clamp(1.12rem, 1.45vw, 1.28rem);
-  font-weight: 400;
-  letter-spacing: -0.008em;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-
-.home-hero-typewriter-cursor {
-  display: inline-block;
-  width: 1px;
-  height: 1em;
-  margin-left: 0.12em;
-  transform: translateY(0.12em);
-  background: var(--organism-accent-strong);
-  animation: home-hero-cursor-blink 900ms step-end infinite;
-}
-
-@keyframes home-hero-cursor-blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 .home-hero-actions {
   display: grid;
   width: 100%;
-  max-width: 32rem;
+  max-width: none;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
   align-items: center;
   gap: 0.65rem;
-  margin-top: 1.05rem;
+  margin-top: 0;
 }
 
 .home-hero-primary-action,
@@ -544,30 +528,37 @@ html:has(.home-journey) {
 .home-hero-stage {
   position: relative;
   z-index: 1;
-  width: 100%;
+  width: min(100%, 28rem);
   min-width: 0;
-  margin: 0;
+  margin: 1.25rem auto 0;
   isolation: isolate;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 
+/* Corner ticks: the plate is surveyed, not decorated. */
 .home-hero-stage::before {
   position: absolute;
-  inset: 12% 10% 10% 2%;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklch, var(--organism-accent-soft) 24%, transparent) 0%,
-    transparent 68%
-  );
-  filter: blur(var(--architecture-stage-blur));
-  content: "";
-  opacity: var(--architecture-stage-glow-opacity);
+  inset: -1px;
+  z-index: 1;
+  background:
+    linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1.1rem 1px,
+    linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 1.1rem,
+    linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1.1rem 1px,
+    linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 1.1rem,
+    linear-gradient(var(--foreground), var(--foreground)) 0 100% / 1.1rem 1px,
+    linear-gradient(var(--foreground), var(--foreground)) 0 100% / 1px 1.1rem,
+    linear-gradient(var(--foreground), var(--foreground)) 100% 100% / 1.1rem 1px,
+    linear-gradient(var(--foreground), var(--foreground)) 100% 100% / 1px 1.1rem;
+  background-repeat: no-repeat;
+  content: none;
+  opacity: 0.55;
   pointer-events: none;
 }
 
 .home-hero-architecture {
-  width: min(100%, 47rem);
+  width: min(100%, 52rem);
   margin: 0 auto;
 }
 
@@ -581,17 +572,28 @@ html:has(.home-journey) {
 }
 
 .home-architecture-caption {
-  max-width: 32rem;
-  margin: 0.7rem auto 0;
+  max-width: none;
+  margin: clamp(0.9rem, 2vw, 1.4rem) auto 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
   color: color-mix(in oklch, var(--foreground) 52%, transparent);
   font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.75rem;
   line-height: 1.5;
-  text-align: center;
+  text-align: left;
 }
 
 .home-architecture-caption-visible {
   display: block;
+}
+
+.home-hero-architecture .home-architecture-ring-label text {
+  font-size: 24px;
+  fill: color-mix(in oklch, var(--ring-label-color) 80%, var(--foreground));
+}
+
+.home-hero-architecture .home-architecture-ring-label[data-layer="awareness-radius"] text {
+  font-size: 17px;
 }
 
 .home-hero-architecture__svg path,
@@ -601,68 +603,16 @@ html:has(.home-journey) {
   vector-effect: non-scaling-stroke;
 }
 
-.home-architecture-style {
+/* Survey furniture on the plate edge — part of the one canonical rendering. */
+.home-architecture-measure-marks {
   fill: none;
-  stroke: var(--architecture-live);
-  stroke-width: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
-}
-
-html:not([data-ui-style]) .home-architecture-style--neural,
-html[data-ui-style="default"] .home-architecture-style--neural,
-html[data-ui-style="neural"] .home-architecture-style--neural,
-html[data-ui-style="minimal"] .home-architecture-style--minimal,
-html[data-ui-style="organic"] .home-architecture-style--organic,
-html[data-ui-style="editorial"] .home-architecture-style--editorial,
-html[data-ui-style="cinematic"] .home-architecture-style--cinematic {
-  opacity: 1;
-}
-
-.home-architecture-neural-lattice {
-  stroke: var(--architecture-quiet);
-  stroke-dasharray: 1 8;
-  stroke-linecap: round;
-  stroke-width: 1;
-}
-
-.home-architecture-organic-rings {
-  stroke: color-mix(in oklch, var(--architecture-live) 46%, transparent);
-  stroke-dasharray: 2 10;
-  stroke-linecap: round;
-  stroke-width: 1.1;
-}
-
-.home-architecture-editorial-measure {
   stroke: var(--architecture-label);
   stroke-width: 0.55;
+  pointer-events: none;
 }
 
-.home-architecture-editorial-measure > path {
+.home-architecture-measure-marks > path {
   stroke-dasharray: 2 6;
-}
-
-.home-architecture-minimal-axis {
-  stroke: var(--architecture-label);
-  stroke-width: 0.7;
-}
-
-.home-architecture-minimal-axis circle {
-  stroke-dasharray: 1 11;
-  stroke-linecap: round;
-}
-
-.home-architecture-cinematic-field,
-.home-architecture-cinematic-depth {
-  stroke: color-mix(in oklch, var(--architecture-live) 42%, transparent);
-  stroke-dasharray: 2 9;
-}
-
-.home-architecture-cinematic-field {
-  filter: drop-shadow(
-    0 0 1.1rem color-mix(in oklch, var(--architecture-live) 20%, transparent)
-  );
 }
 
 .home-architecture-field-stop {
@@ -688,6 +638,21 @@ html[data-ui-style="cinematic"] .home-architecture-style--cinematic {
   stroke-linecap: round;
   stroke-width: 1.25;
   opacity: 0.72;
+}
+
+.home-architecture-field-contours {
+  fill: none;
+  stroke: color-mix(in oklch, var(--architecture-origin) 46%, transparent);
+  stroke-dasharray: 1.5 8;
+  stroke-linecap: round;
+  stroke-width: 0.8;
+  opacity: 0.76;
+}
+
+.home-architecture-field-contours line {
+  stroke: color-mix(in oklch, var(--architecture-origin) 62%, transparent);
+  stroke-dasharray: none;
+  stroke-width: 1.2;
 }
 
 .home-architecture-big-c-zone {
@@ -722,6 +687,15 @@ html[data-ui-style="cinematic"] .home-architecture-style--cinematic {
   stroke-dasharray: 2 6;
   stroke-linecap: round;
   stroke-width: 0.9;
+}
+
+.home-architecture-membrane-bands {
+  fill: none;
+  stroke: color-mix(in oklch, var(--architecture-big-c) 56%, transparent);
+  stroke-dasharray: 2 5;
+  stroke-linecap: round;
+  stroke-width: 0.8;
+  opacity: 0.74;
 }
 
 .home-architecture-organism-node line {
@@ -782,6 +756,14 @@ html[data-ui-style="cinematic"] .home-architecture-style--cinematic {
 .home-architecture-gridpoint {
   fill: var(--architecture-quiet);
   opacity: 0.72;
+}
+
+.home-architecture-frame-contours {
+  fill: none;
+  stroke: color-mix(in oklch, var(--architecture-rf) 26%, transparent);
+  stroke-dasharray: 1.5 6;
+  stroke-linecap: round;
+  stroke-width: 0.75;
 }
 
 .home-architecture-coordinate-axis line {
@@ -1141,128 +1123,16 @@ html[data-contrast="high"] .home-hero-kicker {
   color: var(--foreground);
 }
 
-/* The architecture shares the Appearance material contract, not only its
-   colour. Tint always comes from the organism accent; UI style decides how
-   much atmosphere, geometry, and glow that tint is allowed to carry. */
-html:not([data-ui-style]) .home-hero-stage,
-html[data-ui-style="default"] .home-hero-stage,
-html[data-ui-style="neural"] .home-hero-stage {
-  --architecture-grid-opacity: 0.46;
-  --architecture-stage-glow-opacity: 0;
+/* One canonical rendering. The plate is sharp: measured strokes, a quiet
+   grid, no glow and no atmosphere wash — the accent lives only in the
+   living layers (Little c, the intent thread, the awareness ring). */
+.home-hero-stage {
+  --architecture-grid-opacity: 0.4;
   --architecture-wash-opacity: 0;
 }
 
-html:not([data-ui-style]) .home-architecture-causal-trace path,
-html[data-ui-style="default"] .home-architecture-causal-trace path,
-html[data-ui-style="neural"] .home-architecture-causal-trace path {
+.home-architecture-causal-trace path {
   filter: none;
-}
-
-html[data-ui-style="minimal"] .home-hero-stage {
-  --architecture-grid-opacity: 0;
-  --architecture-live: color-mix(
-    in oklch,
-    var(--foreground) 84%,
-    var(--organism-accent-strong)
-  );
-  --architecture-stage-glow-opacity: 0;
-  --architecture-thread-width: 0.75;
-  --architecture-wash-opacity: 0;
-}
-
-html[data-ui-style="minimal"] .home-architecture-frame-wash,
-html[data-ui-style="minimal"] .home-architecture-grid,
-html[data-ui-style="minimal"] .home-architecture-reticles,
-html[data-ui-style="minimal"] .home-architecture-projection-marks {
-  opacity: 0;
-}
-
-html[data-ui-style="minimal"] .home-architecture-big-c circle:not([data-contour="1"]) {
-  opacity: 0;
-}
-
-html[data-ui-style="minimal"] .home-architecture-frame-boundary {
-  stroke-width: 0.7;
-}
-
-html[data-ui-style="minimal"] .home-architecture-causal-trace path {
-  opacity: 0.9;
-}
-
-html[data-ui-style="organic"] .home-hero-stage {
-  --architecture-grid-opacity: 0;
-  --architecture-stage-glow-opacity: 0.74;
-  --architecture-thread-width: 1.4;
-  --architecture-wash-opacity: 0.78;
-}
-
-html[data-ui-style="organic"] .home-architecture-grid,
-html[data-ui-style="organic"] .home-architecture-reticles {
-  opacity: 0;
-}
-
-/* Carries the tinted fill the retired organic circle used to supply. */
-html[data-ui-style="organic"] .home-architecture-frame-boundary {
-  fill: color-mix(in oklch, var(--architecture-field) 24%, transparent);
-  stroke-dasharray: none;
-  stroke-width: 1.2;
-}
-
-html[data-ui-style="editorial"] .home-hero-stage {
-  --architecture-grid-opacity: 0.2;
-  --architecture-label: var(--foreground);
-  --architecture-line: color-mix(in oklch, var(--foreground) 42%, transparent);
-  --architecture-live: var(--foreground);
-  --architecture-stage-glow-opacity: 0;
-  --architecture-thread-width: 0.7;
-  --architecture-wash-opacity: 0;
-}
-
-html[data-ui-style="editorial"] .home-architecture-big-c circle {
-  stroke-linecap: square;
-}
-
-html[data-ui-style="editorial"] .home-architecture-frame-boundary {
-  stroke-dasharray: none;
-  stroke-linecap: square;
-}
-
-html[data-ui-style="editorial"] .home-architecture-causal-trace path {
-  stroke-dasharray: 5 4;
-}
-
-html[data-ui-style="editorial"] .home-architecture-projection-marks {
-  opacity: 0;
-}
-
-html[data-ui-style="cinematic"] .home-hero-stage {
-  --architecture-grid-opacity: 0.16;
-  --architecture-label: color-mix(in oklch, var(--foreground) 88%, transparent);
-  --architecture-stage-glow-opacity: 1;
-  --architecture-thread-width: 1.25;
-  --architecture-wash-opacity: 1;
-}
-
-html[data-ui-style="cinematic"] .home-architecture-big-c circle[data-contour="1"] {
-  filter: drop-shadow(
-    0 0 1.25rem color-mix(in oklch, var(--architecture-live) 32%, transparent)
-  );
-}
-
-html[data-ui-style="cinematic"] .home-architecture-frame-wash {
-  filter: drop-shadow(
-    0 0 2rem color-mix(in oklch, var(--architecture-live) 24%, transparent)
-  );
-}
-
-html[data-ui-style="cinematic"] .home-architecture-causal-trace path {
-  filter: drop-shadow(
-    0 0 0.6rem color-mix(in oklch, var(--architecture-thread-to) 52%, transparent)
-  );
-}
-
-html[data-ui-style="cinematic"] .home-architecture-thread-glow {
-  opacity: 0.2;
 }
 
 .home-scroll-cue {
@@ -1296,7 +1166,6 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   /* One brief cascade down the copy column. */
   .home-hero-environment[data-hero-motion="full"] .home-hero-kicker,
   .home-hero-environment[data-hero-motion="full"] .home-hero-title > span,
-  .home-hero-environment[data-hero-motion="full"] .home-hero-statement,
   .home-hero-environment[data-hero-motion="full"] .home-hero-actions {
     animation: home-hero-copy-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -1313,17 +1182,8 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
     animation-delay: 240ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-hero-statement {
-    animation-delay: 360ms;
-  }
-
   .home-hero-environment[data-hero-motion="full"] .home-hero-actions {
     animation-delay: 440ms;
-  }
-
-  /* A stepped argument settles in; it never advances on its own. */
-  .home-hero-environment[data-hero-motion="full"] .home-hero-argument {
-    animation: home-hero-copy-arrive 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-scroll-cue {
@@ -1370,10 +1230,8 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
     animation: home-architecture-emerge 500ms ease-out 1.3s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-style {
-    transform-box: view-box;
-    transform-origin: center;
-    animation: home-variant-settle 620ms cubic-bezier(0.22, 1, 0.36, 1) 440ms both;
+  .home-hero-environment[data-hero-motion="full"] .home-architecture-measure-marks {
+    animation: home-architecture-emerge 520ms ease-out 1.85s both;
   }
 
   /* 3 · RF₀: a generated Reality Frame resolving inside Big C. */
@@ -1513,16 +1371,6 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   }
 }
 
-@keyframes home-variant-settle {
-  from {
-    transform: scale(0.985);
-  }
-
-  to {
-    transform: scale(1);
-  }
-}
-
 @keyframes home-frame-resolve {
   from {
     opacity: 0;
@@ -1575,13 +1423,8 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 }
 
 @media (max-width: 1199px) {
-  .home-hero-layout {
-    grid-template-columns: minmax(25rem, 0.92fr) minmax(30rem, 1.08fr);
-    gap: 1rem;
-  }
-
   .home-hero-title {
-    font-size: clamp(3.35rem, 4.8vw, 4.1rem);
+    font-size: 3.5rem;
   }
 }
 
@@ -1591,26 +1434,19 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   }
 
   .home-hero-layout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.5rem;
     padding-top: 7.5rem;
     padding-bottom: 6.5rem;
   }
 
-  .home-hero-copy {
-    grid-row: 1;
-    max-width: 42rem;
-    margin-inline: auto;
-  }
-
   .home-hero-stage {
-    grid-row: 2;
-    width: min(38rem, 88vw);
-    margin-inline: auto;
+    width: min(28rem, 100%);
   }
 
-  .home-hero-title {
-    max-width: 100%;
+  /* The dossier stacks: claim first, acts after, both centred columns. */
+  .home-hero-dossier {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 44rem;
+    gap: 1.75rem;
   }
 }
 
@@ -1620,28 +1456,26 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   }
 
   .home-hero-layout {
-    gap: 1.7rem;
     padding-top: 6.6rem;
     padding-bottom: 5rem;
   }
 
   .home-hero-stage {
-    width: min(32rem, 100%);
+    width: 100%;
     height: auto;
+    padding: 0.6rem;
     overflow: visible;
-  }
-
-  .home-hero-copy {
-    margin-right: 0;
-    margin-left: 0;
-    text-align: left;
   }
 
   .home-hero-title {
     max-width: 100%;
     margin-top: 1rem;
     font-size: 2.25rem;
-    line-height: 0.95;
+    line-height: 1.02;
+  }
+
+  .home-hero-title > span {
+    white-space: normal;
   }
 
   .home-hero-lede {
@@ -1651,15 +1485,10 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
     line-height: 1.55;
   }
 
-  .home-hero-statement {
-    margin-top: 1rem;
-  }
-
   .home-hero-actions {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.45rem;
-    margin-top: 1.5rem;
   }
 
   .home-hero-primary-action,
@@ -1677,9 +1506,9 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   /* Keep the complete concentric model large enough to read without letting
      its legend create horizontal overflow. */
   .home-hero-architecture {
-    width: 108%;
+    width: 106%;
     max-width: none;
-    margin-left: -4%;
+    margin-left: -3%;
     transform: none;
   }
 
@@ -1687,10 +1516,7 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
     font-size: 18px;
   }
 
-  .home-architecture-neural-lattice,
-  .home-architecture-editorial-measure,
-  .home-architecture-cinematic-field,
-  .home-architecture-cinematic-depth,
+  .home-architecture-measure-marks,
   .home-architecture-cardinal-labels {
     display: none;
   }
@@ -1724,13 +1550,9 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
   position: relative;
   overflow: hidden;
-  padding: clamp(1.75rem, 3vw, 2.75rem) 0;
+  padding: clamp(4rem, 6vw, 6.5rem) 0;
   border-top: 1px solid color-mix(in oklch, var(--theory-layer-color) 14%, var(--border));
-  background: color-mix(
-    in oklch,
-    var(--appearance-page-tone, var(--background)) 97%,
-    var(--theory-layer-color)
-  );
+  background: color-mix(in oklch, var(--appearance-page-tone, var(--background)) 98%, var(--theory-layer-color));
 }
 
 .home-theory-layer-environment[data-layer="big-c"] {
@@ -1774,8 +1596,8 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 }
 
 .home-theory-layer-card {
-  --home-theory-heading-font: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
-  --home-theory-body-font: var(--book-reading-font, "Source Serif 4", Georgia, serif);
+  --home-theory-heading-font: var(--home-public-display-font);
+  --home-theory-body-font: var(--home-public-reading-font);
   --home-theory-interface-font: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   --theory-conventional-color: color-mix(in oklch, var(--foreground) 64%, var(--muted-foreground));
 
@@ -1783,26 +1605,13 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   z-index: 1;
   display: block;
   width: 100%;
-  max-width: 64rem;
+  max-width: 76rem;
   margin: 0 auto;
-  border: 1px solid color-mix(in oklch, var(--theory-layer-color) 24%, var(--border));
-  background:
-    radial-gradient(
-      circle at 12% 0%,
-      color-mix(in oklch, var(--theory-layer-color) 5%, transparent),
-      transparent 30%
-    ),
-    color-mix(
-      in oklch,
-      var(--appearance-page-tone, var(--background)) 99%,
-      var(--theory-layer-color)
-    );
-  box-shadow:
-    0 1.25rem 3rem color-mix(in oklch, var(--foreground) 6%, transparent),
-    0 0.15rem 0.35rem color-mix(in oklch, var(--foreground) 5%, transparent);
+  border-top: 1px solid color-mix(in oklch, var(--theory-layer-color) 38%, var(--border));
+  border-bottom: 1px solid color-mix(in oklch, var(--theory-layer-color) 22%, var(--border));
+  background: transparent;
   font-family: var(--home-theory-body-font);
   font-synthesis: none;
-  font-kerning: normal;
   text-rendering: optimizeLegibility;
 }
 
@@ -1816,19 +1625,15 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   content: "";
 }
 
-.home-theory-layer-card::after {
-  content: none;
-}
-
 .home-theory-layer-identity {
   position: relative;
   display: flex;
   min-width: 0;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.45rem;
-  padding: 1.75rem clamp(1.25rem, 4vw, 3rem) 1.5rem;
-  border-bottom: 1px solid color-mix(in oklch, var(--theory-layer-color) 16%, var(--border));
+  padding: 1.5rem 0 1.35rem;
+  border-bottom: 1px solid color-mix(in oklch, var(--theory-layer-color) 22%, var(--border));
   background: transparent;
 }
 
@@ -1841,62 +1646,208 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   z-index: 1;
 }
 
-/* The hero architecture in miniature; only this section's ring is lit. */
-.home-theory-layer-glyph {
-  width: 2.75rem;
-  height: 2.75rem;
-  flex: none;
+/* Plate detail: the layer's own geometry at close range, numbered like a figure. */
+.home-theory-layer-plate {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-.home-theory-layer-glyph circle {
+.home-theory-layer-figure {
+  width: 100%;
+  max-width: 10.5rem;
+  height: auto;
+  overflow: visible;
+}
+
+.home-theory-layer-figure * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* One-line reading of the figure, used only where the geometry needs it. */
+.home-theory-figure-note {
+  max-width: 11rem;
+  color: color-mix(in oklch, var(--foreground) 58%, transparent);
+  font-family: var(--home-theory-body-font);
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.home-theory-figure-arc {
   fill: none;
-  stroke: color-mix(in oklch, var(--foreground) 22%, transparent);
+  stroke: color-mix(in oklch, var(--theory-layer-color) 72%, transparent);
+  stroke-dasharray: 1.5 7;
+  stroke-linecap: round;
+  stroke-width: 1.1;
+}
+
+.home-theory-figure-arc[data-faint="true"] {
+  stroke: color-mix(in oklch, var(--theory-layer-color) 38%, transparent);
+}
+
+.home-theory-figure-ray {
+  stroke: color-mix(in oklch, var(--theory-layer-color) 78%, transparent);
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.home-theory-figure-bit {
+  fill: color-mix(in oklch, var(--theory-layer-color) 82%, var(--foreground));
+}
+
+.home-theory-figure-bit[data-hollow="true"] {
+  fill: none;
+  stroke: color-mix(in oklch, var(--theory-layer-color) 62%, transparent);
   stroke-width: 1;
 }
 
-.home-theory-layer-glyph circle[data-glyph="origin"] {
-  stroke-dasharray: 1.5 3;
-  stroke-linecap: round;
-}
-
-.home-theory-layer-glyph circle[data-glyph="little-c"] {
-  fill: color-mix(in oklch, var(--foreground) 28%, transparent);
-  stroke: none;
-}
-
-.home-theory-layer-glyph circle[data-active] {
+.home-theory-figure-contour {
+  fill: none;
   stroke: var(--theory-layer-color);
-  stroke-width: 1.8;
-  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--theory-layer-color) 45%, transparent));
+  stroke-linecap: round;
+  stroke-width: 1.5;
 }
 
-.home-theory-layer-glyph circle[data-glyph="little-c"][data-active] {
+.home-theory-figure-contour[data-inner="true"] {
+  stroke-width: 1;
+  opacity: 0.45;
+}
+
+.home-theory-figure-membrane {
+  fill: none;
+  stroke: color-mix(in oklch, var(--theory-layer-color) 40%, transparent);
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+  stroke-width: 0.9;
+}
+
+.home-theory-figure-node line {
+  stroke: color-mix(in oklch, var(--theory-layer-color) 80%, var(--background));
+  stroke-linecap: round;
+  stroke-width: 1.1;
+}
+
+.home-theory-figure-node circle {
+  fill: color-mix(in oklch, var(--background) 80%, var(--theory-layer-color));
+  stroke: var(--theory-layer-color);
+  stroke-width: 1.1;
+}
+
+.home-theory-figure-boundary {
+  fill: color-mix(in oklch, var(--theory-layer-color) 5%, transparent);
+  stroke: var(--theory-layer-color);
+  stroke-width: 1.5;
+}
+
+.home-theory-figure-inset {
+  fill: none;
+  stroke: color-mix(in oklch, var(--foreground) 34%, transparent);
+  stroke-width: 0.8;
+  opacity: 0.68;
+}
+
+.home-theory-figure-grid circle {
+  fill: color-mix(in oklch, var(--foreground) 38%, transparent);
+}
+
+.home-theory-figure-axis line {
+  stroke: color-mix(in oklch, var(--foreground) 46%, transparent);
+  stroke-dasharray: 1 10;
+  stroke-linecap: round;
+  stroke-width: 1;
+}
+
+.home-theory-figure-reticle line {
+  stroke: color-mix(in oklch, var(--theory-layer-color) 78%, var(--foreground));
+  stroke-width: 1.1;
+}
+
+.home-theory-figure-awareness {
+  fill: none;
+  stroke: color-mix(in oklch, var(--theory-layer-color) 85%, transparent);
+  stroke-dasharray: 2.5 4.5;
+  stroke-linecap: round;
+  stroke-width: 1.15;
+}
+
+.home-theory-figure-potential {
+  fill: none;
+  stroke: color-mix(in oklch, var(--theory-layer-color) 42%, transparent);
+  stroke-dasharray: 1.5 5.5;
+  stroke-linecap: round;
+  stroke-width: 0.9;
+}
+
+.home-theory-figure-potential[data-faint="true"] {
+  opacity: 0.55;
+}
+
+.home-theory-figure-local-ring {
+  fill: color-mix(in oklch, var(--theory-layer-color) 6%, transparent);
+  stroke: var(--theory-layer-color);
+  stroke-dasharray: 2 5;
+  stroke-linecap: round;
+  stroke-width: 1;
+  opacity: 0.75;
+}
+
+.home-theory-figure-core {
   fill: var(--theory-layer-color);
+  stroke: var(--background);
+  stroke-width: 1.2;
+}
+
+.home-theory-figure-spoke {
+  stroke: color-mix(in oklch, var(--theory-layer-color) 88%, var(--foreground));
+  stroke-linecap: round;
+  stroke-width: 1.1;
+}
+
+.home-theory-figure-option {
+  fill: color-mix(in oklch, var(--foreground) 62%, transparent);
+}
+
+.home-theory-figure-option[data-chosen="true"] {
+  fill: var(--theory-layer-color);
+}
+
+.home-theory-figure-peer circle {
+  fill: color-mix(in oklch, var(--theory-layer-color) 4%, transparent);
+  stroke: color-mix(in oklch, var(--theory-layer-color) 45%, transparent);
+  stroke-dasharray: 1 4;
+  stroke-linecap: round;
+  stroke-width: 0.8;
+}
+
+.home-theory-figure-peer circle[data-core="true"] {
+  fill: color-mix(in oklch, var(--theory-layer-color) 74%, var(--background));
   stroke: none;
 }
 
 .home-theory-layer-copy {
+  container-type: inline-size;
   min-width: 0;
-  padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(1.25rem, 4vw, 3rem)
-    clamp(1.75rem, 3vw, 2.5rem);
+  padding: clamp(2rem, 3.5vw, 3.25rem) 0 clamp(2.5rem, 4vw, 3.5rem);
 }
 
 .home-theory-layer-copy .dot-page-heading {
   font-family: var(--home-theory-heading-font);
   width: 100%;
   max-width: min(22ch, 100%);
-  margin-inline: auto;
-  font-size: clamp(2.15rem, 3.25vw, 3rem);
+  margin-inline: 0;
+  font-size: clamp(2.35rem, 3.8vw, 3.45rem);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.06;
-  text-align: center;
+  text-align: left;
 }
 
 .home-theory-layer-status {
   display: inline-flex;
   align-items: center;
-  max-width: none;
+  max-width: 100%;
   margin: 0;
   padding: 0.22rem 0.7rem;
   border: 1px solid color-mix(in oklch, var(--theory-layer-color) 36%, transparent);
@@ -1910,60 +1861,13 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   line-height: 1.4;
 }
 
-.home-theory-memory-path {
-  display: grid;
-  width: min(100%, 34rem);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 0.35rem auto 0.45rem;
-  color: color-mix(in oklch, var(--foreground) 38%, transparent);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0;
-  line-height: 1.35;
-  text-align: center;
-}
-
-.home-theory-memory-path span {
-  position: relative;
-  min-width: 0;
-  padding: 0 0.25rem 0.65rem;
-}
-
-.home-theory-memory-path span::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: color-mix(in oklch, var(--foreground) 14%, transparent);
-  content: "";
-}
-
-.home-theory-memory-path span[data-past] {
-  color: color-mix(in oklch, var(--foreground) 58%, transparent);
-}
-
-.home-theory-memory-path span[data-past]::after {
-  background: color-mix(in oklch, var(--theory-layer-color) 38%, var(--border));
-}
-
-.home-theory-memory-path span[data-active] {
-  color: color-mix(in oklch, var(--theory-layer-color) 84%, var(--foreground));
-  font-weight: 650;
-}
-
-.home-theory-memory-path span[data-active]::after {
-  height: 2px;
-  background: var(--theory-layer-color);
-}
-
 .home-theory-layer-term {
-  margin: 0.15rem 0 0.25rem;
+  margin: 0.9rem 0 0.25rem;
   color: color-mix(in oklch, var(--theory-layer-color) 78%, var(--foreground));
   font-family: var(--home-theory-heading-font);
-  font-size: clamp(2.5rem, 5vw, 4.4rem);
-  font-weight: 500;
-  letter-spacing: 0;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 550;
+  letter-spacing: -0.01em;
   line-height: 0.95;
   white-space: nowrap;
 }
@@ -1971,72 +1875,46 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 .home-theory-layer-lede {
   width: 100%;
   max-width: 54ch;
-  margin: 0.85rem auto 0;
+  margin: 1.15rem 0 0;
   color: color-mix(in oklch, var(--foreground) 82%, var(--muted-foreground));
   font-family: var(--home-theory-body-font);
   font-size: clamp(1.2rem, 1.7vw, 1.38rem);
   font-weight: 400;
   line-height: 1.6;
-  text-align: center;
-  text-wrap: pretty;
+  text-align: left;
 }
 
 .home-theory-layer-human-stakes {
   max-width: 52ch;
-  margin: 0.75rem auto 0;
+  margin: 1rem 0 0;
   color: color-mix(in oklch, var(--foreground) 72%, var(--muted-foreground));
   font-family: var(--home-theory-body-font);
   font-size: 1.02rem;
   font-style: italic;
   line-height: 1.6;
-  text-align: center;
-  text-wrap: pretty;
+  text-align: left;
 }
 
 .home-theory-layer-thesis {
-  position: relative;
   width: 100%;
-  max-width: 62rem;
-  margin-inline: auto;
-  padding: clamp(1.65rem, 3vw, 2.35rem) clamp(1.25rem, 5vw, 4.5rem)
-    clamp(1.5rem, 2.75vw, 2.15rem);
-  border-top: 1px solid color-mix(in oklch, var(--theory-layer-color) 24%, var(--border));
-  border-bottom: 1px solid color-mix(in oklch, var(--theory-layer-color) 18%, var(--border));
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklch, var(--theory-layer-color) 5%, transparent),
-    transparent 58%
-  );
-}
-
-.home-theory-layer-thesis::before,
-.home-theory-layer-thesis::after {
-  content: none;
-}
-
-.home-theory-layer-thesis .dot-page-heading::before {
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  margin: 0 auto 0.9rem;
-  background: var(--theory-layer-color);
-  content: "";
+  padding-block: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
 }
 
 .home-theory-layer-memory {
   position: relative;
   display: grid;
-  max-width: 62rem;
+  max-width: none;
   grid-template-columns: minmax(8rem, 0.42fr) minmax(0, 1.58fr);
   gap: clamp(1rem, 3vw, 2.5rem);
   align-items: center;
-  margin: 0.6rem auto 0;
-  padding: clamp(0.9rem, 1.75vw, 1.2rem) clamp(1rem, 2.5vw, 1.6rem);
-  border-left: 2px solid var(--theory-layer-color);
+  margin: 0.75rem auto 0;
+  padding: clamp(1.2rem, 2.5vw, 1.75rem) clamp(1.15rem, 3vw, 2rem);
+  border-top: 2px solid var(--theory-layer-color);
+  border-left: 0;
   background: linear-gradient(
     90deg,
-    color-mix(in oklch, var(--theory-layer-color) 7%, transparent),
-    color-mix(in oklch, var(--theory-layer-color) 2%, transparent) 70%,
+    color-mix(in oklch, var(--theory-layer-color) 10%, transparent),
+    color-mix(in oklch, var(--theory-layer-color) 3%, transparent) 70%,
     transparent
   );
 }
@@ -2059,30 +1937,9 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   text-wrap: balance;
 }
 
-.home-theory-layer-prerequisite {
-  display: flex;
-  align-items: baseline;
-  gap: 0.65rem;
-  justify-content: center;
-  margin-bottom: 0.9rem;
-  color: var(--muted-foreground);
-  font-family: var(--home-theory-interface-font);
-  font-size: 0.9rem;
-}
-
-.home-theory-layer-prerequisite > span {
-  letter-spacing: 0.025em;
-}
-
-.home-theory-layer-prerequisite a,
-.home-theory-layer-prerequisite strong {
-  color: color-mix(in oklch, var(--theory-layer-color) 72%, var(--foreground));
-  font-weight: 600;
-}
-
 .home-theory-layer-inquiry {
   max-width: 62rem;
-  margin: 1.25rem auto 0;
+  margin: 1.75rem auto 0;
   border-top: 1px solid color-mix(in oklch, var(--theory-layer-color) 32%, var(--border));
   border-bottom: 1px solid color-mix(in oklch, var(--foreground) 15%, var(--border));
 }
@@ -2094,7 +1951,7 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
 .home-theory-layer-inquiry-steps > section {
   position: relative;
-  padding: 1.25rem 0;
+  padding: 1.75rem 0;
 }
 
 .home-theory-layer-inquiry-steps > section + section {
@@ -2170,7 +2027,6 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   font-size: 1.08rem;
   line-height: 1.62;
   text-align: left;
-  text-wrap: pretty;
 }
 
 .home-theory-layer-unresolved {
@@ -2239,28 +2095,71 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   box-shadow: none;
 }
 
+@container (min-width: 38rem) {
+  .home-theory-layers .home-theory-layer-inquiry-steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+
+  .home-theory-layers .home-theory-layer-foundation {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-theory-layers .home-theory-layer-inquiry-steps > section[data-step="proposal"] {
+    margin: 0;
+    padding-inline: 1.5rem 0;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+    background: none;
+  }
+
+  .home-theory-layers .home-theory-layer-inquiry-steps > section[data-step="boundary"] {
+    grid-column: 1 / -1;
+  }
+}
+
+.home-theory-layers .home-theory-layer-unresolved {
+  padding: 1rem 0 0;
+  border-left: 0;
+  border-top: 1px solid var(--border);
+  background: none;
+}
+
+.home-theory-layers .home-theory-layer-memory {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  background: none;
+}
+
+.home-theory-layers .home-theory-layer-memory-word,
+.home-theory-layers .home-theory-layer-term {
+  letter-spacing: 0;
+}
+
 .home-theory-layer-sources {
   max-width: 62rem;
-  margin: 1.75rem auto 0;
+  margin: 2.5rem auto 0;
   font-family: var(--home-theory-interface-font);
 }
 
 .home-theory-layer-reading-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: 1rem;
+  gap: 2.25rem;
+  margin-top: 1.25rem;
 }
 
 .home-theory-layer-external-reading {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .home-theory-layer-reading-header {
   display: flex;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   align-items: flex-start;
   padding-inline: 0.15rem;
 }
@@ -2284,43 +2183,115 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
 .home-theory-layer-reading-list {
   display: grid;
-  gap: 0.5rem;
+  gap: 0;
+  border-top: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
+}
+
+.home-theory-layer-reading-list > li:last-child .home-theory-layer-source-card[data-tone="external"] {
+  border-bottom: 0;
 }
 
 .home-theory-layer-book-reading {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .home-theory-layer-book-links {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
   height: 100%;
 }
 
 .home-theory-layer-source-card,
 .home-theory-layer-book-card {
   height: 100%;
-  min-height: 3.5rem;
-  padding: 0.75rem;
 }
 
+/* Outside evidence reads as a bibliography: rows and hairlines, not buttons.
+   The row is still a link; the ↗ carries the affordance. */
 .home-theory-layer-source-card[data-tone="external"] {
   --dot-card-accent: color-mix(in oklch, var(--foreground) 48%, var(--muted-foreground));
-  background: color-mix(in oklch, var(--dot-card-accent) 5%, transparent);
+
+  min-height: 0;
+  padding: 0.85rem 0.15rem;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
+  background: none;
+  box-shadow: none;
 }
 
-.home-theory-layer-book-card[data-tone="dot"] {
-  --dot-card-accent: var(--theory-layer-color);
-  background: color-mix(in oklch, var(--theory-layer-color) 8%, transparent);
+.home-theory-layer-source-card[data-tone="external"]:hover {
+  border-bottom-color: color-mix(in oklch, var(--foreground) 38%, transparent);
+  background: none;
+  transform: none;
 }
 
 .home-theory-layer-source-card[data-tone="external"] .dot-pathway-card__label,
-.home-theory-layer-source-card[data-tone="external"] .dot-pathway-card__title,
-.home-theory-layer-source-card[data-tone="external"] .dot-pathway-card__context {
+.home-theory-layer-source-card[data-tone="external"] .dot-pathway-card__title {
   color: color-mix(in oklch, var(--foreground) 82%, var(--muted-foreground));
+}
+
+.home-theory-layer-source-card[data-tone="external"] .dot-pathway-card__context {
+  color: color-mix(in oklch, var(--foreground) 55%, var(--muted-foreground));
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.01em;
+}
+
+/* The fixed edition is a door, not a citation: a tinted panel in the
+   section's own colour, entered from a marker shaped like its figure. */
+.home-theory-layer-book-card[data-tone="dot"] {
+  --dot-card-accent: var(--theory-layer-color);
+
+  border: 1px solid color-mix(in oklch, var(--theory-layer-color) 26%, var(--border));
+  border-left: 2px solid var(--theory-layer-color);
+  background: color-mix(in oklch, var(--theory-layer-color) 7%, transparent);
+}
+
+.home-theory-layer-book-card[data-tone="dot"]:hover {
+  border-color: color-mix(in oklch, var(--theory-layer-color) 55%, var(--border));
+  background: color-mix(in oklch, var(--theory-layer-color) 12%, transparent);
+}
+
+/* Each section's door is marked by its own geometry, echoing the rail figure. */
+.home-theory-layer-book-card .dot-mark {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--theory-layer-color);
+  box-shadow: none;
+}
+
+/* T·E: open possibility — a dashed hollow ring. */
+[data-layer="origin"] .home-theory-layer-book-card .dot-mark {
+  border: 1px dashed var(--theory-layer-color);
+  background: transparent;
+}
+
+/* Big C: the double contour. */
+[data-layer="big-c"] .home-theory-layer-book-card .dot-mark {
+  border: 1px solid var(--theory-layer-color);
+  background: transparent;
+  box-shadow: inset 0 0 0 2.5px var(--background), inset 0 0 0 3.5px var(--theory-layer-color);
+}
+
+/* RF₀: a bounded world with a core. */
+[data-layer="reality-frame"] .home-theory-layer-book-card .dot-mark {
+  border: 1px solid var(--theory-layer-color);
+  background: radial-gradient(
+    circle,
+    var(--theory-layer-color) 0 28%,
+    transparent 32%
+  );
+}
+
+/* Little c: the filled centre (the default mark, in this layer's colour). */
+
+.home-theory-layer-source-card[data-tone="external"] .dot-mark {
+  background: color-mix(in oklch, var(--muted-foreground) 70%, var(--foreground));
+  box-shadow: none;
 }
 
 .home-theory-layer-book-card[data-tone="dot"] .dot-pathway-card__label,
@@ -2330,12 +2301,12 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
 .home-theory-layer-next {
   display: flex;
-  min-height: 3.5rem;
+  min-height: 4.25rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 1rem;
-  padding: 0.75rem 0;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
   border-top: 1px solid color-mix(in oklch, var(--theory-layer-color) 24%, var(--border));
   color: var(--foreground);
   text-decoration: none;
@@ -2370,66 +2341,32 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
 .home-theory-layer-source-card:focus-visible,
 .home-theory-layer-book-card:focus-visible,
-.home-theory-layer-next:focus-visible,
-.home-theory-layer-prerequisite a:focus-visible {
+.home-theory-layer-next:focus-visible {
   outline: 2px solid var(--theory-layer-color);
   outline-offset: 3px;
 }
 
 @media (min-width: 1100px) {
-  .home-theory-layer-identity {
+  .home-theory-layer-card {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-rows: auto auto;
-    column-gap: 1.25rem;
-    row-gap: 0.25rem;
-    align-items: center;
-    padding-block: 1.15rem;
-    text-align: left;
+    grid-template-columns: minmax(12rem, 0.32fr) minmax(0, 1fr);
   }
 
-  .home-theory-layer-glyph {
-    grid-row: 1 / 3;
+  .home-theory-layer-identity {
+    position: sticky;
+    top: 5.5rem;
+    align-self: start;
+    padding: 2.25rem 1.75rem;
+    border-bottom: 0;
   }
 
-  .home-theory-memory-path {
-    width: min(100%, 30rem);
-    margin: 0;
-  }
-
-  .home-theory-layer-term {
-    grid-column: 2;
-    grid-row: 2;
-    margin: 0;
-    font-size: clamp(2rem, 2.5vw, 2.65rem);
-  }
-
-  .home-theory-layer-status {
-    grid-column: 3;
-    grid-row: 1 / 3;
+  .home-theory-layer-copy {
+    padding: clamp(2.75rem, 4vw, 4.25rem);
+    border-left: 1px solid color-mix(in oklch, var(--theory-layer-color) 22%, var(--border));
   }
 
   .home-theory-layer-foundation {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .home-theory-layer-inquiry-steps {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .home-theory-layer-inquiry-steps > section:first-child {
-    grid-column: 1 / -1;
-  }
-
-  .home-theory-layer-inquiry-steps > section[data-step="proposal"] {
-    margin-inline: 0;
-    padding-inline: 1.25rem;
-  }
-
-  .home-theory-layer-inquiry-steps > section[data-step="boundary"] {
-    padding-inline: 1.25rem;
-    border-left: 1px solid color-mix(in oklch, var(--foreground) 11%, var(--border));
   }
 }
 
@@ -2440,93 +2377,43 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
 
 }
 
+@media (max-width: 1099px) {
+  .home-theory-layer-identity {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    align-items: center;
+  }
+
+  .home-theory-layer-plate {
+    grid-row: 1 / 3;
+  }
+
+  .home-theory-layer-term {
+    margin: 0;
+    align-self: end;
+    font-size: 2rem;
+    white-space: normal;
+  }
+
+  .home-theory-layer-status {
+    justify-self: start;
+    align-self: start;
+  }
+}
+
 @media (max-width: 639px) {
   .home-theory-layer-environment {
-    padding: 1.25rem 0;
+    padding: 3rem 0;
   }
 
   .home-theory-layer-card {
     max-width: 36rem;
-    box-shadow:
-      0 0.75rem 1.75rem color-mix(in oklch, var(--foreground) 5%, transparent),
-      0 0.1rem 0.25rem color-mix(in oklch, var(--foreground) 4%, transparent);
   }
 
   .home-theory-layer-identity,
   .home-theory-layer-copy {
-    padding-inline: 1rem;
-  }
-
-  .home-theory-layer-identity {
-    gap: 0.3rem;
-    padding-block: 1rem 0.9rem;
-  }
-
-  .home-theory-layer-glyph {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-
-  .home-theory-memory-path {
-    display: flex;
-    width: auto;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-block: 0.2rem 0.3rem;
-    font-size: 0.75rem;
-  }
-
-  .home-theory-memory-path span {
-    display: block;
-    width: 0.45rem;
-    height: 0.45rem;
-    flex: 0 0 0.45rem;
-    overflow: hidden;
-    padding: 0;
-    border: 1px solid color-mix(in oklch, var(--foreground) 24%, transparent);
-    border-radius: 9999px;
-    color: transparent;
-    font-size: 0;
-  }
-
-  .home-theory-memory-path span::after {
-    content: none;
-  }
-
-  .home-theory-memory-path span[data-past] {
-    border-color: color-mix(in oklch, var(--theory-layer-color) 52%, var(--border));
-    background: color-mix(in oklch, var(--theory-layer-color) 58%, transparent);
-  }
-
-  .home-theory-memory-path span[data-active] {
-    width: auto;
-    height: auto;
-    flex-basis: auto;
-    overflow: visible;
-    padding-inline: 0.15rem;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: color-mix(in oklch, var(--theory-layer-color) 84%, var(--foreground));
-    font-size: 0.75rem;
-  }
-
-  .home-theory-layer-term {
-    margin-block: 0.05rem 0.15rem;
-    font-size: 2.25rem;
-  }
-
-  .home-theory-layer-status {
-    font-size: 0.75rem;
-  }
-
-  .home-theory-layer-copy .dot-page-heading {
-    font-size: 2rem;
-  }
-
-  .home-theory-layer-thesis {
-    padding: 1.4rem 0.5rem 1.3rem;
+    padding-inline: 0.25rem;
   }
 
   .home-theory-layer-memory {
@@ -2537,21 +2424,6 @@ html[data-ui-style="cinematic"] .home-architecture-thread-glow {
   .home-theory-layer-inquiry-steps > section[data-step="proposal"] {
     margin-inline: -0.5rem;
     padding-inline: 0.5rem;
-  }
-}
-
-@media (max-width: 359px) {
-  .home-theory-layer-environment > .dot-page-container {
-    padding-inline: 0.75rem;
-  }
-
-  .home-theory-layer-identity,
-  .home-theory-layer-copy {
-    padding-inline: 0.75rem;
-  }
-
-  .home-theory-layer-copy .dot-page-heading {
-    font-size: 1.9rem;
   }
 }
 
@@ -3491,273 +3363,6 @@ html[data-contrast="high"] .arch-mobile-detail {
 
 }
 
-/* Reality Frame: inversion marks the passage from model to consequence. */
-.home-reality-environment {
-  overflow: hidden;
-  background:
-    radial-gradient(
-      circle at 76% 28%,
-      color-mix(in oklch, var(--organism-accent-strong) 10%, transparent),
-      transparent 40%
-    ),
-    color-mix(in oklch, var(--foreground) 96%, var(--organism-accent));
-  color: var(--background);
-}
-
-.home-reality-environment::before {
-  content: "";
-  position: absolute;
-  inset: 1.25rem;
-  z-index: 0;
-  border: 1px solid color-mix(in oklch, var(--background) 22%, transparent);
-  pointer-events: none;
-}
-
-.home-reality-layout {
-  position: relative;
-  display: grid;
-  max-width: 76rem;
-  gap: 3rem;
-  padding-top: clamp(4.5rem, 7vw, 6rem);
-  padding-bottom: clamp(4.5rem, 7vw, 6rem);
-}
-
-.home-reality-heading {
-  position: relative;
-  align-self: center;
-  padding-left: 1.4rem;
-}
-
-.home-reality-heading::before {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    var(--organism-accent-strong) 20%,
-    color-mix(in oklch, var(--organism-accent-strong) 18%, transparent) 82%,
-    transparent
-  );
-  content: "";
-}
-
-.home-inverse-label {
-  color: color-mix(in oklch, var(--background) 74%, var(--organism-accent-strong));
-  font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.035em;
-  text-transform: none;
-}
-
-.home-inverse-heading {
-  max-width: 12ch;
-  color: var(--background);
-  font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
-  font-size: 3.15rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.01;
-}
-
-.home-reality-copy {
-  --home-evidence-display-font: var(
-    --book-reading-heading-font,
-    "Playfair Display",
-    Georgia,
-    serif
-  );
-  --home-evidence-text-font: var(
-    --book-reading-font,
-    "Source Serif 4",
-    Georgia,
-    serif
-  );
-  --home-evidence-interface-font: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-
-  position: relative;
-  width: 100%;
-  max-width: 50rem;
-  padding: clamp(1.5rem, 3vw, 2.35rem);
-  border: 1px solid color-mix(in oklch, var(--background) 24%, transparent);
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      color-mix(in oklch, var(--organism-accent-strong) 8%, transparent),
-      transparent 34%
-    ),
-    color-mix(in oklch, var(--foreground) 91%, var(--background));
-  color: var(--background);
-  font-family: var(--home-evidence-text-font);
-  font-synthesis: none;
-  box-shadow:
-    0 1.15rem 3rem color-mix(in oklch, var(--foreground) 22%, transparent),
-    0 0.15rem 0.35rem color-mix(in oklch, var(--foreground) 20%, transparent);
-  text-rendering: optimizeLegibility;
-}
-
-.home-reality-copy::before {
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 4rem;
-  height: 2px;
-  background: var(--organism-accent-strong);
-  content: "";
-}
-
-.home-evidence-invitation {
-  max-width: 42rem;
-  color: var(--background);
-  font-family: var(--home-evidence-text-font);
-  font-size: clamp(1.18rem, 1.55vw, 1.32rem);
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-
-/* The charge that follows the confession: quieter, and the reader's. */
-.home-evidence-address {
-  max-width: 40rem;
-  margin-top: 0.9rem;
-  color: color-mix(in oklch, var(--background) 86%, var(--organism-accent-strong));
-  font-family: var(--home-evidence-text-font);
-  font-size: 1.05rem;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-.home-evidence-claims {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.65rem;
-}
-
-.home-evidence-claims > div {
-  padding: 1rem 0 1.1rem 1rem;
-  border-top: 1px solid color-mix(in oklch, var(--background) 24%, transparent);
-  border-left: 2px solid color-mix(in oklch, var(--background) 24%, transparent);
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklch, var(--background) 5%, transparent),
-    transparent 76%
-  );
-}
-
-.home-evidence-claims > div[data-status="grounded"] {
-  border-left-color: var(--organism-accent-strong);
-}
-
-.home-evidence-claims > div[data-status="proposed"] {
-  border-left-color: var(--theory-origin);
-}
-
-.home-evidence-claims dt {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  color: var(--background);
-  font-family: var(--home-evidence-interface-font);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-.home-evidence-claims dt > span:first-child {
-  font-size: 0.9rem;
-}
-
-/* Inverse panel: the badge borrows the panel's inverted palette. */
-.home-evidence-claims dt .dot-epistemic-badge {
-  border-color: color-mix(in oklch, var(--background) 26%, transparent);
-  background: transparent;
-  color: color-mix(in oklch, var(--background) 82%, var(--organism-accent-strong));
-}
-
-.home-evidence-claims dd {
-  margin-top: 0.65rem;
-  color: color-mix(in oklch, var(--background) 88%, var(--organism-accent-strong));
-  font-family: var(--home-evidence-text-font);
-  font-size: 1.02rem;
-  font-weight: 400;
-  line-height: 1.58;
-}
-
-.home-evidence-standard {
-  margin-top: 1.4rem;
-  padding-top: 1.15rem;
-  border-top: 1px solid color-mix(in oklch, var(--background) 28%, transparent);
-  color: var(--background);
-  font-family: var(--home-evidence-text-font);
-}
-
-.home-evidence-standard > span {
-  color: color-mix(in oklch, var(--background) 78%, var(--organism-accent-strong));
-  font-family: var(--home-evidence-interface-font);
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.home-evidence-standard p {
-  max-width: 38rem;
-  margin-top: 0.4rem;
-  color: color-mix(in oklch, var(--background) 88%, var(--organism-accent-strong));
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.home-inverse-link {
-  margin-top: 1.4rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--background);
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--home-evidence-interface-font);
-  font-weight: 600;
-  letter-spacing: 0;
-  transition:
-    border-color 160ms ease,
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 160ms ease;
-}
-
-.home-inverse-link:hover,
-.home-inverse-link:focus-visible {
-  border-color: color-mix(in oklch, var(--background) 70%, var(--organism-accent-strong));
-  background: color-mix(in oklch, var(--background) 84%, var(--organism-accent-strong));
-  color: var(--foreground);
-  transform: translateY(-1px);
-}
-
-@media (min-width: 800px) {
-  .home-reality-layout {
-    grid-template-columns: minmax(19rem, 0.68fr) minmax(0, 1.32fr);
-    gap: clamp(2.75rem, 4.5vw, 4.5rem);
-    align-items: center;
-  }
-
-  .home-reality-copy {
-    justify-self: stretch;
-  }
-
-  .home-inverse-heading {
-    font-size: clamp(3.75rem, 5vw, 4.6rem);
-  }
-}
-
-@media (min-width: 1100px) {
-  .home-evidence-claims {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 .home-concept-ledger {
   display: grid;
   margin: 0;
@@ -3835,8 +3440,12 @@ html[data-contrast="high"] .arch-mobile-detail {
 
 /* Entrances: one primary route and one quiet reference path. */
 .home-entrances-environment {
-  padding: 6.5rem 0;
-  background-color: var(--home-ground-entrances);
+  position: relative;
+  padding: 7.5rem 0;
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    var(--home-ground-entrances);
+  background-size: 6rem 6rem;
 }
 
 .home-ending-label {
@@ -3851,7 +3460,9 @@ html[data-contrast="high"] .arch-mobile-detail {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.85rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid color-mix(in oklch, var(--foreground) 16%, transparent);
 }
 
 .home-path-secondary {
@@ -3860,6 +3471,7 @@ html[data-contrast="high"] .arch-mobile-detail {
   align-items: center;
   gap: 0.55rem;
   color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
   font-size: 0.875rem;
   font-weight: 600;
   transition: color 180ms ease;
@@ -3995,44 +3607,6 @@ html[data-field="off"] .home-hero-stage::before {
     padding-top: 2rem;
   }
 
-  .home-reality-environment::before {
-    inset: 0.75rem;
-  }
-
-  .home-reality-layout {
-    gap: 2rem;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
-
-  .home-reality-heading {
-    padding-left: 1rem;
-  }
-
-  .home-inverse-heading {
-    font-size: clamp(2.4rem, 11vw, 2.85rem);
-  }
-
-  .home-reality-copy {
-    padding: 1.35rem 1.15rem 1.45rem;
-    box-shadow:
-      0 0.85rem 2rem color-mix(in oklch, var(--foreground) 20%, transparent),
-      0 0.1rem 0.25rem color-mix(in oklch, var(--foreground) 18%, transparent);
-  }
-
-  .home-evidence-claims dt {
-    align-items: flex-start;
-  }
-
-  .home-evidence-claims dd {
-    font-size: 0.96rem;
-  }
-
-  .home-inverse-link {
-    width: 100%;
-    justify-content: space-between;
-  }
-
   .home-reflection-layout {
     gap: 2.75rem;
   }
@@ -4087,22 +3661,6 @@ html[data-field="off"] .home-hero-stage::before {
 
 }
 
-@media (max-width: 359px) {
-  .home-evidence-claims dt {
-    gap: 0.4rem;
-  }
-
-  .home-evidence-claims dt > span:first-child {
-    font-size: 0.82rem;
-    white-space: nowrap;
-  }
-
-  .home-inverse-link {
-    padding-inline: 0.75rem;
-    font-size: 0.8125rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .home-journey *,
   .home-journey *::before,
@@ -4153,26 +3711,6 @@ html[data-field="off"] .home-hero-stage::before {
   --ask-lift: var(--appearance-ui-control-shadow);
 }
 
-html[data-ui-style="minimal"] .home-inquiry,
-html[data-ui-style="editorial"] .home-inquiry {
-  --ask-active: var(--foreground);
-  --ask-active-soft: color-mix(in oklch, var(--foreground) 16%, transparent);
-}
-
-html[data-ui-style="organic"] .home-inquiry {
-  --ask-active: color-mix(
-    in oklch,
-    var(--organism-accent-strong) 58%,
-    var(--foreground)
-  );
-  --ask-active-soft: color-mix(
-    in oklch,
-    var(--organism-accent-soft) 56%,
-    transparent
-  );
-}
-
-html[data-ui-style] .home-inquiry__header .dot-label,
 .home-inquiry__header .dot-label {
   color: color-mix(in oklch, var(--muted-foreground) 88%, var(--foreground));
 }
@@ -4201,6 +3739,16 @@ html[data-ui-style] .home-inquiry__header .dot-label,
   width: 0.85rem;
   height: 0.85rem;
   color: currentColor;
+}
+
+/* The field's one visible sentence of expectations — also its aria description. */
+.home-inquiry__note {
+  margin-top: 0.55rem;
+  padding-inline: 0.15rem;
+  color: color-mix(in oklch, var(--muted-foreground) 88%, var(--foreground));
+  font-family: var(--home-public-annotate-font, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  line-height: 1.5;
 }
 
 .home-ask {

@@ -5,20 +5,6 @@ export type HeroAskRequest = {
   lens: AgentLens;
 };
 
-export interface HeroArgument {
-  id: string;
-  stance: string;
-  text: string;
-}
-
-export const HERO_TYPE_INTERVAL_MS = 22;
-
-export const HERO_ARGUMENT: HeroArgument = {
-  id: "home.argument.subjective-data",
-  stance: "The first discipline",
-  text: "Feeling must be treated as data — but feeling is not automatically truth.",
-};
-
 type ClaimLevel = "observation" | "model" | "hypothesis";
 
 export interface Concept {

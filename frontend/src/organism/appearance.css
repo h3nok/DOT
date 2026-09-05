@@ -26,8 +26,7 @@
  * out badly across a 3,000-word chapter, which is why it carries headings and
  * not body — the two faces are doing different jobs, not competing. */
 html[data-reading="serif"] .book-surface,
-html[data-reading="serif"] .home-theory-layer-card,
-html[data-reading="serif"] .home-reality-environment {
+html[data-reading="serif"] .home-theory-layer-card {
   --book-reading-font: "Source Serif 4", Charter, Georgia, serif;
   --book-reading-heading-font: "Playfair Display", Georgia, serif;
 }
@@ -36,8 +35,7 @@ html[data-reading="serif"] .home-reality-environment {
    Inter is a superb text face and a flat heading face; Space Grotesk is already
    bundled and gives headings the shift in voice the serif option gets. */
 html[data-reading="sans"] .book-surface,
-html[data-reading="sans"] .home-theory-layer-card,
-html[data-reading="sans"] .home-reality-environment {
+html[data-reading="sans"] .home-theory-layer-card {
   --book-reading-font: "Inter", ui-sans-serif, system-ui, sans-serif;
   --book-reading-heading-font: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
 }
@@ -50,15 +48,13 @@ html[data-reading="sans"] .home-reality-environment {
    between heading and body is a luxury the reader who picked this did not ask
    for. Same reasoning for Mono below: a display mono is a contradiction. */
 html[data-reading="humanist"] .book-surface,
-html[data-reading="humanist"] .home-theory-layer-card,
-html[data-reading="humanist"] .home-reality-environment {
+html[data-reading="humanist"] .home-theory-layer-card {
   --book-reading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
   --book-reading-heading-font: Verdana, Tahoma, "DejaVu Sans", ui-sans-serif, sans-serif;
 }
 
 html[data-reading="mono"] .book-surface,
-html[data-reading="mono"] .home-theory-layer-card,
-html[data-reading="mono"] .home-reality-environment {
+html[data-reading="mono"] .home-theory-layer-card {
   --book-reading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --book-reading-heading-font: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }

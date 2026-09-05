@@ -106,7 +106,7 @@ export interface OrganismPresetSpec {
 export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
   field: {
     label: "Canvas",
-    hint: "The raw stream — bits of experience drifting and flipping.",
+    hint: "The raw stream — dots of experience drifting; filled carries, hollow waits.",
     density: 0.8,
     speed: 0.7,
     linkFactor: 0,

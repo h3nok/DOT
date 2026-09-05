@@ -60,7 +60,7 @@ test.describe("appearance controls change the rendered document", () => {
     await expect.poll(localCoreFill).not.toBe(jade);
   });
 
-  test("ui style reaches the document root and hero geometry", async ({ page }) => {
+  test("ui style changes controls while keeping one home diagram", async ({ page }) => {
     test.slow();
     await page.goto("/");
     const panel = await openAppearancePanel(page);
@@ -68,29 +68,21 @@ test.describe("appearance controls change the rendered document", () => {
 
     // Glass is the baseline style, so it reports as "default" rather than "glass".
     const styles = [
-      ["Editorial", "editorial", "editorial"],
-      ["Minimal", "minimal", "minimal"],
-      ["Organic", "organic", "organic"],
-      ["Glass", "default", "neural"],
+      ["Editorial", "editorial"],
+      ["Minimal", "minimal"],
+      ["Organic", "organic"],
+      ["Glass", "default"],
     ] as const;
 
-    for (const [label, expected, geometry] of styles) {
+    const diagram = page.locator(".home-hero-architecture__svg");
+    const geometry = await diagram.innerHTML();
+    for (const [label, expected] of styles) {
       await panel.getByRole("button", { name: label, exact: true }).click();
       await expect.poll(() => htmlAttribute(page, "data-ui-style")).toBe(expected);
 
-      // Mobile deliberately suppresses auxiliary geometry to preserve the
-      // diagram's labels. Desktop must visibly answer the selected style.
-      if ((page.viewportSize()?.width ?? 0) >= 640) {
-        await expect
-          .poll(() =>
-            renderedStyle(
-              page,
-              `.home-architecture-style--${geometry}`,
-              "opacity",
-            ),
-          )
-          .toBe("1");
-      }
+      await expect(diagram).toBeVisible();
+      expect(await diagram.innerHTML()).toBe(geometry);
+      await expect(page.locator('[class*="home-architecture-style--"]')).toHaveCount(0);
     }
   });
 

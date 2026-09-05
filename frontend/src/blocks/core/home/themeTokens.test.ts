@@ -85,11 +85,6 @@ describe("home entry theme compatibility", () => {
     expect(styles).toContain("var(--appearance-ui-control-radius)");
     expect(styles).toContain("var(--appearance-ui-control-background)");
     expect(styles).toContain("var(--appearance-ui-backdrop)");
-    expect(styles).toContain('html[data-ui-style="neural"] .home-hero-stage');
-    expect(styles).toContain('html[data-ui-style="minimal"] .home-hero-stage');
-    expect(styles).toContain('html[data-ui-style="organic"] .home-hero-stage');
-    expect(styles).toContain('html[data-ui-style="editorial"] .home-hero-stage');
-    expect(styles).toContain('html[data-ui-style="cinematic"] .home-hero-stage');
   });
 
   it("keeps the inquiry field neutral and open until the reader acts", () => {
@@ -106,8 +101,6 @@ describe("home entry theme compatibility", () => {
     expect(inquiry).not.toContain("--ask-ink: var(--organism-accent-strong)");
     expect(selectedLens).toContain("color: var(--foreground)");
     expect(selectedLens).not.toContain("var(--ask-active)");
-    expect(styles).toContain('html[data-ui-style="minimal"] .home-inquiry');
-    expect(styles).toContain('html[data-ui-style="organic"] .home-inquiry');
   });
 
   it("keeps the architecture optically sharp at fractional SVG scales", () => {
@@ -127,7 +120,7 @@ describe("home entry theme compatibility", () => {
     expect(styles).toContain("paint-order: stroke fill");
     expect(styles).toContain("baseline-shift: sub");
     expect(styles).toMatch(
-      /html\[data-ui-style="neural"\] \.home-architecture-causal-trace path[\s\S]*?filter: none;/,
+      /\.home-architecture-causal-trace path\s*\{[\s\S]*?filter: none;/,
     );
     expect(styles).toMatch(
       /\.home-architecture-frame-boundary\s*\{[\s\S]*?stroke-width: 1\.5;/,
@@ -245,20 +238,16 @@ describe("home entry theme compatibility", () => {
     expect(styles).toContain(".home-architecture-frame-zone");
   });
 
-  it("changes the architecture's geometry with the selected UI style", () => {
+  it("renders one canonical architecture for every appearance style", () => {
     const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
-    for (const style of ["neural", "minimal", "organic", "editorial", "cinematic"]) {
-      expect(architecture).toContain(`home-architecture-style--${style}`);
-      expect(styles).toContain(`data-ui-style="${style}"`);
-    }
+    // One personality: the drawing no longer shape-shifts with the UI style.
+    expect(architecture).not.toContain("home-architecture-style--");
+    expect(styles).not.toContain("data-ui-style");
+    expect(architecture).toContain("home-architecture-measure-marks");
+    expect(styles).toContain(".home-architecture-measure-marks");
 
-    expect(architecture).toContain("home-architecture-neural-lattice");
-    expect(architecture).toContain("home-architecture-organic-rings");
-    expect(architecture).toContain("home-architecture-minimal-axis");
-    expect(architecture).toContain("home-architecture-editorial-measure");
-    expect(architecture).toContain("home-architecture-cinematic-field");
     expect(architecture).not.toContain("home-architecture-field-traces");
     expect(architecture).not.toContain("M348 155V549M151 352H545");
     expect(
