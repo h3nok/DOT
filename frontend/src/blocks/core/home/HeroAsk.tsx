@@ -148,8 +148,9 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
           </button>
         </div>
 
-        <p id="hero-ask-description" className="sr-only">
-          Answers open in a focused panel and cite passages from the released Book One text.
+        <p id="hero-ask-description" className="home-inquiry__note">
+          Try “Do we ever really choose?” — answers cite the released text.
+          Ground anchors them in passages; Test challenges the claim.
         </p>
       </form>
     </div>

@@ -15,7 +15,6 @@ import { useAuth } from "../../../dot/useAuth";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
-import { EpistemicBadge } from "../../../shared/EpistemicBadge";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
@@ -74,7 +73,7 @@ export default function HomePage() {
 
           <div className="flex items-center gap-3">
             <AppearanceControl placement="inline" />
-            <EditModeToggle />
+            {isOwner && <EditModeToggle />}
 
             {isOwner ? (
               <div className="flex items-center gap-2">
@@ -116,16 +115,15 @@ export default function HomePage() {
         className="home-environment home-hero-environment"
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
-          <div className="home-hero-copy">
-            <HeroProposition
-              reducedMotion={organismReducedMotion}
-              inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
-            />
-          </div>
-
-          <div className="home-hero-stage">
-            <HeroArchitecture />
-          </div>
+          <HeroProposition
+            reducedMotion={organismReducedMotion}
+            inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
+            stage={
+              <div className="home-hero-stage">
+                <HeroArchitecture />
+              </div>
+            }
+          />
         </div>
 
         <a className="home-scroll-cue" href="#possibility-field">
@@ -147,85 +145,6 @@ export default function HomePage() {
 
       {/* ── The theory, in the same outside-to-inside order as the hero ─ */}
       <TheoryLayerJourney reducedMotion={reducedMotion} />
-
-      {/* ── The theory's evidence boundary ───────────────────────────── */}
-      <motion.section
-        id="epistemic-boundary"
-        aria-label="The evidence boundary"
-        initial={reducedMotion ? false : { y: 12 }}
-        whileInView={{ y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: reducedMotion ? 0 : 0.5 }}
-        className="home-environment home-reality-environment scroll-mt-24"
-      >
-        <div className="home-reality-layout dot-page-container dot-page-wide">
-          <div className="home-reality-heading">
-            <span className="home-inverse-label dot-label">The evidence boundary</span>
-            <h2 className="home-inverse-heading mt-4 text-balance">
-              The model must show where evidence ends.
-            </h2>
-          </div>
-          <div className="home-reality-copy">
-            <p className="home-evidence-invitation text-balance">
-              I did not receive these ideas; I earned them the hard way, wrong
-              turn by wrong turn. I know what is running through your mind right
-              now — I have been there.
-            </p>
-            <p className="home-evidence-address">
-              No one can walk this for you: not this site, not the book, not me.
-              This is your game to play. Test DOT with your own attention.
-              Revise it. Keep what survives; leave what does not.
-            </p>
-
-            <dl className="home-evidence-claims">
-              <div data-status="grounded">
-                <dt>
-                  <span>Publicly grounded</span>
-                  {" "}
-                  <EpistemicBadge status="evidence">Evidence</EpistemicBadge>
-                </dt>
-                <dd>
-                  At observed scales, the physical universe is modeled as a lawful
-                  spacetime continuum. Cognition depends on embodied processes.
-                  First-person experience is bounded to a local perspective.
-                </dd>
-              </div>
-              <div data-status="proposed">
-                <dt>
-                  <span>Still proposed</span>
-                  {" "}
-                  <EpistemicBadge status="hypothesis">Hypothesis</EpistemicBadge>
-                </dt>
-                <dd>
-                  DOT proposes T and E as primordial conditions; Big C as a developed
-                  conscious organism; this physical universe as RF₀, a generated virtual
-                  Reality Frame; possible further Frames; and Little c as a nonphysical
-                  experiencer.
-                </dd>
-              </div>
-            </dl>
-
-            <div className="home-evidence-standard">
-              <span>Academy standard</span>
-              <p>
-                Every contribution separates observation, model, hypothesis, and
-                speculation at the point of use. DOT receives no exemption from that
-                standard.
-              </p>
-            </div>
-            <Link
-              to="/applied"
-              className="home-inverse-link group inline-flex min-h-11 items-center gap-2 text-sm font-semibold"
-            >
-              Test the strongest objections
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-          </div>
-        </div>
-      </motion.section>
 
       {/* ── Final invitation into the living inquiry ─────────────────── */}
       <motion.section
@@ -279,8 +198,16 @@ export default function HomePage() {
           <p className="text-xs leading-relaxed text-muted-foreground/50">
             Written by Henok Ghebrechristos · offered as a construction, not a revelation.
             No ads, no profiling, no data sales.
-          </p>
-        </div>
+          </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
+              deeper in, at the book's access page, never here (ADR-0022). */}
+          <nav aria-label="Quiet links" className="flex items-center gap-5 text-xs">
+            <Link
+              to="/join"
+              className="text-muted-foreground/60 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            >
+              Join the readers’ list
+            </Link>
+          </nav>        </div>
       </footer>
 
       <AnimatePresence>

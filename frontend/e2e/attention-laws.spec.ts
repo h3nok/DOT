@@ -58,8 +58,8 @@ test.describe("stillness is honoured", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
 
-    const statement = page.locator(".home-hero-statement");
-    await expect(statement).toBeVisible();
+    const thesis = page.locator(".home-hero-reversal");
+    await expect(thesis).toBeVisible();
     await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
 
     // Entry transitions are fine and self-terminating; perpetual motion is not.
@@ -73,6 +73,6 @@ test.describe("stillness is honoured", () => {
     expect(looping, "looping animations survived prefers-reduced-motion").toBe(0);
 
     // Reduced motion must not mean reduced content.
-    expect((await statement.innerText()).trim().length).toBeGreaterThan(20);
+    expect((await thesis.innerText()).trim().length).toBeGreaterThan(20);
   });
 });

@@ -49,7 +49,7 @@ test.describe("hero", () => {
   }) => {
     await page.goto("/");
 
-    await expect(page.locator(".home-hero-statement")).toBeVisible();
+    await expect(page.locator(".home-hero-reversal")).toBeVisible();
     await expect(page.locator(".home-hero-architecture svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
@@ -131,7 +131,7 @@ test.describe("hero", () => {
     await expect(cards).toHaveCount(4);
 
     const argumentOpacity = await page
-      .locator("#big-c, #epistemic-boundary, #choose-path")
+      .locator("#big-c, #choose-path")
       .evaluateAll((items) => items.map((item) => getComputedStyle(item).opacity));
     expect(argumentOpacity.every((opacity) => opacity === "1")).toBe(true);
 
@@ -160,11 +160,6 @@ test.describe("hero", () => {
     ).toBeVisible();
     await expect(realityFrame.getByText(/spacetime governed by fields and laws/)).toBeVisible();
     await expect(realityFrame.getByText(/generated rather than fundamental/)).toBeVisible();
-    const memoryPath = realityFrame.locator(".home-theory-memory-path span");
-    await expect(memoryPath).toHaveCount(4);
-    await expect(
-      realityFrame.locator('.home-theory-memory-path span[data-active="true"]'),
-    ).toHaveText("Consequence");
     await expect(
       realityFrame.getByText("A generated world is still a consequential world."),
     ).toBeVisible();
@@ -187,51 +182,19 @@ test.describe("hero", () => {
     expect(presentation.every(({ transform }) => transform === "uppercase" || transform === "none")).toBe(true);
   });
 
-  test("the evidence boundary separates support, hypothesis and method legibly", async ({
-    page,
-  }) => {
+  test("each theory panel carries its own test boundary", async ({ page }) => {
     await page.goto("/");
 
-    const boundary = page.locator("#epistemic-boundary");
-    await expect(
-      boundary.getByRole("heading", { name: "The model must show where evidence ends." }),
-    ).toBeVisible();
-    await expect(boundary.getByText("Publicly grounded")).toBeVisible();
-    await expect(boundary.getByText("Still proposed")).toBeVisible();
-    await expect(boundary.getByText("Academy standard")).toBeVisible();
-    await expect(boundary.getByText("Evidence", { exact: true })).toBeVisible();
-    await expect(boundary.getByText("Hypothesis", { exact: true })).toBeVisible();
-
-    const presentation = await boundary
-      .locator(
-        ".home-evidence-invitation, .home-evidence-claims dd, .home-evidence-standard p",
-      )
-      .evaluateAll((items) =>
-        items.map((item) => {
-          const style = getComputedStyle(item);
-          return {
-            color: style.color,
-            opacity: Number.parseFloat(style.opacity),
-            size: Number.parseFloat(style.fontSize),
-          };
-        }),
-      );
-
-    expect(presentation).toHaveLength(4);
-    expect(presentation.every(({ opacity }) => opacity === 1)).toBe(true);
-    expect(presentation.every(({ size }) => size >= 15)).toBe(true);
-    expect(presentation.every(({ color }) => color !== "rgba(0, 0, 0, 0)")).toBe(true);
-
-    if ((page.viewportSize()?.width ?? 0) >= 800) {
-      const copyWidth = await boundary.locator(".home-reality-copy").evaluate((element) =>
-        element.getBoundingClientRect().width,
-      );
-      expect(copyWidth).toBeGreaterThanOrEqual(700);
+    // The standalone evidence-boundary section is retired; the honesty now
+    // lives inside every panel, so pin it there instead.
+    await expect(page.locator("#epistemic-boundary")).toHaveCount(0);
+    const boundaries = page.locator(
+      ".home-theory-layer-card [data-step='boundary']",
+    );
+    await expect(boundaries).toHaveCount(4);
+    for (let index = 0; index < 4; index += 1) {
+      await expect(boundaries.nth(index).getByText("Test boundary")).toBeVisible();
     }
-
-    await expect(
-      boundary.getByRole("link", { name: "Test the strongest objections" }),
-    ).toBeVisible();
   });
 });
 

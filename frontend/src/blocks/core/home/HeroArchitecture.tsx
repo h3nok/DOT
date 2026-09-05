@@ -2,6 +2,10 @@ import { useId } from "react";
 
 const BIG_C_RINGS = [286, 297] as const;
 
+const FIELD_CONTOURS = [326, 338] as const;
+const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
+const MEMBRANE_BANDS = [258, 270] as const;
+
 const BIG_C_MEMBRANE_NODES = [-116, -72, -28, 18, 64, 112, 158, 204].map(
   (angle, index) => {
     const radians = (angle * Math.PI) / 180;
@@ -264,12 +268,18 @@ export function HeroArchitecture() {
 
         <circle className="home-architecture-origin-boundary" cx="348" cy="352" r="318" />
 
-        <circle className="home-architecture-big-c-zone" cx="348" cy="352" r="286" />
-
-        <g className="home-architecture-style home-architecture-style--cinematic home-architecture-cinematic-field">
-          <circle cx="348" cy="352" r="268" />
-          <circle cx="348" cy="352" r="238" />
+        <g className="home-architecture-field-contours" aria-hidden="true">
+          {FIELD_CONTOURS.map((radius) => (
+            <path key={radius} d={arcPath(radius, 202, 338)} />
+          ))}
+          {FIELD_RAYS.map((angle) => {
+            const start = polar(320, angle);
+            const end = polar(336, angle);
+            return <line key={angle} x1={start.x} y1={start.y} x2={end.x} y2={end.y} />;
+          })}
         </g>
+
+        <circle className="home-architecture-big-c-zone" cx="348" cy="352" r="286" />
 
         <g className="home-architecture-big-c">
           {BIG_C_RINGS.map((radius, index) => (
@@ -284,6 +294,11 @@ export function HeroArchitecture() {
         </g>
 
         <g className="home-architecture-organism-membrane" aria-hidden="true">
+          <g className="home-architecture-membrane-bands">
+            {MEMBRANE_BANDS.map((radius) => (
+              <path key={radius} d={arcPath(radius, 38, 142)} />
+            ))}
+          </g>
           <circle
             className="home-architecture-organism-inner-membrane"
             cx="348"
@@ -313,15 +328,6 @@ export function HeroArchitecture() {
           ))}
         </g>
 
-        <g className="home-architecture-style home-architecture-style--organic home-architecture-organic-rings">
-          <circle cx="348" cy="352" r="228" />
-          <circle cx="348" cy="352" r="166" />
-        </g>
-
-        <g className="home-architecture-style home-architecture-style--neural home-architecture-neural-lattice">
-          <path d="M234 120L458 124L561 276M446 584L260 590M110 262L151 352" />
-        </g>
-
         <g className="home-architecture-frame">
           <circle className="home-architecture-frame-zone" cx="348" cy="352" r="197" />
           <circle
@@ -340,6 +346,10 @@ export function HeroArchitecture() {
             fill={`url(#${gridId})`}
             clipPath={`url(#${frameClipId})`}
           />
+          <g className="home-architecture-frame-contours" clipPath={`url(#${frameClipId})`}>
+            <circle cx="348" cy="352" r="154" />
+            <circle cx="348" cy="352" r="128" />
+          </g>
           <circle
             className="home-architecture-frame-boundary"
             cx="348"
@@ -388,18 +398,10 @@ export function HeroArchitecture() {
           </g>
         </g>
 
-        <g className="home-architecture-style home-architecture-style--editorial home-architecture-editorial-measure">
+        {/* Survey furniture: the one canonical rendering's measure marks. */}
+        <g className="home-architecture-measure-marks" aria-hidden="true">
           <path d="M151 132V142M348 132V146M545 132V142" />
           <path d="M128 155H138M128 352H142M128 549H138" />
-        </g>
-
-        <g className="home-architecture-style home-architecture-style--minimal home-architecture-minimal-axis">
-          <path d="M348 126V142M348 562V578M122 352H138M558 352H574" />
-          <circle cx="348" cy="352" r="172" />
-        </g>
-
-        <g className="home-architecture-style home-architecture-style--cinematic home-architecture-cinematic-depth">
-          <circle cx="348" cy="352" r="218" />
         </g>
 
         <g className="home-architecture-social-field">

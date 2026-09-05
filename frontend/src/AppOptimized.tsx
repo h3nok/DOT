@@ -13,6 +13,7 @@ import {
   AppearanceControl,
 } from "./organism";
 import { SiteContentProvider } from "./content/editable";
+import "./shared/splash-emergence.css";
 
 // Lazy load surfaces for code splitting.
 const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
@@ -46,9 +47,15 @@ const SupportPage = React.lazy(
 );
 const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 
+/* The route splash performs the thesis: dot → boundary → field (ADR-0022's
+   emergence, as CSS so a stalled JS bundle can never hide the wait state). */
 const LoadingSpinner = () => (
-  <div className="flex h-[60vh] items-center justify-center">
-    <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
+  <div className="splash-emergence" role="status" aria-label="Loading">
+    <div className="splash-emergence__stage">
+      <span className="splash-emergence__halo" />
+      <span className="splash-emergence__ring" />
+      <span className="splash-emergence__dot" />
+    </div>
   </div>
 );
 
@@ -132,7 +139,8 @@ const App: React.FC = () => {
           <OrganismReadingProbe />
           <OrganismHud />
           <RouteScrollManager />
-          <main>
+          {/* Routes render their own <main>; a second landmark here would nest them. */}
+          <div>
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -174,7 +182,7 @@ const App: React.FC = () => {
                 />
               </Routes>
             </Suspense>
-          </main>
+          </div>
           {/* User-facing appearance control (theme + living background). */}
           <FloatingAppearanceControl />
         </div>
