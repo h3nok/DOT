@@ -1,3 +1,4 @@
+import { RadialPreview } from "./RadialPreview";
 import React from "react";
 import type { ThemePreset } from "./themePresets";
 
@@ -43,6 +44,7 @@ export const EnvironmentSwatch: React.FC<{ preset: ThemePreset }> = ({ preset })
       <g clipPath={`url(#${id}-clip)`}>
         <rect x="0" y="0" width="64" height="40" fill={surface} />
 
+        {field === "radial" && <RadialPreview color={accent} />}
         {field === "aurora" && (
           <>
             <circle cx="14" cy="10" r="20" fill={`url(#${id}-bloom)`} opacity="0.7" />

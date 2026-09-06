@@ -3,10 +3,18 @@
    member's own theme. Reduced motion paints the settled mark, still. */
 
 .splash-emergence {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
   display: flex;
-  height: 60vh;
+  height: 100svh;
   align-items: center;
   justify-content: center;
+}
+
+.splash-emergence__placeholder {
+  min-height: 100svh;
 }
 
 .splash-emergence__stage {
@@ -44,7 +52,7 @@
   background: var(--organism-accent-strong);
   animation:
     splash-dot-arrive 420ms cubic-bezier(0.22, 1, 0.36, 1) both,
-    splash-dot-breathe 2.2s ease-in-out 900ms infinite;
+    splash-dot-breathe 20s ease-in-out 900ms infinite;
 }
 
 @keyframes splash-dot-arrive {
@@ -100,4 +108,10 @@
   .splash-emergence__dot {
     animation: none;
   }
+}
+
+html[data-motion="still"] .splash-emergence__halo,
+html[data-motion="still"] .splash-emergence__ring,
+html[data-motion="still"] .splash-emergence__dot {
+  animation: none;
 }

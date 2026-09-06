@@ -830,11 +830,15 @@ html[data-ui-style="neural"] .dot-pill:hover {
   box-shadow: 0 0 calc(6px + var(--organism-glow)) var(--organism-accent-soft);
 }
 
+/* Keep primary actions crisp against the fine ambient mesh. */
 html[data-ui-style="neural"] .dot-reading-action {
   border-radius: 999px;
+  background: color-mix(in oklch, var(--foreground) 90%, var(--organism-accent-strong));
+  color: var(--background);
+  border: 1px solid color-mix(in oklch, var(--foreground) 65%, transparent);
   box-shadow:
-    0 0 calc(8px + var(--organism-glow) * 2) var(--organism-accent-soft),
-    0 16px 40px -16px var(--organism-accent-strong);
+    0 0 18px -8px var(--organism-accent-soft),
+    0 8px 24px -12px color-mix(in oklch, var(--foreground) 28%, transparent);
 }
 
 html[data-ui-style="neural"] .dot-chip {

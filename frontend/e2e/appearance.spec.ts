@@ -24,6 +24,70 @@ async function openEnvironmentFineTune(
  * document actually moved, not merely that state was recorded.
  */
 test.describe("appearance controls change the rendered document", () => {
+  test("radial defaults repaint, remain adjustable, and survive a reload", async ({ page }) => {
+    await page.goto("/");
+    await expect.poll(() => htmlAttribute(page, "data-field")).toBe("radial");
+    await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("full");
+    const pixels = () => page.locator(".organism-membrane canvas").evaluate(
+      (canvas: HTMLCanvasElement) => canvas.toDataURL(),
+    );
+    const light = await pixels();
+    const panel = await openAppearancePanel(page);
+    await panel.getByRole("button", { name: "Quiet Night", exact: true }).click();
+    await expect.poll(pixels).not.toBe(light);
+    await expect.poll(() => htmlAttribute(page, "data-field")).toBe("radial");
+    await openEnvironmentFineTune(panel);
+    const dark = await pixels();
+    await panel.getByRole("slider", { name: "Scale — Finer or coarser structure" }).focus();
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(pixels).not.toBe(dark);
+    await panel.getByRole("button", { name: "Frame", exact: true }).click();
+    await page.reload();
+    await expect.poll(() => htmlAttribute(page, "data-field")).toBe("lattice");
+    const reopened = await openAppearancePanel(page);
+    await reopened.getByRole("button", { name: "Reset", exact: true }).click();
+    await expect.poll(() => htmlAttribute(page, "data-field")).toBe("radial");
+    await expect.poll(() => renderedStyle(page, ".home-hero-environment", "background-image")).toBe("none");
+  });
+
+  test("the still radial field follows the architecture as the page scrolls", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
+    await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
+    const pixels = () => page.locator(".organism-membrane canvas").evaluate(
+      (canvas: HTMLCanvasElement) => canvas.toDataURL(),
+    );
+    const before = await pixels();
+    await page.evaluate(() => window.scrollTo({ top: 160, behavior: "instant" }));
+    await expect.poll(pixels).not.toBe(before);
+    await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
+  });
+
+  test("radial motion animates the cached layer and honours reduced motion", async ({ page }) => {
+    await page.goto("/");
+    // The loader also has an animated field. Measure only after the real
+    // architecture mounts, so its handoff cannot invalidate the cached raster.
+    await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const canvas = page.locator(".organism-membrane canvas");
+    await expect.poll(() => canvas.evaluate((node) => node.getAnimations().length)).toBe(1);
+    await expect.poll(() => htmlAttribute(page, "data-ui-style")).toBe("neural");
+    // Let finite entrance animations and their layout work settle first.
+    await page.evaluate(() => Promise.all(document.getAnimations()
+      .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+      .map((animation) => animation.finished.catch(() => {}))));
+    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    const raster = await canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL());
+    const transform = await canvas.evaluate((node) => getComputedStyle(node).transform);
+    await expect.poll(() => canvas.evaluate((node) => getComputedStyle(node).transform)).not.toBe(transform);
+    expect(await canvas.evaluate((node: HTMLCanvasElement) => node.toDataURL()) === raster).toBe(true);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect.poll(() => canvas.evaluate((node) => node.getAnimations().length)).toBe(0);
+    await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
+    await expect(canvas).toBeVisible();
+  });
+
   test("base tone switches the theme", async ({ page }) => {
     await page.goto("/");
     const panel = await openAppearancePanel(page);

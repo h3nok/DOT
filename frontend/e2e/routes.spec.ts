@@ -28,7 +28,7 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "The observer belongs in the inquiry." }),
+      hero.getByRole("heading", { name: "A theory of reality has to account for you." }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
@@ -144,21 +144,26 @@ test.describe("hero", () => {
     await expect(cards.nth(2).locator(".home-theory-layer-status")).toHaveText(
       "Observed universe; proposed origin",
     );
+    await expect(cards.first().getByText("What remains unproven")).toBeVisible();
+    await expect(cards.first().getByText("What we know")).not.toBeVisible();
+    await cards.first().locator("summary").filter({ hasText: "Explore the reasoning" }).click();
     await expect(cards.first().getByText("What we know")).toBeVisible();
     await expect(cards.first().getByText("Covers: Earliest measurable physical states")).toBeVisible();
     await expect(cards.first().getByText("The open question")).toBeVisible();
     await expect(cards.first().getByText("DOT proposes")).toBeVisible();
-    await expect(cards.first().getByText("Test boundary")).toBeVisible();
+    await expect(cards.first().getByText("What remains unproven")).toBeVisible();
     await expect(cards.first().locator(".home-theory-layer-conventional svg")).toHaveCount(0);
-    await expect(cards.first().locator(".home-theory-layer-inquiry-steps > section")).toHaveCount(3);
-    await expect(cards.first().getByText("Independent evidence")).toBeVisible();
+    await expect(cards.first().locator(".home-theory-layer-inquiry-steps > section")).toHaveCount(2);
+    await cards.first().locator("summary").filter({ hasText: "Sources and further reading" }).click();
+    await expect(cards.first().getByText("Research to compare")).toBeVisible();
     await expect(cards.first().getByText("DOT · Book One")).toBeVisible();
 
     const realityFrame = page.locator("#reality-frame");
     await expect(
-      realityFrame.getByRole("heading", { name: "RF₀ is exactly the physical universe." }),
+      realityFrame.getByRole("heading", { name: "A generated world would still be real." }),
     ).toBeVisible();
-    await expect(realityFrame.getByText(/spacetime governed by fields and laws/)).toBeVisible();
+    await realityFrame.locator("summary").filter({ hasText: "Explore the reasoning" }).click();
+    await expect(realityFrame.getByText(/models tested against measurement/)).toBeVisible();
     await expect(realityFrame.getByText(/generated rather than fundamental/)).toBeVisible();
     await expect(
       realityFrame.getByText("A generated world is still a consequential world."),
@@ -193,7 +198,7 @@ test.describe("hero", () => {
     );
     await expect(boundaries).toHaveCount(4);
     for (let index = 0; index < 4; index += 1) {
-      await expect(boundaries.nth(index).getByText("Test boundary")).toBeVisible();
+      await expect(boundaries.nth(index).getByText("What remains unproven")).toBeVisible();
     }
   });
 });

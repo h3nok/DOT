@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
@@ -17,7 +17,7 @@ describe("HeroProposition", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "The observer belongs in the inquiry.",
+        name: "A theory of reality has to account for you.",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
@@ -35,7 +35,7 @@ describe("HeroProposition", () => {
       "href",
       "/academy",
     );
-    expect(screen.getAllByRole("link")).toHaveLength(2);
+    expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
   });
 
   it("states the thesis boldly while labelling it an open hypothesis", () => {
@@ -46,13 +46,13 @@ describe("HeroProposition", () => {
       screen.getByText("Held as hypothesis · Open to challenge"),
     ).toBeVisible();
     expect(
-      screen.getByText(/consciousness is fundamental/i),
+      screen.getByText(/Consciousness means there is something it feels like to be you/i),
     ).toBeVisible();
     expect(
-      screen.getByText(/the interface — not the source/i),
+      screen.getByText(/DOT proposes that it precedes the physical universe/i),
     ).toBeVisible();
     expect(
-      screen.getByText(/consciousness reading this/i),
+      screen.getByText(/your body connects your experience to it/i),
     ).toBeVisible();
   });
 });

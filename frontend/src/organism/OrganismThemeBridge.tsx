@@ -81,9 +81,13 @@ export const OrganismThemeBridge: React.FC = () => {
       );
     };
 
-    if (reducedMotion) {
+    // Radial motion is composited by the browser. Its surfaces need ambient
+    // updates, not document-wide style invalidation on every animation frame.
+    if (reducedMotion || config.stillness || config.preset === "radial") {
       writeStatic(vitals.current);
-      const id = window.setInterval(() => writeStatic(vitals.current), 1000);
+      const id = window.setInterval(() => {
+        if (!document.hidden) writeStatic(vitals.current);
+      }, 1000);
       return () => window.clearInterval(id);
     }
 
@@ -169,7 +173,7 @@ export const OrganismThemeBridge: React.FC = () => {
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [vitals, config.enabled, config.intensity, tint, reducedMotion]);
+  }, [vitals, config.enabled, config.intensity, config.preset, config.stillness, tint, reducedMotion]);
 
   return null;
 };

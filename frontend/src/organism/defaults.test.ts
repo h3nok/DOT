@@ -41,14 +41,14 @@ describe("default environment", () => {
     }
   });
 
-  it("defaults to Current for both light and dark", () => {
+  it("defaults to Radial for both light and dark", () => {
     for (const base of ["light", "dark"] as const) {
-      expect(defaultConfigFor(base).preset).toBe("flow");
-      expect(ORGANISM_PRESETS[defaultConfigFor(base).preset].label).toBe("Current");
+      expect(defaultConfigFor(base).preset).toBe("radial");
+      expect(ORGANISM_PRESETS[defaultConfigFor(base).preset].label).toBe("Radial");
     }
   });
 
-  it("opens both defaults as living long-form environments", () => {
+  it("opens both defaults as gently moving long-form environments", () => {
     for (const base of ["light", "dark"] as const) {
       const config = defaultConfigFor(base);
       expect(config.readingFont).toBe("serif");
@@ -72,9 +72,9 @@ describe("default environment", () => {
     expect(defaultConfigFor("light").tint).toBe("mono");
   });
 
-  it("uses the editorial surface for both quiet defaults", () => {
-    expect(defaultConfigFor("dark").uiStyle).toBe("editorial");
-    expect(defaultConfigFor("light").uiStyle).toBe("editorial");
+  it("uses the neural surface for both quiet defaults", () => {
+    expect(defaultConfigFor("dark").uiStyle).toBe("neural");
+    expect(defaultConfigFor("light").uiStyle).toBe("neural");
   });
 
   it("still offers an environment on the other side of every default", () => {

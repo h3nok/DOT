@@ -9,7 +9,7 @@ describe("homepage movement narrative", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
-    expect(home.indexOf("<TheoryLayerJourney />")).toBeLessThan(
+    expect(home.indexOf("<TheoryLayerJourney")).toBeLessThan(
       home.indexOf('id="choose-path"'),
     );
     expect(home).not.toContain("<ArchitectureDiagram />");
@@ -27,12 +27,12 @@ describe("homepage movement narrative", () => {
     expect(layers).toContain("not the beginning of everything");
     expect(layers).toContain("Other Reality Frames may exist");
     expect(layers).toContain("RF₀ is exactly the physical universe");
-    expect(layers).toContain("RF₀ is my name for this physical universe");
+    expect(layers).toContain("DOT calls this world RF₀, or Reality Frame zero");
     expect(layers).toContain("generated does not mean unreal");
     expect(layers).toContain("It forms intent, acts within RF₀");
-    expect(layers).toContain("the world’s virtual character as directly examinable");
-    expect(layers).toContain("consciousness can decouple from bodily identification");
-    expect(layers).toContain("a reproducible public method");
+    expect(layers).toContain("You can examine how the world appears in your own experience");
+    expect(layers).toContain("awareness can loosen its identification with the body");
+    expect(layers).toContain("DOT needs a repeatable way to distinguish those explanations");
     expect(layers).not.toContain("its generation of Reality Frames have not been publicly measured");
     expect(layers).not.toContain("Neither is an external substance, container, or predecessor");
   });
@@ -49,7 +49,7 @@ describe("homepage movement narrative", () => {
     expect(guidedArgument).toContain("What we know");
     expect(guidedArgument).toContain("The open question");
     expect(guidedArgument).toContain("DOT proposes");
-    expect(guidedArgument).toContain("Test boundary");
+    expect(guidedArgument).toContain("What remains unproven");
     expect(layers).toContain("home-theory-layer-human-stakes");
     expect(layers).toContain("home-theory-layer-memory");
     expect(layers).toContain("Continuity carries. Possibility opens.");
@@ -75,12 +75,12 @@ describe("homepage movement narrative", () => {
     expect(layers).not.toContain("CircleAlert");
     expect(layers).not.toContain("home-theory-layer-progress");
     expect(layers).toContain("home-theory-layer-sources");
-    expect(layers).toContain("Independent evidence");
+    expect(layers).toContain("Research to compare");
     expect(layers).toContain("DOT · Book One");
     expect(layers).toContain("Book One · Fixed edition");
     expect(layers).toContain("Independent source");
     expect(layers).toContain('rel="noopener noreferrer"');
-    expect(layers).toContain("Next concept:");
+    expect(layers).toContain("Continue to");
     expect(layers).toContain("Planck 2018 Results · Cosmological Parameters");
     expect(layers).toContain("Seth & Bayne · Nature Reviews Neuroscience · 2022");
     expect(layers.match(/term:/g) ?? []).toHaveLength(4);

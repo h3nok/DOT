@@ -76,8 +76,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Monochrome daylight. Colour appears only when it carries meaning.",
     base: "light",
     config: {
-      preset: "flow",
-      uiStyle: "editorial",
+      preset: "radial",
+      uiStyle: "neural",
       tint: "mono",
       intensity: 0.32,
       paperTone: "neutral",
@@ -161,10 +161,10 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Monochrome night. The same field, with no coloured cast.",
     base: "dark",
     config: {
-      preset: "flow",
-      uiStyle: "editorial",
+      preset: "radial",
+      uiStyle: "neural",
       tint: "mono",
-      intensity: 0.38,
+      intensity: 0.58,
       paperTone: "neutral",
       stillness: false,
       showMembrane: true,
@@ -245,7 +245,7 @@ export const THEME_PRESETS: ThemePreset[] = [
 /**
  * The environment a reader lands in before they have chosen anything.
  *
- * Both are the same idea in two lights: a monochrome Current field, an editorial
+ * Both are the same idea in two lights: a slowly breathing monochrome Radial field, a neural
  * surface, and Source Serif for long-form. Colour remains available as a reader
  * choice and for semantics, but it does not tint the first encounter.
  *
