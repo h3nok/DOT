@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="780" viewBox="0 0 720 780" role="img" aria-labelledby="title desc"><title id="title">DOT’s proposed architecture</title><desc id="desc">Big C encompasses the model. Little c names local self-awareness; the Canvas carries state whose organization is the Painting. Body and world participate within a Reality Frame. Distinct shapes separate process, carried state, and environment.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#555555"/></marker><marker id="teal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#285C57"/></marker></defs><rect width="720" height="780" fill="white"/>
+<text x="0" y="30" font-family="Arial" font-size="30" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="0" dy="0">One architecture, distinct roles</tspan>
+</text>
+<rect x="8" y="63" width="704" height="650" rx="12" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<circle cx="43" cy="105" r="9" fill="#285C57"/>
+<text x="65" y="104" font-family="Arial" font-size="27" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="65" dy="0">Big C</tspan>
+</text>
+<text x="65" y="137" font-family="Arial" font-size="22" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="65" dy="0">Self-awareness at the encompassing scope</tspan>
+</text>
+<circle cx="173" cy="304" r="100" fill="white" stroke="#285C57" stroke-width="2"/>
+<circle cx="173" cy="262" r="8" fill="#285C57"/>
+<text x="173" y="303" font-family="Arial" font-size="27" font-weight="bold" fill="#242424" text-anchor="middle">
+<tspan x="173" dy="0">Little c</tspan>
+</text>
+<text x="173" y="335" font-family="Arial" font-size="21" font-weight="normal" fill="#242424" text-anchor="middle">
+<tspan x="173" dy="0">Self-awareness</tspan>
+<tspan x="173" dy="27.3">at a local scope</tspan>
+</text>
+<rect x="413" y="205" width="268" height="264" rx="8" fill="white" stroke="#969692" stroke-width="1.6"/>
+<text x="435" y="240" font-family="Arial" font-size="27" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="435" dy="0">Canvas</tspan>
+</text>
+<text x="435" y="270" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="435" dy="0">Capacity to carry state</tspan>
+</text>
+<rect x="434" y="290" width="227" height="104" rx="4" fill="#F1F0ED" stroke="#CCCCCA" stroke-width="1.6"/>
+<text x="447" y="320" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="447" dy="0">Painting</tspan>
+</text>
+<text x="447" y="345" font-family="Arial" font-size="22" font-weight="normal" fill="#242424" text-anchor="start">
+<tspan x="447" dy="0">Accumulated</tspan><tspan x="447" dy="28">organization</tspan>
+</text>
+<text x="435" y="424" font-family="Arial" font-size="21" font-weight="normal" fill="#242424" text-anchor="start">
+<tspan x="435" dy="0">Character expresses it</tspan>
+</text>
+<text x="435" y="449" font-family="Arial" font-size="21" font-weight="normal" fill="#242424" text-anchor="start">
+<tspan x="435" dy="0">through repeated action</tspan>
+</text>
+<path d="M282 300 H402" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="340" y="333" font-family="Arial" font-size="22" font-weight="normal" fill="#555555" text-anchor="middle">
+<tspan x="340" dy="0">Access;</tspan><tspan x="340" dy="28">state update</tspan>
+</text>
+<rect x="39" y="519" width="642" height="161" rx="8" fill="white" stroke="#969692" stroke-width="1.6"/>
+<text x="59" y="553" font-family="Arial" font-size="26" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="59" dy="0">Reality Frame</tspan>
+</text>
+<text x="660" y="551" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="end">
+<tspan x="660" dy="0">Lawful environment</tspan>
+</text>
+<rect x="65" y="581" width="215" height="74" rx="4" fill="#FAF9F5" stroke="#C5C5C1" stroke-width="1.6"/>
+<text x="172" y="611" font-family="Arial" font-size="24" font-weight="bold" fill="#242424" text-anchor="middle">
+<tspan x="172" dy="0">Body</tspan>
+</text>
+<text x="172" y="638" font-family="Arial" font-size="21" font-weight="normal" fill="#242424" text-anchor="middle">
+<tspan x="172" dy="0">Living interface</tspan>
+</text>
+<rect x="429" y="581" width="220" height="74" rx="4" fill="#FAF9F5" stroke="#C5C5C1" stroke-width="1.6"/>
+<text x="539" y="611" font-family="Arial" font-size="24" font-weight="bold" fill="#242424" text-anchor="middle">
+<tspan x="539" dy="0">World</tspan>
+</text>
+<text x="539" y="638" font-family="Arial" font-size="20" font-weight="normal" fill="#242424" text-anchor="middle">
+<tspan x="539" dy="0">Action &amp; consequence</tspan>
+</text>
+<path d="M291 618 H416" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<path d="M173 410 V506" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<text x="196" y="468" font-family="Arial" font-size="20" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="196" dy="0">Reality Stream</tspan>
+<tspan x="196" dy="26.0">and Intent</tspan>
+</text>
+<path d="M548 507 V480" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="526" y="495" font-family="Arial" font-size="20" font-weight="normal" fill="#555555" text-anchor="end">
+<tspan x="526" dy="0">Feedback</tspan>
+</text>
+<text x="11" y="746" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="11" dy="0">The shapes distinguish roles, not physical locations.</tspan>
+</text>
+</svg>

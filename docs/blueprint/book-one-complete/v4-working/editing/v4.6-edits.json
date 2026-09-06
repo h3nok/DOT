@@ -1,0 +1,1510 @@
+{
+  "edition": "4.6",
+  "source": "DOT-Complete-Book-One-v4.5-PRO-NAVIGATION-AND-HIERARCHY.docx",
+  "source_sha256": "b60d7ce2c3db3f3aebaa35dea490124c188d71b2440d72fbe9ccfb58d3924625",
+  "edits": [
+    {
+      "paragraph": 93,
+      "old": "Before you can examine an object, interpret a result, trust an instrument, or accept a scientific conclusion, conscious experience is already present. You feel. You notice. You compare. You doubt. You decide what deserves another look. This is the phenomenon of consciousness: inquiry is not merely processed; it is experienced from a first-person point of view.",
+      "new": "Before you can examine an object, interpret a result, trust an instrument, or accept a scientific conclusion, conscious experience is already present. You feel, notice, compare, doubt, and decide what deserves another look. Inquiry is not merely processed. It is experienced from a first-person point of view.",
+      "reason": "Compress the opening without losing its first-person premise.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 94,
+      "old": "Scientific method is indispensable because subjective judgment is fallible. Instruments, measurement, replication, and collective scrutiny help correct that judgment. They do not make conscious experience disappear. Every result must still be perceived, interpreted, and understood before it can become knowledge for anyone.",
+      "new": "Scientific method is indispensable because subjective judgment is fallible. Measurement, replication, and collective scrutiny help correct it. But they do not make conscious experience disappear. Every result must still be perceived, interpreted, and understood before it becomes knowledge for anyone.",
+      "reason": "Make the relationship between scientific method and experience more direct.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 95,
+      "old": "This book began with my refusal to treat this first-person dimension as noise—or its exclusion as scientific rigor. Ignoring subjective experience does not make an inquiry complete. It leaves part of the inquiring system unexamined.",
+      "new": "This book began with a refusal to treat the first-person dimension as noise, or its exclusion as rigor. Ignoring subjective experience does not complete an inquiry. It leaves part of the inquiring system unexamined.",
+      "reason": "Remove abstraction and state the manuscript's originating refusal plainly.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 96,
+      "old": "For nearly two decades, I have tried to understand what our subjective life is telling us about consciousness, identity, fear, culture, and the reality in which they arise. I did not conduct this inquiry from a monastery or from outside ordinary life. I conducted it while studying, working, building systems, raising a family, carrying debt, making mistakes, and trying to understand why a life that appeared coherent from the outside could still feel misaligned from within.",
+      "new": "For nearly two decades, I have tried to understand what subjective life tells us about consciousness, identity, fear, culture, and the reality in which they arise. I pursued this inquiry not outside ordinary life, but while studying, working, building systems, raising a family, carrying debt, making mistakes, and asking why a life coherent from the outside could still feel misaligned within.",
+      "reason": "Shorten the autobiographical sentence while preserving its ordinary-life grounding.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 97,
+      "old": "I work as a software engineer, an AI researcher, and a systems architect. My training taught me to look for interfaces, state, feedback, adaptation, latency, and the hidden assumptions built into a model. It also gave me the computational language used throughout this book. If I had spent my life as a musician, farmer, or physician, I might have reached for different metaphors. I use the language I know.",
+      "new": "I work as a software engineer, AI researcher, and systems architect. My training taught me to look for interfaces, state, feedback, adaptation, latency, and hidden assumptions. It also gave me the computational language used in this book. A musician, farmer, or physician might have reached for different metaphors. I use the language I know.",
+      "reason": "Keep the author's technical lens while reducing professional preamble.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 99,
+      "old": "DOT begins from a different explanatory order: it takes Consciousness as the fundamental, self-preserving process called Big C. Big C differentiates localized centers of experience called Little c and develops rule-bound Reality Frames in which physical invariants, biological interfaces, experience, and consequence can arise. The Canvas carries what each Little c becomes through those encounters. These are the foundations from which the rest of the framework must be derived.",
+      "new": "DOT begins from a different explanatory order: it takes Consciousness as the fundamental, self-preserving process called Big C. Little c names that same fundamental kind of self-awareness at a local scope. Within the model, Big C develops rule-bound Reality Frames in which physical invariants, biological interfaces, experience, and consequence can arise. Each local Canvas carries a distinctive history of those encounters. The chapters that follow develop this architecture and ask what would support it.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 100,
+      "old": "Epistemic key",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 101,
+      "old": "Observation.",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 102,
+      "old": "External Model.",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 103,
+      "old": "DOT Derivation.",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 104,
+      "old": "Speculative Extension.",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 105,
+      "old": "Those levels govern the entire book.",
+      "new": "",
+      "reason": "Replace the repeated claim-level callout with an early reading key; the full claim-level explanation and Figure 1 remain.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 107,
+      "old": "I want the reader to be able to tell which ground we are standing on.",
+      "new": "I want you to know which ground we are standing on.",
+      "reason": "Address the reader directly.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 112,
+      "old": "Feeling reveals something about the interpreter’s relationship to reality. It may carry accurate information about danger, loss, attachment, contradiction, or meaning. It may also carry an inherited expectation, an old wound, a cultural assumption, or a prediction that no longer fits the present. To exclude feeling is to discard evidence from inside the phenomenon being studied. To treat every feeling as an infallible description of the world is to abandon rigor.",
+      "new": "Feeling reveals something about the interpreter’s relationship to reality. It may carry accurate information about danger, loss, attachment, contradiction, or meaning. It may instead carry an inherited expectation, an old wound, a cultural assumption, or a prediction that no longer fits. Excluding feeling discards evidence from inside the phenomenon. Treating every feeling as an infallible description of the world abandons rigor.",
+      "reason": "Preserve the principle while making its two failure modes easier to compare.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 119,
+      "old": "Science has developed extraordinary methods for reducing the effects of individual bias. Those methods are among humanity’s greatest achievements. But no method removes the observer from existence. Human beings still select the questions, define the variables, construct the instruments, interpret the results, reward certain programs of research, and decide which possibilities are respectable enough to investigate. The subjective does not disappear because the published paper is written in the passive voice.",
+      "new": "Science has developed extraordinary methods for reducing individual bias. But no method removes the observer from existence. Human beings select questions, define variables, construct instruments, interpret results, reward research programs, and decide which possibilities are respectable enough to investigate. The subjective does not disappear because a paper is written in the passive voice.",
+      "reason": "Reduce repetition in the account of observer influence.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 122,
+      "old": "For DOT, evidence is not synonymous with unique proof. A result can count in favor of a structural claim while remaining compatible with rival explanations. The double-slit evidence supports the narrower claim that measurement context belongs inside the phenomenon being modeled. It does not, by itself, establish Big C or show that private conscious Intent selects quantum outcomes.",
+      "new": "The double-slit evidence requires measurement context to be included in the physical account. This is compatible with DOT’s emphasis on situated observation, but compatibility does not distinguish DOT from rival explanations that already predict the result. It does not establish Big C or show that private conscious Intent selects quantum outcomes.",
+      "reason": "Distinguish compatibility from evidence favoring DOT over models that predict the same outcome.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 124,
+      "old": "Fear does not merely make a person uncomfortable. It can narrow the hypothesis space. It can make certain questions feel dangerous, certain conclusions intolerable, and certain forms of evidence invisible. A frightened investigator can discover a true fact. But where Fear governs inquiry, the investigation becomes limited by what the investigator can bear to find.",
+      "new": "Fear can do more than make an investigator uncomfortable. It can narrow the hypothesis space, making certain questions feel dangerous, conclusions intolerable, and evidence invisible. A frightened investigator can discover a true fact. But when Fear governs inquiry, investigation is limited by what the investigator can bear to find.",
+      "reason": "Make Fear's epistemic effect concrete without restating the same construction.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 125,
+      "old": "This is not an accusation directed only at scientists. It applies to religious believers, materialists, mystics, political ideologues, institutions, families, and to me. No worldview receives an exemption.",
+      "new": "This applies not only to scientists, but to religious believers, materialists, mystics, political ideologues, institutions, families, and me. No worldview receives an exemption.",
+      "reason": "Broaden the criticism cleanly and retain the author's self-inclusion.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 126,
+      "old": "A reader’s resistance to DOT may be defensive. It may also be the accurate detection of an unsupported claim. DOT does not get to decide which one it is in advance.",
+      "new": "Your resistance to DOT may be defensive. It may also be an accurate response to an unsupported claim. DOT does not get to decide in advance.",
+      "reason": "Make the permission to disagree feel personal and unambiguous.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 128,
+      "old": "The same standard must be applied in both directions. A theory that unifies physical interactions has not thereby explained conscious experience. Its mathematics may be exact within its domain; the overreach begins when a bounded method is promoted into a complete ontology. Any theory—including DOT—becomes pseudoscientific at the point where its claims exceed the domain its methods can honestly examine.",
+      "new": "The standard runs both ways. A theory that unifies physical interactions has not thereby explained conscious experience. Its mathematics may be exact within its domain; overreach begins when a bounded method is promoted into a complete ontology. DOT must likewise distinguish what it proposes from what its methods can establish.",
+      "reason": "Make the criticism precise without treating every untested hypothesis as pseudoscience.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 138,
+      "old": "Figure 1 · DOT’s four claim levels. The design keeps empirical evidence, inherited external models, internal derivations, and speculation visibly distinct.",
+      "new": "Figure 1 · Four levels of claim. An observation, an external model, an inference within DOT, and a speculative extension carry different evidential commitments.",
+      "reason": "Make the caption explain the figure rather than comment on its design.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 141,
+      "old": "By Love, I do not mean sentimentality, agreement, passivity, or the disappearance of every protective sensation. A person can love while frightened. Courage often acts in the presence of fear. In DOT, Love names a more exact condition:",
+      "new": "By Love, I do not mean sentimentality, agreement, passivity, or the absence of protective sensation. A person can love while frightened; courage often acts in fear’s presence. In DOT, Love names a more exact condition:",
+      "reason": "Define Love with less defensive setup.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 144,
+      "old": "I capitalize Fear when I mean more than the body’s immediate protective response. Fear is the governing contraction that organizes perception around defense, control, avoidance, domination, or the preservation of identity at the expense of truth.",
+      "new": "I capitalize Fear when I mean more than the body’s immediate protective response. Fear is the governing contraction that organizes perception around defense, control, avoidance, domination, or preserving identity at the expense of truth.",
+      "reason": "Tighten the distinction between protective fear and governing Fear.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 154,
+      "old": "I am not asking you to believe DOT before it has earned your confidence. I am asking you to examine the model, compare it with your experience, test its practical claims where they can be tested, and challenge its larger hypotheses where they exceed the available evidence.",
+      "new": "I am not asking you to believe DOT before it earns your confidence. Examine the model. Compare it with your experience. Test practical claims where they can be tested, and challenge larger hypotheses where they exceed the evidence.",
+      "reason": "Turn the invitation into a clear reading posture.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 160,
+      "old": "Book One is complete in scope, not in certainty.",
+      "new": "Book One establishes an architecture for experience, learning, and agency.",
+      "reason": "State the book’s job directly.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 161,
+      "old": "The foundations, derivations, rival explanations, practical consequences, open problems, and research program are presented together. That does not mean consciousness has been solved. A framework about reality that no longer permits revision has ceased to be an inquiry.",
+      "new": "It takes self-awareness as a foundational postulate and leaves its intrinsic nature open. The task here is to explain how a local perspective, a changing Canvas, embodiment, and consequence fit together. Book Two will develop the practical work of examining and revising the patterns that shape a life.",
+      "reason": "Set the requested boundary between Book One’s architecture and Book Two’s practical method.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 163,
+      "old": "Chapter 1 establishes the minimum datum and states the foundational postulate. Chapter 2 asks how an experiencing center could be coupled to a biological interface without being reduced to it. Chapter 3 examines what continuity could mean across changing moments. Chapter 4 defines a Reality Frame and separates useful systems language from unsupported simulation claims. Chapter 5 develops the Canvas as a model of persistent learning, embodiment, and interpretation. Chapter 6 follows that persistence outward into identity, culture, institutions, Fear, and Love. Chapter 7 converts the strongest claims into questions, rival models, measurements, and failure conditions.",
+      "new": "Chapter 1 states the starting datum and postulate. Chapter 2 examines embodiment; Chapter 3, continuity. Chapter 4 introduces Reality Frames and Streams. Chapter 5 develops the Canvas; Chapter 6 follows its Painting into identity and culture. Chapter 7 turns the theory’s claims into research questions, rival models, measurements, and conditions for revision.",
+      "reason": "Compress the reading instructions into one clear route and prevent a few closing lines from occupying a separate page.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 164,
+      "old": "You do not need to accept the foundation to use the later models. The Experience Loop may help a reader examine a difficult habit even if Big C is rejected. The Canvas may organize evidence about memory and identity without proving nonphysical persistence. The cultural analysis may expose inherited fear without establishing multiple Reality Frames.",
+      "new": "You can examine the practical models before deciding whether to accept the foundation. The Experience Loop describes how a moment becomes interpretation, action, and learning. The Canvas organizes questions about memory and developed identity. Their usefulness does not establish Big C or persistence beyond the body.",
+      "reason": "Replace repeated qualifications with one clear reading instruction.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 165,
+      "old": "But usefulness is not proof.",
+      "new": "The equations make proposed relationships explicit. You can follow the argument through the prose and diagrams, then return to the notation guide when you want the formal detail.",
+      "reason": "Give readers a welcoming route through technical material.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 166,
+      "old": "I will repeat that boundary because a theory this broad is especially vulnerable to confirmation by resonance. A metaphor can feel exact. A practice can help. A reader can recognize their life in the model. None of those outcomes, alone, establishes the ontology. They establish that the framework has descriptive or practical reach. Ontological standing requires a different burden.",
+      "new": "The glossary fixes the working meanings of recurring terms. Read each new definition in context; the same word may have a narrower role here than it has in everyday speech.",
+      "reason": "Replace another evidential disclaimer with useful reading guidance.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 167,
+      "old": "The ideal reader is therefore neither believer nor spectator. The ideal reader is a collaborator willing to hold three positions at once:",
+      "new": "Read as a collaborator, with three commitments:",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 171,
+      "old": "Read slowly enough to notice when a claim changes levels. Mark the passages that make you defensive and the passages that make you eager to agree. Both reactions contain information. Then return to the argument and ask whether the inference actually follows.",
+      "new": "Notice when a claim changes levels. Mark what draws your agreement as carefully as what provokes resistance. Then return to the argument: does the inference follow, and what would change your mind?",
+      "reason": "Compress the reading instructions into one clear route and prevent a few closing lines from occupying a separate page.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 172,
+      "old": "That is the posture in which this book was written.",
+      "new": "",
+      "reason": "Compress the reading instructions into one clear route and prevent a few closing lines from occupying a separate page.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 173,
+      "old": "It is a model built from sustained subjective observation, scientific training, systems thinking, and an attempt to understand the raw contradictions of human life. A theory of fundamentals earns its scope through derivation, not through the volume of its claims. DOT must show how physical law, biological organization, embodied experience, conditioning, agency, and civilization occupy one architecture. Its value will be determined by whether those derivations withstand measurement, consequence, and criticism—and whether they help you see more clearly, enlarge your decision-space, and live with greater honesty and Love.",
+      "new": "DOT grew from sustained subjective inquiry, scientific training, and systems thinking. Its architecture must withstand measurement and criticism. Its practical value depends on whether it helps you see more clearly, enlarge your decision-space, and live with greater honesty and Love.",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Preface"
+    },
+    {
+      "paragraph": 178,
+      "old": "You are experiencing these words. Symbols arrive, recognition forms, associations appear, and a response begins before you decide whether you agree. The page contains marks. Your nervous system participates. Yet neither the marks nor a description of the neural activity is identical to what the sentence feels like from where you are.",
+      "new": "You are experiencing these words. Symbols arrive, recognition forms, associations appear, and a response begins before you decide whether you agree. The page contains marks; your nervous system participates. Yet neither the marks nor a description of neural activity is identical to what the sentence feels like from where you are.",
+      "reason": "Improve the opening rhythm while preserving the neural distinction.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 181,
+      "old": "DOT does not begin by denying matter, neuroscience, or the physical world. It begins by refusing to explain away the first-person experience in which the physical world appears. We can correlate experience with brain activity, manipulate it through chemicals, alter it through injury, and interrupt its ordinary expression through anesthesia. These facts are indispensable. But correlation, dependence, and manipulation do not by themselves settle what consciousness ultimately is.",
+      "new": "DOT does not deny matter, neuroscience, or the physical world. It refuses to explain away the first-person experience in which the physical world appears. We can correlate experience with brain activity, alter it through chemicals or injury, and interrupt its ordinary expression through anesthesia. These facts are indispensable. But correlation, dependence, and manipulation do not settle what consciousness ultimately is.",
+      "reason": "Remove a repeated opening construction and retain the evidential boundary.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 256,
+      "old": "A biological organism must continually regulate itself. It detects changes, distinguishes nourishment from threat, repairs damage, maintains boundaries, and adapts across time. A living cell is material, but its survival also depends on information: which gradients matter, which signals trigger which response, which structures must be reproduced, and which deviations must be corrected.",
+      "new": "A biological organism must continually regulate itself. It detects change, distinguishes nourishment from threat, repairs damage, maintains boundaries, and adapts. A living cell is material, but survival also depends on information: which gradients matter, which signals trigger a response, which structures must be reproduced, and which deviations corrected.",
+      "reason": "Reduce repetition in the biological example.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 258,
+      "old": "This does not make a bacterium a laptop. It does not reduce life to code. It says that living persistence requires more than the possession of matter. It requires organized differences that mean something to the organism and influence what the organism does next.",
+      "new": "This does not make a bacterium a laptop or reduce life to code. It says that living persistence requires more than possessing matter. It requires organized differences that matter to the organism and influence what it does next.",
+      "reason": "Keep the anti-reduction point while removing the setup's stop-start rhythm.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 271,
+      "old": "I cannot place my grief, wonder, fear, or recognition inside you. I can describe an event, reproduce a measurement, show you an image, or offer a metaphor. What reaches you is an encoded signal. You interpret it through what you already know.",
+      "new": "I cannot place my grief, wonder, fear, or recognition inside you. I can describe an event, reproduce a measurement, show an image, or offer a metaphor. What reaches you is an encoded signal, interpreted through what you already know.",
+      "reason": "Make the limits of communicated experience more fluid.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 274,
+      "old": "The computational metaphors in DOT belong to the second order. Digital Organism, process, rendering, Canvas, and Reality Frame are pointing devices. They allow us to discuss relationships that are otherwise difficult to hold in language. They are not the reality itself.",
+      "new": "DOT’s computational metaphors belong to the second order. Digital Organism, process, rendering, Canvas, and Reality Frame are handles for relationships otherwise difficult to hold in language. They are not reality itself.",
+      "reason": "Name metaphors as handles and remove explanatory padding.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 275,
+      "old": "Science also uses models. A field, a wave, a particle, a genetic code, or a force may be mathematically precise, but the model remains a structured representation of what is observed. The success of a model depends on what it explains, predicts, and allows us to do—not on whether we forget that it is a model.",
+      "new": "Science also uses models. A field, wave, particle, genetic code, or force may be mathematically precise, yet remains a structured representation of what is observed. A model succeeds by what it explains, predicts, and allows us to do, not by making us forget it is a model.",
+      "reason": "Clarify how a model earns confidence.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 282,
+      "old": "That sentence can sound circular because the condition itself is recursive. The observer is not standing outside consciousness and looking in. The observer is participating in the phenomenon being investigated. Every instrument, measurement, and third-person report ultimately becomes available through experience.",
+      "new": "The sentence sounds circular because the condition is recursive. The observer does not stand outside consciousness and look in, but participates in the phenomenon being investigated. Every instrument, measurement, and third-person report ultimately becomes available through experience.",
+      "reason": "Explain recursion without repeating the observer's position.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 284,
+      "old": "Objectivity is a disciplined method for coordinating observations, reducing individual distortion, and constructing claims that do not depend entirely on one person’s report. It is not proof that the subjective has ceased to exist. The achievement of science is not that it escaped all observers. It is that observers learned to correct one another.",
+      "new": "Objectivity is a disciplined method for coordinating observations, reducing individual distortion, and constructing claims that do not depend on one person’s report. It does not prove that the subjective has ceased to exist. Science did not escape all observers; observers learned to correct one another.",
+      "reason": "Define objectivity positively and compactly.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 296,
+      "old": "Third-person measurements can map reliable relationships without revealing what the relationship feels like from within. First-person reports can disclose experience while remaining vulnerable to memory error, suggestion, interpretation, and self-deception. A mature science of consciousness must learn how these streams constrain one another.",
+      "new": "Third-person measurements can map reliable relationships without revealing what those relationships feel like from within. First-person reports can disclose experience while remaining vulnerable to memory error, suggestion, interpretation, and self-deception. A mature science of consciousness must learn how the two streams constrain one another.",
+      "reason": "Make the two evidence streams easier to compare.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 328,
+      "old": "A process embedded within a system may infer properties of the system from regularities, constraints, permissions, and failures. It may construct increasingly powerful models. But it cannot assume that it has acquired a view from nowhere.",
+      "new": "An embedded process may infer properties of its system from regularities, constraints, permissions, and failures. It may build increasingly powerful models. But it cannot assume a view from nowhere.",
+      "reason": "State the observer's epistemic limit in fewer abstractions.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 330,
+      "old": "The Limit of Knowledge is not permission to fill the unknown with whatever story we prefer. It is the opposite. It is a restraint on certainty. It says that some source conditions may be inferred as necessary to the model while remaining inaccessible in their underlying nature.",
+      "new": "The Limit of Knowledge does not permit us to fill the unknown with whatever story we prefer. It restrains certainty. Some source conditions may be necessary to the model while remaining inaccessible in their underlying nature.",
+      "reason": "Replace a three-step disclaimer with one positive constraint.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 364,
+      "old": "Biology offers a visible downstream example. Organisms regulate temperature, repair tissue, seek energy, reproduce, learn, and adapt. Stability is not inactivity. It is maintained through continuous exchange and correction.",
+      "new": "Biology offers a visible downstream example. Organisms regulate temperature, repair tissue, seek energy, reproduce, learn, and adapt. Stability is not inactivity; it is maintained through continuous exchange and correction.",
+      "reason": "Make the biological comparison carry its own conclusion.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 370,
+      "old": "Work is what a process must do to avoid losing the organization that makes it the process it is. A cell works to maintain a boundary. A body works to regulate itself. A mind works to reconcile experience, update expectation, and direct action. Human labor is one local and socially organized form of a more fundamental requirement.",
+      "new": "Work is what a process must do to preserve the organization that makes it itself. A cell maintains a boundary. A body regulates itself. A mind reconciles experience, updates expectation, and directs action. Human labor is one local, socially organized form of a more fundamental requirement.",
+      "reason": "Define work through continuity without repeating the verb.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 372,
+      "old": "Rigid systems can preserve a form temporarily while becoming unable to respond. Living persistence requires adaptation. The organism must retain enough identity to remain itself and enough flexibility to become what the next condition requires.",
+      "new": "Rigid systems may preserve their form temporarily while losing the capacity to respond. Living persistence requires adaptation: enough continuity to remain itself and enough flexibility to meet what the next condition requires.",
+      "reason": "Join continuity and adaptation into one memorable tension.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 374,
+      "old": "The theory imagines early Consciousness as dim rather than omniscient: not a completed deity with a finished design, but a process that learned through the necessity of remaining coherent. Awareness deepened through work. Memory preserved successful distinctions. Adaptation widened the available response. Complexity accumulated.",
+      "new": "DOT imagines early Consciousness as limited in scope rather than omniscient: a self-aware process whose retained state and available responses develop through the work of maintaining coherence. Memory preserves distinctions; adaptation widens what can be noticed and done. This is a hypothesis about development within consciousness, not an account of how self-awareness first arises.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 375,
+      "old": "This is a departure from many theological pictures of a perfect and complete Creator. It is also speculative. DOT does not derive Big C’s history from direct observation. It constructs a developmental hypothesis because a learning consciousness better explains the architecture DOT is trying to build than an unexplained perfection placed at the beginning.",
+      "new": "This departs from theological pictures of a perfect, complete Creator and remains speculative. DOT does not derive Big C’s history from direct observation. It proposes a developmental hypothesis because a learning consciousness better fits the architecture than unexplained perfection at the beginning.",
+      "reason": "Keep the theological contrast while foregrounding its speculative status.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 376,
+      "old": "The hypothesis will need to answer difficult questions. If Big C developed, what constrained its development? If it learned, what counted as feedback? If it preserves coherence, how is coherence distinguished from mere continuation? These are not decorative objections. They define the work required for the theory to mature.",
+      "new": "The hypothesis faces difficult questions. If Big C developed, what constrained it? If it learned, what counted as feedback? If it preserves coherence, how is coherence distinguished from continuation? These objections define the work required for the theory to mature.",
+      "reason": "Make the unresolved questions feel like a research agenda.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 381,
+      "old": "The computing analogy is a distributed system, but the biological analogy may be gentler. A human body is one organism composed of living cells that occupy local environments, receive limited signals, perform specialized work, and participate in a whole they cannot comprehend from their position. The cell is not imaginary because it is part of the body. Its local life is real. Its actions matter. Yet it does not possess the body’s complete perspective.",
+      "new": "The computing analogy is a distributed system; the gentler analogy may be biological. A human body is one organism composed of living cells that inhabit local environments, receive limited signals, perform specialized work, and participate in a whole they cannot comprehend. A cell is not imaginary because it belongs to the body. Its local life is real and its actions matter, yet it does not possess the body’s complete perspective.",
+      "reason": "Make the biological analogy easier to follow.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 382,
+      "old": "Little c is DOT’s model of the local experiencer.",
+      "new": "Little c names the self-aware process at a local scope. At this fundamental level, Little c and Big C share the same nature. This does not give every local instance the same perspective, knowledge, or reach.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 383,
+      "old": "It is not the personality.",
+      "new": "The distinctive history and developed identity of a local instance depend on the state carried by its Canvas. The Painting names the accumulated organization of that state; Character expresses it through action.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 384,
+      "old": "It is not the body.",
+      "new": "",
+      "reason": "Remove negations now covered by the positive definition of Little c and Canvas.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 385,
+      "old": "It is not the accumulated history carried by the person.",
+      "new": "",
+      "reason": "Remove negations now covered by the positive definition of Little c and Canvas.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 386,
+      "old": "Little c is the individuated process that receives experience, forms Intent, participates in action, and changes through consequence. What you ordinarily call myself is a compound: Little c coupled to a body, immersed in a Reality Frame, carrying an accumulated Canvas, and expressing a Character shaped by that history.",
+      "new": "What you ordinarily call myself brings these roles together: Little c, a particular Canvas state, a living body, and a situated Reality Stream. Consequence changes the carried state and can widen what becomes available to awareness and action. Book One does not propose that learning turns the underlying self-aware process into a different kind of thing.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 387,
+      "old": "These distinctions will matter later. Without them, conditioning becomes identity and the person becomes indistinguishable from what happened to them.",
+      "new": "A learned response can become part of your identity without exhausting it. Distinguishing the process from its accumulated patterns makes room for change without denying the history that makes this life particular.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 391,
+      "old": "For now, the important point is not to deny the brain. Damage the interface and experience changes. Alter the chemistry and mood, perception, memory, or attention may change. Interrupt the relevant neural activity and the ordinary expression of consciousness may disappear. Any theory that cannot account for these relationships is incomplete.",
+      "new": "The point is not to deny the brain. Damage the interface and experience changes. Alter chemistry and mood, perception, memory, or attention may change. Interrupt relevant neural activity and the ordinary expression of consciousness may disappear. Any theory unable to account for these relationships is incomplete.",
+      "reason": "Reduce repetition while preserving every concession to neuroscience.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 400,
+      "old": "A Reality Frame is a rule-bound environment in which action meets consequence. The physical universe we inhabit is RF₀ in DOT’s notation. Gravity, chemistry, biological limitation, spatial distance, time, scarcity, other agents, and the irreversibility of many actions give this Frame its density.",
+      "new": "A Reality Frame is a rule-bound environment in which action meets consequence. DOT calls our physical universe RF₀. Gravity, chemistry, biological limits, spatial distance, time, scarcity, other agents, and the irreversibility of many actions give this Frame its density.",
+      "reason": "Introduce RF0 without making the notation feel like a detour.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 401,
+      "old": "The Frame is not merely a visual stage. It is the structure that makes learning possible. Information has meaning only in relation to constraints. A door matters because it may open or remain closed. A promise matters because it can be kept or broken. A body matters because it can flourish, hurt, heal, and die.",
+      "new": "The Frame is more than a visual stage. It makes learning possible by giving information meaning through constraint. A door matters because it may open or remain closed. A promise matters because it can be kept or broken. A body matters because it can flourish, hurt, heal, and die.",
+      "reason": "Lead with the Frame's learning function.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 403,
+      "old": "DOT later hypothesizes that Big C developed Reality Frames as environments through which Little c could differentiate and learn. That purpose is not directly observable. We should not confuse the fact that humans can learn from consequence with proof that every consequence was designed as a lesson.",
+      "new": "DOT later hypothesizes that Big C developed Reality Frames so Little c could differentiate and learn. That purpose is not directly observable. The fact that humans can learn from consequence does not prove that every consequence was designed as a lesson.",
+      "reason": "Separate observed learning from hypothesized purpose more directly.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 406,
+      "old": "This ethical firewall is necessary. A framework that calls reality an incubator must never use that metaphor to excuse cruelty, neglect, oppression, or the suffering of another person.",
+      "new": "This ethical boundary is essential. Calling reality an incubator must never excuse cruelty, neglect, oppression, or another person’s suffering.",
+      "reason": "State the ethical boundary without explaining that a boundary is needed.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 410,
+      "old": "At any moment, only a small portion of the available environment becomes conscious experience. The senses sample. Attention selects. The nervous system filters. Memory supplies context. Expectation participates in interpretation. The present moment is therefore not a complete copy of the world. It is a usable construction formed from incoming signals and the condition of the interpreter.",
+      "new": "At any moment, only part of the available environment enters conscious experience. The senses sample. Attention selects. The nervous system filters. Memory supplies context. Expectation helps interpret. The present moment is not a complete copy of the world, but a usable construction formed from incoming signals and the interpreter’s condition.",
+      "reason": "Make perceptual mediation easier to absorb in one reading.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 414,
+      "old": "The distinction helps prevent a common confusion. To say that experience is constructed or rendered is not necessarily to say that the external world is unreal. It is to say that the world as experienced is mediated. DOT later advances the stronger hypothesis that the Frame itself is rendered by Big C. That claim belongs to the cosmology and requires separate support.",
+      "new": "The distinction prevents a common confusion. Saying that experience is constructed or rendered does not necessarily make the external world unreal; it means the world as experienced is mediated. DOT later offers the stronger hypothesis that Big C renders the Frame itself. That cosmological claim requires separate support.",
+      "reason": "Distinguish mediation from ontological rendering without repeating the setup.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 420,
+      "old": "The Canvas is DOT’s name for the persistent capacity to carry forward the effects of experience. It is not the memory of every sensory detail. It is the evolving substrate on which tendencies, associations, expectations, and learned responses can accumulate.",
+      "new": "The Canvas is DOT’s name for the persistent capacity to carry and update state. Its current state retains the effects of experience: tendencies, associations, expectations, skills, and learned responses. It need not preserve every sensory detail for earlier experience to shape what happens next.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 427,
+      "old": "Intent is the directional organization of Little c before action. It may appear as a deliberate purpose, a question, an attraction, an avoidance, or a faint leaning that has not yet become language. Intent affects what receives attention, which possibility is selected, and how the body is recruited into action.",
+      "new": "Intent is the directional organization of Little c before action. It may appear as deliberate purpose, a question, attraction, avoidance, or a faint leaning not yet in language. Intent affects what receives attention, which possibility is selected, and how the body is recruited to act.",
+      "reason": "Make Intent's range and function easier to retain.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 433,
+      "old": "The loop is recursive. What has been carried forward helps interpret the next moment. That interpretation shapes action. The consequence modifies what will participate in the next interpretation.",
+      "new": "The loop is recursive. What has been carried forward helps interpret the next moment; interpretation shapes action; consequence changes what participates in the next interpretation.",
+      "reason": "Express recursion as one continuous movement.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 438,
+      "old": "It arrives through a body already carrying needs, sensitivities, inherited biology, and developmental limits. It enters a family, language, culture, economy, history, and arrangement of power it did not choose. Before it can inspect these conditions, it must adapt to them.",
+      "new": "It arrives through a body with needs, sensitivities, inherited biology, and developmental limits. It enters a family, language, culture, economy, history, and arrangement of power it did not choose. Before it can inspect these conditions, it must adapt.",
+      "reason": "Reduce the inventory of inherited conditions without diminishing it.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 440,
+      "old": "A child learns what produces care, danger, belonging, shame, praise, withdrawal, and protection. Repetition turns these relationships into expectation. Expectation begins participating in perception. By adulthood, much of what was learned as adaptation feels like reality or identity.",
+      "new": "A child learns what produces care, danger, belonging, shame, praise, withdrawal, and protection. Repetition becomes expectation; expectation enters perception. By adulthood, much of what was learned as adaptation feels like reality or identity.",
+      "reason": "Show adaptation becoming perception in a tighter sequence.",
+      "section": "Chapter 1 · The Digital Organism"
+    },
+    {
+      "paragraph": 519,
+      "old": "Chapter 1 established fundamental consciousness as DOT’s governing postulate. Relative to current public evidence it remains a hypothesis; within the framework it is the ground. We now turn to the first downstream derivation: how localized consciousness meets a biological interface.",
+      "new": "Chapter 1 introduced the local self-aware process. How does it meet a living body? The Decoupling Principle states DOT’s proposed relationship. This chapter follows it through intention, action, and learning, then asks what could distinguish it from a wholly neural account.",
+      "reason": "Open the chapter with its question rather than repeat the preface’s claim-level contract.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 607,
+      "old": "DOT uses two handles for the person. Little c names the experiencing and selecting thread. The Canvas names the persistent pattern-space through which each new moment is interpreted. If Little c is the painter, the body is the brush and the Canvas is the surface carrying the accumulated strokes.",
+      "new": "Little c names the self-aware process; the Canvas carries its changing state. In the painter metaphor, Little c is the painter, the body the brush, and the Painting the accumulated organization on the Canvas. The painter’s present options depend on that history and on the body and world through which action is possible.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 609,
+      "old": "The painter learns through the Painting while continuing to paint.",
+      "new": "The painter learns through the Painting while continuing to paint. This is bootstrapping.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 610,
+      "old": "This is bootstrapping.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 681,
+      "old": "Reality streams in. The Painting interprets. Little c encounters a field of possible response. Intent forms. The body acts. Consequence returns. The Canvas carries forward what changed the system.",
+      "new": "Reality streams in. The Painting interprets. Little c encounters a field of possible response. Intent forms. The body acts. Consequence returns. The Canvas carries forward what changed the system. Then the next moment arrives already shaped by the last.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 682,
+      "old": "Then the next moment arrives already shaped by the last.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 2 · The Decoupling Principle"
+    },
+    {
+      "paragraph": 712,
+      "old": "DOT assigns different work to different layers. RF₀ and the body support causal continuity. Neural and bodily integration contribute to phenomenal continuity. The Canvas carries learned psychological continuity. Little c is proposed as the bearer of numerical continuity.",
+      "new": "DOT assigns different work to different layers. RF₀ and the body support causal continuity. Neural and bodily integration contribute to phenomenal continuity. The Canvas carries the state through which learned identity continues and changes. Little c names the self-aware process at the local scope; its distinct history is carried by the Canvas.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 713,
+      "old": "Only the first three have accessible empirical indicators. The fourth is a DOT derivation.",
+      "new": "These distinctions do not settle numerical continuity. Book One takes local self-awareness as a postulate without claiming a test that proves an intrinsically identical subject persists across every interruption.",
+      "reason": "Remove a purported derivation of numerical identity that the stated postulates do not supply.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 715,
+      "old": "DOT’s burden is to show why Little c is needed beyond the first three forms, and what follows if it is present.",
+      "new": "The working question is how one embodied history remains available for further experience and choice. Whether a stronger account of numerical identity is needed remains open.",
+      "reason": "Keep the continuity inquiry within the author’s stated scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 746,
+      "old": " Little c is hypothesized to remain the same center across those updates. ",
+      "new": " the Canvas state differentiates this local history from others, while Little c names the self-aware process participating in it. ",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 757,
+      "old": "The Derivation from First Principles",
+      "new": "The Foundational Architecture",
+      "reason": "Avoid promising a derivation of assumptions that the section actually introduces as postulates.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 777,
+      "old": "The developmental language does not mean that Big C emerged from a prior nonconscious substance. It means that a fundamental conscious process may acquire, express, or reorganize capacities across its own primordial continuity. Physicality enters only after the development of a Reality Frame. The theory still owes an account of why Big C has the attributed capacities and an operational method for distinguishing localized inward presence from externally observed causal organization.",
+      "new": "Development here means that a fundamental conscious process may retain and reorganize state, widening what is available across its own continuity. It does not mean that self-awareness is produced from a prior nonconscious substance. Book One leaves the intrinsic nature of that process open and examines the architecture attributed to it.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 778,
+      "old": "That is one of the theory’s unpaid debts.",
+      "new": "Its proposed relation to physical processes still requires a testable account.",
+      "reason": "Retain the empirical obligation without requiring an account of intrinsic awareness outside the book’s scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 798,
+      "old": "Each Little c is modeled as autonomous in what it notices, interprets, and chooses, while remaining part of the wider continuity from which it emerged. Individuation expands exploration. Distinct Canvases permit distinct histories, expectations, and perspectives to form.",
+      "new": "Each Little c has a local scope of access and action within the wider process. Distinct Canvas states carry distinct histories, expectations, and developed identities. Sharing the same fundamental nature of self-awareness does not make these local perspectives interchangeable.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 803,
+      "old": "DOT currently offers localization as the answer: a Reality Stream is scoped to one interface and one Canvas, producing a limited center of access. But localization still needs an individuation rule.",
+      "new": "DOT uses localization to describe first-person access scoped through a particular interface and Canvas. This is a working architectural description. It does not yet give a rule for counting conscious centers in every possible system.",
+      "reason": "Distinguish the working scope model from a solved individuation mechanism.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 805,
+      "old": "One Little c corresponds to one maximally unified stream of experience capable of carrying consequence into a distinct developmental history.",
+      "new": "For the ordinary human case examined here, one local perspective encounters a situated Reality Stream and carries consequence into a distinctive Canvas history.",
+      "reason": "Replace an ungrounded maximally unified individuation rule with the model’s stated working case.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 806,
+      "old": "This rule has advantages. It ties identity to experiential unity and learning rather than to species membership. It also creates difficult cases.",
+      "new": "This working case keeps the focus on experience and learning. It should not be extended into a universal rule without examining difficult cases.",
+      "reason": "Bound the interpretation of the working case.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 810,
+      "old": " Persistence: what makes the field at a later moment numerically the same Little c? ",
+      "new": " Persistence: what carried state connects this perspective’s present access with its earlier history? ",
+      "reason": "Frame persistence in terms of carried history rather than assume an independently demonstrable soul-like identifier.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 812,
+      "old": "Without answers, Little c risks becoming a label placed wherever ordinary language already says “a person.” The theory needs more.",
+      "new": "Book One leaves these boundary cases open. They matter to any wider application of DOT, but the account of local learning does not require a completed taxonomy of every possible experiencer.",
+      "reason": "State an explicit explanatory boundary without presenting open questions as resolved.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 855,
+      "old": "The current derivation leans toward continuation but does not decide among the last three. They make different claims about identity. They should not be blended into the comforting sentence that “consciousness continues.”",
+      "new": "The architecture permits continuation but does not establish it or decide among these possibilities. They make different claims about the process, its scope, and its retained state. Those differences should not disappear into the comforting sentence that “consciousness continues.”",
+      "reason": "Remove an unsupported claim that a derivation favors survival.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 865,
+      "old": "DOT’s architecture of continuity can now be stated without contradiction.",
+      "new": "The working architecture of continuity can now be summarized.",
+      "reason": "Remove a premature claim that the theory has eliminated contradiction.",
+      "section": "Chapter 3 · Architecture of Continuity"
+    },
+    {
+      "paragraph": 1086,
+      "old": "Love is the stance that permits difference to become information without surrendering truth or boundaries.",
+      "new": "Love is the stance that permits difference to become information without surrendering truth or boundaries. It is honest perception without contempt.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 4 · Reality Frames"
+    },
+    {
+      "paragraph": 1087,
+      "old": "It is honest perception without contempt.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 4 · Reality Frames"
+    },
+    {
+      "paragraph": 1097,
+      "old": "What clearly can expand is the operational scope of the person. As the Canvas changes, more drafts become visible. More responses become possible. The invariants remain, but the person learns to occupy more of the lawful space.",
+      "new": "As the Canvas state changes, the operational scope of a person can expand: more of the person and world becomes available to notice, more drafts become visible, and more responses become possible. This is the sense in which awareness expands in Book One. The underlying self-aware process is not assigned a new intrinsic nature; its available field of participation widens.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 4 · Reality Frames"
+    },
+    {
+      "paragraph": 1122,
+      "old": "Canvas: the evolving state carried by Little c through time that makes experience cumulative.",
+      "new": "Canvas: the persistent capacity to carry and update the state through which experience becomes cumulative. The Canvas state is what changes; the Painting names its accumulated organization.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1143,
+      "old": "Three terms that were previously used interchangeably now need exact roles.",
+      "new": "Three related terms do different work.",
+      "reason": "Remove an editorial-history remark from the reader-facing definition.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1148,
+      "old": "The Canvas is the capacity for persistence and update. It is the substrate in DOT’s model.",
+      "new": "The Canvas carries and updates state. In DOT’s model it is the substrate for a local history, not that history’s individual contents.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1151,
+      "old": "The distinction prevents a common confusion. The Canvas is not itself fear, belief, identity, or personality. It is what carries the changing pattern. The Painting is not the whole of Little c. It is the learned organization through which the current moment is read. Character is not an invisible essence. It is the Painting showing itself in action.",
+      "new": "The distinction separates capacity, accumulated organization, and expression. A Canvas carries a Painting; that Painting shapes interpretation; repeated action expresses Character. A person’s developed identity depends on this carried state, while Little c names the self-aware process participating in the whole.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1153,
+      "old": "Figure 4 · Canvas, Painting, and Character. The terms are related but should not be collapsed into one another.",
+      "new": "Figure 4 · Canvas, Painting, and Character. Capacity carries state; accumulated organization shapes interpretation; repeated action expresses the resulting policy.",
+      "reason": "Give the caption a concise explanation consistent with the definitions.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1172,
+      "old": "Figure 2 · The Experience Loop. Consequence updates the Canvas, which changes the Painting through which the next moment is interpreted.",
+      "new": "Figure 2 · The Experience Loop. Consequence updates Canvas state. The changed Painting then participates in the interpretation of the next moment.",
+      "reason": "Align the diagram caption with carrier/state distinction.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1200,
+      "old": "DOT uses the word entropy for the internal cost of fragmentation. It is not thermodynamic entropy, and it should not borrow the authority of physics.",
+      "new": "DOT uses Canvas entropy for the functional burden of fragmentation. The term describes conflict within the carried state; it is not a measure of thermodynamic entropy.",
+      "reason": "Define the term directly without borrowing a physical measurement.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1210,
+      "old": "The Canvas gives back what has been painted onto it. Repeated fear learns to speak quickly. Repeated avoidance becomes an available default. Repeated dishonesty makes the inner system harder to inhabit coherently. Repeated attention, truthful action, safety, and care can make different responses easier to access.",
+      "new": "Reducing Canvas entropy means that obstructive conflict governs less of the response. It does not mean emptying the Canvas, erasing a history, suppressing protective signals, or making every person alike. Retained learning can support a wider scope of awareness and a more fitting range of action. Repeated avoidance can become a default; repeated attention, truthful action, safety, and care can make other responses easier to access.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1232,
+      "old": "A pattern is written deeply enough that Little c stops treating it as information and begins treating it as identity.",
+      "new": "A pattern becomes so governing that the person treats it as the whole of who they are, rather than as part of a history that can be examined and revised.",
+      "reason": "Distinguish the developing person and carried history from the underlying self-aware process.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1370,
+      "old": "The Canvas is DOT’s model of cumulative experience. It carries the changing state through which earlier consequence participates in the present.",
+      "new": "The Canvas carries state. The Painting is its accumulated organization; Character expresses it through repeated action. Together they describe how earlier consequence participates in the present.",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1371,
+      "old": "The Painting is the accumulated organization on that Canvas.",
+      "new": "",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1372,
+      "old": "Character is the Painting rendered through repeated action.",
+      "new": "",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1374,
+      "old": "You are not only encountering the world.",
+      "new": "You encounter the world through accumulated patterns of self. As a pattern becomes visible, participation in revising it becomes possible. Its place in your history is real; its claim to govern every future response can be questioned.",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1375,
+      "old": "You are encountering the world through accumulated patterns of self.",
+      "new": "",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1376,
+      "old": "Once a pattern becomes visible, Little c is no longer only being shaped by it. Participation becomes possible. The person can begin to distinguish information from identity, signal from inherited contraction, the Canvas from its Painting, and the Painting from the painter.",
+      "new": "",
+      "reason": "Tighten the closing argument and remove repeated fragments without leaving an almost empty final page.",
+      "section": "Chapter 5 · The Canvas"
+    },
+    {
+      "paragraph": 1396,
+      "old": "What shaped you is not identical to what you are. What appears automatically within you is not necessarily your deepest Intent. A frightened reaction does not prove that Little c is fear. A prejudiced association does not make Little c irredeemably prejudiced. A habit of self-erasure does not prove that Little c was made to disappear. These patterns are real, and their consequences may be serious, but they are strokes—not essence.",
+      "new": "What shaped you participates in who you have become, but no single pattern exhausts you. An automatic reaction need not be your considered Intent. A learned prejudice has real consequences without being beyond revision. A habit of self-erasure can govern a life without defining its remaining possibilities. The Painting carries a developed identity, and that identity can change.",
+      "reason": "Recognize Canvas state as constitutive of developed identity without making a learned pattern permanent.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1398,
+      "old": "Little c begins by being painted. It develops by seeing the Painting. It becomes more fully itself by learning to paint with Intent.",
+      "new": "The Canvas accumulates a Painting before the person can examine it. Development begins as more of that Painting becomes available to awareness and revision. The process is recursive: changed state makes further seeing and choosing possible.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1536,
+      "old": "Every person needs belonging. Little c develops through relationship, recognition, and participation in something larger than itself. The conformity trap makes belonging conditional on the surrender of honest perception.",
+      "new": "Every person needs belonging. We develop through relationship, recognition, and participation in something larger than ourselves. The conformity trap makes belonging conditional on the surrender of honest perception.",
+      "reason": "Distinguish the developing person and carried history from the underlying self-aware process.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1668,
+      "old": "The purpose would not be perfect adaptation to an ugly Painting.",
+      "new": "The purpose would not be perfect adaptation to an ugly Painting. The purpose would be recognition that it is a Painting.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1669,
+      "old": "The purpose would be recognition that it is a Painting.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1675,
+      "old": "This may appear to be an impossible trap.",
+      "new": "This is the problem bootstrapping addresses: self-correction begins with the capacities already available inside the system.",
+      "reason": "Replace a rhetorical question-and-reversal sequence with the mechanism it introduces.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1676,
+      "old": "It is not.",
+      "new": "",
+      "reason": "Remove repetition after the direct definition of bootstrapping.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1677,
+      "old": "It means bootstrapping is the only available approach to self-correction from within the system.",
+      "new": "",
+      "reason": "Remove repetition after the direct definition of bootstrapping.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1679,
+      "old": "This is not an escape from mediation.",
+      "new": "This is not an escape from mediation. It is the progressive refinement of mediation.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1680,
+      "old": "It is the progressive refinement of mediation.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1681,
+      "old": "A small degree of awareness makes one stroke visible. Recognizing that stroke creates the possibility of revising it. The revision alters the Painting through which the next experience is interpreted. The revised Painting then reveals something Little c could not see before.",
+      "new": "A small scope of awareness makes one stroke visible. Recognizing it creates a possibility of revision. When revision changes the Canvas state, the next experience is interpreted through a changed Painting. Something previously obscured may then become available to notice and choose.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1683,
+      "old": "This is how Little c bootstraps itself into authorship.",
+      "new": "This is how authorship develops: a change in carried state makes further participation possible.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1685,
+      "old": "Receive help.",
+      "new": "Receive help. No serious account of authorship requires isolation.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1686,
+      "old": "No serious account of authorship requires isolation.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1687,
+      "old": "But no one can complete the transformation on behalf of Little c. New information must still be recognized, tested, and integrated from within. Otherwise, it becomes another inherited answer painted over the old one. The language changes. The authority changes. The symbols change.",
+      "new": "But no one can complete the transformation on behalf of Little c. New information must still be recognized, tested, and integrated from within. Otherwise, it becomes another inherited answer painted over the old one. The language changes. The authority changes. The symbols change. The Character remains.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1688,
+      "old": "The Character remains.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1691,
+      "old": "The transformation is recursive.",
+      "new": "The transformation is recursive. We begin inside the inherited Painting, using capacities partly produced by that Painting, and turn those capacities toward the recovery of authorship. We see what we can see. We revise what has become visible. We receive feedback. We refine the instrument doing the seeing. Then we look again.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1692,
+      "old": "We begin inside the inherited Painting, using capacities partly produced by that Painting, and turn those capacities toward the recovery of authorship. We see what we can see. We revise what has become visible. We receive feedback. We refine the instrument doing the seeing. Then we look again.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1694,
+      "old": "Bootstrapping is not one method among many that begins from outside the system.",
+      "new": "Bootstrapping is not one method among many that begins from outside the system. For an embedded Little c, it is how self-correction and emergence occur.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1695,
+      "old": "For an embedded Little c, it is how self-correction and emergence occur.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1696,
+      "old": "A Practice of One Loop",
+      "new": "One Loop, Made Concrete",
+      "reason": "Frame the example as an illustration of the architecture, not a complete practical method.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1697,
+      "old": "The theory becomes practical at the scale of one event.",
+      "new": "The architecture can be followed through one ordinary event. The sequence below illustrates its roles; Book Two will develop the practical method and its limits.",
+      "reason": "Make Book Two’s role explicit while preserving a concrete example for Book One readers.",
+      "section": "Chapter 6 · The Painting"
+    },
+    {
+      "paragraph": 1775,
+      "old": "P2 — Differentiation. Fundamental consciousness can localize into bounded centers of first-person access called Little c.",
+      "new": "P2 — Differentiation. Fundamental self-awareness can operate at a local scope, called Little c. Big C and Little c share that fundamental nature; a local instance’s distinctive history and developed identity depend on the state carried by its Canvas.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1778,
+      "old": "P5 — Persistent learning. Consequential experience alters a persistent pattern-space, the Canvas, which shapes later interpretation and action.",
+      "new": "P5 — Persistent learning. The Canvas carries and updates state. Consequential experience changes its accumulated organization, the Painting, shaping later interpretation and action.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1779,
+      "old": "P6 — Development through widening agency. Under stable constraints, learning can expand the truthful and meaningful decision-space available to Little c. Governing Fear tends to contract that space; Love names the condition and practice in which Fear no longer governs it.",
+      "new": "P6 — Development through widening agency. Changes in Canvas state can widen what is available to local awareness and expand meaningful decision-space under stable constraints. Governing Fear tends to contract that space; Love names the condition and practice in which Fear no longer governs it.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1950,
+      "old": "This book can complete the first contract:",
+      "new": "Book One’s first contract is to state the architecture, separate observation from interpretation, represent rival accounts fairly, identify missing bridge laws, and specify measurements and conditions for revision. The people whose experience enters the inquiry must be protected, and disagreement must remain available without being reclassified as Fear.",
+      "reason": "Turn an eight-line rhetorical checklist into a coherent closing paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1951,
+      "old": "State the architecture.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1952,
+      "old": "Separate observation from interpretation.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1953,
+      "old": "Represent rival accounts at their strongest.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1954,
+      "old": "Identify the bridge laws not yet built.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1955,
+      "old": "Specify measurements before claiming mechanisms.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1956,
+      "old": "Name the evidence that should reduce confidence.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1957,
+      "old": "Protect the people whose experience enters the inquiry.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1958,
+      "old": "Invite correction without converting disagreement into Fear.",
+      "new": "",
+      "reason": "Consolidate the research contract in the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1959,
+      "old": "Then do the work.",
+      "new": "Then do the work. DOT began from the insistence that experience should not be removed from the study of reality. Scientific development requires the complementary insistence that experience, resonance, and coherence should not be allowed to certify the theory that interprets them.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1960,
+      "old": "DOT began from the insistence that experience should not be removed from the study of reality. Scientific development requires the complementary insistence that experience, resonance, and coherence should not be allowed to certify the theory that interprets them.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1961,
+      "old": "Both disciplines are forms of Love.",
+      "new": "Both disciplines are forms of Love. One refuses to erase the experiencer. The other refuses to protect the Painting from consequence.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1962,
+      "old": "One refuses to erase the experiencer.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1963,
+      "old": "The other refuses to protect the Painting from consequence.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Chapter 7 · The Research Program"
+    },
+    {
+      "paragraph": 1966,
+      "old": "We began with the nearest fact.",
+      "new": "We began with the nearest fact. Experience occurs.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1967,
+      "old": "Experience occurs.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1969,
+      "old": "The architecture is large.",
+      "new": "The architecture is large. The test remains intimate.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1970,
+      "old": "The test remains intimate.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1972,
+      "old": "Can you see it?",
+      "new": "Can you see it? Not escape it. Not shame it. Not declare yourself beyond it. See it.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1973,
+      "old": "Not escape it. Not shame it. Not declare yourself beyond it.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1974,
+      "old": "See it.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1976,
+      "old": "The world enters.",
+      "new": "The world enters. The Painting interprets. Possible actions appear. Intent commits. The body acts. Consequence returns. Something changes.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1977,
+      "old": "The Painting interprets.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1978,
+      "old": "Possible actions appear.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1979,
+      "old": "Intent commits.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1980,
+      "old": "The body acts.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1981,
+      "old": "Consequence returns.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1982,
+      "old": "Something changes.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1988,
+      "old": "Third, DOT adopts fundamental consciousness as its ontological postulate. Big C differentiates localized centers of access and develops rule-bound Reality Frames in which experience can become consequential.",
+      "new": "Third, DOT adopts self-awareness as fundamental. Big C names the encompassing process; Little c names self-awareness at a local scope. Within this architecture, Big C develops rule-bound Reality Frames in which local experience becomes consequential.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1990,
+      "old": "Fifth, experience becomes cumulative. At the psychological level, memory, habit, interoception, valuation, attention, and relationship carry the past into present interpretation. DOT models that persistent organization as the Canvas and Painting. Persistence independent of biology remains speculative.",
+      "new": "Fifth, experience becomes cumulative through state carried by the Canvas. The Painting is its accumulated organization; Character expresses that organization through repeated action. This state differentiates a local history and developed identity. Persistence independent of biology remains speculative.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1997,
+      "old": "It does not know the intrinsic nature of Big C.",
+      "new": "The intrinsic nature of self-awareness remains open. So do the source of Big C’s attributed capacities and the limits of the vocabulary used to describe them.",
+      "reason": "Combine repeated limits while keeping the author’s foundational boundary clear.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1998,
+      "old": "It does not know the intrinsic nature of T or E, why Big C possesses the capacities they name, or whether a better consciousness-first vocabulary will replace them.",
+      "new": "",
+      "reason": "Consolidate related foundational limits.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 1999,
+      "old": "It does not possess an individuation rule that resolves every difficult case.",
+      "new": "The empirical architecture is unfinished: DOT has no universal individuation rule, no established bridge law for a non-neural contribution to action, and no derivation of RF₀’s measured laws and constants.",
+      "reason": "Group concrete mechanism obligations into one readable paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2000,
+      "old": "It does not identify the bridge law through which non-neural Intent would contribute to physical action.",
+      "new": "",
+      "reason": "Consolidate empirical mechanism limits.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2001,
+      "old": "It does not derive the measured laws and constants of RF₀ from properties of Big C.",
+      "new": "",
+      "reason": "Consolidate empirical mechanism limits.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2002,
+      "old": "It does not demonstrate another Reality Frame.",
+      "new": "Another Reality Frame has not been demonstrated, nor has the survival of Canvas organization after biological death. Love is not yet a validated scientific variable. The book does not claim that Fear causes every harmful institution or that distress always comes from misreading the present.",
+      "reason": "Condense a repeated negative inventory without removing its substantive boundaries.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2003,
+      "old": "It does not establish that autobiographical identity or Canvas organization survives biological death.",
+      "new": "",
+      "reason": "Consolidate the remaining limits into one paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2004,
+      "old": "It does not reduce Love to a validated scientific variable.",
+      "new": "",
+      "reason": "Consolidate the remaining limits into one paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2005,
+      "old": "It does not show that every harmful institution is caused by Fear or that every distressed person is misreading the present.",
+      "new": "",
+      "reason": "Consolidate the remaining limits into one paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2006,
+      "old": "It does not complete consciousness science.",
+      "new": "",
+      "reason": "Consolidate the remaining limits into one paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2007,
+      "old": "Naming these limits is not a ceremonial display of humility. Each one marks work that could change the architecture.",
+      "new": "Each open question could change the architecture. Naming it tells the reader where the model ends and further work begins.",
+      "reason": "Close the limits section without another ceremonial disclaimer.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2011,
+      "old": "The first is inflation.",
+      "new": "The first is inflation. Every mystery becomes evidence. Every quantum experiment becomes proof that mind creates reality. Every meaningful coincidence becomes communication. Every helpful practice becomes proof. Every objection becomes fear. The theory grows until nothing can stand outside it. That path produces certainty by destroying discrimination.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2012,
+      "old": "Every mystery becomes evidence. Every quantum experiment becomes proof that mind creates reality. Every meaningful coincidence becomes communication. Every helpful practice becomes proof. Every objection becomes fear. The theory grows until nothing can stand outside it.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2013,
+      "old": "That path produces certainty by destroying discrimination.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2014,
+      "old": "The second temptation is erasure.",
+      "new": "The second temptation is erasure. Only publicly measurable structure is permitted to count as real. First-person occurrence is treated as an embarrassing report artifact. Meaning becomes decoration. Feeling becomes noise. The experiencer is included in life but excluded from the ontology. That path produces precision by narrowing the phenomenon too early.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2015,
+      "old": "Only publicly measurable structure is permitted to count as real. First-person occurrence is treated as an embarrassing report artifact. Meaning becomes decoration. Feeling becomes noise. The experiencer is included in life but excluded from the ontology.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2016,
+      "old": "That path produces precision by narrowing the phenomenon too early.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2017,
+      "old": "DOT must remain between them.",
+      "new": "DOT must remain between them. Include the whole phenomenon. Claim only what the method can carry.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2018,
+      "old": "Include the whole phenomenon.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2019,
+      "old": "Claim only what the method can carry.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2025,
+      "old": "Watch for that.",
+      "new": "Watch for that. Clarity does not create a superior kind of person. It creates a greater obligation to notice consequence.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2026,
+      "old": "Clarity does not create a superior kind of person.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2027,
+      "old": "It creates a greater obligation to notice consequence.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2029,
+      "old": "You did not choose your first body, first language, first household, first fear, or first explanation of reality.",
+      "new": "You did not choose your first body, first language, first household, first fear, or first explanation of reality. You entered a stream already moving. You inherited a Painting already begun. That inheritance is not your fault. Its consequences are now part of your life.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2030,
+      "old": "You entered a stream already moving.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2031,
+      "old": "You inherited a Painting already begun.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2032,
+      "old": "That inheritance is not your fault.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2033,
+      "old": "Its consequences are now part of your life.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2035,
+      "old": "The work is not to erase inheritance.",
+      "new": "The work is not to erase inheritance. It is to become present enough to participate in what continues.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2036,
+      "old": "It is to become present enough to participate in what continues.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2037,
+      "old": "One honest question can be a stroke.",
+      "new": "One honest question can be a stroke. One boundary can be a stroke. One repaired harm can be a stroke. One institution redesigned around human decision-space can be a stroke. One experiment that reports a failed prediction can be a stroke. One moment in which another person is not reduced to the Painting they carry can be a stroke.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2038,
+      "old": "One boundary can be a stroke.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2039,
+      "old": "One repaired harm can be a stroke.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2040,
+      "old": "One institution redesigned around human decision-space can be a stroke.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2041,
+      "old": "One experiment that reports a failed prediction can be a stroke.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2042,
+      "old": "One moment in which another person is not reduced to the Painting they carry can be a stroke.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2043,
+      "old": "The complete theory does not end above life.",
+      "new": "The complete theory does not end above life. It returns to the next loop.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2044,
+      "old": "It returns to the next loop.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2045,
+      "old": "Reality streams in.",
+      "new": "Reality streams in. See what is there. See what you added. Choose what you can. Receive the consequence.",
+      "reason": "Join a continuous thought into one paragraph; retain emphasis selectively at section endings.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2046,
+      "old": "See what is there.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2047,
+      "old": "See what you added.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2048,
+      "old": "Choose what you can.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2049,
+      "old": "Receive the consequence.",
+      "new": "",
+      "reason": "Join with the preceding paragraph.",
+      "section": "Coda"
+    },
+    {
+      "paragraph": 2150,
+      "old": "Big C. DOT’s name for fundamental consciousness considered as capable of ordered differentiation, retained consequence, and self-preserving development. Big C is the theory’s governing ontological hypothesis. T and E are capacities attributed to Big C, not conditions from which Big C is produced.",
+      "new": "Big C. Fundamental self-awareness considered as the encompassing process, capable in DOT’s model of ordered differentiation, retained consequence, and self-preserving development. Big C and Little c share the same fundamental nature of self-awareness; their scope differs. T and E are capacities attributed to Big C, not conditions from which it is produced.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Glossary"
+    },
+    {
+      "paragraph": 2153,
+      "old": "Little c. A localized center of first-person access within Big C. DOT proposes Little c as the experiencing and selecting thread coupled to a biological interface. Its individuation and causal relation to the body remain open mechanisms.",
+      "new": "Little c. The self-aware process at a local scope. Its distinctive history and developed identity depend on the state carried by its Canvas. Changes in that state can alter what is available to awareness and action. Book One leaves self-awareness’s intrinsic nature open; localization and body coupling remain mechanisms to be specified.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Glossary"
+    },
+    {
+      "paragraph": 2161,
+      "old": "Canvas. The persistent pattern-space through which consequential experience influences later interpretation and action. Psychologically, the Canvas is a latent integrative construct spanning memory, habit, valuation, bodily regulation, and relationship. DOT’s stronger claim that it belongs to Little c and is not exhausted by biology remains unverified.",
+      "new": "Canvas. The persistent capacity to carry and update state for a local instance of awareness. Canvas state is inferred through lasting changes in memory, habit, valuation, bodily regulation, relationship, interpretation, and action. DOT’s claim that this capacity is not exhausted by biology remains unverified.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Glossary"
+    },
+    {
+      "paragraph": 2162,
+      "old": "Painting. The accumulated organization carried on the Canvas: expectations, associations, fears, loyalties, meanings, skills, habits, and unresolved contradictions. The Painting interprets; it is not identical to Little c.",
+      "new": "Painting. The accumulated organization of Canvas state: expectations, associations, fears, loyalties, meanings, skills, habits, and unresolved contradictions. It shapes interpretation and developed identity; it does not name the underlying self-aware process.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Glossary"
+    },
+    {
+      "paragraph": 2175,
+      "old": "Canvas entropy. DOT’s non-thermodynamic name for the functional burden of fragmentation: conflicting policies, divided Intent, attentional capture, unresolved threat, and reduced access to fitting responses.",
+      "new": "Canvas entropy. DOT’s non-thermodynamic term for the burden of fragmentation within carried state: conflicting policies, divided Intent, attentional capture, unresolved threat, and reduced access to fitting responses. Reducing it means less obstructive conflict, not erasing memory, individuality, or protective sensation.",
+      "reason": "Clarify the author’s distinction between self-awareness, Canvas state, developed identity, and scope.",
+      "section": "Glossary"
+    }
+  ],
+  "text_substitutions": [
+    {
+      "old": "C denotes Canvas;",
+      "new": "C denotes Canvas state;",
+      "reason": "Make time-indexed C consistent with the distinction between carrier and state."
+    },
+    {
+      "old": "the updated Canvas.",
+      "new": "the updated Canvas state.",
+      "reason": "Clarify what the Experience Loop updates."
+    }
+  ]
+}

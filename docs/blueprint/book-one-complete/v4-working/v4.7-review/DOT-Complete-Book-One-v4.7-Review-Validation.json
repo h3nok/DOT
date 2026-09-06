@@ -1,0 +1,44 @@
+{
+  "source_sha256": "5e39f629f2c12baa6b9a197e2c23ca39190eec083a9ae1493de6168ffb231e15",
+  "editorial_operations": 78,
+  "native_equations_preserved": 101,
+  "equation_fields_preserved": 71,
+  "svg_diagrams": 2,
+  "contents_pages": {
+    "the_observer_belongs_in_the_inquiry": 1,
+    "the_digital_organism": 11,
+    "the_decoupling_principle": 39,
+    "architecture_of_continuity": 57,
+    "reality_frames": 75,
+    "the_canvas": 95,
+    "the_painting": 114,
+    "the_research_program": 147,
+    "the_theory_returns_to_one_life": 165,
+    "equation_and_notation_guide": 170,
+    "core_terms": 174,
+    "references": 179
+  },
+  "pages": 190,
+  "pdf_destinations_checked": 341,
+  "figure_sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "pdf_sha256": "f49afce2e6c5cbc2ba95282a746cf24aa8091c2b1b22150e5b8113eafa1e739e",
+  "docx_sha256": "20da842ad2ea5a7abac7dfdaad13ac5661a53393a42338cac4c842eef76ed8da",
+  "references_preserved": 51,
+  "tagged_pdf": true,
+  "diagram_text_selectable": true,
+  "page_bounds_checked": true,
+  "repository_checks": {
+    "make_verify": "passed",
+    "frontend_unit_tests": 359,
+    "browser_tests": 66,
+    "backend_tests": 444
+  },
+  "visual_proof": "Cover, reader map, loop, chapter openings, comparison figures, glossary, equation appendix, and chapter endings inspected."
+}

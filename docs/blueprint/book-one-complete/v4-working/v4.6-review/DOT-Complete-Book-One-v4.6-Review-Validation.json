@@ -1,0 +1,44 @@
+{
+  "source_sha256": "b60d7ce2c3db3f3aebaa35dea490124c188d71b2440d72fbe9ccfb58d3924625",
+  "edits": 213,
+  "native_equations": 101,
+  "equation_fields": 71,
+  "concept_plates": 6,
+  "internal_links_checked": 166,
+  "contents_pages": {
+    "the_observer_belongs_in_the_inquiry": 1,
+    "the_digital_organism": 11,
+    "the_decoupling_principle": 39,
+    "architecture_of_continuity": 57,
+    "reality_frames": 75,
+    "the_canvas": 95,
+    "the_painting": 114,
+    "the_research_program": 147,
+    "the_theory_returns_to_one_life": 165,
+    "equation_and_notation_guide": 170,
+    "core_terms": 174,
+    "references": 179
+  },
+  "pdf_sha256": "281fced6848dc5939979183a7acfa3c8966ca1c27613bbe2c5ae6eaab9889f9f",
+  "docx_sha256": "5e39f629f2c12baa6b9a197e2c23ca39190eec083a9ae1493de6168ffb231e15",
+  "references_preserved": 51,
+  "page_count": 189,
+  "figure_sequence_checked": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "tagged_pdf": true,
+  "pdf_internal_destinations_checked": 340,
+  "pdf_outline_present": true,
+  "rendered_text_within_page_bounds": true,
+  "repository_checks": {
+    "make_verify": "passed",
+    "frontend_unit_tests": 359,
+    "browser_tests": 66,
+    "backend_tests": 444
+  }
+}

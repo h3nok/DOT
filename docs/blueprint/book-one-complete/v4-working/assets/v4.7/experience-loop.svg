@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="765" viewBox="0 0 720 765" role="img" aria-labelledby="title desc"><title id="title">The Experience Loop</title><desc id="desc">Seven steps form a cycle: receive a moment, interpret it, notice possibilities, commit, act, encounter consequence, and carry forward change. The next iteration uses the changed Painting.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#555555"/></marker><marker id="teal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#285C57"/></marker></defs><rect width="720" height="765" fill="white"/>
+<text x="0" y="30" font-family="Arial" font-size="30" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="0" dy="0">The Experience Loop</tspan>
+</text>
+<text x="0" y="65" font-family="Arial" font-size="23" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="0" dy="0">One moment changes how the next is met.</tspan>
+</text>
+<rect x="20" y="102" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="37" y="131" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="37" dy="0">1</tspan>
+</text>
+<text x="37" y="159" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="37" dy="0">Receive a moment</tspan>
+</text>
+<text x="37" y="186" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="37" dy="0">Reality Stream</tspan>
+</text>
+<rect x="400" y="102" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="417" y="131" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">2</tspan>
+</text>
+<text x="417" y="159" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="417" dy="0">Interpret it</tspan>
+</text>
+<text x="417" y="186" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">Painting</tspan>
+</text>
+<rect x="400" y="267" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="417" y="296" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">3</tspan>
+</text>
+<text x="417" y="324" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="417" dy="0">Notice possibilities</tspan>
+</text>
+<text x="417" y="351" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">Pre-Intent drafts</tspan>
+</text>
+<rect x="400" y="432" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="417" y="461" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">4</tspan>
+</text>
+<text x="417" y="489" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="417" dy="0">Commit to a direction</tspan>
+</text>
+<text x="417" y="516" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="417" dy="0">Intent</tspan>
+</text>
+<rect x="210" y="623" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="227" y="652" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="227" dy="0">5</tspan>
+</text>
+<text x="227" y="680" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="227" dy="0">Act in the world</tspan>
+</text>
+<text x="227" y="707" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="227" dy="0">Body within the Frame</tspan>
+</text>
+<rect x="20" y="432" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#969692" stroke-width="1.6"/>
+<text x="37" y="461" font-family="Arial" font-size="20" font-weight="bold" fill="#555555" text-anchor="start">
+<tspan x="37" dy="0">6</tspan>
+</text>
+<text x="37" y="489" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="37" dy="0">Encounter consequence</tspan>
+</text>
+<text x="37" y="516" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="37" dy="0">Feedback</tspan>
+</text>
+<rect x="20" y="267" width="300" height="99" rx="8" fill="#FAF9F5" stroke="#285C57" stroke-width="1.6"/>
+<text x="37" y="296" font-family="Arial" font-size="20" font-weight="bold" fill="#285C57" text-anchor="start">
+<tspan x="37" dy="0">7</tspan>
+</text>
+<text x="37" y="324" font-family="Arial" font-size="23" font-weight="bold" fill="#242424" text-anchor="start">
+<tspan x="37" dy="0">Carry forward change</tspan>
+</text>
+<text x="37" y="351" font-family="Arial" font-size="21" font-weight="normal" fill="#555555" text-anchor="start">
+<tspan x="37" dy="0">Canvas state</tspan>
+</text>
+<path d="M331 152 H387" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M550 213 V255" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M550 378 V420" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M170 420 V378" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M550 543 V584 Q550 604 520 610 L493 620" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M226 620 L195 606 Q170 592 170 573 V543" fill="none" stroke="#555555" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M170 255 V213" fill="none" stroke="#285C57" stroke-width="2" marker-end="url(#teal-arrow)"/>
+
+</svg>

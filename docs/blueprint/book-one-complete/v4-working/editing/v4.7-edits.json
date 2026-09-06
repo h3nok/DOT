@@ -1,0 +1,553 @@
+{
+  "edition": "4.7",
+  "source": "v4.6-review/DOT-Complete-Book-One-v4.6-Review.docx",
+  "source_sha256": "5e39f629f2c12baa6b9a197e2c23ca39190eec083a9ae1493de6168ffb231e15",
+  "edits": [
+    {
+      "paragraph": 56,
+      "section": "PREFACE · The Observer Belongs in the Inquiry",
+      "old": "Working definition",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 96,
+      "section": "PREFACE · The Observer Belongs in the Inquiry",
+      "old": "Working definition",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 144,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Observation — DOT-E0",
+      "new": "Observation — DOT-E0: Experience occurs.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 145,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Experience occurs.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 158,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Observation — DOT-E1",
+      "new": "Observation — DOT-E1: The content of experience can be inaccurate even while an occurrence of experience is present.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 159,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "The content of experience can be inaccurate even while an occurrence of experience is present.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 171,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Definition — DOT-D2",
+      "new": "Definition — DOT-D2: Epistemic priority means that evidence usable by a subject becomes available to that subject through conscious experience.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 172,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Epistemic priority means that evidence usable by a subject becomes available to that subject through conscious experience.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 185,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Bridge boundary — DOT-B1",
+      "new": "Bridge boundary — DOT-B1: Epistemic priority does not entail ontological fundamentality.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 186,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Epistemic priority does not entail ontological fundamentality.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 206,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "SYSTEM NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 207,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "The important word is not computer.",
+      "new": "The important word is not computer. It is process.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 208,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "It is process.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 277,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Claim boundary",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 294,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Ontological hypothesis — DOT-H1",
+      "new": "Ontological hypothesis — DOT-H1: Consciousness is fundamental rather than reducible to a wholly non-conscious base.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 295,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Consciousness is fundamental rather than reducible to a wholly non-conscious base.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 298,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Architectural hypothesis — DOT-H2",
+      "new": "Architectural hypothesis — DOT-H2: Fundamental consciousness can differentiate, carry state, and preserve consequential continuity.",
+      "reason": "Bring the claim identifier and statement into one readable paragraph."
+    },
+    {
+      "paragraph": 299,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Fundamental consciousness can differentiate, carry state, and preserve consequential continuity.",
+      "new": "",
+      "reason": "Combine with the preceding statement."
+    },
+    {
+      "paragraph": 345,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Open question",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 375,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 380,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "BOUNDARY NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 453,
+      "section": "CHAPTER 1 · The Digital Organism",
+      "old": "RESEARCH NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 477,
+      "section": "CHAPTER 2 · The Decoupling Principle",
+      "old": "Model statement",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 489,
+      "section": "CHAPTER 2 · The Decoupling Principle",
+      "old": "EPISTEMIC NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 535,
+      "section": "CHAPTER 2 · The Decoupling Principle",
+      "old": "In plain language",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 587,
+      "section": "CHAPTER 2 · The Decoupling Principle",
+      "old": "Figure 2 · The Experience Loop. Consequence updates Canvas state. The changed Painting then participates in the interpretation of the next moment.",
+      "new": "Figure 2 · The Experience Loop. Follow the arrows from a situated moment through interpretation, choice, action, and consequence. The return changes Canvas state; the next moment is interpreted through that changed Painting.",
+      "reason": "Explain how to read the new loop diagram and distinguish retained change from production of the external event."
+    },
+    {
+      "paragraph": 648,
+      "section": "Chapter 2 · The Decoupling Principle",
+      "old": "This loop is the most accessible bridge in DOT because the reader can observe its parts before accepting the full derivation. Within the framework, Little c precedes the biological interface and Rendering Latency names the proposed handoff. What remains hypothetical relative to public evidence is how that placement can be operationally distinguished and measured.",
+      "new": "The loop can be examined without accepting DOT’s ontology. DOT places Little c prior to the biological interface and calls the proposed handoff Rendering Latency. Distinguishing and measuring that handoff remains an empirical task.",
+      "reason": "Make the chapter’s closing distinction and transition concise enough to read as one continuous ending."
+    },
+    {
+      "paragraph": 649,
+      "section": "Chapter 2 · The Decoupling Principle",
+      "old": "The chapter therefore ends with two claims at different levels:",
+      "new": "Two claims remain distinct:",
+      "reason": "Make the chapter’s closing distinction and transition concise enough to read as one continuous ending."
+    },
+    {
+      "paragraph": 653,
+      "section": "Chapter 2 · The Decoupling Principle",
+      "old": "The next question is continuity. If the body, Canvas, Intent, and Reality Stream are participating in a sequence of updates, what carries identity across the sequence? What is fundamental continuity, and what part of continuity is constructed within a Reality Frame?",
+      "new": "",
+      "reason": "Combine the transition with its linked chapter reference to avoid a stranded closing sentence."
+    },
+    {
+      "paragraph": 654,
+      "section": "Chapter 2 · The Decoupling Principle",
+      "old": "That is the work of Chapter 3.",
+      "new": "Chapter 3 takes up continuity: what carries identity across these updates, and which forms are fundamental or constructed?",
+      "reason": "Keep the transition and its chapter reference together in a single sentence."
+    },
+    {
+      "paragraph": 663,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 664,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Primordial continuity is fundamental in the model.",
+      "new": "Primordial continuity is fundamental in the model. Seamless continuity inside a Reality Frame is engineered.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 665,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Seamless continuity inside a Reality Frame is engineered.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 730,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Ontological constraint",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 796,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Derivation boundary",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 797,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Physics formalizes the runtime generated by RF₀.",
+      "new": "Physics formalizes the runtime generated by RF₀. DOT must derive the runtime from its source architecture.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 798,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "DOT must derive the runtime from its source architecture.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 825,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "The model in one movement",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 826,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Delegate stability.",
+      "new": "Delegate stability. Preserve continuity. Learn at the next level.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 827,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Preserve continuity.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 828,
+      "section": "CHAPTER 3 · Architecture of Continuity",
+      "old": "Learn at the next level.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 893,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 894,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "The Reality Frame is the wider environment and its rules.",
+      "new": "The Reality Frame is the wider environment and its rules. The Reality Stream is what reaches the experiencer from moment to moment.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 895,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "The Reality Stream is what reaches the experiencer from moment to moment.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 933,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "THREE-LAYER NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 934,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "The world constrains what can be encountered.",
+      "new": "The world constrains what can be encountered. The Painting constrains what the encounter becomes for the person. Neither constraint is total.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 935,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "The Painting constrains what the encounter becomes for the person.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 936,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Neither constraint is total.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1002,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Working definition",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1039,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1040,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Intent does not command the world.",
+      "new": "Intent does not command the world. It commits the person to a lawful move within it.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1041,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "It commits the person to a lawful move within it.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1049,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1050,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Outcome determines what must be repaired in the world.",
+      "new": "Outcome determines what must be repaired in the world. Intent helps determine what is being formed in the person. Neither erases the other.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1051,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Intent helps determine what is being formed in the person.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1052,
+      "section": "CHAPTER 4 · Reality Frames",
+      "old": "Neither erases the other.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1114,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1115,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "The Canvas carries.",
+      "new": "The Canvas carries. The Painting interprets. Character acts.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1116,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "The Painting interprets.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1117,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Character acts.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1143,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "The model in one movement",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1144,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "The Canvas carries the deltas.",
+      "new": "The Canvas carries the deltas. The Painting is their accumulated organization. Every loop begins from the state left by earlier loops.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1145,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "The Painting is their accumulated organization.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1146,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Every loop begins from the state left by earlier loops.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1265,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Working definition",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1290,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Working definition",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1308,
+      "section": "CHAPTER 5 · The Canvas",
+      "old": "Model statement",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1354,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1355,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "The Canvas carries.",
+      "new": "The Canvas carries. The Painting interprets. Character acts.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1356,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "The Painting interprets.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1357,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "Character acts.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1560,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "CIVILIZATIONAL NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1561,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "The tools improve.",
+      "new": "The tools improve. The fear scales.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1562,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "The fear scales.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1704,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "Keep this distinction",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    },
+    {
+      "paragraph": 1705,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "Authorship is not omnipotence.",
+      "new": "Authorship is not omnipotence. It is participation with increasing clarity.",
+      "reason": "Keep a continuous explanation in one paragraph instead of isolated lines."
+    },
+    {
+      "paragraph": 1706,
+      "section": "CHAPTER 6 · The Painting",
+      "old": "It is participation with increasing clarity.",
+      "new": "",
+      "reason": "Combine with the preceding explanation."
+    },
+    {
+      "paragraph": 1930,
+      "section": "CHAPTER 7 · The Research Program",
+      "old": "REVISION NOTE",
+      "new": "",
+      "reason": "Remove a repeated presentation label while retaining the substantive statement."
+    }
+  ]
+}

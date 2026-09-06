@@ -2,14 +2,14 @@
 
 > **Status:** Private, unreleased working manuscript. Not public canon.
 >
-> **Working title:** *Consciousness: A Digital Organism — The Complete Theory*
+> **Working title:** *Consciousness: A Digital Organism — Foundations, Agency, and Research*
 >
-> **Target length:** 90,000–110,000 words, excluding notes and references.
+> **Current edition:** v4.7 author review. Scope and clarity govern length; the earlier 90,000–110,000-word expansion target is retired.
 
 ## Active manuscript
 
-The active manuscript is the [v4 working edition](v4-working/README.md). It is a
-complete copy of v3 being expanded in place, chapter by chapter. The earlier
+The active manuscript is the [v4.7 author review edition](v4-working/README.md),
+a revised and designed Word manuscript with a matching PDF and prose redline. The earlier
 standalone Chapter 1 experiment is retained under `development-notes/` as
 editorial scaffolding; it is not a competing manuscript source.
 

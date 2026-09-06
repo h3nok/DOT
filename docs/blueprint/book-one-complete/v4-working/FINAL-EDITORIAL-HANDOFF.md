@@ -1,4 +1,26 @@
-# Final Editorial Handoff — Complete Book One v4.2
+# Editorial Handoff — Complete Book One
+
+## Current handoff: v4.7
+
+Use the [v4.7 review book and redline](README.md). The author has clarified
+Little c as the underlying self-aware process at a local scope; its distinctive
+history and developed identity depend on Canvas state. The provisional
+maximally unified-stream individuation rule below has been retired as a working
+definition. Book One leaves intrinsic self-awareness open and bounds its
+account to the architecture of local experience, retained state, and agency.
+The detailed practical method belongs in Book Two.
+
+The v4.7 design pass adds neutral typography, an opening architecture map, a
+vector Experience Loop, and fewer interruptions in the prose. The redline
+compares these reading changes with v4.6. The prose and design pass is complete
+for author review. Read the PDF as a
+book, use the redline to inspect conceptual wording, and record further manual
+changes as a new edition. This editorial pass is not scientific peer review.
+
+## Historical handoff: v4.2
+
+The following records the prior development stage. Current decisions above
+and the v4.7 manuscript take precedence.
 
 ## Editorial Verdict
 
