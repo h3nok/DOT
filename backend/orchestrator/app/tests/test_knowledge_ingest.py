@@ -5,7 +5,11 @@ into the extracted text. A citation the member cannot locate in their own source
 is indistinguishable from one the twin invented.
 """
 
+import io
+
 import pytest
+from pypdf import PdfWriter
+from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 
 import app.domains.knowledge.chunk as chunking
 import app.domains.knowledge.embedding as embedding
@@ -162,3 +166,50 @@ async def test_an_unconfigured_embedding_client_refuses_rather_than_returning_em
 
     with pytest.raises(embedding.EmbeddingUnavailableError):
         await embedding.NullEmbeddingClient().embed(["anything"])
+
+
+def _sample_pdf(*, encrypted: bool = False) -> bytes:
+    writer = PdfWriter()
+    for text in ("First page.", "Second page."):
+        page = writer.add_blank_page(width=300, height=300)
+        page[NameObject("/Resources")] = DictionaryObject(
+            {
+                NameObject("/Font"): DictionaryObject(
+                    {
+                        NameObject("/F1"): DictionaryObject(
+                            {
+                                NameObject("/Type"): NameObject("/Font"),
+                                NameObject("/Subtype"): NameObject("/Type1"),
+                                NameObject("/BaseFont"): NameObject("/Helvetica"),
+                            }
+                        )
+                    }
+                )
+            }
+        )
+        content = DecodedStreamObject()
+        content.set_data(f"BT /F1 12 Tf 20 260 Td ({text}) Tj ET".encode())
+        page.replace_contents(content)
+    if encrypted:
+        writer.encrypt("fixture-password")
+    output = io.BytesIO()
+    writer.write(output)
+    return output.getvalue()
+
+
+def test_pdf_extraction_preserves_page_citation_ranges() -> None:
+    result = extraction.extract(_sample_pdf(), mime_type="application/pdf", filename="source.pdf")
+    assert result.text == "First page.\n\nSecond page."
+    assert not result.truncated
+    assert [page.number for page in result.pages] == [1, 2]
+    assert [result.text[page.start : page.end] for page in result.pages] == [
+        "First page.",
+        "Second page.",
+    ]
+
+
+def test_encrypted_pdf_is_rejected_without_exposing_content() -> None:
+    with pytest.raises(extraction.UnsupportedSourceError, match="Encrypted PDFs cannot be read"):
+        extraction.extract(
+            _sample_pdf(encrypted=True), mime_type="application/pdf", filename="source.pdf"
+        )

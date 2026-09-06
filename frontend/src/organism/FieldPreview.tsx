@@ -1,3 +1,4 @@
+import { RadialPreview } from "./RadialPreview";
 import React from "react";
 import type { OrganismPreset } from "./types";
 
@@ -18,6 +19,7 @@ export const FieldPreview: React.FC<{ field: OrganismPreset }> = ({ field }) => 
       className="h-8 w-full max-w-12 shrink-0 rounded-md bg-foreground/[0.04]"
       aria-hidden="true"
     >
+      {field === "radial" && <g transform="scale(0.75 0.8)"><RadialPreview color={dot} /></g>}
       {field === "aurora" && (
         <>
           <defs>

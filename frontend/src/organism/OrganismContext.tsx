@@ -14,6 +14,7 @@ import {
   resolveOrganismConfig,
   type OrganismConfig,
   type OrganismContextValue,
+  type OrganismFieldAnchor,
   type OrganismMood,
   type VitalSigns,
 } from "./types";
@@ -80,6 +81,7 @@ function deriveMood(v: VitalSigns): OrganismMood {
 export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [fieldAnchor, setFieldAnchor] = useState<OrganismFieldAnchor | null>(null);
   const [config, setConfigState] = useState<OrganismConfig>(loadConfig);
   const [mood, setMood] = useState<OrganismMood>("calm");
   const reducedMotion = useReducedMotion();
@@ -201,8 +203,8 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const value = useMemo<OrganismContextValue>(
-    () => ({ config, setConfig, toggle, pulse, vitals, mood, reducedMotion }),
-    [config, setConfig, toggle, pulse, mood, reducedMotion],
+    () => ({ config, setConfig, toggle, pulse, vitals, mood, reducedMotion, fieldAnchor, setFieldAnchor }),
+    [config, setConfig, toggle, pulse, mood, reducedMotion, fieldAnchor],
   );
 
   return (
@@ -228,4 +230,21 @@ export function useOrganism(): OrganismContextValue {
 export function useOrganismPulse(): (amplitude?: number) => void {
   const ctx = useContext(OrganismContext);
   return useCallback((amplitude?: number) => ctx?.pulse(amplitude), [ctx]);
+}
+
+/** A diagram may opt into composition without requiring a provider in isolation. */
+export function useOrganismFieldAnchor({
+  kind,
+  coreRatio,
+}: Omit<OrganismFieldAnchor, "element">) {
+  const setter = useContext(OrganismContext)?.setFieldAnchor;
+  const owned = useRef<Element | null>(null);
+  return useCallback((element: Element | null) => {
+    const previous = owned.current;
+    owned.current = element;
+    // A departing splash must not clear the diagram that just registered.
+    setter?.((current) => element
+      ? { element, kind, coreRatio }
+      : current?.element === previous ? null : current);
+  }, [setter, kind, coreRatio]);
 }

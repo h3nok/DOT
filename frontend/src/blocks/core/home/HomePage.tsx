@@ -154,7 +154,7 @@ export default function HomePage() {
         whileInView={{ y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: reducedMotion ? 0 : 0.5 }}
-        className="home-environment home-entrances-environment scroll-mt-24"
+        className="home-environment home-entrances-environment scroll-mt-4"
       >
         <div className="dot-page-container">
           <div className="mx-auto max-w-2xl text-center">
@@ -163,9 +163,9 @@ export default function HomePage() {
               Continue with the Academy.
             </h2>
             <p className="dot-lede mx-auto mt-4 max-w-xl">
-              The website is DOT's intellectual home: definitions can sharpen,
-              objections remain visible, and experiments can fail in public. Book One
-              stays a fixed edition.
+              Start with a question, compare the claims with the evidence, or
+              bring an objection. The Academy is where the ideas can be revised.
+              Book One remains a fixed edition.
             </p>
           </div>
 
@@ -192,7 +192,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* ── Colophon ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-border/20 py-12 dot-page-container">
+      <footer className="py-12 dot-page-container">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
           <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
           <p className="text-xs leading-relaxed text-muted-foreground/50">
@@ -207,7 +207,8 @@ export default function HomePage() {
             >
               Join the readers’ list
             </Link>
-          </nav>        </div>
+          </nav>
+        </div>
       </footer>
 
       <AnimatePresence>

@@ -1,6 +1,9 @@
 import { useId } from "react";
+import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 
-const BIG_C_RINGS = [286, 297] as const;
+import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+
+const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
 const FIELD_CONTOURS = [326, 338] as const;
 const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
@@ -130,6 +133,10 @@ const SOCIAL_RELATIONS = SOCIAL_CENTRES.map((centre) => ({
  * alter the meaning of the other.
  */
 export function HeroArchitecture() {
+  const fieldAnchor = useOrganismFieldAnchor({
+    kind: "architecture",
+    coreRatio: R.core / R.origin,
+  });
   const instanceId = useId().replaceAll(":", "");
   const gridId = `${instanceId}-hero-rf-grid`;
   const arrowId = `${instanceId}-hero-trace-arrow`;
@@ -254,7 +261,7 @@ export function HeroArchitecture() {
           </linearGradient>
 
           <clipPath id={frameClipId}>
-            <circle cx="348" cy="352" r="197" />
+            <circle cx="348" cy="352" r={R.frame} />
           </clipPath>
         </defs>
 
@@ -266,7 +273,7 @@ export function HeroArchitecture() {
           fill={`url(#${fieldWashId})`}
         />
 
-        <circle className="home-architecture-origin-boundary" cx="348" cy="352" r="318" />
+        <circle ref={fieldAnchor} className="home-architecture-origin-boundary" cx="348" cy="352" r={R.origin} />
 
         <g className="home-architecture-field-contours" aria-hidden="true">
           {FIELD_CONTOURS.map((radius) => (
@@ -329,12 +336,12 @@ export function HeroArchitecture() {
         </g>
 
         <g className="home-architecture-frame">
-          <circle className="home-architecture-frame-zone" cx="348" cy="352" r="197" />
+          <circle className="home-architecture-frame-zone" cx="348" cy="352" r={R.frame} />
           <circle
             className="home-architecture-frame-wash"
             cx="348"
             cy="352"
-            r="197"
+            r={R.frame}
             fill={`url(#${frameWashId})`}
           />
           <rect
@@ -354,7 +361,7 @@ export function HeroArchitecture() {
             className="home-architecture-frame-boundary"
             cx="348"
             cy="352"
-            r="197"
+            r={R.frame}
           />
           <circle
             className="home-architecture-frame-inset"
@@ -479,11 +486,11 @@ export function HeroArchitecture() {
             className="home-architecture-local-aura"
             cx="348"
             cy="352"
-            r="84"
+            r={R.awareness}
             fill={`url(#${localWashId})`}
           />
-          <circle className="home-architecture-local-ring" cx="348" cy="352" r="26" />
-          <circle className="home-architecture-local-core" cx="348" cy="352" r="6" />
+          <circle className="home-architecture-local-ring" cx="348" cy="352" r={R.local} />
+          <circle className="home-architecture-local-core" cx="348" cy="352" r={R.core} />
           <circle className="home-architecture-local-pin" cx="348" cy="352" r="2.25" />
         </g>
 
@@ -584,11 +591,7 @@ export function HeroArchitecture() {
         </g>
       </svg>
 
-      <figcaption id={captionId} className="home-architecture-caption">
-        <span className="home-architecture-caption-visible">
-          Read outside in: conditions → organism → world → experiencer.
-        </span>
-        <span className="sr-only">
+      <figcaption id={captionId} className="sr-only">
           Conceptual map of DOT's proposed architecture, stated as hypothesis:
           T and E precede Big C; Big C generates RF₀; and Little c — the position
           you occupy as reader — experiences and acts within RF₀. RF₀ is also a
@@ -599,7 +602,6 @@ export function HeroArchitecture() {
           awareness radius; Little c reflects, chooses one, and reaches back into
           RF₀ as Intent · embodied action. The rings distinguish conceptual
           domains, not spatial boundaries.
-        </span>
       </figcaption>
     </figure>
   );

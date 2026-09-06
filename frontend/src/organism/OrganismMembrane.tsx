@@ -1,3 +1,5 @@
+import { FIELD_HANDOFF } from "./fieldComposition";
+import { radialField } from "./radialField";
 import React, { useEffect, useRef } from "react";
 import { useOrganism } from "./OrganismContext";
 import { ORGANISM_PRESETS } from "./types";
@@ -83,9 +85,10 @@ const CLEARANCE_FLOOR = 0.14;
  * caps its own work.
  */
 export const OrganismMembrane: React.FC = () => {
-  const { vitals, config, reducedMotion } = useOrganism();
+  const { vitals, config, reducedMotion, fieldAnchor } = useOrganism();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointer = useRef({ x: -9999, y: -9999, active: false });
+  const radialOrigin = useRef<{ x: number; y: number; loading: boolean } | null>(null);
 
   const still = reducedMotion || config.stillness;
 
@@ -97,11 +100,13 @@ export const OrganismMembrane: React.FC = () => {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
+    const previousOrigin = radialOrigin.current;
     const spec = ORGANISM_PRESETS[config.preset];
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let w = 0;
     let h = 0;
     let points: Point[] = [];
+    let radial = radialField(1, 1);
     let cols = 0;
     let rows = 0;
     const ripples: Ripple[] = [];
@@ -358,6 +363,7 @@ export const OrganismMembrane: React.FC = () => {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       rebuild();
+      if (config.preset === "radial") radial = radialField(w, h, config.fieldScale);
     };
 
     resize();
@@ -1075,6 +1081,63 @@ export const OrganismMembrane: React.FC = () => {
       ctx.restore();
     };
 
+    const drawRadial = (hue: number, sat: number, light: number, alpha: number) => {
+      const { core, points: mesh } = radial;
+      // Rasterise only on layout or appearance changes; motion is composited.
+      ctx.save();
+      const bounds = fieldAnchor?.element.getBoundingClientRect();
+      const cx = bounds ? bounds.left + bounds.width / 2 : w / 2;
+      const cy = bounds ? bounds.top + bounds.height / 2 : h / 2;
+      ctx.translate(cx, cy);
+      canvas.style.transformOrigin = `${cx}px ${cy}px`;
+      radialOrigin.current = { x: cx, y: cy, loading: fieldAnchor?.kind === "loading" };
+      ctx.translate(-w / 2, -h / 2);
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.28, alpha * 0.15)})`;
+      ctx.beginPath();
+      for (const ring of mesh) {
+        ctx.moveTo(ring[0].x, ring[0].y);
+        for (const point of ring) ctx.lineTo(point.x, point.y);
+        ctx.closePath();
+      }
+      for (let spoke = 0; spoke < mesh[0].length; spoke++) {
+        ctx.moveTo(mesh[0][spoke].x, mesh[0][spoke].y);
+        for (const ring of mesh) ctx.lineTo(ring[spoke].x, ring[spoke].y);
+      }
+      ctx.stroke();
+      mesh.forEach((ring, index) => {
+        const fade = 1 - 0.65 * index / mesh.length;
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.85, alpha * fade)})`;
+        ctx.beginPath();
+        for (const point of ring) {
+          ctx.moveTo(point.x + 0.85, point.y);
+          ctx.arc(point.x, point.y, 0.85, 0, Math.PI * 2);
+        }
+        ctx.fill();
+      });
+      // The diagram supplies the centre when anchored; avoid a second disc.
+      if (!bounds) {
+        // A restrained centre preserves the reference without a bright light behind prose.
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.18, alpha * 0.22)})`;
+        ctx.beginPath();
+        ctx.arc(w / 2, h / 2, core, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+      if (bounds) {
+        // Keep the mesh outside the illustration legible and its labels clear.
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-out";
+        const mask = ctx.createRadialGradient(cx, cy, 0, cx, cy, bounds.width * 0.62);
+        mask.addColorStop(0, "rgba(0,0,0,0.96)");
+        mask.addColorStop(0.72, "rgba(0,0,0,0.9)");
+        mask.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = mask;
+        ctx.fillRect(0, 0, w, h);
+        ctx.restore();
+      }
+    };
+
     const draw = (animate: boolean) => {
       const v = vitals.current;
       const { hue, sat, light, dark, gain } = palette();
@@ -1099,7 +1162,7 @@ export const OrganismMembrane: React.FC = () => {
 
       // Rising edge of a pulse → ripple. (The bridge already withholds pulses
       // during reading, so this rarely fires there.)
-      if (pulse > prevPulse + 0.25) {
+      if (animate && pulse > prevPulse + 0.25) {
         const src = points.length
           ? points[Math.floor(Math.random() * points.length)]
           : { x: w / 2, y: h * 0.12 };
@@ -1111,9 +1174,17 @@ export const OrganismMembrane: React.FC = () => {
 
       // Every field rests on the same light, so changing field changes the
       // structure without changing the colour of the room.
-      drawAurora(alpha * (config.preset === "aurora" ? 1 : 0.4), hue, sat, dark);
+      if (config.preset !== "radial") drawAurora(alpha * (config.preset === "aurora" ? 1 : 0.4), hue, sat, dark);
 
-      if (config.preset === "dots") {
+      if (config.preset === "radial") {
+        drawRadial(
+          typeof config.tint === "number" ? config.tint : hue,
+          config.tint === "mono" ? 0 : sat,
+          dark ? 86 : light,
+          alpha * (dark ? 2.4 : 0.65),
+        );
+        clearReadingColumn(0.3 + calm * 0.35);
+      } else if (config.preset === "dots") {
         drawDots(hue, sat, light, alpha, animate);
       } else if (config.preset === "topology") {
         drawTopology(hue, sat, light, alpha, animate);
@@ -1184,9 +1255,40 @@ export const OrganismMembrane: React.FC = () => {
       }
     };
 
-    // Still: paint one settled frame, then nothing.
-    if (still) {
+    // Radial uses one rasterised layer and compositor-only motion, even when
+    // the other fields use the frame renderer below. Stillness costs no loop.
+    if (still || config.preset === "radial") {
       draw(false);
+      const breathing = !still && config.fieldSpeed > 0
+        ? canvas.animate(
+          [{ transform: "scale(1)" }, { transform: "scale(1.035)" }, { transform: "scale(1)" }],
+          { duration: 20000 / config.fieldSpeed, iterations: Infinity, easing: "ease-in-out" },
+        )
+        : null;
+      const origin = radialOrigin.current;
+      const handoff = breathing && previousOrigin?.loading && origin && !origin.loading
+        ? canvas.animate([
+          { translate: `${previousOrigin.x - origin.x}px ${previousOrigin.y - origin.y}px` },
+          { translate: "0px 0px" },
+        ], FIELD_HANDOFF)
+        : null;
+      if (breathing) canvas.style.willChange = "transform";
+      const onVisibility = () => {
+        if (document.hidden) {
+          breathing?.pause();
+          handoff?.pause();
+        } else {
+          draw(false);
+          breathing?.play();
+          if (handoff?.playState === "paused") handoff.play();
+        }
+      };
+      onVisibility();
+      document.addEventListener("visibilitychange", onVisibility);
+      // Circadian colour needs only a minute cadence; no per-frame repaint.
+      const colourTimer = config.tint === "auto" ? window.setInterval(() => {
+        if (!document.hidden) draw(false);
+      }, 60000) : undefined;
       const onResize = () => {
         resize();
         draw(false);
@@ -1197,15 +1299,36 @@ export const OrganismMembrane: React.FC = () => {
         attributes: true,
         attributeFilter: ["class"],
       });
+      // A static field still follows layout and scrolling; it does not animate.
+      let layoutFrame = 0;
+      const onLayout = () => {
+        cancelAnimationFrame(layoutFrame);
+        layoutFrame = requestAnimationFrame(() => draw(false));
+      };
+      const layoutObserver = new ResizeObserver(onLayout);
+      if (fieldAnchor && config.preset === "radial") {
+        layoutObserver.observe(fieldAnchor.element);
+        layoutObserver.observe(document.body);
+        window.addEventListener("scroll", onLayout, { passive: true });
+      }
       window.addEventListener("resize", onResize);
       return () => {
+        cancelAnimationFrame(layoutFrame);
+        breathing?.cancel();
+        handoff?.cancel();
+        canvas.style.willChange = "";
+        canvas.style.transformOrigin = "";
+        window.clearInterval(colourTimer);
+        document.removeEventListener("visibilitychange", onVisibility);
+        layoutObserver.disconnect();
+        window.removeEventListener("scroll", onLayout);
         themeObserver.disconnect();
         window.removeEventListener("resize", onResize);
       };
     }
 
     let raf = 0;
-    let running = true;
+    let running = !document.hidden;
     const frame = () => {
       if (!running) return;
       draw(true);
@@ -1233,7 +1356,7 @@ export const OrganismMembrane: React.FC = () => {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerleave", onPointerLeave);
     document.addEventListener("visibilitychange", onVisibility);
-    raf = requestAnimationFrame(frame);
+    if (running) raf = requestAnimationFrame(frame);
 
     return () => {
       running = false;
@@ -1245,10 +1368,12 @@ export const OrganismMembrane: React.FC = () => {
     };
   }, [
     vitals,
+    fieldAnchor,
     config.enabled,
     config.showMembrane,
     config.intensity,
     config.preset,
+    config.tint,
     // Scale changes the point budget, so the field has to be rebuilt, not
     // merely redrawn. Speed and contrast are read every frame but still belong
     // here: with stillness on there is no next frame to read them in.

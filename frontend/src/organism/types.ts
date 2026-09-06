@@ -17,7 +17,7 @@
  * It only changes the *quality* of the ambient field you are already in.
  */
 
-import type { RefObject } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 
 export type OrganismMood =
   | "dormant" // night + idle: slow, dim, barely breathing
@@ -78,6 +78,7 @@ export interface VitalSigns {
  * viewport — every mark has a rule behind it.
  */
 export type OrganismPreset =
+  | "radial"
   | "field"
   | "aurora"
   | "dots"
@@ -104,6 +105,14 @@ export interface OrganismPresetSpec {
 }
 
 export const ORGANISM_PRESETS: Record<OrganismPreset, OrganismPresetSpec> = {
+  radial: {
+    label: "Radial",
+    hint: "Fine curved threads and dots opening around a quiet centre.",
+    density: 0,
+    speed: 0.2,
+    linkFactor: 0,
+    alpha: 1,
+  },
   field: {
     label: "Canvas",
     hint: "The raw stream — dots of experience drifting; filled carries, hollow waits.",
@@ -393,7 +402,17 @@ export interface OrganismConfig {
   paperTone: PaperTone;
 }
 
+export interface OrganismFieldAnchor {
+  element: Element;
+  kind: "loading" | "architecture";
+  /** Diameter of the central mark relative to the anchor's width. */
+  coreRatio: number;
+}
+
 export interface OrganismContextValue {
+  /** Optional composition anchor; the radial field shares this element’s centre. */
+  fieldAnchor: OrganismFieldAnchor | null;
+  setFieldAnchor: Dispatch<SetStateAction<OrganismFieldAnchor | null>>;
   config: OrganismConfig;
   setConfig: (patch: Partial<OrganismConfig>) => void;
   toggle: () => void;
@@ -433,7 +452,7 @@ export const DEFAULT_VITALS: VitalSigns = {
 export const DEFAULT_CONFIG: OrganismConfig = {
   enabled: true,
   intensity: 0.85,
-  preset: "flow",
+  preset: "radial",
   showMembrane: true,
   showHud: false,
   tint: "auto",
@@ -442,7 +461,7 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   fieldSpeed: 1,
   fieldContrast: 1,
   contrast: "standard",
-  uiStyle: "default",
+  uiStyle: "neural",
   readingFont: "serif",
   // Medium is 1; the S/M/L/XL scale is 0.92 / 1 / 1.12 / 1.26.
   readingScale: 1,

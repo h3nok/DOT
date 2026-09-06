@@ -123,9 +123,11 @@ test-e2e:
 verify: lint typecheck test build test-e2e lint-orchestrator test-orchestrator
 	@echo "All gates passed."
 
+# Audit the installed backend used by verify, including its transitive packages.
+# Failures must remain visible to release automation.
 audit:
-	-pnpm --dir frontend audit --audit-level high
-	-./.venv/bin/python3 -m pip_audit -r backend/orchestrator/requirements.txt
+	pnpm --dir frontend audit --audit-level high
+	./.venv/bin/python3 -m pip_audit --local
 
 lint-orchestrator:
 	cd backend/orchestrator && ../../.venv/bin/ruff check app migrations

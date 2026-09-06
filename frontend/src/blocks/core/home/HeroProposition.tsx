@@ -33,15 +33,16 @@ export function HeroProposition({
         </div>
 
         <h1 className="home-hero-title">
-          <span>The observer belongs</span>
+          <span>A theory of reality</span>
           {" "}
-          <span>in the inquiry.</span>
+          <span>has to account for you.</span>
         </h1>
 
         <p className="home-hero-lede">
-          A working model of why your life feels the way it does — who is doing
-          the looking, and how much of it you can change. Offered to be tested,
-          not believed.
+          We can map brain activity and still ask why any of it feels like
+          something. Your fear, love, and ability to change belong in that
+          question. Digital Organism Theory explores what follows if
+          consciousness is part of reality’s foundation.
         </p>
       </div>
 
@@ -73,9 +74,10 @@ export function HeroProposition({
               <EpistemicBadge status="hypothesis">Held as hypothesis · Open to challenge</EpistemicBadge>
             </span>
             <p>
-              Consciousness is fundamental. This universe is a generated Reality
-              Frame. Your body is the interface — not the source — of the
-              consciousness reading this.
+              Consciousness means there is something it feels like to be you.
+              DOT proposes that it precedes the physical universe: a larger
+              conscious organism generates our world, and your body connects
+              your experience to it.
             </p>
           </aside>
         </div>
