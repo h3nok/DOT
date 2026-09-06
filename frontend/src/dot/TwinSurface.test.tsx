@@ -206,7 +206,9 @@ describe("TwinSurface", () => {
     renderMinty();
 
     await waitFor(() => expect(screen.getAllByRole("table")).toHaveLength(1));
-    expect(screen.getByRole("columnheader", { name: "Model" })).toBeVisible();
+    expect(screen.getByRole("columnheader", { name: "Model" })).toHaveTextContent(
+      "Model",
+    );
   });
 
   it("typesets mathematical notation and structures labeled explanations", async () => {
