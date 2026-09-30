@@ -11,6 +11,7 @@ ASSUME_YES="${ASSUME_YES:-0}"
 SKIP_SYSTEM_PACKAGES="${SKIP_SYSTEM_PACKAGES:-0}"
 SKIP_INFRA="${SKIP_INFRA:-0}"
 SKIP_SEED="${SKIP_SEED:-0}"
+INSTALL_GCLOUD="${INSTALL_GCLOUD:-0}"
 DOCKER_NEEDS_SUDO=0
 
 export ORCHESTRATOR_POSTGRES_PORT="${ORCHESTRATOR_POSTGRES_PORT:-5432}"
@@ -178,6 +179,47 @@ install_debian_docker() {
   fi
 
   run_sudo apt-get install -y docker-compose-plugin || run_sudo apt-get install -y docker-compose-v2 || true
+}
+
+install_debian_gcloud() {
+  run_sudo apt-get update
+  run_sudo apt-get install -y ca-certificates curl gnupg
+  run_sudo mkdir -p /usr/share/keyrings
+  curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg |
+    run_sudo gpg --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg
+  printf '%s\n' "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" |
+    run_sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list >/dev/null
+  run_sudo apt-get update
+  run_sudo apt-get install -y google-cloud-cli
+}
+
+ensure_gcloud() {
+  [ "$INSTALL_GCLOUD" = "1" ] || return 0
+
+  section "Preparing optional Google Cloud CLI"
+
+  if ! command_exists gcloud; then
+    [ "$SKIP_SYSTEM_PACKAGES" != "1" ] ||
+      fail "gcloud is missing and SKIP_SYSTEM_PACKAGES=1; install it manually or unset SKIP_SYSTEM_PACKAGES."
+
+    case "$(uname -s)" in
+      Darwin)
+        load_homebrew
+        command_exists brew || fail "Homebrew is required to install gcloud automatically."
+        brew install --cask gcloud-cli
+        ;;
+      Linux)
+        command_exists apt-get ||
+          fail "Automatic gcloud installation supports Debian/Ubuntu; install the Google Cloud CLI manually on this system."
+        install_debian_gcloud
+        ;;
+      *) fail "Install the Google Cloud CLI manually on this system." ;;
+    esac
+  fi
+
+  command_exists gcloud || fail "gcloud was not found after installation; check your PATH."
+  gcloud --version || fail "Google Cloud CLI is installed but could not run."
+  say "Authenticate manually with gcloud auth login before using cloud resources."
 }
 
 install_linux_packages() {
@@ -425,6 +467,7 @@ main() {
   prepare_env_files
   ensure_python
   ensure_node
+  ensure_gcloud
   prepare_infra
 
   cat <<EOF
@@ -445,7 +488,10 @@ Useful flags:
   ASSUME_YES=1 make setup              Non-interactive package installs
   SKIP_SYSTEM_PACKAGES=1 make setup    Use already-installed system tools
   SKIP_INFRA=1 make setup              Install deps without starting Docker services
+  INSTALL_GCLOUD=1 make setup          Include optional Cloud Run CLI tooling
 EOF
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi

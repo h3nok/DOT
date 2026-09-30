@@ -85,10 +85,34 @@ Useful setup flags:
 - `ASSUME_YES=1 make setup` for non-interactive package installs
 - `SKIP_SYSTEM_PACKAGES=1 make setup` if you manage system tools yourself
 - `SKIP_INFRA=1 make setup` to install dependencies without starting Docker services
+- `INSTALL_GCLOUD=1 make setup` to include the optional Google Cloud CLI
 
 On Linux, setup starts Docker with `systemctl` or `service` when available. If
 your user is not in the `docker` group yet, setup can use `sudo docker` for the
 current run and add your user to the group for future shells.
+
+### Google Cloud tooling
+
+CI deploys the orchestrator to Cloud Run from `main`, using Workload Identity
+Federation in `.github/workflows/ci.yml`. Local development does not require a
+Google Cloud account or CLI.
+
+For manual cloud administration, `INSTALL_GCLOUD=1 make setup` checks the CLI
+and installs it when missing on macOS (Homebrew) or Debian/Ubuntu (Google's
+signed apt repository). Other systems must install it manually. With
+`SKIP_SYSTEM_PACKAGES=1`, a missing requested CLI is an explicit error.
+
+Setup never authenticates or deploys for you. Authenticate separately:
+
+```bash
+gcloud auth login
+```
+
+Use explicit `--project` and `--region` flags for cloud commands. A configured
+account can still have expired credentials; renew them with `gcloud auth login`
+if an operation reports reauthentication is required. Application Default
+Credentials are separate and only needed for local code that uses Google Cloud
+client libraries.
 
 ### Alternative Commands
 

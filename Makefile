@@ -8,6 +8,7 @@ BOOK_MANUSCRIPT ?= docs/blueprint/DOT-Book-One-Digital-Edition-v3.docx
 help:
 	@echo "Available targets:"
 	@echo "  make setup             Bootstrap local dev tools, deps, env files, and infra"
+	@echo "  INSTALL_GCLOUD=1 make setup Include optional Google Cloud CLI tooling"
 	@echo "  make install           Install frontend and orchestrator dependencies"
 	@echo "  make install-orchestrator Install FastAPI orchestrator dependencies"
 	@echo "  make dev               Start the full local stack (infra + APIs + worker + frontend)"
