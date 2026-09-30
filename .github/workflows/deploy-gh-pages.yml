@@ -124,6 +124,13 @@ jobs:
         test -f frontend/dist/doctrine/subjective-data/index.html
         test -f frontend/dist/join/index.html
         test -f frontend/dist/support/index.html
+        test -f frontend/dist/about/index.html
+        test -f frontend/dist/readers/index.html
+        test -f frontend/dist/privacy/index.html
+        # Each page carries its own text for readers and crawlers without
+        # JavaScript (ADR-0033); an empty #root means that step silently broke.
+        grep -q '<article data-prerender>' frontend/dist/about/index.html
+        grep -q '<article data-prerender>' frontend/dist/book/digital-organism-theory/preface/index.html
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3

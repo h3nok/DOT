@@ -19,3 +19,6 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/** Whether any essay is released; defined at build time by scripts/essays.mjs. */
+declare const __DOT_ESSAYS_PUBLISHED__: boolean;

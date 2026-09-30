@@ -60,6 +60,10 @@ did not — do not claim to have composed from primitives that are absent.
 - Existing attention prototype lives in `blocks/core/invite/InviteGatewayPage.tsx` + `services/SoundscapeService.ts`.
 - Legacy `services/api/BaseApiService.ts` targets the retired `/api` backend and reads auth
   from `localStorage`. Do not build on it; use `services/Orchestrator*Service.ts`.
+- Essays are Markdown files in `frontend/src/content/essays/` (copy `_template.md`); the
+  author's facts live in `frontend/src/content/author.json`. Both are read by the pages and by
+  `scripts/materialize-public-routes.mjs`, which writes each public page's own text into its
+  HTML at build time (ADR-0033). Never write essays or bios in the author's voice.
 
 ## Commands
 

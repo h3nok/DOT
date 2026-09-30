@@ -46,6 +46,16 @@ const SupportPage = React.lazy(
   () => import("./blocks/core/support/SupportPage"),
 );
 const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
+// The author layer (ADR-0033): who writes, what else they have written, how
+// to hear again, and what the site keeps.
+const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
+const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
+const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
+const ReadersPage = React.lazy(() => import("./blocks/readers/ReadersPage"));
+const ReaderLeavePage = React.lazy(
+  () => import("./blocks/readers/ReaderLeavePage"),
+);
+const PrivacyPage = React.lazy(() => import("./blocks/privacy/PrivacyPage"));
 
 const RouteScrollManager: React.FC = () => {
   const { pathname } = useLocation();
@@ -138,6 +148,12 @@ const App: React.FC = () => {
                 <Route path="/applied" element={<AppliedPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/join" element={<JoinPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/essays" element={<EssaysPage />} />
+                <Route path="/essays/:slug" element={<EssayPage />} />
+                <Route path="/readers" element={<ReadersPage />} />
+                <Route path="/readers/leave" element={<ReaderLeavePage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
                 <Route
                   path="/studio"
                   element={

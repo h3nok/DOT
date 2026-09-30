@@ -36,6 +36,37 @@
       })(window.location);
     </script>
 
+    <!-- Every page's own text is written into #root at build time, for readers
+         without JavaScript and for crawlers that read HTML without running it
+         (scripts/materialize-public-routes.mjs, ADR-0033). A browser that runs
+         scripts marks itself here, before first paint, so it never shows that
+         copy; the app replaces #root as soon as it starts. -->
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <style>
+      .js [data-prerender] { display: none; }
+      [data-prerender] {
+        display: block;
+        max-width: 42rem;
+        margin: 0 auto;
+        padding: 3rem 1.25rem 6rem;
+        font-family: "Source Serif 4", Georgia, serif;
+        font-size: 1.0625rem;
+        line-height: 1.65;
+      }
+      [data-prerender] h1 { font-size: 2rem; line-height: 1.2; margin: 1.5rem 0 1rem; }
+      [data-prerender] h2 { font-size: 1.35rem; line-height: 1.25; margin: 2.5rem 0 1rem; }
+      [data-prerender] p,
+      [data-prerender] ul,
+      [data-prerender] ol,
+      [data-prerender] blockquote { margin: 0 0 1rem; }
+      [data-prerender] ul,
+      [data-prerender] ol { padding-left: 1.5rem; list-style: revert; }
+      [data-prerender] a { color: inherit; text-decoration: underline; }
+      [data-prerender] nav { margin-top: 3rem; font-size: 0.875rem; }
+    </style>
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f7f7f4" />
     <meta name="mobile-web-app-capable" content="yes" />

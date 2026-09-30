@@ -25,6 +25,12 @@ import { useReaderList, type ReaderSource } from "./useReaderList";
 interface ReaderListFormProps {
   /** Where the address was offered, for the steward's coarse sense of reach. */
   source?: ReaderSource;
+  /**
+   * Shown instead of the form once the list is known to be closed. Defaults to
+   * nothing, which suits the end of a book; a page that exists only for the
+   * list has to say something.
+   */
+  fallback?: React.ReactNode;
 }
 
 const FIELD =
@@ -32,7 +38,10 @@ const FIELD =
 const ACTION =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-[color:var(--organism-accent-soft)] bg-foreground/[0.06] px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.1] disabled:opacity-50";
 
-export const ReaderListForm: React.FC<ReaderListFormProps> = ({ source = "book" }) => {
+export const ReaderListForm: React.FC<ReaderListFormProps> = ({
+  source = "book",
+  fallback = null,
+}) => {
   const { available, subscribe, confirm } = useReaderList();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -43,6 +52,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({ source = "book" 
   const emailId = useId();
   const codeId = useId();
 
+  if (available === false) return <>{fallback}</>;
   if (available !== true) return null;
 
   const submitEmail = async (event: React.FormEvent) => {

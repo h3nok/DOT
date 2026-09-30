@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Script } from "node:vm";
+import { Script, createContext } from "node:vm";
 import { describe, expect, it } from "vitest";
 
 /**
@@ -52,6 +52,72 @@ describe("service worker", () => {
       const declared = new RegExp(`const ${constName} = "([^"]+)"`).exec(source);
       expect(declared, `caches.open(${constName}) has no matching constant`).not.toBeNull();
       expect(named.has(declared![1])).toBe(true);
+    }
+  });
+});
+
+/**
+ * Run the real worker against a fake network and cache, and ask what a reader
+ * would be served. Chapter and essay URLs do not change when their text does,
+ * so a cached copy must never win over a reachable network: an earlier version
+ * served cached chapters first, forever.
+ */
+function loadWorker() {
+  const listeners: Record<string, (event: unknown) => void> = {};
+  const cached = { status: 200, body: "cached text", clone: () => cached };
+  const fresh = { status: 200, body: "fresh text", clone: () => fresh };
+  let online = true;
+  const context = createContext({
+    self: {
+      location: { origin: "https://dotheory.org" },
+      addEventListener: (type: string, listener: (event: unknown) => void) => {
+        listeners[type] = listener;
+      },
+      skipWaiting: () => Promise.resolve(),
+      clients: { claim: () => Promise.resolve() },
+    },
+    caches: {
+      match: () => Promise.resolve(cached),
+      open: () => Promise.resolve({ put: () => Promise.resolve(), addAll: () => Promise.resolve() }),
+      keys: () => Promise.resolve([]),
+      delete: () => Promise.resolve(true),
+    },
+    fetch: () => (online ? Promise.resolve(fresh) : Promise.reject(new TypeError("offline"))),
+    URL,
+    console: { log: () => undefined },
+  });
+  new Script(readFileSync(SW, "utf8")).runInContext(context);
+
+  const serve = (path: string) =>
+    new Promise<{ body: string }>((resolve, reject) => {
+      listeners.fetch({
+        request: { url: `https://dotheory.org${path}`, method: "GET", mode: "cors", destination: "" },
+        respondWith: (response: Promise<{ body: string }>) => response.then(resolve, reject),
+      });
+    });
+  return { serve, goOffline: () => (online = false) };
+}
+
+describe("service worker: released text", () => {
+  const released = [
+    "/publications/henok/digital-organism-theory/v3/sections/preface.md",
+    "/essays/index.json",
+    "/essays/fear-narrows.md",
+    "/feed.xml",
+  ];
+
+  it("serves the current text whenever the network answers", async () => {
+    const { serve } = loadWorker();
+    for (const path of released) {
+      expect((await serve(path)).body, path).toBe("fresh text");
+    }
+  });
+
+  it("still serves the last copy it kept when offline", async () => {
+    const { serve, goOffline } = loadWorker();
+    goOffline();
+    for (const path of released) {
+      expect((await serve(path)).body, path).toBe("cached text");
     }
   });
 });

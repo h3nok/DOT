@@ -68,3 +68,4 @@ Docs marked *annex* or *superseded* are retained for history and detail.
 | [0030](adr/0030-living-academy-fixed-publications.md)              | The website is a living academy; books remain publications | Accepted |
 | [0031](adr/0031-versioned-academy-kernel.md)                       | Versioned relational Academy kernel with rebuildable projections | Proposed |
 | [0032](adr/0032-one-platform-kernel-many-institutions.md)          | One platform kernel, many institutions; blueprint consolidated to docs 14/15 | Proposed |
+| [0033](adr/0033-author-layer-and-static-essays.md)                 | Author layer: About, static essays with RSS, page text without JavaScript | Proposed |

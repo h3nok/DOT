@@ -23,6 +23,11 @@ What exists in code — the baseline this plan builds on:
   `/book/digital-organism-theory`. Studio is functional (list, edit, save,
   publish). Book One reads from static manifests in `public/publications/`.
   `/academy` public IA exists as static frontend data (`academyData.ts`).
+  The author layer (ADR-0033, 2026-09-30) adds `/about`, `/essays` (static
+  Markdown in `src/content/essays/`, with RSS at `/feed.xml`), `/readers`,
+  `/readers/leave`, and `/privacy`. Static essays are a Phase 2 import source,
+  like `doctrineData.ts`, and every public page carries its own text for
+  readers and crawlers without JavaScript.
 - **Quality:** zero type errors, 300+ tests, empty manifesto-law `QUARANTINE`,
   `make verify` is the gate.
 - **Does not exist:** any `academy_*` table, the `academy` domain, claims,

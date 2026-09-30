@@ -11,6 +11,10 @@ export const PUBLIC_ROUTES = [
   { path: "/studio", name: "studio" },
   { path: "/book/digital-organism-theory", name: "book landing" },
   { path: "/book/digital-organism-theory/preface", name: "book section" },
+  { path: "/about", name: "about" },
+  { path: "/essays", name: "essays" },
+  { path: "/readers", name: "reader list" },
+  { path: "/privacy", name: "privacy" },
 ] as const;
 
 /**

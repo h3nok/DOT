@@ -1,8 +1,10 @@
 // PWA Configuration for Digital Organism Theory Platform
 // Offline-first service worker for Book One and canonical DOT routes.
 
-const STATIC_CACHE = "dot-static-v2";
-const DYNAMIC_CACHE = "dot-dynamic-v2";
+// Bumped from v2 when released text moved off cache-first: activating this
+// version clears chapters that earlier versions pinned indefinitely.
+const STATIC_CACHE = "dot-static-v3";
+const DYNAMIC_CACHE = "dot-dynamic-v3";
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
@@ -12,7 +14,6 @@ const STATIC_ASSETS = [
   "/favicon-dot.svg",
   "/favicon-dot-16.svg",
   "/favicon-dot.ico",
-  "/publications/henok/digital-organism-theory/v2/manifest.json",
 ];
 
 // Routes to cache dynamically
@@ -90,13 +91,38 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Handle static assets (CSS, JS, fonts, images, publications)
+  // Released text: chapters, manifests, essays, and the feed. None of these
+  // URLs changes when the text does, so a cache-first copy would keep serving
+  // a revised chapter's old wording indefinitely. Read the network, keep a
+  // copy, and fall back to that copy only when offline.
+  if (
+    url.pathname.startsWith("/publications/") ||
+    url.pathname.startsWith("/essays/") ||
+    url.pathname === "/feed.xml"
+  ) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
+    );
+    return;
+  }
+
+  // Handle static assets (CSS, JS, fonts, images). Build assets carry a
+  // content hash in their names, so a cached copy can never be stale.
   if (
     request.destination === "style" ||
     request.destination === "script" ||
     request.destination === "image" ||
     request.destination === "font" ||
-    url.pathname.startsWith("/publications/") ||
     url.pathname.startsWith("/books/")
   ) {
     event.respondWith(

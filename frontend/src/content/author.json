@@ -1,0 +1,28 @@
+{
+  "name": "Henok Ghebrechristos",
+  "suffix": "PhD",
+  "role": "AI research scientist, engineer, and systems architect",
+  "summary": "I write about consciousness and conditioning, and build the software this Academy runs on. Book One is a fixed statement of where that work stood; the inquiry remains open.",
+  "email": "henok@sullix.com",
+  "credentials": [
+    {
+      "degree": "PhD, Computer Science",
+      "institution": "University of Colorado Denver",
+      "year": 2024,
+      "dissertation": {
+        "title": "Patch-Based Optimization and Curriculum Learning: Improving Deep Learning Efficiency and Model Security",
+        "url": "https://www.proquest.com/docview/3142420507"
+      }
+    },
+    {
+      "degree": "BS, Physics",
+      "institution": "University of Colorado Boulder",
+      "year": 2010
+    }
+  ],
+  "photo": "",
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/henok-ghebrechristos-phd-793a1135",
+    "github": "https://github.com/h3nok"
+  }
+}

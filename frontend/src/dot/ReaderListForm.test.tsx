@@ -47,6 +47,21 @@ describe("ReaderListForm", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  it("says what a page offers instead once the list is known to be closed", () => {
+    server.available = false;
+    render(<ReaderListForm fallback={<p>Not open yet</p>} />);
+
+    expect(screen.getByText("Not open yet")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).toBeNull();
+  });
+
+  it("holds that back while it is still unknown whether the list is open", () => {
+    server.available = null;
+    const { container } = render(<ReaderListForm fallback={<p>Not open yet</p>} />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it("takes an address and asks for a code before subscribing anyone", async () => {
     server.available = true;
     server.subscribe.mockResolvedValue({ accepted: { status: "ok", expires_in: 900 } });

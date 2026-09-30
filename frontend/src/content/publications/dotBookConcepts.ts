@@ -140,7 +140,18 @@ definitionsById.set("limit-of-knowledge", {
 export function bookConceptsForSection(
   section: BookReleaseSection,
 ): BookConceptDefinition[] {
-  return (conceptIdsBySection[section.slug] ?? []).flatMap((id) => {
+  return bookConceptDefinitions(conceptIdsBySection[section.slug] ?? []);
+}
+
+/**
+ * Book One's definitions for the named concepts, in the order given. Writing
+ * outside the book (an essay) declares which concepts it builds on, and only
+ * those are annotated, so the same finiteness holds there.
+ */
+export function bookConceptDefinitions(
+  ids: readonly string[],
+): BookConceptDefinition[] {
+  return ids.flatMap((id) => {
     const definition = definitionsById.get(id);
     return definition ? [definition] : [];
   });

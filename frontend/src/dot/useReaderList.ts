@@ -23,6 +23,20 @@ export interface ReaderSubscribeAccepted {
 /** Where the address was offered. A closed set the server also enforces. */
 export type ReaderSource = "book" | "front" | "talk" | "concept" | "unknown";
 
+/**
+ * Leave the list. Needs no session and asks no status first, so the page a
+ * message links to can call it the moment it opens.
+ */
+export async function leaveReaderList(token: string): Promise<boolean> {
+  // The server answers identically for a real and an unknown token, so there
+  // is nothing here to branch on and nothing to report back but "done".
+  const result = await api<{ status: string }>("/v1/readers/unsubscribe", {
+    method: "POST",
+    body: { token },
+  });
+  return result.ok;
+}
+
 export function useReaderList() {
   const [available, setAvailable] = useState<boolean | null>(null);
 
@@ -74,15 +88,5 @@ export function useReaderList() {
     [],
   );
 
-  const unsubscribe = useCallback(async (token: string): Promise<boolean> => {
-    // The server answers identically for a real and an unknown token, so there
-    // is nothing here to branch on and nothing to report back but "done".
-    const result = await api<{ status: string }>("/v1/readers/unsubscribe", {
-      method: "POST",
-      body: { token },
-    });
-    return result.ok;
-  }, []);
-
-  return { available, subscribe, confirm, unsubscribe };
+  return { available, subscribe, confirm, unsubscribe: leaveReaderList };
 }

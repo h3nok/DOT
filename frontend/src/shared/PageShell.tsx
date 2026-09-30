@@ -41,6 +41,8 @@ export function PageHeader({
 interface PageShellProps {
   children: ReactNode;
   header?: ReactNode;
+  /** Rendered after <main>, so a page's closing footer is its own landmark. */
+  footer?: ReactNode;
   className?: string;
   wide?: boolean;
 }
@@ -48,6 +50,7 @@ interface PageShellProps {
 export function PageShell({
   children,
   header,
+  footer,
   className = "",
   wide = false,
 }: PageShellProps) {
@@ -57,6 +60,7 @@ export function PageShell({
       <main className={`dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}>
         {children}
       </main>
+      {footer}
     </div>
   );
 }

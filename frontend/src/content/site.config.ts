@@ -1,3 +1,5 @@
+import { author } from "./author";
+
 export interface Project {
   slug: string;
   name: string;
@@ -19,17 +21,17 @@ export interface Project {
 }
 
 export const siteConfig = {
-  name: "Henok Ghebrechristos",
+  // The author's facts live in author.json, which the build script reads too.
+  name: author.name,
   tagline: "Writing Digital Organism Theory",
   description:
     "The living intellectual home of Digital Organism Theory: definitions, diagrams, hypotheses, objections, experiments, essays, and fixed publications.",
   url: "https://dotheory.org",
-  email: "",
-  bio: "I write about consciousness and conditioning, and build the software this Academy runs on. Book One is a fixed statement of where that work stood; the inquiry remains open.",
+  email: author.email,
+  bio: author.summary,
   social: {
-    github: "https://github.com/h3nok",
-    linkedin:
-      "https://www.linkedin.com/in/henok-ghebrechristos-phd-793a1135",
+    github: author.links.github,
+    linkedin: author.links.linkedin,
   },
   accentColor: "#2563eb",
   projects: [

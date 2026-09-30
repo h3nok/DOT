@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
+import { essaysPlugin } from "./scripts/essays.mjs";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,6 +15,9 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    // Publishes src/content/essays as /essays/index.json + /essays/<slug>.md
+    // and refuses to build if an essay's front matter is incomplete (ADR-0033).
+    essaysPlugin(),
     // A bundle map is useful locally and is also a 1 MB implementation map we
     // have no reason to publish beside the book. Generate it only for the
     // explicit analysis command, never for a normal release.
