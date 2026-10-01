@@ -425,10 +425,10 @@ def clean_markdown(raw: str, spec: SectionSpec) -> str:
         flags=re.DOTALL,
     )
     text: str = re.sub(
-        r"^\$\$(.+)\$\$$",
-        lambda match: f"$$\n{match.group(1)}\n$$",
+        r"^\$\$(.*?)\$\$[ \t]*$",
+        lambda match: f"$$\n{match.group(1).strip()}\n$$",
         text,
-        flags=re.MULTILINE,
+        flags=re.MULTILINE | re.DOTALL,
     )
     text: str = re.sub(r"\$`([^`\n]+)`\$", r"$\1$", text)
 
