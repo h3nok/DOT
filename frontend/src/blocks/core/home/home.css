@@ -40,9 +40,9 @@
   );
   --theory-local: var(--organism-accent-strong);
   --home-ground-threshold: color-mix(
-    in oklch,
+    in oklab,
     color-mix(
-        in oklch,
+        in oklab,
         var(--appearance-page-tone, var(--background)) 98%,
         var(--organism-accent)
       )
@@ -50,9 +50,9 @@
     transparent
   );
   --home-ground-reflection: color-mix(
-    in oklch,
+    in oklab,
     color-mix(
-        in oklch,
+        in oklab,
         var(--appearance-page-tone, var(--background)) 88%,
         var(--organism-accent)
       )
@@ -60,9 +60,9 @@
     transparent
   );
   --home-ground-architecture: color-mix(
-    in oklch,
+    in oklab,
     color-mix(
-        in oklch,
+        in oklab,
         var(--appearance-page-tone, var(--background)) 88%,
         var(--appearance-page-ink, var(--foreground))
       )
@@ -70,9 +70,9 @@
     transparent
   );
   --home-ground-entrances: color-mix(
-    in oklch,
+    in oklab,
     color-mix(
-        in oklch,
+        in oklab,
         var(--appearance-page-tone, var(--background)) 96%,
         var(--appearance-page-ink, var(--foreground))
       )
@@ -80,9 +80,9 @@
     transparent
   );
   --home-ground-invitation: color-mix(
-    in oklch,
+    in oklab,
     color-mix(
-        in oklch,
+        in oklab,
         var(--appearance-page-tone, var(--background)) 88%,
         var(--organism-accent)
       )
@@ -103,7 +103,7 @@
   box-shadow:
     inset 0 1px 0 color-mix(in oklch, var(--foreground) 8%, transparent),
     inset 0 -1px 0 color-mix(in oklch, var(--foreground) 5%, transparent),
-    0 -1.5rem 4rem color-mix(in oklch, var(--background) 18%, transparent);
+    0 -1.5rem 4rem color-mix(in oklab, var(--background) 18%, transparent);
 }
 
 .home-environment > * {
@@ -143,7 +143,7 @@ html:has(.home-journey) {
   gap: 0.25rem;
   padding: 0.5rem 0.25rem;
   border-radius: 9999px;
-  background: color-mix(in oklch, var(--background) 72%, transparent);
+  background: color-mix(in oklab, var(--background) 72%, transparent);
   border: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -190,7 +190,7 @@ html:has(.home-journey) {
   padding: 0.35rem 0.65rem;
   border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
   border-radius: 0.5rem;
-  background: color-mix(in oklch, var(--background) 92%, transparent);
+  background: color-mix(in oklab, var(--background) 92%, transparent);
   color: var(--foreground);
   font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.72rem;
@@ -267,7 +267,7 @@ html:has(.home-journey) {
   min-height: min(100svh, 60rem);
   align-items: center;
   overflow: hidden;
-  background: color-mix(in oklch, var(--appearance-page-tone, var(--background)) 88%, transparent);
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 88%, transparent);
 }
 
 .home-hero-environment::before {
@@ -349,7 +349,7 @@ html:has(.home-journey) {
   inset: -1.5rem -1rem 0;
   background: radial-gradient(
     ellipse,
-    color-mix(in oklch, var(--appearance-page-tone, var(--background)) 92%, transparent),
+    color-mix(in oklab, var(--appearance-page-tone, var(--background)) 92%, transparent),
     transparent 78%
   );
   content: "";
@@ -2245,7 +2245,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
    controls and architecture retain their familiar meaning. */
 .home-theory-layer-environment[data-layer="origin"] .home-theory-layer-card {
   background: radial-gradient(ellipse at 10% 25%, color-mix(in oklch, var(--theory-layer-color) 9%, transparent), transparent 60%),
-    color-mix(in oklch, var(--appearance-page-tone, var(--background)) 97%, transparent);
+    color-mix(in oklab, var(--appearance-page-tone, var(--background)) 97%, transparent);
   box-shadow: none;
 }
 

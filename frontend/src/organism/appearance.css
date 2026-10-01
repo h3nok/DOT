@@ -673,7 +673,7 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   padding: 0.65rem;
   background:
     linear-gradient(145deg, color-mix(in oklch, currentColor 4%, transparent), transparent),
-    color-mix(in oklch, var(--background) 82%, transparent);
+    color-mix(in oklab, var(--background) 82%, transparent);
 }
 
 .appearance-reading-preview__glyph {

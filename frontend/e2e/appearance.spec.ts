@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { htmlAttribute, openAppearancePanel } from "./helpers";
+import identity from "../src/content/identity.json" with { type: "json" };
 
 function renderedStyle(page: import("@playwright/test").Page, selector: string, property: string) {
   return page
@@ -24,6 +25,37 @@ async function openEnvironmentFineTune(
  * document actually moved, not merely that state was recorded.
  */
 test.describe("appearance controls change the rendered document", () => {
+  test("translucent paper preserves DOT's selected surface in both lights", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
+    await page.goto("/");
+    await expect(page.locator(".home-hero-environment")).toBeVisible();
+
+    for (const colorScheme of ["light", "dark"] as const) {
+      await page.emulateMedia({ colorScheme });
+      await expect.poll(() => htmlAttribute(page, "data-theme")).toBe(colorScheme);
+      const surfaces = await page.evaluate((surface) => {
+        const context = document.createElement("canvas").getContext("2d");
+        if (!context) throw new Error("Cannot inspect the painted paper");
+        const pixel = () => [...context.getImageData(0, 0, 1, 1).data].slice(0, 3);
+        context.fillStyle = surface;
+        context.fillRect(0, 0, 1, 1);
+        const expected = pixel();
+        return [".home-hero-environment", ".home-journey-nav__links"].map((selector) => {
+          const node = document.querySelector(selector);
+          if (!node) throw new Error(`Missing paper surface: ${selector}`);
+          context.fillStyle = getComputedStyle(document.body).backgroundColor;
+          context.fillRect(0, 0, 1, 1);
+          context.fillStyle = getComputedStyle(node).backgroundColor;
+          context.fillRect(0, 0, 1, 1);
+          return { selector, difference: Math.max(...pixel().map((value, i) => Math.abs(value - expected[i]))) };
+        });
+      }, identity[colorScheme].surface);
+      for (const surface of surfaces) {
+        expect(surface.difference, `${colorScheme} ${surface.selector} paper cast`).toBeLessThanOrEqual(2);
+      }
+    }
+  });
+
   test("new readers get the shared identity and follow their system without saving an unchosen preference", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");

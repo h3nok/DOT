@@ -1,6 +1,6 @@
 .agent-workspace {
-  --agent-surface: color-mix(in oklch, var(--background) 72%, transparent);
-  --agent-surface-strong: color-mix(in oklch, var(--background) 88%, transparent);
+  --agent-surface: color-mix(in oklab, var(--background) 72%, transparent);
+  --agent-surface-strong: color-mix(in oklab, var(--background) 88%, transparent);
   --agent-line: color-mix(in oklch, var(--organism-accent) 18%, var(--border));
   --agent-line-strong: color-mix(in oklch, var(--organism-accent) 42%, var(--border));
   --agent-ink-soft: color-mix(in oklch, var(--foreground) 70%, transparent);
@@ -62,7 +62,7 @@
 }
 
 .agent-workspace-cell {
-  background: color-mix(in oklch, var(--background) 56%, transparent);
+  background: color-mix(in oklab, var(--background) 56%, transparent);
   padding: 1rem;
 }
 
@@ -90,7 +90,7 @@
   border: 1px solid var(--agent-line);
   border-radius: 9999px;
   color: var(--muted-foreground);
-  background: color-mix(in oklch, var(--background) 48%, transparent);
+  background: color-mix(in oklab, var(--background) 48%, transparent);
 }
 
 .agent-icon-button:hover,
@@ -112,7 +112,7 @@
   width: 100%;
   border: 1px solid var(--agent-line);
   border-radius: 8px;
-  background: color-mix(in oklch, var(--background) 40%, transparent);
+  background: color-mix(in oklab, var(--background) 40%, transparent);
   color: var(--agent-ink-soft);
 }
 

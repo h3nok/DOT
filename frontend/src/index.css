@@ -1586,8 +1586,8 @@ html[data-motion="still"] .book-substrate-flow {
   background:
     linear-gradient(
       90deg,
-      color-mix(in oklch, var(--book-paper) 92%, transparent),
-      color-mix(in oklch, var(--book-paper) 72%, transparent) 48%,
+      color-mix(in oklab, var(--book-paper) 92%, transparent),
+      color-mix(in oklab, var(--book-paper) 72%, transparent) 48%,
       color-mix(in oklch, var(--book-cinnabar) 4%, var(--book-paper))
     );
 }
@@ -2100,8 +2100,8 @@ html[data-motion="still"] .dot-emergence-signal {
   background: linear-gradient(
     180deg,
     transparent 0 27%,
-    color-mix(in oklch, var(--background) 86%, transparent) 37% 73%,
-    color-mix(in oklch, var(--background) 66%, transparent) 81%,
+    color-mix(in oklab, var(--background) 86%, transparent) 37% 73%,
+    color-mix(in oklab, var(--background) 66%, transparent) 81%,
     transparent 91% 100%
   );
 }
@@ -2117,7 +2117,7 @@ html[data-motion="still"] .dot-emergence-signal {
   z-index: -1;
   background: radial-gradient(
     ellipse,
-    color-mix(in oklch, var(--background) 90%, transparent) 0 55%,
+    color-mix(in oklab, var(--background) 90%, transparent) 0 55%,
     transparent 82%
   );
   content: "";
@@ -3035,7 +3035,7 @@ html[data-motion="still"] .dot-emergence-signal {
     background: linear-gradient(
       90deg,
       transparent 0 5%,
-      color-mix(in oklch, var(--background) 90%, transparent) 18% 82%,
+      color-mix(in oklab, var(--background) 90%, transparent) 18% 82%,
       transparent 95% 100%
     );
   }

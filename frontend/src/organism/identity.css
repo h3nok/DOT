@@ -1,3 +1,5 @@
+/* Translucent paper consumers mix in OKLab: polar OKLCH interpolation with
+   transparent can discard a low-chroma paper's hue and produce a pink cast. */
 html[data-palette="dot"][data-theme] {
   --identity-surface: var(--identity-light-surface);
   --identity-ink: var(--identity-light-ink);
