@@ -24,6 +24,48 @@ async function openEnvironmentFineTune(
  * document actually moved, not merely that state was recorded.
  */
 test.describe("appearance controls change the rendered document", () => {
+  test("new readers get the shared identity and follow their system without saving an unchosen preference", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
+    await page.goto("/");
+    await expect.poll(() => htmlAttribute(page, "data-palette")).toBe("dot");
+    await expect.poll(() => htmlAttribute(page, "data-theme")).toBe("light");
+    await expect.poll(() => renderedStyle(page, "body", "background-color")).toBe("rgb(242, 240, 232)");
+    await expect.poll(() => renderedStyle(page, ".nucleus-mark-core", "fill")).toBe("rgb(40, 92, 75)");
+    await expect.poll(() => page.locator('meta[name="theme-color"]').getAttribute("content")).toBe("#f2f0e8");
+    await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
+    await expect.poll(() => htmlAttribute(page, "data-theme")).toBe("dark");
+    await expect.poll(() => renderedStyle(page, "body", "background-color")).toBe("rgb(12, 23, 21)");
+    await expect.poll(() => renderedStyle(page, ".nucleus-mark-core", "fill")).toBe("rgb(145, 200, 177)");
+    await expect.poll(() => page.locator('meta[name="theme-color"]').getAttribute("content")).toBe("#0c1715");
+    expect(await page.evaluate(() => ({
+      base: localStorage.getItem("dot_theme"),
+      appearance: localStorage.getItem("dot_organism"),
+    }))).toEqual({ base: null, appearance: null });
+    const panel = await openAppearancePanel(page);
+    await expect(panel.getByRole("button", { name: "DOT Night", exact: true })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("old appearances are not silently rebranded; Reset explicitly adopts the new default", async ({ page }) => {
+    await page.addInitScript(() => {
+      if (!localStorage.getItem("dot_organism")) {
+        localStorage.setItem("dot_theme", "light");
+        localStorage.setItem("dot_organism", JSON.stringify({
+          tint: 158, paperTone: "warm", preset: "radial",
+          readingFont: "humanist", readingScale: 1.26,
+        }));
+      }
+    });
+    await page.goto("/");
+    await expect.poll(() => htmlAttribute(page, "data-palette")).toBe("classic");
+    await expect.poll(() => htmlAttribute(page, "data-reading")).toBe("humanist");
+    const panel = await openAppearancePanel(page);
+    await panel.getByRole("button", { name: "Reset", exact: true }).click();
+    await expect.poll(() => htmlAttribute(page, "data-palette")).toBe("dot");
+    await expect.poll(() => renderedStyle(page, "body", "background-color")).toBe("rgb(242, 240, 232)");
+    await page.reload();
+    await expect.poll(() => htmlAttribute(page, "data-palette")).toBe("dot");
+  });
+
   test("radial defaults repaint, remain adjustable, and survive a reload", async ({ page }) => {
     await page.goto("/");
     await expect.poll(() => htmlAttribute(page, "data-field")).toBe("radial");

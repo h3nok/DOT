@@ -94,7 +94,7 @@ DOT therefore treats T × E as the minimal condition from which process can aris
 
 Transient patterns disappear without carrying consequence. Persistence begins when a loop retains enough state to compare change, detect a threat to its continuity, and alter the next transition. Feedback is retained consequence; memory is feedback made available to later response; self-preservation is the recursive use of both to remain a continuing process.
 
-DOT locates *proto-awareness* at the next threshold: consequential difference becomes present to the continuing loop itself and is retained as a basis for response. Bare persistence is not enough. The developed self-preserving, experiencing process that emerges from this recursion is **Big C**.
+DOT locates proto-awareness at the next threshold: consequential difference becomes present to the continuing loop itself and is retained as a basis for response. Bare persistence is not enough. The developed self-preserving, experiencing process that emerges from this recursion is Big C.
 
 This is the central origin hypothesis:
 

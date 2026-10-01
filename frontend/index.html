@@ -45,6 +45,10 @@
       document.documentElement.classList.add("js");
     </script>
     <style>
+      html:not(.js) { color: #142822; background: #f2f0e8; color-scheme: light; }
+      @media (prefers-color-scheme: dark) {
+        html:not(.js) { color: #f2f0e8; background: #0c1715; color-scheme: dark; }
+      }
       .js [data-prerender] { display: none; }
       [data-prerender] {
         display: block;
@@ -68,7 +72,7 @@
     </style>
 
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#f7f7f4" />
+    <meta name="theme-color" content="#f2f0e8" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />

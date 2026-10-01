@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SupportSurface } from "./SupportSurface";
-import { useSupport } from "./useSupport";
+import { parseSupportAmount, useSupport } from "./useSupport";
 
 vi.mock("./useSupport", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./useSupport")>();
@@ -22,6 +22,7 @@ const mockedUseSupport = vi.mocked(useSupport);
 
 const closedPlane = {
   options: null,
+  error: null,
   loading: false,
   available: false,
   refresh: vi.fn(),
@@ -80,6 +81,7 @@ describe("SupportSurface", () => {
         available: true,
       },
       loading: false,
+      error: null,
       available: true,
       refresh: vi.fn(),
       createCheckout: vi.fn(),
@@ -111,6 +113,7 @@ describe("SupportSurface", () => {
         available: true,
       },
       loading: false,
+      error: null,
       available: true,
       refresh: vi.fn(),
       createCheckout: vi.fn(),
@@ -126,4 +129,81 @@ describe("SupportSurface", () => {
     expect(screen.queryByText(/supporters|people hold|monthly/i)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Continue to Stripe" })).toBeInTheDocument();
   });
+
+  it("makes author support a changeable, optional contribution without membership", async () => {
+    const createCheckout = vi.fn().mockResolvedValue({ error: "Provider unavailable." });
+    mockedUseSupport.mockReturnValue({
+      ...closedPlane,
+      available: true,
+      options: {
+        tiers: [],
+        purposes: [{ id: "author", label: "Independent writing and research" }],
+        min_custom_minor: 200,
+        max_custom_minor: 500_000,
+        currency: "usd",
+        available: true,
+      },
+      createCheckout,
+    });
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    expect(screen.getByRole("heading", { name: "Support the author" })).toBeInTheDocument();
+    const input = screen.getByRole("spinbutton", { name: "Contribution amount" });
+    expect(input).toHaveValue(20);
+    fireEvent.change(input, { target: { value: "7.50" } });
+    fireEvent.click(screen.getByRole("button", { name: "Continue to Stripe" }));
+    expect(createCheckout).toHaveBeenCalledWith({
+      tier: "custom", purpose: "author", customAmountMinor: 750,
+    });
+    expect(await screen.findByRole("alert")).toHaveTextContent("Provider unavailable.");
+    expect(screen.queryByText(/sign in|membership|purchase/i)).not.toBeInTheDocument();
+  });
+
+  it("rejects zero contributions without putting a payment gate on the book", async () => {
+    mockedUseSupport.mockReturnValue({
+      ...closedPlane,
+      available: true,
+      options: {
+        tiers: [], purposes: [{ id: "author", label: "Independent writing and research" }],
+        min_custom_minor: 200, max_custom_minor: 500_000, currency: "usd", available: true,
+      },
+    });
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    fireEvent.change(screen.getByRole("spinbutton"), { target: { value: "0" } });
+    fireEvent.click(screen.getByRole("button", { name: "Continue to Stripe" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Reading and the PDF remain free.");
+    expect(closedPlane.createCheckout).not.toHaveBeenCalled();
+  });
+
+  it("does not claim success when Stripe confirmation fails", async () => {
+    window.history.replaceState({}, "", "/support?purpose=author&support=thanks&session_id=cs_test");
+    mockedUseSupport.mockReturnValue({
+      ...closedPlane,
+      getCheckoutStatus: vi.fn().mockRejectedValue(new Error("Verification unavailable.")),
+    });
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    expect(await screen.findByRole("heading", { name: "Could not confirm the contribution" })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("Verification unavailable.");
+    expect(screen.queryByText("You helped build it")).not.toBeInTheDocument();
+  });
+
+  it("does not misdirect author support to a generic hosted-link fallback", () => {
+    paymentLink.current = "https://buy.stripe.com/test_link";
+    mockedUseSupport.mockReturnValue(closedPlane);
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Continue to Stripe" })).not.toBeInTheDocument();
+  });
+});
+
+describe("support amount parsing", () => {
+  it.each([["2", 200], ["7.5", 750], ["20.00", 2000], [" 2.01 ", 201]])(
+    "preserves the exact amount %s", (input, amount) => {
+      expect(parseSupportAmount(input)).toBe(amount);
+    },
+  );
+  it.each(["", "1.999", "-20", "1e2", "Infinity", "9007199254740991"])(
+    "rejects %s instead of rounding or coercing it", (input) => {
+      expect(parseSupportAmount(input)).toBeNull();
+    },
+  );
 });

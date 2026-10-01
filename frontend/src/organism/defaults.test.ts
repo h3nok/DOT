@@ -7,6 +7,7 @@ import {
   themePreset,
 } from "./themePresets";
 import { DEFAULT_CONFIG, ORGANISM_PRESETS } from "./types";
+import identity from "../content/identity.json";
 
 describe("default environment", () => {
   it("has a default for each base, and it belongs to that base", () => {
@@ -67,12 +68,21 @@ describe("default environment", () => {
     }
   });
 
-  it("starts both bases in monochrome", () => {
-    expect(defaultConfigFor("dark").tint).toBe("mono");
-    expect(defaultConfigFor("light").tint).toBe("mono");
+  it("starts both bases in the same branded jade palette", () => {
+    for (const base of ["light", "dark"] as const) {
+      expect(defaultConfigFor(base).tint).toBe(identity.accentHue);
+      expect(defaultConfigFor(base).palette).toBe("dot");
+      expect(defaultConfigFor(base).paperTone).toBe("warm");
+    }
+    expect(themePreset("dot-daylight").swatch).toEqual({
+      surface: identity.light.surface, ink: identity.light.ink, accent: identity.light.accent,
+    });
+    expect(themePreset("dot-night").swatch).toEqual({
+      surface: identity.dark.surface, ink: identity.dark.ink, accent: identity.dark.accent,
+    });
   });
 
-  it("uses the neural surface for both quiet defaults", () => {
+  it("uses the neural surface for both branded defaults", () => {
     expect(defaultConfigFor("dark").uiStyle).toBe("neural");
     expect(defaultConfigFor("light").uiStyle).toBe("neural");
   });

@@ -1,8 +1,7 @@
-"""Server-priced commerce and webhook-settled product entitlements."""
+"""Free Book One delivery and settlement of historical book purchases."""
 
 from __future__ import annotations
 
-import asyncio
 import datetime
 import pathlib
 import typing
@@ -12,31 +11,17 @@ import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
 import app.core.config
-import app.db.models
 import app.domains.commerce.models as models
 
-try:  # pragma: no cover - exercised only when the optional dependency is installed
-    import stripe
-except ImportError:  # pragma: no cover
-    stripe = None  # type: ignore[assignment]
 
-
-class CommerceUnavailableError(RuntimeError):
+class BookPurchaseRetiredError(RuntimeError):
     pass
 
 
-def _value(record: typing.Any, key: str, default: typing.Any = None) -> typing.Any:
-    if isinstance(record, dict):
-        return record.get(key, default)
-    return getattr(record, key, default)
-
-
-def _client() -> typing.Any:
-    settings = app.core.config.get_settings()
-    if stripe is None or not settings.STRIPE_SECRET_KEY or not settings.STRIPE_WEBHOOK_SECRET:
-        raise CommerceUnavailableError("Book purchase is not configured.")
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    return stripe
+def reject_book_purchase() -> typing.NoReturn:
+    raise BookPurchaseRetiredError(
+        "Book One is now free. Download without an account; author support is optional."
+    )
 
 
 def pdf_path() -> pathlib.Path:
@@ -44,13 +29,7 @@ def pdf_path() -> pathlib.Path:
 
 
 def is_configured() -> bool:
-    settings = app.core.config.get_settings()
-    return bool(
-        stripe is not None
-        and settings.STRIPE_SECRET_KEY
-        and settings.STRIPE_WEBHOOK_SECRET
-        and pdf_path().is_file()
-    )
+    return pdf_path().is_file()
 
 
 async def has_entitlement(
@@ -65,73 +44,6 @@ async def has_entitlement(
         )
     )
     return entitlement is not None
-
-
-async def create_checkout(
-    session: sqlalchemy.ext.asyncio.AsyncSession,
-    owner: app.auth.dependencies.OwnerContext,
-) -> dict[str, str]:
-    if await has_entitlement(session, owner):
-        raise ValueError("This member already owns the digital edition.")
-
-    client = _client()
-    settings = app.core.config.get_settings()
-    purchase_id = app.db.models.make_id("pur")
-    metadata = {
-        "commerce_purchase_id": purchase_id,
-        "owner_id": owner.owner_id,
-        "product_id": models.BOOK_ONE_PDF_PRODUCT_ID,
-    }
-    base_url = settings.FRONTEND_URL.rstrip("/")
-
-    try:
-        checkout = await asyncio.to_thread(
-            client.checkout.Session.create,
-            mode="payment",
-            line_items=[
-                {
-                    "price_data": {
-                        "currency": models.BOOK_ONE_PDF_CURRENCY,
-                        "unit_amount": models.BOOK_ONE_PDF_PRICE_MINOR,
-                        "product_data": {
-                            "name": "Digital Organism Theory — Book One PDF",
-                            "description": "Authenticated digital edition for offline study.",
-                        },
-                    },
-                    "quantity": 1,
-                }
-            ],
-            client_reference_id=owner.owner_id,
-            metadata=metadata,
-            payment_intent_data={"metadata": metadata},
-            success_url=(
-                f"{base_url}/book/digital-organism-theory/copy"
-                "?purchase=processing&session_id={CHECKOUT_SESSION_ID}"
-            ),
-            cancel_url=f"{base_url}/book/digital-organism-theory/copy?purchase=cancelled",
-            idempotency_key=app.db.models.make_id("checkout"),
-        )
-    except Exception as exc:  # noqa: BLE001 - provider errors remain opaque
-        raise CommerceUnavailableError("Book purchase provider rejected the request.") from exc
-
-    checkout_id = str(_value(checkout, "id", ""))
-    checkout_url = str(_value(checkout, "url", ""))
-    if not checkout_id or not checkout_url:
-        raise CommerceUnavailableError("Book purchase provider returned no checkout URL.")
-
-    session.add(
-        models.CommercePurchase(
-            id=purchase_id,
-            owner_id=owner.owner_id,
-            product_id=models.BOOK_ONE_PDF_PRODUCT_ID,
-            checkout_session_id=checkout_id,
-            amount_minor=models.BOOK_ONE_PDF_PRICE_MINOR,
-            currency=models.BOOK_ONE_PDF_CURRENCY,
-            status="pending",
-        )
-    )
-    await session.commit()
-    return {"checkout_url": checkout_url}
 
 
 async def is_commerce_event(

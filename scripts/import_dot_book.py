@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Release the current DOT Word manuscript to the reader and protected PDF.
+"""Release the current DOT Word manuscript to the reader and free PDF.
 
 The Word manuscript remains the editorial source of truth. This script uses
 Pandoc for OOXML/OMML extraction, splits the result at the manuscript's existing
 section markers, and writes finite Markdown reading units plus a release
-manifest for the public DOT reader. It uses LibreOffice to produce one protected
-digital PDF for authenticated delivery; the editable DOCX remains private.
+manifest for the public DOT reader. LibreOffice produces the free digital PDF;
+the editable DOCX remains private.
 """
 
 from __future__ import annotations
@@ -20,11 +20,13 @@ import pathlib
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from typing import Any
+from xml.sax.saxutils import escape
 
 BOOK_ROUTE = "/book/digital-organism-theory"
-PROTECTED_PDF_NAME = "digital-organism-theory-book-one.pdf"
+PDF_NAME = "digital-organism-theory-book-one.pdf"
 LEGACY_PUBLIC_ARTIFACTS = (
     "consciousness-a-digital-organism-book-one-v2.docx",
     "consciousness-a-digital-organism-book-one-v2.pdf",
@@ -474,10 +476,12 @@ def release_downloads(
     source: pathlib.Path,
     output: pathlib.Path,
     libreoffice: str,
+    public_output: pathlib.Path,
 ) -> None:
-    """Derive the protected digital PDF from the private manuscript."""
+    """Derive identical public and backend PDFs; never publish the DOCX."""
 
     output.mkdir(parents=True, exist_ok=True)
+    public_output.mkdir(parents=True, exist_ok=True)
     for stale_name in LEGACY_PUBLIC_ARTIFACTS:
         (output / stale_name).unlink(missing_ok=True)
 
@@ -493,6 +497,18 @@ def release_downloads(
             "XDG_CONFIG_HOME": str(temp / "config"),
             "XDG_RUNTIME_DIR": str(runtime),
         }
+        # Scope the bundled book fonts to this export, not the user's machine.
+        font_directory = pathlib.Path(__file__).resolve().parents[1] / "design" / "fonts"
+        if sys.platform.startswith("linux") and font_directory.is_dir():
+            font_config = temp / "fonts.conf"
+            font_config.write_text(
+                '<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">'
+                '<fontconfig><include ignore_missing="no">/etc/fonts/fonts.conf</include>'
+                f"<dir>{escape(str(font_directory))}</dir>"
+                f"<cachedir>{escape(str(temp / 'font-cache'))}</cachedir></fontconfig>",
+                encoding="utf-8",
+            )
+            environment["FONTCONFIG_FILE"] = str(font_config)
         command = [
             libreoffice,
             f"-env:UserInstallation={profile.resolve().as_uri()}",
@@ -507,10 +523,12 @@ def release_downloads(
         generated_pdf = temp / f"{source.stem}.pdf"
         if not generated_pdf.exists():
             raise RuntimeError("LibreOffice completed without producing a PDF")
-        shutil.copyfile(generated_pdf, output / PROTECTED_PDF_NAME)
+        shutil.copyfile(generated_pdf, output / PDF_NAME)
+        shutil.copyfile(generated_pdf, public_output / PDF_NAME)
 
     print(f"Released the digital edition from {source.name}:")
-    print(f"  {output / PROTECTED_PDF_NAME}")
+    print(f"  {output / PDF_NAME}")
+    print(f"  {public_output / PDF_NAME}")
 
 
 def main() -> None:
@@ -528,7 +546,7 @@ def main() -> None:
             "soffice",
             MACOS_LIBREOFFICE,
         )
-        release_downloads(source, artifacts_output, libreoffice)
+        release_downloads(source, artifacts_output, libreoffice, output)
         return
 
     sections_dir = output / "sections"
@@ -633,7 +651,7 @@ def main() -> None:
             "soffice",
             MACOS_LIBREOFFICE,
         )
-        release_downloads(source, artifacts_output, libreoffice)
+        release_downloads(source, artifacts_output, libreoffice, output)
 
     if args.push:
         push_to_orchestrator(

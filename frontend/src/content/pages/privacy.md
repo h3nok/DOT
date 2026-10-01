@@ -34,7 +34,7 @@ You give an address only if you choose to: to join the reader list, to ask to jo
 
 ## Payments
 
-If you buy the digital edition or support the work, Stripe handles the payment and your card details never reach this site. See [Stripe's privacy policy](https://stripe.com/privacy). The site keeps a record of the purchase or contribution: what it was, the amount, and the account or address fingerprint it belongs to.
+The complete book and PDF require no payment. If you choose to support the author or the work, Stripe handles the one-time contribution and your card details never reach this site. See [Stripe's privacy policy](https://stripe.com/privacy). The site keeps the provider-confirmed amount, purpose, status, and a one-way fingerprint of the receipt email, not the address itself. Support does not create membership or add you to the reader list. Historical book purchase and refund records remain private, including their account association.
 
 ## Server logs
 

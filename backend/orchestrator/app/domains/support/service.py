@@ -70,6 +70,9 @@ async def create_checkout(
         "cadence": "one_time",
     }
     base_url: str = settings.FRONTEND_URL.rstrip("/")
+    return_url = (
+        f"{base_url}/support?purpose=author&" if resolved_purpose == "author" else f"{base_url}/?"
+    )
 
     try:
         checkout = await asyncio.to_thread(
@@ -81,7 +84,11 @@ async def create_checkout(
                         "currency": "usd",
                         "unit_amount": amount_minor,
                         "product_data": {
-                            "name": "Support the DOT work",
+                            "name": (
+                                "Support the author's writing and research"
+                                if resolved_purpose == "author"
+                                else "Support the DOT work"
+                            ),
                             "description": models.SUPPORT_PURPOSES[resolved_purpose],
                         },
                     },
@@ -90,8 +97,8 @@ async def create_checkout(
             ],
             metadata=metadata,
             payment_intent_data={"metadata": metadata},
-            success_url=f"{base_url}/?support=thanks&session_id={{CHECKOUT_SESSION_ID}}",
-            cancel_url=f"{base_url}/?support=cancelled",
+            success_url=f"{return_url}support=thanks&session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{return_url}support=cancelled",
             idempotency_key=models.new_idempotency_key(),
         )
     except Exception as exc:  # noqa: BLE001 - provider errors are opaque by design

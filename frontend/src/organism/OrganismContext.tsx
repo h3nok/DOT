@@ -19,6 +19,8 @@ import {
   type VitalSigns,
 } from "./types";
 import { defaultConfigFor } from "./themePresets";
+import { applyIdentityPalette } from "../shared/identity";
+import identity from "../content/identity.json";
 import { useReducedMotion } from "./signals/useReducedMotion";
 import { useCircadian } from "./signals/useCircadian";
 import { useArousal } from "./signals/useArousal";
@@ -127,6 +129,15 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [live]);
 
   // Reflect state onto the document for pure-CSS consumers.
+  useEffect(() => {
+    applyIdentityPalette(document.documentElement, config.palette);
+  }, [config.palette]);
+
+  useEffect(() => {
+    document.documentElement.dataset.identityAccent =
+      config.tint === identity.accentHue ? "signature" : "custom";
+  }, [config.tint]);
+
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.organism = config.enabled ? "on" : "off";

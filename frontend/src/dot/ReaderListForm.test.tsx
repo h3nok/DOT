@@ -10,6 +10,7 @@ import { ReaderListForm } from "./ReaderListForm";
 
 const server = vi.hoisted(() => ({
   available: null as boolean | null,
+  availabilityError: null as string | null,
   subscribe: vi.fn(),
   confirm: vi.fn(),
   unsubscribe: vi.fn(),
@@ -18,6 +19,7 @@ const server = vi.hoisted(() => ({
 vi.mock("./useReaderList", () => ({
   useReaderList: () => ({
     available: server.available,
+    availabilityError: server.availabilityError,
     subscribe: server.subscribe,
     confirm: server.confirm,
     unsubscribe: server.unsubscribe,
@@ -26,6 +28,7 @@ vi.mock("./useReaderList", () => ({
 
 afterEach(() => {
   server.available = null;
+  server.availabilityError = null;
   server.subscribe.mockReset();
   server.confirm.mockReset();
   server.unsubscribe.mockReset();
@@ -58,6 +61,29 @@ describe("ReaderListForm", () => {
   it("holds that back while it is still unknown whether the list is open", () => {
     server.available = null;
     const { container } = render(<ReaderListForm fallback={<p>Not open yet</p>} />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("does not claim the list is closed when its status cannot be reached", () => {
+    server.available = false;
+    server.availabilityError = "The service is unreachable.";
+    render(
+      <ReaderListForm
+        fallback={<p>Not open yet</p>}
+        unavailableFallback={<p>Could not reach the list</p>}
+      />,
+    );
+
+    expect(screen.getByText("Could not reach the list")).toBeInTheDocument();
+    expect(screen.queryByText("Not open yet")).toBeNull();
+    expect(screen.queryByRole("textbox")).toBeNull();
+  });
+
+  it("keeps an unavailable optional form out of a completed reading surface", () => {
+    server.available = false;
+    server.availabilityError = "The service is unreachable.";
+    const { container } = render(<ReaderListForm />);
 
     expect(container).toBeEmptyDOMElement();
   });

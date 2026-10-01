@@ -400,6 +400,8 @@ export interface OrganismConfig {
   paragraphStyle: ParagraphStyle;
   /** Colour temperature of the page, applied in both light and dark. */
   paperTone: PaperTone;
+  /** Old saved appearances retain their original palette unless explicitly changed. */
+  palette: "classic" | "dot";
 }
 
 export interface OrganismFieldAnchor {
@@ -450,6 +452,7 @@ export const DEFAULT_VITALS: VitalSigns = {
 };
 
 export const DEFAULT_CONFIG: OrganismConfig = {
+  palette: "classic",
   enabled: true,
   intensity: 0.85,
   preset: "radial",
@@ -497,6 +500,7 @@ export function resolveOrganismConfig(value: unknown): OrganismConfig {
     : {};
 
   return {
+    palette: saved.palette === "dot" ? "dot" : "classic",
     enabled: resolveBoolean(saved.enabled, DEFAULT_CONFIG.enabled),
     intensity: resolveDial(saved.intensity, 0, 1, DEFAULT_CONFIG.intensity),
     preset: resolvePreset(saved.preset),

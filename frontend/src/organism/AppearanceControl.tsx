@@ -85,6 +85,8 @@ const optionClass = (selected: boolean) =>
   }`;
 
 const PRIMARY_THEME_PRESET_IDS: ReadonlySet<ThemePreset["id"]> = new Set([
+  "dot-daylight",
+  "dot-night",
   "quiet",
   "meridian",
   "quiet-night",

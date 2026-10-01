@@ -4,6 +4,10 @@
 - **Date:** 2026-08-15
 - **Deciders:** Founder
 
+> Book One's purchase/download policy is replaced by the founder-selected free
+> PDF and separate voluntary support in [ADR-0035](0035-free-book-and-voluntary-author-support.md).
+> This record retains the historical commerce decision; both ADRs remain Proposed.
+
 ## Context
 
 Book One has two distinct forms. The living web reader is the public canon and supports

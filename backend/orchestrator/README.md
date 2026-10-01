@@ -83,12 +83,20 @@ cd backend/orchestrator
 
 The first migration creates durable run tables and Publication Studio MVP tables.
 
-## Book One digital edition commerce
+## Free Book One and voluntary author support
 
-The complete web reader remains public. The downloadable PDF is a $20 one-time purchase
-delivered only to an authenticated member with an active entitlement.
+The complete web reader and downloadable PDF are free, with no account or payment
+required (ADR-0035). The frontend serves a static PDF; the existing backend
+download endpoint is also public. Missing artifacts return an explicit 503.
+The catalog reports price zero and artifact availability independently of Stripe.
+Book purchase checkout now returns 410 rather than collecting payment.
 
-Configure:
+Optional one-time author support uses `/v1/support/checkout-sessions` with purpose
+`author`, a preset tier or a bounded custom amount, and no member authentication.
+Its existing card-contribution range is $2–$5,000; zero uses the free download.
+Support never creates an entitlement or opens membership.
+
+To enable support, configure:
 
 ```bash
 ORCHESTRATOR_STRIPE_SECRET_KEY=...
@@ -96,8 +104,10 @@ ORCHESTRATOR_STRIPE_WEBHOOK_SECRET=...
 ORCHESTRATOR_BOOK_ONE_PDF_PATH=/app/private/books/digital-organism-theory-book-one.pdf
 ```
 
-The production image includes the protected PDF at the default path. Stripe must send
+The production image includes the backend PDF at the default path. Stripe must send
 `checkout.session.completed`, `checkout.session.async_payment_succeeded`, and
 `charge.refunded` to `POST /v1/support/webhook`. That endpoint verifies the Stripe
-signature before dispatching support events or commerce entitlement events. A checkout
-return URL is never proof of payment.
+signature before dispatching support events or historical commerce entitlement events.
+Historical settlements and refunds are preserved, but never revoke free download
+access. A checkout return URL is never proof of payment; the UI verifies it with
+Stripe and surfaces verification failures. This serves L1/L7/L8/L9/L10 and violates none.

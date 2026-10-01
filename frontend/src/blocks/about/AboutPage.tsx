@@ -50,6 +50,7 @@ export default function AboutPage() {
           right={
             <Link
               to={DOT_BOOK_ONE_ROUTE}
+              aria-label="Book One"
               className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
             >
               <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />

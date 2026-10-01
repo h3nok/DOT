@@ -10,7 +10,6 @@ import sqlalchemy.ext.asyncio
 
 import app.core.config
 import app.domains.commerce.models as models
-import app.domains.commerce.service as commerce_service
 import app.domains.support.service as support_service
 
 
@@ -40,7 +39,7 @@ def commerce_config(
     pdf = tmp_path / "book-one.pdf"
     pdf.write_bytes(b"%PDF-1.4 protected book")
     settings: app.core.config.Settings = app.core.config.get_settings()
-    monkeypatch.setattr(commerce_service, "stripe", stub)
+    monkeypatch.setattr(support_service, "stripe", stub)
     monkeypatch.setattr(settings, "STRIPE_SECRET_KEY", "sk_test_stub", raising=False)
     monkeypatch.setattr(settings, "STRIPE_WEBHOOK_SECRET", "whsec_stub", raising=False)
     monkeypatch.setattr(settings, "BOOK_ONE_PDF_PATH", str(pdf), raising=False)
@@ -65,7 +64,25 @@ async def _purchase(
         )
 
 
-def test_catalog_is_public_and_server_priced(
+async def _seed_purchase(
+    session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
+) -> models.CommercePurchase:
+    async with session_factory() as session:
+        session.add(
+            models.CommercePurchase(
+                owner_id="member-one",
+                product_id=models.BOOK_ONE_PDF_PRODUCT_ID,
+                checkout_session_id="cs_historical_purchase",
+                amount_minor=2_000,
+                currency="usd",
+                status="pending",
+            )
+        )
+        await session.commit()
+    return await _purchase(session_factory)
+
+
+def test_catalog_is_public_and_free(
     client: fastapi.testclient.TestClient,
     commerce_config: tuple[_StubStripe, pathlib.Path],
 ) -> None:
@@ -74,50 +91,71 @@ def test_catalog_is_public_and_server_priced(
     assert response.json() == {
         "id": "book-one-pdf",
         "title": "Digital Organism Theory — Book One PDF",
-        "amount_minor": 2_000,
+        "amount_minor": 0,
         "currency": "usd",
         "available": True,
     }
 
 
-def test_checkout_requires_authentication(
+@pytest.mark.parametrize("headers", [{}, _headers()])
+def test_retired_checkout_cannot_charge_visitors_or_members(
     client: fastapi.testclient.TestClient,
     commerce_config: tuple[_StubStripe, pathlib.Path],
-) -> None:
-    assert client.post("/v1/commerce/products/book-one-pdf/checkout").status_code == 401
-
-
-def test_checkout_uses_server_price_and_member_identity(
-    client: fastapi.testclient.TestClient,
-    commerce_config: tuple[_StubStripe, pathlib.Path],
+    headers: dict[str, str],
 ) -> None:
     stub, _ = commerce_config
-    response = client.post("/v1/commerce/products/book-one-pdf/checkout", headers=_headers())
+    response = client.post("/v1/commerce/products/book-one-pdf/checkout", headers=headers)
+    assert response.status_code == 410
+    assert "now free" in response.json()["detail"]
+    assert stub.calls == []
+
+
+def test_free_download_works_without_payment_configuration(
+    client: fastapi.testclient.TestClient,
+    commerce_config: tuple[_StubStripe, pathlib.Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = app.core.config.get_settings()
+    monkeypatch.setattr(settings, "STRIPE_SECRET_KEY", "")
+    monkeypatch.setattr(settings, "STRIPE_WEBHOOK_SECRET", "")
+    assert client.get("/v1/commerce/products/book-one-pdf").json()["available"] is True
+    response = client.get("/v1/commerce/products/book-one-pdf/download")
     assert response.status_code == 200
-    call = stub.calls[0]
-    assert call["line_items"][0]["price_data"]["unit_amount"] == 2_000
-    assert call["client_reference_id"] == "member-one"
-    assert call["metadata"]["owner_id"] == "member-one"
-    assert call["metadata"]["product_id"] == "book-one-pdf"
+    assert response.content.startswith(b"%PDF")
 
 
-def test_download_requires_authentication_and_purchase(
+@pytest.mark.parametrize("headers", [{}, _headers(), _headers("different-member")])
+def test_download_is_public_and_independent_of_entitlement(
+    client: fastapi.testclient.TestClient,
+    commerce_config: tuple[_StubStripe, pathlib.Path],
+    headers: dict[str, str],
+) -> None:
+    path = "/v1/commerce/products/book-one-pdf/download"
+    response = client.get(path, headers=headers)
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["cache-control"].startswith("public")
+
+
+def test_missing_pdf_is_explicitly_unavailable(
     client: fastapi.testclient.TestClient,
     commerce_config: tuple[_StubStripe, pathlib.Path],
 ) -> None:
-    path = "/v1/commerce/products/book-one-pdf/download"
-    assert client.get(path).status_code == 401
-    assert client.get(path, headers=_headers()).status_code == 403
+    _, pdf = commerce_config
+    pdf.unlink()
+    assert client.get("/v1/commerce/products/book-one-pdf").json()["available"] is False
+    response = client.get("/v1/commerce/products/book-one-pdf/download")
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Digital edition is unavailable."
 
 
-async def test_verified_matching_payment_grants_download(
+async def test_historical_payment_still_settles_private_purchase_records(
     client: fastapi.testclient.TestClient,
     commerce_config: tuple[_StubStripe, pathlib.Path],
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    client.post("/v1/commerce/products/book-one-pdf/checkout", headers=_headers())
-    purchase = await _purchase(session_factory)
+    purchase = await _seed_purchase(session_factory)
     _verified(
         {
             "type": "checkout.session.completed",
@@ -146,21 +184,20 @@ async def test_verified_matching_payment_grants_download(
     assert response.content.startswith(b"%PDF")
     assert (
         client.get(
-            "/v1/commerce/products/book-one-pdf/download",
+            "/v1/commerce/products/book-one-pdf/entitlement",
             headers=_headers("different-member"),
-        ).status_code
-        == 403
+        ).json()["entitled"]
+        is False
     )
 
 
-async def test_verified_refund_revokes_download(
+async def test_historical_refund_revokes_the_record_not_free_download(
     client: fastapi.testclient.TestClient,
     commerce_config: tuple[_StubStripe, pathlib.Path],
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    client.post("/v1/commerce/products/book-one-pdf/checkout", headers=_headers())
-    purchase = await _purchase(session_factory)
+    purchase = await _seed_purchase(session_factory)
     metadata = {
         "commerce_purchase_id": purchase.id,
         "owner_id": "member-one",
@@ -196,9 +233,12 @@ async def test_verified_refund_revokes_download(
     )
     assert client.post("/v1/support/webhook", json={}).json() == {"applied": True}
     assert (
-        client.get("/v1/commerce/products/book-one-pdf/download", headers=_headers()).status_code
-        == 403
+        client.get("/v1/commerce/products/book-one-pdf/entitlement", headers=_headers()).json()[
+            "entitled"
+        ]
+        is False
     )
+    assert client.get("/v1/commerce/products/book-one-pdf/download").status_code == 200
 
 
 async def test_mismatched_provider_amount_never_grants_entitlement(
@@ -207,8 +247,7 @@ async def test_mismatched_provider_amount_never_grants_entitlement(
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    client.post("/v1/commerce/products/book-one-pdf/checkout", headers=_headers())
-    purchase = await _purchase(session_factory)
+    purchase = await _seed_purchase(session_factory)
     _verified(
         {
             "type": "checkout.session.completed",
@@ -229,6 +268,8 @@ async def test_mismatched_provider_amount_never_grants_entitlement(
     )
     assert client.post("/v1/support/webhook", json={}).json() == {"applied": False}
     assert (
-        client.get("/v1/commerce/products/book-one-pdf/download", headers=_headers()).status_code
-        == 403
+        client.get("/v1/commerce/products/book-one-pdf/entitlement", headers=_headers()).json()[
+            "entitled"
+        ]
+        is False
     )

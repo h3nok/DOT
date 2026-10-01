@@ -63,7 +63,7 @@ RL\ : = \ t_{N}\  - \ t_{I}
 $$
 
 $$
-RL\  \geq \ 0\ \ \ (DOT\ hypothesis)
+\text{RL ≥ 0   (DOT hypothesis)}
 $$
 
 The variable $t_{I}$ is the hypothesized time at which Intent forms, while $t_{N}$ is the onset of the first measurable neural change causally recruited for execution. Current experiments do not independently measure $t_{I}$, and they do not identify a neural event as the first event in the full causal sequence. The equation therefore defines DOT’s claim; it does not report an observed interval.

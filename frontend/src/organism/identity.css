@@ -1,0 +1,81 @@
+html[data-palette="dot"][data-theme] {
+  --identity-surface: var(--identity-light-surface);
+  --identity-ink: var(--identity-light-ink);
+  --identity-accent: var(--identity-light-accent);
+  --identity-muted: var(--identity-light-muted);
+  --identity-border: var(--identity-light-border);
+  --background: var(--identity-surface);
+  --foreground: var(--identity-ink);
+  --card: var(--identity-surface);
+  --card-foreground: var(--identity-ink);
+  --popover: var(--identity-surface);
+  --popover-foreground: var(--identity-ink);
+  --primary: var(--identity-accent);
+  --primary-foreground: var(--identity-surface);
+  --secondary: color-mix(in oklab, var(--identity-accent) 12%, var(--identity-surface));
+  --secondary-foreground: var(--identity-ink);
+  --muted: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
+  --muted-foreground: var(--identity-muted);
+  --accent: color-mix(in oklab, var(--identity-accent) 12%, var(--identity-surface));
+  --accent-foreground: var(--identity-ink);
+  --border: var(--identity-border);
+  --input: var(--identity-border);
+  --ring: var(--identity-accent);
+}
+
+html[data-palette="dot"][data-identity-accent="signature"] {
+  --organism-accent: var(--identity-accent);
+  --organism-accent-strong: var(--identity-accent);
+  --organism-accent-soft: color-mix(in oklab, var(--identity-accent) 32%, transparent);
+}
+
+html.dark[data-palette="dot"] {
+  --identity-surface: var(--identity-dark-surface);
+  --identity-ink: var(--identity-dark-ink);
+  --identity-accent: var(--identity-dark-accent);
+  --identity-muted: var(--identity-dark-muted);
+  --identity-border: var(--identity-dark-border);
+}
+
+html[data-palette="dot"][data-paper="warm"][data-reading] {
+  --appearance-page-tone: var(--identity-surface);
+  --appearance-page-ink: var(--identity-ink);
+}
+
+html[data-palette="dot"][data-paper="warm"][data-reading] .book-surface {
+  --book-paper: var(--identity-surface);
+  --book-ink: var(--identity-ink);
+  --book-muted: var(--identity-muted);
+  --book-vellum: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
+}
+
+html[data-palette="dot"][data-reading="serif"] .book-surface,
+html[data-palette="dot"][data-reading="serif"] .home-theory-layer-card {
+  --book-reading-font: var(--identity-reading-font), Charter, Georgia, serif;
+  --book-reading-heading-font: var(--identity-display-font), ui-sans-serif, sans-serif;
+}
+
+html[data-palette="dot"] .book-one-cover {
+  --book-paper: var(--identity-dark-surface);
+  --book-ink: var(--identity-dark-ink);
+  --book-muted: var(--identity-dark-muted);
+  --book-cinnabar: var(--identity-dark-accent);
+  --book-hairline: var(--identity-dark-border);
+  --organism-accent: var(--identity-dark-accent);
+  --organism-accent-strong: var(--identity-dark-accent);
+  --organism-accent-soft: color-mix(in oklab, var(--identity-dark-accent) 32%, transparent);
+  --background: var(--identity-dark-surface);
+  background: var(--identity-dark-surface);
+}
+
+.book-one-cover-mark {
+  width: 56%;
+  max-width: 10rem;
+  aspect-ratio: 1;
+}
+
+.book-one-cover-organism .book-one-cover-mark svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}

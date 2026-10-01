@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { applyIdentityPalette } from '../identity';
 
 // Theme metadata interface
 export interface ThemeInfo {
@@ -12,18 +13,18 @@ export interface ThemeInfo {
 // Available themes with metadata
 const THEMES: Record<string, ThemeInfo> = {
   light: {
-    name: 'Alabaster Matte',
+    name: 'DOT Daylight',
     category: 'Focus',
     icon: '☀️',
     dark: false,
-    description: 'Luxurious warm-paper tone modeled on physical ink, designed to minimize fatigue during long sessions.'
+    description: 'Warm ivory, deep green ink, and restrained jade.'
   },
   dark: {
-    name: 'Midnight Obsidian',
+    name: 'DOT Night',
     category: 'Focus',
     icon: '🌙',
     dark: true,
-    description: 'Deep velvet sapphire-black slate backdrop that prevents high-contrast screen glare.'
+    description: 'Living-ink dark, warm-white text, and the same jade identity.'
   }
 };
 
@@ -113,6 +114,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Set data-theme attribute for compatibility
     document.documentElement.setAttribute('data-theme', newTheme);
+    const root = document.documentElement;
+    applyIdentityPalette(root, root.dataset.palette === 'dot' ? 'dot' : 'classic');
   };
 
   const applyTheme = (newTheme: string) => {

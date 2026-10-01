@@ -38,16 +38,30 @@ export async function leaveReaderList(token: string): Promise<boolean> {
 }
 
 export function useReaderList() {
-  const [available, setAvailable] = useState<boolean | null>(null);
+  const [availability, setAvailability] = useState<{
+    available: boolean | null;
+    error: string | null;
+  }>({ available: null, error: null });
 
   useEffect(() => {
     let active = true;
     void api<{ available: boolean }>("/v1/readers/status").then((result) => {
       if (!active) return;
-      // A failed call means no reachable server, which is not the same as a
-      // server saying "closed". Both end in the same fallback; the surface
-      // still needs to be able to tell a missing door from a shut one.
-      setAvailable(result.ok ? Boolean(result.data?.available) : false);
+      if (!result.ok) {
+        setAvailability({
+          available: false,
+          error: result.error ?? "The reader list could not be reached.",
+        });
+        return;
+      }
+      if (typeof result.data?.available !== "boolean") {
+        setAvailability({
+          available: false,
+          error: "The reader list returned an unexpected response.",
+        });
+        return;
+      }
+      setAvailability({ available: result.data.available, error: null });
     });
     return () => {
       active = false;
@@ -88,5 +102,11 @@ export function useReaderList() {
     [],
   );
 
-  return { available, subscribe, confirm, unsubscribe: leaveReaderList };
+  return {
+    available: availability.available,
+    availabilityError: availability.error,
+    subscribe,
+    confirm,
+    unsubscribe: leaveReaderList,
+  };
 }

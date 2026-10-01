@@ -1,7 +1,7 @@
 """Generate the Open Graph share images for dotheory.org.
 
-The cards mirror the platform identity: off-white paper, the cinnabar
-fingerprint dot (the NucleusMark), and editorial serif titles. Output is a
+The cards mirror the shared DOT identity: warm ivory, green ink, the
+nucleus mark, and Space Grotesk titles. Output is a
 1200x630 PNG — the Open Graph / Twitter `summary_large_image` size. The site
 card names the Academy; Book One has its own card so the two objects are never
 collapsed in a shared link.
@@ -19,17 +19,18 @@ Output: frontend/public/og-image.png
 from __future__ import annotations
 
 import json
-import math
 import os
+from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageColor, ImageDraw, ImageFont
 
-# Brand palette (see frontend/src/index.css and index.html theme-color).
-PAPER = (247, 247, 244)  # #f7f7f4
-INK = (26, 26, 24)  # near-black
-INK_SOFT = (90, 90, 86)  # muted ink for the subtitle
-CINNABAR = (220, 38, 38)  # #dc2626 — the dot
-HAIRLINE = (26, 26, 24)  # foreground hairline, applied at low alpha
+ROOT = Path(__file__).resolve().parents[1]
+IDENTITY = json.loads((ROOT / "frontend/src/content/identity.json").read_text())
+PAPER = ImageColor.getrgb(IDENTITY["light"]["surface"])
+INK = ImageColor.getrgb(IDENTITY["light"]["ink"])
+INK_SOFT = ImageColor.getrgb(IDENTITY["light"]["muted"])
+JADE = ImageColor.getrgb(IDENTITY["light"]["accent"])
+HAIRLINE = INK
 
 WIDTH, HEIGHT = 1200, 630
 PUBLIC_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public")
@@ -40,8 +41,9 @@ RELEASE_MANIFEST = os.path.join(
     PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v3", "manifest.json"
 )
 
-SERIF_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"
-SERIF = "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"
+DISPLAY = str(ROOT / "design/fonts/space-grotesk-500-normal.ttf")
+SERIF = str(ROOT / "design/fonts/source-serif-4-400-normal.ttf")
+ANNOTATION = str(ROOT / "design/fonts/jetbrains-mono-400-normal.ttf")
 
 
 def _font(path: str, size: int) -> ImageFont.FreeTypeFont:
@@ -94,41 +96,31 @@ def _wrapped(
     return _font(path, 28), [text]
 
 
-def draw_fingerprint(draw: ImageDraw.ImageDraw, cx: int, cy: int) -> None:
-    """The fingerprint whorl: a solid cinnabar core ringed by thinning arcs.
+def draw_nucleus(draw: ImageDraw.ImageDraw, cx: int, cy: int, size: int = 200) -> None:
+    scale = size / 100
 
-    This echoes NucleusMark — identity held by someone, framed by its own whorl.
-    """
-    # Concentric broken rings, decreasing opacity outward.
-    for i, radius in enumerate(range(28, 96, 9)):
-        alpha = max(28, 200 - i * 22)
-        outline = CINNABAR + (alpha,)
-        # Draw as a broken arc so it reads as a whorl, not a target.
-        start = (i * 47) % 360
-        sweep = 300 - (i * 13) % 60
-        draw.arc(
-            [cx - radius, cy - radius, cx + radius, cy + radius],
-            start=start,
-            end=start + sweep,
-            fill=outline,
-            width=3,
+    def bounds(radius: float) -> tuple[float, float, float, float]:
+        r = radius * scale
+        return cx - r, cy - r, cx + r, cy + r
+
+    for radius, width, opacity in ((44, 1.35, 0.32), (30, 1.55, 0.62), (15, 1.4, 0.36)):
+        draw.ellipse(
+            bounds(radius),
+            outline=JADE + (round(255 * opacity),),
+            width=max(1, round(width * scale)),
         )
-    # The core dot.
-    core = 16
-    draw.ellipse([cx - core, cy - core, cx + core, cy + core], fill=CINNABAR)
-    inner = 6
-    draw.ellipse(
-        [cx - inner, cy - inner, cx + inner, cy + inner],
-        fill=PAPER + (180,),
-    )
+    draw.arc(bounds(34), -90, 90, fill=JADE + (230,), width=max(1, round(2.25 * scale)))
+    draw.arc(bounds(34), 90, 270, fill=JADE + (143,), width=max(1, round(1.8 * scale)))
+    draw.ellipse(bounds(7.5), fill=JADE)
+    draw.ellipse(bounds(3.25), fill=PAPER + (184,))
 
 
 def _new_card() -> tuple[Image.Image, ImageDraw.ImageDraw]:
-    """Paper, hairline, and the fingerprint — what every card shares."""
+    """Paper, hairline, and the nucleus — what every card shares."""
     img = Image.new("RGBA", (WIDTH, HEIGHT), PAPER + (255,))
     draw = ImageDraw.Draw(img)
     draw.rectangle([24, 24, WIDTH - 24, HEIGHT - 24], outline=HAIRLINE + (28,), width=1)
-    draw_fingerprint(draw, 250, HEIGHT // 2)
+    draw_nucleus(draw, 250, HEIGHT // 2)
     return img, draw
 
 
@@ -155,12 +147,10 @@ def chapter_card(section: dict, manifest: dict) -> Image.Image:
     text_x = 420
     text_width = WIDTH - text_x - 52
 
-    draw.text((text_x, 132), "DOTHEORY · BOOK ONE", font=_font(SERIF_BOLD, 26), fill=CINNABAR)
+    draw.text((text_x, 132), "DOTHEORY · BOOK ONE", font=_font(ANNOTATION, 22), fill=JADE)
     draw.text((text_x, 186), section_label(section), font=_font(SERIF, 27), fill=INK_SOFT)
 
-    title_font, title_lines = _wrapped(
-        draw, SERIF_BOLD, section["title"], 60, text_width, 3
-    )
+    title_font, title_lines = _wrapped(draw, DISPLAY, section["title"], 60, text_width, 3)
     y = 238
     for line in title_lines:
         draw.text((text_x, y), line, font=title_font, fill=INK)
@@ -183,7 +173,7 @@ def main() -> None:
     text_x = 420
     text_width = WIDTH - text_x - 52
     title_lines = ("The intellectual", "home of DOT.")
-    title_font = _fitted_font(draw, SERIF_BOLD, title_lines, 68, text_width)
+    title_font = _fitted_font(draw, DISPLAY, title_lines, 68, text_width)
     detail_font = _fitted_font(
         draw,
         SERIF,
@@ -192,7 +182,7 @@ def main() -> None:
         text_width,
     )
 
-    draw.text((text_x, 150), "DOT ACADEMY · LIVING INQUIRY", font=_font(SERIF_BOLD, 25), fill=CINNABAR)
+    draw.text((text_x, 150), "DOT ACADEMY · LIVING INQUIRY", font=_font(ANNOTATION, 22), fill=JADE)
     draw.text((text_x, 218), title_lines[0], font=title_font, fill=INK)
     draw.text((text_x, 296), title_lines[1], font=title_font, fill=INK)
     draw.text(
@@ -213,7 +203,7 @@ def main() -> None:
     # Book One keeps a share identity of its own.
     img, draw = _new_card()
     title_lines = ("Consciousness:", "A Digital Organism")
-    title_font = _fitted_font(draw, SERIF_BOLD, title_lines, 72, text_width)
+    title_font = _fitted_font(draw, DISPLAY, title_lines, 72, text_width)
     subtitle_font = _fitted_font(
         draw,
         SERIF,
@@ -224,8 +214,8 @@ def main() -> None:
     tag_font = _font(SERIF, 27)
 
     # "DOT" eyebrow mark.
-    eyebrow_font = _font(SERIF_BOLD, 30)
-    draw.text((text_x, 162), "DOTHEORY", font=eyebrow_font, fill=CINNABAR)
+    eyebrow_font = _font(ANNOTATION, 27)
+    draw.text((text_x, 162), "DOTHEORY", font=eyebrow_font, fill=JADE)
 
     # Book title, wrapped over two lines.
     draw.text((text_x, 214), title_lines[0], font=title_font, fill=INK)
@@ -257,6 +247,16 @@ def main() -> None:
             chapter_card(section, manifest),
             os.path.join(CHAPTER_OUT_DIR, f"{section['slug']}.png"),
         )
+
+    icon = Image.new("RGBA", (640, 640), PAPER + (255,))
+    draw_nucleus(ImageDraw.Draw(icon), 320, 320, 540)
+    solid = Image.new("RGB", icon.size, PAPER)
+    solid.paste(icon, mask=icon.getchannel("A"))
+    solid.resize((180, 180), Image.Resampling.LANCZOS).save(
+        os.path.join(PUBLIC_DIR, "apple-touch-icon.png")
+    )
+    solid.save(os.path.join(PUBLIC_DIR, "favicon-dot.ico"), sizes=[(16, 16), (32, 32)])
+    solid.save(os.path.join(PUBLIC_DIR, "favicon-dot-16.ico"), sizes=[(16, 16)])
 
 
 if __name__ == "__main__":

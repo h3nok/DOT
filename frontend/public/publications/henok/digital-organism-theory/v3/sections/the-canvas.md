@@ -121,7 +121,10 @@ As fragmentation on the Canvas increases, Intent becomes less steady. As fragmen
 Its present mathematical content is directional:
 
 $$
-{\mathbb{E}}\lbrack Coh(I_{t})\  \mid \ E_{C}(t)\  = \ e_{2}\rbrack\  \leq \ {\mathbb{E}}\lbrack Coh(I_{t})\  \mid \ E_{C}(t)\  = \ e_{1}\rbrack\ \ \ for\ e_{2}\  > \ e_{1}\ \ \ (DOT\ directional\ hypothesis)
+\begin{array}{r}
+\text{𝔼[Coh(}\text{I}_{\text{t}}\text{) ∣ }\text{E}_{\text{C}}\text{(t) = }\text{e}_{\text{2}}\text{] ≤ 𝔼[Coh(}\text{I}_{\text{t}}\text{) ∣ }\text{E}_{\text{C}}\text{(t) = }\text{e}_{\text{1}}\text{]   for }\text{e}_{\text{2}}\text{ > }\text{e}_{\text{1}} \\
+\text{   (DOT directional hypothesis)}
+\end{array}
 $$
 
 The inequality states a directional hypothesis: under comparable conditions, higher Canvas entropy $E_{C}$ is expected to be associated with no greater average Intent coherence. It does not assume that the relationship is linear, continuously differentiable, or universal. A scientific version would require operational measures of fragmentation and Intent coherence, specified populations, controls, and testable boundary conditions.

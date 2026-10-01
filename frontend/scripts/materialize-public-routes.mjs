@@ -75,7 +75,7 @@ const STATIC_ROUTES = [
   {
     route: `${BOOK_ROUTE}/copy`,
     title: "Digital Edition — Consciousness: A Digital Organism",
-    description: "Purchase the authenticated digital edition of Digital Organism Theory Book One.",
+    description: "Download the complete free PDF of Digital Organism Theory Book One. No account or payment required; author support is optional.",
   },
 ];
 
@@ -299,10 +299,10 @@ function bookNode(manifest) {
         encodingFormat: "application/pdf",
         url: `${SITE_URL}${BOOK_ROUTE}/copy`,
         inLanguage: "en",
-        isAccessibleForFree: false,
+        isAccessibleForFree: true,
         offers: {
           "@type": "Offer",
-          price: "20.00",
+          price: "0.00",
           priceCurrency: "USD",
           availability: "https://schema.org/InStock",
           url: `${SITE_URL}${BOOK_ROUTE}/copy`,
@@ -515,7 +515,8 @@ export function renderMarkdown(markdown) {
   );
 }
 
-const link = (href, label) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`;
+const link = (href, label, downloadFilename) =>
+  `<a href="${escapeHtml(href)}"${downloadFilename ? ` download="${escapeHtml(downloadFilename)}"` : ""}>${escapeHtml(label)}</a>`;
 const titleOf = (route) => route.title.split(" — ")[0];
 
 function siteNav(essaysPublished) {
@@ -640,6 +641,16 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
         structuredData: graph(bookNode(manifest), breadcrumb([home, book])),
         prerender: page(
           `<h1>${escapeHtml(manifest.project.title)}</h1><p>${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><h2>Contents</h2>${contentsList(manifest)}`,
+        ),
+      };
+    }
+    if (route.route === `${BOOK_ROUTE}/copy`) {
+      const pdf = `/publications/henok/digital-organism-theory/v${manifest.release.version}/digital-organism-theory-book-one.pdf`;
+      return {
+        ...route,
+        structuredData: graph(bookNode(manifest), breadcrumb([home, book, { name: "Free PDF", route: route.route }])),
+        prerender: page(
+          `${heading}<p>${link(pdf, "Download the free PDF", "Digital-Organism-Theory-Book-One-Digital-Edition.pdf")}</p><p>${link(BOOK_ROUTE, "Read the complete living edition")}</p><h2>Support the author, if you wish.</h2><p>Voluntary contributions help fund independent writing and research. The book and PDF remain free either way.</p><p>${link("/support?purpose=author", "Support the author · optional")}</p>`,
         ),
       };
     }

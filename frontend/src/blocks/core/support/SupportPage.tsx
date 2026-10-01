@@ -1,5 +1,5 @@
 import { useReducedMotion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { SupportSurface } from "../../../dot/SupportSurface";
 
@@ -16,12 +16,15 @@ import { SupportSurface } from "../../../dot/SupportSurface";
 export default function SupportPage() {
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion() ?? false;
+  const [query] = useSearchParams();
+  const authorSupport = query.get("purpose") === "author";
 
   return (
     <SupportSurface
       reducedMotion={reducedMotion}
       titleAs="h1"
-      onClose={() => navigate("/", { replace: true })}
+      initialPurpose={authorSupport ? "author" : "lumen"}
+      onClose={() => navigate(authorSupport ? "/book/digital-organism-theory/copy" : "/", { replace: true })}
     />
   );
 }

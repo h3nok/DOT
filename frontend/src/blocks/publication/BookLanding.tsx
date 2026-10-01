@@ -145,7 +145,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
               >
                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
-                PDF edition
+                Free PDF edition
               </Link>
             </div>
             {!savedPath && (

@@ -85,7 +85,7 @@ export interface ReadingFontOption {
 }
 
 export const READING_FONT_OPTIONS: readonly ReadingFontOption[] = [
-  { value: "serif", label: "Serif", face: "Source Serif · Playfair" },
+  { value: "serif", label: "Serif", face: "Source Serif 4" },
   { value: "sans", label: "Sans", face: "Inter · Space Grotesk" },
   { value: "humanist", label: "Open", face: "Wide-set sans" },
   { value: "mono", label: "Mono", face: "JetBrains Mono" },

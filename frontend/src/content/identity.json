@@ -1,0 +1,23 @@
+{
+  "name": "Digital Organism Theory",
+  "accentHue": 158,
+  "light": {
+    "surface": "#f2f0e8",
+    "ink": "#142822",
+    "accent": "#285c4b",
+    "muted": "#4c675c",
+    "border": "#d4ded4"
+  },
+  "dark": {
+    "surface": "#0c1715",
+    "ink": "#f2f0e8",
+    "accent": "#91c8b1",
+    "muted": "#b0c5ba",
+    "border": "#284238"
+  },
+  "fonts": {
+    "display": "Space Grotesk",
+    "reading": "Source Serif 4",
+    "annotation": "JetBrains Mono"
+  }
+}

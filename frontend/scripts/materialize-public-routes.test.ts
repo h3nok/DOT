@@ -129,6 +129,25 @@ describe("public route metadata", () => {
     expect((book.author as unknown as { name: string }).name).toBe(manifest.project.author);
     expect(book.hasPart).toHaveLength(manifest.sections.length);
   });
+
+  it("describes the PDF as free and makes the download work without JavaScript", () => {
+    const route = routes.find((candidate) => candidate.route === "/book/digital-organism-theory/copy")!;
+    const book = nodeOfType(route, "Book");
+    const editions = book?.workExample as Array<{ isAccessibleForFree: boolean; offers: { price: string } }>;
+    expect(editions[0].isAccessibleForFree).toBe(true);
+    expect(editions[0].offers.price).toBe("0.00");
+    expect(route.description).not.toMatch(/purchase|authenticated/);
+    const html = new DOMParser().parseFromString(route.prerender!, "text/html");
+    const download = html.querySelector("a[download]");
+    expect(download?.textContent).toBe("Download the free PDF");
+    expect(download?.getAttribute("href")).toBe(
+      `/publications/henok/digital-organism-theory/v${manifest.release.version}/digital-organism-theory-book-one.pdf`,
+    );
+    expect(download?.getAttribute("download")).toBe(
+      "Digital-Organism-Theory-Book-One-Digital-Edition.pdf",
+    );
+    expect(route.prerender).not.toContain(".docx");
+  });
 });
 
 describe("sitemap", () => {

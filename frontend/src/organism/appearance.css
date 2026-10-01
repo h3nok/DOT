@@ -20,7 +20,8 @@
  * Serif had no rule at all — it fell through to the `:root` values, so the one
  * option a reader is most likely to be using was the only one whose typography
  * was not written down anywhere. Naming it here also makes the pairing legible
- * to the next person: Source Serif sets the prose, Playfair sets the headings.
+ * to the next person: Source Serif sets the prose, Playfair sets classic
+ * headings. identity.css pairs branded serif reading with Space Grotesk.
  *
  * Playfair is a display face. Its small x-height and high stroke contrast thin
  * out badly across a 3,000-word chapter, which is why it carries headings and

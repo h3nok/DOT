@@ -69,3 +69,5 @@ Docs marked *annex* or *superseded* are retained for history and detail.
 | [0031](adr/0031-versioned-academy-kernel.md)                       | Versioned relational Academy kernel with rebuildable projections | Proposed |
 | [0032](adr/0032-one-platform-kernel-many-institutions.md)          | One platform kernel, many institutions; blueprint consolidated to docs 14/15 | Proposed |
 | [0033](adr/0033-author-layer-and-static-essays.md)                 | Author layer: About, static essays with RSS, page text without JavaScript | Proposed |
+| [0034](adr/0034-shared-dot-identity-in-two-lights.md)               | Shared DOT identity: paired system-following defaults, preserved appearances, Word/PDF and channel artwork | Proposed |
+| [0035](adr/0035-free-book-and-voluntary-author-support.md)          | Free online book and PDF; separate one-time author support, no account or payment gate | Proposed |

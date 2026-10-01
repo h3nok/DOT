@@ -22,6 +22,7 @@ const retiredPublicPdfPath = join(
   "consciousness-a-digital-organism-book-one-v2.pdf",
 );
 const protectedPdfPath = join(protectedBooksRoot, "digital-organism-theory-book-one.pdf");
+const publicPdfPath = join(releaseRoot, "digital-organism-theory-book-one.pdf");
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),
 ) as {
@@ -59,7 +60,7 @@ describe("Book One edition v3", () => {
     ).toBe(true);
   });
 
-  it("publishes one protected PDF while keeping public downloads and DOCX private", () => {
+  it("publishes identical free and backend PDFs while keeping the DOCX private", () => {
     const sourceDigest = createHash("sha256")
       .update(readFileSync(manuscriptPath))
       .digest("hex");
@@ -74,5 +75,7 @@ describe("Book One edition v3", () => {
     expect(sourceDigest).toBe(manifest.source.sha256);
     expect(pdf.subarray(0, 5).toString("ascii")).toBe("%PDF-");
     expect(pdf.byteLength).toBeGreaterThan(100_000);
+    expect(readFileSync(publicPdfPath)).toEqual(pdf);
+    expect(readdirSync(releaseRoot).some((file) => file.endsWith(".docx"))).toBe(false);
   });
 });

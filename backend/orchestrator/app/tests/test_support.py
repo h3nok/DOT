@@ -91,6 +91,24 @@ async def test_provider_return_is_verified_before_thanking_the_supporter(
     assert await support_service.checkout_status("cs_test_500") == {"status": "paid"}
 
 
+async def test_author_support_is_one_time_separate_from_book_access(
+    stub_stripe: _StubStripe,
+) -> None:
+    session = _MemorySession()
+    result = await support_service.create_checkout(  # type: ignore[arg-type]
+        session, tier="custom", custom_amount_minor=750, purpose="author"
+    )
+    assert result["amount_minor"] == 750
+    assert session.added[0].purpose == "author"
+    call = stub_stripe.calls[0]
+    assert call["mode"] == "payment"
+    assert "/support?purpose=author&support=thanks" in call["success_url"]
+    assert "/support?purpose=author&support=cancelled" in call["cancel_url"]
+    assert call["metadata"]["purpose"] == "author"
+    assert "commerce_purchase_id" not in call["metadata"]
+    assert "owner_id" not in call["metadata"]
+
+
 def test_options_lists_server_owned_tiers(client: fastapi.testclient.TestClient) -> None:
     body = client.get("/v1/support/options").json()
     assert {tier["id"] for tier in body["tiers"]} == set(models.SUPPORT_TIERS)

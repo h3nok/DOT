@@ -27,6 +27,16 @@ const renderPage = () =>
   );
 
 describe("AboutPage", () => {
+  it("names the book navigation even when its visible text is hidden on mobile", () => {
+    renderPage();
+
+    const context = within(screen.getByRole("navigation", { name: "Page context" }));
+    expect(context.getByRole("link", { name: "Book One" })).toHaveAttribute(
+      "aria-label",
+      "Book One",
+    );
+  });
+
   it("introduces the author in their own words", () => {
     renderPage();
 

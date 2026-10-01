@@ -26,6 +26,7 @@ SUPPORT_TIERS: dict[str, int] = {
     "patron": 10_000,
 }
 SUPPORT_PURPOSES: dict[str, str] = {
+    "author": "Independent writing and research",
     # `lumen` is the stable stored/API key for the companion now named Minty;
     # renaming the key would break existing rows and Stripe metadata.
     "lumen": "Reliable Minty and semantic book search",

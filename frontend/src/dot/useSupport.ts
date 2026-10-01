@@ -5,9 +5,8 @@ import { api } from "./orchestrator";
 /**
  * useSupport — the member-funding client (ADR-0012).
  *
- * The server owns the price list. This hook asks what the tiers are and hands
- * back a Stripe client secret; it never tells the server what an amount should
- * be, and it never learns who else has given — only the totals.
+ * The server owns tiers and validates custom amounts. Checkout is hosted by
+ * Stripe; neither a redirect nor this hook can settle a contribution.
  */
 
 export interface SupportTier {
@@ -43,13 +42,27 @@ export function formatAmount(minor: number, currency = "usd"): string {
   }).format(minor / 100);
 }
 
+export function parseSupportAmount(value: string): number | null {
+  if (!/^\d+(?:\.\d{1,2})?$/.test(value.trim())) return null;
+  const [whole, fraction = ""] = value.trim().split(".");
+  const minor = Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
+  return Number.isSafeInteger(minor) ? minor : null;
+}
+
 export function useSupport() {
   const [options, setOptions] = useState<SupportOptions | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const optionsResult = await api<SupportOptions>("/v1/support/options");
-    if (optionsResult.ok && optionsResult.data) setOptions(optionsResult.data);
+    if (optionsResult.ok && optionsResult.data) {
+      setOptions(optionsResult.data);
+      setError(null);
+    } else {
+      setOptions(null);
+      setError(optionsResult.error ?? "Support details are unavailable.");
+    }
     setLoading(false);
   }, []);
 
@@ -82,17 +95,21 @@ export function useSupport() {
   );
 
   const getCheckoutStatus = useCallback(
-    async (sessionId: string): Promise<SupportCheckoutStatus | null> => {
+    async (sessionId: string): Promise<SupportCheckoutStatus> => {
       const result = await api<{ status: SupportCheckoutStatus }>(
         `/v1/support/checkout-sessions/${encodeURIComponent(sessionId)}`,
       );
-      return result.ok && result.data ? result.data.status : null;
+      if (!result.ok || !result.data) {
+        throw new Error(result.error ?? "Could not verify the contribution.");
+      }
+      return result.data.status;
     },
     [],
   );
 
   return {
     options,
+    error,
     loading,
     available: Boolean(options?.available),
     refresh,

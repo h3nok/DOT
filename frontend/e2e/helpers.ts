@@ -10,6 +10,7 @@ export const PUBLIC_ROUTES = [
   { path: "/support", name: "support" },
   { path: "/studio", name: "studio" },
   { path: "/book/digital-organism-theory", name: "book landing" },
+  { path: "/book/digital-organism-theory/copy", name: "free PDF" },
   { path: "/book/digital-organism-theory/preface", name: "book section" },
   { path: "/about", name: "about" },
   { path: "/essays", name: "essays" },

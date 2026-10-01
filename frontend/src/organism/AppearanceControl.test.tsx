@@ -30,6 +30,7 @@ describe("AppearanceControl", () => {
     delete document.documentElement.dataset.measure;
     delete document.documentElement.dataset.paragraph;
     delete document.documentElement.dataset.paper;
+    delete document.documentElement.dataset.palette;
   });
 
   it("applies and persists display and reading preferences", async () => {
@@ -127,6 +128,8 @@ describe("AppearanceControl", () => {
       .getByText("Fine tune environment")
       .closest("details");
     expect(environmentFineTune).not.toHaveAttribute("open");
+    expect(screen.getByRole("button", { name: "DOT Daylight" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "DOT Night" })).toBeVisible();
     expect(screen.getByRole("button", { name: /^quiet$/i })).toBeVisible();
     expect(screen.getByRole("button", { name: /^meridian$/i })).toBeVisible();
     expect(screen.getByRole("button", { name: /^quiet night$/i })).toBeVisible();

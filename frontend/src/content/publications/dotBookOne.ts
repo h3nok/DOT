@@ -85,6 +85,10 @@ const publicAssetUrl = (path: string) => {
   return `${base}${DOT_BOOK_ONE_ASSET_ROOT}/${path}`.replace(/\/{2,}/g, "/");
 };
 
+export const DOT_BOOK_ONE_PDF_URL = publicAssetUrl(
+  "digital-organism-theory-book-one.pdf",
+);
+
 async function readResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     throw new Error(`Book release request failed: ${response.status}`);

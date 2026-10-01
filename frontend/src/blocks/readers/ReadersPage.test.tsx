@@ -8,12 +8,14 @@ import ReadersPage from "./ReadersPage";
 
 const server = vi.hoisted(() => ({
   available: null as boolean | null,
+  availabilityError: null as string | null,
   leave: vi.fn<(token: string) => Promise<boolean>>(),
 }));
 
 vi.mock("../../dot/useReaderList", () => ({
   useReaderList: () => ({
     available: server.available,
+    availabilityError: server.availabilityError,
     subscribe: vi.fn(),
     confirm: vi.fn(),
     unsubscribe: server.leave,
@@ -23,6 +25,7 @@ vi.mock("../../dot/useReaderList", () => ({
 
 afterEach(() => {
   server.available = null;
+  server.availabilityError = null;
   server.leave.mockReset();
   window.history.replaceState(null, "", "/");
 });
@@ -46,6 +49,22 @@ describe("ReadersPage", () => {
     inRouter(<ReadersPage />);
 
     expect(screen.getByText("The list is not open yet.")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(screen.getByRole("link", { name: "Book One" })).toHaveAttribute(
+      "href",
+      "/book/digital-organism-theory",
+    );
+  });
+
+  it("reports an availability failure without saying the list is closed", () => {
+    server.available = false;
+    server.availabilityError = "The service is unreachable.";
+    inRouter(<ReadersPage />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "The reader list could not be reached.",
+    );
+    expect(screen.queryByText("The list is not open yet.")).toBeNull();
     expect(screen.queryByRole("textbox")).toBeNull();
     expect(screen.getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",

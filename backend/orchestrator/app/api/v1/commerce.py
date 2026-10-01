@@ -20,7 +20,7 @@ async def get_book_one_product() -> schemas.ProductResponse:
     return schemas.ProductResponse(
         id=models.BOOK_ONE_PDF_PRODUCT_ID,
         title="Digital Organism Theory — Book One PDF",
-        amount_minor=models.BOOK_ONE_PDF_PRICE_MINOR,
+        amount_minor=0,
         currency=models.BOOK_ONE_PDF_CURRENCY,
         available=service.is_configured(),
     )
@@ -45,31 +45,18 @@ async def get_book_one_entitlement(
 @_limiter.limit("5/minute")
 async def create_book_one_checkout(
     request: fastapi.Request,
-    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
-        app.auth.dependencies.require_owner
-    ),
-    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.CheckoutResponse:
     try:
-        result = await service.create_checkout(session, owner)
-    except ValueError as exc:
-        raise fastapi.HTTPException(status_code=409, detail=str(exc)) from exc
-    except service.CommerceUnavailableError as exc:
-        raise fastapi.HTTPException(status_code=503, detail=str(exc)) from exc
-    return schemas.CheckoutResponse(**result)
+        service.reject_book_purchase()
+    except service.BookPurchaseRetiredError as exc:
+        raise fastapi.HTTPException(status_code=410, detail=str(exc)) from exc
 
 
 @router.get("/products/book-one-pdf/download")
 @_limiter.limit("20/hour")
 async def download_book_one_pdf(
     request: fastapi.Request,
-    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
-        app.auth.dependencies.require_owner
-    ),
-    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> fastapi.responses.FileResponse:
-    if not await service.has_entitlement(session, owner):
-        raise fastapi.HTTPException(status_code=403, detail="Purchase required.")
     path = service.pdf_path()
     if not path.is_file():
         raise fastapi.HTTPException(status_code=503, detail="Digital edition is unavailable.")
@@ -77,5 +64,5 @@ async def download_book_one_pdf(
         path,
         media_type="application/pdf",
         filename="Digital-Organism-Theory-Book-One-Digital-Edition.pdf",
-        headers={"Cache-Control": "private, no-store"},
+        headers={"Cache-Control": "public, max-age=3600"},
     )

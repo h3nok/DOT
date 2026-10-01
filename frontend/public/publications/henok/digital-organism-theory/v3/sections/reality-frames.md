@@ -122,7 +122,7 @@ World invariants are the nonnegotiable conditions under which action occurs.
 
 Gravity does not pause because a person is kind. Charge does not reverse because a government votes. A body cannot ignore its need for oxygen. A person may invent a machine that flies, but the machine succeeds by working within physical constraints rather than abolishing them.
 
-In RF₀, physics derives and tests formal descriptions of these regularities through causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law. DOT groups the stable constraints they describe under **world invariants** and requires them to arise from the Frame’s state-space and transition structure. The physical sciences are therefore contained as exact downstream accounts of generated regularity.
+In RF₀, physics derives and tests formal descriptions of these regularities through causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law. DOT groups the stable constraints they describe under world invariants and requires them to arise from the Frame’s state-space and transition structure. The physical sciences are therefore contained as exact downstream accounts of generated regularity.
 
 The Frame, in other words, has an outer envelope.
 

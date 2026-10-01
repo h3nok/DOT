@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG, type OrganismConfig } from "./types";
+import identity from "../content/identity.json";
 
 /**
  * Reading environments — the appearance panel's front door.
@@ -23,6 +24,8 @@ import { DEFAULT_CONFIG, type OrganismConfig } from "./types";
  */
 
 export type ThemePresetId =
+  | "dot-daylight"
+  | "dot-night"
   | "quiet"
   | "meridian"
   | "membrane"
@@ -45,6 +48,7 @@ export type PresetConfig = Pick<
   | "stillness"
   | "showMembrane"
   | "enabled"
+  | "palette"
 >;
 
 export interface ThemePreset {
@@ -59,6 +63,7 @@ export interface ThemePreset {
 }
 
 const PRESET_KEYS: Array<keyof PresetConfig> = [
+  "palette",
   "preset",
   "uiStyle",
   "tint",
@@ -71,11 +76,48 @@ const PRESET_KEYS: Array<keyof PresetConfig> = [
 
 export const THEME_PRESETS: ThemePreset[] = [
   {
+    id: "dot-daylight",
+    label: "DOT Daylight",
+    hint: "Warm ivory, green ink, and jade. DOT's quiet radial field in daylight.",
+    base: "light",
+    config: {
+      palette: "dot",
+      preset: "radial",
+      uiStyle: "neural",
+      tint: identity.accentHue,
+      intensity: 0.42,
+      paperTone: "warm",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: identity.light.surface, ink: identity.light.ink, accent: identity.light.accent },
+  },
+  {
+    id: "dot-night",
+    label: "DOT Night",
+    hint: "Living-ink dark, warm-white text, and the same jade field.",
+    base: "dark",
+    config: {
+      palette: "dot",
+      preset: "radial",
+      uiStyle: "neural",
+      tint: identity.accentHue,
+      intensity: 0.42,
+      paperTone: "warm",
+      stillness: false,
+      showMembrane: true,
+      enabled: true,
+    },
+    swatch: { surface: identity.dark.surface, ink: identity.dark.ink, accent: identity.dark.accent },
+  },
+  {
     id: "quiet",
     label: "Quiet",
     hint: "Monochrome daylight. Colour appears only when it carries meaning.",
     base: "light",
     config: {
+      palette: "classic",
       preset: "radial",
       uiStyle: "neural",
       tint: "mono",
@@ -93,6 +135,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Daylight and a living field. The organism at its most present.",
     base: "light",
     config: {
+      palette: "classic",
       preset: "field",
       uiStyle: "organic",
       tint: "auto",
@@ -110,6 +153,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Warm light behind lit glass, with the Reality Stream drawn slowly beneath it.",
     base: "light",
     config: {
+      palette: "classic",
       preset: "flow",
       uiStyle: "neural",
       tint: "auto",
@@ -127,6 +171,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "The Reality Frame, gently warped. Structure you can see through.",
     base: "light",
     config: {
+      palette: "classic",
       preset: "lattice",
       uiStyle: "neural",
       tint: 202,
@@ -144,6 +189,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Nothing behind the words and nothing moving. A quiet daylight page.",
     base: "light",
     config: {
+      palette: "classic",
       preset: "off",
       uiStyle: "organic",
       tint: 212,
@@ -161,6 +207,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Monochrome night. The same field, with no coloured cast.",
     base: "dark",
     config: {
+      palette: "classic",
       preset: "radial",
       uiStyle: "neural",
       tint: "mono",
@@ -178,6 +225,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Deep indigo behind lit glass, with the Reality Stream drawn slowly beneath it.",
     base: "dark",
     config: {
+      palette: "classic",
       preset: "flow",
       uiStyle: "neural",
       tint: 212,
@@ -195,6 +243,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Centres of experience firing in the dark. The organism at full vitality.",
     base: "dark",
     config: {
+      palette: "classic",
       preset: "dots",
       uiStyle: "neural",
       tint: 288,
@@ -212,6 +261,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Dark ground, violet depth, contours moving slowly behind the text.",
     base: "dark",
     config: {
+      palette: "classic",
       preset: "topology",
       uiStyle: "cinematic",
       tint: 265,
@@ -229,6 +279,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     hint: "Warm dark and slow strokes. The long night reading, without the glare.",
     base: "dark",
     config: {
+      palette: "classic",
       preset: "ink",
       uiStyle: "organic",
       tint: 26,
@@ -245,9 +296,8 @@ export const THEME_PRESETS: ThemePreset[] = [
 /**
  * The environment a reader lands in before they have chosen anything.
  *
- * Both are the same idea in two lights: a slowly breathing monochrome Radial field, a neural
- * surface, and Source Serif for long-form. Colour remains available as a reader
- * choice and for semantics, but it does not tint the first encounter.
+ * One identity in two lights: warm ivory or living ink, a jade Radial field,
+ * and Source Serif for long-form. Existing saved palettes stay untouched.
  *
  * Naming the defaults as environments rather than as a loose bag of values is
  * deliberate: a reader who opens the panel on their first visit sees the
@@ -255,8 +305,8 @@ export const THEME_PRESETS: ThemePreset[] = [
  * would describe a choice they never made.
  */
 export const DEFAULT_ENVIRONMENT: Record<"light" | "dark", ThemePresetId> = {
-  light: "quiet",
-  dark: "quiet-night",
+  light: "dot-daylight",
+  dark: "dot-night",
 };
 
 /**

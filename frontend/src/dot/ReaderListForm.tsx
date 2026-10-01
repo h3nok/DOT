@@ -31,6 +31,8 @@ interface ReaderListFormProps {
    * list has to say something.
    */
   fallback?: React.ReactNode;
+  /** A status failure is not evidence that the steward closed the list. */
+  unavailableFallback?: React.ReactNode;
 }
 
 const FIELD =
@@ -41,8 +43,9 @@ const ACTION =
 export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   source = "book",
   fallback = null,
+  unavailableFallback = null,
 }) => {
-  const { available, subscribe, confirm } = useReaderList();
+  const { available, availabilityError, subscribe, confirm } = useReaderList();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [stage, setStage] = useState<"form" | "confirm" | "done">("form");
@@ -52,6 +55,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   const emailId = useId();
   const codeId = useId();
 
+  if (availabilityError) return <>{unavailableFallback}</>;
   if (available === false) return <>{fallback}</>;
   if (available !== true) return null;
 

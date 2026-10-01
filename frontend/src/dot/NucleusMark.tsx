@@ -17,8 +17,8 @@
  */
 
 interface NucleusMarkProps {
-  /** Diameter in px. The mark scales crisply to any size. */
-  size?: number;
+  /** Diameter in px or a CSS length, such as 100% of a square cover frame. */
+  size?: number | string;
   /** The mark at work: its own parts in motion while an answer is forming. */
   thinking?: boolean;
   reducedMotion?: boolean;
