@@ -1,5 +1,5 @@
 /* A primary action with paper, ink and a soft field, without a drawn frame.
-   The paired palette tokens preserve text contrast across appearances. */
+   OKLab keeps low-chroma paper and ink from losing their hue in the blend. */
 .dot-button {
   position: relative;
   isolation: isolate;
@@ -12,7 +12,7 @@
   padding: 0.75rem 1rem;
   border: 0;
   border-radius: min(var(--appearance-ui-control-radius, 0.75rem), 0.75rem);
-  background: color-mix(in oklch, var(--background) 96%, var(--foreground));
+  background: color-mix(in oklab, var(--background) 96%, var(--foreground));
   box-shadow: none;
   color: var(--foreground);
   font-family: var(--identity-display-font, var(--font-sans, sans-serif));
@@ -36,7 +36,7 @@
   border-radius: inherit;
   background: radial-gradient(
     ellipse at 0% 50%,
-    color-mix(in oklch, var(--organism-accent-strong, var(--foreground)) 14%, transparent),
+    color-mix(in oklab, var(--organism-accent-strong, var(--foreground)) 14%, transparent),
     transparent 72%
   );
   opacity: 0;
@@ -54,7 +54,7 @@
 }
 
 .dot-button:focus-visible .dot-button__end-icon {
-  background: color-mix(in oklch, var(--foreground) 8%, transparent);
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
 }
 
 .dot-button:focus-visible .dot-button__copy strong {
@@ -62,7 +62,7 @@
 }
 
 .dot-button:not(:disabled):active {
-  background: color-mix(in oklch, var(--background) 91%, var(--foreground));
+  background: color-mix(in oklab, var(--background) 91%, var(--foreground));
 }
 
 .dot-button:disabled {
@@ -98,7 +98,7 @@
 .dot-button__copy > span {
   display: block;
   margin-top: 0.25rem;
-  color: color-mix(in oklch, var(--foreground) 84%, var(--background));
+  color: color-mix(in oklab, var(--foreground) 84%, var(--background));
   font-size: 0.8125rem;
   line-height: 1.5;
   text-wrap: balance;
@@ -125,7 +125,7 @@
   }
 
   .dot-button:not(:disabled):hover .dot-button__end-icon {
-    background: color-mix(in oklch, var(--foreground) 8%, transparent);
+    background: color-mix(in oklab, var(--foreground) 8%, transparent);
   }
 
   .dot-button:not(:disabled):hover .dot-button__copy strong {
