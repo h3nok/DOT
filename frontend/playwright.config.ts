@@ -30,6 +30,9 @@ export default defineConfig({
   ],
   webServer: {
     command: `pnpm exec vite --port ${PORT} --strictPort`,
+    // The preview and test server must never rewrite each other's optimized
+    // dependencies when a lockfile update causes Vite to refresh its cache.
+    env: { DOT_VITE_CACHE_DIR: ".vite-cache/playwright" },
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

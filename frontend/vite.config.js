@@ -11,9 +11,11 @@ export default defineConfig({
   // Keep generated optimizer state outside node_modules. Local containers have
   // historically mounted that directory under a different uid, which leaves
   // Vite unable to refresh stale lazy-module dependencies.
-  cacheDir: ".vite-cache",
+  cacheDir: process.env.DOT_VITE_CACHE_DIR || ".vite-cache",
   plugins: [
-    react(),
+    // The optimizer lives outside node_modules, so explicitly keep its
+    // generated dependencies out of Babel and React Fast Refresh.
+    react({ exclude: /[/\\]\.vite-cache[/\\]/ }),
     tailwindcss(),
     // Publishes src/content/essays as /essays/index.json + /essays/<slug>.md
     // and refuses to build if an essay's front matter is incomplete (ADR-0033).
