@@ -38,6 +38,30 @@ models, hypotheses, and speculation visibly distinct.
 - Modern, accessible design
 - Community engagement platform
 
+### Public-entry diagram
+
+The homepage opens with "What shapes the life you live?", one short
+consciousness-first proposition, its hypothesis status, and a primary reading
+invitation to the free preface. A quiet "Explore the model" link leads to the
+four theory panels. The code-native SVG accompanies the invitation on desktop
+and follows it on phones. Its definitions and the Book One question tools
+open only when requested. The Academy remains available at the page's ending.
+
+Theme-derived ink, non-scaling strokes, responsive labels, and a short
+conceptual-boundary caption keep the model legible in both DOT palettes.
+Browser tests check rendered contrast, label overlap, reading-first order,
+keyboard access, expandable explanations, tablet layouts, and 320px-phone
+overflow. This serves L1, L8, and L10; violates none.
+
+The entry composes the existing identity and appearance tokens, page heading
+and lede styles, and `EpistemicBadge`. `attention-os/focus-nav/FocusNav.tsx`
+implements P3's single-primary-action contract for both the opening and ending.
+`shared/Disclosure.tsx` provides the initially closed, keyboard-accessible
+explanations. Colour, type, control radius, contrast, and stillness stay owned
+by the shared system; the home stylesheet owns the composition and diagram.
+Reader/P2 remains the book's reading primitive. Focus Modes/P1, Intention/P4,
+and Presence/P5 are not implemented by this release.
+
 ## Book One
 
 The current digital edition is available at:

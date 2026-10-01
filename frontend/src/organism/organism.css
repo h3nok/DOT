@@ -538,6 +538,22 @@ html[data-organism=\"on\"][data-organism-mood=\"active\"] .dot-surface {
   color: color-mix(in oklch, var(--muted-foreground) 80%, transparent);
 }
 
+/* Inline claim status for introductions; the semantic status stays intact. */
+.dot-epistemic-badge[data-presentation="text"] {
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--muted-foreground);
+  font-family: var(--identity-display-font, var(--font-sans, sans-serif));
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: normal;
+}
+
 /* --- Card: DOT's bounded surface ---------------------------------------
    The one container for claims, citations, and pathways. Everything it
    holds — label, badge, body — stays inside its boundary. The top hairline

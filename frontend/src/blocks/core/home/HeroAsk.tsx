@@ -106,27 +106,6 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
           {/* The mark the pen leaves. It is the whole of the pen we show. */}
           <InkStroke width={strokeWidth} className="home-ask__stroke" />
 
-          <fieldset className="home-ask__lenses" aria-label="Inquiry lens">
-            <button
-              type="button"
-              aria-pressed={selectedLens === "ground"}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => setSelectedLens("ground")}
-              title="Ground the answer in source passages"
-            >
-              Ground
-            </button>
-            <button
-              type="button"
-              aria-pressed={selectedLens === "test"}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => setSelectedLens("test")}
-              title="Test the claim and expose weak points"
-            >
-              Test
-            </button>
-          </fieldset>
-
           {query.trim() && (
             <button
               type="button"
@@ -148,9 +127,31 @@ export function HeroAsk({ onAsk, className = "" }: HeroAskProps) {
           </button>
         </div>
 
+        <div className="home-inquiry__controls">
+          <fieldset className="home-ask__lenses" aria-label="Inquiry lens">
+            <button
+              type="button"
+              aria-pressed={selectedLens === "ground"}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setSelectedLens("ground")}
+              title="Ground the answer in source passages"
+            >
+              Ground
+            </button>
+            <button
+              type="button"
+              aria-pressed={selectedLens === "test"}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setSelectedLens("test")}
+              title="Test the claim and expose weak points"
+            >
+              Test
+            </button>
+          </fieldset>
+        </div>
+
         <p id="hero-ask-description" className="home-inquiry__note">
-          Try “Do we ever really choose?” — answers cite the released text.
-          Ground anchors them in passages; Test challenges the claim.
+          Answers cite Book One. Ground explains the text; Test examines its weak points.
         </p>
       </form>
     </div>

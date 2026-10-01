@@ -271,6 +271,19 @@ describe("page text for readers without JavaScript", () => {
     expect(html).toContain('href="/about"');
   });
 
+  it("carries the paradigm and lived inquiry into metadata and the script-free home", () => {
+    const description = /name="description"\s+content="([^"]+)"/.exec(shell)?.[1];
+    expect(description).toContain("new consciousness-first paradigm");
+    expect(description).toContain("reality and human purpose");
+    expect(description).toContain("study, questioning, and lived experience");
+    for (const field of ["og:description", "twitter:description"]) {
+      const content = new RegExp(`(?:name|property)="${field}"\\s+content="([^"]+)"`)
+        .exec(shell)?.[1];
+      expect(content).toBe(description);
+    }
+    expect(rootDocument(shell, manifest)).toContain(`<p>${description}</p>`);
+  });
+
   it("keeps the leave page out of search engines", () => {
     const leave = routeAt("/readers/leave");
     expect(leave.noindex).toBe(true);

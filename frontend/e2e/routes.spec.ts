@@ -28,34 +28,36 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "A theory of reality has to account for you." }),
+      hero.getByRole("heading", { name: "What shapes the life you live?" }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
       name: "Ask a question about Digital Organism Theory",
     });
-    await expect(inquiry).toHaveCount(1);
-    if ((page.viewportSize()?.width ?? 0) >= 800) {
-      await expect(inquiry).toBeVisible();
-    }
+    await expect(inquiry).toHaveCount(0);
+    await hero.getByText("Have a question about Book One?", { exact: true }).click();
+    await expect(inquiry).toBeVisible();
+    await inquiry.fill("What is consciousness?");
+    await expect(hero.getByRole("button", { name: "Ask Book One", exact: true })).toBeEnabled();
+    expect((await inquiry.boundingBox())?.width).toBeGreaterThanOrEqual(120);
     await expect(page.locator(".home-journey-nav ol")).toHaveCount(0);
 
-    const caption = await hero.locator("figcaption").textContent();
-    expect(caption?.trim().split(/\s+/).length).toBeLessThanOrEqual(120);
+    const caption = await hero.locator(".home-architecture-caption-visible").innerText();
+    expect(caption.trim().split(/\s+/).length).toBeLessThanOrEqual(12);
   });
 
-  test("renders the proposition, the architecture figure and both actions", async ({
+  test("renders a short proposition, the architecture figure and one reading action", async ({
     page,
   }) => {
     await page.goto("/");
 
-    await expect(page.locator(".home-hero-reversal")).toBeVisible();
-    await expect(page.locator(".home-hero-architecture svg")).toBeVisible();
+    await expect(page.locator(".home-hero-lede")).toBeVisible();
+    await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
-    const academy = actions.getByRole("link", { name: "Preview the Academy" });
-    await expect(academy).toBeVisible();
-    await expect(academy).toHaveAttribute("href", "/academy");
+    const model = actions.getByRole("link", { name: "Explore the model" });
+    await expect(model).toBeVisible();
+    await expect(model).toHaveAttribute("href", "#possibility-field");
     await expect(actions.getByRole("link", { name: "Read Book One" })).toBeVisible();
   });
 
@@ -71,7 +73,7 @@ test.describe("hero", () => {
       "T · E",
       "Big C",
       "RF0",
-      "Your awarenessradius",
+      "Awareness radius",
       "Little c",
     ]);
     await expect(labels.locator("rect")).toHaveCount(0);

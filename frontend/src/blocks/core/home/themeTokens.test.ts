@@ -23,6 +23,7 @@ const HERO_FILES = [
   "HeroConcepts.tsx",
   "HeroAsk.tsx",
   "HeroArchitecture.tsx",
+  "HeroArchitectureLabels.tsx",
   "HeroProposition.tsx",
   "TheoryLayerJourney.tsx",
   "HomeJourneyNav.tsx",
@@ -31,6 +32,12 @@ const HERO_FILES = [
 ] as const;
 
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");
+
+function readArchitecture() {
+  return ["HeroArchitecture.tsx", "HeroArchitectureLabels.tsx"]
+    .map((file) => readFileSync(join(HERE, file), "utf8"))
+    .join("\n");
+}
 
 /** `#fff`, `#f2ead9`, `rgb(...)`, `rgba(...)`, `hsl(...)` written literally. */
 const LITERAL_COLOUR = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/;
@@ -76,8 +83,9 @@ describe("home entry theme compatibility", () => {
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
-    expect(proposition).toContain("dot-reading-action home-hero-primary-action");
-    expect(proposition).toContain("appearance-ui-control home-hero-secondary-action");
+    expect(proposition).toContain("<FocusNav");
+    expect(proposition).toContain("<Disclosure");
+    expect(proposition).toContain('presentation="text"');
     expect(proposition).not.toContain("<ul");
     expect(home).toContain("<HeroAsk");
     expect(home).toContain("<TwinSurface");
@@ -104,7 +112,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("keeps the architecture optically sharp at fractional SVG scales", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(architecture).toContain("home-architecture-label-subscript");
@@ -128,7 +136,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("keeps the two arrow vocabularies distinct and the intent trace singular", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     // Inbound options arrive at the awareness radius; the chevron stays open.
@@ -157,7 +165,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("uses geometry rather than a Reflection label to communicate spatial return", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
 
     expect(architecture).not.toContain('data-label="reflection"');
     expect(architecture).not.toContain("home-architecture-spatial-lattice");
@@ -168,22 +176,22 @@ describe("home entry theme compatibility", () => {
     expect(architecture).not.toContain("PEER_FRAMES");
     expect(architecture).not.toContain('data-depth={depth}');
     expect(architecture).not.toContain("home-architecture-frame-horizon");
-    // Coupling semantics live in the accessible caption now, not a legend.
-    expect(architecture).toContain("constraint · consequence");
+    // Coupling semantics remain in the transcription and optional guide.
+    expect(architecture).toContain("constraint and consequence");
   });
 
   it("states the theory's epistemic status without overclaiming the ontology", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
 
     // The visible heading is gone; the caption still declares the status.
-    expect(architecture).toContain("stated as hypothesis");
+    expect(architecture).toContain("A proposed model");
     expect(architecture).toContain("T · E");
     expect(architecture).toContain("Big C");
     expect(architecture).toContain("RF₀");
     expect(architecture).toContain("Little c");
     expect(architecture).toContain("T and E precede Big C");
-    expect(architecture).toMatch(/conceptual\s+domains,\s+not\s+spatial\s+boundaries/);
-    expect(architecture).toContain("Intent · embodied action");
+    expect(architecture).toMatch(/Conceptual\s+rings,\s+not\s+spatial\s+boundaries/);
+    expect(architecture).toContain("Intent and embodied action");
     expect(architecture).not.toContain("possibility within Big C");
     expect(architecture).not.toContain("ONE OF MANY");
     expect(architecture).not.toContain("RFᵢ");
@@ -193,7 +201,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("depicts RF₀ as a social environment that can brighten awareness", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(architecture).toContain("SOCIAL_CENTRES");
@@ -207,7 +215,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("labels the rings through protected gaps and keys each layer by colour", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(architecture).toContain('data-layer="origin"');
@@ -239,7 +247,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("renders one canonical architecture for every appearance style", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     // One personality: the drawing no longer shape-shifts with the UI style.
@@ -256,7 +264,7 @@ describe("home entry theme compatibility", () => {
   });
 
   it("keeps the architecture presentational rather than cursor-driven", () => {
-    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(architecture).not.toContain("onPointer");

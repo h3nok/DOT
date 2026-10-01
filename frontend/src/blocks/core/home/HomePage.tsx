@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  ChevronDown,
   LogIn,
   Network,
 } from "lucide-react";
@@ -15,6 +14,7 @@ import { useAuth } from "../../../dot/useAuth";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
+import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
@@ -116,7 +116,6 @@ export default function HomePage() {
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
           <HeroProposition
-            reducedMotion={organismReducedMotion}
             inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
             stage={
               <div className="home-hero-stage">
@@ -125,11 +124,6 @@ export default function HomePage() {
             }
           />
         </div>
-
-        <a className="home-scroll-cue" href="#possibility-field">
-          <span>Continue</span>
-          <ChevronDown className="h-4 w-4" aria-hidden="true" />
-        </a>
       </section>
 
       <AnimatePresence>
@@ -169,25 +163,17 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="home-path-actions mx-auto mt-10 max-w-3xl">
-            <Link
-              to="/academy"
-              className="dot-reading-action group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-lg px-6 text-sm font-semibold"
-            >
-              <Network className="h-4 w-4" aria-hidden="true" />
-              Enter DOT Academy
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-
-            <Link
-              to="/book/digital-organism-theory"
-              className="home-path-secondary group"
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-              Read Book One as a fixed edition
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
+          <FocusNav
+            label="Continue the inquiry"
+            className="mx-auto mt-10 max-w-sm"
+            primary={{ to: "/academy", label: "Enter DOT Academy", icon: <Network /> }}
+            secondary={[{
+              to: "/book/digital-organism-theory",
+              label: "Read Book One as a fixed edition",
+              icon: <BookOpen />,
+              endIcon: <ArrowRight />,
+            }]}
+          />
         </div>
       </motion.section>
 

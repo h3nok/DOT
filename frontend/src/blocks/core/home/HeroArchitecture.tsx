@@ -1,7 +1,9 @@
 import { useId } from "react";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
+import { Disclosure } from "../../../shared/Disclosure";
 
 import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
@@ -148,9 +150,10 @@ export function HeroArchitecture() {
   const threadId = `${instanceId}-hero-thread`;
   const frameClipId = `${instanceId}-hero-frame-clip`;
   const captionId = `${instanceId}-hero-architecture-caption`;
+  const descriptionId = `${instanceId}-hero-architecture-description`;
 
   return (
-    <figure className="home-hero-architecture" aria-labelledby={captionId}>
+    <figure className="home-hero-architecture" aria-labelledby={captionId} aria-describedby={descriptionId}>
       <svg
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
@@ -531,77 +534,35 @@ export function HeroArchitecture() {
           />
         </g>
 
-        <g className="home-architecture-ring-labels">
-          <g className="home-architecture-ring-label" data-layer="origin">
-            <a href="#possibility-field" aria-label="T · E — read about continuity and possibility">
-              <text x="147" y="110" textAnchor="middle">
-                T · E
-              </text>
-            </a>
-          </g>
-          <g className="home-architecture-ring-label" data-layer="big-c">
-            <a href="#big-c" aria-label="Big C — read about the first conscious organism">
-              <text x="535" y="138" textAnchor="middle">
-                Big C
-              </text>
-            </a>
-          </g>
-          <g className="home-architecture-ring-label" data-layer="reality-frame">
-            <a href="#reality-frame" aria-label="RF₀ — read about the physical universe as a Reality Frame">
-              <text x="187" y="244" textAnchor="middle">
-                <tspan>RF</tspan>
-                <tspan className="home-architecture-label-subscript" fontSize="10.5">
-                  0
-                </tspan>
-              </text>
-            </a>
-          </g>
-          <g className="home-architecture-ring-label" data-layer="awareness-radius">
-            {/* Anchored on the ring's base and stacked directly beneath it, so
-                the whole label stays inside RF₀ without reaching the Big C zone. */}
-            <circle className="home-architecture-awareness-callout-dot" cx="348" cy="424" r="2.2" />
-            <line
-              className="home-architecture-label-leader"
-              x1="348"
-              y1="427"
-              x2="348"
-              y2="438"
-            />
-            <text x="348" y="452" textAnchor="middle">
-              <tspan x="348">Your awareness</tspan>
-              <tspan x="348" dy="14.5">
-                radius
-              </tspan>
-            </text>
-          </g>
-          <g className="home-architecture-ring-label" data-layer="little-c">
-            <line
-              className="home-architecture-label-leader"
-              x1="382"
-              y1="352"
-              x2="420"
-              y2="352"
-            />
-            <a href="#little-c" aria-label="Little c — read about the local experiencer">
-              <text x="455" y="357" textAnchor="middle">
-                Little c
-              </text>
-            </a>
-          </g>
-        </g>
+        <HeroArchitectureLabels />
       </svg>
 
-      <figcaption id={captionId} className="sr-only">
-          Conceptual map of DOT's proposed architecture, stated as hypothesis:
-          T and E precede Big C; Big C generates RF₀; and Little c — the position
-          you occupy as reader — experiences and acts within RF₀. RF₀ is also a
-          social environment: other Little c centres, each with an unequal
-          awareness radius, relate within it. Those relations meet your awareness
-          boundary and can brighten what you know and perceive. RF₀ reaches
-          Little c as constraint · consequence and presents options at your
-          awareness radius; Little c reflects, chooses one, and reaches back into
-          RF₀ as Intent · embodied action. The rings distinguish conceptual
-          domains, not spatial boundaries.
+      <figcaption className="home-architecture-caption">
+        <span id={captionId} className="home-architecture-caption-visible">
+          A proposed model · Conceptual rings, not spatial boundaries
+        </span>
+        <span id={descriptionId} className="sr-only">
+          T and E precede Big C; Big C generates RF₀, the physical universe;
+          Little c experiences and acts within RF₀. Virtual means generated,
+          not unreal. RF₀ is also a social environment. Other Little c centres
+          have unequal awareness radii.
+          Relations meet your awareness boundary. RF₀ presents options and
+          returns constraint and consequence; Little c reflects, chooses, and
+          acts through Intent and embodied action.
+        </span>
+        <Disclosure className="home-architecture-guide" summary="How to read this model">
+          <dl>
+            <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
+            <div><dt>Big C</dt><dd>The proposed conscious organism that generates our world.</dd></div>
+            <div><dt>RF₀</dt><dd>The physical universe: generated in this model, with real consequences.</dd></div>
+            <div><dt>Little c</dt><dd>You, the local experiencer: noticing, choosing, and living with what follows.</dd></div>
+          </dl>
+          <p>
+            Your awareness radius marks the options you can perceive. Other
+            experiencers can broaden that awareness. Intent becomes embodied
+            action; the world returns constraint and consequence.
+          </p>
+        </Disclosure>
       </figcaption>
     </figure>
   );

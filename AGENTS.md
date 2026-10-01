@@ -43,9 +43,10 @@ Member UI is *intended* to be composed from `frontend/src/attention-os/` primiti
 Star §5): Focus Modes (P1), Reader (P2), Single-Focus Navigation (P3), Intention &
 Attention Budget (P4), Presence & Ambient Signals (P5).
 
-**Reality check (verify before relying on this):** only **P2 (Reader)** exists today, as
-`attention-os/reader/BookMarkdown.tsx`. P1, P3, P4, and P5 are **not implemented**. Existing
-surfaces are ad-hoc components under `dot/` and `blocks/`. If you need a primitive that does
+**Reality check (verify before relying on this):** **P2 (Reader)** exists as
+`attention-os/reader/BookMarkdown.tsx`, and **P3 (Single-Focus Navigation)** as
+`attention-os/focus-nav/FocusNav.tsx`. P1, P4, and P5 are **not implemented**. Existing
+surfaces still include ad-hoc components under `dot/` and `blocks/`. If you need a primitive that does
 not exist, either build it in `attention-os/` as a reusable module or say plainly that you
 did not — do not claim to have composed from primitives that are absent.
 

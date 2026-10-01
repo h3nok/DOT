@@ -1,0 +1,93 @@
+.dot-focus-nav {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  font-family: var(--identity-display-font, var(--font-sans, sans-serif));
+}
+
+/* The paired foreground/background tokens preserve contrast in every palette.
+   This intentional action stays solid even when ambient chrome is translucent. */
+:root .dot-focus-nav > .dot-focus-nav__primary {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--foreground);
+  border-radius: min(var(--appearance-ui-control-radius, 0.75rem), 0.875rem);
+  background: var(--foreground);
+  box-shadow: none;
+  color: var(--background);
+  text-align: left;
+  text-decoration: none;
+  backdrop-filter: none;
+}
+
+:root .dot-focus-nav > .dot-focus-nav__primary:hover {
+  background: color-mix(in oklch, var(--foreground) 92%, var(--background));
+}
+
+.dot-focus-nav__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.dot-focus-nav__copy strong {
+  display: block;
+  font-family: var(--identity-reading-font, var(--font-serif, serif));
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.dot-focus-nav__copy > span {
+  display: block;
+  margin-top: 0.25rem;
+  color: color-mix(in oklch, var(--background) 90%, var(--foreground));
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dot-focus-nav__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.dot-focus-nav__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.dot-focus-nav__secondary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+  border-radius: min(var(--appearance-ui-control-radius, 0.75rem), 0.875rem);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.dot-focus-nav__secondary:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.dot-focus-nav > a:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-focus-nav > a {
+    transition: none;
+  }
+}
+
+html[data-motion="still"] .dot-focus-nav > a {
+  transition: none;
+}

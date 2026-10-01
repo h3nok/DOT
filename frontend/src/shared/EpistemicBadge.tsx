@@ -18,6 +18,7 @@ interface EpistemicBadgeProps {
   className?: string;
   prefix?: ReactNode;
   title?: string;
+  presentation?: "badge" | "text";
 }
 
 /**
@@ -31,11 +32,13 @@ export function EpistemicBadge({
   className = "",
   prefix,
   title,
+  presentation = "badge",
 }: EpistemicBadgeProps) {
   return (
     <span
       className={`dot-epistemic-badge dot-label dot-micro inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 ${className}`}
       data-epistemic-status={status}
+      data-presentation={presentation}
       title={title}
     >
       {prefix}
