@@ -51,7 +51,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       const headingStyle = getComputedStyle(heading);
       const lifeStyle = getComputedStyle(life);
       const readingStyle = getComputedStyle(read);
-      const readingNote = read.querySelector(".dot-focus-nav__copy > span");
+      const readingNote = read.querySelector(".dot-button__copy > span");
       if (!readingNote) throw new Error("Reading invitation has no description");
 
       return {

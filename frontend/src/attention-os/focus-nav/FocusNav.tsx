@@ -1,6 +1,7 @@
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { DotButton } from "../../shared/DotButton";
 import "./focus-nav.css";
 
 type Destination = { to: string; href?: never } | { href: string; to?: never };
@@ -21,28 +22,13 @@ interface FocusNavProps {
 
 /** P3: one immediately available action, with quiet, reader-directed alternatives. */
 export function FocusNav({ label, primary, secondary = [], className = "" }: FocusNavProps) {
-  const id = useId();
-  const primaryContent = (
-    <>
-      {primary.icon && <span className="dot-focus-nav__icon" aria-hidden="true">{primary.icon}</span>}
-      <span className="dot-focus-nav__copy">
-        <strong id={`${id}-title`}>{primary.label}</strong>
-        {primary.description && <span id={`${id}-description`}>{primary.description}</span>}
-      </span>
-      <span className="dot-focus-nav__icon dot-focus-nav__advance" aria-hidden="true">{primary.endIcon ?? <ArrowRight />}</span>
-    </>
-  );
-  const primaryProps = {
-    className: "dot-reading-action dot-focus-nav__primary",
-    "aria-labelledby": `${id}-title`,
-    "aria-describedby": primary.description ? `${id}-description` : undefined,
-  };
-
   return (
     <nav aria-label={label} className={`dot-focus-nav ${className}`}>
-      {primary.to !== undefined
-        ? <Link to={primary.to} {...primaryProps}>{primaryContent}</Link>
-        : <a href={primary.href} {...primaryProps}>{primaryContent}</a>}
+      <DotButton
+        {...primary}
+        className="dot-focus-nav__primary"
+        endIcon={primary.endIcon ?? <ArrowRight />}
+      />
       {secondary.map((action) => {
         const content = (
           <>

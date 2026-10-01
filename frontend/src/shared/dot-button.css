@@ -1,0 +1,165 @@
+/* A primary action with paper, ink and a soft field, without a drawn frame.
+   The paired palette tokens preserve text contrast across appearances. */
+.dot-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-width: 0;
+  min-height: 2.75rem;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: min(var(--appearance-ui-control-radius, 0.75rem), 0.75rem);
+  background: color-mix(in oklch, var(--background) 96%, var(--foreground));
+  box-shadow: none;
+  color: var(--foreground);
+  font-family: var(--identity-display-font, var(--font-sans, sans-serif));
+  text-align: left;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.dot-button[data-description] {
+  min-height: 5.5rem;
+  padding-block: 1rem;
+}
+
+.dot-button::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse at 0% 50%,
+    color-mix(in oklch, var(--organism-accent-strong, var(--foreground)) 14%, transparent),
+    transparent 72%
+  );
+  opacity: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.dot-button:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+.dot-button:focus-visible::before {
+  opacity: 1;
+}
+
+.dot-button:focus-visible .dot-button__end-icon {
+  background: color-mix(in oklch, var(--foreground) 8%, transparent);
+}
+
+.dot-button:focus-visible .dot-button__copy strong {
+  text-decoration-color: currentColor;
+}
+
+.dot-button:not(:disabled):active {
+  background: color-mix(in oklch, var(--background) 91%, var(--foreground));
+}
+
+.dot-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dot-button__icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  place-items: center;
+}
+
+.dot-button__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.dot-button__copy strong {
+  display: block;
+  font-family: var(--identity-reading-font, var(--font-serif, serif));
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.dot-button__copy > span {
+  display: block;
+  margin-top: 0.25rem;
+  color: color-mix(in oklch, var(--foreground) 84%, var(--background));
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.dot-button__icon > svg,
+.dot-button__end-icon > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.dot-button__end-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  place-items: center;
+}
+
+@media (hover: hover) {
+  .dot-button:not(:disabled):hover::before {
+    opacity: 1;
+  }
+
+  .dot-button:not(:disabled):hover .dot-button__end-icon {
+    background: color-mix(in oklch, var(--foreground) 8%, transparent);
+  }
+
+  .dot-button:not(:disabled):hover .dot-button__copy strong {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Feedback is finite and reader-initiated. Stillness leaves the arrow in place
+   and makes all feedback immediate, including children and pseudo elements. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .dot-button,
+  html:not([data-motion="still"]) .dot-button__end-icon {
+    transition: background-color 180ms ease;
+  }
+
+  html:not([data-motion="still"]) .dot-button::before {
+    transition: opacity 180ms ease;
+  }
+
+  html:not([data-motion="still"]) .dot-button__copy strong {
+    transition: text-decoration-color 180ms ease;
+  }
+
+  html:not([data-motion="still"]) .dot-button__end-icon > svg {
+    transition: transform 180ms ease;
+  }
+
+  html:not([data-motion="still"]) .dot-button[data-directional]:focus-visible .dot-button__end-icon > svg {
+    transform: translateX(3px);
+  }
+
+  @media (hover: hover) {
+    html:not([data-motion="still"]) .dot-button[data-directional]:hover .dot-button__end-icon > svg {
+      transform: translateX(3px);
+    }
+  }
+}
