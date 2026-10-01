@@ -157,16 +157,16 @@ export default function HomePage() {
               Continue with the Academy.
             </h2>
             <p className="dot-lede mx-auto mt-4 max-w-xl">
-              Start with a question, compare the claims with the evidence, or
-              bring an objection. The Academy is where the ideas can be revised.
-              Book One remains a fixed edition.
+              Read the definitions and examine the questions DOT has yet to
+              answer. The Academy is in development; Book One remains a fixed
+              edition.
             </p>
           </div>
 
           <FocusNav
             label="Continue the inquiry"
             className="mx-auto mt-10 max-w-sm"
-            primary={{ to: "/academy", label: "Enter DOT Academy", icon: <Network /> }}
+            primary={{ to: "/academy", label: "Explore DOT Academy", icon: <Network /> }}
             secondary={[{
               to: "/book/digital-organism-theory",
               label: "Read Book One as a fixed edition",
@@ -181,15 +181,15 @@ export default function HomePage() {
       <footer className="py-12 dot-page-container">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
           <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
-          <p className="text-xs leading-relaxed text-muted-foreground/50">
+          <p className="text-xs leading-relaxed text-muted-foreground">
             Written by Henok Ghebrechristos · offered as a construction, not a revelation.
             No ads, no profiling, no data sales.
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
           <nav aria-label="Quiet links" className="flex items-center gap-5 text-xs">
             <Link
-              to="/join"
-              className="text-muted-foreground/60 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+              to="/readers"
+              className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             >
               Join the readers’ list
             </Link>

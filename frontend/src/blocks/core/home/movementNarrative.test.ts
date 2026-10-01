@@ -22,7 +22,7 @@ describe("homepage movement narrative", () => {
     expect(layers.indexOf('id: "reality-frame"')).toBeLessThan(
       layers.indexOf('id: "little-c"'),
     );
-    expect(layers).toContain("I place T and E before Big C");
+    expect(layers).toContain("DOT places T and E before Big C");
     expect(layers).toContain("the Big Bang may mark the beginning of RF₀");
     expect(layers).toContain("not the beginning of everything");
     expect(layers).toContain("Other Reality Frames may exist");
@@ -109,7 +109,7 @@ describe("homepage movement narrative", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
     expect(home).toContain("Continue with the Academy.");
-    expect(home).toContain("Enter DOT Academy");
+    expect(home).toContain("Explore DOT Academy");
     expect(home).toContain("Read Book One as a fixed edition");
     expect(home).not.toContain("Request an invitation to the circle");
   });

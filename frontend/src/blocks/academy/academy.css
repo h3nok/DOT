@@ -88,11 +88,15 @@
 .academy-title {
   margin-top: 1.5rem;
   font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
-  font-size: clamp(2.8rem, 6.2vw, 5.4rem);
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.02;
   text-wrap: balance;
+}
+
+.academy-title > span {
+  display: block;
 }
 
 .academy-hero__lede {
@@ -110,45 +114,8 @@
 }
 
 .academy-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.85rem;
+  max-width: 23rem;
   margin-top: 2.25rem;
-}
-
-.academy-primary-action {
-  display: inline-flex;
-  min-height: 3.25rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  border-radius: var(--appearance-ui-control-radius, 0.5rem);
-  padding: 0 1.35rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.academy-secondary-action {
-  display: inline-flex;
-  min-height: 3.25rem;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0 1.15rem;
-  border-radius: var(--appearance-ui-control-radius, 0.5rem);
-  border: 1px solid var(--academy-line);
-  background: color-mix(in oklab, var(--academy-ink) 3%, transparent);
-  color: var(--academy-ink);
-  font-size: 0.875rem;
-  font-weight: 550;
-  text-decoration: none;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
-}
-
-.academy-secondary-action:hover {
-  border-color: color-mix(in oklab, var(--academy-accent) 50%, transparent);
-  background: color-mix(in oklab, var(--academy-accent) 6%, transparent);
-  color: var(--academy-ink);
 }
 
 .academy-text-link {
@@ -386,6 +353,13 @@
   font-weight: 600;
 }
 
+.academy-program-card__area-status {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+}
+
 .academy-program-card__area-role {
   margin-top: 0.65rem;
   color: color-mix(in oklab, var(--academy-ink) 68%, transparent);
@@ -576,18 +550,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .academy-hero__actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .academy-primary-action,
-  .academy-secondary-action {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
 html[data-ui-style="minimal"] .academy-title,
 html[data-ui-style="minimal"] .academy-section-heading h2,

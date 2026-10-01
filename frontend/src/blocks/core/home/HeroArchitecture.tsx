@@ -541,6 +541,11 @@ export function HeroArchitecture() {
         <span id={captionId} className="home-architecture-caption-visible">
           A proposed model · Conceptual rings, not spatial boundaries
         </span>
+        <p className="home-architecture-reading-key">
+          T is continuity; E is possibility. Big C is the proposed conscious
+          organism that generates RF₀, our physical universe. Little c is you,
+          the experiencer within it.
+        </p>
         <span id={descriptionId} className="sr-only">
           T and E precede Big C; Big C generates RF₀, the physical universe;
           Little c experiences and acts within RF₀. Virtual means generated,

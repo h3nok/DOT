@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { headingSlug } from "../../attention-os/reader/headingSlug";
 import type { DotBookOneManifest } from "../publications/dotBookOne";
 import {
+  OPEN_SEAMS_EDITION,
   openSeams,
   seamWork,
   type AppliedWork,
@@ -22,7 +23,7 @@ import {
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v3",
+  `public/publications/henok/digital-organism-theory/v${OPEN_SEAMS_EDITION}`,
 );
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),
@@ -50,7 +51,8 @@ const allWork = (): Array<{ seam: OpenSeam; work: AppliedWork }> =>
   openSeams.flatMap((seam) => seam.work.map((work) => ({ seam, work })));
 
 describe("open seams register", () => {
-  it("has entries", () => {
+  it("names its source edition and has entries", () => {
+    expect(manifest.release.version).toBe(OPEN_SEAMS_EDITION);
     expect(openSeams.length).toBeGreaterThan(0);
   });
 

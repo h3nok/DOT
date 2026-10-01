@@ -43,7 +43,7 @@ const STATIC_ROUTES = [
   {
     route: ACADEMY_ROUTE,
     title: "DOT Academy — Digital Organism Theory",
-    description: "The living intellectual home of DOT: definitions, diagrams, hypotheses, objections, responses, experiments, excerpts, and essays.",
+    description: "Study and challenge Digital Organism Theory through its concept map and open questions. The Academy is in development; Book One remains a fixed edition.",
   },
   {
     route: "/applied",
@@ -650,7 +650,7 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
         ...route,
         structuredData: graph(bookNode(manifest), breadcrumb([home, book, { name: "Free PDF", route: route.route }])),
         prerender: page(
-          `${heading}<p>${link(pdf, "Download the free PDF", "Digital-Organism-Theory-Book-One-Digital-Edition.pdf")}</p><p>${link(BOOK_ROUTE, "Read the complete living edition")}</p><h2>Support the author, if you wish.</h2><p>Voluntary contributions help fund independent writing and research. The book and PDF remain free either way.</p><p>${link("/support?purpose=author", "Support the author · optional")}</p>`,
+          `${heading}<p>${link(pdf, "Download the free PDF", "Digital-Organism-Theory-Book-One-Digital-Edition.pdf")}</p><p>${link(BOOK_ROUTE, "Read the fixed edition online")}</p><h2>Support the author, if you wish.</h2><p>Voluntary contributions help fund independent writing and research. The book and PDF remain free either way.</p><p>${link("/support?purpose=author", "Support the author · optional")}</p>`,
         ),
       };
     }

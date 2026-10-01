@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
@@ -12,16 +12,20 @@ describe("AcademyPage", () => {
       </MemoryRouter>,
     );
 
-  it("declares the Academy as an intellectual revolution while keeping Book One distinct", () => {
+  it("explains the inquiry and offers material readers can use now", () => {
     renderPage();
 
     expect(
-      screen.getByRole("heading", { name: "A new Academy, in the literal sense." }),
+      screen.getByRole("heading", { name: "Study the theory. Question its claims." }),
     ).toBeVisible();
-    expect(screen.getByText(/In Assembly · Coming Soon/i)).toBeVisible();
-    expect(screen.getByText("Deliberate Assembly")).toBeVisible();
-    expect(screen.getByText(/frustrated, fragmented, unfulfilled/)).toBeVisible();
-    expect(screen.getByText(/a place to learn how to see/)).toBeVisible();
+    expect(screen.getByText(/DOT Academy · In development/i)).toBeVisible();
+    const start = screen.getByRole("navigation", { name: "Begin exploring the Academy" });
+    expect(within(start).getByRole("link", { name: "Explore the concept map" }))
+      .toHaveAttribute("href", "/doctrine");
+    expect(within(start).getByRole("link", { name: "Review open questions" }))
+      .toHaveAttribute("href", "/applied");
+    expect(screen.getByText(/No experiment is recorded yet/)).toBeVisible();
+    expect(screen.getByText(/No Academy response has been released yet/)).toBeVisible();
     expect(screen.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
   });
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BookOpen, Compass, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, ShieldAlert } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import {
@@ -8,7 +8,7 @@ import {
   academyPrograms,
 } from "../../content/academy/academyData";
 import { PageHeader } from "../../shared/PageShell";
-import { EpistemicBadge } from "../../shared/EpistemicBadge";
+import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import "./academy.css";
 
 const invariants = [
@@ -91,7 +91,7 @@ export default function AcademyPage() {
       />
 
       <main id="academy-main">
-        {/* ── Hero: The Declaration of the New Academy ────────────────────── */}
+        {/* ── The inquiry and its available starting points ───────────────── */}
         <section className="academy-hero" aria-labelledby="academy-title">
           <div className="academy-hero__inner dot-page-container dot-page-wide">
             <motion.div
@@ -101,47 +101,35 @@ export default function AcademyPage() {
               className="academy-hero__copy"
             >
               <div className="academy-hero__status-badge">
-                <span className="dot-mark" data-live="true" aria-hidden="true" />
-                <span className="dot-label">In Assembly · Coming Soon</span>
+                <span className="dot-mark" aria-hidden="true" />
+                <span className="dot-label">DOT Academy · In development</span>
               </div>
 
               <h1 id="academy-title" className="academy-title">
-                A new Academy, in the literal sense.
+                <span>Study the theory.</span>{" "}
+                <span>Question its claims.</span>
               </h1>
 
               <p className="academy-hero__lede">
-                This is not a content library, a forum, or a feed. It is a school
-                in the oldest sense of the word — a place to learn how to see.
+                DOT Academy brings the study of conscious experience together
+                with the practice of attention. Explore the model’s definitions
+                and unresolved questions, and compare its claims with the evidence.
               </p>
 
-              <p className="academy-hero__lede">
-                It begins from one blunt observation: a mind that never grows
-                still suffers — frustrated, fragmented, unfulfilled — and carries
-                that struggle to the end of its life. So the work here is double.
-                Intellectual: the observer enters the inquiry, and every claim
-                shows where its evidence ends. Spiritual: attention comes home,
-                the mind grows quiet, and thought proceeds from stillness instead
-                of need.
-              </p>
-
-              <div className="academy-hero__actions">
-                <Link
-                  to="/book/digital-organism-theory"
-                  className="dot-reading-action academy-primary-action group"
-                >
-                  <BookOpen className="h-4 w-4" aria-hidden="true" />
-                  Read Book One
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                </Link>
-                <Link to="/doctrine" className="academy-secondary-action group">
-                  <Compass className="h-4 w-4" aria-hidden="true" />
-                  Explore Concept Map
-                </Link>
-                <Link to="/applied" className="academy-secondary-action group">
-                  <ShieldAlert className="h-4 w-4" aria-hidden="true" />
-                  Inspect Open Seams
-                </Link>
-              </div>
+              <FocusNav
+                className="academy-hero__actions"
+                label="Begin exploring the Academy"
+                primary={{
+                  to: "/doctrine",
+                  label: "Explore the concept map",
+                  description: "Definitions linked to Book One",
+                  icon: <Compass />,
+                }}
+                secondary={[
+                  { to: "/applied", label: "Review open questions", icon: <ShieldAlert /> },
+                  { to: "/book/digital-organism-theory", label: "Read Book One", icon: <BookOpen /> },
+                ]}
+              />
             </motion.div>
 
             <motion.aside
@@ -149,17 +137,16 @@ export default function AcademyPage() {
               animate={{ y: 0 }}
               transition={{ duration: reducedMotion ? 0 : 0.6, delay: 0.12 }}
               className="academy-manifesto-card"
-              aria-label="Institutional Status"
+              aria-label="What is available"
             >
               <span className="academy-manifesto-card__tag dot-label">
-                <Sparkles className="h-3 w-3" aria-hidden="true" />
-                Incomplete by Design
+                Start here
               </span>
-              <h2>Deliberate Assembly</h2>
+              <h2>Available to read now</h2>
               <p>
-                Nothing here is filler. A hall opens only when finished work
-                exists to stand in it — sourced, argued, and open to challenge.
-                Until then it stays closed. Silence is more honest than padding.
+                Book One, the concept map, and the open questions are public.
+                New Academy responses, experiments, and essays are still in
+                development.
               </p>
               <div className="academy-manifesto-card__foot">
                 <span>Core Canon</span>
@@ -240,13 +227,11 @@ export default function AcademyPage() {
                         >
                           <div className="academy-program-card__area-head">
                             <span className="academy-program-card__area-title">{area.title}</span>
-                            <EpistemicBadge
-                              status={area.phase === "available" ? "grounded" : "proposed"}
-                            >
-                              {area.phase === "available" ? "Anchored" : "Convening"}
-                            </EpistemicBadge>
+                            <span className="academy-program-card__area-status dot-label">
+                              {area.phase === "available" ? "Available" : "In development"}
+                            </span>
                           </div>
-                          <p className="academy-program-card__area-role">{area.role}</p>
+                          <p className="academy-program-card__area-role">{area.currentState}</p>
                           {area.href && (
                             <Link to={area.href} className="academy-program-card__area-link group">
                               <span>{area.action}</span>
@@ -324,10 +309,10 @@ export default function AcademyPage() {
         </motion.section>
 
         {/* ── Epilogue / Dispatch ───────────────────────────────────────── */}
-        <section className="academy-end" aria-label="Convening notice">
+        <section className="academy-end" aria-label="Continue studying">
           <div className="dot-page-container">
             <span className="dot-mark academy-end__mark" aria-hidden="true" />
-            <p className="dot-label">The Convening Edge</p>
+            <p className="dot-label">Continue the inquiry</p>
             <h2>The work begins in stillness.</h2>
             <p>
               The Academy will open its doors progressively. Until then, explore the
@@ -340,7 +325,7 @@ export default function AcademyPage() {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <Link to="/applied" className="academy-text-link">
-                Review open objections
+                Review open questions
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>

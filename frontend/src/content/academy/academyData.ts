@@ -48,13 +48,13 @@ export const academyPrograms: readonly AcademyProgram[] = [
     id: "critical",
     index: "02",
     title: "Critical inquiry",
-    purpose: "Keep pressure, reply, method, and failure in the same public record.",
+    purpose: "Examine objections, the evidence still needed, and any responses.",
   },
   {
     id: "writing",
     index: "03",
     title: "Writing",
-    purpose: "Develop implications without disguising new work as established canon.",
+    purpose: "Keep interpretations and new work distinct from the fixed book.",
   },
 ] as const;
 
@@ -76,7 +76,7 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Diagrams",
     role: "Expose conceptual layers, causal direction, and unresolved handoffs visually.",
     currentState:
-      "The first architecture diagram is published on the front door. A versioned diagram library comes next.",
+      "The first architecture diagram is on the homepage. A library of versioned diagrams is in development.",
     phase: "available",
     href: "/#threshold",
     action: "Inspect the architecture",
@@ -87,7 +87,7 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Hypotheses",
     role: "State what DOT proposes beyond established evidence in terms that can be challenged.",
     currentState:
-      "The Big C and Little c hypotheses are marked inside the current concept map; their unpaid debts remain attached.",
+      "The concept map explains the Big C and Little c hypotheses, with links to Book One and the questions they leave open.",
     phase: "available",
     href: "/doctrine/big-c",
     action: "Examine a hypothesis",
@@ -98,10 +98,10 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Objections",
     role: "Give the strongest unresolved criticism a permanent and citable place.",
     currentState:
-      "The open-seams register begins with the derivations and measurements Book One says it still owes.",
+      "Read the derivations and measurements Book One still needs. These open questions are the starting point for criticism.",
     phase: "available",
     href: "/applied",
-    action: "Read the open seams",
+    action: "Review open questions",
   },
   {
     id: "responses",
@@ -109,7 +109,7 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Responses",
     role: "Answer a named objection without erasing it or claiming closure by assertion.",
     currentState:
-      "The editorial contract is set. No Academy response has been released yet.",
+      "No Academy response has been released yet.",
     phase: "opening",
   },
   {
@@ -118,10 +118,10 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Experiments",
     role: "Publish methods, predictions, failure conditions, and results in their declared order.",
     currentState:
-      "The open-seams register names what could settle each claim. No experiment is recorded yet.",
+      "The open questions identify evidence that could test each claim. No experiment is recorded yet.",
     phase: "available",
     href: "/applied",
-    action: "Inspect the research burdens",
+    action: "Review what needs testing",
   },
   {
     id: "excerpts",
@@ -129,7 +129,7 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Excerpts",
     role: "Present bounded passages with exact publication and edition provenance.",
     currentState:
-      "Excerpts will be Academy objects. The complete Book One reader remains a separate publication surface.",
+      "No Academy excerpt has been released yet. The complete Book One reader is available as a separate publication.",
     phase: "opening",
   },
   {
@@ -138,7 +138,7 @@ export const academyAreas: readonly AcademyArea[] = [
     title: "Essays",
     role: "Develop consequences, interpretations, and new directions outside the book's canon.",
     currentState:
-      "The collection architecture is ready. No Academy essay has been released yet.",
+      "No Academy essay has been released yet. Future essays will be separate from Book One’s fixed text.",
     phase: "opening",
   },
 ] as const;

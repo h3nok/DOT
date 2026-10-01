@@ -33,9 +33,9 @@ export function HeroProposition({
             </h1>
 
             <p className="dot-lede home-hero-lede">
-              DOT proposes that consciousness precedes the physical universe we
-              inhabit, and that this universe is an environment for conscious
-              learning and development.
+              Consciousness is the experience of being you. DOT proposes that it
+              precedes the physical universe we inhabit, which provides an
+              environment for conscious learning and development.
             </p>
             <EpistemicBadge status="hypothesis" presentation="text">
               Held as hypothesis · Open to challenge

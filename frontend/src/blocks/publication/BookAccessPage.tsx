@@ -78,7 +78,7 @@ export default function BookAccessPage() {
             <BookOpen className="h-5 w-5 shrink-0 text-[var(--book-cinnabar)]" aria-hidden="true" />
             <span className="min-w-0 flex-1">
               <span className="book-reading-heading block text-2xl font-semibold">
-                Read the complete living edition
+                Read the fixed edition online
               </span>
               <span className="book-reading-copy mt-1 block text-sm leading-relaxed text-muted-foreground">
                 Source-linked reading, with the book&apos;s concepts and references close at hand.

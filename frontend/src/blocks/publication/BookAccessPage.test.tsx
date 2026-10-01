@@ -14,7 +14,7 @@ describe("BookAccessPage", () => {
     );
 
     expect(
-      screen.getByRole("link", { name: /Read the complete living edition/ }),
+      screen.getByRole("link", { name: /Read the fixed edition online/ }),
     ).toHaveAttribute("href", "/book/digital-organism-theory");
     const download = screen.getByRole("link", { name: /Download the free PDF/ });
     expect(download).toHaveAttribute("href", DOT_BOOK_ONE_PDF_URL);

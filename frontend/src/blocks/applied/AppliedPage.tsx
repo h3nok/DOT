@@ -10,6 +10,7 @@ import {
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { EpistemicBadge, type EpistemicStatus } from "../../shared/EpistemicBadge";
 import {
+  OPEN_SEAMS_EDITION,
   openSeams,
   seamWork,
   type AppliedWork,
@@ -230,7 +231,7 @@ export default function AppliedPage() {
       }
     >
       <div id="applied-main">
-        <p className="dot-label">Open seams · Edition v3</p>
+        <p className="dot-label">Open seams · Edition v{OPEN_SEAMS_EDITION}</p>
         <h1 className="dot-page-heading mt-4 max-w-2xl">
           What Book One does not establish
         </h1>
@@ -250,7 +251,7 @@ export default function AppliedPage() {
           {[
             ["Seams", String(openSeams.length)],
             ["Work recorded", String(recorded)],
-            ["Edition", "v2 · digital edition"],
+            ["Edition", `v${OPEN_SEAMS_EDITION} · digital edition`],
           ].map(([label, value]) => (
             <div key={label} className="border-b border-border/50 px-1 py-4 last:border-b-0 sm:border-b-0 sm:px-5 sm:first:pl-0 sm:last:pr-0">
               <dt className="dot-label">

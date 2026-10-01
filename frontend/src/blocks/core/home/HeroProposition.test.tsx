@@ -32,15 +32,15 @@ describe("HeroProposition", () => {
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText(/consciousness precedes the physical universe/)).toBeVisible();
+    expect(screen.getByText(/Consciousness is the experience of being you/)).toBeVisible();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
   it("explains the paradigm without claiming purpose is already understood", () => {
     renderProposition();
 
-    expect(screen.getByText(/DOT proposes that consciousness precedes/)).toBeVisible();
-    expect(screen.getByText(/this universe is an environment for conscious learning and development/)).toBeVisible();
+    expect(screen.getByText(/DOT proposes that it precedes the physical universe we inhabit/)).toBeVisible();
+    expect(screen.getByText(/environment for conscious learning and development/)).toBeVisible();
     expect(screen.getByText("Held as hypothesis · Open to challenge")).toBeVisible();
   });
 
@@ -70,7 +70,7 @@ describe("HeroProposition", () => {
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
     const heading = screen.getByRole("heading", { name: "What shapes the life you live?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
-    const explanation = screen.getByText(/DOT proposes that consciousness/i);
+    const explanation = screen.getByText(/DOT proposes that it/i);
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

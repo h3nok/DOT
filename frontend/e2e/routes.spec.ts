@@ -212,15 +212,16 @@ test.describe("academy", () => {
     await page.goto("/academy");
 
     await expect(
-      page.getByRole("heading", { name: "A new Academy, in the literal sense." }),
+      page.getByRole("heading", { name: "Study the theory. Question its claims." }),
     ).toBeVisible();
-    await expect(page.getByText(/a place to learn how to see/)).toBeVisible();
+    await expect(page.getByText(/DOT Academy · In development/)).toBeVisible();
     await expect(page.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
 
     const programs = page.locator("#academy-programs");
     await expect(programs.locator(".academy-program-card")).toHaveCount(3);
     await expect(programs.locator(".academy-program-card__area-item")).toHaveCount(8);
     await expect(programs.getByText("Experiments", { exact: true })).toBeVisible();
+    await expect(programs.getByText(/No experiment is recorded yet/)).toBeVisible();
   });
 });
 

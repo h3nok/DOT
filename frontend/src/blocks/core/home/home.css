@@ -505,6 +505,16 @@ html:has(.home-journey) {
   margin-top: 0.25rem;
 }
 
+.home-architecture-reading-key {
+  max-width: 50ch;
+  margin: 0.75rem auto;
+  color: var(--foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
 .home-architecture-guide {
   max-width: 32rem;
   margin: 0.25rem auto 0;
@@ -1681,12 +1691,12 @@ html[data-contrast="high"] .home-hero-kicker {
   font-family: var(--home-theory-heading-font);
   width: 100%;
   max-width: min(28ch, 100%);
-  margin-inline: auto;
+  margin-inline: 0;
   font-size: clamp(2.15rem, 3.5vw, 3.15rem);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.14;
-  text-align: center;
+  text-align: left;
 }
 
 .home-theory-layer-status {
@@ -1719,25 +1729,24 @@ html[data-contrast="high"] .home-hero-kicker {
 
 .home-theory-layer-lede {
   width: 100%;
-  max-width: 44ch;
-  margin: 1.75rem auto 0;
+  max-width: 52ch;
+  margin: 1.5rem 0 0;
   color: color-mix(in oklch, var(--foreground) 82%, var(--muted-foreground));
   font-family: var(--home-theory-body-font);
-  font-size: clamp(1.25rem, 1.7vw, 1.45rem);
+  font-size: clamp(1.125rem, 1.5vw, 1.25rem);
   font-weight: 400;
   line-height: 1.6;
-  text-align: center;
+  text-align: left;
 }
 
 .home-theory-layer-human-stakes {
   max-width: 52ch;
-  margin: 0 auto;
+  margin: 1rem 0 0;
   color: color-mix(in oklch, var(--foreground) 72%, var(--muted-foreground));
   font-family: var(--home-theory-body-font);
   font-size: 1.125rem;
-  font-style: italic;
   line-height: 1.6;
-  text-align: center;
+  text-align: left;
 }
 
 .home-theory-layer-thesis {
@@ -1780,7 +1789,7 @@ html[data-contrast="high"] .home-hero-kicker {
 
 .home-theory-layer-inquiry {
   max-width: 46rem;
-  margin: 1rem auto 0;
+  margin: 1rem 0 0;
   border: 0;
 }
 
@@ -1948,7 +1957,7 @@ html[data-contrast="high"] .home-hero-kicker {
 
 .home-theory-layer-sources {
   max-width: 46rem;
-  margin: 1rem auto 0;
+  margin: 1rem 0 0;
   font-family: var(--home-theory-interface-font);
 }
 
@@ -2203,8 +2212,8 @@ html[data-contrast="high"] .home-hero-kicker {
 
 .home-theory-layer-inquiry > [data-step="boundary"] {
   max-width: 62ch;
-  margin-inline: auto;
-  padding: 1.75rem 0 2.5rem;
+  margin-inline: 0;
+  padding: 1rem 0 2rem;
 }
 .home-theory-layer-inquiry > [data-step="boundary"] .home-theory-layer-step-label {
   font-family: var(--home-theory-interface-font);
@@ -2298,11 +2307,11 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 }
 .home-theory-layer-environment[data-layer="little-c"] .dot-page-heading,
 .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-lede {
-  margin-inline: auto;
-  text-align: center;
+  margin-inline: 0;
+  text-align: left;
 }
 
-/* Phones retain a compact identity above the centered introduction. */
+/* Phones retain a compact identity above the reading column. */
 
 .home-theory-layer-source-card .dot-pathway-card__title,
 .home-theory-layer-book-card .dot-pathway-card__title {
@@ -2336,17 +2345,6 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
   .home-theory-layer-foundation {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .home-theory-layer-environment[data-layer="big-c"] .home-theory-layer-card {
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.34fr);
-  }
-  .home-theory-layer-environment[data-layer="big-c"] .home-theory-layer-identity {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .home-theory-layer-environment[data-layer="big-c"] .home-theory-layer-copy {
-    grid-column: 1;
-    grid-row: 1;
   }
 }
 @media (max-width: 1099px) {
@@ -2427,7 +2425,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
   }
   .home-theory-layer-environment[data-layer="little-c"] .dot-page-heading,
   .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-lede {
-    text-align: center;
+    text-align: left;
   }
   .home-theory-layer-environment[data-layer="reality-frame"] .home-theory-layer-plate {
     padding: 0.5rem;

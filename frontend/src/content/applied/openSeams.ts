@@ -14,6 +14,9 @@
 
 import { DOT_BOOK_ONE_ROUTE } from "../publications/dotBookOne";
 
+/** The fixed edition these source passages come from. */
+export const OPEN_SEAMS_EDITION = 3;
+
 /** The book's four levels, in the order the reader contract lists them. */
 export type ClaimLevel = "Observation" | "Model" | "Hypothesis" | "Speculation";
 

@@ -49,6 +49,18 @@ test("a closed reader list does not ask for an address", async ({ page }) => {
   await expectNoHorizontalOverflow(page);
 });
 
+test("the homepage readers’ list link opens subscription rather than membership", async ({ page }) => {
+  await page.route("**/v1/readers/status", (route) => route.fulfill({
+    json: { available: false },
+  }));
+  await page.goto("/");
+  await page.getByRole("link", { name: "Join the readers’ list", exact: true }).click();
+
+  await expect(page).toHaveURL("/readers");
+  await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
+  await expect(page.getByRole("textbox")).toHaveCount(0);
+});
+
 test("a reader-list outage is not presented as a closed list", async ({ page }) => {
   await page.route("**/v1/readers/status", (route) => route.abort());
   await page.goto("/readers");
