@@ -29,7 +29,7 @@ export function FocusNav({ label, primary, secondary = [], className = "" }: Foc
         <strong id={`${id}-title`}>{primary.label}</strong>
         {primary.description && <span id={`${id}-description`}>{primary.description}</span>}
       </span>
-      <span className="dot-focus-nav__icon" aria-hidden="true">{primary.endIcon ?? <ArrowRight />}</span>
+      <span className="dot-focus-nav__icon dot-focus-nav__advance" aria-hidden="true">{primary.endIcon ?? <ArrowRight />}</span>
     </>
   );
   const primaryProps = {

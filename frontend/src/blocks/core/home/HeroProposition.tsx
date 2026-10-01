@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import { ArrowDown, BookOpen } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
+import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
 import { EpistemicBadge } from "../../../shared/EpistemicBadge";
 
@@ -48,7 +49,7 @@ export function HeroProposition({
               to: "/book/digital-organism-theory/preface",
               label: "Read Book One",
               description: "Begin with the preface · Free to read",
-              icon: <BookOpen />,
+              icon: <NucleusMark size={24} reducedMotion />,
             }}
             secondary={[{
               href: "#possibility-field",
