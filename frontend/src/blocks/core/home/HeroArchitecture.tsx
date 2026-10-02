@@ -538,24 +538,14 @@ export function HeroArchitecture() {
       </svg>
 
       <figcaption className="home-architecture-caption">
-        <span id={captionId} className="home-architecture-caption-visible">
-          A proposed model · Conceptual rings, not spatial boundaries
-        </span>
-        <p className="home-architecture-reading-key">
-          T is continuity; E is possibility. Big C is the proposed conscious
-          organism that generates RF₀, our physical universe. Little c is you,
-          the experiencer within it.
-        </p>
+        <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
         <span id={descriptionId} className="sr-only">
-          T and E precede Big C; Big C generates RF₀, the physical universe;
-          Little c experiences and acts within RF₀. Virtual means generated,
-          not unreal. RF₀ is also a social environment. Other Little c centres
-          have unequal awareness radii.
-          Relations meet your awareness boundary. RF₀ presents options and
-          returns constraint and consequence; Little c reflects, chooses, and
-          acts through Intent and embodied action.
+          T and E precede Big C; Big C generates RF₀, our physical universe;
+          Little c experiences and acts within it. The rings are conceptual,
+          not spatial.
         </span>
-        <Disclosure className="home-architecture-guide" summary="How to read this model">
+        <Disclosure className="home-architecture-guide" summary="About the diagram">
+          <p>Conceptual rings, not spatial boundaries.</p>
           <dl>
             <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
             <div><dt>Big C</dt><dd>The proposed conscious organism that generates our world.</dd></div>
@@ -563,9 +553,10 @@ export function HeroArchitecture() {
             <div><dt>Little c</dt><dd>You, the local experiencer: noticing, choosing, and living with what follows.</dd></div>
           </dl>
           <p>
-            Your awareness radius marks the options you can perceive. Other
-            experiencers can broaden that awareness. Intent becomes embodied
-            action; the world returns constraint and consequence.
+            Your awareness radius marks the options you can perceive. RF₀ is
+            also a social environment: other experiencers can broaden that
+            awareness. The world returns constraint and consequence; Little c
+            reflects, chooses, and acts through Intent and embodied action.
           </p>
         </Disclosure>
       </figcaption>

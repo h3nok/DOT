@@ -111,8 +111,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.headingContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifeContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifePixels).toBeGreaterThanOrEqual(16);
-    expect(presentation.opening.headingWidth).toBeLessThanOrEqual(448);
-    expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(448);
+    expect(presentation.opening.headingWidth).toBeLessThanOrEqual(600);
+    expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(600);
     expect(presentation.opening.questionBeforeDiagram).toBe(true);
     expect(presentation.opening.readingHeight).toBeGreaterThanOrEqual(72);
     expect(presentation.opening.readingRadius).toBeLessThan(presentation.opening.readingHeight / 2);
@@ -132,6 +132,8 @@ for (const colorScheme of ["light", "dark"] as const) {
       expect(font.contrast, `${font.layer} painted label contrast`).toBeGreaterThanOrEqual(4.5);
     }
     if ((page.viewportSize()?.width ?? 0) >= 1024) {
+      expect(presentation.opening.headingWidth).toBeGreaterThanOrEqual(512);
+      expect(presentation.opening.lifeWidth).toBeGreaterThanOrEqual(480);
       expect(presentation.width).toBeGreaterThanOrEqual(480);
       expect(presentation.width).toBeLessThanOrEqual(600);
       expect(presentation.top).toBeLessThan(300);
@@ -226,7 +228,7 @@ for (const viewport of [
     const question = await page.locator(".home-hero-title").boundingBox();
     expect(diagram).not.toBeNull();
     expect(question).not.toBeNull();
-    if (viewport.width >= 768) {
+    if (viewport.width >= 1100) {
       expect(question!.x + question!.width).toBeLessThanOrEqual(diagram!.x);
     } else {
       expect(question!.y + question!.height).toBeLessThan(diagram!.y);

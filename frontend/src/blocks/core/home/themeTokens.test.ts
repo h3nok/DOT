@@ -183,8 +183,8 @@ describe("home entry theme compatibility", () => {
   it("states the theory's epistemic status without overclaiming the ontology", () => {
     const architecture = readArchitecture();
 
-    // The visible heading is gone; the caption still declares the status.
-    expect(architecture).toContain("A proposed model");
+    // The figure stays named while its detailed guide is reader-controlled.
+    expect(architecture).toContain("DOT’s proposed architecture");
     expect(architecture).toContain("T · E");
     expect(architecture).toContain("Big C");
     expect(architecture).toContain("RF₀");

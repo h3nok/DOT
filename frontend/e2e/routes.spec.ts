@@ -42,8 +42,11 @@ test.describe("hero", () => {
     expect((await inquiry.boundingBox())?.width).toBeGreaterThanOrEqual(120);
     await expect(page.locator(".home-journey-nav ol")).toHaveCount(0);
 
-    const caption = await hero.locator(".home-architecture-caption-visible").innerText();
-    expect(caption.trim().split(/\s+/).length).toBeLessThanOrEqual(12);
+    const diagram = hero.getByRole("figure", { name: "DOT’s proposed architecture" });
+    await expect(diagram).toHaveAccessibleDescription(/The rings are conceptual, not spatial/);
+    const guide = diagram.locator("details");
+    await expect(guide).not.toHaveAttribute("open");
+    await expect(guide.locator("dl")).not.toBeVisible();
   });
 
   test("renders a short proposition, the architecture figure and one reading action", async ({
