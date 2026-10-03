@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { SignIn } from "../../../dot/SignIn";
 import { TwinSurface } from "../../../dot/TwinSurface";
 import { useAuth } from "../../../dot/useAuth";
+import { useReaderList } from "../../../dot/useReaderList";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
@@ -25,6 +26,7 @@ import "./home.css";
 
 export default function HomePage() {
   const { isOwner, logout } = useAuth();
+  const readerListOpen = useReaderList().available === true;
   const { config, reducedMotion: organismReducedMotion } = useOrganism();
   const [signInOpen, setSignInOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -91,7 +93,7 @@ export default function HomePage() {
                   Sign out
                 </button>
               </div>
-            ) : (
+            ) : readerListOpen ? (
               // Strangers are readers, not members: the open door is the
               // readers' list (ADR-0025). Members sign in from the footer.
               <Link
@@ -101,6 +103,15 @@ export default function HomePage() {
               >
                 <Mail className="h-3 w-3" aria-hidden="true" />
                 <span>Readers’ list</span>
+              </Link>
+            ) : (
+              // Until the list can confirm addresses, the honest door is the book.
+              <Link
+                to="/book/digital-organism-theory"
+                className="home-header-action dot-pill text-foreground/80"
+              >
+                <BookOpen className="h-3 w-3" aria-hidden="true" />
+                <span>Book One</span>
               </Link>
             )}
           </div>

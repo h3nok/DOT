@@ -76,6 +76,19 @@ test("the header offers strangers the readers’ list; members sign in from the 
   await expect(page.getByRole("dialog", { name: "Sign in" })).toBeVisible();
 });
 
+test("while the list is closed, the header offers the book instead of a closed door", async ({ page }) => {
+  await page.route("**/v1/readers/status", (route) => route.fulfill({
+    json: { available: false },
+  }));
+  await page.goto("/");
+
+  const header = page.locator('header[aria-label="Site Header"]');
+  await expect(header.getByRole("link", { name: "Book One", exact: true }))
+    .toHaveAttribute("href", "/book/digital-organism-theory");
+  await expect(header.getByRole("link", { name: "Readers’ list", exact: true })).toHaveCount(0);
+  await expect(header.getByRole("button", { name: "Sign in" })).toHaveCount(0);
+});
+
 test("a reader-list outage is not presented as a closed list", async ({ page }) => {
   await page.route("**/v1/readers/status", (route) => route.abort());
   await page.goto("/readers");
