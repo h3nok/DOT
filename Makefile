@@ -1,9 +1,13 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project seed-academy ingest-canon release-book release-book-artifacts test-book-release orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project seed-academy ingest-canon release-book release-book-artifacts test-book-release book-complete preview-book-complete orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
 #: Whose canon and graph the local stack serves.
 OWNER ?= henok
 BOOK_MANUSCRIPT ?= docs/blueprint/DOT-Book-One-Digital-Edition-v3.docx
+BOOK_PYTHON ?= .venv/bin/python
+PANDOC ?= pandoc
+COMPLETE_BOOK ?= docs/blueprint/book-one-complete/v4-working/v4.8-review/DOT-Complete-Book-One-v4.8-Review
+COMPLETE_RELEASE ?= /tmp/dot-book-one-v4-preview
 
 help:
 	@echo "Available targets:"
@@ -27,6 +31,8 @@ help:
 	@echo "  make release-book      Rebuild the web reader and digital PDF from the DOCX"
 	@echo "  make release-book-artifacts Refresh the digital PDF from the DOCX"
 	@echo "  make test-book-release Verify every Book One artifact matches the DOCX"
+	@echo "  make book-complete     Build the v4.8 Complete Edition (line edit, depth layer, print design)"
+	@echo "  make preview-book-complete Derive the digital reading units from it (COMPLETE_RELEASE=dir)"
 	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
@@ -102,6 +108,15 @@ release-book-artifacts:
 
 test-book-release:
 	pnpm --dir frontend exec vitest run src/content/publications/dotBookOne.release.test.ts
+
+# One manuscript, two renderings (ADR-0036). Building never publishes; point
+# COMPLETE_RELEASE at frontend/public/publications/henok/digital-organism-theory/v4
+# only when the author has approved the edition.
+book-complete:
+	$(BOOK_PYTHON) scripts/build_book_v48.py --render
+
+preview-book-complete:
+	$(BOOK_PYTHON) scripts/import_dot_book_v4.py --input $(COMPLETE_BOOK).docx --output $(COMPLETE_RELEASE) --pandoc $(PANDOC)
 
 build:
 	pnpm --dir frontend build

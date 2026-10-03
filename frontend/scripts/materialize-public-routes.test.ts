@@ -9,6 +9,7 @@ import {
   RELEASE_MANIFEST,
   SITE_URL,
   publicRoutes,
+  renderMarkdown,
   renderRoute,
   robotsTxt,
   rootDocument,
@@ -248,6 +249,15 @@ describe("page text for readers without JavaScript", () => {
     const withMath = routes.filter((route) => route.prerender?.includes("<math"));
     expect(withMath.length).toBeGreaterThan(0);
     expect(routes.some((route) => route.prerender?.includes("<script"))).toBe(false);
+  });
+
+  it("folds depth passages into native disclosures that work without JavaScript", () => {
+    const html = renderMarkdown(
+      "Core argument.\n\n::: depth Formal notation\n\nThe detail stays in the page.\n\n:::\n\nThe argument continues.\n",
+    );
+    expect(html).toMatch(/<details class="book-depth"[^>]*><summary class="book-depth__summary"[^>]*>Formal notation<\/summary>/);
+    expect(html).toContain("The detail stays in the page.");
+    expect(html).not.toContain(":::");
   });
 
   it("puts that text inside #root, where the app replaces it", () => {

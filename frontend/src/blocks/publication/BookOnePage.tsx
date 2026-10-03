@@ -27,6 +27,7 @@ import {
 } from "../../attention-os/reader/readingPaths";
 import { saveReadingPathProgress } from "../../attention-os/reader/readingPathProgress";
 import {
+  DOT_BOOK_ONE_PDF_URL,
   DOT_BOOK_ONE_ROUTE,
   bookSectionRoute,
   fetchDotBookOneManifest,
@@ -312,6 +313,7 @@ function BookReader({
             concepts={bookConceptsForSection(section)}
             references={references}
             variant={section.kind === "references" ? "references" : "chapter"}
+            completeEditionHref={DOT_BOOK_ONE_PDF_URL}
           />
 
           <footer className="book-coda book-focus-hidden print:hidden">

@@ -3,7 +3,13 @@ import type {
   ReaderReference,
 } from "../../attention-os/reader/readerTypes";
 
-export type BookSectionKind = "preface" | "chapter" | "references";
+export type BookSectionKind =
+  | "preface"
+  | "chapter"
+  | "coda"
+  | "appendix"
+  | "glossary"
+  | "references";
 
 export interface BookReleaseSection {
   id: string;
@@ -16,7 +22,14 @@ export interface BookReleaseSection {
   part: string;
   content_path: string;
   word_count: number;
+  /** Core reading time; depth passages are folded and excluded (ADR-0036). */
   reading_time_minutes: number;
+  /** Complete Edition releases: words outside depth passages. */
+  core_word_count?: number;
+  /** Complete Edition releases: passages folded behind a disclosure. */
+  depth_passages?: number;
+  /** Complete Edition releases: reading time with every passage opened. */
+  complete_reading_time_minutes?: number;
   related_concepts: string[];
 }
 
@@ -50,12 +63,16 @@ export interface DotBookOneManifest {
   extent: {
     chapters: number;
     words: number;
+    core_words?: number;
+    depth_passages?: number;
     equations: number;
     references: number;
   };
   reader_contract: {
     finite: true;
     autoplay: false;
+    /** Complete Edition releases fold depth passages until the reader opens them. */
+    depth?: "folded-on-request";
     claim_levels: string[];
   };
   sections: BookReleaseSection[];

@@ -20,6 +20,8 @@ import {
 } from "./editorialGrammar";
 import { headingSlug } from "./headingSlug";
 import { remarkStichicRuns } from "./remarkStichicRuns";
+import { remarkDepthPassages } from "./remarkDepthPassages";
+import { DepthPassage, DepthSummary } from "./DepthPassage";
 import type {
   ReaderConceptDefinition,
   ReaderReference,
@@ -320,12 +322,15 @@ export function BookMarkdown({
   concepts = [],
   references,
   variant = "chapter",
+  completeEditionHref,
 }: {
   content: string;
   afterHeading?: Readonly<Record<string, ReactNode>>;
   concepts?: readonly ReaderConceptDefinition[];
   references?: ReadonlyMap<number, ReaderReference>;
   variant?: "chapter" | "references";
+  /** Where the printed Complete Edition can be read; offered inside depth passages. */
+  completeEditionHref?: string;
 }) {
   const [activeAside, setActiveAside] = useState<ReaderAside | null>(null);
   const linkedConceptIds = new Set<string>();
@@ -345,9 +350,21 @@ export function BookMarkdown({
       <div className={`book-prose book-prose--${variant} py-12`}>
         <ReactMarkdown
           skipHtml
-          remarkPlugins={[remarkGfm, remarkMath, remarkStichicRuns]}
+          remarkPlugins={[remarkGfm, remarkMath, remarkStichicRuns, remarkDepthPassages]}
           rehypePlugins={[rehypeKatex]}
           components={{
+            details: ({ children }) => (
+              <DepthPassage completeEditionHref={completeEditionHref}>
+                {children}
+              </DepthPassage>
+            ),
+            summary: ({ children, ...rest }) => (
+              <DepthSummary
+                minutes={(rest as Record<string, unknown>)["data-depth-minutes"] as string}
+              >
+                {children}
+              </DepthSummary>
+            ),
             h1: ({ children }) => (
               <h1 id={headingId(children)} className="scroll-mt-24">
                 {children}

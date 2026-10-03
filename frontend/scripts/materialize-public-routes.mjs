@@ -9,6 +9,7 @@ import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 
+import { remarkDepthPassages } from "../src/attention-os/reader/remarkDepthPassages.js";
 import { ESSAYS_ROUTE, readEssays } from "./essays.mjs";
 
 const SITE_URL = "https://dotheory.org";
@@ -508,7 +509,7 @@ export function renderMarkdown(markdown) {
   return renderToStaticMarkup(
     createElement(ReactMarkdown, {
       skipHtml: true,
-      remarkPlugins: [remarkGfm, remarkMath],
+      remarkPlugins: [remarkGfm, remarkMath, remarkDepthPassages],
       rehypePlugins: [[rehypeKatex, { output: "mathml" }]],
       children: markdown,
     }),

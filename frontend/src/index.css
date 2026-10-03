@@ -2225,7 +2225,8 @@ html[data-motion="still"] .dot-emergence-signal {
    reset removes native manuscript spacing, so the reader has to restore an
    explicit book rhythm: paragraph, section, subsection, then apparatus. The
    indented reading preset can still collapse these margins in appearance.css. */
-.book-prose > p {
+.book-prose > p,
+.book-prose .book-depth__body > p {
   margin-block: 0 1.18em;
 }
 
@@ -2665,6 +2666,79 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-prose .book-draft-line {
   position: relative;
+}
+
+/* Depth passages (ADR-0036). The Complete Edition prints them inline; the
+   digital reader folds them behind a quiet, native disclosure. Closed, it is
+   one line that says what the passage covers and what it costs. Open, it reads
+   as part of the chapter, held off the measure by a single rule. No motion. */
+.book-prose .book-depth {
+  margin-block: 2rem;
+  border-block: 1px solid var(--book-hairline);
+}
+
+.book-prose .book-depth__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  padding-block: 0.85rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--book-reading-font);
+  color: color-mix(in oklch, var(--book-ink) 82%, var(--book-verdigris));
+}
+
+.book-prose .book-depth__summary::-webkit-details-marker {
+  display: none;
+}
+
+.book-prose .book-depth__summary::before {
+  content: "+";
+  width: 1ch;
+  color: color-mix(in oklch, var(--book-ink) 70%, var(--book-verdigris));
+}
+
+.book-prose .book-depth[open] > .book-depth__summary::before {
+  content: "−";
+}
+
+.book-prose .book-depth__summary:focus-visible {
+  outline: 1px solid var(--book-cinnabar);
+  outline-offset: 0.3rem;
+}
+
+.book-prose .book-depth__kicker,
+.book-prose .book-depth__time {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--book-ink) 60%, transparent);
+}
+
+.book-prose .book-depth__label {
+  font-style: italic;
+}
+
+.book-prose .book-depth[open] {
+  padding-block-end: 1rem;
+}
+
+/* Consecutive passages share one rule instead of doubling it. */
+.book-prose .book-depth + .book-depth {
+  margin-block-start: -2rem;
+  border-block-start: 0;
+}
+
+.book-prose .book-depth__body {
+  padding-inline-start: 1.15rem;
+  border-inline-start: 1px solid color-mix(in oklch, var(--book-verdigris) 46%, transparent);
+}
+
+.book-prose .book-depth__edition {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: color-mix(in oklch, var(--book-ink) 62%, transparent);
 }
 
 .book-prose .book-inline-definition > strong:first-child,

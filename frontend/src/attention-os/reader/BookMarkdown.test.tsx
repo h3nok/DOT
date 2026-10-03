@@ -163,6 +163,47 @@ describe("BookMarkdown", () => {
     );
   });
 
+  it("folds a depth passage behind a closed disclosure the reader can open", () => {
+    const { container } = render(
+      <BookMarkdown
+        completeEditionHref="/publications/complete.pdf"
+        content={[
+          "The core argument stays in the reading line.",
+          "",
+          "::: depth Formal definition of Rendering Latency",
+          "",
+          "### Rendering Latency",
+          "",
+          "$$",
+          "RL := t_N - t_I \\tag{2.3}",
+          "$$",
+          "",
+          ":::",
+          "",
+          "The argument continues.",
+        ].join("\n")}
+      />,
+    );
+
+    const details = container.querySelector("details.book-depth");
+    expect(details).not.toBeNull();
+    expect(details).not.toHaveAttribute("open");
+    const summary = screen.getByText("Formal definition of Rendering Latency").closest("summary");
+    expect(summary).toHaveTextContent("In depth");
+    expect(summary).toHaveTextContent("1 min");
+    // The passage stays in the page for search, assistive technology, and no-JS readers.
+    expect(details).toContainElement(screen.getByRole("heading", { name: "Rendering Latency" }));
+    expect(details?.querySelector(".katex")).not.toBeNull();
+    expect(screen.getByRole("link", { name: "Read the Complete Edition" })).toHaveAttribute(
+      "href",
+      "/publications/complete.pdf",
+    );
+    expect(container).not.toHaveTextContent(":::");
+
+    fireEvent.click(summary as HTMLElement);
+    expect(details).toHaveAttribute("open");
+  });
+
   it("renders explicit claim levels through the shared editorial grammar", () => {
     const { container } = render(
       <BookMarkdown content="**Hypothesis:** Consciousness is fundamental." />,

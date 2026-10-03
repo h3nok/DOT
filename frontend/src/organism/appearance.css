@@ -392,6 +392,7 @@ html[data-leading="loose"] .book-prose p {
    their alignment, and Focus/Open can return the page to a ragged edge. */
 
 html[data-align="justify"] .book-prose > p,
+html[data-align="justify"] .book-prose .book-depth__body > p,
 html[data-align="justify"] .book-prose li {
   text-align: justify;
   text-align-last: left;
@@ -401,6 +402,7 @@ html[data-align="justify"] .book-prose li {
 }
 
 html[data-align="left"] .book-prose > p,
+html[data-align="left"] .book-prose .book-depth__body > p,
 html[data-align="left"] .book-prose li {
   text-align: left;
   text-align-last: auto;
@@ -412,6 +414,7 @@ html[data-align="left"] .book-prose li {
    larger pages and becomes ragged-right where the measure cannot support it. */
 @media (max-width: 40rem) {
   html[data-align="justify"] .book-prose > p,
+  html[data-align="justify"] .book-prose .book-depth__body > p,
   html[data-align="justify"] .book-prose li {
     text-align: left;
     text-align-last: auto;
