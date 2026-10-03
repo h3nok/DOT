@@ -16,10 +16,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:install": "playwright install --with-deps chromium",
     "analyze": "ANALYZE=1 pnpm build",
-    "analyze:server": "pnpm build && npx serve dist",
-    "predeploy": "pnpm build",
-    "deploy": "cd .. && gh-pages -d frontend/dist",
-    "deploy:github": "pnpm predeploy && pnpm deploy"
+    "analyze:server": "pnpm build && npx serve dist"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.2",
@@ -106,7 +103,6 @@
     "eslint": "^10.8.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
-    "gh-pages": "^6.3.0",
     "globals": "^16.0.0",
     "jsdom": "^30.0.1",
     "rollup-plugin-visualizer": "^7.0.1",
