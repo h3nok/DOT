@@ -34,8 +34,10 @@ export function HeroProposition({
 
             <p className="dot-lede home-hero-lede">
               Consciousness is the experience of being you. DOT proposes that it
-              precedes the physical universe we inhabit, which provides an
-              environment for conscious learning and development.
+              precedes the physical universe we inhabit, and that this universe
+              is a virtual environment where threads of consciousness use their
+              potential to learn and refine themselves: a school that
+              consciousness runs for itself.
             </p>
             <EpistemicBadge status="hypothesis" presentation="text">
               Held as hypothesis · Open to challenge

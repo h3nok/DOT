@@ -40,7 +40,7 @@ describe("HeroProposition", () => {
     renderProposition();
 
     expect(screen.getByText(/DOT proposes that it precedes the physical universe we inhabit/)).toBeVisible();
-    expect(screen.getByText(/environment for conscious learning and development/)).toBeVisible();
+    expect(screen.getByText(/a school that consciousness runs for itself/)).toBeVisible();
     expect(screen.getByText("Held as hypothesis · Open to challenge")).toBeVisible();
   });
 
