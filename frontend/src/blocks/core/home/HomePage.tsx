@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  LogIn,
+  Mail,
   Network,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -92,14 +92,16 @@ export default function HomePage() {
                 </button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => setSignInOpen(true)}
+              // Strangers are readers, not members: the open door is the
+              // readers' list (ADR-0025). Members sign in from the footer.
+              <Link
+                to="/readers"
                 className="home-header-action dot-pill text-foreground/80"
+                title="Hear by email when there is more DOT to read"
               >
-                <LogIn className="h-3 w-3" aria-hidden="true" />
-                <span>Sign in</span>
-              </button>
+                <Mail className="h-3 w-3" aria-hidden="true" />
+                <span>Readers’ list</span>
+              </Link>
             )}
           </div>
         </div>
@@ -193,6 +195,16 @@ export default function HomePage() {
             >
               Join the readers’ list
             </Link>
+            {!isOwner && (
+              // Membership is by invitation (ADR-0001); its sign-in stays quiet.
+              <button
+                type="button"
+                onClick={() => setSignInOpen(true)}
+                className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+              >
+                Member sign-in
+              </button>
+            )}
           </nav>
         </div>
       </footer>

@@ -61,6 +61,21 @@ test("the homepage readers’ list link opens subscription rather than membershi
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 
+test("the header offers strangers the readers’ list; members sign in from the footer", async ({ page }) => {
+  await page.route("**/v1/readers/status", (route) => route.fulfill({
+    json: { available: true },
+  }));
+  await page.goto("/");
+
+  const header = page.locator('header[aria-label="Site Header"]');
+  await expect(header.getByRole("button", { name: "Sign in" })).toHaveCount(0);
+  await expect(header.getByRole("link", { name: "Readers’ list", exact: true }))
+    .toHaveAttribute("href", "/readers");
+
+  await page.getByRole("button", { name: "Member sign-in", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Sign in" })).toBeVisible();
+});
+
 test("a reader-list outage is not presented as a closed list", async ({ page }) => {
   await page.route("**/v1/readers/status", (route) => route.abort());
   await page.goto("/readers");
