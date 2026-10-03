@@ -1,0 +1,50 @@
+{
+  "source_sha256": "20da842ad2ea5a7abac7dfdaad13ac5661a53393a42338cac4c842eef76ed8da",
+  "editorial_operations": 128,
+  "depth_passages": 26,
+  "caption_labels": [
+    "Table 1 ·",
+    "Figure 1 ·",
+    "Table 2 ·",
+    "Table 3 ·",
+    "Table 4 ·",
+    "Table 5 ·"
+  ],
+  "native_equations_preserved": 101,
+  "equation_fields_preserved": 71,
+  "contents_pages": {
+    "the_observer_belongs_in_the_inquiry": "v",
+    "the_digital_organism": "1",
+    "the_decoupling_principle": "27",
+    "architecture_of_continuity": "45",
+    "reality_frames": "63",
+    "the_canvas": "83",
+    "the_painting": "101",
+    "the_research_program": "131",
+    "the_theory_returns_to_one_life": "149",
+    "equation_and_notation_guide": "155",
+    "core_terms": "159",
+    "references": "165"
+  },
+  "pages": 186,
+  "references_preserved": 51,
+  "depth_bookmarks": 52,
+  "tagged_pdf": true,
+  "fonts": [
+    "DejaVuMathTeXGyre-Regular",
+    "DejaVuSerif-Italic",
+    "LiberationSerif",
+    "LiberationSerif-Italic",
+    "NimbusRoman-Italic",
+    "NotoSerif-Italic",
+    "OpenSymbol",
+    "SourceSerif4Display-Semibold",
+    "SourceSerif4SmText-Bold",
+    "SourceSerif4SmText-It",
+    "SourceSerif4SmText-Regular",
+    "SourceSerif4SmText-Semibold",
+    "SpaceGroteskLight-Medium"
+  ],
+  "pdf_sha256": "a6d82f347c57d1a2b1d0fc42fa1145dd47eb1eb7458b655ea245d796581b743a",
+  "docx_sha256": "96510297619e109186a72a938b559a30b79452aefbdbf67c86a777adbeaa0460"
+}

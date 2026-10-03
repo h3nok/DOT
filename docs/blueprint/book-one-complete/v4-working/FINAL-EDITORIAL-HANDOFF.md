@@ -1,8 +1,29 @@
 # Editorial Handoff — Complete Book One
 
-## Current handoff: v4.7
+## Current handoff: v4.8
 
-Use the [v4.7 review book and redline](README.md). The author has clarified
+Use the [v4.8 Complete Edition and its redline](README.md). v4.8 keeps v4.7's
+conceptual decisions unchanged and adds three things:
+
+1. **A recorded line edit.** 128 paragraph-level edits tighten stacked
+   negations, announcing transitions, overlong sentences, and repeated
+   restatements. Every edit is in the redline with its reason. Edits that
+   changed claim strength (for example "does not" → "does not yet", "lead to"
+   → "cause") or flattened deliberate rhetorical rhythm ("We go to work. We pay
+   bills. We scroll.") were rejected in review and are not applied. The author
+   should read the redline before this text becomes public canon.
+2. **A depth layer** for the digital edition (ADR-0036): 26 passages that the
+   printed book sets inline and the digital reader folds on request.
+3. **A print design pass** following trade-book conventions (see README).
+
+Remaining before a print release: the author's own final line edit, an ISBN,
+a full wrap cover once the page count is final, an index, and a proofread of
+the designed pages. The digital release (v4) is cut from this manuscript only
+after the author approves the redline.
+
+## Previous handoff: v4.7
+
+The author has clarified
 Little c as the underlying self-aware process at a local scope; its distinctive
 history and developed identity depend on Canvas state. The provisional
 maximally unified-stream individuation rule below has been retired as a working
@@ -12,15 +33,13 @@ The detailed practical method belongs in Book Two.
 
 The v4.7 design pass adds neutral typography, an opening architecture map, a
 vector Experience Loop, and fewer interruptions in the prose. The redline
-compares these reading changes with v4.6. The prose and design pass is complete
-for author review. Read the PDF as a
-book, use the redline to inspect conceptual wording, and record further manual
-changes as a new edition. This editorial pass is not scientific peer review.
+compares these reading changes with v4.6. This editorial pass is not
+scientific peer review.
 
 ## Historical handoff: v4.2
 
 The following records the prior development stage. Current decisions above
-and the v4.7 manuscript take precedence.
+and the v4.8 manuscript take precedence.
 
 ## Editorial Verdict
 
