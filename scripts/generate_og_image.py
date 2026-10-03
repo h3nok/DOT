@@ -38,7 +38,7 @@ OUT_PATH = os.path.join(PUBLIC_DIR, "og-image.png")
 BOOK_OUT_PATH = os.path.join(PUBLIC_DIR, "og", "book-one.png")
 CHAPTER_OUT_DIR = os.path.join(PUBLIC_DIR, "og", "book")
 RELEASE_MANIFEST = os.path.join(
-    PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v3", "manifest.json"
+    PUBLIC_DIR, "publications", "henok", "digital-organism-theory", "v4", "manifest.json"
 )
 
 DISPLAY = str(ROOT / "design/fonts/space-grotesk-500-normal.ttf")

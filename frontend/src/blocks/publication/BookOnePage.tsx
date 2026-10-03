@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import { openEnclosingDepth } from "../../attention-os/reader/openEnclosingDepth";
 import PrivateReaderNote from "../../attention-os/reader/PrivateReaderNote";
 import { useReadingFocus } from "../../attention-os/reader/useReadingFocus";
 import {
@@ -626,6 +627,7 @@ export default function BookOnePage() {
       ? document.getElementById(location.hash.slice(1))
       : null;
     if (target) {
+      openEnclosingDepth(target);
       target.scrollIntoView({ block: "start", behavior: "auto" });
     } else {
       window.scrollTo({ top: 0, behavior: "auto" });

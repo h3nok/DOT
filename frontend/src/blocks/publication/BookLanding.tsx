@@ -39,8 +39,13 @@ function sectionLabel(section: BookReleaseSection): string {
   return "Sources";
 }
 
+// Edition v4's four levels, worded as the book's own Table 1 defines them.
+// The v3 names stay so an older manifest still reads correctly.
 const CLAIM_DEFINITIONS: Record<string, string> = {
-  observation: "What can be examined in experience or public evidence.",
+  observation: "What is encountered or measured without accepting DOT.",
+  "external model": "An account developed in another field, used within its scope.",
+  "dot derivation": "An inference from declared postulates and bridge premises.",
+  "speculative extension": "A possibility not yet adequately derived or tested.",
   model: "A representation that makes relationships easier to inspect.",
   hypothesis: "A proposed explanation that still requires stronger tests.",
   speculation: "A possibility kept visible without being presented as fact.",
@@ -196,8 +201,8 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               Read the claim at the level it earns.
             </h2>
             <p className="book-reading-copy mt-5 text-base leading-relaxed text-[var(--book-muted)]">
-              Observation, model, hypothesis, and speculation remain visibly
-              distinct throughout the edition.
+              {manifest.reader_contract.claim_levels.join(", ").replace(/, ([^,]*)$/, ", and $1")}{" "}
+              remain visibly distinct throughout the edition.
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
               <Link
@@ -248,8 +253,9 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 A finite sequence.
               </h2>
               <p className="book-reading-copy mt-5 max-w-sm text-base leading-relaxed text-[var(--book-muted)]">
-                Preface, six chapters, and a source record. Nothing autoplays;
-                every section has an end.
+                Preface, seven chapters, a coda, and the notes and sources.
+                Technical passages stay folded until you open them. Nothing
+                autoplays; every section has an end.
               </p>
               <p className="dot-label mt-6 text-[var(--book-muted)]">
                 {manifest.extent.chapters} chapters · {manifest.extent.references} sources

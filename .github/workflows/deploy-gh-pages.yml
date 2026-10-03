@@ -42,13 +42,10 @@ jobs:
         cd frontend
         pnpm install --frozen-lockfile
 
-    - name: Install book release tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes --no-install-recommends pandoc libreoffice-writer
-
-    - name: Release Book One from the Word manuscript
-      run: make release-book
+    # Book One v4 is built locally (make release-book-complete) and committed:
+    # its designed PDF needs the bundled print fonts, and reading units depend on
+    # the Pandoc release. Release tests below pin the committed files to the
+    # Word manuscript's checksum, so a stale release cannot deploy (ADR-0036).
 
     - name: Verify release frontend
       working-directory: frontend

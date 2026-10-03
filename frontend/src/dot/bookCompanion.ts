@@ -197,6 +197,11 @@ function parseSection(
       continue;
     }
     if (inCodeFence) continue;
+    // Depth containers (ADR-0036) fold text in the reader; keep the passage, drop the marker.
+    if (/^:::/.test(line.trim())) {
+      flush();
+      continue;
+    }
 
     const heading = line.match(/^#{1,6}\s+(.+)$/);
     if (heading) {
@@ -445,7 +450,12 @@ function rankPassages(
 
   const ranked = corpus
     .map((passage) => {
-      const heading = `${passage.sectionTitle} ${passage.headingTitle}`.toLowerCase();
+      // Opening paragraphs carry the section title as their heading; count it once.
+      const heading = (
+        passage.headingTitle === passage.sectionTitle
+          ? passage.sectionTitle
+          : `${passage.sectionTitle} ${passage.headingTitle}`
+      ).toLowerCase();
       const body = passage.text.toLowerCase();
       let score = 0;
       // A heading the intent names outranks any amount of incidental overlap,
@@ -518,7 +528,7 @@ function citationFor(passage: BookPassage): BookCitation {
     kind: "book",
     label: `${passage.sectionTitle} · ${passage.headingTitle}`,
     locator: {
-      edition: "digital-organism-theory-v3",
+      edition: "digital-organism-theory-v4",
       section: passage.sectionSlug,
       title: passage.sectionTitle,
       heading: passage.heading,

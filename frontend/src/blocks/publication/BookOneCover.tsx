@@ -9,10 +9,10 @@ interface BookOneCoverProps {
 const RELEASED_COVER = {
   seriesTitle: "Digital Organism Theory",
   title: "Consciousness: A Digital Organism",
-  subtitle: "A Framework for Consciousness, Conditioning, and Conscious Authorship",
+  subtitle: "Foundations, Agency, and Research",
   author: "Henok Ghebrechristos",
   edition: "Digital Edition",
-  version: 3,
+  version: 4,
 } as const;
 
 /**

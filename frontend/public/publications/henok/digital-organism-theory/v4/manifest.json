@@ -1,0 +1,305 @@
+{
+  "schema_version": "publication.release.v2",
+  "generated_at": "2026-10-03T00:00:00Z",
+  "source": {
+    "format": "docx",
+    "name": "DOT-Book-One-Complete-Edition-v4.docx",
+    "sha256": "cbcfd939bdbe24ecb6d16ec41fb34eff6871a4956f975e1ec0323a206ae1b9f2"
+  },
+  "project": {
+    "id": "dot-book-one",
+    "owner_id": "henok",
+    "type": "book",
+    "series_title": "Digital Organism Theory",
+    "title": "Consciousness: A Digital Organism",
+    "subtitle": "Foundations, Agency, and Research",
+    "author": "Henok Ghebrechristos",
+    "slug": "digital-organism-theory",
+    "visibility": "public"
+  },
+  "release": {
+    "id": "dot-book-one-v4",
+    "version": 4,
+    "status": "published",
+    "label": "Digital edition",
+    "published_at": "2026-10-03",
+    "updated_at": "2026-10-03"
+  },
+  "extent": {
+    "chapters": 7,
+    "words": 43747,
+    "core_words": 33427,
+    "depth_passages": 26,
+    "equations": 24,
+    "references": 51
+  },
+  "reader_contract": {
+    "finite": true,
+    "autoplay": false,
+    "depth": "folded-on-request",
+    "claim_levels": [
+      "Observation",
+      "External model",
+      "DOT derivation",
+      "Speculative extension"
+    ]
+  },
+  "sections": [
+    {
+      "id": "dot-book-one-preface",
+      "order": 0,
+      "slug": "preface",
+      "kind": "preface",
+      "number": null,
+      "title": "The Observer Belongs in the Inquiry",
+      "subtitle": null,
+      "part": "The Proposed Architecture",
+      "content_path": "sections/preface.md",
+      "word_count": 2420,
+      "core_word_count": 2101,
+      "depth_passages": 1,
+      "reading_time_minutes": 10,
+      "complete_reading_time_minutes": 11,
+      "related_concepts": [
+        "subjective-data",
+        "fear",
+        "love"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-digital-organism",
+      "order": 1,
+      "slug": "the-digital-organism",
+      "kind": "chapter",
+      "number": 1,
+      "title": "The Digital Organism",
+      "subtitle": "The Fact Hiding in Plain Sight",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/the-digital-organism.md",
+      "word_count": 6934,
+      "core_word_count": 5591,
+      "depth_passages": 4,
+      "reading_time_minutes": 25,
+      "complete_reading_time_minutes": 32,
+      "related_concepts": [
+        "digital-organism",
+        "big-c",
+        "little-c",
+        "reality-frame",
+        "canvas",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-decoupling-principle",
+      "order": 2,
+      "slug": "the-decoupling-principle",
+      "kind": "chapter",
+      "number": 2,
+      "title": "The Decoupling Principle",
+      "subtitle": "The Junction We Cannot Yet See",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/the-decoupling-principle.md",
+      "word_count": 4467,
+      "core_word_count": 3281,
+      "depth_passages": 3,
+      "reading_time_minutes": 15,
+      "complete_reading_time_minutes": 20,
+      "related_concepts": [
+        "little-c",
+        "body-interface",
+        "rendering-latency",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-architecture-of-continuity",
+      "order": 3,
+      "slug": "architecture-of-continuity",
+      "kind": "chapter",
+      "number": 3,
+      "title": "Architecture of Continuity",
+      "subtitle": "Between Moments, Something Holds",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/architecture-of-continuity.md",
+      "word_count": 4562,
+      "core_word_count": 3629,
+      "depth_passages": 3,
+      "reading_time_minutes": 16,
+      "complete_reading_time_minutes": 21,
+      "related_concepts": [
+        "continuity",
+        "reality-frame",
+        "reality-stream",
+        "big-c"
+      ]
+    },
+    {
+      "id": "dot-book-one-reality-frames",
+      "order": 4,
+      "slug": "reality-frames",
+      "kind": "chapter",
+      "number": 4,
+      "title": "Reality Frames",
+      "subtitle": "Rules, Consequence, and the Structure of Experience",
+      "part": "The Proposed Architecture",
+      "content_path": "sections/reality-frames.md",
+      "word_count": 4832,
+      "core_word_count": 3741,
+      "depth_passages": 5,
+      "reading_time_minutes": 17,
+      "complete_reading_time_minutes": 22,
+      "related_concepts": [
+        "reality-frame",
+        "reality-stream",
+        "world-invariants",
+        "agency",
+        "intent"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-canvas",
+      "order": 5,
+      "slug": "the-canvas",
+      "kind": "chapter",
+      "number": 5,
+      "title": "The Canvas",
+      "subtitle": "Something in You Is Recording",
+      "part": "The Human Instance",
+      "content_path": "sections/the-canvas.md",
+      "word_count": 4448,
+      "core_word_count": 3714,
+      "depth_passages": 4,
+      "reading_time_minutes": 17,
+      "complete_reading_time_minutes": 20,
+      "related_concepts": [
+        "canvas",
+        "painting",
+        "character",
+        "fear"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-painting",
+      "order": 6,
+      "slug": "the-painting",
+      "kind": "chapter",
+      "number": 6,
+      "title": "The Painting",
+      "subtitle": "See the Painting First",
+      "part": "The Human Instance",
+      "content_path": "sections/the-painting.md",
+      "word_count": 8127,
+      "core_word_count": 7404,
+      "depth_passages": 2,
+      "reading_time_minutes": 34,
+      "complete_reading_time_minutes": 37,
+      "related_concepts": [
+        "painting",
+        "character",
+        "culture",
+        "fear",
+        "love"
+      ]
+    },
+    {
+      "id": "dot-book-one-the-research-program",
+      "order": 7,
+      "slug": "the-research-program",
+      "kind": "chapter",
+      "number": 7,
+      "title": "The Research Program",
+      "subtitle": "From Framework to Research Program",
+      "part": "The Inquiry Ahead",
+      "content_path": "sections/the-research-program.md",
+      "word_count": 3956,
+      "core_word_count": 498,
+      "depth_passages": 3,
+      "reading_time_minutes": 2,
+      "complete_reading_time_minutes": 18,
+      "related_concepts": [
+        "research-program",
+        "decoupling-principle",
+        "rendering-latency"
+      ]
+    },
+    {
+      "id": "dot-book-one-coda",
+      "order": 8,
+      "slug": "coda",
+      "kind": "coda",
+      "number": null,
+      "title": "The Theory Returns to One Life",
+      "subtitle": null,
+      "part": "The Inquiry Ahead",
+      "content_path": "sections/coda.md",
+      "word_count": 1074,
+      "core_word_count": 1074,
+      "depth_passages": 0,
+      "reading_time_minutes": 5,
+      "complete_reading_time_minutes": 5,
+      "related_concepts": [
+        "little-c",
+        "love"
+      ]
+    },
+    {
+      "id": "dot-book-one-equation-guide",
+      "order": 9,
+      "slug": "equation-guide",
+      "kind": "appendix",
+      "number": null,
+      "title": "Equation and Notation Guide",
+      "subtitle": null,
+      "part": "Notes and Sources",
+      "content_path": "sections/equation-guide.md",
+      "word_count": 533,
+      "core_word_count": 0,
+      "depth_passages": 1,
+      "reading_time_minutes": 1,
+      "complete_reading_time_minutes": 2,
+      "related_concepts": [
+        "notation"
+      ]
+    },
+    {
+      "id": "dot-book-one-glossary",
+      "order": 10,
+      "slug": "glossary",
+      "kind": "glossary",
+      "number": null,
+      "title": "Core Terms",
+      "subtitle": null,
+      "part": "Notes and Sources",
+      "content_path": "sections/glossary.md",
+      "word_count": 1094,
+      "core_word_count": 1094,
+      "depth_passages": 0,
+      "reading_time_minutes": 5,
+      "complete_reading_time_minutes": 5,
+      "related_concepts": [
+        "terms"
+      ]
+    },
+    {
+      "id": "dot-book-one-references",
+      "order": 11,
+      "slug": "references",
+      "kind": "references",
+      "number": null,
+      "title": "References",
+      "subtitle": null,
+      "part": "Notes and Sources",
+      "content_path": "sections/references.md",
+      "word_count": 1300,
+      "core_word_count": 1300,
+      "depth_passages": 0,
+      "reading_time_minutes": 6,
+      "complete_reading_time_minutes": 6,
+      "related_concepts": [
+        "sources",
+        "evidence"
+      ]
+    }
+  ]
+}

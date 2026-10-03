@@ -17,6 +17,7 @@ import asyncio
 import json
 import os
 import pathlib
+import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
@@ -30,7 +31,7 @@ if configured_canon_root:
     EDITION_ROOT = pathlib.Path(configured_canon_root)
 else:
     repo_root = pathlib.Path(__file__).resolve().parents[2]
-    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v3"
+    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v4"
 
 #: Declared by the author, section by section. Absent means undeclared.
 CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
@@ -53,7 +54,9 @@ def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection
                 number=entry["number"],
                 title=entry["title"],
                 part=entry["part"],
-                text=body.read_text(encoding="utf-8"),
+                # Depth containers (ADR-0036) fold text in the reader; the canon
+                # keeps the passage and drops only its marker lines.
+                text=re.sub(r"^:::.*$\n?", "", body.read_text(encoding="utf-8"), flags=re.M),
                 claim_level=CLAIM_LEVELS_BY_SECTION.get(entry["slug"]),
             )
         )

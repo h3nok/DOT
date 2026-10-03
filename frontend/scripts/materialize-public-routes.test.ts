@@ -237,7 +237,7 @@ describe("the author", () => {
 describe("page text for readers without JavaScript", () => {
   it("writes every chapter's own text into its page", () => {
     for (const section of manifest.sections) {
-      const source = readFileSync(join("public/publications/henok/digital-organism-theory/v3", section.content_path), "utf8");
+      const source = readFileSync(join("public/publications/henok/digital-organism-theory/v4", section.content_path), "utf8");
       // The first line of prose, as a crawler would quote it.
       const firstProse = source.split("\n").find((line: string) => /^[A-Z][a-z]/.test(line))!;
       const route = routeAt(`/book/digital-organism-theory/${section.slug}`);

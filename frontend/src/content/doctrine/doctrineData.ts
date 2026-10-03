@@ -45,7 +45,7 @@ export interface DoctrineNode {
   body: string;
   weight: number; // 0..1, conceptual centrality; never derived from traffic
   status: "released";
-  version: 3;
+  version: 4;
   source: DoctrineSource;
   related: DoctrineRelation[];
 }
@@ -77,7 +77,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 1,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -103,7 +103,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.98,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -129,7 +129,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -156,7 +156,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -183,7 +183,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-decoupling-principle",
       "The Decoupling Principle",
@@ -210,7 +210,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -237,7 +237,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.93,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -262,7 +262,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.78,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -288,7 +288,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -315,7 +315,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -342,7 +342,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.92,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -369,11 +369,11 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-painting",
       "The Painting",
-      "see-the-painting-first",
+      "what-is-on-your-painting",
       "Model",
     ),
     related: [
@@ -396,7 +396,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.76,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -422,7 +422,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -448,7 +448,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -474,7 +474,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-painting",
       "The Painting",
@@ -501,7 +501,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.88,
     status: "released",
-    version: 3,
+    version: 4,
     source: source(
       "the-digital-organism",
       "The Digital Organism",

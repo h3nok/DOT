@@ -7,7 +7,7 @@ import AboutPage from "./AboutPage";
 import { author, authorByline } from "../../content/author";
 
 const manifest = readFileSync(
-  "public/publications/henok/digital-organism-theory/v3/manifest.json",
+  "public/publications/henok/digital-organism-theory/v4/manifest.json",
   "utf8",
 );
 

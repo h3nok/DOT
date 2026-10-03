@@ -15,9 +15,10 @@ editorial scaffolding; it is not a competing manuscript source.
 
 ## Relationship to the public edition
 
-The public v3 Digital Edition remains the immutable Reader's Edition. It is the
-short, free entry into Digital Organism Theory and must not be rewritten in
-place.
+The v3 Digital Edition was the first public Reader's Edition and stays
+published, unchanged, at its own path. Since 2026-10-03 the live edition is
+version 4, released from the Complete Edition manuscript in `v4-working/`
+(ADR-0036).
 
 This directory develops a separate Complete Book One by expanding the full v3
 text in place. V3 supplies the narrative spine and original language. V4 adds

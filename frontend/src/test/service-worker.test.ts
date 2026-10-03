@@ -100,7 +100,7 @@ function loadWorker() {
 
 describe("service worker: released text", () => {
   const released = [
-    "/publications/henok/digital-organism-theory/v3/sections/preface.md",
+    "/publications/henok/digital-organism-theory/v4/sections/preface.md",
     "/essays/index.json",
     "/essays/fear-narrows.md",
     "/feed.xml",

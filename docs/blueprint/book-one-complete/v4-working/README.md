@@ -1,6 +1,7 @@
 # Complete Book One — Complete Edition, author review v4.8
 
-> Private editorial manuscript. Public v3 remains the released edition.
+> Editorial working copy. Published on 2026-10-03 as the Complete Edition,
+> version 4 ([release files](../release-v4/)), and as the v4 digital edition.
 
 *Consciousness: A Digital Organism — Foundations, Agency, and Research*
 

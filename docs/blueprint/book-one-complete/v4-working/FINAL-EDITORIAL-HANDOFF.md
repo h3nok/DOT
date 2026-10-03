@@ -18,8 +18,8 @@ conceptual decisions unchanged and adds three things:
 
 Remaining before a print release: the author's own final line edit, an ISBN,
 a full wrap cover once the page count is final, an index, and a proofread of
-the designed pages. The digital release (v4) is cut from this manuscript only
-after the author approves the redline.
+the designed pages. The author approved publication on 2026-10-03: the release
+build (`../release-v4/`) is live as digital edition v4 and its free PDF.
 
 ## Previous handoff: v4.7
 

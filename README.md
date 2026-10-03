@@ -70,22 +70,31 @@ The current digital edition is available at:
 /book/digital-organism-theory
 ```
 
-The Word manuscript in `docs/blueprint/` remains the editorial source of truth.
-After revising it in Word or LibreOffice, rebuild the web chapters, manifest,
-and branded digital PDF together:
+The live edition is version 4, published from the Complete Edition Word
+manuscript (ADR-0036: one manuscript, two renderings). The printed Complete
+Edition sets every passage inline; the digital reader folds 26 technical
+passages behind closed disclosures that open on request, so the core reads at
+about 33,000 words with the full 44,000 one tap away. The editable manuscript
+and its edit/depth manifests live in
+[`docs/blueprint/book-one-complete/v4-working/`](docs/blueprint/book-one-complete/v4-working/README.md);
+the published files are in `docs/blueprint/book-one-complete/release-v4/`.
+To publish an approved revision, rebuild the release Word/PDF, the reading
+units, and the manifest together (LibreOffice, Poppler, Pandoc, and the
+`.venv` book-design requirements):
 
 ```bash
-make release-book
+make release-book PANDOC=/path/to/pandoc
 ```
 
-The importer writes a deterministic release manifest and one finite Markdown
-unit per chapter under `frontend/public/publications/`. It preserves DOT model
-equations as TeX, links numbered citations to the reference section, and emits
-stable section/concept identifiers for DOT's graph layer. The normal test suite
-compares the private manuscript checksum with the manifest, so a DOCX edit
-cannot ship while the reader still represents an older manuscript. The DOCX is
-never exposed as a public download. `make release-book-artifacts` refreshes only
-the digital PDF when chapter extraction is intentionally unchanged.
+The importer writes a release manifest and one finite Markdown unit per
+section under `frontend/public/publications/henok/digital-organism-theory/v4/`.
+It preserves DOT model equations as TeX, links numbered citations to the
+reference section, and keeps each depth passage's text in the page. The normal
+test suite compares the private manuscript checksum with the manifest, so a
+DOCX edit cannot ship while the reader still represents an older manuscript.
+The DOCX is never exposed as a public download. Earlier editions (v1–v3) stay
+published at their own paths so existing citations keep resolving; the v3
+importer remains as `make release-book-v3` for provenance only.
 
 The complete online book and PDF are free without an account or email address.
 The PDF is published beside the reading units and mirrored in the backend
@@ -97,9 +106,11 @@ webhook delivery are still required before support can open. Historical book
 purchase/refund records remain private; new book purchase checkout is retired
 (ADR-0035; L1/L7/L8/L9/L10, none violated).
 
-The GitHub Pages deployment runs the same release command before every build.
-Once a manuscript revision reaches `main`, the public reader and digital PDF are
-regenerated from that Word document as part of the deployment.
+The GitHub Pages deployment ships the committed release. Its designed PDF needs
+the bundled print fonts and its reading units depend on the Pandoc release, so
+the edition is built locally with `make release-book`; the deployment's release
+tests refuse a manifest, PDF, or depth layer that no longer matches the Word
+manuscript.
 
 ## YouTube channel artwork
 
@@ -153,8 +164,8 @@ native equation row, without changing any tokens or subscripts. Explicit normal
 text formatting keeps the literal "DOT" qualifications from being interpreted
 as a dot-accent command by LibreOffice.
 
-Inspect the Word/PDF proof before replacing the canonical private manuscript,
-then run `make release-book` to refresh its derived reader and free PDF.
+This recipe produced the v3 Digital Edition and is kept for provenance; the v4
+Complete Edition's design lives in `scripts/build_book_v48.py`.
 The design recipe embeds the existing licensed fonts in Word and saves them
 under `design/fonts/` with their notices. On Linux, PDF export uses these fonts
 through an isolated Fontconfig configuration; it does not install fonts into

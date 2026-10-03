@@ -33,7 +33,7 @@ const RELEASE_MANIFEST = path.join(
   "publications",
   "henok",
   "digital-organism-theory",
-  "v3",
+  "v4",
   "manifest.json",
 );
 

@@ -1,4 +1,4 @@
-.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project seed-academy ingest-canon release-book release-book-artifacts test-book-release book-complete preview-book-complete orchestrator-services-up orchestrator-services-down
+.PHONY: help setup install install-frontend install-orchestrator dev start start-frontend start-backend start-orchestrator start-orchestrator-worker build lint lint-orchestrator format test test-e2e test-orchestrator typecheck verify audit migrate-orchestrator seed-profile-delivery seed-book-project seed-academy ingest-canon release-book release-book-v3 test-book-release book-complete preview-book-complete release-book-complete orchestrator-services-up orchestrator-services-down
 
 PYTHON ?= python3
 #: Whose canon and graph the local stack serves.
@@ -28,11 +28,12 @@ help:
 	@echo "  make seed-book-project    Seed Book One as a studio project"
 	@echo "  make seed-academy         Seed DOT Academy as institution kernel space 1"
 	@echo "  make ingest-canon      Load Book One so the copilot can cite it"
-	@echo "  make release-book      Rebuild the web reader and digital PDF from the DOCX"
-	@echo "  make release-book-artifacts Refresh the digital PDF from the DOCX"
+	@echo "  make release-book      Publish Book One (the v4 Complete Edition) to the reader"
+	@echo "  make release-book-v3   Rebuild the frozen v3 reading units (history only)"
 	@echo "  make test-book-release Verify every Book One artifact matches the DOCX"
 	@echo "  make book-complete     Build the v4.8 Complete Edition (line edit, depth layer, print design)"
 	@echo "  make preview-book-complete Derive the digital reading units from it (COMPLETE_RELEASE=dir)"
+	@echo "  make release-book-complete Publish the approved Complete Edition as digital v4"
 	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
@@ -98,13 +99,12 @@ ingest-canon:
 # The Word manuscript is the only editorial source. Pandoc derives the web
 # sections and LibreOffice derives the public PDF; both tools must be explicit
 # so a release cannot quietly fall back to stale generated files.
-release-book:
-	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT)
-	$(MAKE) test-book-release
+# The live edition is v4 (ADR-0036). The v3 Digital Edition is frozen; its
+# importer remains for provenance and writes only historical outputs.
+release-book: release-book-complete
 
-release-book-artifacts:
-	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT) --artifacts-only
-	$(MAKE) test-book-release
+release-book-v3:
+	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT) --skip-artifacts --output frontend/public/publications/henok/digital-organism-theory/v3
 
 test-book-release:
 	pnpm --dir frontend exec vitest run src/content/publications/dotBookOne.release.test.ts
@@ -117,6 +117,14 @@ book-complete:
 
 preview-book-complete:
 	$(BOOK_PYTHON) scripts/import_dot_book_v4.py --input $(COMPLETE_BOOK).docx --output $(COMPLETE_RELEASE) --pandoc $(PANDOC)
+
+# Publish the approved edition: build the release-labelled Word/PDF, derive the
+# v4 reading units, and mirror the PDF to the backend artifact directory.
+RELEASE_BOOK := docs/blueprint/book-one-complete/release-v4/DOT-Book-One-Complete-Edition-v4
+release-book-complete:
+	$(BOOK_PYTHON) scripts/build_book_v48.py --release --render
+	$(BOOK_PYTHON) scripts/import_dot_book_v4.py --input $(RELEASE_BOOK).docx --pdf $(RELEASE_BOOK).pdf --output frontend/public/publications/henok/digital-organism-theory/v4 --pandoc $(PANDOC)
+	$(MAKE) test-book-release
 
 build:
 	pnpm --dir frontend build

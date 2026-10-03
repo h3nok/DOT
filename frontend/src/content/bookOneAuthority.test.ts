@@ -16,14 +16,18 @@ const earlierDraftClaims = [
 ];
 
 describe("Book One authority", () => {
-  it("keeps both delivery and canon ingestion on edition v3", () => {
-    const liveReleaseInputs = [
-      readFileSync("src/content/publications/dotBookOne.ts", "utf8"),
-      readFileSync("../backend/orchestrator/scripts/ingest_canon.py", "utf8"),
-    ].join("\n");
-
-    expect(liveReleaseInputs).toContain("digital-organism-theory/v3");
-    expect(liveReleaseInputs).not.toContain("digital-organism-theory/v1");
+  it("keeps delivery, canon ingestion, and the API image on edition v4", () => {
+    for (const input of [
+      "src/content/publications/dotBookOne.ts",
+      "../backend/orchestrator/scripts/ingest_canon.py",
+      "../backend/orchestrator/Dockerfile",
+      "scripts/materialize-public-routes.mjs",
+    ]) {
+      const source = readFileSync(input, "utf8");
+      // Literal paths, template literals (`${slug}/v4`), and path segments ("v4").
+      expect(source, input).toMatch(/digital-organism-theory\/v4|\/v4`|"v4"/);
+      expect(source, input).not.toMatch(/digital-organism-theory\/v[123]\b|\/v[123]`|"v[123]"/);
+    }
   });
 
   it("keeps first-party theory descriptions subordinate to Book One", () => {

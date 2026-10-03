@@ -56,6 +56,8 @@ MUTED = IDENTITY["light"]["muted"][1:].upper()
 ACCENT = IDENTITY["light"]["accent"][1:].upper()
 RULE = "B9C4BC"
 EDITION = "Complete Edition · Author Review v4.8"
+# --release swaps review labels for the published edition's (see configure_release).
+RELEASE = False
 # Text measure on the 6 × 9 in page: 8640 − 1224 inside − 936 outside margins.
 MEASURE = 6480
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -518,7 +520,12 @@ def front_matter(doc):
     holder = [n for n in copyright_lines[1].getElementsByTagName("w:t") if n.firstChild and "Author Review Edition." in n.firstChild.data]
     if len(holder) != 1:
         raise ValueError("Copyright edition line changed")
-    holder[0].firstChild.data = holder[0].firstChild.data.replace("Author Review Edition.", EDITION + ".", 1)
+    if RELEASE:
+        if len([n for n in copyright_lines[1].getElementsByTagName("w:t") if n.firstChild]) != 1:
+            raise ValueError("Copyright edition line has unexpected runs")
+        holder[0].firstChild.data = f"{EDITION}. First published October 2026."
+    else:
+        holder[0].firstChild.data = holder[0].firstChild.data.replace("Author Review Edition.", EDITION + ".", 1)
     # Set the copyright block low on its page. LibreOffice drops space-before at
     # the top of a page, so an exact-height spacer carries the drop instead.
     spacer = doc.createElement("w:p")
@@ -753,7 +760,7 @@ def build(output: Path):
         prop(root, tag, **attrs)
     parts["word/settings.xml"] = settings.toxml(encoding="UTF-8")
 
-    cover = ASSETS / "cover.png"
+    cover = ASSETS / ("cover-release.png" if RELEASE else "cover.png")
     render_cover(cover)
     rels = minidom.parseString(parts["word/_rels/document.xml.rels"])
     first_image = paragraphs[0].getElementsByTagName("a:blip")
@@ -767,7 +774,7 @@ def build(output: Path):
     embed_print_fonts(parts)
     core = minidom.parseString(parts["docProps/core.xml"])
     for tag, value in (
-        ("dc:description", "Complete Edition, author review v4.8: line edit, depth layer for the digital reader, and print design."),
+        ("dc:description", f"{EDITION}: line edit, depth layer for the digital reader, and print design."),
         ("dcterms:modified", "2026-10-02T00:00:00Z"),
     ):
         holder = core.getElementsByTagName(tag)[0]
@@ -941,6 +948,8 @@ def validate(path: Path, report: dict):
         following = pages[number] if number < len(pages) else ""
         if not re.match(r"\s*(PREFACE|CHAPTER|CODA|APPENDIX|GLOSSARY|NOTES AND SOURCES)\b", following) and number != len(pages):
             raise ValueError(f"Unexpected blank page {number}")
+    if RELEASE and re.search(r"Author Review|not the final publication", text):
+        raise ValueError("Review labels remain in the release edition")
     report.update(
         {
             "pages": len(pages),
@@ -952,11 +961,23 @@ def validate(path: Path, report: dict):
     )
 
 
+def configure_release():
+    """Label the build as the published Complete Edition, version 4."""
+    global RELEASE, NAME, EDITION
+    RELEASE = True
+    NAME = "DOT-Book-One-Complete-Edition-v4"
+    EDITION = "Complete Edition · Version 4"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=BASE / "v4.8-review")
+    parser.add_argument("--output", type=Path)
     parser.add_argument("--render", action="store_true")
+    parser.add_argument("--release", action="store_true", help="Build the published edition rather than the review proof")
     args = parser.parse_args()
+    if args.release:
+        configure_release()
+    args.output = args.output or (BASE.parent / "release-v4" if args.release else BASE / "v4.8-review")
     path, report = build(args.output.resolve())
     if args.render:
         render(path)

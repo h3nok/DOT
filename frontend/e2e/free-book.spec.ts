@@ -70,10 +70,33 @@ test("closed support does not block the free download", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Download the free PDF/ })).toBeVisible();
 });
 
-test("the released two-row equation renders in the reader without page overflow", async ({ page }) => {
+test("released equations render in the reader without page overflow", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/book/digital-organism-theory/the-canvas");
+  // Rendering Latency's definitions sit in the core reading line.
+  await page.goto("/book/digital-organism-theory/the-decoupling-principle");
   await expect(page.locator(".katex-display").first()).toBeVisible();
   await expect(page.locator(".katex-error")).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
+});
+
+test("a folded depth passage opens on request and its equations fit the page (ADR-0036)", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/book/digital-organism-theory/the-canvas");
+  const passage = page.locator("details.book-depth", { hasText: "Experience Loop equations" });
+  await expect(passage).not.toHaveAttribute("open");
+  await expect(passage.locator(".katex-display").first()).toBeHidden();
+
+  await passage.locator("summary").click();
+  await expect(passage).toHaveAttribute("open");
+  await expect(passage.locator(".katex-display").first()).toBeVisible();
+  await expect(page.locator(".katex-error")).toHaveCount(0);
+  await expectNoHorizontalOverflow(page);
+});
+
+test("a link into a folded passage opens it, so concept-map links still land", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/book/digital-organism-theory/the-digital-organism#the-derivation-contract");
+  const heading = page.getByRole("heading", { name: "The Derivation Contract" });
+  await expect(heading).toBeVisible();
+  await expect(page.locator("details.book-depth", { has: heading })).toHaveAttribute("open");
 });
