@@ -61,7 +61,7 @@ test.describe("hero", () => {
     const model = actions.getByRole("link", { name: "Explore the model" });
     await expect(model).toBeVisible();
     await expect(model).toHaveAttribute("href", "#possibility-field");
-    await expect(actions.getByRole("link", { name: "Read Book One" })).toBeVisible();
+    await expect(actions.getByRole("link", { name: "Begin with lived experience" })).toBeVisible();
   });
 
   test("the architecture figure keeps its layer and awareness labels legible", async ({
@@ -132,7 +132,7 @@ test.describe("hero", () => {
   }) => {
     await page.goto("/");
 
-    const cards = page.locator(".home-theory-layer-card");
+    const cards = page.locator(".home-theory-layers .home-theory-layer-card");
     await expect(cards).toHaveCount(4);
 
     const argumentOpacity = await page
@@ -147,7 +147,7 @@ test.describe("hero", () => {
       "Proposed explanation",
     );
     await expect(cards.nth(2).locator(".home-theory-layer-status")).toHaveText(
-      "Observed universe; proposed origin",
+      "Observed universe; proposed origin and purpose",
     );
     await expect(cards.first().getByText("What remains unproven")).toBeVisible();
     await expect(cards.first().getByText("What we know")).not.toBeVisible();
@@ -165,13 +165,15 @@ test.describe("hero", () => {
 
     const realityFrame = page.locator("#reality-frame");
     await expect(
-      realityFrame.getByRole("heading", { name: "A generated world would still be real." }),
+      realityFrame.getByRole("heading", { name: "A world to live in, learn from, and evolve within." }),
     ).toBeVisible();
+    await expect(realityFrame.getByText(/DOT proposes RF₀ as an incubator for Little c/)).toBeVisible();
+    await expect(realityFrame.getByText(/not a conclusion derived from physics/)).toBeVisible();
     await realityFrame.locator("summary").filter({ hasText: "Explore the reasoning" }).click();
     await expect(realityFrame.getByText(/models tested against measurement/)).toBeVisible();
     await expect(realityFrame.getByText(/generated rather than fundamental/)).toBeVisible();
     await expect(
-      realityFrame.getByText("A generated world is still a consequential world."),
+      realityFrame.getByText("Live, explore, and develop through real consequence."),
     ).toBeVisible();
     await expect(realityFrame.getByText("From consequence to choice")).toBeVisible();
 

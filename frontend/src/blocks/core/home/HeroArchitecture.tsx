@@ -3,6 +3,7 @@ import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 import { Disclosure } from "../../../shared/Disclosure";
 
 import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
@@ -140,15 +141,22 @@ export function HeroArchitecture() {
     coreRatio: R.core / R.origin,
   });
   const instanceId = useId().replaceAll(":", "");
-  const gridId = `${instanceId}-hero-rf-grid`;
-  const arrowId = `${instanceId}-hero-trace-arrow`;
-  const pressureArrowId = `${instanceId}-hero-pressure-arrow`;
-  const radiusArrowId = `${instanceId}-hero-radius-arrow`;
-  const fieldWashId = `${instanceId}-hero-field-wash`;
-  const frameWashId = `${instanceId}-hero-frame-wash`;
-  const localWashId = `${instanceId}-hero-local-wash`;
-  const threadId = `${instanceId}-hero-thread`;
-  const frameClipId = `${instanceId}-hero-frame-clip`;
+  const ids: HeroArchitectureIds = {
+    gridId: `${instanceId}-hero-rf-grid`,
+    arrowId: `${instanceId}-hero-trace-arrow`,
+    pressureArrowId: `${instanceId}-hero-pressure-arrow`,
+    radiusArrowId: `${instanceId}-hero-radius-arrow`,
+    fieldWashId: `${instanceId}-hero-field-wash`,
+    frameWashId: `${instanceId}-hero-frame-wash`,
+    localWashId: `${instanceId}-hero-local-wash`,
+    threadId: `${instanceId}-hero-thread`,
+    frameClipId: `${instanceId}-hero-frame-clip`,
+    surfacePrefix: `${instanceId}-hero-surface`,
+  };
+  const {
+    gridId, arrowId, pressureArrowId, fieldWashId, frameWashId,
+    localWashId, threadId, frameClipId, surfacePrefix,
+  } = ids;
   const captionId = `${instanceId}-hero-architecture-caption`;
   const descriptionId = `${instanceId}-hero-architecture-description`;
 
@@ -159,114 +167,7 @@ export function HeroArchitecture() {
         viewBox="0 0 700 700"
         focusable="false"
       >
-        <defs>
-          <pattern
-            id={gridId}
-            width="20"
-            height="20"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle className="home-architecture-gridpoint" cx="1" cy="1" r="0.75" />
-          </pattern>
-          <marker
-            id={arrowId}
-            markerWidth="8"
-            markerHeight="8"
-            refX="6"
-            refY="4"
-            orient="auto"
-            markerUnits="strokeWidth"
-          >
-            <path className="home-architecture-arrow" d="M0 0L8 4L0 8Z" />
-          </marker>
-          <marker
-            id={pressureArrowId}
-            markerWidth="6"
-            markerHeight="6"
-            refX="5"
-            refY="3"
-            orient="auto"
-            markerUnits="strokeWidth"
-          >
-            {/* Open chevron: an option offered, not yet an action taken. */}
-            <path className="home-architecture-pressure-arrow" d="M1 0L6 3L1 6" />
-          </marker>
-          <marker
-            id={radiusArrowId}
-            markerWidth="7"
-            markerHeight="7"
-            refX="5.2"
-            refY="3"
-            orient="auto-start-reverse"
-            markerUnits="strokeWidth"
-          >
-            {/* Dimension arrowhead: the radius is a measurement, not a flow. */}
-            <path className="home-architecture-radius-arrow" d="M0.6 0.6L5.4 3L0.6 5.4Z" />
-          </marker>
-          <radialGradient id={fieldWashId} cx="50%" cy="48%" r="52%">
-            <stop
-              className="home-architecture-field-stop"
-              offset="0%"
-              stopOpacity="0.14"
-            />
-            <stop
-              className="home-architecture-field-stop"
-              offset="58%"
-              stopOpacity="0.05"
-            />
-            <stop
-              className="home-architecture-field-stop"
-              offset="100%"
-              stopOpacity="0"
-            />
-          </radialGradient>
-          <radialGradient id={frameWashId} cx="50%" cy="52%" r="70%">
-            <stop
-              className="home-architecture-frame-stop"
-              offset="0%"
-              stopOpacity="0.2"
-            />
-            <stop
-              className="home-architecture-frame-stop"
-              offset="100%"
-              stopOpacity="0.04"
-            />
-          </radialGradient>
-          <radialGradient id={localWashId} cx="50%" cy="50%" r="50%">
-            <stop
-              className="home-architecture-local-stop"
-              offset="0%"
-              stopOpacity="0.28"
-            />
-            <stop
-              className="home-architecture-local-stop"
-              offset="42%"
-              stopOpacity="0.1"
-            />
-            <stop
-              className="home-architecture-local-stop"
-              offset="100%"
-              stopOpacity="0"
-            />
-          </radialGradient>
-          {/* Runs along the thread so it gathers colour as consequence returns. */}
-          <linearGradient
-            id={threadId}
-            x1="348"
-            y1="352"
-            x2="454"
-            y2="518"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop className="home-architecture-thread-from" offset="0%" />
-            <stop className="home-architecture-thread-mid" offset="52%" />
-            <stop className="home-architecture-thread-to" offset="100%" />
-          </linearGradient>
-
-          <clipPath id={frameClipId}>
-            <circle cx="348" cy="352" r={R.frame} />
-          </clipPath>
-        </defs>
+        <HeroArchitectureDefs ids={ids} />
 
         <circle
           className="home-architecture-field-wash"
@@ -289,7 +190,13 @@ export function HeroArchitecture() {
           })}
         </g>
 
-        <circle className="home-architecture-big-c-zone" cx="348" cy="352" r="286" />
+        <circle
+          className="home-architecture-big-c-zone home-architecture-surface"
+          cx="348" cy="352" r={R.bigC}
+          fill={`url(#${surfacePrefix}-big-c)`}
+          stroke={`url(#${surfacePrefix}-rim)`}
+          filter={`url(#${surfacePrefix}-shadow)`}
+        />
 
         <g className="home-architecture-big-c">
           {BIG_C_RINGS.map((radius, index) => (
@@ -339,7 +246,13 @@ export function HeroArchitecture() {
         </g>
 
         <g className="home-architecture-frame">
-          <circle className="home-architecture-frame-zone" cx="348" cy="352" r={R.frame} />
+          <circle
+            className="home-architecture-frame-zone home-architecture-surface"
+            cx="348" cy="352" r={R.frame}
+            fill={`url(#${surfacePrefix}-frame)`}
+            stroke={`url(#${surfacePrefix}-rim)`}
+            filter={`url(#${surfacePrefix}-shadow)`}
+          />
           <circle
             className="home-architecture-frame-wash"
             cx="348"
@@ -492,6 +405,13 @@ export function HeroArchitecture() {
             r={R.awareness}
             fill={`url(#${localWashId})`}
           />
+          <circle
+            className="home-architecture-surface"
+            cx="348" cy="352" r={R.local}
+            fill={`url(#${surfacePrefix}-local)`}
+            stroke={`url(#${surfacePrefix}-rim)`}
+            filter={`url(#${surfacePrefix}-shadow)`}
+          />
           <circle className="home-architecture-local-ring" cx="348" cy="352" r={R.local} />
           <circle className="home-architecture-local-core" cx="348" cy="352" r={R.core} />
           <circle className="home-architecture-local-pin" cx="348" cy="352" r="2.25" />
@@ -542,14 +462,25 @@ export function HeroArchitecture() {
         <span id={descriptionId} className="sr-only">
           T and E precede Big C; Big C generates RF₀, our physical universe;
           Little c experiences and acts within it. The rings are conceptual,
-          not spatial.
+          not spatial. DOT proposes this environment as a setting for Little c
+          to live, explore possibilities, and develop.
         </span>
         <Disclosure className="home-architecture-guide" summary="About the diagram">
-          <p>Conceptual rings, not spatial boundaries.</p>
+          <p>
+            Conceptual rings, not spatial boundaries. Shading adds visual depth,
+            not physical scale. The page-wide curved field suggests continuity and
+            possibility, not measured structure outside our universe.
+          </p>
+          <p>
+            RF₀’s grid and graphite boundaries identify physical structure.
+            The accent identifies conscious processes: experiencers, awareness,
+            and Intent. Dotted links distinguish offered options and social
+            coupling from chosen action.
+          </p>
           <dl>
             <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
             <div><dt>Big C</dt><dd>The proposed conscious organism that generates our world.</dd></div>
-            <div><dt>RF₀</dt><dd>The physical universe: generated in this model, with real consequences.</dd></div>
+            <div><dt>RF₀</dt><dd>The physical universe, proposed as Big C’s developmental environment for Little c. Generated does not mean unreal; consequences remain real.</dd></div>
             <div><dt>Little c</dt><dd>You, the local experiencer: noticing, choosing, and living with what follows.</dd></div>
           </dl>
           <p>

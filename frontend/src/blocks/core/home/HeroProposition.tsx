@@ -4,10 +4,11 @@ import { ArrowDown } from "lucide-react";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
-import { EpistemicBadge } from "../../../shared/EpistemicBadge";
+import { HeroConceptSlideshow } from "./HeroConceptSlideshow";
 
 interface HeroPropositionProps {
   inquiry?: ReactNode;
+  reducedMotion?: boolean;
   /** The proposed architecture accompanies the reading invitation. */
   stage?: ReactNode;
 }
@@ -15,6 +16,7 @@ interface HeroPropositionProps {
 export function HeroProposition({
   inquiry,
   stage,
+  reducedMotion,
 }: HeroPropositionProps) {
   return (
     <div className="home-hero-proposition">
@@ -33,23 +35,19 @@ export function HeroProposition({
             </h1>
 
             <p className="dot-lede home-hero-lede">
-              Consciousness is the experience of being you. DOT proposes that it
-              precedes the physical universe we inhabit, and that this universe
-              is a virtual environment where threads of consciousness use their
-              potential to learn and refine themselves: a school that
-              consciousness runs for itself.
+              You inherit ways of seeing before you learn to examine them. DOT
+              offers a practical framework for exploring how feeling,
+              conditioning, choice, and consequence shape your life.
             </p>
-            <EpistemicBadge status="hypothesis" presentation="text">
-              Held as hypothesis · Open to challenge
-            </EpistemicBadge>
+            <HeroConceptSlideshow reducedMotion={reducedMotion} />
           </div>
 
           <FocusNav
             className="home-hero-entry"
             label="Begin exploring DOT"
             primary={{
-              to: "/book/digital-organism-theory/preface",
-              label: "Read Book One",
+              to: "/book/digital-organism-theory/preface?path=start-where-you-live",
+              label: "Begin with lived experience",
               description: "Begin with the preface · Free to read",
               icon: <NucleusMark size={24} reducedMotion />,
             }}

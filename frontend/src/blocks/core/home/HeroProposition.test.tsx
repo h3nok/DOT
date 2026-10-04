@@ -8,11 +8,11 @@ describe("HeroProposition", () => {
   const renderProposition = () =>
     render(
       <MemoryRouter>
-        <HeroProposition />
+        <HeroProposition reducedMotion />
       </MemoryRouter>,
     );
 
-  it("offers a human question without self-advancing copy", () => {
+  it("keeps the human question still while concepts have their own controls", () => {
     renderProposition();
 
     expect(
@@ -32,31 +32,36 @@ describe("HeroProposition", () => {
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText(/Consciousness is the experience of being you/)).toBeVisible();
+    expect(screen.getByText(/You inherit ways of seeing before you learn to examine them/)).toBeVisible();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("explains the paradigm without claiming purpose is already understood", () => {
+  it("introduces practical inquiry without presenting the architecture as established", () => {
     renderProposition();
 
-    expect(screen.getByText(/DOT proposes that it precedes the physical universe we inhabit/)).toBeVisible();
-    expect(screen.getByText(/a school that consciousness runs for itself/)).toBeVisible();
-    expect(screen.getByText("Held as hypothesis · Open to challenge")).toBeVisible();
+    expect(screen.getByText(/offers a practical framework for exploring/)).toBeVisible();
+    expect(screen.getByText(/conditioning, choice, and consequence shape your life\./)).toBeVisible();
+    expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
+    const concepts = screen.getByRole("region", { name: "Key concepts from Book One" });
+    expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
+    expect(within(concepts).getByRole("group", { name: "1 of 10" }))
+      .toHaveAttribute("data-epistemic-status", "model");
+    expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
   });
 
   it("offers one primary reading action and a quiet path to the explanation", () => {
     renderProposition();
 
-    expect(screen.getByRole("link", { name: /read book one/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Begin with lived experience" })).toHaveAttribute(
       "href",
-      "/book/digital-organism-theory/preface",
+      "/book/digital-organism-theory/preface?path=start-where-you-live",
     );
     expect(screen.getByRole("link", { name: /explore the model/i })).toHaveAttribute(
       "href",
       "#possibility-field",
     );
     expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
-    expect(screen.getByRole("link", { name: "Read Book One" }))
+    expect(screen.getByRole("link", { name: "Begin with lived experience" }))
       .toHaveAccessibleDescription("Begin with the preface · Free to read");
   });
 
@@ -70,7 +75,7 @@ describe("HeroProposition", () => {
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
     const heading = screen.getByRole("heading", { name: "What shapes the life you live?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
-    const explanation = screen.getByText(/DOT proposes that it/i);
+    const explanation = screen.getByText(/offers a practical framework/i);
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

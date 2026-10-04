@@ -38,7 +38,7 @@ const RELEASE_MANIFEST = path.join(
 );
 
 const BOOK_DESCRIPTION =
-  "Read Digital Organism Theory's foundational architecture of consciousness, physical law, biology, and lived experience with its evidence boundaries in view.";
+  "Examine experience, inherited conditioning, meaningful choice, and development toward Love. Book One also develops DOT’s proposed wider architecture of consciousness and the physical universe, with its evidence boundaries in view.";
 
 const STATIC_ROUTES = [
   {
@@ -896,7 +896,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     "<h1>Digital Organism Theory</h1>",
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
-    `<p>${link(BOOK_ROUTE, `Read ${manifest.project.title}`)}, complete and free.</p>`,
+    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, "Begin with lived experience")} in ${escapeHtml(manifest.project.title)}, complete and free.</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0
       ? `<h2>Essays</h2><ol>${latest.map((essay) => `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)}</li>`).join("")}</ol>`

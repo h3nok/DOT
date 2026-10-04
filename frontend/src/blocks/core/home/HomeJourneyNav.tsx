@@ -6,6 +6,7 @@ const HOME_SECTIONS = [
   { id: "big-c", label: "Big C: the foundation" },
   { id: "reality-frame", label: "RF₀: the physical universe" },
   { id: "little-c", label: "Little c: the local experiencer" },
+  { id: "consciousness-101", label: "Consciousness 101: Love and relationships" },
   { id: "choose-path", label: "Continue the inquiry" },
 ] as const;
 

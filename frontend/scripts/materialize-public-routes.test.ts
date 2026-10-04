@@ -279,13 +279,17 @@ describe("page text for readers without JavaScript", () => {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }
     expect(html).toContain('href="/about"');
+    expect(html).toContain(
+      '<a href="/book/digital-organism-theory/preface?path=start-where-you-live">Begin with lived experience</a>',
+    );
   });
 
-  it("carries the paradigm and lived inquiry into metadata and the script-free home", () => {
+  it("carries the practical passage into metadata and the script-free home", () => {
     const description = /name="description"\s+content="([^"]+)"/.exec(shell)?.[1];
-    expect(description).toContain("new consciousness-first paradigm");
-    expect(description).toContain("reality and human purpose");
-    expect(description).toContain("study, questioning, and lived experience");
+    expect(description).toContain("You inherit ways of seeing");
+    expect(description).toContain("practical framework");
+    expect(description).toContain("conditioning, choice, and consequence shape your life.");
+    expect(description).not.toContain("greater awareness can support");
     for (const field of ["og:description", "twitter:description"]) {
       const content = new RegExp(`(?:name|property)="${field}"\\s+content="([^"]+)"`)
         .exec(shell)?.[1];

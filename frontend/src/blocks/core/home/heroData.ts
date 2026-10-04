@@ -18,7 +18,7 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.organism",
     term: "The Digital Organism",
-    text: "A state-bearing, information-sensitive process that works to preserve or develop its coherence across change.",
+    text: "A process that responds to information while maintaining or developing its coherence: how well its parts work together through change.",
     level: "model",
   },
   {
@@ -30,43 +30,43 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.layers",
     term: "Canvas · Painting · Character",
-    text: "The Canvas carries. The Painting interprets. Character acts.",
+    text: "Your body carries experience. Your learned interpretations give it meaning. Character is how you act within what you can see and choose.",
     level: "model",
   },
   {
     id: "home.concept.rest",
     term: "The First Painting",
-    text: "You were shaped by your environment, yet you must choose within your available decision space.",
+    text: "Family, culture, and early experience shape how you see before you can examine it. What you inherit is a starting point, not a final verdict.",
     level: "observation",
   },
   {
     id: "home.concept.fear",
     term: "Fear",
-    text: "The governing contraction that organizes perception around defense, control, and the preservation of identity at the expense of truth.",
+    text: "When protecting your identity matters more than seeing clearly, Fear governs. Perception narrows around defence and control.",
     level: "model",
   },
   {
     id: "home.concept.love",
     term: "Love",
-    text: "The condition in which Fear no longer governs you. Not a mood added to the loop — the operating condition that makes inquiry harder to corrupt.",
+    text: "Love is the condition in which Fear no longer governs you. It takes form in truthful, caring relationships that respect agency and boundaries.",
     level: "model",
   },
   {
     id: "home.concept.intent",
     term: "Intent",
-    text: "The directional organization of Little c before action. Clarity matters without requiring magic.",
+    text: "The direction you form before you act. It shapes your next choice within what the world allows; it is not a magical override of physical law.",
     level: "model",
   },
   {
     id: "home.concept.frame",
     term: "Reality Frame",
-    text: "A generated, rule-bound environment whose invariants the physical sciences formalize. Consequence gives experience weight.",
+    text: "A world with stable rules and real consequences. DOT proposes RF₀, our physical universe, as an environment for Little c to live and develop.",
     level: "model",
   },
   {
     id: "home.concept.bigc",
     term: "Big C and Little c",
-    text: "Fundamental consciousness differentiates local centres of experience and develops Reality Frames. A public hypothesis; DOT's governing postulate.",
+    text: "DOT proposes Big C as the conscious source of worlds, and Little c as a local experiencer. A hypothesis, not an established finding.",
     level: "hypothesis",
   },
   {

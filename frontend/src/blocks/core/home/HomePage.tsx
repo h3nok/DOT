@@ -22,6 +22,7 @@ import { HeroProposition } from "./HeroProposition";
 import type { HeroAskRequest } from "./heroData";
 import { HomeJourneyNav } from "./HomeJourneyNav";
 import { TheoryLayerJourney } from "./TheoryLayerJourney";
+import { Consciousness101 } from "./Consciousness101";
 import "./home.css";
 
 export default function HomePage() {
@@ -129,6 +130,7 @@ export default function HomePage() {
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
           <HeroProposition
+            reducedMotion={reducedMotion}
             inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
             stage={
               <div className="home-hero-stage">
@@ -152,6 +154,7 @@ export default function HomePage() {
 
       {/* ── The theory, in the same outside-to-inside order as the hero ─ */}
       <TheoryLayerJourney reducedMotion={reducedMotion} />
+      <Consciousness101 />
 
       {/* ── Final invitation into the living inquiry ─────────────────── */}
       <motion.section

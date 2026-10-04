@@ -23,8 +23,13 @@ const HERO_FILES = [
   "HeroConcepts.tsx",
   "HeroAsk.tsx",
   "HeroArchitecture.tsx",
+  "HeroArchitectureDefs.tsx",
   "HeroArchitectureLabels.tsx",
+  "ArchitectureSurfaceDefs.tsx",
+  "ConceptArchitecture.tsx",
   "HeroProposition.tsx",
+  "HeroConceptSlideshow.tsx",
+  "Consciousness101.tsx",
   "TheoryLayerJourney.tsx",
   "HomeJourneyNav.tsx",
   "ArchitectureDiagram.tsx",
@@ -34,7 +39,7 @@ const HERO_FILES = [
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");
 
 function readArchitecture() {
-  return ["HeroArchitecture.tsx", "HeroArchitectureLabels.tsx"]
+  return ["HeroArchitecture.tsx", "HeroArchitectureDefs.tsx", "HeroArchitectureLabels.tsx", "ArchitectureSurfaceDefs.tsx"]
     .map((file) => readFileSync(join(HERE, file), "utf8"))
     .join("\n");
 }
@@ -69,6 +74,21 @@ describe("home entry theme compatibility", () => {
     expect(source).not.toMatch(/<section[^>]*\sclassName="[^"]*\bbg-(?!background\b)\S/);
   });
 
+  it("reveals the shared splash field rather than drawing a substitute grid", () => {
+    const styles = readFileSync(join(HERE, "home.css"), "utf8");
+    const field = styles.match(/\.home-hero-environment::before\s*\{([\s\S]*?)\n\}/)?.[1];
+    const hero = styles.match(/\.home-hero-environment\s*\{([\s\S]*?)\n\}/)?.[1];
+    const architecture = readFileSync(join(HERE, "HeroArchitecture.tsx"), "utf8");
+    expect(hero).toContain("background: var(--home-ground-threshold);");
+    expect(field).toContain("inset: 0;");
+    expect(field).toContain("pointer-events: none;");
+    expect(field).not.toContain("animation");
+    expect(field?.match(/background-image:([\s\S]*?);/)?.[1]).not.toContain("linear-gradient");
+    expect(styles).not.toContain("--home-substrate");
+    expect(architecture).toContain("useOrganismFieldAnchor");
+    expect(architecture).toContain('ref={fieldAnchor}');
+  });
+
   it("treats Appearance-panel stillness as a reason not to animate", () => {
     const source = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
@@ -81,11 +101,12 @@ describe("home entry theme compatibility", () => {
   it("composes hero controls from the shared Appearance contracts", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
+    const slideshow = readFileSync(join(HERE, "HeroConceptSlideshow.tsx"), "utf8");
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(proposition).toContain("<FocusNav");
     expect(proposition).toContain("<Disclosure");
-    expect(proposition).toContain('presentation="text"');
+    expect(slideshow).toContain("data-epistemic-status={concept.level}");
     expect(proposition).not.toContain("<ul");
     expect(home).toContain("<HeroAsk");
     expect(home).toContain("<TwinSurface");

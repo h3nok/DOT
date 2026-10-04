@@ -4,15 +4,32 @@ test("home offers a reading path and readable theory comparisons", async ({ page
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const entry = page.getByRole("navigation", { name: "Begin exploring DOT" });
-  const read = entry.getByRole("link", { name: "Read Book One" });
+  const read = entry.getByRole("link", { name: "Begin with lived experience" });
   await expect(read).toBeInViewport();
-  await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface");
+  await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await page.screenshot({ path: testInfo.outputPath("home-opening.png") });
 
   for (const sectionId of ["possibility-field", "big-c", "reality-frame", "little-c"]) {
     const section = page.locator(`#${sectionId}`);
     await section.evaluate(element => element.scrollIntoView());
     await expect(section.getByRole("heading", { level: 2 })).toBeVisible();
+    const centered = await section.locator(".home-theory-layer-copy").evaluate(copy => {
+      const column = copy.getBoundingClientRect();
+      return [...copy.querySelectorAll("h2, .home-theory-layer-lede, .home-theory-layer-human-stakes, [data-step='boundary']")]
+        .map(element => {
+          const box = element.getBoundingClientRect();
+          return {
+            alignment: getComputedStyle(element).textAlign,
+            offset: Math.abs((box.left + box.right - column.left - column.right) / 2),
+          };
+        });
+    });
+    expect(centered).toHaveLength(4);
+    for (const content of centered) {
+      expect(content.alignment).toBe("center");
+      expect(content.offset).toBeLessThanOrEqual(1);
+    }
+    await expect(section.locator(".home-concept-architecture .home-architecture-surface")).toHaveCount(3);
     const reasoning = section.locator("summary").filter({ hasText: "Explore the reasoning" });
     const boundaryElement = section.locator('[data-step="boundary"]');
     await expect(boundaryElement).toBeVisible();

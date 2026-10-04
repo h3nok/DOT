@@ -84,6 +84,10 @@ describe("BookLanding", () => {
         name: "A proposed architecture of consciousness.",
       }),
     ).toBeInTheDocument();
+    expect(screen.getByText(/Examine experience, inherited conditioning, meaningful choice/))
+      .toHaveTextContent(/development toward Love/);
+    expect(screen.getByText(/Examine experience, inherited conditioning, meaningful choice/))
+      .toHaveTextContent(/proposed wider architecture/);
     expect(
       screen.queryByText("A life is shaped, acts, and is shaped again."),
     ).not.toBeInTheDocument();

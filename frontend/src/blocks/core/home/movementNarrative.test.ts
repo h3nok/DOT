@@ -54,7 +54,10 @@ describe("homepage movement narrative", () => {
     expect(layers).toContain("home-theory-layer-memory");
     expect(layers).toContain("Continuity carries. Possibility opens.");
     expect(layers).toContain("Consciousness persists, develops, and generates.");
-    expect(layers).toContain("A generated world is still a consequential world.");
+    expect(layers).toContain("Live, explore, and develop through real consequence.");
+    expect(layers).toContain("DOT proposes RF₀ as an incubator for Little c");
+    expect(layers).toContain("its developmental purpose");
+    expect(layers).toContain("not a conclusion derived from physics");
     expect(layers).toContain("You experience locally, choose through a body");
     expect(layers.match(/memoryWord:/g) ?? []).toHaveLength(4);
     expect(layers.match(/memoryLine:/g) ?? []).toHaveLength(4);
@@ -119,7 +122,9 @@ describe("homepage movement narrative", () => {
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
-    expect(proposition).toContain("Held as hypothesis · Open to challenge");
+    const slideshow = readFileSync(join(HERE, "HeroConceptSlideshow.tsx"), "utf8");
+    expect(proposition).toContain("<HeroConceptSlideshow");
+    expect(slideshow).toContain("data-epistemic-status={concept.level}");
     expect(layers.match(/status:/g) ?? []).toHaveLength(4);
     expect(home).not.toContain("SUPPORT_PAYMENT_LINK");
     expect(home).not.toContain("Support the work");
@@ -130,7 +135,7 @@ describe("homepage movement narrative", () => {
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
     // The standalone boundary section is retired; each panel carries its own
-    // test boundary and the hero badge declares the claim level (ADR-0026).
+    // test boundary and the concept slides retain their claim levels.
     expect(home).not.toContain('id="epistemic-boundary"');
     expect(home).not.toContain("Publicly grounded");
     expect(layers.match(/boundary:/g) ?? []).toHaveLength(4);
@@ -139,5 +144,14 @@ describe("homepage movement narrative", () => {
     expect(home).not.toContain("A shared vocabulary · 10 concepts");
     expect(home.toLowerCase()).not.toContain("belief");
     expect(home.toLowerCase()).not.toContain("believe");
+  });
+
+  it("places the purpose card after Little c, with the Academy still the ending", () => {
+    const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
+    const navigation = readFileSync(join(HERE, "HomeJourneyNav.tsx"), "utf8");
+    expect(home.indexOf("<TheoryLayerJourney")).toBeLessThan(home.indexOf("<Consciousness101"));
+    expect(home.indexOf("<Consciousness101")).toBeLessThan(home.indexOf('id="choose-path"'));
+    expect(navigation.indexOf('id: "little-c"')).toBeLessThan(navigation.indexOf('id: "consciousness-101"'));
+    expect(navigation.indexOf('id: "consciousness-101"')).toBeLessThan(navigation.indexOf('id: "choose-path"'));
   });
 });

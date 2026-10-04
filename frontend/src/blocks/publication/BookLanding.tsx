@@ -117,9 +117,10 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               A proposed architecture of consciousness.
             </h1>
             <p className="book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
-              DOT proposes that consciousness gives rise to our physical
-              universe and local experience. Book One develops this model and
-              asks how experience, conditioning, and choice shape a human life.
+              Examine experience, inherited conditioning, meaningful choice, and
+              development toward Love. Book One also develops DOT’s proposed
+              wider architecture of consciousness and the physical universe,
+              with its evidence boundaries in view.
             </p>
 
             <div className="book-volume-position mt-8 grid max-w-xl grid-cols-[auto_minmax(0,1fr)] gap-4 border-y border-[var(--book-hairline)] py-5">

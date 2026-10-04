@@ -1,4 +1,6 @@
+import { useId } from "react";
 import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { ArchitectureSurfaceDefs } from "./ArchitectureSurfaceDefs";
 
 type Layer = "origin" | "big-c" | "reality-frame" | "little-c";
 const PARTICLES = Array.from({ length: 48 }, (_, index) => {
@@ -8,8 +10,13 @@ const PARTICLES = Array.from({ length: 48 }, (_, index) => {
 
 /** The same nested architecture, with the current concept brought forward. */
 export function ConceptArchitecture({ layer }: { layer: Layer }) {
+  const surfacePrefix = `${useId().replaceAll(":", "")}-concept-surface`;
+
   return (
     <svg className="home-concept-architecture" viewBox="0 0 700 700" aria-hidden="true">
+      <defs>
+        <ArchitectureSurfaceDefs idPrefix={surfacePrefix} />
+      </defs>
       <g transform="translate(348 352)">
         <g data-active={layer === "origin"} className="home-concept-contour">
           <circle r={R.origin} strokeDasharray="1 11" />
@@ -18,7 +25,13 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
           ))}
         </g>
         <g data-active={layer === "big-c"} className="home-concept-contour">
-          <circle r={R.bigC} />
+          <circle
+            className="home-architecture-surface"
+            r={R.bigC}
+            fill={`url(#${surfacePrefix}-big-c)`}
+            stroke={`url(#${surfacePrefix}-rim)`}
+            filter={`url(#${surfacePrefix}-shadow)`}
+          />
           <circle r={R.membrane} className="home-concept-secondary" />
           {[-116, -72, -28, 18, 64, 112, 158, 204].map((angle) => (
             <circle key={angle} cx={Math.cos(angle * Math.PI / 180) * R.bigC}
@@ -26,7 +39,13 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
           ))}
         </g>
         <g data-active={layer === "reality-frame"} className="home-concept-contour">
-          <circle r={R.frame} />
+          <circle
+            className="home-architecture-surface"
+            r={R.frame}
+            fill={`url(#${surfacePrefix}-frame)`}
+            stroke={`url(#${surfacePrefix}-rim)`}
+            filter={`url(#${surfacePrefix}-shadow)`}
+          />
           {[-120, -80, -40, 0, 40, 80, 120].flatMap((x) =>
             [-120, -80, -40, 0, 40, 80, 120].map((y) => (
               <circle key={`${x}-${y}`} cx={x} cy={y} r="1.5" className="home-concept-node home-concept-secondary" />
@@ -38,7 +57,13 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
         </g>
         <g data-active={layer === "little-c"} className="home-concept-contour">
           <circle r={R.awareness} strokeDasharray="5 9" />
-          <circle r={R.local} />
+          <circle
+            className="home-architecture-surface"
+            r={R.local}
+            fill={`url(#${surfacePrefix}-local)`}
+            stroke={`url(#${surfacePrefix}-rim)`}
+            filter={`url(#${surfacePrefix}-shadow)`}
+          />
           <path d="M-58 58L-18 18M54 -54L70 -70M-54 -54L-70 -70" />
           <circle r={R.core} className="home-concept-node" />
         </g>
