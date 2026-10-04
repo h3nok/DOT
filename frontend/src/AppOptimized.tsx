@@ -56,9 +56,10 @@ const ReaderLeavePage = React.lazy(
   () => import("./blocks/readers/ReaderLeavePage"),
 );
 const PrivacyPage = React.lazy(() => import("./blocks/privacy/PrivacyPage"));
+const NotFoundPage = React.lazy(() => import("./blocks/core/NotFoundPage"));
 
 const RouteScrollManager: React.FC = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -67,8 +68,44 @@ const RouteScrollManager: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      return;
+    }
+
+    // Route elements are lazy. On a direct visit the manager can render one
+    // frame before the anchored section exists, so retry briefly instead of
+    // erasing a valid deep link by immediately scrolling to the top.
+    let frame = 0;
+    let attempts = 0;
+    let settleTimer = 0;
+    let cancelled = false;
+    const alignTarget = (target: HTMLElement) => {
+      if (!cancelled) {
+        target.scrollIntoView({ block: "start", behavior: "auto" });
+      }
+    };
+    const revealAnchor = () => {
+      const target = document.getElementById(hash.slice(1));
+      if (target) {
+        alignTarget(target);
+        // Web fonts and responsive lazy children can settle after the section
+        // first enters the DOM. Realign once after layout stabilises so a
+        // mobile deep link does not drift half a section away from its target.
+        void document.fonts?.ready.then(() => alignTarget(target));
+        settleTimer = window.setTimeout(() => alignTarget(target), 500);
+        return;
+      }
+      attempts += 1;
+      if (attempts < 60) frame = window.requestAnimationFrame(revealAnchor);
+    };
+    frame = window.requestAnimationFrame(revealAnchor);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(settleTimer);
+    };
+  }, [hash, pathname]);
 
   return null;
 };
@@ -184,6 +221,7 @@ const App: React.FC = () => {
                   path="/book/digital-organism-theory/:sectionSlug"
                   element={<BookOnePage />}
                 />
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </RouteLoadingBoundary>
           </div>

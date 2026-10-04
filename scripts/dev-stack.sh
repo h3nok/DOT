@@ -9,6 +9,11 @@ ALEMBIC_BIN="${ALEMBIC_BIN:-$ROOT_DIR/.venv/bin/alembic}"
 VITE_BIN="${VITE_BIN:-$ROOT_DIR/frontend/node_modules/.bin/vite}"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.orchestrator.yml"
 
+MINIO_CONSOLE_PORT_WAS_SET=0
+if [ -n "${ORCHESTRATOR_MINIO_CONSOLE_PORT:-}" ]; then
+  MINIO_CONSOLE_PORT_WAS_SET=1
+fi
+
 export ORCHESTRATOR_POSTGRES_PORT="${ORCHESTRATOR_POSTGRES_PORT:-5432}"
 export ORCHESTRATOR_REDIS_PORT="${ORCHESTRATOR_REDIS_PORT:-6379}"
 export ORCHESTRATOR_MINIO_PORT="${ORCHESTRATOR_MINIO_PORT:-9000}"
@@ -84,6 +89,86 @@ wait_for_tcp() {
   fail "${name} did not become reachable on ${host}:${port}"
 }
 
+port_is_reachable() {
+  local host="$1"
+  local port="$2"
+  (exec 3<>"/dev/tcp/${host}/${port}") >/dev/null 2>&1
+}
+
+prepare_minio_console_port() {
+  local configured_port="$ORCHESTRATOR_MINIO_CONSOLE_PORT"
+  local existing_port=""
+  local candidate
+  local attempts=0
+
+  case "$configured_port" in
+    '' | *[!0-9]*) fail "MinIO console port must be a number, got '${configured_port}'" ;;
+  esac
+
+  # A prior run may already have DOT's MinIO published on a fallback port. Reuse
+  # that mapping so repeated `make start` calls do not recreate the container.
+  existing_port="$(docker compose -f "$COMPOSE_FILE" port orchestrator-minio 9001 2>/dev/null | head -n 1 | awk -F: '{print $NF}' || true)"
+  if [ "$existing_port" = "$configured_port" ]; then
+    return 0
+  fi
+  if [ "$MINIO_CONSOLE_PORT_WAS_SET" = "0" ] && [[ "$existing_port" =~ ^[0-9]+$ ]]; then
+    export ORCHESTRATOR_MINIO_CONSOLE_PORT="$existing_port"
+    echo "Reusing MinIO console port ${existing_port} from the running DOT container."
+    return 0
+  fi
+
+  if ! port_is_reachable "127.0.0.1" "$configured_port"; then
+    return 0
+  fi
+
+  if [ "$MINIO_CONSOLE_PORT_WAS_SET" = "1" ]; then
+    fail "MinIO console port ${configured_port} is already in use; stop that service or run ORCHESTRATOR_MINIO_CONSOLE_PORT=<free-port> make start"
+  fi
+
+  candidate="$configured_port"
+  while [ "$attempts" -lt 50 ]; do
+    candidate=$((candidate + 1))
+    if [ "$candidate" -gt 65535 ]; then
+      break
+    fi
+    if ! port_is_reachable "127.0.0.1" "$candidate"; then
+      export ORCHESTRATOR_MINIO_CONSOLE_PORT="$candidate"
+      echo "MinIO console port ${configured_port} is in use; using ${candidate} for DOT."
+      return 0
+    fi
+    attempts=$((attempts + 1))
+  done
+
+  fail "could not find a free MinIO console port after ${configured_port}"
+}
+
+prepare_local_auth_secret() {
+  local env_file="$ROOT_DIR/backend/orchestrator/.env"
+  local configured_secret=""
+  local secret_file="$ROOT_DIR/.data/orchestrator-service-auth-secret"
+
+  if [ -n "${ORCHESTRATOR_SERVICE_AUTH_SECRET:-}" ]; then
+    return 0
+  fi
+
+  if [ -f "$env_file" ]; then
+    configured_secret="$(sed -n 's/^ORCHESTRATOR_SERVICE_AUTH_SECRET=//p' "$env_file" | head -n 1 | tr -d '\r')"
+    case "$configured_secret" in
+      '' | '""' | "''") ;;
+      *) return 0 ;;
+    esac
+  fi
+
+  mkdir -p "$(dirname "$secret_file")"
+  if [ ! -s "$secret_file" ]; then
+    (umask 077; "$PYTHON_BIN" -c 'import secrets; print(secrets.token_hex(32))' >"$secret_file")
+    echo "Generated a persistent local auth secret in .data/."
+  fi
+
+  export ORCHESTRATOR_SERVICE_AUTH_SECRET="$(tr -d '\r\n' <"$secret_file")"
+  [ "${#ORCHESTRATOR_SERVICE_AUTH_SECRET}" -ge 32 ] || fail "local auth secret in .data/ is invalid; remove it and rerun make start"
+}
+
 start_service() {
   local name="$1"
   local dir="$2"
@@ -133,6 +218,9 @@ reap_stale() {
 
 echo "Clearing any stale DOT dev processes..."
 reap_stale
+
+prepare_minio_console_port
+prepare_local_auth_secret
 
 echo "Starting local infrastructure..."
 docker compose -f "$COMPOSE_FILE" up -d

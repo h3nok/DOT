@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -173,24 +173,11 @@ function Seam({ seam, index }: { seam: OpenSeam; index: number }) {
 }
 
 export default function AppliedPage() {
-  const { hash } = useLocation();
-
+  // Each seam is citable on its own; the app's route scroll manager lands
+  // /applied#seam-id on the seam rather than the top of the register.
   useEffect(() => {
     document.title = "Open Seams — Digital Organism Theory";
   }, []);
-
-  // Each seam is meant to be citable on its own, and the app's route scroll
-  // manager returns every navigation to the top. Without this, /applied#seam-id
-  // lands on the register but not on the seam.
-  useEffect(() => {
-    if (!hash) return;
-    const frame = window.requestAnimationFrame(() => {
-      document
-        .getElementById(hash.slice(1))
-        ?.scrollIntoView({ block: "start", behavior: "auto" });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [hash]);
 
   const recorded = openSeams.reduce(
     (total, seam) => total + seam.work.length,

@@ -37,6 +37,8 @@ export default function HomePage() {
   const [heroCompanionOpen, setHeroCompanionOpen] = useState(false);
 
   useEffect(() => {
+    // Other routes set their own titles; restore the home title on return.
+    document.title = "DOT — Digital Organism Theory";
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -55,6 +57,12 @@ export default function HomePage() {
 
   return (
     <main className="home-journey relative min-h-screen">
+      <a
+        href="#threshold"
+        className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to the introduction
+      </a>
       {/* ── Dynamic Scroll-Aware Header ───────────────────────────────────────── */}
       <header
         aria-label="Site Header"

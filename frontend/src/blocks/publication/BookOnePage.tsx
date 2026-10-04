@@ -42,6 +42,7 @@ import {
 import { bookConceptsForSection } from "../../content/publications/dotBookConcepts";
 import { AppearanceControl } from "../../organism";
 import BookCitation from "./BookCitation";
+import { ReaderListForm } from "../../dot/ReaderListForm";
 import BookLanding from "./BookLanding";
 import { TwinSurface } from "../../dot/TwinSurface";
 import { useAuth } from "../../dot/useAuth";
@@ -337,6 +338,11 @@ function BookReader({
               </div>
             )}
 
+            {/* The one moment a reader is most likely to want more, and the only
+                place the open door is offered (ADR-0025). Renders nothing when the
+                list is closed or unreachable. */}
+            {section.kind === "references" && <ReaderListForm source="book" />}
+
             {/* Reaching the end of a chapter should first reveal the next
                 deliberate move. The optional apparatus follows it, so the
                 reader can finish without walking through a small dashboard. */}
@@ -392,40 +398,44 @@ function BookReader({
                 there is something to get past first. Minty stays one click away
                 in the header throughout, so nothing became harder to reach — it
                 simply stopped standing in the doorway. */}
-            <nav
-              aria-label="Reading tools"
-              className="book-coda__tools"
-            >
-              <button
-                type="button"
-                onClick={() => onOpenMinty()}
-                className="book-coda__tool book-coda__tool--primary"
-              >
-                <span className="book-coda__tool-mark">
-                  <MessageCircleQuestion className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <span>
-                  <strong>Ask about this chapter</strong>
-                  <small>Open Minty with this chapter in context.</small>
-                </span>
-              </button>
-              <Link
-                to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
-                className="book-coda__tool"
-              >
-                <span className="book-coda__tool-mark">
-                  <Library className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <span>
-                  <strong>
-                    {sourceCount > 0
-                      ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
-                      : "Notes & sources"}
-                  </strong>
-                  <small>Review the evidence and source record.</small>
-                </span>
-              </Link>
-            </nav>
+            {/* The references page is the source record itself; a chapter tool
+                pointing back at it would only link the page to itself. */}
+            {section.kind !== "references" && (
+              <nav aria-label="Reading tools" className="book-coda__tools">
+                <button
+                  type="button"
+                  onClick={() => onOpenMinty()}
+                  className="book-coda__tool book-coda__tool--primary"
+                >
+                  <span className="book-coda__tool-mark">
+                    <MessageCircleQuestion
+                      className="h-4 w-4"
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span>
+                    <strong>Ask about this chapter</strong>
+                    <small>Open Minty with this chapter in context.</small>
+                  </span>
+                </button>
+                <Link
+                  to={`${DOT_BOOK_ONE_ROUTE}/references${path ? `?path=${path.id}` : ""}`}
+                  className="book-coda__tool"
+                >
+                  <span className="book-coda__tool-mark">
+                    <Library className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span>
+                    <strong>
+                      {sourceCount > 0
+                        ? `${sourceCount} ${sourceCount === 1 ? "note" : "notes"}`
+                        : "Notes & sources"}
+                    </strong>
+                    <small>Review the evidence and source record.</small>
+                  </span>
+                </Link>
+              </nav>
+            )}
 
             <PrivateReaderNote
               key={section.slug}
