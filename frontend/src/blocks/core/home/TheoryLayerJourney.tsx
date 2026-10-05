@@ -130,7 +130,7 @@ const THEORY_LAYERS = [
     status: "Proposed local experiencer",
     title: "Your point of view. Your next choice.",
     lede:
-      "You encounter the world from your own point of view and act through one body. DOT calls the experiencer Little c and proposes that the body connects it to the world.",
+      "You encounter the world from your own point of view and act through one body. DOT calls the experiencer Little c and proposes that it is not physical: the body is how it receives this world and acts within it.",
     humanStakes:
       "Think of a difficult message. You feel a reaction, consider a reply, send it, and meet the response. This is the everyday cycle DOT is trying to explain.",
     memoryWord: "Choice",

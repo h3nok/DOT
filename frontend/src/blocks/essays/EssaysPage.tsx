@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { author } from "../../content/author";
+import newsletter from "../../content/newsletter.json";
 import {
   FEED_URL,
   essayRoute,
@@ -12,6 +13,7 @@ import {
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { ClaimLevels } from "./ClaimLevels";
+import { ReleasedWritingList } from "../publication/ReleasedWritingList";
 
 const LINK =
   "text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]";
@@ -55,6 +57,33 @@ export default function EssaysPage() {
           changes Book One, which remains a fixed edition.
         </p>
 
+        <section aria-labelledby="newsletter-title" className="mt-12 border-y border-border/70 py-8">
+          <p className="dot-label">{newsletter.project} · {newsletter.status}</p>
+          <h2 id="newsletter-title" className="mt-3 font-serif text-2xl text-foreground">
+            {newsletter.title}
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {newsletter.cadence} as a newsletter. {" "}
+            <a href={newsletter.url} className={LINK} rel="noreferrer">
+              View the newsletter on LinkedIn
+            </a>
+          </p>
+          <ul aria-label="Selected newsletter editions" className="mt-6 space-y-5">
+            {newsletter.editions.map((edition) => (
+              <li key={edition.url}>
+                <h3 className="max-w-2xl text-lg font-semibold leading-snug">
+                  <a href={edition.url} className={LINK} rel="noreferrer">
+                    {edition.title}
+                  </a>
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground">Read on LinkedIn</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <ReleasedWritingList />
+
         {state.status === "loading" && (
           <p className="mt-12 text-sm text-muted-foreground" role="status">
             Loading the essays…
@@ -69,7 +98,7 @@ export default function EssaysPage() {
 
         {state.status === "ready" && state.essays.length === 0 && (
           <p className="mt-12 text-sm text-muted-foreground">
-            No essay has been published yet. To hear when one is,{" "}
+            No additional essays are archived here yet. To hear when one is,{" "}
             <Link to="/readers" className={LINK}>
               join the reader list
             </Link>

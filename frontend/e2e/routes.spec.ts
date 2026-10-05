@@ -54,7 +54,7 @@ test.describe("hero", () => {
   }) => {
     await page.goto("/");
 
-    await expect(page.locator(".home-hero-lede")).toBeVisible();
+    await expect(page.locator(".home-concept-slideshow")).toBeVisible();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
@@ -77,7 +77,7 @@ test.describe("hero", () => {
       "Big C",
       "RF0",
       "Awareness radius",
-      "Little c",
+      "Little c1— you",
     ]);
     await expect(labels.locator("rect")).toHaveCount(0);
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);

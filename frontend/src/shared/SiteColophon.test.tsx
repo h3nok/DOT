@@ -23,11 +23,14 @@ describe("SiteColophon", () => {
     expect(screen.getByText(/Written by Henok Ghebrechristos/)).toBeInTheDocument();
     expect(siteLinks()).toEqual([
       ["About", "/about"],
+      ["Publications", "/publications"],
+      ["Essays", "/essays"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
       ["Terms", "/terms"],
     ]);
     expect(screen.queryByText(/support|donate|fund/i)).toBeNull();
+    expect(screen.queryByRole("link", { name: "RSS" })).toBeNull();
   });
 
   it("sends readers to the reader list, never the invitation queue (ADR-0025)", () => {
@@ -43,6 +46,7 @@ describe("SiteColophon", () => {
 
     expect(siteLinks()).toEqual([
       ["About", "/about"],
+      ["Publications", "/publications"],
       ["Essays", "/essays"],
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],

@@ -18,7 +18,9 @@ import {
   type PublicationReleaseRead,
   type PublicationValidationRead,
   validatePublicationProject,
+  updatePublicationProject,
 } from "../../../services/OrchestratorPublicationService";
+import { PublicationSharing } from "./PublicationSharing";
 
 interface ReleasePanelProps {
   project: PublicationProjectRead;
@@ -39,6 +41,8 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
   const [validation, setValidation] = useState<PublicationValidationRead | null>(null);
   const [loadingState, setLoadingState] = useState(true);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [visibility, setVisibility] = useState(project.visibility);
+  const [releasedVisibility, setReleasedVisibility] = useState(project.visibility);
   const [message, setMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
 
   const publicHref = `/read/${encodeURIComponent(project.owner_id)}/${encodeURIComponent(project.slug)}`;
@@ -86,11 +90,15 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
     try {
       setIsPublishing(true);
       setMessage(null);
+      if (visibility !== releasedVisibility) {
+        await updatePublicationProject(project.id, { visibility });
+        setReleasedVisibility(visibility);
+      }
       const release = await createPublicationRelease(project.id, {
         idempotencyKey: crypto.randomUUID(),
       });
       await refreshReleaseState();
-      setMessage({ tone: "success", text: `Edition v${release.version} is now public.` });
+      setMessage({ tone: "success", text: `Edition v${release.version} released ${visibility === "public" ? "publicly" : "privately"}.` });
     } catch (reason: unknown) {
       setMessage({
         tone: "error",
@@ -122,7 +130,7 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
 
       <div className="flex-1 space-y-6 overflow-y-auto p-4">
         <section>
-          <p className="font-mono dot-micro uppercase text-muted-foreground">Public edition</p>
+          <p className="font-mono dot-micro uppercase text-muted-foreground">{releasedVisibility === "public" ? "Public" : "Private"} edition</p>
           <div className="mt-3 border-y border-border/60 py-3">
             {loadingState && !latestRelease ? (
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -141,11 +149,11 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
               </div>
             ) : (
               <p className="text-xs leading-relaxed text-muted-foreground">
-                No public edition has been created from this project.
+                No edition has been created from this project.
               </p>
             )}
           </div>
-          {latestRelease && (
+          {latestRelease && releasedVisibility === "public" && (
             <Link
               to={publicHref}
               target="_blank"
@@ -158,6 +166,18 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
             </Link>
           )}
         </section>
+
+        <section>
+          <label htmlFor={`release-visibility-${project.id}`} className="text-xs font-semibold">Project visibility</label>
+          <select id={`release-visibility-${project.id}`} value={visibility} onChange={(event) => setVisibility(event.target.value)} disabled={isPublishing}
+            className="mt-2 min-h-10 w-full rounded border border-border bg-background px-2 text-sm text-foreground">
+            <option value="private">Private editions</option>
+            <option value="public">Public editions</option>
+          </select>
+          <p className="mt-2 text-xs text-muted-foreground">Applied when you release. This choice affects every edition in this project.</p>
+        </section>
+
+        {latestRelease && releasedVisibility === "public" && <PublicationSharing title={project.title} path={publicHref} />}
 
         <section>
           <p className="font-mono dot-micro uppercase text-muted-foreground">Preflight</p>
@@ -236,7 +256,7 @@ export function ReleasePanel({ project, manuscriptRevision = 0 }: ReleasePanelPr
                 Publish the saved manuscript?
               </AlertDialog.Title>
               <AlertDialog.Description className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                This creates a finite, versioned edition from the latest saved revisions and updates the public reader. Your working drafts remain editable.
+                This releases the saved manuscript as a {visibility} edition. Project visibility applies to all its editions. Working drafts remain editable.
               </AlertDialog.Description>
               <div className="mt-6 flex justify-end gap-2">
                 <AlertDialog.Cancel className="dot-pill min-h-9">

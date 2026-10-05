@@ -9,9 +9,12 @@ vi.mock("framer-motion", () => ({
   useInView: () => motion.inView,
 }));
 
-function finishTyping(term: string) {
-  for (let index = 0; index < term.length; index++) {
+function finishTyping(concept: { term: string; text: string }) {
+  for (let index = 0; index < concept.term.length; index++) {
     act(() => vi.advanceTimersByTime(35));
+  }
+  for (let index = 0; index < concept.text.length; index++) {
+    act(() => vi.advanceTimersByTime(20));
   }
 }
 
@@ -63,7 +66,7 @@ describe("HeroConceptSlideshow", () => {
       expect(slide).toHaveAttribute("aria-live", "off");
       expect(within(slide).getByText(concept.text)).toBeVisible();
       if (index === HERO_CONCEPTS.length - 1) break;
-      finishTyping(concept.term);
+      finishTyping(concept);
       expect(within(slide).getByRole("heading")).toHaveTextContent(concept.term);
       const readingTime = Math.max(8_000, concept.text.split(/\s+/).length * 300);
       act(() => vi.advanceTimersByTime(readingTime - 1));
@@ -75,6 +78,25 @@ describe("HeroConceptSlideshow", () => {
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(120_000));
     expect(screen.getByRole("group", { name: "10 of 10" })).toBeVisible();
+  });
+
+  it("types the whole passage after the term while its full text holds its place", () => {
+    vi.useFakeTimers();
+    render(<HeroConceptSlideshow />);
+    const [first] = HERO_CONCEPTS;
+    const slide = screen.getByRole("group", { name: "1 of 10" });
+    const passage = slide.querySelector("p");
+    for (let index = 0; index < first.term.length; index++) {
+      act(() => vi.advanceTimersByTime(35));
+    }
+    expect(passage?.querySelector('[data-typing="true"]')).toHaveTextContent(/^$/);
+    for (let index = 0; index < 10; index++) {
+      act(() => vi.advanceTimersByTime(20));
+    }
+    expect(passage?.querySelector('[data-typing="true"]')?.textContent).toBe(first.text.slice(0, 10));
+    expect(passage).toHaveTextContent(first.text);
+    act(() => vi.advanceTimersByTime(8_000));
+    expect(screen.getByRole("group", { name: "1 of 10" })).toBeVisible();
   });
 
   it("pauses immediately, reveals the full title, and resumes only on Play", () => {
@@ -116,7 +138,7 @@ describe("HeroConceptSlideshow", () => {
   it("suspends offscreen and gives a full reading interval when returning", () => {
     vi.useFakeTimers();
     const { rerender } = render(<HeroConceptSlideshow />);
-    finishTyping(HERO_CONCEPTS[0].term);
+    finishTyping(HERO_CONCEPTS[0]);
     act(() => vi.advanceTimersByTime(4_000));
     motion.inView = false;
     rerender(<HeroConceptSlideshow />);
@@ -134,7 +156,7 @@ describe("HeroConceptSlideshow", () => {
     vi.useFakeTimers();
     const hidden = vi.spyOn(document, "hidden", "get");
     const { unmount } = render(<HeroConceptSlideshow />);
-    finishTyping(HERO_CONCEPTS[0].term);
+    finishTyping(HERO_CONCEPTS[0]);
     hidden.mockReturnValue(true);
     fireEvent(document, new Event("visibilitychange"));
     expect(vi.getTimerCount()).toBe(0);
@@ -177,7 +199,7 @@ describe("HeroConceptSlideshow", () => {
     first.unmount();
     expect(vi.getTimerCount()).toBe(0);
     const second = render(<HeroConceptSlideshow />);
-    finishTyping(HERO_CONCEPTS[0].term);
+    finishTyping(HERO_CONCEPTS[0]);
     expect(vi.getTimerCount()).toBe(1);
     second.unmount();
     expect(vi.getTimerCount()).toBe(0);

@@ -34,11 +34,6 @@ export function HeroProposition({
               <span>the life you live?</span>
             </h1>
 
-            <p className="dot-lede home-hero-lede">
-              You inherit ways of seeing before you learn to examine them. DOT
-              offers a practical framework for exploring how feeling,
-              conditioning, choice, and consequence shape your life.
-            </p>
             <HeroConceptSlideshow reducedMotion={reducedMotion} />
           </div>
 
@@ -48,7 +43,7 @@ export function HeroProposition({
             primary={{
               to: "/book/digital-organism-theory/preface?path=start-where-you-live",
               label: "Begin with lived experience",
-              description: "Begin with the preface · Free to read",
+              description: "The preface · Free to read",
               icon: <NucleusMark size={24} reducedMotion />,
             }}
             secondary={[{

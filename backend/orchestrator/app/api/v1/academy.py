@@ -93,6 +93,44 @@ def _delivery_item(
 # ── Authoring ─────────────────────────────────────────────────────────────────
 
 
+@router.get("/workspace")
+async def get_workspace(
+    space: str = fastapi.Query(default="dot-academy", min_length=1, max_length=160),
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.WorkspaceRead:
+    workspace = await service.get_workspace(
+        session, space_slug=space, actor_id=owner.actor_id
+    )
+    return schemas.WorkspaceRead(id=workspace.id, title=workspace.title, slug=workspace.slug)
+
+
+@router.get("/revisions/{revision_id}/body")
+async def get_revision_body(
+    revision_id: str,
+    include_claims: bool = False,
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> fastapi.Response:
+    if include_claims:
+        editor = await service.get_revision_editor(
+            session, revision_id=revision_id, actor_id=owner.actor_id
+        )
+        return fastapi.responses.JSONResponse(content=editor, headers={"Cache-Control": "no-store"})
+    body = await service.get_revision_body(
+        session, revision_id=revision_id, actor_id=owner.actor_id
+    )
+    return fastapi.Response(
+        content=body,
+        media_type="text/markdown; charset=utf-8",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 @router.post("/spaces/{space_id}/works", status_code=201)
 async def create_work(
     space_id: str,

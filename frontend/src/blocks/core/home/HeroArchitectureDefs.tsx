@@ -4,7 +4,9 @@ import { ArchitectureSurfaceDefs } from "./ArchitectureSurfaceDefs";
 export type HeroArchitectureIds = {
   gridId: string;
   arrowId: string;
-  pressureArrowId: string;
+  optionArrowId: string;
+  constraintArrowId: string;
+  couplingArrowId: string;
   radiusArrowId: string;
   fieldWashId: string;
   frameWashId: string;
@@ -16,7 +18,7 @@ export type HeroArchitectureIds = {
 
 export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
   const {
-    gridId, arrowId, pressureArrowId, radiusArrowId, fieldWashId,
+    gridId, arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, fieldWashId,
     frameWashId, localWashId, threadId, frameClipId, surfacePrefix,
   } = ids;
 
@@ -38,7 +40,7 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         <path className="home-architecture-arrow" d="M0 0L8 4L0 8Z" />
       </marker>
       <marker
-        id={pressureArrowId}
+        id={optionArrowId}
         markerWidth="6"
         markerHeight="6"
         refX="5"
@@ -47,7 +49,30 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         markerUnits="strokeWidth"
       >
         {/* Open chevron: an option offered, not yet an action taken. */}
-        <path className="home-architecture-pressure-arrow" d="M1 0L6 3L1 6" />
+        <path className="home-architecture-option-arrow" d="M1 0L6 3L1 6" />
+      </marker>
+      <marker
+        id={constraintArrowId}
+        markerWidth="6"
+        markerHeight="6"
+        refX="5"
+        refY="3"
+        orient="auto"
+        markerUnits="strokeWidth"
+      >
+        {/* Solid wedge: constraint and consequence are applied, not offered. */}
+        <path className="home-architecture-constraint-arrow" d="M0 0L6 3L0 6Z" />
+      </marker>
+      <marker
+        id={couplingArrowId}
+        markerWidth="6"
+        markerHeight="6"
+        refX="4.6"
+        refY="3"
+        orient="auto-start-reverse"
+        markerUnits="strokeWidth"
+      >
+        <path className="home-architecture-coupling-arrow" d="M0.6 0.6L5 3L0.6 5.4Z" />
       </marker>
       <marker
         id={radiusArrowId}
@@ -58,7 +83,7 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         orient="auto-start-reverse"
         markerUnits="strokeWidth"
       >
-        {/* Dimension arrowhead: the radius is a measurement, not a flow. */}
+        {/* Growth arrowhead: the awareness radius expands. */}
         <path className="home-architecture-radius-arrow" d="M0.6 0.6L5.4 3L0.6 5.4Z" />
       </marker>
       <radialGradient id={fieldWashId} cx="50%" cy="48%" r="52%">
@@ -80,8 +105,8 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         id={threadId}
         x1="348"
         y1="352"
-        x2="454"
-        y2="518"
+        x2="448"
+        y2="510"
         gradientUnits="userSpaceOnUse"
       >
         <stop className="home-architecture-thread-from" offset="0%" />

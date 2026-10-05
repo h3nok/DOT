@@ -106,6 +106,26 @@ async def _get_work_scoped(
 # ── Works ─────────────────────────────────────────────────────────────────────
 
 
+async def get_workspace(
+    session: sqlalchemy.ext.asyncio.AsyncSession, *, space_slug: str, actor_id: str
+) -> models.AcademySpace:
+    await context.bind_actor(session, actor_id)
+    space = (
+        await session.execute(
+            sqlalchemy.select(models.AcademySpace).where(
+                models.AcademySpace.slug == space_slug, models.AcademySpace.status == "active"
+            )
+        )
+    ).scalar_one_or_none()
+    if space is None:
+        raise _not_found("Academy space")
+    await context.bind_space(session, space.id, actor_id)
+    await policy.require_authority(
+        session, space_id=space.id, actor_id=actor_id, action="read_private"
+    )
+    return space
+
+
 async def create_work(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     *,
@@ -349,6 +369,59 @@ async def _get_revision_scoped(
 
 
 # ── Claims, relations, sources, contributions ────────────────────────────────
+
+
+async def get_revision_body(
+    session: sqlalchemy.ext.asyncio.AsyncSession, *, revision_id: str, actor_id: str
+) -> str:
+    revision, work = await _get_revision_scoped(session, revision_id, actor_id)
+    await policy.require_authority(
+        session, space_id=work.academy_space_id, actor_id=actor_id, action="read_private"
+    )
+    try:
+        return await app.integrations.object_store.get_object_store().get_text(revision.body_ref)
+    except app.integrations.object_store.ObjectNotFoundError:
+        raise _not_found("Revision body") from None
+    except app.integrations.object_store.ObjectStoreError as exc:
+        raise fastapi.HTTPException(status_code=503, detail="Revision body unavailable.") from exc
+
+
+async def get_revision_editor(
+    session: sqlalchemy.ext.asyncio.AsyncSession, *, revision_id: str, actor_id: str
+) -> dict[str, typing.Any]:
+    body = await get_revision_body(session, revision_id=revision_id, actor_id=actor_id)
+    _, work = await _get_revision_scoped(session, revision_id, actor_id)
+    claims = (
+        await session.execute(
+            sqlalchemy.select(models.AcademyClaimRevision).where(
+                models.AcademyClaimRevision.academy_revision_id == revision_id,
+                models.AcademyClaimRevision.academy_space_id == work.academy_space_id,
+            )
+        )
+    ).scalars().all()
+    links = (
+        await session.execute(
+            sqlalchemy.select(models.AcademySourceLink).where(
+                models.AcademySourceLink.academy_revision_id == revision_id,
+                models.AcademySourceLink.academy_space_id == work.academy_space_id,
+            )
+        )
+    ).scalars().all()
+    return {
+        "body": body,
+        "claims": [
+            {
+                "statement": claim.statement,
+                "level": claim.epistemic_level,
+                "origin": claim.origin,
+                "source": next(
+                    (link.external_uri for link in links if link.claim_revision_id == claim.id and link.external_uri),
+                    "",
+                ),
+            }
+            for claim in claims
+        ],
+    }
 
 
 async def add_claim(
@@ -652,6 +725,14 @@ async def create_release(
         raise _not_found("Revision of this work")
 
     claim_revisions = await _validate_release(session, work, revision)
+    source_links = (
+        await session.execute(
+            sqlalchemy.select(models.AcademySourceLink).where(
+                models.AcademySourceLink.academy_revision_id == revision.id,
+                models.AcademySourceLink.academy_space_id == work.academy_space_id,
+            )
+        )
+    ).scalars().all()
 
     previous = (
         (
@@ -723,6 +804,10 @@ async def create_release(
                 for claim_revision in claim_revisions
             ],
             "policy_revision_id": authority.policy_revision_id,
+            "sources": [
+                {"external_uri": link.external_uri, "locator": link.locator, "relation": link.relation}
+                for link in source_links if link.external_uri
+            ],
         }
         manifest_json = _canonical_json(manifest)
         manifest_hash = _sha256(manifest_json)

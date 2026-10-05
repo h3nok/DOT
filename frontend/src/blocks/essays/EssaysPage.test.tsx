@@ -55,6 +55,20 @@ const openAt = (path: string) =>
   );
 
 describe("EssaysPage", () => {
+  it("shows the author's newsletter and identifies its edition as external writing", async () => {
+    serve([]);
+    openAt("/essays");
+
+    expect(screen.getByRole("heading", { name: "The Millennial Manifesto" })).toBeInTheDocument();
+    expect(screen.getByText("Applied DOT · Book in development")).toBeInTheDocument();
+    const editions = screen.getByRole("list", { name: "Selected newsletter editions" });
+    expect(within(editions).getByRole("link", {
+      name: "AI will not kill you. The one saying that it will, will",
+    })).toHaveAttribute("href", "https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c/");
+    expect(within(editions).getByText("Read on LinkedIn")).toBeInTheDocument();
+    expect(await screen.findByText(/No additional essays are archived here yet/)).toBeInTheDocument();
+  });
+
   it("lists every essay as the index gives it, and ends", async () => {
     serve([MACHINES, FEAR]);
     openAt("/essays");
@@ -83,7 +97,7 @@ describe("EssaysPage", () => {
     serve([]);
     openAt("/essays");
 
-    expect(await screen.findByText(/No essay has been published yet/)).toBeInTheDocument();
+    expect(await screen.findByText(/No additional essays are archived here yet/)).toBeInTheDocument();
   });
 });
 

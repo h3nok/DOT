@@ -2,6 +2,10 @@ import { expect, test } from "@playwright/test";
 import { HERO_CONCEPTS } from "../src/blocks/core/home/heroData";
 import { expectNoHorizontalOverflow } from "./helpers";
 
+/** The title types at 35 ms a character, then the passage at 20 ms. */
+const typingTime = (concept: { term: string; text: string }) =>
+  concept.term.length * 35 + concept.text.length * 20 + 400;
+
 test("still concepts visibly explain every idea without clipping or shifting the reading action", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -55,7 +59,7 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await page.goto("/");
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   await expect(concepts).toHaveAttribute("data-playback", "playing");
-  await page.clock.runFor(1_200);
+  await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await expect(concepts.getByRole("heading", { name: "The Digital Organism" }))
     .toHaveText("The Digital Organism");
   await expect(concepts.getByRole("group", { name: "1 of 10" })).toHaveAttribute("aria-live", "off");
@@ -65,7 +69,7 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
     if (index === 0 || index === HERO_CONCEPTS.length - 1) continue;
-    await page.clock.runFor(1_200);
+    await page.clock.runFor(typingTime(concept));
     await expect(concepts.getByRole("heading", { name: concept.term })).toHaveText(concept.term);
     await expect(concepts.getByRole("group", { name: `${index + 1} of 10` })).toBeVisible();
     await page.clock.fastForward(Math.max(8_000, concept.text.split(/\s+/).length * 300));
@@ -107,7 +111,7 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await page.goto("/");
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   await expect(concepts).toHaveAttribute("data-playback", "playing");
-  await page.clock.runFor(1_000);
+  await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await concepts.hover();
   await expect(concepts).toHaveAttribute("data-playback", "paused");
   await page.clock.fastForward(90_000);

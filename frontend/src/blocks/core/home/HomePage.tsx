@@ -176,14 +176,25 @@ export default function HomePage() {
       >
         <div className="dot-page-container">
           <div className="mx-auto max-w-2xl text-center">
-            <span className="home-ending-label dot-label">The living inquiry</span>
+            <span className="home-ending-label dot-label">A new intellectual movement</span>
             <h2 className="dot-page-heading mt-2 text-balance">
               Continue with the Academy.
             </h2>
             <p className="dot-lede mx-auto mt-4 max-w-xl">
+              DOT is part of a growing movement to build a theory of everything
+              that includes consciousness. Its nearest neighbours include Thomas
+              Campbell’s <cite>My Big TOE</cite>, Bernardo Kastrup’s analytic
+              idealism, and Donald Hoffman’s theory of conscious agents. DOT puts
+              one question at the centre: can anyone see reality clearly while
+              Fear governs what they are willing to find?
+            </p>
+            <p className="dot-lede mx-auto mt-4 max-w-xl">
               Read the definitions and examine the questions DOT has yet to
               answer. The Academy is in development; Book One remains a fixed
               edition.
+            </p>
+            <p className="mx-auto mt-4 max-w-xl text-xs text-muted-foreground">
+              Naming these thinkers does not mean they endorse DOT.
             </p>
           </div>
 

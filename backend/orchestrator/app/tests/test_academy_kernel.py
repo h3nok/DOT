@@ -139,6 +139,37 @@ async def test_definition_lifecycle_draft_to_immutable_release(
     assert [item["work_slug"] for item in catalog] == ["big-c"]
 
 
+async def test_writing_workspace_and_private_revision_body(
+    client: fastapi.testclient.TestClient,
+    session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
+) -> None:
+    space = await _provision(session_factory)
+    workspace = client.get("/v1/academy/workspace", headers=_headers())
+    assert workspace.status_code == 200
+    assert workspace.json()["id"] == space.id
+    assert client.get("/v1/academy/workspace", headers=_headers("outsider")).status_code == 403
+    assert client.get("/v1/academy/workspace?space=", headers=_headers()).status_code == 422
+    assert client.get("/v1/academy/workspace?space=missing", headers=_headers()).status_code == 404
+
+    work_id = _create_definition(client, space.id)
+    revision = _freeze_revision(client, work_id, body="Private manuscript text.")
+    route = f"/v1/academy/revisions/{revision['id']}/body"
+    body = client.get(route, headers=_headers())
+    assert body.status_code == 200
+    assert body.text == "Private manuscript text."
+    assert body.headers["Cache-Control"] == "no-store"
+    _annotate_claim(client, revision["id"])
+    editor = client.get(f"{route}?include_claims=true", headers=_headers())
+    assert editor.status_code == 200
+    assert editor.json()["body"] == body.text
+    assert editor.json()["claims"][0]["level"] == "Model"
+    assert client.get(f"{route}?include_claims=true", headers=_headers("outsider")).status_code in {403, 404}
+    assert client.get(f"{route}?include_claims=invalid", headers=_headers()).status_code == 422
+    assert client.get(route, headers=_headers("outsider")).status_code in {403, 404}
+    assert client.get("/v1/academy/revisions/missing/body", headers=_headers()).status_code == 404
+    assert client.get(f"/v1/academy/delivery/body/{revision['body_ref']}").status_code == 404
+
+
 async def test_sourced_claim_requires_source_link(
     client: fastapi.testclient.TestClient,
     session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
@@ -168,6 +199,8 @@ async def test_sourced_claim_requires_source_link(
         json={"revision_id": revision["id"]},
     )
     assert released.status_code == 201, released.text
+    manifest = client.get(f"/v1/academy/delivery/works/{work_id}").json()["manifest"]
+    assert manifest["sources"][0]["external_uri"] == "https://example.org/paper"
 
 
 async def test_revisions_are_immutable_and_corrections_are_new_releases(

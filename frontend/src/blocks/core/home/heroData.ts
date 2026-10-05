@@ -18,8 +18,8 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.organism",
     term: "The Digital Organism",
-    text: "A process that responds to information while maintaining or developing its coherence: how well its parts work together through change.",
-    level: "model",
+    text: "DOT proposes that you are not physical: a conscious process that receives this world through a body. Digital means informational, not electronic.",
+    level: "hypothesis",
   },
   {
     id: "home.concept.feeling",
@@ -30,7 +30,7 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.layers",
     term: "Canvas · Painting · Character",
-    text: "Your body carries experience. Your learned interpretations give it meaning. Character is how you act within what you can see and choose.",
+    text: "Consequential experience is etched onto your Canvas. What accumulates there, your Painting, interprets what comes next. Character is that Painting made visible in how you act.",
     level: "model",
   },
   {

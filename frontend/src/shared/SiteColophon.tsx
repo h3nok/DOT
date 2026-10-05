@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import { authorByline } from "../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
+import newsletter from "../content/newsletter.json";
 import { DotWordmark } from "./DotWordmark";
 
 const LINK =
@@ -12,8 +13,8 @@ const LINK =
  * the few places a reader can go next. Plain text links in a fixed order —
  * nothing counted, nothing ranked, and no funding ask (ADR-0022).
  *
- * The Essays and RSS links appear only once an essay is released, so the site
- * never points at an empty page.
+ * Writing is linked once an essay or newsletter edition is available.
+ * RSS only carries essays released here.
  */
 export function SiteColophon({
   essaysPublished = ESSAYS_PUBLISHED,
@@ -35,7 +36,8 @@ export function SiteColophon({
           <Link to="/about" className={LINK}>
             About
           </Link>
-          {essaysPublished && (
+          <Link to="/publications" className={LINK}>Publications</Link>
+          {(essaysPublished || newsletter.editions.length > 0) && (
             <Link to="/essays" className={LINK}>
               Essays
             </Link>

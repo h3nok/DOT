@@ -24,6 +24,7 @@ const TERMS_ROUTE = "/terms";
 const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
+const NEWSLETTER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "newsletter.json"), "utf8"));
 // Search engines resolve an author entity through profiles they already know,
 // so every work's structured data names them.
 const AUTHOR_PROFILE = AUTHOR.links.linkedin;
@@ -528,7 +529,7 @@ function siteNav(essaysPublished) {
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
     [ACADEMY_ROUTE, "DOT Academy"],
-    ...(essaysPublished ? [[ESSAYS_ROUTE, "Essays"]] : []),
+    ...(essaysPublished || NEWSLETTER.editions.length > 0 ? [[ESSAYS_ROUTE, "Essays"]] : []),
     [ABOUT_ROUTE, "About"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
@@ -787,13 +788,13 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
     };
   });
 
-  const essayRoutes = essaysPublished
+  const essayRoutes = essaysPublished || NEWSLETTER.editions.length > 0
     ? [
         {
           route: ESSAYS_ROUTE,
           title: `Essays — ${AUTHOR.name}`,
           description: ESSAYS_DESCRIPTION,
-          lastmod: essays[0].updated ?? essays[0].published,
+          lastmod: essays[0]?.updated ?? essays[0]?.published,
           structuredData: graph(
             essayCollectionNode(essays),
             breadcrumb([home, { name: "Essays", route: ESSAYS_ROUTE }]),
@@ -804,7 +805,7 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
                 (essay) =>
                   `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)} (<time datetime="${essay.published}">${essay.published}</time>): ${escapeHtml(essay.summary)}</li>`,
               )
-              .join("")}</ol>`,
+              .join("")}</ol><section><p>${escapeHtml(NEWSLETTER.project)} · ${escapeHtml(NEWSLETTER.status)}</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(NEWSLETTER.cadence)} as a newsletter. ${link(NEWSLETTER.url, "View the newsletter on LinkedIn")}</p><ul>${NEWSLETTER.editions.map((edition) => `<li><h3>${link(edition.url, edition.title)}</h3><p>Read on LinkedIn</p></li>`).join("")}</ul></section>`,
           ),
         },
         ...essays.map((essay) => {

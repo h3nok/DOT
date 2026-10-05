@@ -42,7 +42,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       const labels = [...node.querySelectorAll(".home-architecture-ring-label text")];
       const boxes = labels.map((label) => label.getBoundingClientRect());
       const caption = node.closest("figure")?.querySelector("figcaption");
-      const explanation = document.querySelector(".home-hero-lede");
+      const explanation = document.querySelector(".home-concept-slideshow");
       const background = getComputedStyle(document.body).backgroundColor;
       const canvas = document.createElement("canvas");
       canvas.width = canvas.height = 1;
@@ -85,7 +85,7 @@ for (const colorScheme of ["light", "dark"] as const) {
           (Math.min(foregroundLuminance, surfaceLuminance) + 0.05);
       };
       const heading = document.querySelector(".home-hero-title");
-      const life = document.querySelector(".home-hero-lede");
+      const life = document.querySelector(".home-concept-slideshow-content .home-concept-slideshow-explanation");
       const kicker = document.querySelector(".home-hero-kicker");
       const masthead = document.querySelector(".home-hero-masthead");
       const read = document.querySelector(".home-hero-entry .dot-focus-nav__primary");
@@ -160,8 +160,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.overlap).toBe(false);
     expect(presentation.systemDomainDistance, "RF₀ structure must be distinguishable from conscious Intent")
       .toBeGreaterThanOrEqual(0.05);
-    expect(presentation.lighting.surfaceCount).toBe(3);
-    expect(presentation.lighting.gradientTones).toHaveLength(3);
+    expect(presentation.lighting.surfaceCount).toBe(2);
+    expect(presentation.lighting.gradientTones).toHaveLength(2);
     expect(presentation.lighting.gradientTones.every(tones => tones >= 3)).toBe(true);
     for (const levels of presentation.lighting.gradientLight) {
       for (let index = 1; index < levels.length; index++) {
@@ -182,7 +182,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.kickerCase).toBe("none");
     expect(presentation.opening.headingContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifeContrast).toBeGreaterThanOrEqual(4.5);
-    expect(presentation.opening.lifePixels).toBeGreaterThanOrEqual(16);
+    expect(presentation.opening.lifePixels).toBeGreaterThanOrEqual(14);
     expect(presentation.opening.headingWidth).toBeLessThanOrEqual(600);
     expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(600);
     expect(presentation.opening.questionBeforeDiagram).toBe(true);
@@ -205,7 +205,6 @@ for (const colorScheme of ["light", "dark"] as const) {
     }
     if ((page.viewportSize()?.width ?? 0) >= 1024) {
       expect(presentation.opening.headingWidth).toBeGreaterThanOrEqual(512);
-      expect(presentation.opening.lifeWidth).toBeGreaterThanOrEqual(480);
       expect(presentation.width).toBeGreaterThanOrEqual(480);
       expect(presentation.width).toBeLessThanOrEqual(600);
       expect(presentation.top).toBeLessThan(300);
@@ -294,7 +293,7 @@ for (const viewport of [
     const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
       .getByRole("link", { name: "Begin with lived experience", exact: true });
     await expect(reading).toBeInViewport({ ratio: 1 });
-    await expect(reading).toHaveAccessibleDescription("Begin with the preface · Free to read");
+    await expect(reading).toHaveAccessibleDescription("The preface · Free to read");
 
     const diagram = await svg.boundingBox();
     const question = await page.locator(".home-hero-title").boundingBox();

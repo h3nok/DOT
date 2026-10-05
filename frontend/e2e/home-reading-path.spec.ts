@@ -29,7 +29,9 @@ test("home offers a reading path and readable theory comparisons", async ({ page
       expect(content.alignment).toBe("center");
       expect(content.offset).toBeLessThanOrEqual(1);
     }
-    await expect(section.locator(".home-concept-architecture .home-architecture-surface")).toHaveCount(3);
+    // Only conscious processes carry the living surface; RF₀ is a flat plane.
+    await expect(section.locator(".home-concept-architecture .home-architecture-surface")).toHaveCount(2);
+    await expect(section.locator(".home-concept-architecture .home-concept-frame-plane")).toHaveCount(1);
     const reasoning = section.locator("summary").filter({ hasText: "Explore the reasoning" });
     const boundaryElement = section.locator('[data-step="boundary"]');
     await expect(boundaryElement).toBeVisible();

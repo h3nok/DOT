@@ -39,13 +39,7 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
           ))}
         </g>
         <g data-active={layer === "reality-frame"} className="home-concept-contour">
-          <circle
-            className="home-architecture-surface"
-            r={R.frame}
-            fill={`url(#${surfacePrefix}-frame)`}
-            stroke={`url(#${surfacePrefix}-rim)`}
-            filter={`url(#${surfacePrefix}-shadow)`}
-          />
+          <circle className="home-concept-frame-plane" r={R.frame} />
           {[-120, -80, -40, 0, 40, 80, 120].flatMap((x) =>
             [-120, -80, -40, 0, 40, 80, 120].map((y) => (
               <circle key={`${x}-${y}`} cx={x} cy={y} r="1.5" className="home-concept-node home-concept-secondary" />

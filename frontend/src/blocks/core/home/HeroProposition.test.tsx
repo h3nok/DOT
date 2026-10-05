@@ -32,20 +32,19 @@ describe("HeroProposition", () => {
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText(/You inherit ways of seeing before you learn to examine them/)).toBeVisible();
+    expect(document.querySelector(".home-hero-lede")).toBeNull();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("introduces practical inquiry without presenting the architecture as established", () => {
+  it("lets the first concept carry DOT's proposal at its honest claim level", () => {
     renderProposition();
 
-    expect(screen.getByText(/offers a practical framework for exploring/)).toBeVisible();
-    expect(screen.getByText(/conditioning, choice, and consequence shape your life\./)).toBeVisible();
     expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
     const concepts = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
-    expect(within(concepts).getByRole("group", { name: "1 of 10" }))
-      .toHaveAttribute("data-epistemic-status", "model");
+    const first = within(concepts).getByRole("group", { name: "1 of 10" });
+    expect(first).toHaveTextContent(/you are not physical/);
+    expect(first).toHaveAttribute("data-epistemic-status", "hypothesis");
     expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
   });
 
@@ -62,7 +61,7 @@ describe("HeroProposition", () => {
     );
     expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
     expect(screen.getByRole("link", { name: "Begin with lived experience" }))
-      .toHaveAccessibleDescription("Begin with the preface · Free to read");
+      .toHaveAccessibleDescription("The preface · Free to read");
   });
 
   it("puts the question and reading invitation before the diagram", () => {
@@ -75,7 +74,7 @@ describe("HeroProposition", () => {
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
     const heading = screen.getByRole("heading", { name: "What shapes the life you live?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
-    const explanation = screen.getByText(/offers a practical framework/i);
+    const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

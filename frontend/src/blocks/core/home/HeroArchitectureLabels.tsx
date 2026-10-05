@@ -1,28 +1,34 @@
 import type { ReactNode } from "react";
+import { C1_TRANSFORM } from "./architectureGeometry";
 
 /**
- * Each name is written once and drawn twice: visibly, and into the mask that
- * cuts its protected gap through the drawing. The gap follows the actual
- * glyphs at every responsive size, so no ring, tick, or node runs through text.
+ * Layers are named on one vertical axis, each centred in its own region;
+ * c₁'s own measures hang from c₁.
  */
 const LABEL_TEXT = {
-  origin: <text x="131" y="101" textAnchor="middle">T · E</text>,
-  "big-c": <text x="535" y="138" textAnchor="middle">Big C</text>,
+  origin: <text x="348" y="26" textAnchor="middle">T · E</text>,
+  "big-c": <text x="348" y="120" textAnchor="middle">Big C</text>,
   "reality-frame": (
-    <text x="187" y="244" textAnchor="middle">
+    <text x="348" y="192" textAnchor="middle">
       <tspan>RF</tspan>
       <tspan className="home-architecture-label-subscript">0</tspan>
     </text>
   ),
   "awareness-radius": (
-    <text x="300" y="470" textAnchor="middle" aria-label="Your awareness radius">
-      <tspan x="300">Awareness</tspan>
+    <text x="348" y="462" textAnchor="middle" aria-label="Your awareness radius">
+      <tspan x="348">Awareness</tspan>
       {/* A zero-width word space keeps the accessible name while both lines centre on their glyphs. */}
       <tspan className="home-architecture-label-space"> </tspan>
-      <tspan x="300" dy="1.15em">radius</tspan>
+      <tspan x="348" dy="1.15em">radius</tspan>
     </text>
   ),
-  "little-c": <text x="430" y="361" textAnchor="start">Little c</text>,
+  "little-c": (
+    <text x="430" y="361" textAnchor="start">
+      <tspan>Little c</tspan>
+      <tspan className="home-architecture-label-subscript">1</tspan>
+      <tspan className="home-architecture-label-you" x="430" dy="1.55em">— you</tspan>
+    </text>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export function HeroArchitectureLabelGaps() {
@@ -55,14 +61,14 @@ export function HeroArchitectureLabels() {
           {LABEL_TEXT["reality-frame"]}
         </a>
       </g>
-      <g className="home-architecture-ring-label" data-layer="awareness-radius">
+      <g className="home-architecture-ring-label" data-layer="awareness-radius" transform={C1_TRANSFORM}>
         <circle className="home-architecture-awareness-callout-dot" cx="348" cy="424" r="2.2" />
-        <path className="home-architecture-awareness-callout" d="M348 427V438H300V445" />
+        <path className="home-architecture-awareness-callout" d="M348 427V440" />
         {LABEL_TEXT["awareness-radius"]}
       </g>
-      <g className="home-architecture-ring-label" data-layer="little-c">
+      <g className="home-architecture-ring-label" data-layer="little-c" transform={C1_TRANSFORM}>
         <line className="home-architecture-label-leader" x1="378" y1="352" x2="422" y2="352" />
-        <a href="#little-c" aria-label="Little c — read about the local experiencer">
+        <a href="#little-c" aria-label="Little c₁ — you. Read about the local experiencer">
           {LABEL_TEXT["little-c"]}
         </a>
       </g>

@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, FRAME_CENTRE } from "./architectureGeometry";
 import { ConceptArchitecture } from "./ConceptArchitecture";
 import { HeroArchitecture } from "./HeroArchitecture";
 
@@ -21,10 +21,24 @@ describe("architecture surface lighting", () => {
 
     for (const diagram of diagrams) {
       const surfaces = [...diagram.querySelectorAll(".home-architecture-surface")];
-      expect(surfaces.map(surface => Number(surface.getAttribute("r"))))
-        .toEqual([R.bigC, R.frame, R.local]);
+      // RF₀ is structure, not a conscious organism: only Big C and Little c are living surfaces.
+      expect(surfaces).toHaveLength(2);
+      for (const [index, surface] of surfaces.entries()) {
+        const radius = [R.bigC, R.local][index];
+        if (surface.tagName.toLowerCase() === "circle") {
+          expect(Number(surface.getAttribute("r"))).toBe(radius);
+        } else {
+          const coordinates = surface.getAttribute("d")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+          expect(coordinates).toHaveLength(192);
+          for (let offset = 0; offset < coordinates.length; offset += 2) {
+            const distance = Math.hypot(coordinates[offset] - FRAME_CENTRE.x, coordinates[offset + 1] - FRAME_CENTRE.y);
+            expect(Math.abs(distance - radius)).toBeLessThan(radius * 0.08);
+          }
+        }
+      }
       expect(diagram).not.toHaveAttribute("filter");
-      expect(diagram.querySelectorAll(".home-architecture-surface-gradient")).toHaveLength(3);
+      expect(diagram.querySelectorAll(".home-architecture-surface-gradient")).toHaveLength(2);
+      expect(diagram.querySelector('[data-material="frame"]')).toBeNull();
       expect(diagram.querySelectorAll("feDropShadow")).toHaveLength(1);
       expect(diagram.querySelector("feDropShadow")).toHaveAttribute("dy", "3");
       expect(diagram.querySelector("feDropShadow")).toHaveAttribute("stdDeviation", "1.5");

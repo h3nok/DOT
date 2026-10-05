@@ -2,13 +2,21 @@ import { useId } from "react";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 import { Disclosure } from "../../../shared/Disclosure";
 
-import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, membranePath } from "./architectureGeometry";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
+import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
+/* Big C is grown: each membrane wavers slightly, offset from its neighbour. */
+const BIG_C_MEMBRANE = { amplitude: 3.2, lobes: 5 } as const;
+const bigCMembrane = (radius: number, phase: number) =>
+  membranePath(348, 352, radius, { ...BIG_C_MEMBRANE, phase });
+
 const FIELD_CONTOURS = [326, 338] as const;
+/* The top-centre stays open for the T · E label. */
+const FIELD_ARCS = [[202, 256], [284, 338]] as const;
 const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
 const MEMBRANE_BANDS = [258, 270] as const;
 
@@ -68,16 +76,6 @@ const POLAR_TICKS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
-/** Little c's current awareness & chosen intent (solid line to awareness boundary). */
-const AWARENESS_TRACE_D = "M353 358C366 374 378 392 391 410";
-
-/** Awareness potential & causal reach extending through RF₀ into the field (dotted continuation). */
-const POTENTIAL_TRACE_D = "M391 410C410 440 430 478 454 518";
-
-/** Combined causal trajectory. Glow and accessible path share it. */
-const THREAD_D =
-  "M353 358C366 374 378 392 391 410C410 440 430 478 454 518";
-
 const polar = (radius: number, angleDeg: number) => ({
   x: 348 + Math.cos((angleDeg * Math.PI) / 180) * radius,
   y: 352 + Math.sin((angleDeg * Math.PI) / 180) * radius,
@@ -88,44 +86,6 @@ const arcPath = (radius: number, startDeg: number, endDeg: number) => {
   const end = polar(radius, endDeg);
   return `M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
 };
-
-/** The awareness radius: the region of options Little c can actually see. */
-const AWARENESS_RADIUS = 72;
-
-/** The radius is drawn, not implied: a spoke from centre to ring at this angle. */
-const AWARENESS_SPOKE_ANGLE = 150;
-
-/** Dotted arcs beyond the current radius: awareness can expand.
- *  Kept in the free quadrant around the spoke so they never cross an option. */
-const AWARENESS_POTENTIAL_RADII = [96, 120] as const;
-const AWARENESS_ARC_SPAN = 28;
-
-/** Options RF₀ presents, arriving at the edge of the awareness radius. */
-const OPTION_ANGLES = [205, 258, 310] as const;
-
-const OPTION_ARROWS = OPTION_ANGLES.map((angle) => ({
-  angle,
-  from: polar(112, angle),
-  to: polar(80, angle),
-  node: polar(AWARENESS_RADIUS, angle),
-}));
-
-/** Where the intent thread crosses the ring: the option Little c chose. */
-const CHOSEN_OPTION = { x: 391, y: 410 } as const;
-
-/** Other Little c centres in RF₀. Their unequal rings make awareness developmental. */
-const SOCIAL_CENTRES = [
-  { angle: -62, distance: 138, awareness: 15 },
-  { angle: 8, distance: 144, awareness: 20 },
-  { angle: 218, distance: 142, awareness: 12 },
-] as const;
-
-const SOCIAL_RELATIONS = SOCIAL_CENTRES.map((centre) => ({
-  ...centre,
-  point: polar(centre.distance, centre.angle),
-  from: polar(centre.distance - centre.awareness - 4, centre.angle),
-  to: polar(AWARENESS_RADIUS + 5, centre.angle),
-}));
 
 /**
  * Code-native rendering of DOT's proposed layered architecture.
@@ -144,7 +104,9 @@ export function HeroArchitecture() {
   const ids: HeroArchitectureIds = {
     gridId: `${instanceId}-hero-rf-grid`,
     arrowId: `${instanceId}-hero-trace-arrow`,
-    pressureArrowId: `${instanceId}-hero-pressure-arrow`,
+    optionArrowId: `${instanceId}-hero-option-arrow`,
+    constraintArrowId: `${instanceId}-hero-constraint-arrow`,
+    couplingArrowId: `${instanceId}-hero-coupling-arrow`,
     radiusArrowId: `${instanceId}-hero-radius-arrow`,
     fieldWashId: `${instanceId}-hero-field-wash`,
     frameWashId: `${instanceId}-hero-frame-wash`,
@@ -154,8 +116,7 @@ export function HeroArchitecture() {
     surfacePrefix: `${instanceId}-hero-surface`,
   };
   const {
-    gridId, arrowId, pressureArrowId, fieldWashId, frameWashId,
-    localWashId, threadId, frameClipId, surfacePrefix,
+    gridId, fieldWashId, frameWashId, frameClipId, surfacePrefix,
   } = ids;
   const captionId = `${instanceId}-hero-architecture-caption`;
   const descriptionId = `${instanceId}-hero-architecture-description`;
@@ -180,9 +141,9 @@ export function HeroArchitecture() {
         <circle ref={fieldAnchor} className="home-architecture-origin-boundary" cx="348" cy="352" r={R.origin} />
 
         <g className="home-architecture-field-contours" aria-hidden="true">
-          {FIELD_CONTOURS.map((radius) => (
-            <path key={radius} d={arcPath(radius, 202, 338)} />
-          ))}
+          {FIELD_CONTOURS.flatMap((radius) => FIELD_ARCS.map(([start, end]) => (
+            <path key={`${radius}-${start}`} d={arcPath(radius, start, end)} />
+          )))}
           {FIELD_RAYS.map((angle) => {
             const start = polar(320, angle);
             const end = polar(336, angle);
@@ -190,9 +151,9 @@ export function HeroArchitecture() {
           })}
         </g>
 
-        <circle
+        <path
           className="home-architecture-big-c-zone home-architecture-surface"
-          cx="348" cy="352" r={R.bigC}
+          d={bigCMembrane(R.bigC, 0)}
           fill={`url(#${surfacePrefix}-big-c)`}
           stroke={`url(#${surfacePrefix}-rim)`}
           filter={`url(#${surfacePrefix}-shadow)`}
@@ -200,12 +161,10 @@ export function HeroArchitecture() {
 
         <g className="home-architecture-big-c">
           {BIG_C_RINGS.map((radius, index) => (
-            <circle
+            <path
               key={radius}
               data-contour={index + 1}
-              cx="348"
-              cy="352"
-              r={radius}
+              d={bigCMembrane(radius, index * 1.3)}
             />
           ))}
         </g>
@@ -216,11 +175,9 @@ export function HeroArchitecture() {
               <path key={radius} d={arcPath(radius, 38, 142)} />
             ))}
           </g>
-          <circle
+          <path
             className="home-architecture-organism-inner-membrane"
-            cx="348"
-            cy="352"
-            r="278"
+            d={bigCMembrane(278, 2.6)}
           />
           {BIG_C_MEMBRANE_NODES.map(({ angle, radius, x1, y1, x2, y2 }) => (
             <g key={angle} className="home-architecture-organism-node">
@@ -246,12 +203,10 @@ export function HeroArchitecture() {
         </g>
 
         <g className="home-architecture-frame">
+          {/* RF₀ is structure, not an organism: a flat plane, never the living surface material. */}
           <circle
-            className="home-architecture-frame-zone home-architecture-surface"
+            className="home-architecture-frame-zone"
             cx="348" cy="352" r={R.frame}
-            fill={`url(#${surfacePrefix}-frame)`}
-            stroke={`url(#${surfacePrefix}-rim)`}
-            filter={`url(#${surfacePrefix}-shadow)`}
           />
           <circle
             className="home-architecture-frame-wash"
@@ -279,6 +234,13 @@ export function HeroArchitecture() {
             cy="352"
             r={R.frame}
           />
+          {/* Built, not grown: a perfect machined bezel no organism carries. */}
+          <circle
+            className="home-architecture-frame-bezel"
+            cx="348"
+            cy="352"
+            r={R.frame - 3}
+          />
           <circle
             className="home-architecture-frame-inset"
             cx="348"
@@ -289,6 +251,13 @@ export function HeroArchitecture() {
           <g className="home-architecture-coordinate-axis" clipPath={`url(#${frameClipId})`}>
             <line x1="151" y1="352" x2="545" y2="352" />
             <line x1="348" y1="155" x2="348" y2="549" />
+          </g>
+
+          {/* RF₀'s own origin: no experiencer occupies it. */}
+          <g className="home-architecture-frame-origin" aria-hidden="true">
+            <line x1="340" y1="352" x2="356" y2="352" />
+            <line x1="348" y1="344" x2="348" y2="360" />
+            <circle cx="348" cy="352" r="3.5" />
           </g>
 
           <g className="home-architecture-projection-marks" aria-hidden="true">
@@ -327,132 +296,7 @@ export function HeroArchitecture() {
           <path d="M128 155H138M128 352H142M128 549H138" />
         </g>
 
-        <g className="home-architecture-social-field">
-          <g className="home-architecture-social-relations">
-            {SOCIAL_RELATIONS.map(({ angle, from, to }) => (
-              <g key={angle}>
-                <line x1={from.x} y1={from.y} x2={to.x} y2={to.y} />
-                <circle cx={to.x} cy={to.y} r="2" />
-                <path
-                  className="home-architecture-awareness-brightening"
-                  d={arcPath(AWARENESS_RADIUS, angle - 7, angle + 7)}
-                />
-              </g>
-            ))}
-          </g>
-          <g className="home-architecture-peer-centres">
-            {SOCIAL_RELATIONS.map(({ angle, point, awareness }) => (
-              <g key={angle} className="home-architecture-peer-centre">
-                <circle
-                  className="home-architecture-peer-awareness"
-                  cx={point.x}
-                  cy={point.y}
-                  r={awareness}
-                />
-                <circle
-                  className="home-architecture-peer-core"
-                  cx={point.x}
-                  cy={point.y}
-                  r="3.2"
-                />
-              </g>
-            ))}
-          </g>
-        </g>
-
-        <g className="home-architecture-frame-pressure">
-          {OPTION_ARROWS.map(({ angle, from, to }) => (
-            <line
-              key={angle}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              markerEnd={`url(#${pressureArrowId})`}
-            />
-          ))}
-        </g>
-
-        <g className="home-architecture-causal-trace">
-          <path
-            className="home-architecture-thread-glow"
-            d={THREAD_D}
-            stroke={`url(#${threadId})`}
-            pathLength="1"
-          />
-          {/* Solid line: Little c's current awareness & chosen intent */}
-          <path
-            className="home-architecture-awareness-trace"
-            d={AWARENESS_TRACE_D}
-            stroke={`url(#${threadId})`}
-            pathLength="1"
-          />
-          {/* Dotted continuation: Awareness potential & causal trajectory extending through RF₀ */}
-          <path
-            className="home-architecture-potential-trace"
-            d={POTENTIAL_TRACE_D}
-            stroke={`url(#${threadId})`}
-            markerEnd={`url(#${arrowId})`}
-          />
-          <circle cx="454" cy="518" r="3" />
-        </g>
-
-        <g className="home-architecture-little-c">
-          <circle
-            className="home-architecture-local-aura"
-            cx="348"
-            cy="352"
-            r={R.awareness}
-            fill={`url(#${localWashId})`}
-          />
-          <circle
-            className="home-architecture-surface"
-            cx="348" cy="352" r={R.local}
-            fill={`url(#${surfacePrefix}-local)`}
-            stroke={`url(#${surfacePrefix}-rim)`}
-            filter={`url(#${surfacePrefix}-shadow)`}
-          />
-          <circle className="home-architecture-local-ring" cx="348" cy="352" r={R.local} />
-          <circle className="home-architecture-local-core" cx="348" cy="352" r={R.core} />
-          <circle className="home-architecture-local-pin" cx="348" cy="352" r="2.25" />
-        </g>
-
-        <g className="home-architecture-awareness-radius">
-          <g className="home-architecture-awareness-potential">
-            {AWARENESS_POTENTIAL_RADII.map((radius) => (
-              <path
-                key={radius}
-                d={arcPath(
-                  radius,
-                  AWARENESS_SPOKE_ANGLE - AWARENESS_ARC_SPAN,
-                  AWARENESS_SPOKE_ANGLE + AWARENESS_ARC_SPAN,
-                )}
-              />
-            ))}
-          </g>
-          <circle
-            className="home-architecture-awareness-ring"
-            cx="348"
-            cy="352"
-            r={AWARENESS_RADIUS}
-          />
-          {OPTION_ARROWS.map(({ angle, node }) => (
-            <circle
-              key={angle}
-              className="home-architecture-option-node"
-              cx={node.x}
-              cy={node.y}
-              r="2.6"
-            />
-          ))}
-          <circle
-            className="home-architecture-option-node"
-            data-chosen="true"
-            cx={CHOSEN_OPTION.x}
-            cy={CHOSEN_OPTION.y}
-            r="3.4"
-          />
-        </g>
+        <HeroArchitectureExperiencers ids={ids} />
 
         <HeroArchitectureLabels />
       </svg>
@@ -460,10 +304,14 @@ export function HeroArchitecture() {
       <figcaption className="home-architecture-caption">
         <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
         <span id={descriptionId} className="sr-only">
-          T and E precede Big C; Big C generates RF₀, our physical universe;
-          Little c experiences and acts within it. The rings are conceptual,
-          not spatial. DOT proposes this environment as a setting for Little c
-          to live, explore possibilities, and develop.
+          T and E precede Big C; Big C generates RF₀, our physical universe,
+          which is structure rather than a conscious process. RF₀ hosts many
+          Little c, indexed c₁, c₂, c₃ and onward; c₁ is you. RF₀ presses on
+          you through constraint and consequence and offers options to your
+          awareness. Little c meet only through RF₀ and press on one another;
+          you cooperate with c₂, which widens both your awareness. The rings
+          are conceptual, not spatial. DOT proposes this environment as a
+          setting for Little c to live, explore possibilities, and develop.
         </span>
         <Disclosure className="home-architecture-guide" summary="About the diagram">
           <p>
@@ -472,22 +320,29 @@ export function HeroArchitecture() {
             possibility, not measured structure outside our universe.
           </p>
           <p>
-            RF₀’s grid and graphite boundaries identify physical structure.
-            The accent identifies conscious processes: experiencers, awareness,
-            and Intent. Dotted links distinguish offered options and social
-            coupling from chosen action.
+            Two kinds of process, drawn two ways. Graphite is RF₀, the
+            interaction environment: structure and law, not a conscious
+            process, so it is drawn flat and centred on no experiencer. The
+            accent marks conscious processes: Big C, each Little c, awareness,
+            and Intent.
           </p>
           <dl>
             <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
             <div><dt>Big C</dt><dd>The proposed conscious organism that generates our world.</dd></div>
-            <div><dt>RF₀</dt><dd>The physical universe, proposed as Big C’s developmental environment for Little c. Generated does not mean unreal; consequences remain real.</dd></div>
-            <div><dt>Little c</dt><dd>You, the local experiencer: noticing, choosing, and living with what follows.</dd></div>
+            <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process. Proposed as Big C’s developmental environment, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
+            <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): noticing, choosing, and living with what follows.</dd></div>
+            <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>
+            <div><dt>Open graphite chevrons</dt><dd>Options RF₀ offers, arriving at your awareness radius: the options you can perceive.</dd></div>
+            <div><dt>Dotted double arrows</dt><dd>Mutual pressure between Little c. They meet only through RF₀, and each presses on the other.</dd></div>
+            <div><dt>Solid accent link</dt><dd>Cooperation, which widens the awareness of both. cₙ lies beyond your awareness for now.</dd></div>
           </dl>
           <p>
-            Your awareness radius marks the options you can perceive. RF₀ is
-            also a social environment: other experiencers can broaden that
-            awareness. The world returns constraint and consequence; Little c
-            reflects, chooses, and acts through Intent and embodied action.
+            DOT proposes that Big C’s aim is for Little c to cooperate so that
+            each can reach its potential. RF₀ does not impose this: will is free.
+            It is a high-fidelity, difficult environment in which uplifting one
+            another works better than condescension. You choose, act through
+            Intent and embodied action, and the world returns constraint and
+            consequence.
           </p>
         </Disclosure>
       </figcaption>

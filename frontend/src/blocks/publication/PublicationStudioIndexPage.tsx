@@ -7,6 +7,7 @@ import {
   type PublicationProjectRead,
 } from "../../services/OrchestratorPublicationService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { CreateBookProject } from "./components/CreateBookProject";
 
 export default function PublicationStudioIndexPage() {
   const [projects, setProjects] = useState<PublicationProjectRead[]>([]);
@@ -39,6 +40,11 @@ export default function PublicationStudioIndexPage() {
           Write in durable Markdown, distinguish observation from model and hypothesis, then inspect the exact reader experience before publishing a finite edition.
         </p>
       </header>
+
+      <CreateBookProject />
+      <Link to="/studio/writing" className="inline-flex min-h-12 items-center gap-2 text-sm font-semibold underline underline-offset-4">
+        <FileText className="h-4 w-4" aria-hidden="true" />Essays, analysis, and letters<ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </Link>
 
         {loading ? (
           <div className="flex min-h-52 items-center justify-center" aria-label="Loading projects">

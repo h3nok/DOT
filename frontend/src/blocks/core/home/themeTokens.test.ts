@@ -24,6 +24,7 @@ const HERO_FILES = [
   "HeroAsk.tsx",
   "HeroArchitecture.tsx",
   "HeroArchitectureDefs.tsx",
+  "HeroArchitectureExperiencers.tsx",
   "HeroArchitectureLabels.tsx",
   "ArchitectureSurfaceDefs.tsx",
   "ConceptArchitecture.tsx",
@@ -39,7 +40,7 @@ const HERO_FILES = [
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");
 
 function readArchitecture() {
-  return ["HeroArchitecture.tsx", "HeroArchitectureDefs.tsx", "HeroArchitectureLabels.tsx", "ArchitectureSurfaceDefs.tsx"]
+  return ["HeroArchitecture.tsx", "HeroArchitectureDefs.tsx", "HeroArchitectureExperiencers.tsx", "HeroArchitectureLabels.tsx", "ArchitectureSurfaceDefs.tsx"]
     .map((file) => readFileSync(join(HERE, file), "utf8"))
     .join("\n");
 }
@@ -164,7 +165,7 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain("AWARENESS_RADIUS = 72");
     expect(architecture).toContain("OPTION_ANGLES");
     expect(architecture).toContain('d="M1 0L6 3L1 6"');
-    expect(architecture).not.toContain('d="M0 0L6 3L0 6Z"');
+    expect(architecture).toMatch(/home-architecture-option-arrow" d="M1 0L6 3L1 6"/);
     // The chosen option sits where the merged awareness & potential trace crosses the ring.
     expect(architecture).toContain('data-chosen="true"');
     expect(architecture).toContain("AWARENESS_TRACE_D");
@@ -173,7 +174,7 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain("home-architecture-potential-trace");
     expect(architecture).not.toContain("M184 252C232 270 270 298 308 324");
     expect(architecture).not.toContain("home-architecture-reflection");
-    expect(styles).toContain(".home-architecture-frame-pressure line");
+    expect(styles).toContain(".home-architecture-frame-options line");
     expect(styles).toContain(".home-architecture-awareness-ring");
     expect(styles).toContain(".home-architecture-awareness-trace");
     expect(styles).toContain(".home-architecture-potential-trace");
@@ -181,7 +182,12 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain("AWARENESS_POTENTIAL_RADII");
     expect(architecture).toContain("AWARENESS_ARC_SPAN");
     expect(styles).toContain(".home-architecture-awareness-potential path");
-    expect(styles).toMatch(/\.home-architecture-pressure-arrow\s*\{[\s\S]*?fill: none;/);
+    expect(styles).toMatch(/\.home-architecture-option-arrow\s*\{[\s\S]*?fill: none;/);
+    // RF₀'s constraint is a separate, solid mark on the body, never an option.
+    expect(architecture).toContain("CONSTRAINT_ANGLES");
+    expect(architecture).toContain('d="M0 0L6 3L0 6Z"');
+    expect(styles).toContain(".home-architecture-frame-constraint line");
+    expect(styles).toMatch(/\.home-architecture-constraint-arrow\s*\{[\s\S]*?fill: var\(--architecture-rf\);/);
     expect(styles).not.toContain(".home-architecture-reflection path");
   });
 
@@ -221,18 +227,40 @@ describe("home entry theme compatibility", () => {
     expect(architecture).not.toContain("LITTLE c");
   });
 
-  it("depicts RF₀ as a social environment that can brighten awareness", () => {
+  it("draws mutual pressure between Little c and cooperation as a free choice", () => {
     const architecture = readArchitecture();
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(architecture).toContain("SOCIAL_CENTRES");
-    expect(architecture).toContain("social environment");
+    expect(architecture).toContain('relation: "cooperation"');
+    expect(architecture).toContain('relation: "pressure"');
+    expect(architecture).toContain('orient="auto-start-reverse"');
+    expect(architecture).toContain("markerStart={`url(#${couplingArrowId})`}");
+    expect(architecture).toContain("meet only through RF₀");
+    expect(architecture).toContain("will is free");
     expect(architecture).toContain("home-architecture-peer-centre");
     expect(architecture).toContain("home-architecture-awareness-brightening");
     expect(architecture).not.toContain("toward Love");
     expect(styles).toContain(".home-architecture-social-relations line");
+    expect(styles).toContain('.home-architecture-social-relations [data-relation="cooperation"] line');
     expect(styles).toContain(".home-architecture-peer-awareness");
     expect(styles).toContain(".home-architecture-awareness-brightening");
+  });
+
+  it("draws RF₀ as structure hosting many indexed Little c, centred on none", () => {
+    const architecture = readArchitecture();
+    const geometry = readFileSync(join(HERE, "architectureGeometry.ts"), "utf8");
+
+    expect(architecture).not.toContain("-frame)`}");
+    expect(architecture).toContain("home-architecture-frame-origin");
+    expect(geometry).toContain("C1_OFFSET");
+    expect(architecture).toContain("transform={C1_TRANSFORM}");
+    for (const index of ["2", "3", "4", "n"]) {
+      expect(architecture).toContain(`index: "${index}"`);
+    }
+    expect(architecture).toContain("home-architecture-peer-label");
+    expect(architecture).toContain("not a conscious process");
+    expect(architecture).toContain("indexed c₁, c₂, c₃");
   });
 
   it("labels the rings through protected gaps and keys each layer by colour", () => {

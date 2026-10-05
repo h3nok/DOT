@@ -117,6 +117,15 @@ describe("homepage movement narrative", () => {
     expect(home).not.toContain("Request an invitation to the circle");
   });
 
+  it("places DOT in its lineage without implying endorsement (ADR-0038)", () => {
+    const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
+
+    expect(home).toContain("A new intellectual movement");
+    expect(home).toContain("theory of everything");
+    expect(home).toContain("<cite>My Big TOE</cite>");
+    expect(home).toContain("Naming these thinkers does not mean they endorse DOT.");
+  });
+
   it("keeps claim levels explicit and the funding ask away from the front door", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");

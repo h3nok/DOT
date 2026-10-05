@@ -287,11 +287,11 @@ describe("page text for readers without JavaScript", () => {
     );
   });
 
-  it("carries the practical passage into metadata and the script-free home", () => {
+  it("carries the hero proposition into metadata and the script-free home", () => {
     const description = /name="description"\s+content="([^"]+)"/.exec(shell)?.[1];
-    expect(description).toContain("You inherit ways of seeing");
-    expect(description).toContain("practical framework");
-    expect(description).toContain("conditioning, choice, and consequence shape your life.");
+    expect(description).toContain("What shapes the life you live?");
+    expect(description).toContain("consciousness-first theory of everything");
+    expect(description).toContain("a construction, not a revelation.");
     expect(description).not.toContain("greater awareness can support");
     for (const field of ["og:description", "twitter:description"]) {
       const content = new RegExp(`(?:name|property)="${field}"\\s+content="([^"]+)"`)
@@ -344,9 +344,15 @@ describe("essays", () => {
   );
   const essays = [newer, older];
 
-  it("are not listed anywhere until one is published", async () => {
-    expect(routes.some((route) => route.route.startsWith("/essays"))).toBe(false);
-    expect(rootDocument(shell, manifest)).not.toContain('href="/essays"');
+  it("lists external newsletter writing without inventing a local essay or feed", async () => {
+    const writing = routes.find((route) => route.route === "/essays");
+    expect(writing?.prerender).toContain("The Millennial Manifesto");
+    expect(writing?.prerender).toContain("AI will not kill you. The one saying that it will, will");
+    expect(writing?.prerender).toContain("Read on LinkedIn");
+    expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
+    const home = rootDocument(shell, manifest);
+    expect(home).toContain('href="/essays"');
+    expect(home).not.toContain('href="/feed.xml"');
   });
 
   it("each state their author, dates, and the concepts they build on", async () => {

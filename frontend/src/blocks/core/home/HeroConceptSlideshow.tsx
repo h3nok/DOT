@@ -9,6 +9,11 @@ const LEVEL_LABEL: Record<Concept["level"], string> = {
   hypothesis: "Hypothesis",
 };
 
+const TERM_TICK_MS = 35;
+const PASSAGE_TICK_MS = 20;
+
+const fullLength = (concept: Concept) => concept.term.length + concept.text.length;
+
 export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const pointerPlayback = useRef(false);
@@ -23,9 +28,15 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
   const concept = HERO_CONCEPTS[index];
   if (!concept) throw new Error("The selected Book One concept is missing.");
   const length = typed.id === concept.id ? typed.length : 0;
+  const total = fullLength(concept);
   const last = index === HERO_CONCEPTS.length - 1;
   const typing = !still && playing && !last;
   const advancing = typing && inView && tabVisible && !hovered;
+  const counting = advancing && length >= total;
+  const readingTime = Math.max(8_000, concept.text.split(/\s+/).length * 300);
+  const termShown = typing ? Math.min(length, concept.term.length) : concept.term.length;
+  const textShown = typing ? Math.max(0, length - concept.term.length) : concept.text.length;
+  const typingText = typing && textShown < concept.text.length;
 
   useEffect(() => {
     const updateVisibility = () => setTabVisible(!document.hidden);
@@ -38,25 +49,24 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
   }, [still]);
 
   useEffect(() => {
-    if (!typing || !inView || !tabVisible || length >= concept.term.length) return;
+    if (!typing || !inView || !tabVisible || length >= total) return;
     const timer = window.setTimeout(() => {
       setTyped({ id: concept.id, length: length + 1 });
-    }, 35);
+    }, length < concept.term.length ? TERM_TICK_MS : PASSAGE_TICK_MS);
     return () => window.clearTimeout(timer);
-  }, [concept.id, concept.term, inView, length, tabVisible, typing]);
+  }, [concept.id, concept.term.length, inView, length, tabVisible, total, typing]);
 
   useEffect(() => {
-    if (!advancing || length < concept.term.length) return;
-    const readingTime = Math.max(8_000, concept.text.split(/\s+/).length * 300);
+    if (!counting) return;
     const timer = window.setTimeout(() => {
       setIndex(current => Math.min(HERO_CONCEPTS.length - 1, current + 1));
     }, readingTime);
     return () => window.clearTimeout(timer);
-  }, [advancing, concept.text, index, length, concept.term.length]);
+  }, [counting, index, readingTime]);
 
   const pause = () => {
     setPlaying(false);
-    setTyped({ id: concept.id, length: concept.term.length });
+    setTyped({ id: concept.id, length: total });
   };
 
   const move = (direction: number) => {
@@ -65,10 +75,9 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
     if (!nextConcept) throw new Error("The requested Book One concept is missing.");
     setPlaying(false);
     setIndex(nextIndex);
-    setTyped({ id: nextConcept.id, length: nextConcept.term.length });
+    setTyped({ id: nextConcept.id, length: fullLength(nextConcept) });
   };
 
-  const playbackLabel = last ? "Done" : still ? "Still" : playing ? "Pause" : "Play";
   const PlaybackIcon = last ? Check : playing && !still ? Pause : Play;
 
   return (
@@ -84,6 +93,10 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
       }}
       onPointerLeave={() => setHovered(false)}
     >
+      <p className="home-concept-slideshow-eyebrow" aria-hidden="true">
+        <span>Key concept</span>
+        <span data-level={concept.level}>{LEVEL_LABEL[concept.level]}</span>
+      </p>
       <div className="home-concept-slideshow-body">
         {/* Reserve the longest slide at the current font and width, without clipping text. */}
         {HERO_CONCEPTS.map(item => (
@@ -102,19 +115,39 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
           data-epistemic-status={concept.level}
         >
           <h2 className="home-concept-slideshow-term" aria-label={concept.term}>
-            <span aria-hidden="true" data-typing={typing && length < concept.term.length}>
-              {typing ? concept.term.slice(0, length) : concept.term}
+            <span aria-hidden="true" data-typing={typing && termShown < concept.term.length}>
+              {concept.term.slice(0, termShown)}
             </span>
           </h2>
           <span className="sr-only">{LEVEL_LABEL[concept.level]}.</span>
-          <p className="home-concept-slideshow-explanation">{concept.text}</p>
+          <p className="home-concept-slideshow-explanation">
+            {typingText ? (
+              <>
+                <span data-typing={termShown === concept.term.length}>
+                  {concept.text.slice(0, textShown)}
+                </span>
+                {/* Untyped words keep their place, so lines never reflow as they arrive. */}
+                <span className="home-concept-slideshow-untyped">
+                  {concept.text.slice(textShown)}
+                </span>
+              </>
+            ) : concept.text}
+          </p>
         </div>
       </div>
       <div className="home-concept-slideshow-footer">
-        <p className="home-concept-slideshow-meta" aria-hidden="true">
-          <span>{last ? "Complete" : "Key concepts"}</span>
-          <span>{LEVEL_LABEL[concept.level]} · {index + 1} / {HERO_CONCEPTS.length}</span>
-        </p>
+        <ol className="home-concept-slideshow-rail" aria-hidden="true">
+          {HERO_CONCEPTS.map((item, position) => (
+            <li
+              key={item.id}
+              data-state={position < index ? "read" : position === index ? "current" : "ahead"}
+            >
+              {position === index && counting && (
+                <span style={{ animationDuration: `${readingTime}ms` }} />
+              )}
+            </li>
+          ))}
+        </ol>
         <div className="home-concept-slideshow-controls">
           <button
             type="button"
@@ -134,7 +167,6 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
             }}
           >
             <PlaybackIcon aria-hidden="true" />
-            <span>{playbackLabel}</span>
           </button>
           <button
             type="button"

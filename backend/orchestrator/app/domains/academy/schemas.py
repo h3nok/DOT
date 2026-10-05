@@ -9,6 +9,12 @@ import pydantic
 import app.domains.academy.models as models
 
 
+class WorkspaceRead(pydantic.BaseModel):
+    id: str
+    title: str
+    slug: str
+
+
 class WorkCreate(pydantic.BaseModel):
     kind: str
     canonical_slug: str = pydantic.Field(

@@ -51,6 +51,9 @@ const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
+const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
+const PublicationsPage = React.lazy(() => import("./blocks/publication/PublicationsPage"));
+const NativeWritingPage = React.lazy(() => import("./blocks/publication/NativeWritingPage"));
 const ReadersPage = React.lazy(() => import("./blocks/readers/ReadersPage"));
 const ReaderLeavePage = React.lazy(
   () => import("./blocks/readers/ReaderLeavePage"),
@@ -189,6 +192,9 @@ const App: React.FC = () => {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
+                <Route path="/publications" element={<PublicationsPage />} />
+                <Route path="/writing/:workId" element={<NativeWritingPage />} />
+                <Route path="/writing/:workId/releases/:releaseNumber" element={<NativeWritingPage />} />
                 <Route path="/readers" element={<ReadersPage />} />
                 <Route path="/readers/leave" element={<ReaderLeavePage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
@@ -200,6 +206,10 @@ const App: React.FC = () => {
                       <PublicationStudioIndexPage />
                     </StudioAuthGate>
                   }
+                />
+                <Route
+                  path="/studio/writing"
+                  element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
                 />
                 <Route
                   path="/studio/:projectId"

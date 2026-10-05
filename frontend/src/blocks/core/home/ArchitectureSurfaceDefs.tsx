@@ -1,7 +1,8 @@
 export function ArchitectureSurfaceDefs({ idPrefix }: { idPrefix: string }) {
   return (
     <>
-      {["big-c", "frame", "local"].map((material) => (
+      {/* Living surfaces only: RF₀ is structure, not a conscious organism. */}
+      {["big-c", "local"].map((material) => (
         <radialGradient
           key={material}
           id={`${idPrefix}-${material}`}

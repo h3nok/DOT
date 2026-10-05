@@ -22,6 +22,7 @@ Docs marked *annex* or *superseded* are retained for history and detail.
 | 13  | [DOT Academy Platform](13-DOT-ACADEMY-PLATFORM.md)                   | *Annex to 14* — detailed kernel schema, kind contracts, lifecycles, preservation.            |
 | 14  | [The Intellectual Platform](14-INTELLECTUAL-PLATFORM.md)             | **The architecture** — one kernel, many institutions; invariants P1–P14; consolidated contract. |
 | 15  | [Platform Implementation Plan](15-PLATFORM-IMPLEMENTATION-PLAN.md)   | **The plan** — ground truth, Phases 0–8 with acceptance gates.                               |
+| 16  | [Owned Publication Platform](16-OWNED-PUBLICATION-PLATFORM.md)       | **Proposed publication track** — native books/writing, on-site newsletters, owned email delivery, optional LinkedIn/Substack distribution. |
 | —   | [ADRs](adr/)                                                         | Locked decisions with trade-offs.                                                            |
 
 ## How to use this
@@ -73,3 +74,5 @@ Docs marked *annex* or *superseded* are retained for history and detail.
 | [0035](adr/0035-free-book-and-voluntary-author-support.md)          | Free online book and PDF; separate one-time author support, no account or payment gate | Proposed |
 | [0036](adr/0036-one-manuscript-two-renderings.md)                   | One Word manuscript: print sets depth passages inline, the digital reader folds them on request | Proposed |
 | [0037](adr/0037-reader-controlled-concepts-and-purpose.md)          | Founder-approved finite explained hero introduction, restrained architecture distinction, and Consciousness 101 | Accepted |
+| [0038](adr/0038-dot-names-its-movement-and-lineage.md)              | Hero carries no lede; the first concept states DOT's proposal; the ending names the movement and its lineage without implying endorsement | Proposed |
+| [0039](adr/0039-owned-publication-native-newsletters-and-distribution.md) | Owned native publication and newsletter archive; separate approved email delivery and optional outward distribution | Proposed |
