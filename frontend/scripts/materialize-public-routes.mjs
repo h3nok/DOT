@@ -18,6 +18,7 @@ const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
+const TERMS_ROUTE = "/terms";
 
 // Paths are relative to the frontend package, where the build runs.
 const CONTENT_DIR = path.join("src", "content");
@@ -64,7 +65,7 @@ const STATIC_ROUTES = [
   {
     route: "/support",
     title: "Support the Work — Digital Organism Theory",
-    description: "Fund the reader, grounded research companion, and public development of DOT without advertising.",
+    description: "Pay the author directly, if you wish: one-time, an amount you choose, and not a charitable donation. Reading and the PDF stay free.",
   },
   {
     route: BOOK_ROUTE,
@@ -531,6 +532,7 @@ function siteNav(essaysPublished) {
     [ABOUT_ROUTE, "About"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
+    [TERMS_ROUTE, "Terms"],
   ];
   return `<nav aria-label="Site">${entries.map(([href, label]) => link(href, label)).join(" · ")}</nav>`;
 }
@@ -655,6 +657,18 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
         ),
       };
     }
+    if (route.route === "/support") {
+      return {
+        ...route,
+        structuredData: graph(
+          webPageNode(route),
+          breadcrumb([home, { name: titleOf(route), route: route.route }]),
+        ),
+        prerender: page(
+          `${heading}<p>Payments are taken by Stripe, which emails the receipt. A payment buys no access, membership, or standing. Who runs the site, the refund policy, and a contact address: ${link(TERMS_ROUTE, "Terms and refunds")}.</p>`,
+        ),
+      };
+    }
     if (route.route === "/doctrine") {
       return {
         ...route,
@@ -687,9 +701,10 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
     };
   });
 
-  const [aboutText, privacyText] = await Promise.all([
+  const [aboutText, privacyText, termsText] = await Promise.all([
     readFile(path.join(CONTENT_DIR, "pages", "about.md"), "utf8"),
     readFile(path.join(CONTENT_DIR, "pages", "privacy.md"), "utf8"),
+    readFile(path.join(CONTENT_DIR, "pages", "terms.md"), "utf8"),
   ]);
 
   const about = {
@@ -751,6 +766,13 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
       description:
         "What this site keeps, what it never collects, and which services handle what.",
       body: renderMarkdown(privacyText),
+    },
+    {
+      route: TERMS_ROUTE,
+      title: "Terms and refunds — Digital Organism Theory",
+      description:
+        "Who runs this site, what an optional payment to the author is, and how to get a refund.",
+      body: renderMarkdown(termsText),
     },
   ].map((route) => {
     if (route.structuredData) return route;

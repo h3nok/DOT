@@ -16,6 +16,7 @@ export const PUBLIC_ROUTES = [
   { path: "/essays", name: "essays" },
   { path: "/readers", name: "reader list" },
   { path: "/privacy", name: "privacy" },
+  { path: "/terms", name: "terms" },
 ] as const;
 
 /**

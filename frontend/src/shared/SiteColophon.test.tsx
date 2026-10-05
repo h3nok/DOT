@@ -25,6 +25,7 @@ describe("SiteColophon", () => {
       ["About", "/about"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
+      ["Terms", "/terms"],
     ]);
     expect(screen.queryByText(/support|donate|fund/i)).toBeNull();
   });
@@ -46,6 +47,7 @@ describe("SiteColophon", () => {
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
+      ["Terms", "/terms"],
     ]);
   });
 });

@@ -148,7 +148,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         <div className="flex flex-col gap-4 py-1 text-sm leading-relaxed text-muted-foreground">
           <p>Contributions pay for the time this takes: making Minty reliable, deepening the Book One reader, and keeping the whole thing running as a careful public release.</p>
           <p>Support never changes what reaches you. It buys no access, no standing, and no position in anything you are shown — reading stays free and complete either way.</p>
-          <p className="dot-meta leading-5 text-muted-foreground/80">Stripe hosts the checkout, sets the amount, and issues the receipt. There is no recurring charge and no public list of who gave.</p>
+          <p className="dot-meta leading-5 text-muted-foreground/80">Stripe hosts the checkout, sets the amount, and issues the receipt. There is no recurring charge and no public list of who gave. <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a></p>
         </div>
       </BloomSurface>
     );
@@ -157,10 +157,14 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
   if (!available) {
     return (
       <BloomSurface {...common} kicker="support" title="Not open yet"
-        description="Contributions are not being accepted until checkout and receipts are configured." size="sm">
-        <p className="py-4 text-sm italic leading-relaxed text-muted-foreground">
-          DOT takes no advertising. The book and PDF are free now; optional support
-          will open here without urgency or a public donor list.
+        description="Card checkout opens here once Stripe payments and receipts are set up." size="sm">
+        <p className="pt-4 text-sm leading-relaxed text-muted-foreground">
+          This page will take optional, one-time payments to the author, for an amount
+          you choose. A payment is not a charitable donation and buys no access: the
+          book and PDF are free now and stay free.
+        </p>
+        <p className="py-4 text-xs leading-relaxed text-muted-foreground">
+          <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a>
         </p>
         {optionsError && <p role="alert" className="text-xs text-destructive">{optionsError}</p>}
       </BloomSurface>
@@ -172,7 +176,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
       title={authorSupport ? "Support the author" : "Support the work"}
       description={authorSupport
         ? "A voluntary contribution supports independent writing and research. The complete book and PDF remain free, with no account required."
-        : "I am fundraising to make Minty reliable, deepen the Book One reader, and prepare DOT for a careful public release."}
+        : "A voluntary, one-time payment to the author. It pays for making Minty reliable, deepening the Book One reader, and keeping DOT running. It is not a charitable donation."}
       size="md"
       footer={
         <button type="button" disabled={busy} onClick={() => void submit()}
@@ -189,7 +193,8 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         selectedTier={selectedTier} onTierChange={setSelectedTier} customAmount={customAmount} onAmountChange={setCustomAmount} />}
       <p className="dot-meta mt-4 leading-5 text-muted-foreground/80">
         Stripe hosts checkout and issues the receipt. DOT keeps the verified amount,
-        purpose, status, and only a one-way hash of the receipt email. No recurring charge.
+        purpose, status, and only a one-way hash of the receipt email. No recurring charge.{" "}
+        <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a>
       </p>
       {error && <p role="alert" className="mt-3 text-xs text-destructive">{error}</p>}
     </BloomSurface>

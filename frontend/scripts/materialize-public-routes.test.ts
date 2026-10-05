@@ -263,6 +263,9 @@ describe("page text for readers without JavaScript", () => {
   it("puts that text inside #root, where the app replaces it", () => {
     const html = renderRoute(shell, routeAt("/privacy"));
     expect(html).toMatch(/<div id="root"><article data-prerender><h1>Privacy<\/h1>/);
+    const terms = renderRoute(shell, routeAt("/terms"));
+    expect(terms).toMatch(/<div id="root"><article data-prerender><h1>Terms and refunds<\/h1>/);
+    expect(renderRoute(shell, routeAt("/support"))).toContain('<a href="/terms">Terms and refunds</a>');
   });
 
   it("hides that text from any browser that runs scripts", () => {

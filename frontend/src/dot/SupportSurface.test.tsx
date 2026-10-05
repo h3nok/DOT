@@ -45,6 +45,11 @@ describe("SupportSurface", () => {
     expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /continue/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /continue/i })).not.toBeInTheDocument();
+    // A payment processor's reviewer reads this state: it must say what a
+    // payment will be, and where the refund policy lives.
+    expect(screen.getByText(/not a charitable donation/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Terms and refunds" })).toHaveAttribute("href", "/terms");
+    expect(screen.queryByText(/fundrais/i)).not.toBeInTheDocument();
   });
 
   it("falls back to the hosted payment link when the server plane is unavailable", () => {

@@ -56,6 +56,7 @@ const ReaderLeavePage = React.lazy(
   () => import("./blocks/readers/ReaderLeavePage"),
 );
 const PrivacyPage = React.lazy(() => import("./blocks/privacy/PrivacyPage"));
+const TermsPage = React.lazy(() => import("./blocks/terms/TermsPage"));
 const NotFoundPage = React.lazy(() => import("./blocks/core/NotFoundPage"));
 
 const RouteScrollManager: React.FC = () => {
@@ -191,6 +192,7 @@ const App: React.FC = () => {
                 <Route path="/readers" element={<ReadersPage />} />
                 <Route path="/readers/leave" element={<ReaderLeavePage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/terms" element={<TermsPage />} />
                 <Route
                   path="/studio"
                   element={

@@ -51,6 +51,9 @@ export function SiteColophon({
           <Link to="/privacy" className={LINK}>
             Privacy
           </Link>
+          <Link to="/terms" className={LINK}>
+            Terms
+          </Link>
         </nav>
       </div>
     </footer>
