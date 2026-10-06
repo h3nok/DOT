@@ -6,7 +6,7 @@ import { C1_TRANSFORM } from "./architectureGeometry";
  * c₁'s own measures hang from c₁.
  */
 const LABEL_TEXT = {
-  origin: <text x="348" y="26" textAnchor="middle">T · E</text>,
+  origin: <text x="348" y="26" textAnchor="middle">T × E</text>,
   "big-c": <text x="348" y="120" textAnchor="middle">Big C</text>,
   "reality-frame": (
     <text x="348" y="192" textAnchor="middle">
@@ -47,12 +47,12 @@ export function HeroArchitectureLabels() {
   return (
     <g className="home-architecture-ring-labels">
       <g className="home-architecture-ring-label" data-layer="origin">
-        <a href="#possibility-field" aria-label="T · E — read about continuity and possibility">
+        <a href="#possibility-field" aria-label="T × E — read about the source: continuity and possibility">
           {LABEL_TEXT.origin}
         </a>
       </g>
       <g className="home-architecture-ring-label" data-layer="big-c">
-        <a href="#big-c" aria-label="Big C — read about the first conscious organism">
+        <a href="#big-c" aria-label="Big C — read about primordial consciousness">
           {LABEL_TEXT["big-c"]}
         </a>
       </g>

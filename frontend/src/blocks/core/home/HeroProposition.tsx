@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { ArrowDown } from "lucide-react";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
+import { ArchitectureFocusContext, type ArchitectureFocus } from "./architectureFocus";
+import type { ArchitecturePartId } from "./heroData";
 import { HeroConceptSlideshow } from "./HeroConceptSlideshow";
 
 interface HeroPropositionProps {
@@ -18,7 +20,17 @@ export function HeroProposition({
   stage,
   reducedMotion,
 }: HeroPropositionProps) {
+  const [focus, setFocus] = useState<ArchitecturePartId | null>(null);
+  const [requested, setRequested] = useState<ArchitectureFocus["requested"]>(null);
+  const architecture = useMemo<ArchitectureFocus>(() => ({
+    focus,
+    setFocus,
+    requested,
+    request: (part) => setRequested({ part, at: Date.now() }),
+  }), [focus, requested]);
+
   return (
+    <ArchitectureFocusContext.Provider value={architecture}>
     <div className="home-hero-proposition">
       <div className="home-hero-opening">
         <div className="home-hero-margin">
@@ -63,6 +75,7 @@ export function HeroProposition({
         </Disclosure>
       )}
     </div>
+    </ArchitectureFocusContext.Provider>
   );
 }
 

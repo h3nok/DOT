@@ -1,8 +1,40 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
+import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
+
+describe("the concept slideshow and the architecture stay one explanation", () => {
+  const renderLinked = () => render(
+    <MemoryRouter>
+      <HeroProposition reducedMotion stage={<HeroArchitecture />} />
+    </MemoryRouter>,
+  );
+  const concepts = () => screen.getByRole("region", { name: "Key concepts from Book One" });
+  const focus = () => document.querySelector(".home-hero-architecture__svg")?.getAttribute("data-focus");
+
+  it("brings forward the part each architecture concept explains, and only then", () => {
+    renderLinked();
+    expect(focus()).toBeNull();
+    const next = within(concepts()).getByRole("button", { name: "Next concept" });
+    while (!within(concepts()).queryByRole("heading", { name: "T × E: The Source" })) fireEvent.click(next);
+    expect(focus()).toBe("te");
+    fireEvent.click(next);
+    expect(within(concepts()).getByRole("heading", { name: "Big C: Primordial Consciousness" })).toBeVisible();
+    expect(focus()).toBe("big-c");
+  });
+
+  it("turns to a part's concept when it is chosen in the diagram", () => {
+    renderLinked();
+    fireEvent.click(document.querySelector('[data-part="rfn"] .home-architecture-other-frame-zone')!);
+    expect(within(concepts()).getByRole("heading", { name: "RFₙ: Every Reality Frame" })).toBeVisible();
+    expect(focus()).toBe("rfn");
+    fireEvent.click(document.querySelector('[data-part="rf0"] .home-architecture-frame-zone')!);
+    expect(within(concepts()).getByRole("heading", { name: "RF₀: Where Physics Governs" })).toBeVisible();
+    expect(focus()).toBe("rf0");
+  });
+});
 
 describe("HeroProposition", () => {
   const renderProposition = () =>
@@ -42,7 +74,7 @@ describe("HeroProposition", () => {
     expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
     const concepts = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
-    const first = within(concepts).getByRole("group", { name: "1 of 10" });
+    const first = within(concepts).getByRole("group", { name: /^1 of \d+$/ });
     expect(first).toHaveTextContent(/you are not physical/);
     expect(first).toHaveAttribute("data-epistemic-status", "hypothesis");
     expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();

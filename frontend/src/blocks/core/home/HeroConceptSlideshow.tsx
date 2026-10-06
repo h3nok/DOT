@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useInView, useReducedMotion } from "framer-motion";
 import { HERO_CONCEPTS, type Concept } from "./heroData";
+import { useArchitectureFocus } from "./architectureFocus";
 
 const LEVEL_LABEL: Record<Concept["level"], string> = {
   observation: "Observation",
@@ -47,6 +48,22 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
   useEffect(() => {
     if (still) setPlaying(false);
   }, [still]);
+
+  const { setFocus, requested } = useArchitectureFocus();
+  useEffect(() => {
+    setFocus(concept.part ?? null);
+  }, [concept.part, setFocus]);
+  useEffect(() => () => setFocus(null), [setFocus]);
+
+  useEffect(() => {
+    if (!requested) return;
+    const target = HERO_CONCEPTS.findIndex(item => item.part === requested.part);
+    const targetConcept = HERO_CONCEPTS[target];
+    if (!targetConcept) return;
+    setPlaying(false);
+    setIndex(target);
+    setTyped({ id: targetConcept.id, length: fullLength(targetConcept) });
+  }, [requested]);
 
   useEffect(() => {
     if (!typing || !inView || !tabVisible || length >= total) return;

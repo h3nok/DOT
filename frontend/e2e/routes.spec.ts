@@ -73,7 +73,7 @@ test.describe("hero", () => {
     const labels = svg.locator(".home-architecture-ring-label");
     await expect(labels).toHaveCount(5);
     expect(await labels.locator("text").allTextContents()).toEqual([
-      "T · E",
+      "T × E",
       "Big C",
       "RF0",
       "Awareness radius",

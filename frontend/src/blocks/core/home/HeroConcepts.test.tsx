@@ -32,13 +32,13 @@ describe("HeroConcepts", () => {
     }
   });
 
-  it("keeps Big C and Little c explicitly marked as hypothesis", () => {
+  it("keeps the architecture's proposals explicitly marked as hypothesis", () => {
     render(<HeroConcepts />);
 
-    const entry = screen
-      .getByRole("heading", { name: "Big C and Little c" })
-      .closest(".home-concept-ledger-item");
-    expect(entry).not.toBeNull();
-    expect(within(entry as HTMLElement).getByText("Hypothesis")).toBeVisible();
+    for (const name of ["T × E: The Source", "Big C: Primordial Consciousness", "RFₙ: Every Reality Frame", "Little c: You"]) {
+      const entry = screen.getByRole("heading", { name }).closest(".home-concept-ledger-item");
+      expect(entry).not.toBeNull();
+      expect(within(entry as HTMLElement).getByText("Hypothesis")).toBeVisible();
+    }
   });
 });

@@ -1,19 +1,19 @@
-import { useId, useState } from "react";
+import { useId } from "react";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 import { Disclosure } from "../../../shared/Disclosure";
 
 import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
-import type { ArchitecturePartId } from "./architectureModel";
+import { useArchitectureFocus } from "./architectureFocus";
+import type { ArchitecturePartId } from "./heroData";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
-import { HeroArchitectureExplorer } from "./HeroArchitectureExplorer";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
 const FIELD_CONTOURS = [R.origin + 8, R.origin + 20] as const;
-/* The top-centre stays open for the T · E label. */
+/* The top-centre stays open for the T × E label. */
 const FIELD_ARCS = [[202, 256], [284, 338]] as const;
 const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
 const MEMBRANE_BANDS = [R.bigC - 28, R.bigC - 16] as const;
@@ -120,21 +120,21 @@ export function HeroArchitecture() {
   } = ids;
   const captionId = `${instanceId}-hero-architecture-caption`;
   const descriptionId = `${instanceId}-hero-architecture-description`;
-  const [selected, setSelected] = useState<ArchitecturePartId | null>(null);
+  const { focus, request } = useArchitectureFocus();
 
   return (
     <figure className="home-hero-architecture" aria-labelledby={captionId} aria-describedby={descriptionId}>
-      {/* Pointer shortcut only: every part is also a button in the explorer below. */}
+      {/* Pointer shortcut only: the concept slideshow names each part for every reader. */}
       <svg
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
         focusable="false"
-        data-focus={selected ?? undefined}
+        data-focus={focus ?? undefined}
         onClick={(event) => {
           const target = event.target as Element;
           if (target.closest("a")) return;
           const part = target.closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null;
-          setSelected(!part || part === selected ? null : part);
+          if (part) request(part);
         }}
       >
         <HeroArchitectureDefs ids={ids} />
@@ -326,8 +326,6 @@ export function HeroArchitecture() {
         <HeroArchitectureLabels />
       </svg>
 
-      <HeroArchitectureExplorer selected={selected} onSelect={setSelected} />
-
       <figcaption className="home-architecture-caption">
         <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
         <span id={descriptionId} className="sr-only">
@@ -359,9 +357,9 @@ export function HeroArchitecture() {
             Little c, awareness, and Intent.
           </p>
           <dl>
-            <div><dt>T · E</dt><dd>Continuity and possibility: the conditions within which Big C is proposed to have emerged.</dd></div>
-            <div><dt>Big C</dt><dd>The proposed first conscious organism. It emerged within T × E, began maintaining itself, and develops Reality Frames, our world among them.</dd></div>
-            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>Other Reality Frames Big C develops, each under its own rules. DOT proposes that a Little c who stabilizes its consciousness can explore them, expanding its decision space. Drawn small and dashed because, unlike RF₀, they cannot be measured from here; their interiors only mark that the rules differ.</dd></div>
+            <div><dt>T × E</dt><dd>The source: continuity and possibility, within which Big C is proposed to have emerged.</dd></div>
+            <div><dt>Big C</dt><dd>Primordial consciousness. It emerged within T × E, began maintaining itself, and develops Reality Frames, our world among them.</dd></div>
+            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>RFₙ generalizes: any Reality Frame Big C develops, each under its own rules. DOT proposes that a Little c who stabilizes its consciousness can explore them, expanding its decision space. Drawn small and dashed because, unlike RF₀, they cannot be measured from here; their interiors only mark that the rules differ.</dd></div>
             <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process, and the one Reality Frame we can measure. Proposed as Big C’s developmental environment for us, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
             <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): a downstream, local implementation of Big C’s own process, so it is drawn in Big C’s living material. Noticing, choosing, and living with what follows.</dd></div>
             <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>

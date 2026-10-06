@@ -212,7 +212,7 @@ describe("home entry theme compatibility", () => {
 
     // The figure stays named while its detailed guide is reader-controlled.
     expect(architecture).toContain("DOT’s proposed architecture");
-    expect(architecture).toContain("T · E");
+    expect(architecture).toContain("T × E");
     expect(architecture).toContain("Big C");
     expect(architecture).toContain("RF₀");
     expect(architecture).toContain("Little c");

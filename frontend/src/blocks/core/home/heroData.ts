@@ -7,11 +7,15 @@ export type HeroAskRequest = {
 
 type ClaimLevel = "observation" | "model" | "hypothesis";
 
+/** A part of the hero architecture a concept explains; the diagram brings it forward. */
+export type ArchitecturePartId = "te" | "big-c" | "rf0" | "rfn" | "little-c";
+
 export interface Concept {
   id: string;
   term: string;
   text: string;
   level: ClaimLevel;
+  part?: ArchitecturePartId;
 }
 
 export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
@@ -58,16 +62,39 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
     level: "model",
   },
   {
-    id: "home.concept.frame",
-    term: "Reality Frame",
-    text: "A world with stable rules and real consequences. DOT proposes RF₀, our physical universe, as an environment for Little c to live and develop.",
-    level: "model",
+    id: "home.concept.source",
+    term: "T × E: The Source",
+    text: "Continuity (T) and possibility (E). DOT takes them as the source: the conditions within which consciousness first arose.",
+    level: "hypothesis",
+    part: "te",
   },
   {
-    id: "home.concept.bigc",
-    term: "Big C and Little c",
-    text: "DOT proposes Big C as the conscious source of worlds, and Little c as a local experiencer. A hypothesis, not an established finding.",
+    id: "home.concept.primordial",
+    term: "Big C: Primordial Consciousness",
+    text: "Consciousness that emerged within T × E and began maintaining itself. It develops Reality Frames, and each Little c carries its process.",
     level: "hypothesis",
+    part: "big-c",
+  },
+  {
+    id: "home.concept.rf0",
+    term: "RF₀: Where Physics Governs",
+    text: "Our physical universe, one Reality Frame among many. DOT proposes it as the place to stabilize your own consciousness before exploring other realities.",
+    level: "model",
+    part: "rf0",
+  },
+  {
+    id: "home.concept.rfn",
+    term: "RFₙ: Every Reality Frame",
+    text: "The generalization: each Reality Frame Big C develops has its own rules. A stabilized consciousness can explore them, expanding its decision space.",
+    level: "hypothesis",
+    part: "rfn",
+  },
+  {
+    id: "home.concept.littlec",
+    term: "Little c: You",
+    text: "A downstream, local implementation of Big C’s own process: you receive a world through a body, form Intent, act, and live with what follows.",
+    level: "hypothesis",
+    part: "little-c",
   },
   {
     id: "home.concept.lok",

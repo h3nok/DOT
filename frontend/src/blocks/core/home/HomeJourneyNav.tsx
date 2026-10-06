@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
   { id: "threshold", label: "The proposed architecture" },
-  { id: "possibility-field", label: "T · E: continuity and possibility" },
-  { id: "big-c", label: "Big C: the foundation" },
+  { id: "possibility-field", label: "T × E: the source" },
+  { id: "big-c", label: "Big C: primordial consciousness" },
   { id: "reality-frame", label: "RF₀: the physical universe" },
   { id: "little-c", label: "Little c: the local experiencer" },
   { id: "consciousness-101", label: "Consciousness 101: Love and relationships" },

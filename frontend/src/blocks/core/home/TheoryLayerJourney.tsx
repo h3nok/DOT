@@ -12,7 +12,7 @@ const THEORY_LAYERS = [
   {
     id: "possibility-field",
     layer: "origin",
-    term: "T · E",
+    term: "T × E",
     status: "Starting assumption",
     title: "Something lasts. Something can change.",
     lede:

@@ -2,6 +2,9 @@ import { expect, test, type Page } from "@playwright/test";
 import { HERO_CONCEPTS } from "../src/blocks/core/home/heroData";
 import { expectNoHorizontalOverflow } from "./helpers";
 
+const TOTAL = HERO_CONCEPTS.length;
+const PENULTIMATE = HERO_CONCEPTS[TOTAL - 2];
+
 /** The title types at 35 ms a character, then the passage at 20 ms. */
 const typingTime = (concept: { term: string; text: string }) =>
   concept.term.length * 35 + concept.text.length * 20 + 400;
@@ -30,7 +33,7 @@ test("still concepts visibly explain every idea without clipping or shifting the
   await expect(previous).toBeDisabled();
 
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
-    const slide = concepts.getByRole("group", { name: `${index + 1} of 10` });
+    const slide = concepts.getByRole("group", { name: `${index + 1} of ${TOTAL}` });
     await expect(slide.getByRole("heading", { name: concept.term, exact: true })).toHaveText(concept.term);
     await expect(slide.getByText(concept.text, { exact: true })).toBeVisible();
     await expect(slide).toHaveAttribute("data-epistemic-status", concept.level);
@@ -56,9 +59,9 @@ test("still concepts visibly explain every idea without clipping or shifting the
   await expect(next).toBeDisabled();
   await previous.focus();
   await page.keyboard.press("Enter");
-  await expect(concepts.getByRole("heading", { name: "Big C and Little c", exact: true })).toBeVisible();
-  await expect(concepts.getByRole("group", { name: "9 of 10" }))
-    .toHaveAttribute("data-epistemic-status", "hypothesis");
+  await expect(concepts.getByRole("heading", { name: PENULTIMATE.term, exact: true })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `${TOTAL - 1} of ${TOTAL}` }))
+    .toHaveAttribute("data-epistemic-status", PENULTIMATE.level);
   await expectNoHorizontalOverflow(page);
 });
 
@@ -72,18 +75,18 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await expect(concepts.getByRole("heading", { name: "The Digital Organism" }))
     .toHaveText("The Digital Organism");
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toHaveAttribute("aria-live", "off");
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toHaveAttribute("aria-live", "off");
   await page.clock.fastForward(6_000);
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
   await page.clock.fastForward(2_000);
-  await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
     if (index === 0 || index === HERO_CONCEPTS.length - 1) continue;
-    const slide = concepts.getByRole("group", { name: `${index + 1} of 10` });
+    const slide = concepts.getByRole("group", { name: `${index + 1} of ${TOTAL}` });
     await expect(slide).toBeVisible();
     await runUntil(page, async () => await slide.locator(".home-concept-slideshow-untyped").count() === 0);
     await expect(concepts.getByRole("heading", { name: concept.term })).toHaveText(concept.term);
-    const next = concepts.getByRole("group", { name: `${index + 2} of 10` });
+    const next = concepts.getByRole("group", { name: `${index + 2} of ${TOTAL}` });
     await runUntil(page, () => next.isVisible());
   }
   await expect(concepts).toHaveAttribute("data-playback", "complete");
@@ -92,7 +95,7 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await expect(concepts.getByRole("button", { name: "Concept introduction complete" })).toBeDisabled();
   await expect(concepts.getByRole("button", { name: "Next concept" })).toBeDisabled();
   await page.clock.fastForward(90_000);
-  await expect(concepts.getByRole("group", { name: "10 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `${TOTAL} of ${TOTAL}` })).toBeVisible();
 });
 
 test("Pause and Play work with pointer focus, and manual paging stays paused", async ({ page }) => {
@@ -105,15 +108,15 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await concepts.getByRole("button", { name: "Pause concept introduction" }).click();
   await expect(concepts.getByRole("button", { name: "Play concept introduction" })).toBeVisible();
   await page.clock.fastForward(90_000);
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Next concept" }).click();
   await page.clock.fastForward(90_000);
-  await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
   await page.getByRole("heading", { level: 1 }).hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
-  await expect(concepts.getByRole("group", { name: "3 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();
 });
 
 test("hover and leaving the hero suspend autoplay instead of consuming unread concepts", async ({ page }, testInfo) => {
@@ -127,18 +130,18 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await concepts.hover();
   await expect(concepts).toHaveAttribute("data-playback", "paused");
   await page.clock.fastForward(90_000);
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
   await page.mouse.move(0, 0);
   await page.locator("#little-c").scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "paused");
   await page.clock.fastForward(90_000);
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(7_900);
-  await expect(concepts.getByRole("group", { name: "1 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
   await page.clock.fastForward(200);
-  await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
+  await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
 });
 
 test("Consciousness 101 follows Little c and leads to the Academy or its book source", async ({ page }) => {
