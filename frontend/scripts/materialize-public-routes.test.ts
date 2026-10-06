@@ -408,6 +408,15 @@ describe("essays", () => {
     )[0];
     expect(encoded.textContent).toContain("A CDATA end ]]&gt; stays text.");
   });
+
+  it("lets readers subscribe before the first piece without inventing an item or date", () => {
+    const feed = new DOMParser().parseFromString(rssXml([]), "application/xml");
+    expect(feed.querySelector("parsererror")).toBeNull();
+    expect(feed.querySelector("channel > link")?.textContent).toBe(`${SITE_URL}/blog`);
+    expect(feed.querySelectorAll("item")).toHaveLength(0);
+    expect(feed.querySelector("lastBuildDate")).toBeNull();
+    expect(feed.getElementsByTagNameNS("http://www.w3.org/2005/Atom", "link")[0].getAttribute("href")).toBe(`${SITE_URL}/feed.xml`);
+  });
 });
 
 describe("native writing", () => {
