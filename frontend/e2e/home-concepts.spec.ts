@@ -1,10 +1,19 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { HERO_CONCEPTS } from "../src/blocks/core/home/heroData";
 import { expectNoHorizontalOverflow } from "./helpers";
 
 /** The title types at 35 ms a character, then the passage at 20 ms. */
 const typingTime = (concept: { term: string; text: string }) =>
   concept.term.length * 35 + concept.text.length * 20 + 400;
+
+/** Each typed character schedules the next timer only after React commits, so step the clock. */
+async function runUntil(page: Page, done: () => Promise<boolean>) {
+  await expect.poll(async () => {
+    if (await done()) return true;
+    await page.clock.runFor(2_000);
+    return done();
+  }, { intervals: [10], timeout: 30_000 }).toBe(true);
+}
 
 test("still concepts visibly explain every idea without clipping or shifting the reading action", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 844 });
@@ -54,6 +63,7 @@ test("still concepts visibly explain every idea without clipping or shifting the
 });
 
 test("autoplay explains the concepts once, then stops without looping or announcing automatic updates", async ({ page }) => {
+  test.setTimeout(120_000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
@@ -69,10 +79,12 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
     if (index === 0 || index === HERO_CONCEPTS.length - 1) continue;
-    await page.clock.runFor(typingTime(concept));
+    const slide = concepts.getByRole("group", { name: `${index + 1} of 10` });
+    await expect(slide).toBeVisible();
+    await runUntil(page, async () => await slide.locator(".home-concept-slideshow-untyped").count() === 0);
     await expect(concepts.getByRole("heading", { name: concept.term })).toHaveText(concept.term);
-    await expect(concepts.getByRole("group", { name: `${index + 1} of 10` })).toBeVisible();
-    await page.clock.fastForward(Math.max(8_000, concept.text.split(/\s+/).length * 300));
+    const next = concepts.getByRole("group", { name: `${index + 2} of 10` });
+    await runUntil(page, () => next.isVisible());
   }
   await expect(concepts).toHaveAttribute("data-playback", "complete");
   await expect(concepts.getByRole("heading", { name: "The Limit of Knowledge" }))
@@ -98,7 +110,7 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.clock.fastForward(90_000);
   await expect(concepts.getByRole("group", { name: "2 of 10" })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
-  await page.mouse.move(0, 0);
+  await page.getByRole("heading", { level: 1 }).hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: "3 of 10" })).toBeVisible();

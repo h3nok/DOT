@@ -11,6 +11,7 @@ export interface WritingClaim {
   origin: "author_originated" | "sourced";
   source: string;
 }
+export const emptyClaim = (): WritingClaim => ({ statement: "", level: "", origin: "author_originated", source: "" });
 export interface WritingRelease { release_number: number; release_status: string }
 export interface ReleasedWriting {
   work_id: string; work_slug: string; title: string; summary: string | null;

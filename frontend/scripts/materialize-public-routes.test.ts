@@ -8,6 +8,7 @@ import {
   DOCTRINE_CONCEPTS,
   RELEASE_MANIFEST,
   SITE_URL,
+  fetchNativeWriting,
   publicRoutes,
   renderMarkdown,
   renderRoute,
@@ -395,5 +396,67 @@ describe("essays", () => {
       "encoded",
     )[0];
     expect(encoded.textContent).toContain("A CDATA end ]]&gt; stays text.");
+  });
+});
+
+describe("native writing", () => {
+  const api = "https://api.example.org";
+  const manifestFor = (title: string) => ({
+    title,
+    summary: "An analysis of the world through DOT.",
+    release: { number: 2 },
+    revision: { content_hash: "hash" },
+    claims: [{ statement: "The author's claim", epistemic_level: "Hypothesis", origin: "sourced" }],
+    sources: [{ external_uri: "https://example.org/report", locator: null, relation: "cites" }],
+  });
+  const responses: Record<string, unknown> = {
+    "/v1/academy/delivery/catalog?space=dot-academy": [
+      { work_id: "awork_abc123", work_slug: "ai", title: "AI letter", summary: "An analysis.", kind: "essay", release_number: 2, released_at: "2026-10-05T12:00:00Z", withdrawn_at: null },
+      { work_id: "awork_gone", work_slug: "gone", title: "Gone", summary: null, kind: "essay", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: "2026-10-02T00:00:00Z" },
+      { work_id: "awork_def", work_slug: "def", title: "A definition", summary: null, kind: "definition", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: null },
+    ],
+    "/v1/academy/delivery/works/awork_abc123/releases/1": { withdrawn: true, title: "AI letter", reason: "Corrected" },
+    "/v1/academy/delivery/works/awork_abc123/releases/2": { manifest: manifestFor("AI letter"), body_ref: "academy/space/releases/2.md" },
+    "/v1/academy/delivery/body/academy/space/releases/2.md": "The **whole** text.\n\n<script>alert(1)</script>",
+  };
+  const fetchImpl = async (url: string) => {
+    const key = url.slice(api.length);
+    if (!(key in responses)) return new Response("missing", { status: 404 });
+    const value = responses[key];
+    return new Response(typeof value === "string" ? value : JSON.stringify(value));
+  };
+
+  it("is not fetched by local builds", async () => {
+    expect(await fetchNativeWriting("http://127.0.0.1:8000", { fetchImpl: () => { throw new Error("no network"); } })).toEqual([]);
+    expect(await fetchNativeWriting(undefined)).toEqual([]);
+  });
+
+  it("gives every live release its own shareable page with whole text, claims and sources", async () => {
+    const writing = await fetchNativeWriting(api, { fetchImpl });
+    expect(writing.map((item: { id: string }) => item.id)).toEqual(["awork_abc123"]);
+    const withWriting: PublicRoute[] = await publicRoutes(manifest, { essays: [], writing });
+    const paths = withWriting.map((route) => route.route);
+    expect(paths).toContain("/writing/awork_abc123");
+    expect(paths).toContain("/writing/awork_abc123/releases/2");
+    expect(paths).not.toContain("/writing/awork_abc123/releases/1");
+
+    const page = withWriting.find((route) => route.route === "/writing/awork_abc123/releases/2")!;
+    expect(page.ogType).toBe("article");
+    expect(page.title).toBe(`AI letter — ${AUTHOR.name}`);
+    expect(page.prerender).toContain("<strong>whole</strong>");
+    expect(page.prerender).not.toContain("<script>");
+    expect(page.prerender).toMatch(/The author(&#39;|&#039;|')s claim \(Hypothesis\)/);
+    expect(page.prerender).toContain('href="https://example.org/report"');
+    const html = renderRoute(shell, page);
+    expect(html).toContain(`<meta property="og:url" content="${SITE_URL}/writing/awork_abc123/releases/2" />`);
+    expect(html).toContain('<meta property="og:title" content="AI letter — ');
+
+    const publications = withWriting.find((route) => route.route === "/publications")!;
+    expect(publications.prerender).toContain('href="/writing/awork_abc123"');
+  });
+
+  it("fails the build rather than silently dropping published work", async () => {
+    const broken = async () => new Response("down", { status: 503 });
+    await expect(fetchNativeWriting(api, { fetchImpl: broken })).rejects.toThrow(/503/);
   });
 });

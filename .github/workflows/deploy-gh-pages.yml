@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main, master ]
+  # Writing released from the Studio needs a rebuild to get its own shareable page.
+  schedule:
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -118,6 +121,7 @@ jobs:
     - name: Verify public route entry points
       run: |
         test -f frontend/dist/book/digital-organism-theory/preface/index.html
+        test -f frontend/dist/publications/index.html
         test -f frontend/dist/doctrine/subjective-data/index.html
         test -f frontend/dist/join/index.html
         test -f frontend/dist/support/index.html

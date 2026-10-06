@@ -99,3 +99,44 @@ async def provision_space(
     )
     await session.commit()
     return space
+
+
+async def ensure_steward(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    *,
+    space: models.AcademySpace,
+    steward_member_id: str,
+    steward_roles: tuple[str, ...] = ("steward", "publisher", "contributor"),
+) -> bool:
+    """Grant founding roles to a steward without a membership; return whether one was added."""
+    await context.bind_space(session, space.id, steward_member_id)
+    existing = (
+        await session.execute(
+            sqlalchemy.select(models.AcademyMembership).where(
+                models.AcademyMembership.academy_space_id == space.id,
+                models.AcademyMembership.member_id == steward_member_id,
+            )
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        return False
+
+    membership = models.AcademyMembership(
+        academy_space_id=space.id,
+        member_id=steward_member_id,
+        membership_state="active",
+    )
+    session.add(membership)
+    await session.flush()
+    for role in steward_roles:
+        session.add(
+            models.AcademyRoleGrant(
+                academy_space_id=space.id,
+                membership_id=membership.id,
+                role=role,
+                policy_revision_id=space.governance_policy_revision_id,
+                granted_by=steward_member_id,
+            )
+        )
+    await session.commit()
+    return True

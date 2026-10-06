@@ -19,6 +19,8 @@ const ABOUT_ROUTE = "/about";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
+const PUBLICATIONS_ROUTE = "/publications";
+const WRITING_ROUTE = "/writing";
 
 // Paths are relative to the frontend package, where the build runs.
 const CONTENT_DIR = path.join("src", "content");
@@ -195,7 +197,7 @@ export const DOCTRINE_CONCEPTS = [
   },
 ];
 
-const routePattern = /^\/[a-z0-9]+(?:\/[a-z0-9-]+)*$/;
+const routePattern = /^\/[a-z0-9]+(?:\/[a-z0-9_-]+)*$/;
 
 const BOOK_ID = `${SITE_URL}${BOOK_ROUTE}#book`;
 const ACADEMY_ID = `${SITE_URL}${ACADEMY_ROUTE}#academy`;
@@ -448,7 +450,44 @@ const ESSAYS_DESCRIPTION = `Essays by ${AUTHOR.name} that develop Digital Organi
 const FEED_URL = `${SITE_URL}/feed.xml`;
 const FEED_TITLE = `Essays by ${AUTHOR.name}`;
 
-const essayUrl = (essay) => `${SITE_URL}${ESSAYS_ROUTE}/${essay.slug}`;
+const essayUrl = (essay) => essay.url ?? `${SITE_URL}${ESSAYS_ROUTE}/${essay.slug}`;
+const writingPath = (item, release) => `${WRITING_ROUTE}/${item.id}${release ? `/releases/${release}` : ""}`;
+
+/**
+ * Every released version of native writing, read from the public delivery API at
+ * build time so a shared link carries its own title, summary and whole text.
+ * Only an HTTPS orchestrator is read: local builds stay independent of a server.
+ */
+export async function fetchNativeWriting(apiUrl, { fetchImpl = fetch, space = "dot-academy" } = {}) {
+  if (!/^https:\/\//.test(apiUrl ?? "")) return [];
+  const base = `${apiUrl.replace(/\/$/, "")}/v1/academy`;
+  const get = async (requestPath, asText = false) => {
+    const response = await fetchImpl(`${base}${requestPath}`);
+    if (!response.ok) throw new Error(`Released writing could not be read (${response.status}): ${requestPath}`);
+    return asText ? response.text() : response.json();
+  };
+  const catalog = await get(`/delivery/catalog?space=${encodeURIComponent(space)}`);
+  const latest = catalog.filter((entry) => entry.kind === "essay" && !entry.withdrawn_at);
+  return Promise.all(
+    latest.map(async (entry) => {
+      const releases = [];
+      for (let number = 1; number <= entry.release_number; number += 1) {
+        const delivery = await get(`/delivery/works/${encodeURIComponent(entry.work_id)}/releases/${number}`);
+        if (delivery.withdrawn) continue;
+        if (!delivery.manifest || !delivery.body_ref) throw new Error(`Release ${number} of ${entry.work_id} is incomplete.`);
+        const body = await get(`/delivery/body/${delivery.body_ref.split("/").map(encodeURIComponent).join("/")}`, true);
+        releases.push({ number, manifest: delivery.manifest, body });
+      }
+      return {
+        id: entry.work_id,
+        title: entry.title,
+        summary: entry.summary ?? "",
+        published: entry.released_at.slice(0, 10),
+        releases,
+      };
+    }),
+  ).then((items) => items.filter((item) => item.releases.length > 0).reverse());
+}
 
 function conceptTerms(ids) {
   return ids
@@ -529,6 +568,7 @@ function siteNav(essaysPublished) {
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
     [ACADEMY_ROUTE, "DOT Academy"],
+    [PUBLICATIONS_ROUTE, "Publications"],
     ...(essaysPublished || NEWSLETTER.editions.length > 0 ? [[ESSAYS_ROUTE, "Essays"]] : []),
     [ABOUT_ROUTE, "About"],
     [READERS_ROUTE, "Reader list"],
@@ -561,7 +601,7 @@ function authorContactLink() {
   return email ? link(`mailto:${email}`, email) : link(AUTHOR.links.linkedin, "LinkedIn");
 }
 
-async function publicRoutes(manifest, { essays = readEssays() } = {}) {
+async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = {}) {
   const home = { name: "DOT", route: "/" };
   const book = { name: manifest.project.title, route: BOOK_ROUTE };
   const essaysPublished = essays.length > 0;
@@ -837,7 +877,58 @@ async function publicRoutes(manifest, { essays = readEssays() } = {}) {
       ]
     : [];
 
-  return [...staticRoutes, ...authorRoutes, ...essayRoutes, ...sectionRoutes, ...conceptRoutes];
+  const writingRoutes = writing.flatMap((item) => {
+    const pages = item.releases.map((release) => ({ path: writingPath(item, release.number), release }));
+    pages.push({ path: writingPath(item), release: item.releases.at(-1) });
+    return pages.map(({ path: route, release }) => {
+      const { manifest: delivered, body } = release;
+      const sources = delivered.sources ?? [];
+      return {
+        route,
+        title: `${delivered.title} — ${AUTHOR.name}`,
+        description: delivered.summary || `${delivered.title}, by ${AUTHOR.name}.`,
+        ogType: "article",
+        lastmod: item.published,
+        structuredData: graph(
+          articleNode({ ...item, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
+          breadcrumb([home, { name: "Publications", route: PUBLICATIONS_ROUTE }, { name: delivered.title, route }]),
+        ),
+        prerender: page(
+          [
+            `<header><p>By ${link(ABOUT_ROUTE, AUTHOR.name)} · Version ${release.number}</p>`,
+            `<h1>${escapeHtml(delivered.title)}</h1>${delivered.summary ? `<p>${escapeHtml(delivered.summary)}</p>` : ""}</header>`,
+            renderMarkdown(body),
+            `<h2>Claims</h2><ul>${delivered.claims.map((claim) => `<li>${escapeHtml(claim.statement)} (${escapeHtml(claim.epistemic_level)})</li>`).join("")}</ul>`,
+            sources.length > 0
+              ? `<h2>Sources</h2><ul>${sources.map((source) => `<li>${/^https?:\/\//i.test(source.external_uri) ? link(source.external_uri, source.external_uri) : escapeHtml(source.external_uri)}</li>`).join("")}</ul>`
+              : "",
+          ].join(""),
+        ),
+      };
+    });
+  });
+
+  const publicationsRoute = {
+    route: PUBLICATIONS_ROUTE,
+    title: `Publications — ${AUTHOR.name}`,
+    description: `Books, essays, analysis and letters by ${AUTHOR.name}, published and kept here.`,
+    lastmod: writing[0]?.published,
+    structuredData: graph(
+      webPageNode({ route: PUBLICATIONS_ROUTE, title: `Publications — ${AUTHOR.name}`, description: `Books, essays, analysis and letters by ${AUTHOR.name}.` }),
+      breadcrumb([home, { name: "Publications", route: PUBLICATIONS_ROUTE }]),
+    ),
+    prerender: page(
+      [
+        `<h1>Publications</h1><p>Books, essays, analysis and letters by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p>`,
+        `<h2>Books</h2><ul><li>${link(BOOK_ROUTE, manifest.project.title)}</li><li>${escapeHtml(NEWSLETTER.title)} (${escapeHtml(NEWSLETTER.status)})</li></ul>`,
+        writing.length > 0
+          ? `<h2>Writing</h2><ol>${writing.map((item) => `<li>${link(writingPath(item), item.title)} (<time datetime="${item.published}">${item.published}</time>)${item.summary ? `: ${escapeHtml(item.summary)}` : ""}</li>`).join("")}</ol>`
+          : "",
+      ].join(""),
+    ),
+  };
+
+  return [...staticRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */
@@ -1008,8 +1099,21 @@ async function main() {
   const manifest = JSON.parse(await readFile(RELEASE_MANIFEST, "utf8"));
   const shell = await readFile(path.join("dist", "index.html"), "utf8");
   const essays = readEssays();
-  const routes = await publicRoutes(manifest, { essays });
-  const headTags = essays.length > 0 ? [feedLinkTag()] : [];
+  const writing = await fetchNativeWriting(process.env.VITE_ORCHESTRATOR_URL, {
+    space: process.env.VITE_ACADEMY_SPACE_SLUG || "dot-academy",
+  });
+  const routes = await publicRoutes(manifest, { essays, writing });
+  const feed = [
+    ...essays,
+    ...writing.map((item) => ({
+      title: item.title,
+      summary: item.summary,
+      published: item.published,
+      body: item.releases.at(-1).body,
+      url: `${SITE_URL}${writingPath(item)}`,
+    })),
+  ].sort((first, second) => second.published.localeCompare(first.published));
+  const headTags = feed.length > 0 ? [feedLinkTag()] : [];
 
   for (const entry of routes) {
     // Share cards are generated by scripts/generate_og_image.py and committed.
@@ -1046,13 +1150,13 @@ async function main() {
     "utf8",
   );
   await writeFile(path.join("dist", "robots.txt"), robotsTxt(), "utf8");
-  if (essays.length > 0) {
-    await writeFile(path.join("dist", "feed.xml"), rssXml(essays), "utf8");
+  if (feed.length > 0) {
+    await writeFile(path.join("dist", "feed.xml"), rssXml(feed), "utf8");
   }
 
   const indexed = routes.filter((route) => !route.noindex).length;
   console.log(
-    `Materialized ${routes.length} public route entry points with their own text, a sitemap of ${indexed + 1} URLs, robots.txt${essays.length > 0 ? `, and an RSS feed of ${essays.length} essays` : ""}.`,
+    `Materialized ${routes.length} public route entry points with their own text, a sitemap of ${indexed + 1} URLs, robots.txt${feed.length > 0 ? `, and an RSS feed of ${feed.length} pieces` : ""}.`,
   );
 }
 

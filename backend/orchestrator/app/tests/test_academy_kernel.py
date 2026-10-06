@@ -163,11 +163,39 @@ async def test_writing_workspace_and_private_revision_body(
     assert editor.status_code == 200
     assert editor.json()["body"] == body.text
     assert editor.json()["claims"][0]["level"] == "Model"
-    assert client.get(f"{route}?include_claims=true", headers=_headers("outsider")).status_code in {403, 404}
+    assert client.get(f"{route}?include_claims=true", headers=_headers("outsider")).status_code in {
+        403,
+        404,
+    }
     assert client.get(f"{route}?include_claims=invalid", headers=_headers()).status_code == 422
     assert client.get(route, headers=_headers("outsider")).status_code in {403, 404}
     assert client.get("/v1/academy/revisions/missing/body", headers=_headers()).status_code == 404
     assert client.get(f"/v1/academy/delivery/body/{revision['body_ref']}").status_code == 404
+
+
+async def test_existing_space_grants_the_signed_in_founder_once(
+    client: fastapi.testclient.TestClient,
+    session_factory: sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession],
+) -> None:
+    space = await _provision(session_factory)
+    founder = "mbr_founder"
+    assert client.get("/v1/academy/workspace", headers=_headers(founder)).status_code == 403
+    async with session_factory() as session:
+        stored = await session.get(models.AcademySpace, space.id)
+        assert stored is not None
+        assert await app.domains.academy.bootstrap.ensure_steward(
+            session, space=stored, steward_member_id=founder
+        )
+        assert not await app.domains.academy.bootstrap.ensure_steward(
+            session, space=stored, steward_member_id=founder
+        )
+    assert client.get("/v1/academy/workspace", headers=_headers(founder)).status_code == 200
+    created = client.post(
+        f"/v1/academy/spaces/{space.id}/works",
+        headers=_headers(founder),
+        json={"kind": "essay", "canonical_slug": "first-letter"},
+    )
+    assert created.status_code == 201, created.text
 
 
 async def test_sourced_claim_requires_source_link(

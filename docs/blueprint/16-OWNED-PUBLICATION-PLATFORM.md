@@ -297,8 +297,19 @@ finish all Academy phases before the author can publish.
 A is useful without email or connectors. D and E are independent after C/B;
 do not delay native reading until both are available. Import the author's existing
 articles with permission and full text; the current LinkedIn link alone cannot
-satisfy A. Before A, resolve the currently failing diagram-geometry test so the
-required repository gate is green; that failure is not a publication feature.
+satisfy A.
+
+### Implementation status (2026-10-05, `make verify` green)
+
+| Slice | State |
+| --- | --- |
+| A | `/publications` catalogue and applied-book entry built. No author article supplied yet, so A's gate is unmet. |
+| B | Code built for standalone writing: `/studio/writing` private drafts with claims/sources that reopen, explicit public release, `/writing/:id` and immutable `/writing/:id/releases/:n` with whole text, claim ledger and sources. Build-time HTML, sitemap and RSS for each live release, rebuilt hourly. Studio book projects can be created and released public or private. **Production prerequisites:** durable storage bucket (CI refuses to deploy without one) and a founder-granted writing space (seeded on deploy). No real work released end to end in production yet. |
+| C, D | Not implemented. The reader list confirms and leaves; it sends no issues. |
+| E | Manual only: copy link, LinkedIn share-offsite link, plain-text export. No platform APIs. |
+| F | Draft JSON export/import only. |
+
+Released Studio books are not yet listed in `/publications`.
 
 ## 11. Verification and launch requirements
 

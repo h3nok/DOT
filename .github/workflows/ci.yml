@@ -21,6 +21,7 @@ env:
   API_SERVICE: dot-orchestrator-api
   CLOUD_SQL_INSTANCE: ${{ vars.CLOUD_SQL_INSTANCE }}
   RUNTIME_SERVICE_ACCOUNT: ${{ vars.RUNTIME_SERVICE_ACCOUNT }}
+  OBJECT_STORE_BUCKET: ${{ vars.OBJECT_STORE_BUCKET }}
 
 jobs:
   frontend:
@@ -169,6 +170,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Require durable release storage
+        run: |
+          # Release bodies on Cloud Run's /tmp vanish on every cold start; never publish there.
+          if [[ -z "$OBJECT_STORE_BUCKET" ]]; then
+            echo "::error::Set the OBJECT_STORE_BUCKET repository variable to a Cloud Storage bucket the runtime service account can write."
+            exit 1
+          fi
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -204,6 +213,26 @@ jobs:
             --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
           gcloud run jobs execute dot-migrate \
+            --region ${{ env.GCP_REGION }} \
+            --wait \
+            --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Provision the founder's writing space
+        run: |
+          gcloud run jobs deploy dot-seed-academy \
+            --image "$IMAGE" \
+            --region ${{ env.GCP_REGION }} \
+            --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
+            --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
+            --set-secrets ORCHESTRATOR_DATABASE_URL=ORCHESTRATOR_DATABASE_URL:latest \
+            --set-env-vars ORCHESTRATOR_AUTH_ENABLED=false,ACADEMY_STEWARD_EMAIL=nkenok@gmail.com \
+            --command python3 \
+            --args=scripts/seed_academy_space.py \
+            --max-retries 1 \
+            --task-timeout 120s \
+            --quiet \
+            --project ${{ env.GCP_PROJECT_ID }}
+          gcloud run jobs execute dot-seed-academy \
             --region ${{ env.GCP_REGION }} \
             --wait \
             --project ${{ env.GCP_PROJECT_ID }}
@@ -254,7 +283,10 @@ jobs:
             --service-account ${{ env.RUNTIME_SERVICE_ACCOUNT }} \
             --set-cloudsql-instances ${{ env.CLOUD_SQL_INSTANCE }} \
             --set-secrets="$SECRETS" \
-            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/tmp/dot-objects,EMAIL_FROM=no-reply@dotheory.org,DOT_OWNER_EMAILS=nkenok@gmail.com \
+            --execution-environment gen2 \
+            --add-volume name=objects,type=cloud-storage,bucket=${{ env.OBJECT_STORE_BUCKET }} \
+            --add-volume-mount volume=objects,mount-path=/data/objects \
+            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/data/objects,EMAIL_FROM=no-reply@dotheory.org,DOT_OWNER_EMAILS=nkenok@gmail.com \
             --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
 

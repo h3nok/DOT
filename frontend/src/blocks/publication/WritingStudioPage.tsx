@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
 import {
-  createWritingWork, fetchWritingDraft, fetchWritingWorkspace, fetchWritingWorks, releaseWriting, saveWritingDraft, writingRoute,
+  createWritingWork, emptyClaim, fetchWritingDraft, fetchWritingWorkspace, fetchWritingWorks, releaseWriting, saveWritingDraft, writingRoute,
   type WritingClaim, type WritingDraft, type WritingWork, type WritingWorkspace,
 } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { PublicationSharing } from "./components/PublicationSharing";
-import { emptyClaim, WritingClaimsEditor } from "./components/WritingClaimsEditor";
+import { WritingClaimsEditor } from "./components/WritingClaimsEditor";
 
 const emptyDraft = (): WritingDraft => ({ title: "", summary: "", body: "" });
 const field = "min-h-11 w-full rounded border border-border bg-background px-3 text-base text-foreground";

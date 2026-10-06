@@ -101,9 +101,7 @@ async def get_workspace(
     ),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.WorkspaceRead:
-    workspace = await service.get_workspace(
-        session, space_slug=space, actor_id=owner.actor_id
-    )
+    workspace = await service.get_workspace(session, space_slug=space, actor_id=owner.actor_id)
     return schemas.WorkspaceRead(id=workspace.id, title=workspace.title, slug=workspace.slug)
 
 

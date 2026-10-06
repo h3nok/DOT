@@ -1,7 +1,6 @@
 import { Plus, Trash2 } from "lucide-react";
-import type { WritingClaim } from "../../../services/OrchestratorWritingService";
+import { emptyClaim, type WritingClaim } from "../../../services/OrchestratorWritingService";
 
-export const emptyClaim = (): WritingClaim => ({ statement: "", level: "", origin: "author_originated", source: "" });
 const field = "min-h-10 w-full rounded border border-border bg-background px-3 text-sm text-foreground";
 
 export function WritingClaimsEditor({ claims, onChange, disabled }: { claims: WritingClaim[]; onChange: (claims: WritingClaim[]) => void; disabled: boolean }) {

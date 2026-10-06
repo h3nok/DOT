@@ -392,21 +392,29 @@ async def get_revision_editor(
     body = await get_revision_body(session, revision_id=revision_id, actor_id=actor_id)
     _, work = await _get_revision_scoped(session, revision_id, actor_id)
     claims = (
-        await session.execute(
-            sqlalchemy.select(models.AcademyClaimRevision).where(
-                models.AcademyClaimRevision.academy_revision_id == revision_id,
-                models.AcademyClaimRevision.academy_space_id == work.academy_space_id,
+        (
+            await session.execute(
+                sqlalchemy.select(models.AcademyClaimRevision).where(
+                    models.AcademyClaimRevision.academy_revision_id == revision_id,
+                    models.AcademyClaimRevision.academy_space_id == work.academy_space_id,
+                )
             )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
     links = (
-        await session.execute(
-            sqlalchemy.select(models.AcademySourceLink).where(
-                models.AcademySourceLink.academy_revision_id == revision_id,
-                models.AcademySourceLink.academy_space_id == work.academy_space_id,
+        (
+            await session.execute(
+                sqlalchemy.select(models.AcademySourceLink).where(
+                    models.AcademySourceLink.academy_revision_id == revision_id,
+                    models.AcademySourceLink.academy_space_id == work.academy_space_id,
+                )
             )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
     return {
         "body": body,
         "claims": [
@@ -415,7 +423,11 @@ async def get_revision_editor(
                 "level": claim.epistemic_level,
                 "origin": claim.origin,
                 "source": next(
-                    (link.external_uri for link in links if link.claim_revision_id == claim.id and link.external_uri),
+                    (
+                        link.external_uri
+                        for link in links
+                        if link.claim_revision_id == claim.id and link.external_uri
+                    ),
                     "",
                 ),
             }
@@ -726,13 +738,17 @@ async def create_release(
 
     claim_revisions = await _validate_release(session, work, revision)
     source_links = (
-        await session.execute(
-            sqlalchemy.select(models.AcademySourceLink).where(
-                models.AcademySourceLink.academy_revision_id == revision.id,
-                models.AcademySourceLink.academy_space_id == work.academy_space_id,
+        (
+            await session.execute(
+                sqlalchemy.select(models.AcademySourceLink).where(
+                    models.AcademySourceLink.academy_revision_id == revision.id,
+                    models.AcademySourceLink.academy_space_id == work.academy_space_id,
+                )
             )
         )
-    ).scalars().all()
+        .scalars()
+        .all()
+    )
 
     previous = (
         (
@@ -805,8 +821,13 @@ async def create_release(
             ],
             "policy_revision_id": authority.policy_revision_id,
             "sources": [
-                {"external_uri": link.external_uri, "locator": link.locator, "relation": link.relation}
-                for link in source_links if link.external_uri
+                {
+                    "external_uri": link.external_uri,
+                    "locator": link.locator,
+                    "relation": link.relation,
+                }
+                for link in source_links
+                if link.external_uri
             ],
         }
         manifest_json = _canonical_json(manifest)
