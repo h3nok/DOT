@@ -91,10 +91,13 @@ ORCHESTRATOR_CORS_ORIGINS=["https://dotheory.org","https://www.dotheory.org"]
 ORCHESTRATOR_FRONTEND_URL=https://dotheory.org
 ```
 
-The first public release uses one scale-to-zero API instance, in-memory rate
-limits, and an ephemeral filesystem for authenticated vault uploads. Book One,
-the agent, and support use Cloud SQL; member uploads do not become durable until
-managed object storage and the worker plane are deployed.
+The launch deployment keeps one API instance warm at the service level (`--min 1`)
+and caps scaling at one instance. Revision-level minimum instances stay at zero
+to avoid keeping old revisions warm too. Idle instances incur Cloud Run charges;
+this reduces cold-start latency but does not guarantee availability. Rate limits
+remain in memory. Public release assets use the configured object-storage bucket
+mounted at `/data/objects`; this does not establish vault ingestion readiness,
+which also requires the worker plane. Book One, the agent, and support use Cloud SQL.
 
 The frontend may safely call the generated Cloud Run URL. Do not create an
 `api` DNS record until the global external Application Load Balancer has

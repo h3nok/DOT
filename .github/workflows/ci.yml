@@ -270,6 +270,7 @@ jobs:
           else
             echo "::notice::Stripe secrets are not both present in Secret Manager; deploying with support closed."
           fi
+          # Keep one instance warm at the service level without warming old revisions.
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
             --region ${{ env.GCP_REGION }} \
@@ -277,6 +278,7 @@ jobs:
             --allow-unauthenticated \
             --port 8000 \
             --min-instances 0 \
+            --min 1 \
             --max-instances 1 \
             --memory 512Mi \
             --cpu 1 \

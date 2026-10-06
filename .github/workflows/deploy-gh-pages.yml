@@ -3,9 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main, master ]
-  # Writing released from the Studio needs a rebuild to get its own shareable page.
+  # Refresh released writing every 15 minutes, away from the top of the hour.
+  # Scheduled runs can be delayed; workflow_dispatch remains available before sharing.
   schedule:
-    - cron: "17 * * * *"
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:
