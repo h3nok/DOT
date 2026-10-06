@@ -49,55 +49,16 @@ const openAt = (path: string) =>
     <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route path="/essays" element={<EssaysPage />} />
+        <Route path="/blog" element={<h1>Writing archive</h1>} />
         <Route path="/essays/:slug" element={<EssayPage />} />
       </Routes>
     </MemoryRouter>,
   );
 
 describe("EssaysPage", () => {
-  it("shows the author's newsletter and identifies its edition as external writing", async () => {
-    serve([]);
+  it("takes an old archive link to the common writing archive", async () => {
     openAt("/essays");
-
-    expect(screen.getByRole("heading", { name: "The Millennial Manifesto" })).toBeInTheDocument();
-    expect(screen.getByText("Applied DOT · Book in development")).toBeInTheDocument();
-    const editions = screen.getByRole("list", { name: "Selected newsletter editions" });
-    expect(within(editions).getByRole("link", {
-      name: "AI will not kill you. The one saying that it will, will",
-    })).toHaveAttribute("href", "https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c/");
-    expect(within(editions).getByText("Read on LinkedIn")).toBeInTheDocument();
-    expect(await screen.findByText(/No additional essays are archived here yet/)).toBeInTheDocument();
-  });
-
-  it("lists every essay as the index gives it, and ends", async () => {
-    serve([MACHINES, FEAR]);
-    openAt("/essays");
-
-    const list = await screen.findByRole("list", { name: "Essays, newest first" });
-    const titles = within(list)
-      .getAllByRole("heading", { level: 2 })
-      .map((heading) => heading.textContent);
-    expect(titles).toEqual([MACHINES.title, FEAR.title]);
-    expect(screen.getByText("October 14, 2026")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "That is every essay." })).toBeInTheDocument();
-  });
-
-  it("shows each essay's claim levels, weakest burden first", async () => {
-    serve([FEAR]);
-    openAt("/essays");
-
-    const levels = await screen.findByRole("list", { name: "Claim levels used" });
-    expect(within(levels).getAllByRole("listitem").map((item) => item.textContent)).toEqual([
-      "Observation",
-      "Model",
-    ]);
-  });
-
-  it("says so plainly when nothing is published yet", async () => {
-    serve([]);
-    openAt("/essays");
-
-    expect(await screen.findByText(/No additional essays are archived here yet/)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Writing archive" })).toBeInTheDocument();
   });
 });
 
@@ -115,7 +76,9 @@ describe("EssayPage", () => {
       "/doctrine/fear-gating",
     );
     expect(screen.getByRole("region", { name: "Respond" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "All essays" })).toHaveAttribute("href", "/essays");
+    expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute("href", "/blog");
+    expect(within(screen.getByRole("navigation", { name: "Primary" })).getByRole("link", { name: "Blog" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("region", { name: "Share publication" })).toBeInTheDocument();
     // No "read next": the essay ends where its text ends (L2).
     expect(screen.queryByText(/read next|you might also/i)).toBeNull();
     expect(document.title).toBe("Fear narrows — Henok Ghebrechristos");

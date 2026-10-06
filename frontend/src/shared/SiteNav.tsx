@@ -14,7 +14,8 @@ export function SiteNav({ className = "" }: { className?: string }) {
     <nav aria-label="Primary" className={className}>
       <ul className="flex flex-wrap items-center gap-x-1 gap-y-1">
         {PRIMARY_NAV.map(([to, label]) => {
-          const current = pathname === to || pathname.startsWith(`${to}/`);
+          const current = pathname === to || pathname.startsWith(`${to}/`) ||
+            (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname)));
           return (
             <li key={to}>
               <Link

@@ -165,7 +165,7 @@ export default function WritingStudioPage() {
               <label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={approved} disabled={busy} onChange={(event) => setApproved(event.target.checked)} className="mt-1" />I have reviewed the text, classified its material claims, and approve public release.</label>
               <button type="button" disabled={busy || !approved || !draft.title.trim() || !draft.body.trim()} onClick={() => void save(true)} className="dot-reading-action mt-5 inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"><Upload className="h-4 w-4" aria-hidden="true" />Publish on this website</button>
               {message && <p role="status" className="mt-4 text-sm">{message}</p>}
-              {workId && releaseNumber && <div className="mt-8"><Link to={writingRoute(workId, releaseNumber)} className="mb-5 inline-block text-sm underline">Read released version {releaseNumber}</Link><PublicationSharing title={draft.title} path={writingRoute(workId, releaseNumber)} /></div>}
+              {workId && releaseNumber && <div className="mt-8"><Link to={writingRoute(workId, releaseNumber)} className="mb-5 inline-block text-sm underline">Read released version {releaseNumber}</Link><PublicationSharing title={draft.title} path={writingRoute(workId, releaseNumber)} distributionTools /></div>}
             </div>
           </div>
         )}

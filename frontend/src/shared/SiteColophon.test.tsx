@@ -24,8 +24,7 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
-      ["Publications", "/publications"],
-      ["Essays", "/essays"],
+      ["Books", "/publications"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
       ["Terms", "/terms"],
@@ -51,14 +50,13 @@ describe("SiteColophon", () => {
     expect(hrefs).not.toContain("/join");
   });
 
-  it("offers essays and their feed only once one is published", () => {
+  it("offers the feed once an essay is published, with one common writing archive", () => {
     renderColophon(true);
 
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
-      ["Publications", "/publications"],
-      ["Essays", "/essays"],
+      ["Books", "/publications"],
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],

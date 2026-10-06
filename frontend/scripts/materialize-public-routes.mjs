@@ -524,24 +524,6 @@ function articleNode(essay) {
   };
 }
 
-function essayCollectionNode(essays) {
-  return {
-    "@type": "CollectionPage",
-    "@id": `${SITE_URL}${ESSAYS_ROUTE}#essays`,
-    name: FEED_TITLE,
-    description: ESSAYS_DESCRIPTION,
-    url: `${SITE_URL}${ESSAYS_ROUTE}`,
-    inLanguage: "en",
-    author: personNode(),
-    hasPart: essays.map((essay) => ({
-      "@type": "Article",
-      "@id": `${essayUrl(essay)}#article`,
-      headline: essay.title,
-      url: essayUrl(essay),
-    })),
-  };
-}
-
 /**
  * Markdown to HTML through the reader's own pipeline, for readers and crawlers
  * that never run the app. Math becomes MathML: no fonts, no script, and still
@@ -570,8 +552,8 @@ function siteNav(essaysPublished) {
     ["/applied", "Open questions"],
     [ACADEMY_ROUTE, "DOT Academy"],
     [BLOG_ROUTE, "Blog"],
-    [PUBLICATIONS_ROUTE, "Publications"],
-    ...(essaysPublished || NEWSLETTER.editions.length > 0 ? [[ESSAYS_ROUTE, "Essays"]] : []),
+    [PUBLICATIONS_ROUTE, "Books"],
+    ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
     [ABOUT_ROUTE, "About"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
@@ -731,7 +713,9 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           academyNode(),
           breadcrumb([home, { name: "DOT Academy", route: ACADEMY_ROUTE }]),
         ),
-        prerender: page(heading),
+        prerender: page(
+          `${heading}<p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")}</p><h2>Book One remains a book.</h2><p>${link(BOOK_ROUTE, "Read the fixed edition")}</p>`,
+        ),
       };
     }
     return {
@@ -769,6 +753,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<h1>${escapeHtml(AUTHOR_BYLINE)}</h1>`,
           `<p>${escapeHtml(AUTHOR.role)}</p>`,
           `<p>${escapeHtml(AUTHOR.summary)}</p>`,
+          `<p>${link(BLOG_ROUTE, "Essays and letters")}</p>`,
           "<h2>Where the work comes from</h2>",
           renderMarkdown(aboutText),
           `<p>From the ${link(`${BOOK_ROUTE}/preface`, "preface to Book One")}.</p>`,
@@ -830,54 +815,45 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     };
   });
 
-  const essayRoutes = essaysPublished || NEWSLETTER.editions.length > 0
-    ? [
-        {
-          route: ESSAYS_ROUTE,
-          title: `Essays — ${AUTHOR.name}`,
-          description: ESSAYS_DESCRIPTION,
-          lastmod: essays[0]?.updated ?? essays[0]?.published,
-          structuredData: graph(
-            essayCollectionNode(essays),
-            breadcrumb([home, { name: "Essays", route: ESSAYS_ROUTE }]),
-          ),
-          prerender: page(
-            `<h1>Essays</h1><p>${escapeHtml(ESSAYS_DESCRIPTION)}</p><ol>${essays
-              .map(
-                (essay) =>
-                  `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)} (<time datetime="${essay.published}">${essay.published}</time>): ${escapeHtml(essay.summary)}</li>`,
-              )
-              .join("")}</ol><section><p>${escapeHtml(NEWSLETTER.project)} · ${escapeHtml(NEWSLETTER.status)}</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(NEWSLETTER.cadence)} as a newsletter. ${link(NEWSLETTER.url, "View the newsletter on LinkedIn")}</p><ul>${NEWSLETTER.editions.map((edition) => `<li><h3>${link(edition.url, edition.title)}</h3><p>Read on LinkedIn</p></li>`).join("")}</ul></section>`,
-          ),
-        },
-        ...essays.map((essay) => {
-          const route = `${ESSAYS_ROUTE}/${essay.slug}`;
-          const concepts = essay.concepts
-            .map((id) => DOCTRINE_CONCEPTS.find((concept) => concept.id === id))
-            .map((concept) => `<li>${link(`/doctrine/${concept.id}`, concept.name)}</li>`)
-            .join("");
-          return {
-            route,
-            title: `${essay.title} — ${AUTHOR.name}`,
-            description: essay.summary,
-            ogType: "article",
-            lastmod: essay.updated ?? essay.published,
-            structuredData: graph(
-              articleNode(essay),
-              breadcrumb([home, { name: "Essays", route: ESSAYS_ROUTE }, { name: essay.title, route }]),
-            ),
-            prerender: page(
-              [
-                `<header><p>Essay by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · Claim levels: ${essay.levels.join(", ")}</p>`,
-                `<h1>${escapeHtml(essay.title)}</h1><p>${escapeHtml(essay.summary)}</p></header>`,
-                renderMarkdown(essay.body),
-                concepts ? `<h2>Builds on</h2><ul>${concepts}</ul>` : "",
-              ].join(""),
-            ),
-          };
-        }),
-      ]
-    : [];
+  const essayRoutes = [
+    {
+      route: ESSAYS_ROUTE,
+      canonicalRoute: BLOG_ROUTE,
+      title: `Writing archive — ${AUTHOR.name}`,
+      description: "Essays and letters are collected in the blog.",
+      structuredData: graph(webPageNode({ route: BLOG_ROUTE, title: "Writing archive", description: "Essays and letters." })),
+      prerender: page(`<h1>Writing archive</h1><p>Essays and letters are collected in the blog.</p><p>${link(BLOG_ROUTE, "All writing")}</p>`),
+    },
+    ...essays.map((essay) => {
+      const route = `${ESSAYS_ROUTE}/${essay.slug}`;
+      const concepts = essay.concepts
+        .map((id) => DOCTRINE_CONCEPTS.find((concept) => concept.id === id))
+        .map((concept) => `<li>${link(`/doctrine/${concept.id}`, concept.name)}</li>`)
+        .join("");
+      return {
+        route,
+        title: `${essay.title} — ${AUTHOR.name}`,
+        description: essay.summary,
+        ogType: "article",
+        lastmod: essay.updated ?? essay.published,
+        structuredData: graph(
+          articleNode(essay),
+          breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }, { name: essay.title, route }]),
+        ),
+        prerender: page(
+          [
+            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
+            `<header><p>Essay by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · Claim levels: ${essay.levels.join(", ")}</p>`,
+            `<h1>${escapeHtml(essay.title)}</h1><p>${escapeHtml(essay.summary)}</p></header>`,
+            renderMarkdown(essay.body),
+            "<p>End of essay</p>",
+            concepts ? `<h2>Builds on</h2><ul>${concepts}</ul>` : "",
+            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
+          ].join(""),
+        ),
+      };
+    }),
+  ];
 
   const writingRoutes = writing.flatMap((item) => {
     const pages = item.releases.map((release) => ({ path: writingPath(item, release.number), release }));
@@ -893,17 +869,20 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         lastmod: item.published,
         structuredData: graph(
           articleNode({ ...item, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
-          breadcrumb([home, { name: "Publications", route: PUBLICATIONS_ROUTE }, { name: delivered.title, route }]),
+          breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }, { name: delivered.title, route }]),
         ),
         prerender: page(
           [
+            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
             `<header><p>By ${link(ABOUT_ROUTE, AUTHOR.name)} · Version ${release.number}</p>`,
             `<h1>${escapeHtml(delivered.title)}</h1>${delivered.summary ? `<p>${escapeHtml(delivered.summary)}</p>` : ""}</header>`,
             renderMarkdown(body),
+            "<p>End of piece</p>",
             `<h2>Claims</h2><ul>${delivered.claims.map((claim) => `<li>${escapeHtml(claim.statement)} (${escapeHtml(claim.epistemic_level)})</li>`).join("")}</ul>`,
             sources.length > 0
               ? `<h2>Sources</h2><ul>${sources.map((source) => `<li>${/^https?:\/\//i.test(source.external_uri) ? link(source.external_uri, source.external_uri) : escapeHtml(source.external_uri)}</li>`).join("")}</ul>`
               : "",
+            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
           ].join(""),
         ),
       };
@@ -912,20 +891,18 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
 
   const publicationsRoute = {
     route: PUBLICATIONS_ROUTE,
-    title: `Publications — ${AUTHOR.name}`,
-    description: `Books, essays, analysis and letters by ${AUTHOR.name}, published and kept here.`,
+    title: `Books — ${AUTHOR.name}`,
+    description: `Books by ${AUTHOR.name}, with links to the complete free edition and letters.`,
     lastmod: writing[0]?.published,
     structuredData: graph(
-      webPageNode({ route: PUBLICATIONS_ROUTE, title: `Publications — ${AUTHOR.name}`, description: `Books, essays, analysis and letters by ${AUTHOR.name}.` }),
-      breadcrumb([home, { name: "Publications", route: PUBLICATIONS_ROUTE }]),
+      webPageNode({ route: PUBLICATIONS_ROUTE, title: `Books — ${AUTHOR.name}`, description: `Books by ${AUTHOR.name}.` }),
+      breadcrumb([home, { name: "Books", route: PUBLICATIONS_ROUTE }]),
     ),
     prerender: page(
       [
-        `<h1>Publications</h1><p>Books, essays, analysis and letters by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p>`,
-        `<h2>Books</h2><ul><li>${link(BOOK_ROUTE, manifest.project.title)}</li><li>${escapeHtml(NEWSLETTER.title)} (${escapeHtml(NEWSLETTER.status)})</li></ul>`,
-        writing.length > 0
-          ? `<h2>Writing</h2><ol>${writing.map((item) => `<li>${link(writingPath(item), item.title)} (<time datetime="${item.published}">${item.published}</time>)${item.summary ? `: ${escapeHtml(item.summary)}` : ""}</li>`).join("")}</ol>`
-          : "",
+        `<h1>Books</h1><p>Books by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p>`,
+        `<ul><li>${link(BOOK_ROUTE, manifest.project.title)}</li><li>${escapeHtml(NEWSLETTER.title)} (${escapeHtml(NEWSLETTER.status)})</li></ul>`,
+        `<p>${link(BLOG_ROUTE, "Letters and essays")}</p>`,
       ].join(""),
     ),
   };
@@ -937,19 +914,25 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   const blogRoute = {
     route: BLOG_ROUTE,
     title: "Blog — Digital Organism Theory",
-    description: "Essays, analysis and letters that apply Digital Organism Theory to the world, newest first.",
+    description: "Essays, analysis and letters that apply Digital Organism Theory to the world.",
     lastmod: blogPosts[0]?.date,
     structuredData: graph(
-      webPageNode({ route: BLOG_ROUTE, title: "Blog — Digital Organism Theory", description: "Writing from the DOT movement." }),
+      webPageNode({ route: BLOG_ROUTE, title: "Blog — Digital Organism Theory", description: "Essays and letters." }),
       breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }]),
     ),
     prerender: page(
       [
-        "<h1>Writing from the DOT movement</h1>",
-        "<p>Essays, analysis and letters that apply Digital Organism Theory to the world, newest first.</p>",
+        "<h1>Essays &amp; letters</h1>",
+        "<p>Essays, analysis and letters that apply Digital Organism Theory to the world.</p>",
+        `<p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h2>Latest writing</h2><p>Newest first</p>`,
         blogPosts.length > 0
-          ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol>`
-          : `<p>Nothing has been posted yet. ${link(BOOK_ROUTE, "Book One is complete and free.")}</p>`,
+          ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
+          : "<p>Nothing has been posted here yet.</p><p>New essays and letters will appear here when published.</p>",
+        NEWSLETTER.editions.length > 0
+          ? `<h2>Letters on LinkedIn</h2><p>From ${escapeHtml(NEWSLETTER.title)}. These letters open on LinkedIn.</p><ul>${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}<p>Read on LinkedIn</p></li>`).join("")}</ul>`
+          : "",
+        `<h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(NEWSLETTER.cadence)} on LinkedIn.</p><p>${link(NEWSLETTER.url, "Read on LinkedIn")} · ${link(FEED_URL, "RSS feed")} · ${link(READERS_ROUTE, "Reader list")}</p>`,
+        `<h2>Book One</h2><p>Digital Organism Theory, in full. The complete edition is free to read.</p><p>${link(BOOK_ROUTE, "Read Book One")}</p>`,
       ].join(""),
     ),
   };
@@ -993,7 +976,7 @@ function feedLinkTag() {
 
 /** One route's document: its metadata, its structured data, and its own text. */
 export function renderRoute(shell, route, { headTags = [] } = {}) {
-  const url = `${SITE_URL}${route.route}`;
+  const url = `${SITE_URL}${route.canonicalRoute ?? route.route}`;
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
   const image = `${SITE_URL}${route.image ?? "/og-image.png"}`;
@@ -1053,7 +1036,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
  * lastmod that moved on every deploy would be noise.
  */
 export function sitemapXml(routes, lastmod) {
-  const urls = [{ route: "/" }, ...routes.filter((route) => !route.noindex)].map(
+  const urls = [{ route: "/" }, ...routes.filter((route) => !route.noindex && !route.canonicalRoute)].map(
     (entry) =>
       `  <url>\n    <loc>${SITE_URL}${entry.route === "/" ? "/" : entry.route}</loc>\n    <lastmod>${entry.lastmod ?? lastmod}</lastmod>\n  </url>`,
   );

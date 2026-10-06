@@ -8,6 +8,7 @@ import {
 } from "../../services/OrchestratorPublicationService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { CreateBookProject } from "./components/CreateBookProject";
+import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 
 export default function PublicationStudioIndexPage() {
   const [projects, setProjects] = useState<PublicationProjectRead[]>([]);
@@ -41,10 +42,15 @@ export default function PublicationStudioIndexPage() {
         </p>
       </header>
 
-      <CreateBookProject />
-      <Link to="/studio/writing" className="inline-flex min-h-12 items-center gap-2 text-sm font-semibold underline underline-offset-4">
-        <FileText className="h-4 w-4" aria-hidden="true" />Essays, analysis, and letters<ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </Link>
+      <FocusNav
+        label="Start writing"
+        className="mt-8 max-w-md"
+        primary={{ to: "/studio/writing", label: "Write an essay or letter", icon: <FileText /> }}
+      />
+
+      <details className="mt-10 border-t border-border/60">
+        <summary className="min-h-12 cursor-pointer py-4 text-sm font-semibold">Book projects</summary>
+        <CreateBookProject />
 
         {loading ? (
           <div className="flex min-h-52 items-center justify-center" aria-label="Loading projects">
@@ -96,6 +102,7 @@ export default function PublicationStudioIndexPage() {
             ))}
           </ul>
         )}
+      </details>
     </PageShell>
   );
 }

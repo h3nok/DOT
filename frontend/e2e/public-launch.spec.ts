@@ -19,7 +19,7 @@ test("About offers named book navigation and the configured contact", async ({ p
   await page.goto("/about");
 
   await expect(page.getByRole("heading", { name: BYLINE, exact: true })).toBeVisible();
-  const book = page.getByRole("navigation", { name: "Page context" })
+  const book = page.getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Book One", exact: true });
   await expect(book).toBeVisible();
   await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");

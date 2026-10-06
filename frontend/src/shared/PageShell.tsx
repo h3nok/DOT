@@ -8,12 +8,14 @@ interface PageHeaderProps {
   backTo?: string;
   backLabel?: string;
   right?: ReactNode;
+  controls?: ReactNode;
 }
 
 export function PageHeader({
   backTo = "/",
   backLabel = "DOT",
   right,
+  controls,
 }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-transparent bg-background/80 backdrop-blur-md">
@@ -35,6 +37,7 @@ export function PageHeader({
             {right}
           </nav>
         )}
+        {controls && <div className="flex items-center gap-1">{controls}</div>}
       </div>
     </header>
   );

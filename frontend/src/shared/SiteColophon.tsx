@@ -13,8 +13,7 @@ const LINK =
  * the few places a reader can go next. Plain text links in a fixed order —
  * nothing counted, nothing ranked, and no funding ask (ADR-0022).
  *
- * Writing is linked once an essay or newsletter edition is available.
- * RSS only carries essays released here.
+ * Blog is the common writing archive. RSS carries writing released here.
  */
 export function SiteColophon({
   essaysPublished = ESSAYS_PUBLISHED,
@@ -37,12 +36,7 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
-          <Link to="/publications" className={LINK}>Publications</Link>
-          {(essaysPublished || newsletter.editions.length > 0) && (
-            <Link to="/essays" className={LINK}>
-              Essays
-            </Link>
-          )}
+          <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
             <a href={FEED_URL} className={LINK}>
               RSS

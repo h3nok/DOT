@@ -115,7 +115,7 @@ const RouteScrollManager: React.FC = () => {
   return null;
 };
 
-/** Book surfaces own this control in their sticky reading chrome. */
+/** Book and blog surfaces own this control in their sticky reading chrome. */
 const FloatingAppearanceControl: React.FC = () => {
   const { pathname } = useLocation();
 
@@ -125,7 +125,7 @@ const FloatingAppearanceControl: React.FC = () => {
   ) {
     return null;
   }
-  if (pathname === "/") return null;
+  if (pathname === "/" || /^\/blog\/?$/.test(pathname)) return null;
   return <AppearanceControl />;
 };
 

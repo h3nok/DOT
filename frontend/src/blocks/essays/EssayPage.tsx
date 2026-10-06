@@ -6,7 +6,6 @@ import { BookMarkdown } from "../../attention-os/reader";
 import { author, authorContact } from "../../content/author";
 import { doctrineNodes } from "../../content/doctrine/doctrineData";
 import {
-  ESSAYS_ROUTE,
   fetchEssayIndex,
   fetchEssayText,
   formatEssayDate,
@@ -17,6 +16,7 @@ import { DOT_BOOK_ONE_ROUTE } from "../../content/publications/dotBookOne";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { ClaimLevels } from "./ClaimLevels";
+import { PublicationSharing } from "../publication/components/PublicationSharing";
 
 const LINK =
   "text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]";
@@ -40,12 +40,14 @@ type EssayState =
 export default function EssayPage() {
   const { slug = "" } = useParams();
   const [state, setState] = useState<EssayState>({ status: "loading" });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: "loading" });
     Promise.all([fetchEssayIndex(controller.signal), fetchEssayText(slug, controller.signal)])
       .then(([essays, text]) => {
+        if (controller.signal.aborted) return;
         const essay = essays.find((candidate) => candidate.slug === slug);
         setState(essay && text !== null ? { status: "ready", essay, text } : { status: "missing" });
       })
@@ -53,7 +55,7 @@ export default function EssayPage() {
         if (!controller.signal.aborted) setState({ status: "failed" });
       });
     return () => controller.abort();
-  }, [slug]);
+  }, [slug, attempt]);
 
   const title = state.status === "ready" ? state.essay.title : null;
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function EssayPage() {
 
   return (
     <PageShell
-      header={<PageHeader backTo={ESSAYS_ROUTE} backLabel="Essays" />}
+      header={<PageHeader backTo="/blog" backLabel="Blog" />}
       footer={<SiteColophon />}
     >
       {state.status === "loading" && (
@@ -73,14 +75,18 @@ export default function EssayPage() {
       {state.status === "missing" && (
         <Notice title="No essay has this address.">
           The link may be incomplete, or the essay is not published.{" "}
-          <Link to={ESSAYS_ROUTE} className={LINK}>
-            See every essay
+          <Link to="/blog" className={LINK}>
+            All writing
           </Link>
           .
         </Notice>
       )}
       {state.status === "failed" && (
-        <Notice title="The essay could not be loaded.">Try again in a moment.</Notice>
+        <Notice title="The essay could not be loaded.">
+          <button type="button" onClick={() => setAttempt((value) => value + 1)} className={`min-h-11 ${LINK}`}>
+            Try again
+          </button>
+        </Notice>
       )}
       {state.status === "ready" && <Essay essay={state.essay} text={state.text} />}
     </PageShell>
@@ -162,15 +168,18 @@ function Essay({ essay, text }: { essay: EssaySummary; text: string }) {
           aria-label="After this essay"
           className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
         >
-          <Link to={ESSAYS_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
+          <Link to="/blog" className={`inline-flex items-center gap-2 ${LINK}`}>
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            All essays
+            All writing
           </Link>
           <Link to={DOT_BOOK_ONE_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
             <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
             Book One
           </Link>
         </nav>
+        <div className="mt-8">
+          <PublicationSharing title={essay.title} path={`/essays/${essay.slug}`} />
+        </div>
       </footer>
     </article>
   );

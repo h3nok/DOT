@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import aboutText from "../../content/pages/about.md?raw";
 import { author, authorByline, authorContact, authorProfiles } from "../../content/author";
-import { ESSAYS_PUBLISHED, ESSAYS_ROUTE } from "../../content/essays/essays";
 import { formatReference } from "../../content/publications/citation";
 import {
   DOT_BOOK_ONE_ROUTE,
@@ -45,20 +44,7 @@ export default function AboutPage() {
 
   return (
     <PageShell
-      header={
-        <PageHeader
-          right={
-            <Link
-              to={DOT_BOOK_ONE_ROUTE}
-              aria-label="Book One"
-              className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
-            >
-              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Book One</span>
-            </Link>
-          }
-        />
-      }
+      header={<PageHeader />}
       footer={<SiteColophon />}
     >
       <div className="mx-auto max-w-2xl">
@@ -141,14 +127,10 @@ export default function AboutPage() {
               </Link>{" "}
               — what the book says it does not yet establish.
             </li>
-            {ESSAYS_PUBLISHED && (
-              <li>
-                <Link to={ESSAYS_ROUTE} className={LINK}>
-                  Essays
-                </Link>{" "}
-                — writing beyond the book.
-              </li>
-            )}
+            <li>
+              <Link to="/blog" className={LINK}>Essays and letters</Link>{" "}
+              — writing beyond the book.
+            </li>
           </ul>
         </section>
 

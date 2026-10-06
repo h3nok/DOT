@@ -1,16 +1,19 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import AcademyPage from "./AcademyPage";
 
 describe("AcademyPage", () => {
-  const renderPage = () =>
-    render(
+  const renderPage = (expanded = false) => {
+    const result = render(
       <MemoryRouter>
         <AcademyPage />
       </MemoryRouter>,
     );
+    if (expanded) fireEvent.click(screen.getByText("About the Academy: principles, programs, and editorial standards"));
+    return result;
+  };
 
   it("explains the inquiry and offers material readers can use now", () => {
     renderPage();
@@ -24,13 +27,13 @@ describe("AcademyPage", () => {
       .toHaveAttribute("href", "/doctrine");
     expect(within(start).getByRole("link", { name: "Review open questions" }))
       .toHaveAttribute("href", "/applied");
-    expect(screen.getByText(/No experiment is recorded yet/)).toBeVisible();
-    expect(screen.getByText(/No Academy response has been released yet/)).toBeVisible();
+    expect(screen.getByText(/No experiment is recorded yet/)).not.toBeVisible();
+    expect(screen.getByText(/No Academy response has been released yet/)).not.toBeVisible();
     expect(screen.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
   });
 
   it("presents the four invariants of the intellectual revolution", () => {
-    renderPage();
+    renderPage(true);
 
     expect(screen.getByRole("heading", { name: "The Observer in the Inquiry" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Sovereign Attention" })).toBeVisible();
@@ -39,7 +42,7 @@ describe("AcademyPage", () => {
   });
 
   it("holds all eight work forms across the three programs under assembly", () => {
-    renderPage();
+    renderPage(true);
 
     expect(screen.getByRole("heading", { name: "Theory" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Critical inquiry" })).toBeVisible();
@@ -56,7 +59,7 @@ describe("AcademyPage", () => {
   });
 
   it("exposes the epistemic and provenance standard", () => {
-    renderPage();
+    renderPage(true);
 
     expect(screen.getByText("Observation · Model · Hypothesis · Speculation")).toBeVisible();
     expect(screen.getByText("Source · edition · relationship to earlier work")).toBeVisible();

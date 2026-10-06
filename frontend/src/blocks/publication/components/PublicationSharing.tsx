@@ -3,7 +3,11 @@ import { useState } from "react";
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || "https://dotheory.org";
 
-export function PublicationSharing({ title, path }: { title: string; path: string }) {
+export function PublicationSharing({ title, path, distributionTools = false }: {
+  title: string;
+  path: string;
+  distributionTools?: boolean;
+}) {
   const [message, setMessage] = useState<string | null>(null);
   const url = new URL(path, SITE_URL).href;
   const packageText = `${title}\n\n${url}\n`;
@@ -35,8 +39,10 @@ export function PublicationSharing({ title, path }: { title: string; path: strin
         <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" className="dot-pill">
           <ExternalLink className="h-4 w-4" aria-hidden="true" />Share on LinkedIn
         </a>
-        <button type="button" onClick={() => void copy(packageText)} className="dot-pill"><Copy className="h-4 w-4" aria-hidden="true" />Copy title and link</button>
-        <button type="button" onClick={download} className="dot-pill"><Download className="h-4 w-4" aria-hidden="true" />Export sharing text</button>
+        {distributionTools && <>
+          <button type="button" onClick={() => void copy(packageText)} className="dot-pill"><Copy className="h-4 w-4" aria-hidden="true" />Copy title and link</button>
+          <button type="button" onClick={download} className="dot-pill"><Download className="h-4 w-4" aria-hidden="true" />Export sharing text</button>
+        </>}
       </div>
       {message && <p role="status" className="mt-3 text-xs text-muted-foreground">{message}</p>}
     </section>

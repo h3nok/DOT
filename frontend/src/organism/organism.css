@@ -60,6 +60,11 @@
   height: 100%;
 }
 
+/* Reading keeps the chosen field, with less contrast behind the words. */
+html[data-organism-reading="true"] .organism-membrane {
+  opacity: calc(var(--appearance-field-opacity, 1) * 0.3);
+}
+
 /* Lift the page content above the membrane (z-index:0) without disturbing the
    fixed overlays (HUD, appearance control) that are also children of .App. */
 [data-organism="on"] .App {

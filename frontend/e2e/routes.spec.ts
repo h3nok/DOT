@@ -222,6 +222,10 @@ test.describe("academy", () => {
     await expect(page.getByText(/DOT Academy · In development/)).toBeVisible();
     await expect(page.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
 
+    const disclosure = page.locator("details").filter({ hasText: "About the Academy: principles, programs, and editorial standards" });
+    await expect(disclosure).not.toHaveAttribute("open");
+    await expect(page.getByText(/No experiment is recorded yet/)).not.toBeVisible();
+    await disclosure.locator("summary").click();
     const programs = page.locator("#academy-programs");
     await expect(programs.locator(".academy-program-card")).toHaveCount(3);
     await expect(programs.locator(".academy-program-card__area-item")).toHaveCount(8);

@@ -31,6 +31,7 @@ interface PublicRoute {
   image?: string;
   ogType?: string;
   noindex?: boolean;
+  canonicalRoute?: string;
   lastmod?: string;
   prerender?: string;
   structuredData: { "@context": string; "@graph": Record<string, unknown>[] };
@@ -155,11 +156,11 @@ describe("public route metadata", () => {
 describe("sitemap", () => {
   const xml = sitemapXml(routes, manifest.release.updated_at);
 
-  it("lists the home page and every indexable route once", () => {
+  it("lists the home page and every canonical indexable route once", () => {
     const locations = Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g), (match) => match[1]);
     expect(locations).toEqual([
       `${SITE_URL}/`,
-      ...routes.filter((route) => !route.noindex).map((route) => `${SITE_URL}${route.route}`),
+      ...routes.filter((route) => !route.noindex && !route.canonicalRoute).map((route) => `${SITE_URL}${route.route}`),
     ]);
     expect(new Set(locations).size).toBe(locations.length);
   });
@@ -345,14 +346,22 @@ describe("essays", () => {
   );
   const essays = [newer, older];
 
-  it("lists external newsletter writing without inventing a local essay or feed", async () => {
-    const writing = routes.find((route) => route.route === "/essays");
-    expect(writing?.prerender).toContain("The Millennial Manifesto");
-    expect(writing?.prerender).toContain("AI will not kill you. The one saying that it will, will");
-    expect(writing?.prerender).toContain("Read on LinkedIn");
+  it("keeps the old archive address as a canonical alias and preserves external letters in the blog", () => {
+    const alias = routes.find((route) => route.route === "/essays")!;
+    expect(alias.canonicalRoute).toBe("/blog");
+    expect(alias.prerender).toContain('href="/blog">All writing</a>');
+    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" />');
+    expect(renderRoute(shell, alias)).not.toContain('name="robots" content="noindex"');
+    const sitemap = sitemapXml(routes, "2026-10-06");
+    expect(sitemap).toContain("<loc>https://dotheory.org/blog</loc>");
+    expect(sitemap).not.toContain("<loc>https://dotheory.org/essays</loc>");
+    const blog = routes.find((route) => route.route === "/blog")!;
+    expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
+    expect(blog.prerender).toContain("Read on LinkedIn");
     expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
     const home = rootDocument(shell, manifest);
-    expect(home).toContain('href="/essays"');
+    expect(home).toContain('href="/blog"');
+    expect(home).not.toContain('href="/essays"');
     expect(home).not.toContain('href="/feed.xml"');
   });
 
@@ -365,6 +374,8 @@ describe("essays", () => {
     expect((article.author as Record<string, unknown>)["@id"]).toBe(`${SITE_URL}/about#person`);
     expect(article.datePublished).toBe("2026-10-01");
     expect((article.about as Array<{ name: string }>)[0].name).toBe("The Fear-Gating Principle");
+    expect(route.prerender).toContain('href="/blog">All writing</a>');
+    expect(route.prerender).toContain("End of essay");
 
     const revised = withEssays.find((candidate) => candidate.route === "/essays/language-models")!;
     expect((nodeOfType(revised, "Article") as Record<string, unknown>).dateModified).toBe("2026-10-20");
@@ -447,12 +458,14 @@ describe("native writing", () => {
     expect(page.prerender).not.toContain("<script>");
     expect(page.prerender).toMatch(/The author(&#39;|&#039;|')s claim \(Hypothesis\)/);
     expect(page.prerender).toContain('href="https://example.org/report"');
+    expect(page.prerender).toContain('href="/blog">All writing</a>');
+    expect(page.prerender).toContain("End of piece");
     const html = renderRoute(shell, page);
     expect(html).toContain(`<meta property="og:url" content="${SITE_URL}/writing/awork_abc123/releases/2" />`);
     expect(html).toContain('<meta property="og:title" content="AI letter — ');
 
     const publications = withWriting.find((route) => route.route === "/publications")!;
-    expect(publications.prerender).toContain('href="/writing/awork_abc123"');
+    expect(publications.prerender).toContain('href="/blog">Letters and essays</a>');
   });
 
   it("fails the build rather than silently dropping published work", async () => {

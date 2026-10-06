@@ -27,14 +27,16 @@ const renderPage = () =>
   );
 
 describe("AboutPage", () => {
-  it("names the book navigation even when its visible text is hidden on mobile", () => {
+  it("uses one shared book link in the header", () => {
     renderPage();
 
-    const context = within(screen.getByRole("navigation", { name: "Page context" }));
+    const context = within(screen.getByRole("navigation", { name: "Primary" }));
     expect(context.getByRole("link", { name: "Book One" })).toHaveAttribute(
-      "aria-label",
-      "Book One",
+      "href",
+      "/book/digital-organism-theory",
     );
+    expect(screen.queryByRole("navigation", { name: "Page context" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Essays and letters" })).toHaveAttribute("href", "/blog");
   });
 
   it("introduces the author in their own words", () => {
