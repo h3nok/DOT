@@ -39,7 +39,7 @@ describe("HeroConceptSlideshow", () => {
     const region = screen.getByRole("region", { name: "Key concepts from Book One" });
     const previous = within(region).getByRole("button", { name: "Previous concept" });
     const next = within(region).getByRole("button", { name: "Next concept" });
-    expect(HERO_CONCEPTS).toHaveLength(13);
+    expect(HERO_CONCEPTS).toHaveLength(15);
     expect(previous).toBeDisabled();
 
     for (const [index, concept] of HERO_CONCEPTS.entries()) {

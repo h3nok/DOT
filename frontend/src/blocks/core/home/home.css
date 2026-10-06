@@ -781,18 +781,53 @@ html:has(.home-journey) {
 }
 
 .home-hero-architecture__svg[data-focus="te"] [data-part="te"],
+.home-hero-architecture__svg[data-focus="awareness"] [data-part="te"],
+.home-hero-architecture__svg[data-focus="awareness"] [data-part="big-c"],
 .home-hero-architecture__svg[data-focus="big-c"] [data-part="big-c"],
 .home-hero-architecture__svg[data-focus="big-c"] [data-part="little-c"],
 .home-hero-architecture__svg[data-focus="rf0"] [data-part="rf0"],
 .home-hero-architecture__svg[data-focus="rf0"] [data-part="little-c"],
 .home-hero-architecture__svg[data-focus="rfn"] [data-part="rfn"],
 .home-hero-architecture__svg[data-focus="rfn"] [data-part="rf0"],
-.home-hero-architecture__svg[data-focus="little-c"] [data-part="little-c"] {
+.home-hero-architecture__svg[data-focus="little-c"] [data-part="little-c"],
+.home-hero-architecture__svg[data-focus="process"] [data-part="big-c"],
+.home-hero-architecture__svg[data-focus="process"] [data-part="little-c"] {
   opacity: 1;
 }
 
+/* The loops exist only while Process is the concept in view. */
+.home-architecture-process-loops {
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+  transition: opacity 360ms ease;
+}
+
+.home-hero-architecture__svg[data-focus="process"] .home-architecture-process-loops {
+  opacity: 1;
+}
+
+.home-architecture-process-loop--outer {
+  stroke: var(--architecture-big-c);
+}
+
+.home-architecture-process-loop--inner {
+  stroke: var(--architecture-local);
+}
+
+.home-architecture-loop-arrow--outer {
+  fill: var(--architecture-big-c);
+}
+
+.home-architecture-loop-arrow--inner {
+  fill: var(--architecture-local);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .home-hero-architecture__svg [data-part] {
+  .home-hero-architecture__svg [data-part],
+  .home-architecture-process-loops {
     transition: none;
   }
 }

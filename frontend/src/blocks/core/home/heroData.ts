@@ -8,7 +8,7 @@ export type HeroAskRequest = {
 type ClaimLevel = "observation" | "model" | "hypothesis";
 
 /** A part of the hero architecture a concept explains; the diagram brings it forward. */
-export type ArchitecturePartId = "te" | "big-c" | "rf0" | "rfn" | "little-c";
+export type ArchitecturePartId = "te" | "awareness" | "big-c" | "rf0" | "rfn" | "little-c" | "process";
 
 export interface Concept {
   id: string;
@@ -69,6 +69,13 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
     part: "te",
   },
   {
+    id: "home.concept.awareness",
+    term: "Awareness: The Undifferentiated Process",
+    text: "Before any self, DOT proposes awareness: a fundamental process emerging within T × E, not yet anyone’s. It may be a capacity of Big C; each Little c holds a local share.",
+    level: "hypothesis",
+    part: "awareness",
+  },
+  {
     id: "home.concept.primordial",
     term: "Big C: Primordial Consciousness",
     text: "Consciousness that emerged within T × E and began maintaining itself. It develops Reality Frames, and each Little c carries its process.",
@@ -95,6 +102,13 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
     text: "A downstream, local implementation of Big C’s own process: you receive a world through a body, form Intent, act, and live with what follows.",
     level: "hypothesis",
     part: "little-c",
+  },
+  {
+    id: "home.concept.process",
+    term: "Process Rules",
+    text: "Big C runs the outer loop; each Little c, an inner one. Under T × E nothing stays coherent for free: work maintains you, effort develops you, rest lets the loop consolidate.",
+    level: "model",
+    part: "process",
   },
   {
     id: "home.concept.lok",

@@ -14,12 +14,14 @@ export type HeroArchitectureIds = {
   threadId: string;
   frameClipId: string;
   surfacePrefix: string;
+  outerLoopArrowId: string;
+  innerLoopArrowId: string;
 };
 
 export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
   const {
     gridId, arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, fieldWashId,
-    frameWashId, localWashId, threadId, frameClipId, surfacePrefix,
+    frameWashId, localWashId, threadId, frameClipId, surfacePrefix, outerLoopArrowId, innerLoopArrowId,
   } = ids;
 
   return (
@@ -86,6 +88,14 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         {/* Growth arrowhead: the awareness radius expands. */}
         <path className="home-architecture-radius-arrow" d="M0.6 0.6L5.4 3L0.6 5.4Z" />
       </marker>
+      {[
+        [outerLoopArrowId, "home-architecture-loop-arrow--outer"],
+        [innerLoopArrowId, "home-architecture-loop-arrow--inner"],
+      ].map(([id, className]) => (
+        <marker key={id} id={id} markerWidth="7" markerHeight="7" refX="4.8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path className={className} d="M0.6 0.6L5.4 3L0.6 5.4Z" />
+        </marker>
+      ))}
       <radialGradient id={fieldWashId} cx="50%" cy="48%" r="52%">
         <stop className="home-architecture-field-stop" offset="0%" stopOpacity="0.14" />
         <stop className="home-architecture-field-stop" offset="58%" stopOpacity="0.05" />

@@ -21,6 +21,8 @@ describe("the concept slideshow and the architecture stay one explanation", () =
     while (!within(concepts()).queryByRole("heading", { name: "T × E: The Source" })) fireEvent.click(next);
     expect(focus()).toBe("te");
     fireEvent.click(next);
+    expect(focus()).toBe("awareness");
+    fireEvent.click(next);
     expect(within(concepts()).getByRole("heading", { name: "Big C: Primordial Consciousness" })).toBeVisible();
     expect(focus()).toBe("big-c");
   });
@@ -33,6 +35,19 @@ describe("the concept slideshow and the architecture stay one explanation", () =
     fireEvent.click(document.querySelector('[data-part="rf0"] .home-architecture-frame-zone')!);
     expect(within(concepts()).getByRole("heading", { name: "RF₀: Where Physics Governs" })).toBeVisible();
     expect(focus()).toBe("rf0");
+  });
+
+  it("shows Big C's outer loop and c₁'s inner loop only with Process Rules", () => {
+    renderLinked();
+    const loops = document.querySelector(".home-architecture-process-loops")!;
+    expect(loops.querySelectorAll("path[marker-end]")).toHaveLength(2);
+    const next = within(concepts()).getByRole("button", { name: "Next concept" });
+    while (!within(concepts()).queryByRole("heading", { name: "Awareness: The Undifferentiated Process" })) fireEvent.click(next);
+    expect(focus()).toBe("awareness");
+    while (!within(concepts()).queryByRole("heading", { name: "Process Rules" })) fireEvent.click(next);
+    expect(focus()).toBe("process");
+    expect(within(concepts()).getByRole("group", { name: /of \d+$/ }))
+      .toHaveTextContent(/work maintains you, effort develops you, rest lets the loop consolidate/);
   });
 });
 

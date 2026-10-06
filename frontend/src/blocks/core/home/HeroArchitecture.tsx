@@ -2,7 +2,7 @@ import { useId } from "react";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 import { Disclosure } from "../../../shared/Disclosure";
 
-import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, C1_TRANSFORM } from "./architectureGeometry";
 import { useArchitectureFocus } from "./architectureFocus";
 import type { ArchitecturePartId } from "./heroData";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
@@ -87,6 +87,17 @@ const arcPath = (radius: number, startDeg: number, endDeg: number) => {
   return `M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
 };
 
+/** A long clockwise arc (over 180°), used for the process loops. */
+const loopPath = (radius: number, startDeg: number, endDeg: number) => {
+  const start = polar(radius, startDeg);
+  const end = polar(radius, endDeg);
+  return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}A${radius} ${radius} 0 1 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+};
+/* Big C's outer loop runs between its membrane and T × E, open at the top for the label. */
+const OUTER_LOOP = loopPath((R.membrane + R.origin) / 2, -70, 250);
+/* c₁'s inner loop sits between its constraints and its awareness radius, open where its label and Intent leave. */
+const INNER_LOOP = loopPath(52, 70, 350);
+
 /**
  * Code-native rendering of DOT's proposed layered architecture.
  *
@@ -114,6 +125,8 @@ export function HeroArchitecture() {
     threadId: `${instanceId}-hero-thread`,
     frameClipId: `${instanceId}-hero-frame-clip`,
     surfacePrefix: `${instanceId}-hero-surface`,
+    outerLoopArrowId: `${instanceId}-hero-outer-loop-arrow`,
+    innerLoopArrowId: `${instanceId}-hero-inner-loop-arrow`,
   };
   const {
     gridId, fieldWashId, frameWashId, frameClipId, surfacePrefix,
@@ -323,6 +336,12 @@ export function HeroArchitecture() {
           <HeroArchitectureExperiencers ids={ids} />
         </g>
 
+        {/* Shown with the Process concept: Big C's outer loop and c₁'s inner one. */}
+        <g className="home-architecture-process-loops" aria-hidden="true">
+          <path className="home-architecture-process-loop--outer" d={OUTER_LOOP} markerEnd={`url(#${ids.outerLoopArrowId})`} />
+          <path className="home-architecture-process-loop--inner" d={INNER_LOOP} transform={C1_TRANSFORM} markerEnd={`url(#${ids.innerLoopArrowId})`} />
+        </g>
+
         <HeroArchitectureLabels />
       </svg>
 
@@ -358,10 +377,12 @@ export function HeroArchitecture() {
           </p>
           <dl>
             <div><dt>T × E</dt><dd>The source: continuity and possibility, within which Big C is proposed to have emerged.</dd></div>
+            <div><dt>Awareness</dt><dd>Proposed as a fundamental, undifferentiated process emerging within T × E, not yet anyone’s. It may be a capacity of Big C; each Little c’s awareness radius is its local share.</dd></div>
             <div><dt>Big C</dt><dd>Primordial consciousness. It emerged within T × E, began maintaining itself, and develops Reality Frames, our world among them.</dd></div>
             <div><dt>RF₁, RF₂ … RFₙ</dt><dd>RFₙ generalizes: any Reality Frame Big C develops, each under its own rules. DOT proposes that a Little c who stabilizes its consciousness can explore them, expanding its decision space. Drawn small and dashed because, unlike RF₀, they cannot be measured from here; their interiors only mark that the rules differ.</dd></div>
             <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process, and the one Reality Frame we can measure. Proposed as Big C’s developmental environment for us, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
             <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): a downstream, local implementation of Big C’s own process, so it is drawn in Big C’s living material. Noticing, choosing, and living with what follows.</dd></div>
+            <div><dt>Loops</dt><dd>Shown with the Process concept. Big C runs the outer loop and each Little c an inner one. Under T × E, coherence is never free: work maintains a process, effort develops it, and rest lets it consolidate.</dd></div>
             <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>
             <div><dt>Open graphite chevrons</dt><dd>Options RF₀ offers, arriving at your awareness radius: the options you can perceive.</dd></div>
             <div><dt>Dotted double arrows</dt><dd>Mutual pressure between Little c. They meet only through RF₀, and each presses on the other.</dd></div>

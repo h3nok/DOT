@@ -35,7 +35,7 @@ describe("HeroConcepts", () => {
   it("keeps the architecture's proposals explicitly marked as hypothesis", () => {
     render(<HeroConcepts />);
 
-    for (const name of ["T × E: The Source", "Big C: Primordial Consciousness", "RFₙ: Every Reality Frame", "Little c: You"]) {
+    for (const name of ["T × E: The Source", "Awareness: The Undifferentiated Process", "Big C: Primordial Consciousness", "RFₙ: Every Reality Frame", "Little c: You"]) {
       const entry = screen.getByRole("heading", { name }).closest(".home-concept-ledger-item");
       expect(entry).not.toBeNull();
       expect(within(entry as HTMLElement).getByText("Hypothesis")).toBeVisible();
