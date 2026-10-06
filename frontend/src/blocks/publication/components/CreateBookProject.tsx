@@ -31,7 +31,7 @@ export function CreateBookProject() {
       <div className="mt-3 flex flex-wrap items-end gap-3">
         <input id="new-book-title" value={title} onChange={(event) => setTitle(event.target.value)} required maxLength={256} disabled={saving}
           className="min-h-11 min-w-0 flex-1 rounded border border-border bg-background px-3 text-base text-foreground" />
-        <button type="submit" disabled={saving || !title.trim()} className="dot-reading-action min-h-11 disabled:opacity-40">
+        <button type="submit" disabled={saving || !title.trim()} className="dot-reading-action inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <BookPlus className="h-4 w-4" aria-hidden="true" />}
           Create private manuscript
         </button>

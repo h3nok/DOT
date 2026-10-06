@@ -38,7 +38,7 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={() => setSignInOpen(true)}
-          className="dot-reading-action mt-7"
+          className="dot-reading-action mt-7 inline-flex min-h-12 items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 text-sm font-semibold"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />
           Sign in
