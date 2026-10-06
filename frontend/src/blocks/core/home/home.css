@@ -1052,6 +1052,38 @@ html:has(.home-journey) {
   opacity: var(--architecture-grid-opacity);
 }
 
+/* Other Reality Frames: built like RF₀, but hypothesized, so their edge is dashed. */
+.home-architecture-other-frame-zone {
+  fill: color-mix(in oklch, var(--background) 90%, var(--architecture-rf));
+  stroke: none;
+}
+
+.home-architecture-other-frame-boundary {
+  fill: none;
+  stroke: var(--architecture-rf);
+  stroke-dasharray: 3 3;
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.home-architecture-other-frame-rules {
+  fill: none;
+  stroke: var(--architecture-rf);
+  stroke-width: 0.9;
+  opacity: 0.62;
+}
+
+.home-architecture-other-frame-label {
+  fill: color-mix(in oklch, var(--architecture-rf) 70%, var(--foreground));
+  font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  paint-order: stroke fill;
+  stroke: color-mix(in oklch, var(--background) 90%, var(--architecture-rf));
+  stroke-linejoin: round;
+  stroke-width: 5px;
+}
+
 .home-architecture-gridpoint {
   fill: var(--architecture-quiet);
   opacity: 0.72;

@@ -9,6 +9,24 @@ const LAYERS = ["origin", "big-c", "reality-frame", "little-c"] as const;
 const DIAGRAM_SELECTOR = ".home-hero-architecture__svg, .home-concept-architecture";
 
 describe("architecture surface lighting", () => {
+  it("shows RF₀ as one of several Reality Frames Big C develops, the others hypothesized", () => {
+    const { container } = render(<HeroArchitecture />);
+    const frames = [...container.querySelectorAll(".home-architecture-other-frame")];
+
+    expect(frames.map(frame => frame.textContent)).toEqual(["RF1", "RF2", "RFn"]);
+    expect(new Set(frames.map(frame => frame.getAttribute("data-rules"))).size).toBe(3);
+    for (const frame of frames) {
+      // Structure, not organisms: no living surface, and every one lies inside Big C, outside RF₀.
+      expect(frame.querySelector(".home-architecture-surface")).toBeNull();
+      const zone = frame.querySelector(".home-architecture-other-frame-zone")!;
+      const [x, y, r] = ["cx", "cy", "r"].map(name => Number(zone.getAttribute(name)));
+      const distance = Math.hypot(x - FRAME_CENTRE.x, y - FRAME_CENTRE.y);
+      expect(distance - r).toBeGreaterThan(R.frame + 8);
+      expect(distance + r).toBeLessThan(R.bigC - 8);
+    }
+    expect(container.textContent).toContain("hypothesized, may follow different rules");
+  });
+
   it("preserves the shared geometry and each concept's focus", () => {
     const { container } = render(
       <>

@@ -16,6 +16,18 @@ export const FRAME_CENTRE = { x: 348, y: 352 } as const;
 export const C1_OFFSET = { x: -34, y: -20 } as const;
 export const C1_TRANSFORM = `translate(${C1_OFFSET.x} ${C1_OFFSET.y})`;
 
+/**
+ * Other Reality Frames Big C may develop, each under its own rules. Hypothesized and
+ * unobserved, so they are drawn dashed; RF₀ is drawn large only because we live in it.
+ */
+export const OTHER_FRAMES = [
+  { index: "1", angle: -38, rules: "lattice" },
+  { index: "2", angle: 215, rules: "polar" },
+  { index: "n", angle: 162, rules: "unknown" },
+] as const;
+export const OTHER_FRAME_ORBIT = 240;
+export const OTHER_FRAME_RADIUS = 27;
+
 /** A grown, gently irregular membrane. Organisms get this; the built Frame never does. */
 export function membranePath(
   cx: number,

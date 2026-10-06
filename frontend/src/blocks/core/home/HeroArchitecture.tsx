@@ -6,6 +6,7 @@ import { ARCHITECTURE_RADII as R, membranePath } from "./architectureGeometry";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
+import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
@@ -202,6 +203,8 @@ export function HeroArchitecture() {
           ))}
         </g>
 
+        <HeroArchitectureOtherFrames />
+
         <g className="home-architecture-frame">
           {/* RF₀ is structure, not an organism: a flat plane, never the living surface material. */}
           <circle
@@ -304,8 +307,10 @@ export function HeroArchitecture() {
       <figcaption className="home-architecture-caption">
         <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
         <span id={descriptionId} className="sr-only">
-          T and E precede Big C; Big C generates RF₀, our physical universe,
-          which is structure rather than a conscious process. RF₀ hosts many
+          T and E precede Big C; Big C develops Reality Frames. RF₀, our
+          physical universe, is one of them: structure rather than a conscious
+          process. Other Reality Frames, RF₁, RF₂ and onward to RFₙ, are
+          hypothesized, may follow different rules, and have not been observed. RF₀ hosts many
           Little c, indexed c₁, c₂, c₃ and onward; c₁ is you. RF₀ presses on
           you through constraint and consequence and offers options to your
           awareness. Little c meet only through RF₀ and press on one another;
@@ -328,8 +333,9 @@ export function HeroArchitecture() {
           </p>
           <dl>
             <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
-            <div><dt>Big C</dt><dd>The proposed conscious organism that generates our world.</dd></div>
-            <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process. Proposed as Big C’s developmental environment, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
+            <div><dt>Big C</dt><dd>The proposed conscious organism that develops Reality Frames, our world among them.</dd></div>
+            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>Other Reality Frames DOT proposes Big C may develop, each under different rules. Hypothesized and unobserved, so drawn small and dashed; their interiors only suggest that the rules differ.</dd></div>
+            <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process, and the one Reality Frame we can measure. Proposed as Big C’s developmental environment for us, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
             <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): noticing, choosing, and living with what follows.</dd></div>
             <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>
             <div><dt>Open graphite chevrons</dt><dd>Options RF₀ offers, arriving at your awareness radius: the options you can perceive.</dd></div>
