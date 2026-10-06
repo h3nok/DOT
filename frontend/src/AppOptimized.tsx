@@ -50,6 +50,7 @@ const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 // to hear again, and what the site keeps.
 const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
+const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
 const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
 const PublicationsPage = React.lazy(() => import("./blocks/publication/PublicationsPage"));
@@ -190,6 +191,7 @@ const App: React.FC = () => {
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/join" element={<JoinPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/blog" element={<BlogPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
                 <Route path="/publications" element={<PublicationsPage />} />

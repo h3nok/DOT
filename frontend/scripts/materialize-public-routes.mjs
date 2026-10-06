@@ -20,6 +20,7 @@ const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
 const PUBLICATIONS_ROUTE = "/publications";
+const BLOG_ROUTE = "/blog";
 const WRITING_ROUTE = "/writing";
 
 // Paths are relative to the frontend package, where the build runs.
@@ -230,7 +231,7 @@ function personNode() {
     jobTitle: AUTHOR.role,
     description: AUTHOR.summary,
     image: AUTHOR.photo ? `${SITE_URL}${AUTHOR.photo}` : undefined,
-    sameAs: [AUTHOR.links.linkedin, AUTHOR.links.github],
+    sameAs: Object.values(AUTHOR.links).filter((href) => /^https:\/\//.test(href ?? "")),
     alumniOf: AUTHOR.credentials.length > 0
       ? [...new Set(AUTHOR.credentials.map((credential) => credential.institution))].map(
           (name) => ({ "@type": "CollegeOrUniversity", name }),
@@ -568,6 +569,7 @@ function siteNav(essaysPublished) {
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
     [ACADEMY_ROUTE, "DOT Academy"],
+    [BLOG_ROUTE, "Blog"],
     [PUBLICATIONS_ROUTE, "Publications"],
     ...(essaysPublished || NEWSLETTER.editions.length > 0 ? [[ESSAYS_ROUTE, "Essays"]] : []),
     [ABOUT_ROUTE, "About"],
@@ -928,7 +930,31 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     ),
   };
 
-  return [...staticRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...sectionRoutes, ...conceptRoutes];
+  const blogPosts = [
+    ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
+    ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, href: writingPath(item) })),
+  ].sort((first, second) => second.date.localeCompare(first.date));
+  const blogRoute = {
+    route: BLOG_ROUTE,
+    title: "Blog — Digital Organism Theory",
+    description: "Essays, analysis and letters that apply Digital Organism Theory to the world, newest first.",
+    lastmod: blogPosts[0]?.date,
+    structuredData: graph(
+      webPageNode({ route: BLOG_ROUTE, title: "Blog — Digital Organism Theory", description: "Writing from the DOT movement." }),
+      breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }]),
+    ),
+    prerender: page(
+      [
+        "<h1>Writing from the DOT movement</h1>",
+        "<p>Essays, analysis and letters that apply Digital Organism Theory to the world, newest first.</p>",
+        blogPosts.length > 0
+          ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol>`
+          : `<p>Nothing has been posted yet. ${link(BOOK_ROUTE, "Book One is complete and free.")}</p>`,
+      ].join(""),
+    ),
+  };
+
+  return [...staticRoutes, blogRoute, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */

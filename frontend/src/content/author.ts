@@ -11,6 +11,7 @@ import authorData from "./author.json";
  * - `credentials`: one entry per degree, with its dissertation or thesis where
  *   there is one. The build also states them to search engines.
  * - `photo`: a path under `public/`, such as "/henok.jpg".
+ * - `links`: public profiles. Empty ones are never shown.
  */
 export interface Credential {
   /** "PhD, Computer Science" */
@@ -31,7 +32,34 @@ export interface Author {
   email: string;
   credentials: Credential[];
   photo: string;
-  links: { linkedin: string; github: string };
+  links: AuthorLinks;
+}
+
+export interface AuthorLinks {
+  linkedin: string;
+  github: string;
+  youtube?: string;
+  x?: string;
+  substack?: string;
+  bluesky?: string;
+  instagram?: string;
+}
+
+const PROFILE_LABELS: Record<keyof AuthorLinks, string> = {
+  linkedin: "LinkedIn",
+  youtube: "YouTube",
+  substack: "Substack",
+  x: "X",
+  bluesky: "Bluesky",
+  instagram: "Instagram",
+  github: "GitHub",
+};
+
+/** Filled, HTTPS profiles in a fixed order; nothing is shown for an empty slot. */
+export function authorProfiles(source: Author = author): { label: string; href: string }[] {
+  return (Object.keys(PROFILE_LABELS) as (keyof AuthorLinks)[])
+    .map((key) => ({ label: PROFILE_LABELS[key], href: (source.links[key] ?? "").trim() }))
+    .filter((profile) => /^https:\/\//.test(profile.href));
 }
 
 export const author: Author = authorData as Author;

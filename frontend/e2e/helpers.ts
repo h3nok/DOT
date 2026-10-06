@@ -14,6 +14,7 @@ export const PUBLIC_ROUTES = [
   { path: "/book/digital-organism-theory/preface", name: "book section" },
   { path: "/about", name: "about" },
   { path: "/essays", name: "essays" },
+  { path: "/blog", name: "blog" },
   { path: "/readers", name: "reader list" },
   { path: "/privacy", name: "privacy" },
   { path: "/terms", name: "terms" },

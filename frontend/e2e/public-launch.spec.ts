@@ -26,7 +26,7 @@ test("About offers named book navigation and the configured contact", async ({ p
   await expect(page.getByRole("region", { name: "Contact" })
     .getByRole("link", { name: CONTACT.label, exact: true }))
     .toHaveAttribute("href", CONTACT.href);
-  await expect(page.getByRole("link", { name: "LinkedIn", exact: true }))
+  await expect(page.getByRole("main").getByRole("link", { name: "LinkedIn", exact: true }))
     .toHaveAttribute("href", author.links.linkedin);
   await expectNoHorizontalOverflow(page);
   await book.click();
@@ -44,7 +44,7 @@ test("a closed reader list does not ask for an address", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
   await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Book One", exact: true }))
+  await expect(page.getByRole("main").getByRole("link", { name: "Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
   await expectNoHorizontalOverflow(page);
 });

@@ -23,6 +23,7 @@ describe("SiteColophon", () => {
     expect(screen.getByText(/Written by Henok Ghebrechristos/)).toBeInTheDocument();
     expect(siteLinks()).toEqual([
       ["About", "/about"],
+      ["Blog", "/blog"],
       ["Publications", "/publications"],
       ["Essays", "/essays"],
       ["Reader list", "/readers"],
@@ -31,6 +32,15 @@ describe("SiteColophon", () => {
     ]);
     expect(screen.queryByText(/support|donate|fund/i)).toBeNull();
     expect(screen.queryByRole("link", { name: "RSS" })).toBeNull();
+  });
+
+  it("links only the author's real profiles, as plain links", () => {
+    renderColophon(false);
+
+    const elsewhere = within(screen.getByRole("navigation", { name: "Elsewhere" }));
+    expect(elsewhere.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("rel", "noreferrer me");
+    expect(elsewhere.queryByRole("link", { name: "YouTube" })).toBeNull();
+    expect(elsewhere.getByRole("link", { name: "The Millennial Manifesto" })).toBeInTheDocument();
   });
 
   it("sends readers to the reader list, never the invitation queue (ADR-0025)", () => {
@@ -46,6 +56,7 @@ describe("SiteColophon", () => {
 
     expect(siteLinks()).toEqual([
       ["About", "/about"],
+      ["Blog", "/blog"],
       ["Publications", "/publications"],
       ["Essays", "/essays"],
       ["RSS", "/feed.xml"],

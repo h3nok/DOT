@@ -15,6 +15,7 @@ import { useReaderList } from "../../../dot/useReaderList";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
+import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
@@ -72,7 +73,7 @@ export default function HomePage() {
             : "bg-transparent py-5"
         }`}
       >
-        <div className="home-header-layout dot-page-container dot-page-wide flex items-center justify-between">
+        <div className="home-header-layout dot-page-container dot-page-wide flex flex-wrap items-center justify-between gap-y-1">
           <Link
             to="/"
             // -my-2.5 keeps the header its original height while the link itself
@@ -81,6 +82,8 @@ export default function HomePage() {
           >
             <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
           </Link>
+
+          <SiteNav className="order-last w-full sm:order-none sm:w-auto" />
 
           <div className="flex items-center gap-3">
             <AppearanceControl placement="inline" />
@@ -113,16 +116,7 @@ export default function HomePage() {
                 <Mail className="h-3 w-3" aria-hidden="true" />
                 <span>Readers’ list</span>
               </Link>
-            ) : (
-              // Until the list can confirm addresses, the honest door is the book.
-              <Link
-                to="/book/digital-organism-theory"
-                className="home-header-action dot-pill text-foreground/80"
-              >
-                <BookOpen className="h-3 w-3" aria-hidden="true" />
-                <span>Book One</span>
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </header>

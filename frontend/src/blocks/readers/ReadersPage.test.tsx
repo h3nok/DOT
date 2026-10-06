@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -50,7 +50,7 @@ describe("ReadersPage", () => {
 
     expect(screen.getByText("The list is not open yet.")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).toBeNull();
-    expect(screen.getByRole("link", { name: "Book One" })).toHaveAttribute(
+    expect(within(screen.getByRole("main")).getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory",
     );
@@ -66,7 +66,7 @@ describe("ReadersPage", () => {
     );
     expect(screen.queryByText("The list is not open yet.")).toBeNull();
     expect(screen.queryByRole("textbox")).toBeNull();
-    expect(screen.getByRole("link", { name: "Book One" })).toHaveAttribute(
+    expect(within(screen.getByRole("main")).getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory",
     );

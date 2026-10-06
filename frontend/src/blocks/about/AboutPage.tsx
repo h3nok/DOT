@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import aboutText from "../../content/pages/about.md?raw";
-import { author, authorByline, authorContact } from "../../content/author";
+import { author, authorByline, authorContact, authorProfiles } from "../../content/author";
 import { ESSAYS_PUBLISHED, ESSAYS_ROUTE } from "../../content/essays/essays";
 import { formatReference } from "../../content/publications/citation";
 import {
@@ -179,12 +179,11 @@ export default function AboutPage() {
             .
           </p>
           <p className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-            <a href={author.links.linkedin} className={LINK} rel="noreferrer me">
-              LinkedIn
-            </a>
-            <a href={author.links.github} className={LINK} rel="noreferrer me">
-              GitHub
-            </a>
+            {authorProfiles().map((profile) => (
+              <a key={profile.href} href={profile.href} className={LINK} rel="noreferrer me">
+                {profile.label}
+              </a>
+            ))}
           </p>
         </section>
 

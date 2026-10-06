@@ -70,6 +70,17 @@ def _mint_session_jwt(member: app.db.models.Member, email: str) -> str:
     return jwt.encode(payload, settings.SERVICE_AUTH_SECRET, algorithm=_ALGORITHM)
 
 
+def email_delivery_available() -> bool:
+    """Production needs a real provider key; development logs codes to the console."""
+    api_key: str = os.environ.get("RESEND_API_KEY", "").strip()
+    if api_key and api_key != "disabled":
+        return True
+    return os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development") not in {
+        "production",
+        "staging",
+    }
+
+
 async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> bool:
     """Send via Resend; fall back to console log in dev.
 
@@ -133,6 +144,14 @@ async def request_otp(
 ) -> dict:
     email_hash: str = _hash_email(email)
     now: datetime.datetime = _now_utc()
+
+    if not email_delivery_available():
+        logger.warning("[OTP] Email delivery is unavailable for signin")
+        return {
+            "ok": False,
+            "error": "Email sign-in is not available yet: the site cannot send codes.",
+            "status": 503,
+        }
 
     # Enforce cooldown: reject if an unused code was issued within the window.
     recent: app.db.models.OtpCode | None = await session.scalar(

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { authorByline } from "../content/author";
+import { authorByline, authorProfiles } from "../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
 import { DotWordmark } from "./DotWordmark";
@@ -36,6 +36,7 @@ export function SiteColophon({
           <Link to="/about" className={LINK}>
             About
           </Link>
+          <Link to="/blog" className={LINK}>Blog</Link>
           <Link to="/publications" className={LINK}>Publications</Link>
           {(essaysPublished || newsletter.editions.length > 0) && (
             <Link to="/essays" className={LINK}>
@@ -56,6 +57,19 @@ export function SiteColophon({
           <Link to="/terms" className={LINK}>
             Terms
           </Link>
+        </nav>
+        <nav
+          aria-label="Elsewhere"
+          className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs"
+        >
+          {authorProfiles().map((profile) => (
+            <a key={profile.href} href={profile.href} className={LINK} rel="noreferrer me">
+              {profile.label}
+            </a>
+          ))}
+          <a href={newsletter.url} className={LINK} rel="noreferrer">
+            {newsletter.title}
+          </a>
         </nav>
       </div>
     </footer>

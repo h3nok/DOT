@@ -33,6 +33,17 @@ def test_request_otp_cooldown(client: fastapi.testclient.TestClient) -> None:
     assert r.status_code == 429
 
 
+def test_production_without_email_delivery_says_so_and_stores_no_code(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ORCHESTRATOR_ENVIRONMENT", "production")
+    monkeypatch.setenv("RESEND_API_KEY", "disabled")
+    for _ in range(2):
+        r = client.post("/v1/auth/otp/request", json={"email": "owner@example.com"})
+        assert r.status_code == 503
+        assert "cannot send codes" in r.json()["detail"]
+
+
 # ── /v1/auth/otp/verify ──────────────────────────────────────────────────────
 
 
