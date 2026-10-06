@@ -7,6 +7,7 @@ import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
+import app.core.tenancy
 import app.db.models
 import app.domains.publication.schemas
 import app.integrations.object_store
@@ -567,6 +568,8 @@ async def get_public_delivery_manifest(
     project_slug: str,
     version: int | None = None,
 ) -> dict[str, typing.Any]:
+    # Forced RLS hides every project until a tenant is bound; filters keep this public-only.
+    await app.core.tenancy.bind_tenant(session, owner_id)
     project_result: sqlalchemy.Result[
         tuple[app.db.models.PublicationProject]
     ] = await session.execute(

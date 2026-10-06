@@ -8,6 +8,7 @@ import sqlalchemy
 import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
+import app.core.tenancy
 import app.db.models
 import app.domains.publication.schemas
 import app.domains.publication.service
@@ -226,6 +227,27 @@ def test_publication_delivery_manifest_is_public_by_owner_and_slug(
     assert manifest_response.status_code == 200
     assert manifest_response.json()["project"]["id"] == project["id"]
     assert manifest_response.json()["release"]["id"] == release_response.json()["id"]
+
+
+def test_public_delivery_binds_the_owner_so_postgres_rls_can_return_it(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    project, _section = create_ready_project(client, visibility="public")
+    client.post(
+        f"/v1/publications/projects/{project['id']}/releases", headers=OWNER_HEADERS, json={}
+    )
+    bound: list[str] = []
+    original = app.core.tenancy.bind_tenant
+
+    async def spy(session: sqlalchemy.ext.asyncio.AsyncSession, owner_id: str) -> None:
+        bound.append(owner_id)
+        await original(session, owner_id)
+
+    monkeypatch.setattr(app.core.tenancy, "bind_tenant", spy)
+    response = client.get("/v1/publications/delivery/owner_1/henok-book/manifest")
+
+    assert response.status_code == 200
+    assert bound == ["owner_1"]
 
 
 def test_publication_delivery_manifest_hides_private_projects(
