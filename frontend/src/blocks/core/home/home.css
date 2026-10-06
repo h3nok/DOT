@@ -228,6 +228,8 @@ html:has(.home-journey) {
   --architecture-origin: var(--theory-origin);
   --architecture-big-c: var(--theory-big-c);
   --architecture-rf: var(--theory-rf);
+  /* Reality Frames are built, not grown: a fixed bronze, apart from any theme accent. */
+  --architecture-rf-ring: oklch(0.56 0.095 62);
   --architecture-local: var(--theory-local);
   --architecture-live: color-mix(
     in oklch,
@@ -768,6 +770,107 @@ html:has(.home-journey) {
   margin: 0.25rem auto 0;
 }
 
+/* Explorer: naming a part brings it forward; the rest steps back, nothing moves. */
+.home-hero-architecture__svg [data-part] {
+  cursor: pointer;
+  transition: opacity 220ms ease;
+}
+
+.home-hero-architecture__svg[data-focus] [data-part] {
+  opacity: 0.2;
+}
+
+.home-hero-architecture__svg[data-focus="te"] [data-part="te"],
+.home-hero-architecture__svg[data-focus="big-c"] [data-part="big-c"],
+.home-hero-architecture__svg[data-focus="big-c"] [data-part="little-c"],
+.home-hero-architecture__svg[data-focus="rf0"] [data-part="rf0"],
+.home-hero-architecture__svg[data-focus="rf0"] [data-part="little-c"],
+.home-hero-architecture__svg[data-focus="rf1"] [data-part="rf1"],
+.home-hero-architecture__svg[data-focus="rf2"] [data-part="rf2"],
+.home-hero-architecture__svg[data-focus="rfn"] [data-part="rfn"],
+.home-hero-architecture__svg[data-focus="little-c"] [data-part="little-c"] {
+  opacity: 1;
+}
+
+.home-architecture-explorer {
+  max-width: 32rem;
+  margin: 0.5rem auto 0;
+  font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+.home-architecture-explorer__parts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.home-architecture-explorer__parts button {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid color-mix(in oklch, var(--foreground) 18%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+.home-architecture-explorer__parts button:hover {
+  color: var(--foreground);
+  border-color: color-mix(in oklch, var(--foreground) 40%, transparent);
+}
+
+.home-architecture-explorer__parts button[aria-pressed="true"] {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.home-architecture-explorer__parts button:focus-visible {
+  outline: 2px solid var(--organism-accent-strong);
+  outline-offset: 2px;
+}
+
+.home-architecture-explorer__detail {
+  min-height: 3.25rem;
+  margin-top: 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.home-architecture-explorer__detail > * + * {
+  margin-top: 0.4rem;
+}
+
+.home-architecture-explorer__detail strong,
+.home-architecture-explorer__status {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.home-architecture-explorer__detail a {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.home-architecture-explorer__hint {
+  text-align: center;
+  font-size: 0.8125rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-architecture__svg [data-part],
+  .home-architecture-explorer__parts button {
+    transition: none;
+  }
+}
+
 .home-architecture-guide dl {
   display: grid;
   gap: 0.875rem;
@@ -951,7 +1054,7 @@ html:has(.home-journey) {
   opacity: 0.96;
 }
 
-.home-architecture-big-c path {
+.home-architecture-big-c circle {
   fill: none;
   stroke: var(--architecture-big-c);
   opacity: var(--contour-opacity);
@@ -959,15 +1062,16 @@ html:has(.home-journey) {
   stroke-width: 1.5;
 }
 
-.home-architecture-big-c path[data-contour="1"] {
-  --contour-opacity: 0.88;
+.home-architecture-big-c circle[data-contour="1"] {
+  --contour-opacity: 1;
 
   filter: none;
+  stroke-width: 2;
 }
 
-.home-architecture-big-c path[data-contour="2"] {
-  --contour-opacity: 0.4;
-  stroke-width: 1;
+.home-architecture-big-c circle[data-contour="2"] {
+  --contour-opacity: 0.32;
+  stroke-width: 0.75;
 }
 
 .home-architecture-organism-inner-membrane {
@@ -1024,19 +1128,19 @@ html:has(.home-journey) {
 
 .home-architecture-frame-boundary {
   fill: none;
-  stroke: var(--architecture-rf);
+  stroke: var(--architecture-rf-ring);
   stroke-dasharray: none;
   stroke-linecap: round;
-  stroke-width: 1.5;
+  stroke-width: 1.75;
 }
 
-/* Machined graduation between the Frame's two hairlines: built, not grown. */
+/* Machined graduation just inside the Frame's edge: built, not grown. */
 .home-architecture-frame-bezel {
   fill: none;
-  stroke: var(--architecture-rf);
-  stroke-dasharray: 1 2.4;
-  stroke-width: 5;
-  opacity: 0.42;
+  stroke: var(--architecture-rf-ring);
+  stroke-dasharray: 0.75 3;
+  stroke-width: 3;
+  opacity: 0.38;
 }
 
 .home-architecture-frame-inset {
@@ -1060,10 +1164,10 @@ html:has(.home-journey) {
 
 .home-architecture-other-frame-boundary {
   fill: none;
-  stroke: var(--architecture-rf);
-  stroke-dasharray: 3 3;
+  stroke: var(--architecture-rf-ring);
+  stroke-dasharray: 2.5 2.5;
   stroke-linecap: round;
-  stroke-width: 1.2;
+  stroke-width: 1.25;
 }
 
 .home-architecture-other-frame-rules {
@@ -1485,6 +1589,7 @@ html:has(.home-journey) {
   --architecture-origin: color-mix(in oklab, var(--theory-origin) 68%, var(--foreground));
   --architecture-big-c: color-mix(in oklab, var(--theory-big-c) 68%, var(--foreground));
   --architecture-rf: color-mix(in oklab, var(--theory-rf) 68%, var(--foreground));
+  --architecture-rf-ring: oklch(0.76 0.09 68);
   --architecture-local: color-mix(in oklab, var(--theory-local) 68%, var(--foreground));
 }
 
@@ -1519,6 +1624,7 @@ html[data-contrast="high"] .home-architecture-polar-scale line {
 html[data-contrast="high"] .home-hero-environment {
   --architecture-big-c: var(--foreground);
   --architecture-rf: var(--foreground);
+  --architecture-rf-ring: var(--foreground);
   --architecture-local: var(--foreground);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 34%, transparent);
   --architecture-live: var(--foreground);
@@ -1613,7 +1719,7 @@ html[data-contrast="high"] .home-hero-kicker {
 
   /* 2 · Big C: one dot of consciousness, expanding to hold everything. */
   .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c-zone,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c path {
+  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c circle {
     transform-box: fill-box;
     transform-origin: center;
     animation: home-big-c-emerge 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -1624,12 +1730,12 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c path[data-contour="1"] {
+    .home-architecture-big-c circle[data-contour="1"] {
     animation-delay: 420ms;
   }
 
   .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c path[data-contour="2"] {
+    .home-architecture-big-c circle[data-contour="2"] {
     animation-delay: 560ms;
   }
 

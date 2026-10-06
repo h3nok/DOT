@@ -1,31 +1,30 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 import { Disclosure } from "../../../shared/Disclosure";
 
-import { ARCHITECTURE_RADII as R, membranePath } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import type { ArchitecturePartId } from "./architectureModel";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
+import { HeroArchitectureExplorer } from "./HeroArchitectureExplorer";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
 
-/* Big C is grown: each membrane wavers slightly, offset from its neighbour. */
-const BIG_C_MEMBRANE = { amplitude: 3.2, lobes: 5 } as const;
-const bigCMembrane = (radius: number, phase: number) =>
-  membranePath(348, 352, radius, { ...BIG_C_MEMBRANE, phase });
-
-const FIELD_CONTOURS = [326, 338] as const;
+const FIELD_CONTOURS = [R.origin + 8, R.origin + 20] as const;
 /* The top-centre stays open for the T · E label. */
 const FIELD_ARCS = [[202, 256], [284, 338]] as const;
 const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
-const MEMBRANE_BANDS = [258, 270] as const;
+const MEMBRANE_BANDS = [R.bigC - 28, R.bigC - 16] as const;
+/* Big C's inner membrane, just inside its edge. */
+const INNER_MEMBRANE = R.bigC - 8;
 
 const BIG_C_MEMBRANE_NODES = [-116, -72, -28, 18, 64, 112, 158, 204].map(
   (angle, index) => {
     const radians = (angle * Math.PI) / 180;
-    const innerRadius = 278;
-    const outerRadius = 286;
+    const innerRadius = INNER_MEMBRANE;
+    const outerRadius = R.bigC;
 
     return {
       angle,
@@ -42,7 +41,7 @@ const BIG_C_ORGANELLE_NODES = [
   -138, -94, -50, -6, 41, 88, 135, 181, 227,
 ].map((angle, index) => {
   const radians = (angle * Math.PI) / 180;
-  const radius = 297;
+  const radius = R.membrane;
   return {
     angle,
     r: index % 2 === 0 ? 2 : 1.4,
@@ -121,21 +120,31 @@ export function HeroArchitecture() {
   } = ids;
   const captionId = `${instanceId}-hero-architecture-caption`;
   const descriptionId = `${instanceId}-hero-architecture-description`;
+  const [selected, setSelected] = useState<ArchitecturePartId | null>(null);
 
   return (
     <figure className="home-hero-architecture" aria-labelledby={captionId} aria-describedby={descriptionId}>
+      {/* Pointer shortcut only: every part is also a button in the explorer below. */}
       <svg
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
         focusable="false"
+        data-focus={selected ?? undefined}
+        onClick={(event) => {
+          const target = event.target as Element;
+          if (target.closest("a")) return;
+          const part = target.closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null;
+          setSelected(!part || part === selected ? null : part);
+        }}
       >
         <HeroArchitectureDefs ids={ids} />
 
+        <g data-part="te">
         <circle
           className="home-architecture-field-wash"
           cx="348"
           cy="352"
-          r="314"
+          r={R.origin - 4}
           fill={`url(#${fieldWashId})`}
         />
 
@@ -146,15 +155,19 @@ export function HeroArchitecture() {
             <path key={`${radius}-${start}`} d={arcPath(radius, start, end)} />
           )))}
           {FIELD_RAYS.map((angle) => {
-            const start = polar(320, angle);
-            const end = polar(336, angle);
+            const start = polar(R.origin + 2, angle);
+            const end = polar(R.origin + 18, angle);
             return <line key={angle} x1={start.x} y1={start.y} x2={end.x} y2={end.y} />;
           })}
         </g>
+        </g>
 
-        <path
+        <g data-part="big-c">
+        <circle
           className="home-architecture-big-c-zone home-architecture-surface"
-          d={bigCMembrane(R.bigC, 0)}
+          cx="348"
+          cy="352"
+          r={R.bigC}
           fill={`url(#${surfacePrefix}-big-c)`}
           stroke={`url(#${surfacePrefix}-rim)`}
           filter={`url(#${surfacePrefix}-shadow)`}
@@ -162,10 +175,12 @@ export function HeroArchitecture() {
 
         <g className="home-architecture-big-c">
           {BIG_C_RINGS.map((radius, index) => (
-            <path
+            <circle
               key={radius}
               data-contour={index + 1}
-              d={bigCMembrane(radius, index * 1.3)}
+              cx="348"
+              cy="352"
+              r={radius}
             />
           ))}
         </g>
@@ -176,9 +191,11 @@ export function HeroArchitecture() {
               <path key={radius} d={arcPath(radius, 38, 142)} />
             ))}
           </g>
-          <path
+          <circle
             className="home-architecture-organism-inner-membrane"
-            d={bigCMembrane(278, 2.6)}
+            cx="348"
+            cy="352"
+            r={INNER_MEMBRANE}
           />
           {BIG_C_MEMBRANE_NODES.map(({ angle, radius, x1, y1, x2, y2 }) => (
             <g key={angle} className="home-architecture-organism-node">
@@ -202,9 +219,11 @@ export function HeroArchitecture() {
             />
           ))}
         </g>
+        </g>
 
         <HeroArchitectureOtherFrames />
 
+        <g data-part="rf0">
         <g className="home-architecture-frame">
           {/* RF₀ is structure, not an organism: a flat plane, never the living surface material. */}
           <circle
@@ -298,20 +317,28 @@ export function HeroArchitecture() {
           <path d="M151 132V142M348 132V146M545 132V142" />
           <path d="M128 155H138M128 352H142M128 549H138" />
         </g>
+        </g>
 
-        <HeroArchitectureExperiencers ids={ids} />
+        <g data-part="little-c">
+          <HeroArchitectureExperiencers ids={ids} />
+        </g>
 
         <HeroArchitectureLabels />
       </svg>
 
+      <HeroArchitectureExplorer selected={selected} onSelect={setSelected} />
+
       <figcaption className="home-architecture-caption">
         <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
         <span id={descriptionId} className="sr-only">
-          T and E precede Big C; Big C develops Reality Frames. RF₀, our
-          physical universe, is one of them: structure rather than a conscious
-          process. Other Reality Frames, RF₁, RF₂ and onward to RFₙ, are
-          hypothesized, may follow different rules, and have not been observed. RF₀ hosts many
-          Little c, indexed c₁, c₂, c₃ and onward; c₁ is you. RF₀ presses on
+          Big C emerges within T and E and maintains itself; it develops Reality
+          Frames. RF₀, our physical universe, is one of them, governed by physics:
+          structure rather than a conscious process. Other Reality Frames, RF₁,
+          RF₂ and onward to RFₙ, follow their own rules; DOT proposes that a
+          Little c who stabilizes its own consciousness can explore them,
+          expanding its decision space. RF₀ hosts many Little c, indexed c₁, c₂, c₃
+          and onward; c₁ is you. Each Little c is a downstream, local
+          implementation of Big C’s own process. RF₀ presses on
           you through constraint and consequence and offers options to your
           awareness. Little c meet only through RF₀ and press on one another;
           you cooperate with c₂, which widens both your awareness. The rings
@@ -325,18 +352,18 @@ export function HeroArchitecture() {
             possibility, not measured structure outside our universe.
           </p>
           <p>
-            Two kinds of process, drawn two ways. Graphite is RF₀, the
-            interaction environment: structure and law, not a conscious
-            process, so it is drawn flat and centred on no experiencer. The
-            accent marks conscious processes: Big C, each Little c, awareness,
-            and Intent.
+            Two kinds of process, drawn two ways. Bronze rings are Reality
+            Frames: RF₀, the interaction environment, is structure and law,
+            not a conscious process, so it is drawn flat and centred on no
+            experiencer. The accent marks conscious processes: Big C, each
+            Little c, awareness, and Intent.
           </p>
           <dl>
-            <div><dt>T · E</dt><dd>Continuity and possibility, proposed to precede consciousness.</dd></div>
-            <div><dt>Big C</dt><dd>The proposed conscious organism that develops Reality Frames, our world among them.</dd></div>
-            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>Other Reality Frames DOT proposes Big C may develop, each under different rules. Hypothesized and unobserved, so drawn small and dashed; their interiors only suggest that the rules differ.</dd></div>
+            <div><dt>T · E</dt><dd>Continuity and possibility: the conditions within which Big C is proposed to have emerged.</dd></div>
+            <div><dt>Big C</dt><dd>The proposed first conscious organism. It emerged within T × E, began maintaining itself, and develops Reality Frames, our world among them.</dd></div>
+            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>Other Reality Frames Big C develops, each under its own rules. DOT proposes that a Little c who stabilizes its consciousness can explore them, expanding its decision space. Drawn small and dashed because, unlike RF₀, they cannot be measured from here; their interiors only mark that the rules differ.</dd></div>
             <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process, and the one Reality Frame we can measure. Proposed as Big C’s developmental environment for us, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
-            <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): noticing, choosing, and living with what follows.</dd></div>
+            <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): a downstream, local implementation of Big C’s own process, so it is drawn in Big C’s living material. Noticing, choosing, and living with what follows.</dd></div>
             <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>
             <div><dt>Open graphite chevrons</dt><dd>Options RF₀ offers, arriving at your awareness radius: the options you can perceive.</dd></div>
             <div><dt>Dotted double arrows</dt><dd>Mutual pressure between Little c. They meet only through RF₀, and each presses on the other.</dd></div>

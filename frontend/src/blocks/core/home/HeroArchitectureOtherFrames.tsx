@@ -45,7 +45,7 @@ export function HeroArchitectureOtherFrames() {
       {OTHER_FRAMES.map(({ index, angle, rules }) => {
         const { x, y } = centreOf(angle);
         return (
-          <g key={index} className="home-architecture-other-frame" data-rules={rules}>
+          <g key={index} className="home-architecture-other-frame" data-part={`rf${index}`} data-rules={rules}>
             <circle className="home-architecture-other-frame-zone" cx={x} cy={y} r={OTHER_FRAME_RADIUS} />
             <g className="home-architecture-other-frame-rules">
               {rules === "lattice" && <path d={latticeChords(x, y, inner)} />}

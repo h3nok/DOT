@@ -153,7 +153,7 @@ describe("home entry theme compatibility", () => {
       /\.home-architecture-causal-trace path\s*\{[\s\S]*?filter: none;/,
     );
     expect(styles).toMatch(
-      /\.home-architecture-frame-boundary\s*\{[\s\S]*?stroke-width: 1\.5;/,
+      /\.home-architecture-frame-boundary\s*\{[\s\S]*?stroke: var\(--architecture-rf-ring\);[\s\S]*?stroke-width: 1\.75;/,
     );
   });
 
@@ -216,7 +216,7 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain("Big C");
     expect(architecture).toContain("RF₀");
     expect(architecture).toContain("Little c");
-    expect(architecture).toContain("T and E precede Big C");
+    expect(architecture).toContain("Big C emerges within T and E and maintains itself");
     expect(architecture).toMatch(/Conceptual\s+rings,\s+not\s+spatial\s+boundaries/);
     expect(architecture).toContain("Intent and embodied action");
     expect(architecture).not.toContain("possibility within Big C");

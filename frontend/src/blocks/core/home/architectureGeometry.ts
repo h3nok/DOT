@@ -1,8 +1,8 @@
 /** Shared proportions for the main architecture and its concept details. */
 export const ARCHITECTURE_RADII = {
   origin: 318,
-  bigC: 286,
-  membrane: 297,
+  bigC: 298,
+  membrane: 306,
   frame: 197,
   awareness: 84,
   local: 26,
@@ -25,8 +25,8 @@ export const OTHER_FRAMES = [
   { index: "2", angle: 215, rules: "polar" },
   { index: "n", angle: 162, rules: "unknown" },
 ] as const;
-export const OTHER_FRAME_ORBIT = 240;
-export const OTHER_FRAME_RADIUS = 27;
+export const OTHER_FRAME_ORBIT = (ARCHITECTURE_RADII.frame + ARCHITECTURE_RADII.bigC) / 2;
+export const OTHER_FRAME_RADIUS = 30;
 
 /** A grown, gently irregular membrane. Organisms get this; the built Frame never does. */
 export function membranePath(
