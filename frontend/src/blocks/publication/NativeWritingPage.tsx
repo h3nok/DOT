@@ -31,7 +31,14 @@ export default function NativeWritingPage() {
     <PageShell header={<PageHeader />} footer={<SiteColophon />}>
       <div className="mx-auto max-w-3xl">
         <Helmet><title>{manifest?.title || content?.delivery.title || "Writing"} — {author.name}</title><link rel="canonical" href={canonical} />{manifest?.summary && <meta name="description" content={manifest.summary} />}</Helmet>
-        {error ? <p role="alert" className="break-words text-sm">{error}</p>
+        {error ? <>
+            <h1 className="font-serif text-3xl">This piece could not be opened</h1>
+            <p role="alert" className="mt-5 text-base text-muted-foreground">
+              {/^(Failed to fetch|NetworkError|Load failed)/i.test(error)
+                ? "The site could not reach the publication service. Try again in a moment."
+                : /not found|404/i.test(error) ? "There is no published piece at this address." : error}
+            </p>
+          </>
           : !content ? <p role="status">Loading the publication…</p>
           : content.delivery.withdrawn ? <><h1 className="font-serif text-3xl">{content.delivery.title}</h1><p className="mt-5">This release has been withdrawn.</p><p className="mt-3">{content.delivery.reason}</p></>
           : manifest && <>
@@ -46,7 +53,7 @@ export default function NativeWritingPage() {
             {!!manifest.sources?.length && <section aria-label="Sources" className="border-t border-border py-6"><h2 className="text-lg font-semibold">Sources</h2><ul className="mt-3 space-y-3 text-sm">{manifest.sources.map((source, index) => <li key={index} className="break-words">{/^https?:\/\//i.test(source.external_uri) ? <a href={source.external_uri} rel="noreferrer" className="underline">{source.external_uri}</a> : source.external_uri}{source.locator && <p className="mt-1 text-xs text-muted-foreground">{source.locator}</p>}</li>)}</ul></section>}
             <PublicationSharing title={manifest.title} path={writingRoute(workId, manifest.release.number)} />
           </>}
-        <Link to="/publications" className="mt-8 inline-block text-sm underline underline-offset-4">All publications</Link>
+        <Link to="/blog" className="mt-8 inline-block text-sm underline underline-offset-4">All writing</Link>
       </div>
     </PageShell>
   );

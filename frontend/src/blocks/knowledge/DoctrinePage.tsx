@@ -364,15 +364,15 @@ const DoctrinePage = () => {
         aria-hidden="true"
       />
 
-      {/* Back to the movement graph */}
+      {/* Back to the home page */}
       <Link
         to="/"
         className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-sm font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
-        aria-label="Back to the movement graph"
-        title="Back to the movement graph"
+        aria-label="DOT home"
+        title="DOT home"
       >
         <ArrowLeft className="h-4 w-4 shrink-0" />
-        <span>Back</span>
+        <span>Home</span>
       </Link>
 
       <Link
