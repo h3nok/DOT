@@ -20,15 +20,8 @@ def test_health_alias(client: TestClient) -> None:
     assert response.json()["service"] == "dot-orchestrator"
 
 
-def test_api_schema_is_served_in_development(client: TestClient) -> None:
-    for path in ("/docs", "/redoc", "/openapi.json"):
-        assert client.get(path).status_code == 200
-
-
-@pytest.mark.parametrize("environment", ["production", "staging"])
-def test_public_deployments_do_not_publish_the_api_schema(
-    monkeypatch: pytest.MonkeyPatch, environment: str
-) -> None:
+def _app_in(monkeypatch: pytest.MonkeyPatch, environment: str) -> TestClient:
+    # Set the environment explicitly: a developer's .env must not decide the outcome.
     monkeypatch.setenv("ORCHESTRATOR_ENVIRONMENT", environment)
     monkeypatch.setenv("ORCHESTRATOR_AUTH_ENABLED", "true")
     monkeypatch.setenv("ORCHESTRATOR_AUTH_MODE", "jwt")
@@ -36,8 +29,24 @@ def test_public_deployments_do_not_publish_the_api_schema(
         "ORCHESTRATOR_SERVICE_AUTH_SECRET", "test-session-signing-secret-at-least-32-bytes"
     )
     app.settings.get_settings.cache_clear()
+    return fastapi.testclient.TestClient(app.main.create_app())
+
+
+def test_api_schema_is_served_in_development(monkeypatch: pytest.MonkeyPatch) -> None:
     try:
-        deployed = fastapi.testclient.TestClient(app.main.create_app())
+        local = _app_in(monkeypatch, "development")
+        for path in ("/docs", "/redoc", "/openapi.json"):
+            assert local.get(path).status_code == 200
+    finally:
+        app.settings.get_settings.cache_clear()
+
+
+@pytest.mark.parametrize("environment", ["production", "staging"])
+def test_public_deployments_do_not_publish_the_api_schema(
+    monkeypatch: pytest.MonkeyPatch, environment: str
+) -> None:
+    try:
+        deployed = _app_in(monkeypatch, environment)
         for path in ("/docs", "/redoc", "/openapi.json"):
             assert deployed.get(path).status_code == 404
     finally:
