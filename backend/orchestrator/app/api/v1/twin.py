@@ -36,8 +36,10 @@ public_router = fastapi.APIRouter(prefix="/v1/twin", tags=["twin"])
 
 
 @public_router.post("/public/ask", response_model=app.domains.twin.schemas.TwinAskResponse)
-@_limiter.limit("10/minute")
+# SlowAPI checks limits in registration order, bottom decorator first: a request
+# refused by the visitor's own limit must not spend everyone's ceiling.
 @_limiter.shared_limit(PUBLIC_ASK_CEILING, scope="public-ask", key_func=_all_visitors)
+@_limiter.limit("10/minute")
 async def ask_public(
     request: fastapi.Request,
     payload: app.domains.twin.schemas.TwinPublicAskRequest,
@@ -62,8 +64,10 @@ async def ask_public(
 
 
 @public_router.post("/public/ask/stream")
-@_limiter.limit("10/minute")
+# SlowAPI checks limits in registration order, bottom decorator first: a request
+# refused by the visitor's own limit must not spend everyone's ceiling.
 @_limiter.shared_limit(PUBLIC_ASK_CEILING, scope="public-ask", key_func=_all_visitors)
+@_limiter.limit("10/minute")
 async def ask_public_stream(
     request: fastapi.Request,
     payload: app.domains.twin.schemas.TwinPublicAskRequest,

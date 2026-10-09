@@ -695,3 +695,32 @@ def test_public_questions_share_a_site_wide_ceiling(monkeypatch) -> None:
 
     assert seventh.status_code == 429
     assert stream.status_code == 429
+
+
+def test_a_visitor_over_their_own_limit_does_not_spend_the_shared_ceiling(monkeypatch) -> None:
+    """Requests refused by a visitor's own limit must not count against everyone."""
+
+    import app.domains.twin.schemas as schemas
+    import app.domains.twin.service as service
+    from app.main import app as fastapi_app
+
+    async def _answer(session, requester, payload, client=None, history=()):  # noqa: ANN001
+        return schemas.TwinAskResponse(answer="ok", citations=[], grounded=False)
+
+    monkeypatch.setattr(service, "ask", _answer)
+    question = {"question": "What is this about?", "owner_id": "henok"}
+
+    def ask(client, visitor: str) -> int:
+        return client.post(
+            "/v1/twin/public/ask", json=question, headers={"X-Forwarded-For": visitor}
+        ).status_code
+
+    with fastapi.testclient.TestClient(fastapi_app) as client:
+        persistent = [ask(client, "81.2.69.5") for _ in range(25)]
+        assert persistent.count(200) == 10
+        assert persistent.count(429) == 15
+        # The other 50 of the 60 a minute remain for everyone else.
+        for visitor in range(5):
+            for _ in range(10):
+                assert ask(client, f"81.2.69.{visitor + 20}") == 200
+        assert ask(client, "81.2.69.30") == 429
