@@ -6,7 +6,7 @@ import { SignIn } from "../../../dot/SignIn";
 import { useAuth } from "../../../dot/useAuth";
 import { DotWordmark } from "../../../shared/DotWordmark";
 
-export function StudioAuthGate({ children, ownerOnly = false }: { children: ReactNode; ownerOnly?: boolean }) {
+export function StudioAuthGate({ children, ownerOnly = false, title = "Publication Studio" }: { children: ReactNode; ownerOnly?: boolean; title?: string }) {
   const { user, loading } = useAuth();
   const [signInOpen, setSignInOpen] = useState(false);
 
@@ -37,7 +37,7 @@ export function StudioAuthGate({ children, ownerOnly = false }: { children: Reac
         <p className="mt-8 font-mono dot-micro uppercase text-[color:var(--organism-accent-strong)]">
           Private workspace
         </p>
-        <h1 className="dot-page-heading mt-2">Publication Studio</h1>
+        <h1 className="dot-page-heading mt-2">{title}</h1>
         <p className="dot-caption mx-auto mt-4 max-w-sm">
           Sign in to open the private workspace. Public reading remains
           available without an account.

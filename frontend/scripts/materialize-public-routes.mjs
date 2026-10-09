@@ -17,6 +17,7 @@ const BOOK_ROUTE = "/book/digital-organism-theory";
 const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
 const CONTACT_ROUTE = "/contact";
+const INBOX_ROUTE = "/studio/inbox";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
@@ -761,6 +762,19 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     imageAlt: `${AUTHOR.name} — work, writing and conversation`,
   };
   const authorRoutes = [
+    {
+      route: INBOX_ROUTE,
+      title: `Contact inbox — ${AUTHOR.name}`,
+      description: "Sign in with the site owner's account to review and reply to private inquiries.",
+      noindex: true,
+      structuredData: graph({
+        "@type": "WebPage",
+        "@id": `${SITE_URL}${INBOX_ROUTE}#page`,
+        url: `${SITE_URL}${INBOX_ROUTE}`,
+        name: "Contact inbox",
+      }),
+      prerender: page('<p>Private workspace</p><h1>Contact inbox</h1><p>Sign in with the site owner’s account to review and reply to private inquiries. This workspace requires JavaScript.</p>'),
+    },
     {
       ...about,
       structuredData: graph(

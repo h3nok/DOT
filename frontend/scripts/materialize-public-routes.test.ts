@@ -267,6 +267,14 @@ describe("the author", () => {
 });
 
 describe("page text for readers without JavaScript", () => {
+  it("gives the private inbox a non-indexed entry without exposing messages", () => {
+    const inbox = routeAt("/studio/inbox");
+    expect(inbox.noindex).toBe(true);
+    expect(inbox.prerender).toContain("Sign in with the site owner");
+    expect(renderRoute(readFileSync("index.html", "utf8"), inbox))
+      .toContain('<meta name="robots" content="noindex" />');
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/studio/inbox");
+  });
   it("writes every chapter's own text into its page", () => {
     for (const section of manifest.sections) {
       const source = readFileSync(join("public/publications/henok/digital-organism-theory/v4", section.content_path), "utf8");
