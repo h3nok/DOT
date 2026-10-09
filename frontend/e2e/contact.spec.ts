@@ -33,6 +33,17 @@ test("contact failure offers email without collecting details", async ({ page })
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 
+test("private inbox offers sign-in without requesting private messages anonymously", async ({ page }) => {
+  await page.route("**/v1/auth/session", route => route.fulfill({ json: { user: null } }));
+  let opened = false;
+  await page.route("**/v1/contact/inbox**", route => { opened = true; return route.fulfill({ status: 401, json: {} }); });
+  await page.goto("/studio/inbox");
+  await expect(page.getByRole("heading", { name: "Contact inbox", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Sign in", exact: true })).toBeVisible();
+  expect(opened).toBe(false);
+});
+
 test("private inbox refuses a member session", async ({ page }) => {
   await page.route("**/v1/auth/session", route => route.fulfill({ json: { user: { id: "member_123", display_name: "Member", role: "member", is_owner: false } } }));
   let opened = false;

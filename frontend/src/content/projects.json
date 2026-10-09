@@ -15,7 +15,7 @@
       "Tailwind CSS"
     ],
     "links": {
-        "live": "/book/digital-organism-theory"
+      "live": "/book/digital-organism-theory"
     },
     "gradient": "linear-gradient(135deg, #0f766e 0%, #2563eb 100%)",
     "glowColor": "rgba(20, 184, 166, 0.4)"
@@ -56,9 +56,21 @@
       "PostgreSQL",
       "Multi-agent AI"
     ],
-    "links": {},
+    "links": {
+      "website": "https://sullix.com/"
+    },
     "gradient": "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
-    "glowColor": "rgba(6, 182, 212, 0.4)"
+    "glowColor": "rgba(6, 182, 212, 0.4)",
+    "showcase": {
+      "source": "/work/sullix/project-command-center.webp",
+      "alt": "Sullix project command center showing budget, actual costs, and cost breakdown by category.",
+      "mark": "/work/sullix/faro-mark.svg",
+      "agentName": "Faro",
+      "agentRole": "Sullix’s field assistant",
+      "caption": "Project command center · Budget & job costing",
+      "width": 1920,
+      "height": 870
+    }
   },
   {
     "slug": "medroute",

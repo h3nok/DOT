@@ -17,6 +17,7 @@ const BOOK_ROUTE = "/book/digital-organism-theory";
 const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
 const CONTACT_ROUTE = "/contact";
+const INBOX_ROUTE = "/studio/inbox";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
@@ -762,6 +763,19 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   };
   const authorRoutes = [
     {
+      route: INBOX_ROUTE,
+      title: `Contact inbox — ${AUTHOR.name}`,
+      description: "Sign in with the site owner's account to review and reply to private inquiries.",
+      noindex: true,
+      structuredData: graph({
+        "@type": "WebPage",
+        "@id": `${SITE_URL}${INBOX_ROUTE}#page`,
+        url: `${SITE_URL}${INBOX_ROUTE}`,
+        name: "Contact inbox",
+      }),
+      prerender: page('<p>Private workspace</p><h1>Contact inbox</h1><p>Sign in with the site owner’s account to review and reply to private inquiries. This workspace requires JavaScript.</p>'),
+    },
+    {
       ...about,
       structuredData: graph(
         profilePageNode(about),
@@ -777,13 +791,14 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<p>${escapeHtml(BUILDER.summary)}</p>`,
           `<p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p>`,
           `<p>${link("#about-resume", "Explore the background")}</p>`,
-          `<aside><p>Research depth. Product experience.</p><dl><dt>Enterprise AI</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Product co-founding</dt><dd>Sullix & Avia — Hands-on architecture and engineering</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
+          `<aside><p>Research depth. Product experience.</p><dl><dt>Applied AI research</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Product co-founding</dt><dd>Sullix — Hands-on architecture and engineering</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
           `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Ways to work together")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
           '<h2 id="about-products">Selected work</h2>',
           `<ul>${BUILDER_PROJECTS.map((project) => {
             const href = project.links.live || project.links.website || project.links.repo;
             const label = project.links.live ? "Explore project" : project.links.website ? "Visit website" : "View source";
-            return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
+            const showcase = project.showcase ? `<figure><img src="${escapeHtml(project.showcase.mark)}" alt="" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p><img src="${escapeHtml(project.showcase.source)}" alt="${escapeHtml(project.showcase.alt)}" width="${project.showcase.width}" height="${project.showcase.height}" loading="lazy"><figcaption>${escapeHtml(project.showcase.caption)}</figcaption></figure>` : "";
+            return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3>${showcase}<p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
           }).join("")}</ul>`,
           OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
           '<h2 id="about-services">Ways to work together</h2>',

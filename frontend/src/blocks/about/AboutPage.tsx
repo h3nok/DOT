@@ -26,6 +26,7 @@ import { SiteColophon } from "../../shared/SiteColophon";
 import { PageIntro, SectionHeading, Surface, TextLink } from "../../shared/design-system/Editorial";
 import type { IntentTone } from "../../attention-os/focus-nav/IntentCard";
 import { BuilderArtwork, ProductArtwork } from "./AboutArtwork";
+import { ProjectShowcase } from "./ProjectShowcase";
 import "./about.css";
 
 const projectTones: Record<string, IntentTone> = { sullix: "copper", medroute: "blue", stay: "forest" };
@@ -80,7 +81,7 @@ export default function AboutPage() {
           <p className="dot-label">Research depth. Product experience.</p>
           <dl>
             <div><dt>Applied AI research</dt><dd>{career.experience[0].role}<span>{career.experience[0].company}</span></dd></div>
-            <div><dt>Product co-founding</dt><dd>Sullix & Avia<span>Hands-on architecture and engineering</span></dd></div>
+            <div><dt>Product co-founding</dt><dd>Sullix<span>Hands-on architecture and engineering</span></dd></div>
             {author.credentials[0] && <div><dt>Research foundation</dt><dd>{author.credentials[0].degree}<span>{author.credentials[0].institution}</span></dd></div>}
           </dl>
           <p className="about-location">Based in {career.location}</p>
@@ -99,25 +100,37 @@ export default function AboutPage() {
         <ul className="about-projects">
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
+            const identity = (
+              <div className="about-project-identity">
+                <div className="about-project-name">
+                  <p className="dot-label">{project.status}</p>
+                  <h3>{project.name}</h3>
+                </div>
+                <div className="about-project-byline">
+                  <p className="about-project-role">{project.role}</p>
+                  <p className="about-period">{project.period}</p>
+                </div>
+              </div>
+            );
             return (
-              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
-                <div className="about-project-visual"><ProductArtwork kind={project.slug} /></div>
+              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className={`about-project${project.showcase ? " about-project-with-showcase" : ""}`} tone={projectTones[project.slug] ?? "forest"}>
+                {project.showcase && identity}
+                <div className="about-project-visual">{project.showcase ? <ProjectShowcase showcase={project.showcase} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
-                  <div className="about-project-identity">
-                    <p className="dot-label">{project.status}</p>
-                    <h3>{project.name}</h3>
-                    <p className="about-project-role">{project.role}</p>
-                    <p className="about-period">{project.period}</p>
-                  </div>
+                  {!project.showcase && identity}
                   <div className="about-project-detail">
-                    <p className="about-project-tagline">{project.tagline}</p>
-                    <p>{project.description}</p>
-                    <ul className="about-project-stack" aria-label={`Technologies for ${project.name}`}>
-                      {project.stack.map(technology => <li key={technology}>{technology}</li>)}
-                    </ul>
-                    {destination && (
-                      <TextLink href={destination.href} aria-label={`${destination.label}: ${project.name}`}>{destination.label}</TextLink>
-                    )}
+                    <div className="about-project-description">
+                      <p className="about-project-tagline">{project.tagline}</p>
+                      <p>{project.description}</p>
+                    </div>
+                    <div className="about-project-links">
+                      <ul className="about-project-stack" aria-label={`Technologies for ${project.name}`}>
+                        {project.stack.map(technology => <li key={technology}>{technology}</li>)}
+                      </ul>
+                      {destination && (
+                        <TextLink href={destination.href} aria-label={`${destination.label}: ${project.name}`}>{destination.label}</TextLink>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Surface>

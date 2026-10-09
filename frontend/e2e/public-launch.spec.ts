@@ -26,6 +26,9 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await pageNav.getByRole("link", { name: "Selected work" }).click();
   await expect(page.getByRole("region", { name: "Selected work" })
     .getByRole("heading", { name: "Sullix", exact: true })).toBeInViewport();
+  await expect(page.getByRole("main")).not.toContainText("Avia");
+  await expect(page.getByRole("link", { name: "Visit website: Sullix", exact: true }))
+    .toHaveAttribute("href", "https://sullix.com/");
   await pageNav.getByRole("link", { name: "Career & résumé", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Career & résumé", exact: true })).toBeInViewport();
   const resume = page.getByRole("region", { name: "Career & résumé" });
@@ -57,6 +60,23 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await book.click();
   await expect(page).toHaveURL("/book/digital-organism-theory");
   await expect(page.locator("h1").first()).toBeVisible();
+  expect(problems).toEqual([]);
+});
+
+test("Sullix showcases its interface with still images instead of video", async ({ page }) => {
+  const problems = collectPageProblems(page);
+  await page.goto("/about");
+  const project = page.locator("#project-sullix");
+  await project.scrollIntoViewIfNeeded();
+  await expect(project.locator("video")).toHaveCount(0);
+  const screen = project.getByRole("img", { name: /Sullix project command center/ });
+  await expect(screen).toBeVisible();
+  for (const image of await project.locator("img").all()) {
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
+      element.complete && element.naturalWidth > 0)).toBe(true);
+  }
+  await expect(project.getByText("Faro", { exact: true })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
   expect(problems).toEqual([]);
 });
 

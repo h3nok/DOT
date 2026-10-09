@@ -10,6 +10,16 @@ export interface Project {
   tagline: string;
   description: string;
   stack: string[];
+  showcase?: {
+    source: string;
+    alt: string;
+    mark: string;
+    agentName: string;
+    agentRole: string;
+    caption: string;
+    width: number;
+    height: number;
+  };
   links: {
     repo?: string;
     live?: string;

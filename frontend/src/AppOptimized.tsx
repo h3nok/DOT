@@ -216,7 +216,7 @@ const App: React.FC = () => {
                   path="/studio/writing"
                   element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
                 />
-                <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly><ContactInboxPage /></StudioAuthGate>} />
+                <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly title="Contact inbox"><ContactInboxPage /></StudioAuthGate>} />
                 <Route
                   path="/studio/:projectId"
                   element={
