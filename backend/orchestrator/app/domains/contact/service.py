@@ -288,10 +288,12 @@ async def reply(session: sqlasync.AsyncSession, inquiry_id: str, message: str, k
                 ),
             )
             .values(status="sending", attempt_at=now)
+            .execution_options(synchronize_session=False)
         )
         if not changed.rowcount:
             raise fastapi.HTTPException(409, "Refresh this conversation before retrying.")
         record.status = "sending"
+        record.attempt_at = now
     else:
         record = models.ContactReply(
             owner_id=row.owner_id,
