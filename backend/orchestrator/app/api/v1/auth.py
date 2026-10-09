@@ -23,6 +23,24 @@ def _cookie_secure() -> bool:
     return app.settings.get_settings().ENVIRONMENT in {"production", "staging"}
 
 
+def _set_session_cookie(response: fastapi.Response, token: str, *, max_age: int) -> None:
+    """The HTTPS frontend and API can live on different sites (ADR-0046)."""
+    secure = _cookie_secure()
+    response.set_cookie(
+        key="dot_session",
+        value=token,
+        max_age=max_age,
+        expires=0 if max_age == 0 else None,
+        httponly=True,
+        samesite="none" if secure else "lax",
+        secure=secure,
+    )
+    if secure:
+        # Python 3.12 cannot serialize Partitioned through SimpleCookie yet.
+        # Append the standard attribute for the browser, including on logout.
+        response.headers["set-cookie"] += "; Partitioned"
+
+
 @router.post("/otp/request", response_model=schemas.OtpRequestResponse)
 @_limiter.limit("5/minute")
 async def request_otp(
@@ -56,15 +74,7 @@ async def verify_otp(
         content=fastapi.responses.JSONResponse(content={"user": result["user"]}).body,
         media_type="application/json",
     )
-    # httpOnly session cookie — JS cannot read the token.
-    response.set_cookie(
-        key="dot_session",
-        value=result["token"],
-        max_age=7 * 24 * 3600,
-        httponly=True,
-        samesite="lax",
-        secure=_cookie_secure(),
-    )
+    _set_session_cookie(response, result["token"], max_age=7 * 24 * 3600)
     return response
 
 
@@ -94,7 +104,7 @@ async def get_session(
 @router.post("/logout")
 async def logout() -> fastapi.Response:
     response = fastapi.Response(content='{"ok":true}', media_type="application/json")
-    response.delete_cookie("dot_session", httponly=True, samesite="lax", secure=_cookie_secure())
+    _set_session_cookie(response, "", max_age=0)
     return response
 
 
