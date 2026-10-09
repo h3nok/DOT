@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { authorContact } from "../../content/author";
+import { author, authorContact } from "../../content/author";
 import { leaveReaderList } from "../../dot/useReaderList";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 
@@ -34,7 +34,7 @@ export default function ReaderLeavePage() {
   const sent = useRef(false);
 
   useEffect(() => {
-    document.title = "Leave the reader list — Digital Organism Theory";
+    document.title = `Leave the reader list — ${author.name}`;
   }, []);
 
   useEffect(() => {

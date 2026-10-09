@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { authorContact } from "../../content/author";
+import { author, authorContact } from "../../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../../content/essays/essays";
 import { ReaderListForm } from "../../dot/ReaderListForm";
 import { PageHeader, PageShell } from "../../shared/PageShell";
@@ -18,7 +18,7 @@ const LIST_STATE = "rounded-2xl border border-border/60 bg-foreground/[0.02] p-6
  */
 export default function ReadersPage() {
   useEffect(() => {
-    document.title = "The reader list — Digital Organism Theory";
+    document.title = `The reader list — ${author.name}`;
   }, []);
 
   return (
