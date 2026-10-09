@@ -26,6 +26,7 @@ interface VerifyResult {
   ok: boolean;
   error?: string;
   user?: AuthUser;
+  codeAccepted?: boolean;
 }
 
 interface InviteResult {
@@ -122,8 +123,22 @@ export function useAuth() {
           };
         }
         const verified: AuthUser | undefined = payload?.user;
-        if (verified) setUser(verified);
-        return { ok: true, user: verified };
+        // A successful code is insufficient if the browser drops the cookie.
+        // Confirm the real session before SignIn reloads the private workspace.
+        const session: AuthUser | null = await fetch(`${AUTH_BASE}/session`, {
+          credentials: "include",
+          cache: "no-store",
+        }).then(async response => response.ok ? (await response.json()).user : null)
+          .catch(() => null);
+        if (!verified?.id || session?.id !== verified.id) {
+          return {
+            ok: false,
+            codeAccepted: true,
+            error: "Your code was accepted, but sign-in did not complete. Please request a new code.",
+          };
+        }
+        setUser(session);
+        return { ok: true, user: session };
       } catch {
         return {
           ok: false,

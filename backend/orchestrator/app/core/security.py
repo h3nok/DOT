@@ -7,6 +7,7 @@ import slowapi.util
 import starlette.middleware.base
 import starlette.requests
 import starlette.responses
+import starlette.types
 
 # ── Rate limiter (Redis-backed in prod; memory-backed in dev) ─────────────────
 
@@ -43,6 +44,39 @@ _SECURITY_HEADERS: dict[str, str] = {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
     "Content-Security-Policy": ("default-src 'none'; frame-ancestors 'none'; base-uri 'none';"),
 }
+
+
+class SessionOriginMiddleware(starlette.middleware.base.BaseHTTPMiddleware):
+    """Reject foreign-origin mutations carrying an ambient session cookie."""
+
+    def __init__(
+        self,
+        app: starlette.types.ASGIApp,
+        *,
+        allowed_origins: list[str],
+        require_origin: bool,
+    ) -> None:
+        super().__init__(app)
+        self.allowed_origins = frozenset(origin.rstrip("/") for origin in allowed_origins)
+        self.require_origin = require_origin
+
+    async def dispatch(
+        self,
+        request: starlette.requests.Request,
+        call_next: starlette.middleware.base.RequestResponseEndpoint,
+    ) -> starlette.responses.Response:
+        if request.method not in {"GET", "HEAD", "OPTIONS"} and request.cookies.get("dot_session"):
+            origin = request.headers.get("origin")
+            if (not origin and self.require_origin) or (
+                origin
+                and origin not in self.allowed_origins
+                and origin != str(request.base_url).rstrip("/")
+            ):
+                return starlette.responses.JSONResponse(
+                    {"detail": "This sign-in session cannot be used from that origin."},
+                    status_code=403,
+                )
+        return await call_next(request)
 
 
 class SecurityHeadersMiddleware(starlette.middleware.base.BaseHTTPMiddleware):

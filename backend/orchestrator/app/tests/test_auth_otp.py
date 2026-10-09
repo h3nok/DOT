@@ -163,6 +163,7 @@ def test_the_session_cookie_is_locked_down_but_usable_over_local_http(
     assert "HttpOnly" in cookie
     assert "SameSite=lax" in cookie
     assert "Secure" not in cookie
+    assert "Partitioned" not in cookie
 
 
 def test_the_session_cookie_is_secure_in_production(
@@ -177,7 +178,33 @@ def test_the_session_cookie_is_secure_in_production(
     ]
     response = client.post("/v1/auth/otp/verify", json={"email": "prod@example.com", "code": code})
 
-    assert "Secure" in response.headers["set-cookie"]
+    cookie = response.headers["set-cookie"]
+    assert "HttpOnly" in cookie
+    assert "Secure" in cookie
+    assert "SameSite=none" in cookie
+    assert "Partitioned" in cookie
+    assert "Domain=" not in cookie
+
+    logout = client.post("/v1/auth/logout")
+    cleared = logout.headers["set-cookie"]
+    assert "Max-Age=0" in cleared
+    assert "SameSite=none" in cleared
+    assert "Secure" in cleared
+    assert "Partitioned" in cleared
+
+
+def test_cookie_session_mutations_reject_foreign_origins_before_auth(
+    client: fastapi.testclient.TestClient,
+) -> None:
+    _sign_in(client, "csrf-check@example.com")
+    response = client.post("/v1/auth/logout", headers={"Origin": "https://attacker.test"})
+    assert response.status_code == 403
+    assert "set-cookie" not in response.headers
+    assert client.get("/v1/auth/session").json()["user"] is not None
+
+    trusted = client.post("/v1/auth/logout", headers={"Origin": "https://dotheory.org"})
+    assert trusted.status_code == 200
+    assert client.get("/v1/auth/session").json()["user"] is None
 
 
 def test_without_a_session_or_owner_header_a_write_is_rejected(

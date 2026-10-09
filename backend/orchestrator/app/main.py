@@ -106,6 +106,11 @@ def create_app() -> fastapi.FastAPI:
     )
     # Keep failures inside the response pipeline so CORS, security headers, and
     # request IDs remain present instead of masking an exception as a CORS error.
+    fapp.add_middleware(
+        _security.SessionOriginMiddleware,
+        allowed_origins=[*settings.CORS_ORIGINS, settings.FRONTEND_URL],
+        require_origin=settings.ENVIRONMENT in {"production", "staging"},
+    )
     fapp.add_middleware(_errors.UnhandledExceptionMiddleware)
     fapp.add_middleware(_security.SecurityHeadersMiddleware)
     fapp.add_middleware(_middleware.RequestIdMiddleware)

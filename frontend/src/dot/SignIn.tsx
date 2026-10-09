@@ -49,6 +49,10 @@ export const SignIn: React.FC<SignInProps> = ({
     setBusy(false);
     if (!result.ok) {
       setError(result.error ?? "Could not verify.");
+      if (result.codeAccepted) {
+        setCode("");
+        setStep("email");
+      }
       return;
     }
     // Signed in — reload so every provider picks up the session.
