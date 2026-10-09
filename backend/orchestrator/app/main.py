@@ -57,6 +57,8 @@ async def lifespan(app: fastapi.FastAPI) -> collections.abc.AsyncGenerator[None,
 def create_app() -> fastapi.FastAPI:
     settings: _settings.Settings = _settings.get_settings()
     limiter = _security.make_limiter(settings.REDIS_URL)
+    # The schema maps every route; public deployments serve the API, not its map.
+    public_deployment = settings.ENVIRONMENT in {"production", "staging"}
     fapp = fastapi.FastAPI(
         title=settings.SERVICE_NAME,
         summary="Knowledge and Publication OS orchestrator",
@@ -65,8 +67,9 @@ def create_app() -> fastapi.FastAPI:
             "exports, deletions, and durable workflow state for DOT/Stay."
         ),
         version="0.1.0",
-        docs_url="/docs",
-        redoc_url="/redoc",
+        docs_url=None if public_deployment else "/docs",
+        redoc_url=None if public_deployment else "/redoc",
+        openapi_url=None if public_deployment else "/openapi.json",
         lifespan=lifespan,
         openapi_tags=[
             {"name": "health", "description": "Liveness and readiness probes."},
