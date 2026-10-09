@@ -4680,7 +4680,7 @@ html[data-field="off"] .home-hero-stage::before {
   padding: 0 0.5rem;
   border: 0;
   background: transparent;
-  color: color-mix(in oklch, var(--muted-foreground) 78%, transparent);
+  color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.02em;
