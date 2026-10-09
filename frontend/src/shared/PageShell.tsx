@@ -50,6 +50,8 @@ interface PageShellProps {
   footer?: ReactNode;
   className?: string;
   wide?: boolean;
+  /** Pages with their own, more specific skip link turn this one off. */
+  skipLink?: boolean;
 }
 
 export function PageShell({
@@ -58,11 +60,23 @@ export function PageShell({
   footer,
   className = "",
   wide = false,
+  skipLink = true,
 }: PageShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {header && skipLink && (
+        <a
+          href="#main-content"
+          className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Skip to content
+        </a>
+      )}
       {header}
-      <main className={`dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}>
+      <main
+        id="main-content"
+        className={`dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}
+      >
         {children}
       </main>
       {footer}

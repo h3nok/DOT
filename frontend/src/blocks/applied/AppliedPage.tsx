@@ -186,6 +186,7 @@ export default function AppliedPage() {
 
   return (
     <PageShell
+      skipLink={false}
       header={
         <>
           <a

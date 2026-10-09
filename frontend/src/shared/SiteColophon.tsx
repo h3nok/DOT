@@ -5,8 +5,10 @@ import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
 import { DotWordmark } from "./DotWordmark";
 
+// Quiet, but legible: full muted text clears WCAG AA contrast in both themes,
+// and a 24px row keeps wrapped links from crowding each other on a phone.
 const LINK =
-  "text-muted-foreground/60 underline-offset-4 transition-colors hover:text-foreground hover:underline";
+  "inline-flex min-h-6 items-center text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
 /**
  * The closing line of every public page that ends (ADR-0033): who wrote it, and
@@ -26,7 +28,7 @@ export function SiteColophon({
     <footer className="dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
         <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
-        <p className="text-xs leading-relaxed text-muted-foreground/50">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           {variant === "personal" ? (
             <>{authorByline} · Independent builder.</>
           ) : (
