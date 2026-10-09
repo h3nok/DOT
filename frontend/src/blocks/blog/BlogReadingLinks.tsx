@@ -1,10 +1,10 @@
 import { ArrowUpRight, Rss, Send } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import blog from "../../content/blog.json";
 import { projectInquiryHref } from "../../content/builder";
 import { FEED_URL } from "../../content/essays/essays";
+import { TextLink } from "../../shared/design-system/Editorial";
 
 /** Reading stays first; these quiet alternatives follow the archive on mobile. */
 export function BlogReadingLinks() {
@@ -32,7 +32,7 @@ export function BlogReadingLinks() {
           label="Discuss a build"
           primary={{ to: projectInquiryHref(), label: "Discuss a project", endIcon: <ArrowUpRight /> }}
         />
-        <Link to="/about#about-resume" className="blog-profile-link">Background &amp; résumé<ArrowUpRight aria-hidden="true" /></Link>
+        <TextLink to="/about#about-resume" className="blog-profile-link">Background &amp; résumé</TextLink>
       </section>
     </aside>
   );

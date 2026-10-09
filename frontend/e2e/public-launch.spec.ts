@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import author from "../src/content/author.json" with { type: "json" };
+import career from "../src/content/career.json" with { type: "json" };
 import { collectPageProblems, expectNoHorizontalOverflow } from "./helpers";
 
 const TOKEN = "a".repeat(64);
@@ -28,7 +29,9 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await pageNav.getByRole("link", { name: "Career & résumé", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Career & résumé", exact: true })).toBeInViewport();
   const resume = page.getByRole("region", { name: "Career & résumé" });
-  await expect(resume.getByRole("heading", { name: "Costco Wholesale", exact: true })).toBeVisible();
+  await expect(resume.getByRole("heading", { name: career.experience[0].company, exact: true })).toBeVisible();
+  await expect(resume.getByText("Research Scientist", { exact: true })).toBeVisible();
+  await expect(page.getByRole("main")).not.toContainText("Costco Wholesale");
   await expect(resume.getByRole("link", { name: "Download résumé" }))
     .toHaveAttribute("href", author.resumeUrl);
   const [download] = await Promise.all([

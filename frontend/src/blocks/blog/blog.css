@@ -155,9 +155,6 @@
 
 .blog-path {
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  background: var(--blog-paper);
 }
 
 .blog-path-art {

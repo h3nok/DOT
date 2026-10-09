@@ -1,7 +1,7 @@
 .intention-picker { min-width: 0; }
 .intention-picker legend { margin-bottom: 1rem; }
 .intention-picker-options { display: grid; gap: .75rem; }
-.intention-option { position: relative; display: flex; align-items: start; gap: .8rem; min-height: 5rem; padding: 1rem; border: 1px solid var(--border); border-radius: .8rem; background: var(--background); cursor: pointer; }
+.intention-option { position: relative; display: flex; align-items: start; gap: .8rem; min-height: 5rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--public-radius); background: var(--background); cursor: pointer; }
 .intention-option input { position: absolute; top: 1.2rem; right: .8rem; width: 1rem; height: 1rem; accent-color: var(--intent-tone); }
 .intention-option:has(input:checked) { border-color: var(--intent-tone); background: color-mix(in oklab, var(--background) 88%, var(--intent-light)); }
 .intention-option:has(input:focus-visible) { outline: 2px solid var(--foreground); outline-offset: 3px; }
