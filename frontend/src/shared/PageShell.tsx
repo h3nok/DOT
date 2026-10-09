@@ -73,9 +73,11 @@ export function PageShell({
         </a>
       )}
       {header}
+      {/* The scroll margin clears the sticky header (two rows on a phone) when
+          the skip link or a fragment brings <main> to the top. */}
       <main
         id="main-content"
-        className={`dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}
+        className={`dot-page-container scroll-mt-24 pb-24 pt-12 sm:scroll-mt-16 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}
       >
         {children}
       </main>
