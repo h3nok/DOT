@@ -20,6 +20,15 @@ router = fastapi.APIRouter(
 
 _limiter = app.core.security.make_limiter()
 
+# Each visitor has their own limit; this bounds model spend from all strangers
+# together, so a surge or a distributed abuser cannot run up the bill.
+PUBLIC_ASK_CEILING = "60/minute"
+
+
+def _all_visitors() -> str:
+    return "all-visitors"
+
+
 # Released canon is public (ADR-0017), so a visitor must be able to be taught from
 # it. This router takes no tenant binding and never resolves to a member: the
 # context it builds can only ever see `public` visibility (retriever.allowed_visibilities).
@@ -28,6 +37,7 @@ public_router = fastapi.APIRouter(prefix="/v1/twin", tags=["twin"])
 
 @public_router.post("/public/ask", response_model=app.domains.twin.schemas.TwinAskResponse)
 @_limiter.limit("10/minute")
+@_limiter.shared_limit(PUBLIC_ASK_CEILING, scope="public-ask", key_func=_all_visitors)
 async def ask_public(
     request: fastapi.Request,
     payload: app.domains.twin.schemas.TwinPublicAskRequest,
@@ -53,6 +63,7 @@ async def ask_public(
 
 @public_router.post("/public/ask/stream")
 @_limiter.limit("10/minute")
+@_limiter.shared_limit(PUBLIC_ASK_CEILING, scope="public-ask", key_func=_all_visitors)
 async def ask_public_stream(
     request: fastapi.Request,
     payload: app.domains.twin.schemas.TwinPublicAskRequest,
