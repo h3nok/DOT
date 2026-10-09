@@ -63,25 +63,19 @@ test("About offers products, résumé, project inquiries, and named book navigat
   expect(problems).toEqual([]);
 });
 
-test("Sullix's recorded demo plays only on request and carries its evidence limits", async ({ page }) => {
+test("Sullix showcases its interface with still images instead of video", async ({ page }) => {
   const problems = collectPageProblems(page);
   await page.goto("/about");
-  const demo = page.locator('video[aria-label="Faro prepares a project draft"]');
-  await expect(demo).toHaveAttribute("preload", "none");
-  expect(await demo.evaluate((video: HTMLVideoElement) => ({
-    autoplay: video.autoplay, loop: video.loop, paused: video.paused,
-  }))).toEqual({ autoplay: false, loop: false, paused: true });
-  await expect(page.getByText(/Recorded Sullix software with a fictional kitchen remodel/)).toBeVisible();
-  await demo.scrollIntoViewIfNeeded();
-  await demo.evaluate((video: HTMLVideoElement) => video.play());
-  await expect.poll(() => demo.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0);
-  expect(await demo.evaluate((video: HTMLVideoElement) => video.videoWidth)).toBe(1920);
-  await demo.evaluate((video: HTMLVideoElement) => video.pause());
-  const captions = demo.locator('track[kind="captions"]');
-  await expect(captions).toHaveAttribute("srclang", "en");
-  await expect.poll(() => captions.evaluate((track: HTMLTrackElement) => track.readyState)).toBe(2);
-  await page.getByText("Read the video description", { exact: true }).click();
-  await expect(page.getByText(/it does not show an autonomous project completion or a customer result/)).toBeVisible();
+  const project = page.locator("#project-sullix");
+  await project.scrollIntoViewIfNeeded();
+  await expect(project.locator("video")).toHaveCount(0);
+  const screen = project.getByRole("img", { name: /Sullix project command center/ });
+  await expect(screen).toBeVisible();
+  for (const image of await project.locator("img").all()) {
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
+      element.complete && element.naturalWidth > 0)).toBe(true);
+  }
+  await expect(project.getByText("Faro", { exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   expect(problems).toEqual([]);
 });

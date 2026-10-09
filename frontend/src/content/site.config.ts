@@ -10,13 +10,13 @@ export interface Project {
   tagline: string;
   description: string;
   stack: string[];
-  media?: {
+  showcase?: {
     source: string;
-    poster: string;
-    captions: string;
-    title: string;
-    description: string;
-    transcript: string;
+    alt: string;
+    mark: string;
+    agentName: string;
+    agentRole: string;
+    caption: string;
     width: number;
     height: number;
   };

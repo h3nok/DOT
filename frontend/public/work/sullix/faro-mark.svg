@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="5.3 3.4 13.4 39.5" role="img" aria-labelledby="title">
+  <title id="title">Faro lighthouse mark</title>
+  <defs>
+    <linearGradient id="faro-mark-tower" x1="9" y1="0" x2="15" y2="0">
+      <stop offset="0%" stop-color="#fafafa"/>
+      <stop offset="100%" stop-color="#d4d4d8"/>
+    </linearGradient>
+    <clipPath id="faro-mark-tower-clip"><path d="M9.6 15.7C9.5 22.8 9.1 31 7.3 38.6H16.7C14.9 31 14.5 22.8 14.4 15.7Z"/></clipPath>
+  </defs>
+  <ellipse cx="12" cy="42.38" rx="6.35" ry="0.46" fill="rgba(24,24,27,0.12)"/>
+  <path d="M11.62 3.8H12.38V5H11.62Z" fill="#27272a"/>
+  <path d="M7.4 8.2L10.7 4.9H13.3L16.6 8.2Z" fill="#27272a" stroke="rgba(255,255,255,0.18)" stroke-width="0.1"/>
+  <path d="M8.4 8.15H15.6V13.9H8.4Z" fill="#3f3f46"/>
+  <rect x="9.15" y="8.95" width="5.7" height="4" rx="0.38" fill="#ffffff" stroke="rgba(234,88,12,0.72)" stroke-width="0.12"/>
+  <path d="M10.95 8.95V12.95" fill="none" stroke="#3f3f46" stroke-width="0.16"/>
+  <path d="M13.05 8.95V12.95" fill="none" stroke="#3f3f46" stroke-width="0.16"/>
+  <path d="M7.55 12.65V14.05M16.45 12.65V14.05M7.55 12.82H8.4M15.6 12.82H16.45" fill="none" stroke="#27272a" stroke-width="0.18" stroke-linecap="square"/>
+  <path d="M7.05 13.85H16.95V14.5H7.05Z" fill="#27272a"/>
+  <path d="M7.75 14.5H16.25V15.7H7.75Z" fill="#27272a"/>
+  <path d="M9.6 15.7C9.5 22.8 9.1 31 7.3 38.6H16.7C14.9 31 14.5 22.8 14.4 15.7Z" fill="url(#faro-mark-tower)" stroke="rgba(24,24,27,0.20)" stroke-width="0.12" stroke-linejoin="round"/>
+  <g clip-path="url(#faro-mark-tower-clip)">
+    <path d="M8.55 24.85L15.25 21.6L15.78 24.78L8.02 28.55Z" fill="#ea580c"/>
+  </g>
+  <path d="M10.18 16.45C10.05 23 9.72 30.5 8.1 38.05" fill="none" stroke="rgba(255,255,255,0.72)" stroke-width="0.12" stroke-linecap="round"/>
+  <path d="M10.45 38.6V35.9C10.45 34.95 11.15 34.25 12 34.25C12.85 34.25 13.55 34.95 13.55 35.9V38.6Z" fill="#3f3f46" opacity="0.9"/>
+  <path d="M6.7 38.6H17.3V40.35H6.7Z" fill="#27272a" stroke="rgba(255,255,255,0.14)" stroke-width="0.1"/>
+  <path d="M5.9 40.35H18.1V42.15H5.9Z" fill="#27272a" stroke="rgba(255,255,255,0.14)" stroke-width="0.1"/>
+</svg>

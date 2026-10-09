@@ -94,7 +94,7 @@ describe("AboutPage", () => {
   it("shows no placeholder portrait", () => {
     renderPage();
 
-    if (!author.photo) expect(screen.queryByRole("img")).toBeNull();
+    if (!author.photo) expect(screen.queryByRole("img", { name: /Portrait of/ })).toBeNull();
   });
 
   it("leads with independent work and native project intake", () => {

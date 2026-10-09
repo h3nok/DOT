@@ -15,7 +15,7 @@
       "Tailwind CSS"
     ],
     "links": {
-        "live": "/book/digital-organism-theory"
+      "live": "/book/digital-organism-theory"
     },
     "gradient": "linear-gradient(135deg, #0f766e 0%, #2563eb 100%)",
     "glowColor": "rgba(20, 184, 166, 0.4)"
@@ -59,18 +59,18 @@
     "links": {
       "website": "https://sullix.com/"
     },
-    "media": {
-      "source": "/work/sullix/faro-project-draft.mp4",
-      "poster": "/work/sullix/faro-project-draft.jpg",
-      "captions": "/work/sullix/faro-project-draft.vtt",
-      "title": "Faro prepares a project draft",
-      "description": "Recorded Sullix software with a fictional kitchen remodel. Scope, budget, and planning questions are prepared for contractor review.",
-      "transcript": "Faro presents a reviewable kitchen-remodel draft with the scope of work, an $84,000 budget, and a proposed start next month. The draft remains pending until the contractor reviews and confirms it. This recording demonstrates project drafting; it does not show an autonomous project completion or a customer result.",
-      "width": 1920,
-      "height": 1080
-    },
     "gradient": "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
-    "glowColor": "rgba(6, 182, 212, 0.4)"
+    "glowColor": "rgba(6, 182, 212, 0.4)",
+    "showcase": {
+      "source": "/work/sullix/project-command-center.webp",
+      "alt": "Sullix project command center showing budget, actual costs, and cost breakdown by category.",
+      "mark": "/work/sullix/faro-mark.svg",
+      "agentName": "Faro",
+      "agentRole": "Sullix’s field assistant",
+      "caption": "Project command center · Budget & job costing",
+      "width": 1920,
+      "height": 870
+    }
   },
   {
     "slug": "medroute",
