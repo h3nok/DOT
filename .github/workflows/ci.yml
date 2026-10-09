@@ -63,8 +63,11 @@ jobs:
         run: pnpm build
 
   # The browser journeys: the attention laws as a reader meets them, sign-in,
-  # contact, writing, and every public route on desktop and phone widths. API
-  # traffic is intercepted with fictional responses; nothing reaches production.
+  # contact, writing, and every public route on desktop and phone widths.
+  # Journeys that depend on the API intercept it with fictional responses; the
+  # rest run the frontend alone, where API calls go to an absent local server
+  # and fail by design (e2e/helpers.ts). No orchestrator URL is configured
+  # here, so nothing reaches production.
   e2e:
     name: Browser journeys (Playwright)
     runs-on: ubuntu-latest
