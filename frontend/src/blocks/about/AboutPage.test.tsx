@@ -119,7 +119,7 @@ describe("AboutPage", () => {
     expect(products.queryByRole("link", { name: /Sullix/ })).toBeNull();
   });
 
-  it("offers a real résumé and the supplied employment history rather than a repeated project list", () => {
+  it("offers a real résumé with generic employer labels and the requested research title", () => {
     renderPage();
 
     const resume = within(screen.getByRole("region", { name: "Career & résumé" }));
@@ -131,7 +131,10 @@ describe("AboutPage", () => {
     expect(resume.getByRole("link", { name: "Read online" }))
       .toHaveAttribute("href", author.resumeOnlineUrl);
     const online = readFileSync(`public${author.resumeOnlineUrl}`, "utf8");
-    expect(online).toContain("Costco Wholesale");
+    expect(online).toContain("Research Scientist");
+    expect(online).toContain("Enterprise applied research");
+    expect(online).not.toMatch(/Costco|AI Principal|Avia Solutions LLC|<h3>Sullix<\/h3>/i);
+    expect(screen.queryByText(/Costco Wholesale/)).toBeNull();
     expect(online).toContain(author.credentials[0].dissertation!.title);
     for (const job of career.experience) {
       expect(resume.getByRole("heading", { name: job.company })).toBeVisible();

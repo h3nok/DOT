@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Blocks, Download, Layers, Workflow } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import aboutText from "../../content/pages/about.md?raw";
@@ -23,7 +23,13 @@ import { DotButton } from "../../shared/DotButton";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { ProseMarkdown } from "../../shared/ProseMarkdown";
 import { SiteColophon } from "../../shared/SiteColophon";
+import { PageIntro, SectionHeading, Surface, TextLink } from "../../shared/design-system/Editorial";
+import type { IntentTone } from "../../attention-os/focus-nav/IntentCard";
+import { BuilderArtwork, ProductArtwork } from "./AboutArtwork";
 import "./about.css";
+
+const projectTones: Record<string, IntentTone> = { sullix: "copper", medroute: "blue", stay: "forest" };
+const serviceVisuals = [{ icon: <Blocks />, tone: "forest" }, { icon: <Workflow />, tone: "blue" }, { icon: <Layers />, tone: "plum" }] as const;
 
 /** The supplied career establishes the work; one direct inquiry remains primary. */
 export default function AboutPage() {
@@ -44,41 +50,41 @@ export default function AboutPage() {
 
   return (
     <PageShell
+      wide
       header={<PageHeader />}
       footer={<SiteColophon variant="personal" />}
       className="about-page"
     >
       <div className="about-hero">
         <div className="about-hero-copy">
-          <p className="dot-label">{builder.title}</p>
           {author.photo && (
             <img src={author.photo} alt={`Portrait of ${author.name}`} className="about-portrait" />
           )}
-          <h1 className="dot-page-heading about-name">
-            {author.name}{author.suffix && <span className="about-suffix">, {author.suffix}</span>}
-          </h1>
-          <p className="about-role">{author.role}</p>
-          <p className="about-headline">{builder.headline}</p>
-          <p className="about-intro">{builder.summary}</p>
-          <div className="about-actions">
-            <DotButton
-              to={projectInquiryHref()}
-              label="Discuss a project"
-              endIcon={<ArrowUpRight />}
-              className="about-primary"
-            />
-            <a href="#about-resume" className="about-link">Explore the background <ArrowRight aria-hidden="true" /></a>
-          </div>
+          <PageIntro eyebrow={builder.title} title={<>{author.name}{author.suffix && <span className="about-suffix">, {author.suffix}</span>}</>} titleClassName="about-name">
+            <p className="about-role">{author.role}</p>
+            <p className="about-headline">{builder.headline}</p>
+            <p className="about-intro">{builder.summary}</p>
+            <div className="about-actions">
+              <DotButton
+                to={projectInquiryHref()}
+                label="Discuss a project"
+                endIcon={<ArrowUpRight />}
+                className="about-primary"
+              />
+              <TextLink href="#about-resume" icon={<ArrowRight />}>Explore the background</TextLink>
+            </div>
+          </PageIntro>
         </div>
-        <aside className="about-background" aria-label="Career at a glance">
+        <Surface as="aside" className="about-background" aria-label="Career at a glance">
+          <BuilderArtwork />
           <p className="dot-label">Research depth. Product experience.</p>
           <dl>
-            <div><dt>Enterprise AI</dt><dd>{career.experience[0].company}<span>{career.experience[0].role}</span></dd></div>
+            <div><dt>Applied AI research</dt><dd>{career.experience[0].role}<span>{career.experience[0].company}</span></dd></div>
             <div><dt>Product co-founding</dt><dd>Sullix & Avia<span>Hands-on architecture and engineering</span></dd></div>
             {author.credentials[0] && <div><dt>Research foundation</dt><dd>{author.credentials[0].degree}<span>{author.credentials[0].institution}</span></dd></div>}
           </dl>
           <p className="about-location">Based in {career.location}</p>
-        </aside>
+        </Surface>
       </div>
 
       <nav aria-label="On this page" className="about-section-nav">
@@ -89,30 +95,32 @@ export default function AboutPage() {
       </nav>
 
       <section aria-labelledby="about-products" className="about-section">
-        <div className="about-section-heading">
-          <p className="dot-label">Products & projects</p>
-          <h2 id="about-products">Selected work</h2>
-        </div>
+        <SectionHeading id="about-products" eyebrow="Products & projects" title="Selected work" />
         <ul className="about-projects">
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
             return (
-              <li key={project.slug} id={`project-${project.slug}`} className="about-project">
-                <div className="about-project-identity">
-                  <h3>{project.name}</h3>
-                  <p className="about-project-role">{project.role}</p>
-                  <p className="about-period">{project.period}</p>
+              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
+                <div className="about-project-visual"><ProductArtwork kind={project.slug} /></div>
+                <div className="about-project-copy">
+                  <div className="about-project-identity">
+                    <p className="dot-label">{project.status}</p>
+                    <h3>{project.name}</h3>
+                    <p className="about-project-role">{project.role}</p>
+                    <p className="about-period">{project.period}</p>
+                  </div>
+                  <div className="about-project-detail">
+                    <p className="about-project-tagline">{project.tagline}</p>
+                    <p>{project.description}</p>
+                    <ul className="about-project-stack" aria-label={`Technologies for ${project.name}`}>
+                      {project.stack.map(technology => <li key={technology}>{technology}</li>)}
+                    </ul>
+                    {destination && (
+                      <TextLink href={destination.href} aria-label={`${destination.label}: ${project.name}`}>{destination.label}</TextLink>
+                    )}
+                  </div>
                 </div>
-                <div className="about-project-detail">
-                  <p className="about-project-tagline">{project.tagline}</p>
-                  <p>{project.description}</p>
-                  {destination && (
-                    <a href={destination.href} className="about-link" aria-label={`${destination.label}: ${project.name}`}>
-                      {destination.label}<ArrowUpRight aria-hidden="true" />
-                    </a>
-                  )}
-                </div>
-              </li>
+              </Surface>
             );
           })}
         </ul>
@@ -121,7 +129,7 @@ export default function AboutPage() {
           return destination && (
             <p key={project.slug} className="about-other-work">
               Also in open source:{" "}
-              <a href={destination.href} className="about-link">{project.name}<ArrowUpRight aria-hidden="true" /></a>
+              <TextLink href={destination.href}>{project.name}</TextLink>
               <span>Isolation for AI agent tools.</span>
             </p>
           );
@@ -129,26 +137,21 @@ export default function AboutPage() {
       </section>
 
       <section aria-labelledby="about-services" className="about-section">
-        <div className="about-section-heading">
-          <p className="dot-label">Independent contract work</p>
-          <h2 id="about-services">Ways to work together</h2>
-        </div>
+        <SectionHeading id="about-services" eyebrow="Independent contract work" title="Ways to work together" />
         <div className="about-services">
-          {builder.services.map((service) => (
-            <div key={service.title}>
+          {builder.services.map((service, index) => (
+            <Surface key={service.title} tone={serviceVisuals[index % serviceVisuals.length].tone}>
+              <span className="about-service-symbol" aria-hidden="true">{serviceVisuals[index % serviceVisuals.length].icon}</span>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
               <p className="about-service-deliverable">{service.deliverable}</p>
-            </div>
+            </Surface>
           ))}
         </div>
       </section>
 
       <section aria-labelledby="about-resume" className="about-section">
-        <div className="about-section-heading">
-          <p className="dot-label">Enterprise research to product co-founding</p>
-          <h2 id="about-resume">Career & résumé</h2>
-        </div>
+        <SectionHeading id="about-resume" eyebrow="Enterprise research to product co-founding" title="Career & résumé" />
         <div className="about-career-grid">
           <ol className="about-experience">
             {career.experience.map((job) => (
@@ -160,7 +163,7 @@ export default function AboutPage() {
               </li>
             ))}
           </ol>
-          <div className="about-credentials">
+          <Surface className="about-credentials" tone="plum">
             <section aria-labelledby="about-education">
               <h3 id="about-education">Education</h3>
               <ul className="about-education">
@@ -191,26 +194,23 @@ export default function AboutPage() {
               </dl>
             </details>
             <div className="about-resume-actions">
-              <a href={resumeHref()} className="about-link" download={author.resumeUrl?.startsWith("/") || undefined}>
-                {author.resumeUrl ? "Download résumé" : "Request full résumé"}<Download aria-hidden="true" />
-              </a>
-              {author.resumeOnlineUrl && <a href={author.resumeOnlineUrl} className="about-link">Read online<ArrowUpRight aria-hidden="true" /></a>}
+              <TextLink href={resumeHref()} download={author.resumeUrl?.startsWith("/") || undefined} icon={<Download />}>
+                {author.resumeUrl ? "Download résumé" : "Request full résumé"}
+              </TextLink>
+              {author.resumeOnlineUrl && <TextLink href={author.resumeOnlineUrl}>Read online</TextLink>}
             </div>
             <p className="about-resume-note">Full experience, research, and technical background.</p>
-          </div>
+          </Surface>
         </div>
       </section>
 
       <section aria-labelledby="about-writing" className="about-section about-writing">
-        <div>
-          <p className="dot-label">Alongside the engineering</p>
-          <h2 id="about-writing">Writing & research</h2>
-        </div>
+        <SectionHeading id="about-writing" eyebrow="Alongside the engineering" title="Writing & research" />
         <div>
           <p className="about-writing-intro">{author.summary}</p>
           <div className="about-writing-links">
-            <Link to={DOT_BOOK_ONE_ROUTE} className="about-link">Read Book One<ArrowUpRight aria-hidden="true" /></Link>
-            <Link to="/blog" className="about-link">Essays and letters<ArrowUpRight aria-hidden="true" /></Link>
+            <TextLink to={DOT_BOOK_ONE_ROUTE}>Read Book One</TextLink>
+            <TextLink to="/blog">Essays and letters</TextLink>
           </div>
           <details className="about-disclosure about-origin">
             <summary>Where the work comes from</summary>
@@ -233,23 +233,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="about-contact" className="about-section about-contact">
-        <div>
-          <p className="dot-label">Have something in mind?</p>
-          <h2 id="about-contact">Contact</h2>
-        </div>
+      <Surface as="section" aria-labelledby="about-contact" className="about-section about-contact" tone="blue">
+        <SectionHeading id="about-contact" eyebrow="Have something in mind?" title="Contact" />
         <div>
           <p className="about-contact-intro">{builder.contactIntro}</p>
-          <Link to="/contact" className="about-link">Start a conversation <ArrowUpRight aria-hidden="true" /></Link>
+          <TextLink to="/contact">Start a conversation</TextLink>
           <a href={contact.href} className="about-contact-address">{contact.label}<ArrowUpRight aria-hidden="true" /></a>
           <p className="about-profiles">
             {authorProfiles().map((profile) => (
-              <a key={profile.href} href={profile.href} className="about-link" rel="noreferrer me">{profile.label}<ArrowUpRight aria-hidden="true" /></a>
+              <TextLink key={profile.href} href={profile.href} rel="noreferrer me">{profile.label}</TextLink>
             ))}
           </p>
           <p className="about-contact-note">Also for writing, research, interviews, and requests about your data.</p>
         </div>
-      </section>
+      </Surface>
     </PageShell>
   );
 }

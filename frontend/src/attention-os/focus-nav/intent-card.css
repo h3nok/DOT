@@ -1,14 +1,4 @@
-.intent-card,
-.intention-option { --intent-tone: #366b55; --intent-light: #b7ceae; }
-[data-tone="copper"] { --intent-tone: #9d542e; --intent-light: #eac29c; }
-[data-tone="blue"] { --intent-tone: #356785; --intent-light: #b2cfdf; }
-[data-tone="plum"] { --intent-tone: #776187; --intent-light: #d1c3df; }
-.dark .intent-card,
-.dark .intention-option { --intent-tone: #b7ceae; }
-.dark [data-tone="copper"] { --intent-tone: #eac29c; }
-.dark [data-tone="blue"] { --intent-tone: #b2cfdf; }
-.dark [data-tone="plum"] { --intent-tone: #d1c3df; }
-.intent-card { position: relative; display: grid; gap: .65rem; min-width: 0; min-height: 15rem; padding: 1.5rem; overflow: hidden; border: 1px solid color-mix(in oklab, var(--intent-tone) 24%, var(--border)); border-radius: 1rem; background: color-mix(in oklab, var(--background) 87%, var(--intent-light)); color: var(--foreground); }
+.intent-card { position: relative; display: grid; gap: .65rem; min-width: 0; min-height: 15rem; padding: 1.5rem; overflow: hidden; border: 1px solid color-mix(in oklab, var(--intent-tone) 24%, var(--border)); border-radius: var(--public-radius); background: color-mix(in oklab, var(--background) 87%, var(--intent-light)); color: var(--foreground); }
 .intent-card-symbol { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: .65rem; border: 1px solid color-mix(in oklab, var(--intent-tone) 30%, transparent); border-radius: 50%; color: var(--intent-tone); }
 .intent-card-symbol svg { width: 1.4rem; height: 1.4rem; }
 .intent-card-label { color: var(--intent-tone); }

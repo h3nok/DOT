@@ -10,6 +10,7 @@ import { FormField } from "../../attention-os/forms/FormField";
 import { DotButton } from "../../shared/DotButton";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
+import { PageIntro, Surface, TextLink } from "../../shared/design-system/Editorial";
 import { fetchContactStatus, sendContactMessage, type ContactDraft, type ContactPurpose } from "../../services/OrchestratorContactService";
 import "./contact.css";
 
@@ -58,11 +59,9 @@ export default function ContactPage() {
 
   return (
     <PageShell wide className="contact-page" header={<PageHeader />} footer={<SiteColophon variant="personal" />}>
-      <header className="contact-masthead">
-        <p className="dot-label">Get in touch · {author.name}</p>
-        <h1 className="dot-page-heading">{contact.title}</h1>
+      <PageIntro className="contact-masthead" eyebrow={`Get in touch · ${author.name}`} title={contact.title}>
         <p>{contact.description}</p>
-      </header>
+      </PageIntro>
       <div className="contact-layout">
         <section className="contact-intake" aria-label="Send Henok a message">
           {receipt ? (
@@ -103,15 +102,15 @@ export default function ContactPage() {
             </>}
           </div>}
         </section>
-        <aside className="contact-aside" aria-label="Direct contact and next steps">
+        <Surface as="aside" className="contact-aside" aria-label="Direct contact and next steps">
           <div className="contact-letter-art" aria-hidden="true"><span /><span /><Mail /></div>
           <p className="dot-label">A direct conversation</p>
           <h2 className="dot-section-heading">Prefer email?</h2>
           <a className="contact-email" href={`mailto:${author.email}`}>{author.email}<ArrowUpRight aria-hidden="true" /></a>
           <p className="contact-aside-copy">For projects, collaboration, writing, speaking, or a simple hello.</p>
           <div className="contact-next"><h3 className="dot-section-heading">What happens next</h3><p>{contact.next}</p></div>
-          <Link className="contact-quiet-action" to="/about#about-resume">Background &amp; résumé <ArrowUpRight aria-hidden="true" /></Link>
-        </aside>
+          <TextLink className="contact-quiet-action" to="/about#about-resume">Background &amp; résumé</TextLink>
+        </Surface>
       </div>
     </PageShell>
   );

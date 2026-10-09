@@ -1,6 +1,5 @@
 .contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, #b7ceae); }
 .contact-masthead { max-width: 44rem; padding-block: .5rem 3rem; }
-.contact-masthead h1 { margin-top: 1rem; font-size: clamp(3rem, 7vw, 5rem); line-height: 1.05; letter-spacing: -.045em; }
 .contact-masthead > p:last-child { max-width: 46ch; margin-top: 1.4rem; color: var(--muted-foreground); font-size: 1rem; line-height: 1.8; }
 .contact-layout { display: grid; gap: 3rem; align-items: start; }
 .contact-intake { min-width: 0; }
@@ -13,7 +12,7 @@
 .contact-privacy a { text-decoration: underline; text-underline-offset: .2em; }
 .contact-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .contact-form-body > .dot-button { max-width: 23rem; }
-.contact-aside { min-width: 0; padding: 1.75rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--contact-paper); }
+.contact-aside { padding: 1.75rem; }
 .contact-aside h2 { margin-top: .75rem; font-size: 1.75rem; }
 .contact-letter-art { position: relative; display: grid; place-items: center; height: 8rem; margin-bottom: 1.5rem; }
 .contact-letter-art span { position: absolute; width: 9rem; height: 5.5rem; border: 1px solid color-mix(in oklab, var(--foreground) 25%, transparent); border-radius: .4rem; background: var(--background); transform: rotate(-10deg); }

@@ -9,6 +9,7 @@ import { essayRoute, fetchEssayIndex, formatEssayDate } from "../../content/essa
 import { fetchReleasedWriting, writingRoute } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
+import { PageIntro, Surface, TextLink } from "../../shared/design-system/Editorial";
 import { AppearanceControl } from "../../organism/AppearanceControl";
 import { BlogReadingLinks } from "./BlogReadingLinks";
 import { BlogCoverArtwork, BlogPathArtwork, BlogPostArtwork, BlogSeriesArtwork } from "./BlogArtwork";
@@ -107,13 +108,10 @@ export default function BlogPage() {
           <p className="blog-byline">By <Link to="/about" className={LINK}>{author.name}</Link></p>
         </div>
         <div className="blog-hero">
-          <div className="blog-hero-copy">
-            <h1 className="dot-page-heading blog-title">
-              {blog.heading.map((line) => <span key={line}>{line}</span>)}
-            </h1>
+          <PageIntro className="blog-hero-copy" titleClassName="blog-title" title={blog.heading.map((line) => <span key={line}>{line}</span>)}>
             <p className="blog-description">{blog.description}</p>
             <a href="#latest-writing" className="blog-jump">Browse the writing <ArrowDown aria-hidden="true" /></a>
-          </div>
+          </PageIntro>
           <div className="blog-hero-art">
             <BlogCoverArtwork />
             <div className="blog-art-caption" aria-hidden="true"><span>Systems &amp; self</span><Asterisk /><span>A space for both</span></div>
@@ -123,15 +121,15 @@ export default function BlogPage() {
 
       <section className="blog-paths" aria-label="Building and inquiry">
         {blog.paths.map((path) => (
-          <div key={path.id} className={`blog-path blog-path-${path.id}`}>
+          <Surface key={path.id} className={`blog-path blog-path-${path.id}`} tone={path.id === "building" ? "forest" : "copper"}>
             <div className="blog-path-art"><BlogPathArtwork kind={path.id} /></div>
             <div className="blog-path-copy">
               <p className="dot-label">{path.label}</p>
               <h2 className="dot-section-heading">{path.title}</h2>
               <p>{path.description}</p>
-              <Link to={path.to} className="blog-path-link">{path.linkLabel}<ArrowUpRight aria-hidden="true" /></Link>
+              <TextLink to={path.to} className="blog-path-link">{path.linkLabel}</TextLink>
             </div>
-          </div>
+          </Surface>
         ))}
       </section>
 
