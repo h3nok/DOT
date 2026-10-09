@@ -9,8 +9,10 @@ import {
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { CreateBookProject } from "./components/CreateBookProject";
 import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
+import { useAuth } from "../../dot/useAuth";
 
 export default function PublicationStudioIndexPage() {
+  const { isOwner } = useAuth();
   const [projects, setProjects] = useState<PublicationProjectRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +49,7 @@ export default function PublicationStudioIndexPage() {
         className="mt-8 max-w-md"
         primary={{ to: "/studio/writing", label: "Write an essay or letter", icon: <FileText /> }}
       />
+      {isOwner && <Link to="/studio/inbox" className="mt-5 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Open your contact inbox <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>}
 
       <details className="mt-10 border-t border-border/60">
         <summary className="min-h-12 cursor-pointer py-4 text-sm font-semibold">Book projects</summary>

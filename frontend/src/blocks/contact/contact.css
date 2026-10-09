@@ -1,0 +1,74 @@
+.contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, #b7ceae); }
+.contact-masthead { max-width: 44rem; padding-block: .5rem 3rem; }
+.contact-masthead h1 { margin-top: 1rem; font-size: clamp(3rem, 7vw, 5rem); line-height: 1.05; letter-spacing: -.045em; }
+.contact-masthead > p:last-child { max-width: 46ch; margin-top: 1.4rem; color: var(--muted-foreground); font-size: 1rem; line-height: 1.8; }
+.contact-layout { display: grid; gap: 3rem; align-items: start; }
+.contact-intake { min-width: 0; }
+.contact-form-body { display: grid; min-width: 0; gap: 1.5rem; }
+.contact-fields { display: grid; gap: 1.25rem; }
+.contact-consent { display: flex; align-items: start; gap: .8rem; min-height: 2.75rem; font-size: .8125rem; line-height: 1.8; cursor: pointer; }
+.contact-consent input { flex-shrink: 0; width: 1.1rem; height: 1.1rem; margin-top: .2rem; accent-color: var(--organism-accent-strong, var(--foreground)); }
+.contact-consent input:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.contact-privacy { color: var(--muted-foreground); font-size: .75rem; line-height: 1.75; }
+.contact-privacy a { text-decoration: underline; text-underline-offset: .2em; }
+.contact-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.contact-form-body > .dot-button { max-width: 23rem; }
+.contact-aside { min-width: 0; padding: 1.75rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--contact-paper); }
+.contact-aside h2 { margin-top: .75rem; font-size: 1.75rem; }
+.contact-letter-art { position: relative; display: grid; place-items: center; height: 8rem; margin-bottom: 1.5rem; }
+.contact-letter-art span { position: absolute; width: 9rem; height: 5.5rem; border: 1px solid color-mix(in oklab, var(--foreground) 25%, transparent); border-radius: .4rem; background: var(--background); transform: rotate(-10deg); }
+.contact-letter-art span:nth-child(2) { transform: rotate(8deg); }
+.contact-letter-art svg { position: relative; width: 2.2rem; height: 2.2rem; color: var(--organism-accent-strong, var(--foreground)); }
+.contact-email { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .65rem; min-height: 2.75rem; margin-top: .65rem; font-size: .9375rem; overflow-wrap: anywhere; }
+.contact-email svg { width: 1rem; height: 1rem; }
+.contact-aside-copy,
+.contact-next p { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.8; }
+.contact-next { margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.contact-next h3 { font-size: 1.25rem; margin-bottom: .6rem; }
+.contact-quiet-action { display: inline-flex; align-items: center; gap: .65rem; min-height: 2.75rem; margin-top: 1rem; font-size: .8125rem; text-decoration: underline; text-underline-offset: .3em; }
+.contact-quiet-action svg { width: 1rem; height: 1rem; }
+.contact-error { padding: 1rem; border-left: 3px solid var(--foreground); background: color-mix(in oklab, var(--background) 92%, #c67550); font-size: .875rem; line-height: 1.7; }
+.contact-receipt,
+.contact-availability { display: grid; justify-items: start; gap: 1.25rem; padding: 2rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in oklab, var(--background) 97%, #b7ceae); }
+.contact-receipt-mark { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--contact-paper); color: var(--organism-accent-strong, var(--foreground)); }
+.contact-receipt p,
+.contact-availability p { color: var(--muted-foreground); font-size: .875rem; line-height: 1.8; }
+.contact-reference { display: grid; gap: .5rem; width: 100%; }
+.contact-reference code { max-width: 100%; font-size: .75rem; overflow-wrap: anywhere; }
+.contact-receipt .dot-button { width: 100%; }
+.contact-page a:focus-visible,
+.contact-page button:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+html[data-contrast="high"] .contact-aside,
+html[data-contrast="high"] .contact-receipt { border-color: var(--foreground); background: var(--background); }
+@media (min-width: 640px) { .contact-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 960px) { .contact-layout { grid-template-columns: minmax(0, 1fr) 19rem; gap: 3rem; } }
+
+.contact-inbox { max-width: 58rem; }
+.inbox-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 1.5rem; margin: 2rem 0; }
+.inbox-toolbar .intent-field { min-width: min(18rem, 100%); }
+html:has(.contact-page) .organism-membrane { opacity: .22; }
+.inbox-list { list-style: none; padding: 0; border-top: 1px solid var(--border); }
+.inbox-list li { border-bottom: 1px solid var(--border); }
+.inbox-list a { display: grid; gap: .5rem; padding: 1.5rem .75rem; min-width: 0; }
+.inbox-list a:hover { background: var(--contact-paper); }
+.inbox-list strong { font-family: var(--font-serif, Georgia, serif); font-size: 1.4rem; font-weight: 500; }
+.inbox-preview { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--muted-foreground); font-size: .875rem; }
+.inbox-date { color: var(--muted-foreground); font-size: .75rem; }
+.inbox-message-header { display: grid; gap: .65rem; margin-top: 2rem; }
+.inbox-message-header h2 { font-size: 2rem; }
+.inbox-message-header p:last-child { font-size: .75rem; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.inbox-context { display: grid; gap: .75rem; margin: 1.5rem 0; }
+.inbox-context div { display: flex; gap: 1rem; font-size: .875rem; }
+.inbox-context dt { color: var(--muted-foreground); min-width: 6rem; }
+.inbox-message-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9375rem; line-height: 1.85; margin: 1.5rem 0; }
+.inbox-notice { margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; font-size: .8125rem; line-height: 1.8; background: var(--contact-paper); }
+.inbox-replies { margin-top: 2rem; }
+.inbox-replies article { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.inbox-reply-form { display: grid; gap: 1.25rem; margin-top: 2rem; }
+.inbox-management { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 2rem; border-top: 1px solid var(--border); }
+.inbox-delete { padding: 1rem 0; font-size: .875rem; line-height: 1.8; }
+.inbox-delete button + button { margin-left: 2rem; }
+.inbox-pagination { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-bottom: 2rem; font-size: .875rem; }
+.inbox-pagination button { margin-top: 0; }
+.inbox-empty { padding: 2rem 0; color: var(--muted-foreground); }
+.contact-page button:disabled { cursor: wait; opacity: .6; }

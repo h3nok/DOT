@@ -1,0 +1,14 @@
+{
+  "title": "Let’s talk.",
+  "description": "A project to build, a collaboration to explore, or a question to share. Start the conversation here.",
+  "purposes": [
+    { "value": "project", "title": "Discuss a project", "description": "AI, applications, or a digital product", "tone": "forest" },
+    { "value": "collaboration", "title": "Collaborate", "description": "Build or explore something together", "tone": "blue" },
+    { "value": "writing", "title": "Writing & inquiry", "description": "A book, an idea, or a question", "tone": "plum" },
+    { "value": "speaking", "title": "Speaking & media", "description": "A talk, interview, or invitation", "tone": "copper" },
+    { "value": "general", "title": "Say hello", "description": "Anything else you’d like to discuss", "tone": "blue" },
+    { "value": "privacy", "title": "Privacy & data", "description": "Access, correction, or deletion", "tone": "forest" }
+  ],
+  "privacy": "Your name, email, and message are used to respond to this inquiry. Sending a message does not subscribe you to a newsletter.",
+  "next": "Henok can review the message and reply by email. Project discussions begin with the problem, scope, and fit; work starts only after a separate agreement."
+}

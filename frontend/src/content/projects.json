@@ -1,0 +1,102 @@
+[
+  {
+    "slug": "stay",
+    "name": "Stay",
+    "role": "Architect & Lead Engineer",
+    "period": "2025–Present",
+    "status": "In Development",
+    "tagline": "A calmer home for knowledge and publishing.",
+    "description": "A platform for public profiles, source-backed reading, and durable publication. Built around private knowledge and an invite-only community that protects attention.",
+    "stack": [
+      "React",
+      "Vite",
+      "FastAPI",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "links": {
+        "live": "/book/digital-organism-theory"
+    },
+    "gradient": "linear-gradient(135deg, #0f766e 0%, #2563eb 100%)",
+    "glowColor": "rgba(20, 184, 166, 0.4)"
+  },
+  {
+    "slug": "dot",
+    "name": "Digital Organism Theory",
+    "role": "Creator & Systems Architect",
+    "period": "2024–Present",
+    "status": "Active Research",
+    "tagline": "A foundational architecture of reality and experience.",
+    "description": "The DOT Academy develops a foundational architecture of reality and experience through definitions, diagrams, hypotheses, criticism, and experiments. Book One remains its own fixed publication.",
+    "stack": [
+      "Book One",
+      "Systems Theory",
+      "Consciousness Studies",
+      "Source-backed Publishing"
+    ],
+    "links": {
+      "repo": "https://github.com/h3nok/DOT",
+      "live": "/"
+    },
+    "gradient": "linear-gradient(135deg, #0f766e 0%, #2563eb 100%)",
+    "glowColor": "rgba(20, 184, 166, 0.4)"
+  },
+  {
+    "slug": "sullix",
+    "name": "Sullix",
+    "role": "Co-Founder & Principal Engineer",
+    "period": "December 2025 – Present",
+    "status": "Co-founded product",
+    "tagline": "Construction and real estate, connected by AI.",
+    "description": "An AI-native platform connecting contractor discovery, project execution, payments, and compliance. Purpose-built agents support estimating, matching, risk, materials, and investment analysis.",
+    "stack": [
+      "React",
+      "TypeScript",
+      "tRPC",
+      "PostgreSQL",
+      "Multi-agent AI"
+    ],
+    "links": {},
+    "gradient": "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
+    "glowColor": "rgba(6, 182, 212, 0.4)"
+  },
+  {
+    "slug": "medroute",
+    "name": "Avia",
+    "role": "Technical Co-Founder & Lead Engineer",
+    "period": "2025 – Present",
+    "status": "Co-founded product",
+    "tagline": "Medical transportation, thoughtfully connected.",
+    "description": "Dispatcher and admin tools, a driver mobile app, and partner onboarding in one medical transportation platform. Tenant isolation, field-level encryption, and audit trails support secure operations.",
+    "stack": [
+      "React Native",
+      "Spring Boot",
+      "PostgreSQL",
+      "Expo"
+    ],
+    "links": {},
+    "gradient": "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+    "glowColor": "rgba(16, 185, 129, 0.4)"
+  },
+  {
+    "slug": "hki",
+    "name": "Hermetic Knowledge Isolation",
+    "role": "Lead Security Engineer",
+    "period": "2024–2025",
+    "status": "Production (Enterprise)",
+    "tagline": "Isolation for agent tool calls.",
+    "description": "Runs LLM agent tools in short-lived, signed-domain containers with a constrained Model Context Protocol surface, so a prompt that escapes its task still cannot reach the host.",
+    "stack": [
+      "TypeScript",
+      "Python",
+      "Docker",
+      "Model Context Protocol"
+    ],
+    "links": {
+      "repo": "https://github.com/h3nok/HKI",
+      "npm": "@hki/runtime"
+    },
+    "gradient": "linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)",
+    "glowColor": "rgba(245, 158, 11, 0.4)"
+  }
+]

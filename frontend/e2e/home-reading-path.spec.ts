@@ -1,10 +1,28 @@
 import { expect, test } from "@playwright/test";
 
+test("home attributes Love and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const opening = page.locator("#threshold");
+  await expect(opening.getByRole("heading", { level: 1, name: "Love." })).toBeVisible();
+  await expect(opening.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
+    .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+  const invitation = page.getByRole("region", { name: "An invitation to inquire" });
+  await expect(invitation.getByText(/remain hypotheses, open to challenge and revision/)).toBeVisible();
+  await expect(invitation.getByText(/there is no timetable for it/)).toBeVisible();
+  await expect(invitation.locator(".dot-focus-nav__primary"))
+    .toHaveAttribute("href", "/book/digital-organism-theory");
+  await expect(invitation.getByRole("link", { name: "Read Book One", exact: true }))
+    .toHaveAccessibleDescription("Complete and free · Fixed edition");
+  await expect(invitation.getByRole("link", { name: "Explore DOT Academy" }))
+    .toHaveAttribute("href", "/academy");
+});
+
 test("home offers a reading path and readable theory comparisons", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const entry = page.getByRole("navigation", { name: "Begin exploring DOT" });
-  const read = entry.getByRole("link", { name: "Begin with lived experience" });
+  const read = entry.getByRole("link", { name: "Read Book One" });
   await expect(read).toBeInViewport();
   await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await page.screenshot({ path: testInfo.outputPath("home-opening.png") });

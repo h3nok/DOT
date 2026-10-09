@@ -16,6 +16,7 @@ const SITE_URL = "https://dotheory.org";
 const BOOK_ROUTE = "/book/digital-organism-theory";
 const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
+const CONTACT_ROUTE = "/contact";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
@@ -27,7 +28,23 @@ const WRITING_ROUTE = "/writing";
 const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
+const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
+const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
+const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
+const CAREER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "career.json"), "utf8"));
+const PROJECTS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "projects.json"), "utf8"));
+const BUILDER_PROJECTS = BUILDER.projectOrder.map((slug) => {
+  const project = PROJECTS.find((item) => item.slug === slug);
+  if (!project) throw new Error(`Unknown portfolio project: ${slug}`);
+  return project;
+});
+const OTHER_BUILDER_PROJECTS = BUILDER.otherProjects.map((slug) => {
+  const project = PROJECTS.find((item) => item.slug === slug);
+  if (!project) throw new Error(`Unknown portfolio project: ${slug}`);
+  return project;
+});
 const NEWSLETTER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "newsletter.json"), "utf8"));
+const BLOG = JSON.parse(readFileSync(path.join(CONTENT_DIR, "blog.json"), "utf8"));
 // Search engines resolve an author entity through profiles they already know,
 // so every work's structured data names them.
 const AUTHOR_PROFILE = AUTHOR.links.linkedin;
@@ -242,7 +259,7 @@ function personNode() {
 
 const AUTHOR_BYLINE = AUTHOR.suffix ? `${AUTHOR.name}, ${AUTHOR.suffix}` : AUTHOR.name;
 
-/** Each dissertation as the author's own work, linked where it is published. */
+/** Supplied thesis titles; a public URL is included only when known. */
 function dissertationNodes() {
   return AUTHOR.credentials
     .filter((credential) => credential.dissertation)
@@ -406,12 +423,12 @@ function siteStructuredData(manifest) {
     {
       "@type": "WebSite",
       "@id": `${SITE_URL}#website`,
-      name: "Digital Organism Theory",
+      name: `${AUTHOR.name} — Builder, writing & inquiry`,
       alternateName: "DOT",
       url: SITE_URL,
       inLanguage: "en",
       author: personNode(),
-      about: { "@type": "Thing", name: "Digital Organism Theory" },
+      about: [{ "@type": "Thing", name: "AI and product architecture" }, { "@type": "Thing", name: "Digital Organism Theory" }],
       hasPart: [
         { "@id": ACADEMY_ID, "@type": "CollectionPage" },
         { "@id": BOOK_ID, "@type": "Book" },
@@ -449,7 +466,7 @@ function profilePageNode(route) {
 
 const ESSAYS_DESCRIPTION = `Essays by ${AUTHOR.name} that develop Digital Organism Theory beyond Book One, each stating the claim levels it uses.`;
 const FEED_URL = `${SITE_URL}/feed.xml`;
-const FEED_TITLE = `Essays by ${AUTHOR.name}`;
+const FEED_TITLE = `Writing by ${AUTHOR.name}`;
 
 const essayUrl = (essay) => essay.url ?? `${SITE_URL}${ESSAYS_ROUTE}/${essay.slug}`;
 const writingPath = (item, release) => `${WRITING_ROUTE}/${item.id}${release ? `/releases/${release}` : ""}`;
@@ -555,6 +572,7 @@ function siteNav(essaysPublished) {
     [PUBLICATIONS_ROUTE, "Books"],
     ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
     [ABOUT_ROUTE, "About"],
+    [CONTACT_ROUTE, "Contact"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
     [TERMS_ROUTE, "Terms"],
@@ -736,9 +754,11 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
 
   const about = {
     route: ABOUT_ROUTE,
-    title: `${AUTHOR.name} — About`,
-    description: AUTHOR.summary,
+    title: `${AUTHOR.name} — ${BUILDER.title}`,
+    description: `${AUTHOR.name}. ${BUILDER.summary}`,
     ogType: "profile",
+    image: "/og/henok-platform.png",
+    imageAlt: `${AUTHOR.name} — work, writing and conversation`,
   };
   const authorRoutes = [
     {
@@ -751,28 +771,62 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
       prerender: page(
         [
           `<h1>${escapeHtml(AUTHOR_BYLINE)}</h1>`,
+          `<p>${escapeHtml(BUILDER.title)}</p>`,
           `<p>${escapeHtml(AUTHOR.role)}</p>`,
-          `<p>${escapeHtml(AUTHOR.summary)}</p>`,
-          `<p>${link(BLOG_ROUTE, "Essays and letters")}</p>`,
-          "<h2>Where the work comes from</h2>",
-          renderMarkdown(aboutText),
-          `<p>From the ${link(`${BOOK_ROUTE}/preface`, "preface to Book One")}.</p>`,
+          `<p>${escapeHtml(BUILDER.headline)}</p>`,
+          `<p>${escapeHtml(BUILDER.summary)}</p>`,
+          `<p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p>`,
+          `<p>${link("#about-resume", "Explore the background")}</p>`,
+          `<aside><p>Research depth. Product experience.</p><dl><dt>Enterprise AI</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Product co-founding</dt><dd>Sullix & Avia — Hands-on architecture and engineering</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
+          `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Ways to work together")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
+          '<h2 id="about-products">Selected work</h2>',
+          `<ul>${BUILDER_PROJECTS.map((project) => {
+            const href = project.links.live || project.links.website || project.links.repo;
+            const label = project.links.live ? "Explore project" : project.links.website ? "Visit website" : "View source";
+            return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
+          }).join("")}</ul>`,
+          OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
+          '<h2 id="about-services">Ways to work together</h2>',
+          BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p><p>${escapeHtml(service.deliverable)}</p>`).join(""),
+          '<h2 id="about-resume">Career & résumé</h2>',
+          `<ol>${CAREER.experience.map((job) => `<li><p>${escapeHtml(job.period)}</p><h3>${escapeHtml(job.company)}</h3><p>${escapeHtml(job.role)}</p><p>${escapeHtml(job.summary)}</p></li>`).join("")}</ol>`,
           AUTHOR.credentials.length > 0
-            ? `<h2>Education</h2><ul>${AUTHOR.credentials
+            ? `<h3>Education</h3><ul>${AUTHOR.credentials
                 .map(
                   (credential) =>
                     `<li>${escapeHtml(credential.degree)} · ${escapeHtml(credential.institution)}, ${credential.year}${
                       credential.dissertation
-                        ? `. Dissertation: ${link(credential.dissertation.url, credential.dissertation.title)}`
+                        ? `<details><summary>Doctoral research</summary><p>${credential.dissertation.url ? link(credential.dissertation.url, credential.dissertation.title) : escapeHtml(credential.dissertation.title)}</p></details>`
                         : ""
                     }</li>`,
                 )
                 .join("")}</ul>`
             : "",
-          `<h2>Contact</h2><p>For questions, objections, corrections, interviews, and requests about your data: ${authorContactLink()}.</p>`,
+          `<details><summary>Technical toolkit</summary><dl>${CAREER.skills.map((skill) => `<dt>${escapeHtml(skill.domain)}</dt><dd>${escapeHtml(skill.technologies)}</dd>`).join("")}</dl></details>`,
+          `<p>${link(AUTHOR.resumeUrl && (/^https:\/\//.test(AUTHOR.resumeUrl) || /^\/(?!\/)/.test(AUTHOR.resumeUrl))
+            ? AUTHOR.resumeUrl
+            : AUTHOR.email.trim() ? `mailto:${AUTHOR.email.trim()}?subject=${encodeURIComponent("Résumé request")}` : AUTHOR.links.linkedin,
+          AUTHOR.resumeUrl ? "Download résumé" : "Request full résumé")}</p>`,
+          AUTHOR.resumeOnlineUrl ? `<p>${link(AUTHOR.resumeOnlineUrl, "Read online")}</p>` : "",
+          "<p>Full experience, research, and technical background.</p>",
+          '<h2 id="about-writing">Writing & research</h2>',
+          `<p>${escapeHtml(AUTHOR.summary)}</p>`,
+          `<p>${link(BOOK_ROUTE, "Read Book One")} · ${link(BLOG_ROUTE, "Essays and letters")}</p>`,
+          `<details><summary>Where the work comes from</summary>${renderMarkdown(aboutText)}<p>From the ${link(`${BOOK_ROUTE}/preface`, "preface to Book One")}.</p><p>${link("/doctrine", "The concept map")} · ${link("/applied", "Open seams")}</p></details>`,
+          '<h2 id="about-contact">Contact</h2>',
+          `<p>${escapeHtml(BUILDER.contactIntro)}</p><p>${link(CONTACT_ROUTE, "Start a conversation")} · ${authorContactLink()}</p>`,
           `<p>${link(AUTHOR.links.linkedin, "LinkedIn")} · ${link(AUTHOR.links.github, "GitHub")}</p>`,
+          "<p>Also for writing, research, interviews, and requests about your data.</p>",
         ].join(""),
       ),
+    },
+    {
+      route: CONTACT_ROUTE,
+      title: `Contact — ${AUTHOR.name}`,
+      description: CONTACT.description,
+      image: "/og/henok-platform.png",
+      imageAlt: `${AUTHOR.name} — work, writing and conversation`,
+      body: `<h1>${escapeHtml(CONTACT.title)}</h1><p>${escapeHtml(CONTACT.description)}</p><h2>What brings you here?</h2><ul>${CONTACT.purposes.map(purpose => `<li><h3>${escapeHtml(purpose.title)}</h3><p>${escapeHtml(purpose.description)}</p></li>`).join("")}</ul><p>The contact form needs JavaScript. You can also email ${authorContactLink()} directly.</p><h2>What happens next</h2><p>${escapeHtml(CONTACT.next)}</p><p>${escapeHtml(CONTACT.privacy)} ${link(PRIVACY_ROUTE, "Read the privacy page.")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
     },
     {
       route: READERS_ROUTE,
@@ -913,26 +967,35 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   ].sort((first, second) => second.date.localeCompare(first.date));
   const blogRoute = {
     route: BLOG_ROUTE,
-    title: "Blog — Digital Organism Theory",
-    description: "Essays, analysis and letters that apply Digital Organism Theory to the world.",
+    title: `${BLOG.title} — ${AUTHOR.name}`,
+    description: BLOG.description,
+    image: "/og/henok-writing.png",
+    imageAlt: `${AUTHOR.name} — ${BLOG.heading.join(" ")}`,
     lastmod: blogPosts[0]?.date,
     structuredData: graph(
-      webPageNode({ route: BLOG_ROUTE, title: "Blog — Digital Organism Theory", description: "Essays and letters." }),
+      {
+        ...webPageNode({ route: BLOG_ROUTE, title: `${BLOG.title} — ${AUTHOR.name}`, description: BLOG.description }),
+        "@type": "Blog",
+        author: { "@id": PERSON_ID },
+      },
       breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }]),
     ),
     prerender: page(
       [
-        "<h1>Essays &amp; letters</h1>",
-        "<p>Essays, analysis and letters that apply Digital Organism Theory to the world.</p>",
-        `<p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h2>Latest writing</h2><p>Newest first</p>`,
+        `<p>${escapeHtml(BLOG.title)}</p><h1>${BLOG.heading.map(escapeHtml).join("<br />")}</h1>`,
+        `<p>${escapeHtml(BLOG.description)}</p><p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p>`,
+        `<section aria-label="Building and inquiry">${BLOG.paths.map((entry) => `<p>${escapeHtml(entry.label)}</p><h2>${escapeHtml(entry.title)}</h2><p>${escapeHtml(entry.description)}</p><p>${link(entry.to, entry.linkLabel)}</p>`).join("")}</section>`,
+        `<section><p>A series · Applied DOT</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(BLOG.seriesDescription)}</p><p>These letters are published on LinkedIn.</p>`,
+        NEWSLETTER.editions.length > 0
+          ? `<ul aria-label="Letters on LinkedIn">${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}<p>Read on LinkedIn</p></li>`).join("")}</ul>`
+          : "",
+        `<p>${link(NEWSLETTER.url, "Explore the series on LinkedIn")}</p></section>`,
+        "<h2>Latest writing</h2><p>Newest first</p>",
         blogPosts.length > 0
           ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
-          : "<p>Nothing has been posted here yet.</p><p>New essays and letters will appear here when published.</p>",
-        NEWSLETTER.editions.length > 0
-          ? `<h2>Letters on LinkedIn</h2><p>From ${escapeHtml(NEWSLETTER.title)}. These letters open on LinkedIn.</p><ul>${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}<p>Read on LinkedIn</p></li>`).join("")}</ul>`
-          : "",
-        `<h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(NEWSLETTER.cadence)} on LinkedIn.</p><p>${link(NEWSLETTER.url, "Read on LinkedIn")} · ${link(FEED_URL, "RSS feed")} · ${link(READERS_ROUTE, "Reader list")}</p>`,
-        `<h2>Book One</h2><p>Digital Organism Theory, in full. The complete edition is free to read.</p><p>${link(BOOK_ROUTE, "Read Book One")}</p>`,
+          : `<p>${escapeHtml(BLOG.emptyTitle)}</p><p>${escapeHtml(BLOG.emptyDescription)}</p>`,
+        `<h2>Read at your pace.</h2><p>${escapeHtml(BLOG.followDescription)}</p><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
+        `<h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${escapeHtml(BLOG.contactDescription)}</p><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
       ].join(""),
     ),
   };
@@ -1016,10 +1079,13 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   const description = /<meta\s+name="description"\s+content="([^"]*)"/.exec(shell)?.[1] ?? "";
   const latest = essays.slice(0, 5);
   const body = [
-    "<h1>Digital Organism Theory</h1>",
+    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1>`,
     `<p>${description}</p>`,
+    `<blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
-    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, "Begin with lived experience")} in ${escapeHtml(manifest.project.title)}, complete and free.</p>`,
+    `<h2>Things built. Ideas explored.</h2><p>${link(`${ABOUT_ROUTE}#about-products`, "Build something useful.")} · ${link(BLOG_ROUTE, "Follow an idea.")} · ${link(`${CONTACT_ROUTE}?purpose=project`, "Start a conversation.")}</p>`,
+    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, "Read Book One")} — ${escapeHtml(manifest.project.title)}, complete and free.</p>`,
+    `<h2>${escapeHtml(HOME.invitationTitle)}</h2><p>${escapeHtml(HOME.invitation)}</p><p>${escapeHtml(HOME.boundary)}</p><p>${escapeHtml(HOME.edition)}</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0
       ? `<h2>Essays</h2><ol>${latest.map((essay) => `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)}</li>`).join("")}</ol>`
@@ -1094,7 +1160,7 @@ export function rssXml(essays) {
     `    <title>${escapeHtml(FEED_TITLE)}</title>`,
     `    <link>${SITE_URL}${BLOG_ROUTE}</link>`,
     `    <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml" />`,
-    `    <description>${escapeHtml(ESSAYS_DESCRIPTION)}</description>`,
+    `    <description>${escapeHtml(BLOG.description)}</description>`,
     "    <language>en</language>",
     ...(newest ? [`    <lastBuildDate>${rfc822(newest)}</lastBuildDate>`] : []),
     ...items,

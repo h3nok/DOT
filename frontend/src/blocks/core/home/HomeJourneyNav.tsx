@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
-  { id: "threshold", label: "The proposed architecture" },
+  { id: "threshold", label: "Love: an inquiry into consciousness" },
+  { id: "personal-platform", label: "Work, writing and contact" },
   { id: "possibility-field", label: "T × E: the source" },
   { id: "big-c", label: "Big C: primordial consciousness" },
   { id: "reality-frame", label: "RF₀: the physical universe" },
   { id: "little-c", label: "Little c: the local experiencer" },
   { id: "consciousness-101", label: "Consciousness 101: Love and relationships" },
-  { id: "choose-path", label: "A new intellectual movement" },
+  { id: "choose-path", label: "Read and inquire" },
 ] as const;
 
 type HomeSectionId = (typeof HOME_SECTIONS)[number]["id"];

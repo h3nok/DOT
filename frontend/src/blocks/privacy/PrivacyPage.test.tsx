@@ -49,9 +49,9 @@ describe("PrivacyPage", () => {
   it("sends data requests somewhere that answers", () => {
     renderPage();
 
-    expect(within(screen.getByRole("main")).getByRole("link", { name: "About" })).toHaveAttribute(
+    expect(within(screen.getByRole("main")).getByRole("link", { name: "Contact" })).toHaveAttribute(
       "href",
-      "/about",
+      "/contact?purpose=privacy",
     );
   });
 });

@@ -11,6 +11,8 @@ import authorData from "./author.json";
  * - `credentials`: one entry per degree, with its dissertation or thesis where
  *   there is one. The build also states them to search engines.
  * - `photo`: a path under `public/`, such as "/henok.jpg".
+ * - `resumeUrl`: a public HTTPS URL or path under `public/`. Until supplied,
+ *   visitors can request the full résumé through the configured contact.
  * - `links`: public profiles. Empty ones are never shown.
  */
 export interface Credential {
@@ -18,8 +20,8 @@ export interface Credential {
   degree: string;
   institution: string;
   year: number;
-  /** Linked where it is published, so a reader can check the work itself. */
-  dissertation?: { title: string; url: string };
+  /** A supplied title; link only when its actual public destination is known. */
+  dissertation?: { title: string; url?: string };
 }
 
 export interface Author {
@@ -32,6 +34,9 @@ export interface Author {
   email: string;
   credentials: Credential[];
   photo: string;
+  resumeUrl?: string;
+  /** Optional readable companion to a supplied résumé document. */
+  resumeOnlineUrl?: string;
   links: AuthorLinks;
 }
 

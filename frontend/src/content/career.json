@@ -1,0 +1,60 @@
+{
+  "location": "Aurora, Colorado",
+  "profile": "Technologist with 14+ years building AI systems from research prototype to production at scale. Combines deep ML foundations with hands-on product engineering — designing multi-agent orchestration systems, shipping full-stack AI-native platforms, and leading enterprise AI transformation. Proven across the full spectrum: enterprise R&D with nine-figure cost implications at Costco, and zero-to-one product builds as a technical co-founder. Particularly experienced in agentic AI architecture — named-agent pipelines with LLM tool use, streaming, session memory, governance and multi-provider model routing — alongside computer vision, real-time systems, and full-stack development. Adept at partnering with executives to align AI roadmaps with business priorities, and at building high-performing multidisciplinary teams. Particularly equipped and passionate about greenfield projects.",
+  "experience": [
+    {
+      "id": "costco",
+      "company": "Costco Wholesale",
+      "role": "AI Principal, Applied Science",
+      "period": "2022 – Present",
+      "location": "Dallas, Texas",
+      "summary": "Enterprise AI platforms, retail agent orchestration, and applied research across computer vision and security.",
+      "highlights": [
+        "Led the design and deployment of a Retail Agentic Platform with Supervisor/ReAct orchestration, intent-based routing, specialized worker agents, a tool registry, Redis-backed session memory, and I/O guardrails on GKE.",
+        "Delivered a full-stack Enterprise AI Platform on Kubernetes: React chat UI and BFF, vector knowledge API, document ingestion, LLM orchestration, and analytics. Consolidated nine microservice stubs into a single in-process orchestration layer.",
+        "Architected a hybrid Azure and on-premises AI/ML platform that reduced data processing times by 90%.",
+        "Proposed and prototyped computer vision models for automated checkout, smart carts, and shrink/loss prevention.",
+        "Built and led a multidisciplinary AI team delivering a 50% improvement in threat detection and multi-million-dollar cost avoidance.",
+        "Shaped the enterprise AI R&D roadmap and aligned initiatives with C-suite business priorities."
+      ]
+    },
+    {
+      "id": "sullix",
+      "company": "Sullix",
+      "role": "Co-Founder & Principal Engineer",
+      "period": "December 2025 – Present",
+      "location": "Dallas, Texas",
+      "summary": "Technical co-founding across an AI-native construction and real estate platform, from agent orchestration to product delivery.",
+      "highlights": [
+        "Designed and built a multi-agent AI orchestrator coordinating FORGE, SCOUT, SENTINEL, LEDGER, and PROCURE across estimating, contractor matching, risk, payments, and materials, with LLM tool use, streaming, and persistent session memory.",
+        "Built FARO, a context-aware AI assistant with page-context routing, prompt caching, rate limiting, and real-time streaming.",
+        "Developed an AI Deal Analyzer for investment underwriting: market scanning, comparable analysis, scenario modeling, and underwriting recovery flows.",
+        "Architected the platform with React 19, TypeScript, tRPC, Express 5, Drizzle ORM, PostgreSQL, Redis, Stripe, Stream Chat, Resend, Twilio, and Expo/React Native. Implemented model routing across OpenAI, Google Gemini, and Ollama.",
+        "Delivered marketplace, bidding, project execution, milestone billing, escrow, compliance, and real-time messaging workflows.",
+        "Established migration safety matrices, CI/CD governance gates, release readiness scoring, and progressive rollout practices."
+      ]
+    },
+    {
+      "id": "avia",
+      "company": "Avia Solutions LLC",
+      "role": "Technical Co-Founder & Lead Engineer",
+      "period": "2025 – Present",
+      "location": "Aurora, Colorado",
+      "summary": "A medical transportation platform connecting dispatcher tools, driver applications, and secure operations.",
+      "highlights": [
+        "Architected a HIPAA-adjacent, multi-tenant medical transportation platform with PHI field-level encryption, tenant isolation, audit logging, and compliance gate controls.",
+        "Built a full-stack monorepo with a Spring Boot REST API in Java 17, React and Vite dispatcher/admin applications, a React Native and Expo driver app, and shared TypeScript libraries.",
+        "Implemented partner onboarding, legal gate controls, and pilot role-readiness automation with full E2E test coverage."
+      ]
+    }
+  ],
+  "skills": [
+    { "domain": "Agentic AI & LLMs", "technologies": "Multi-agent orchestration, LLM tool use, ReAct, streaming, prompt engineering, RAG, vector search, OpenAI, Google Gemini, Ollama" },
+    { "domain": "Machine learning & vision", "technologies": "Deep learning, computer vision, object detection, optical systems, model training and deployment" },
+    { "domain": "Languages", "technologies": "TypeScript, Python, Java, SQL" },
+    { "domain": "Frontend", "technologies": "React, Vite, Tailwind CSS, Radix UI, Framer Motion, TanStack Query, React Native, Expo" },
+    { "domain": "Backend", "technologies": "Express, FastAPI, Spring Boot, tRPC, Drizzle ORM, Zod" },
+    { "domain": "Data & infrastructure", "technologies": "PostgreSQL, Redis, Azure, GKE, Kubernetes, Docker, GitHub Actions, CI/CD" },
+    { "domain": "Integrations", "technologies": "Stripe, Stream Chat, Twilio, Resend, Google Maps, QuickBooks" }
+  ]
+}

@@ -7,8 +7,8 @@
      display  — Space Grotesk   headings, terms, actions, structural labels
      reading  — Source Serif 4  sentences meant to be read slowly
      annotate — JetBrains Mono  claim labels, figure notes, citations, micro
-   · Colour is never literal: theme vars + the four --theory-* layer accents.
-     One accent per section; the organism accent is Little c's.
+   · Colour names the paths and theory layers; theme ink keeps it readable.
+     The organism accent is Little c's and remains controlled by Appearance.
    · One diagram grammar: hairline strokes, dashed = proposed/potential,
      solid = claimed structure, filled dot = an experiencer.
    · Marks: .dot-mark is the brand atom; layer doors reshape it per section.
@@ -23,9 +23,9 @@
   --home-public-display-font: var(--identity-display-font, var(--font-sans, ui-sans-serif, system-ui, sans-serif));
   --home-public-reading-font: var(--identity-reading-font, var(--font-serif, ui-serif, Georgia, serif));
   --home-public-annotate-font: var(--identity-annotation-font, ui-monospace, monospace);
-  --theory-origin: color-mix(in oklab, var(--foreground) 58%, var(--background));
+  --theory-origin: color-mix(in oklab, var(--foreground) 56%, #a587ba);
   --theory-big-c: color-mix(in oklab, var(--organism-accent-strong) 75%, var(--foreground));
-  --theory-rf: color-mix(in oklab, var(--foreground) 86%, var(--background));
+  --theory-rf: color-mix(in oklab, var(--foreground) 56%, #72a2bb);
   --theory-local: var(--organism-accent-strong);
   --home-ground-threshold: color-mix(
     in oklab,
@@ -489,6 +489,65 @@ html:has(.home-journey) {
 .home-hero-title > span {
   display: block;
   white-space: normal;
+}
+
+.home-hero-masthead .home-hero-title {
+  font-size: clamp(4.5rem, 8vw, 7rem);
+  line-height: 1;
+}
+
+/* Ink spreads around the word; the letters retain the theme's readable ink. */
+.home-love-ink {
+  color: color-mix(in oklab, var(--foreground) 62%, #b87992);
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+.home-love-ink::before {
+  position: absolute;
+  z-index: -1;
+  inset: -0.45em -0.6em -0.5em -0.4em;
+  background:
+    radial-gradient(ellipse at 36% 58%, color-mix(in oklab, var(--organism-accent-strong) 28%, transparent), transparent 68%),
+    radial-gradient(ellipse at 72% 35%, color-mix(in oklab, var(--organism-accent) 18%, transparent), transparent 65%);
+  mask-image: radial-gradient(ellipse, black 20%, transparent 70%);
+  content: "";
+  pointer-events: none;
+}
+
+.home-hero-love-quote {
+  max-width: 28rem;
+  margin: 1rem 0 0;
+}
+
+.home-hero-love-quote p {
+  margin: 0;
+  color: var(--foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.home-hero-love-quote cite {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.75rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.home-hero-love-quote a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+html[data-contrast="high"] .home-love-ink::before,
+html[data-field="off"] .home-love-ink::before {
+  content: none;
 }
 
 .home-hero-ask {
@@ -2116,7 +2175,7 @@ html[data-contrast="high"] .home-hero-kicker {
   z-index: 0;
   background: radial-gradient(
     circle at 12% 50%,
-    color-mix(in oklch, var(--theory-layer-color) 6%, transparent),
+    color-mix(in oklch, var(--theory-layer-color) 16%, transparent),
     transparent 32%
   );
   content: "";
@@ -2994,6 +3053,44 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
 .home-consciousness-101 .dot-page-heading {
   margin-top: 1rem;
+}
+
+.home-love-statement {
+  position: relative;
+  isolation: isolate;
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  color: var(--foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.home-love-statement::before {
+  position: absolute;
+  z-index: -1;
+  inset: -1rem;
+  background: radial-gradient(ellipse at 28% 50%, color-mix(in oklab, var(--organism-accent-strong) 18%, transparent), transparent 72%);
+  content: "";
+  pointer-events: none;
+}
+
+.home-love-statement p {
+  margin: 0;
+}
+
+html[data-contrast="high"] .home-love-statement::before,
+html[data-field="off"] .home-love-statement::before {
+  content: none;
+}
+
+@media print {
+  .home-love-ink::before,
+  .home-love-statement::before {
+    content: none;
+  }
 }
 
 .home-consciousness-101-source {
@@ -4686,3 +4783,16 @@ html[data-field="off"] .home-hero-stage::before {
     display: none !important;
   }
 }
+.home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: 1.5rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
+.home-author-line span { font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
+.home-author-line:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+.home-personal-section { position: relative; padding: clamp(3rem, 7vw, 6rem) 0; border-block: 1px solid var(--border); background: color-mix(in oklab, var(--background) 95%, #d3c5ad); scroll-margin-top: 7rem; }
+.home-personal-heading { display: grid; gap: 1.5rem; margin-bottom: 2rem; }
+.home-personal-heading h2 { margin-top: .75rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.08; }
+.home-personal-heading > p { align-self: end; max-width: 27rem; color: var(--muted-foreground); font-size: .9375rem; line-height: 1.85; }
+.home-personal-doors { display: grid; gap: 1rem; }
+@media (min-width: 760px) {
+  .home-personal-heading { grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .home-personal-doors { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+html[data-contrast="high"] .home-personal-section { background: var(--background); }

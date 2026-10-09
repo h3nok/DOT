@@ -1,0 +1,13 @@
+.intent-field { display: grid; align-content: start; gap: .55rem; min-width: 0; }
+.intent-field > label { display: flex; justify-content: space-between; gap: 1rem; font-size: .8125rem; font-weight: 600; }
+.intent-field > label > span { color: var(--muted-foreground); font-size: .75rem; font-weight: 400; }
+.intent-field input,
+.intent-field textarea,
+.intent-field select { width: 100%; min-height: 3rem; padding: .85rem 1rem; border: 1px solid var(--border); border-radius: .65rem; background: var(--background); color: var(--foreground); font: inherit; font-size: .9375rem; }
+.intent-field textarea { min-height: 10rem; resize: vertical; line-height: 1.8; }
+.intent-field input::placeholder,
+.intent-field textarea::placeholder { color: var(--muted-foreground); opacity: .7; }
+.intent-field input:focus-visible,
+.intent-field textarea:focus-visible,
+.intent-field select:focus-visible { outline: 2px solid var(--organism-accent-strong, var(--foreground)); outline-offset: 3px; }
+.intent-field-hint { color: var(--muted-foreground); font-size: .75rem; line-height: 1.7; }

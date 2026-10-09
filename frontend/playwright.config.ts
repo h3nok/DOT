@@ -10,7 +10,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  // Allow resource-constrained local verification to run serially while CI
+  // retains its normal two-worker limit.
+  workers: process.env.DOT_E2E_WORKERS ? Number(process.env.DOT_E2E_WORKERS) : process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
   timeout: 30_000,
   expect: { timeout: 10_000 },

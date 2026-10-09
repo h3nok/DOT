@@ -48,6 +48,15 @@ class ServiceSettings(pydantic_settings.BaseSettings):
 
     SENTRY_DSN: str = ""
     FRONTEND_URL: str = "https://dotheory.org"
+    CONTACT_EMAIL: str = ""
+    CONTACT_OWNER_ID: str = "henok"
+
+    # Optional, author-approved outward distribution. Credentials never reach
+    # the browser; absent application settings keep automatic sharing closed.
+    LINKEDIN_CLIENT_ID: str = ""
+    LINKEDIN_CLIENT_SECRET: str = ""
+    LINKEDIN_REDIRECT_URI: str = ""
+    PUBLISHING_TOKEN_KEY: str = ""
 
     # Twin plane (ADR-0010). TOOL_RUNTIME_SECRET signs tool manifests; without it
     # the registry refuses to dispatch anything.

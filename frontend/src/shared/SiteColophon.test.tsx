@@ -24,6 +24,7 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["Contact", "/contact"],
       ["Books", "/publications"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
@@ -56,6 +57,7 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["Contact", "/contact"],
       ["Books", "/publications"],
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],

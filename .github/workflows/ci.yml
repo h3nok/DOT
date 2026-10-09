@@ -270,6 +270,22 @@ jobs:
           else
             echo "::notice::Stripe secrets are not both present in Secret Manager; deploying with support closed."
           fi
+          # LinkedIn OAuth is opt-in; all four settings must exist together.
+          # Preserve them across deploys without blocking owned publishing.
+          PUBLISHING_SECRETS=""
+          PUBLISHING_READY=true
+          for name in ORCHESTRATOR_LINKEDIN_CLIENT_ID ORCHESTRATOR_LINKEDIN_CLIENT_SECRET ORCHESTRATOR_LINKEDIN_REDIRECT_URI ORCHESTRATOR_PUBLISHING_TOKEN_KEY; do
+            if gcloud secrets describe "$name" --project ${{ env.GCP_PROJECT_ID }} >/dev/null 2>&1; then
+              PUBLISHING_SECRETS="$PUBLISHING_SECRETS,$name=$name:latest"
+            else
+              PUBLISHING_READY=false
+            fi
+          done
+          if [ "$PUBLISHING_READY" = true ]; then
+            SECRETS="$SECRETS$PUBLISHING_SECRETS"
+          else
+            echo "::notice::LinkedIn application settings are incomplete; native publishing and full-text distribution remain available."
+          fi
           # Keep one instance warm at the service level without warming old revisions.
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
@@ -288,7 +304,7 @@ jobs:
             --execution-environment gen2 \
             --add-volume name=objects,type=cloud-storage,bucket=${{ env.OBJECT_STORE_BUCKET }} \
             --add-volume-mount volume=objects,mount-path=/data/objects \
-            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/data/objects,EMAIL_FROM=no-reply@dotheory.org,DOT_OWNER_EMAILS=nkenok@gmail.com \
+            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_CONTACT_EMAIL=henok@sullix.com,ORCHESTRATOR_CONTACT_OWNER_ID=henok,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/data/objects,EMAIL_FROM=no-reply@dotheory.org,DOT_OWNER_EMAILS=nkenok@gmail.com \
             --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
 

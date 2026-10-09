@@ -5,6 +5,8 @@ from sqlalchemy import engine_from_config, pool
 
 import app.domains.academy.models  # noqa: F401
 import app.domains.commerce.models  # noqa: F401
+import app.domains.contact.models  # noqa: F401
+import app.domains.distribution.models  # noqa: F401
 import app.domains.sitecontent.models  # noqa: F401
 import app.domains.support.models  # noqa: F401
 from app.db.models import Base

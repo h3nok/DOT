@@ -27,7 +27,7 @@ test("still concepts visibly explain every idea without clipping or shifting the
   const previous = concepts.getByRole("button", { name: "Previous concept" });
   const next = concepts.getByRole("button", { name: "Next concept" });
   const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Begin with lived experience", exact: true });
+    .getByRole("link", { name: "Read Book One", exact: true });
   const opening = await read.boundingBox();
   expect(opening).not.toBeNull();
   await expect(previous).toBeDisabled();
@@ -144,7 +144,7 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
 });
 
-test("Consciousness 101 follows Little c and leads to the Academy or its book source", async ({ page }) => {
+test("Consciousness 101 follows Little c and leads to inquiry or its book source", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const purpose = page.getByRole("region", { name: "Consciousness 101" });
@@ -157,7 +157,7 @@ test("Consciousness 101 follows Little c and leads to the Academy or its book so
   await expect(purpose.getByRole("heading", { name: "Consciousness 101", exact: true })).toBeVisible();
   await expect(purpose.getByText("Love and relationships", { exact: true })).toBeVisible();
   await expect(purpose.getByText(/In DOT, the purpose of Little c/)).toBeVisible();
-  await expect(purpose.getByRole("link", { name: /Continue with the Academy/ }))
+  await expect(purpose.getByRole("link", { name: /Read and inquire/ }))
     .toHaveAttribute("href", "#choose-path");
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true })
     .getByRole("link", { name: "Consciousness 101: Love and relationships", includeHidden: true }))

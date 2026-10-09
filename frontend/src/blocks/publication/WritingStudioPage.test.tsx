@@ -3,10 +3,13 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WritingStudioPage from "./WritingStudioPage";
 import * as writing from "../../services/OrchestratorWritingService";
+import * as distribution from "../../services/OrchestratorDistributionService";
+
+vi.mock("../../services/OrchestratorDistributionService", () => ({ fetchLinkedInConnection: vi.fn(), fetchDistributionCopies: vi.fn(), shareReleasedWritingOnLinkedIn: vi.fn() }));
 
 vi.mock("../../services/OrchestratorWritingService", async (original) => ({
   ...await original<typeof writing>(),
-  fetchWritingWorkspace: vi.fn(), fetchWritingWorks: vi.fn(), createWritingWork: vi.fn(), fetchWritingDraft: vi.fn(), saveWritingDraft: vi.fn(), releaseWriting: vi.fn(),
+  fetchWritingWorkspace: vi.fn(), fetchWritingWorks: vi.fn(), createWritingWork: vi.fn(), fetchWritingDraft: vi.fn(), saveWritingDraft: vi.fn(), releaseWriting: vi.fn(), fetchWritingDelivery: vi.fn(),
 }));
 
 beforeEach(() => {
@@ -15,6 +18,9 @@ beforeEach(() => {
   vi.mocked(writing.createWritingWork).mockResolvedValue({ id: "work-1", kind: "essay", canonical_slug: "my-analysis", lifecycle_state: "draft" });
   vi.mocked(writing.saveWritingDraft).mockResolvedValue({ id: "revision-1", title: "My analysis", summary: null, revision_number: 1 });
   vi.mocked(writing.releaseWriting).mockResolvedValue({ release_number: 1, release_status: "released" });
+  vi.mocked(writing.fetchWritingDelivery).mockResolvedValue({ delivery: { manifest: { title: "My analysis", summary: null, release: { number: 1 }, revision: { content_hash: "hash" }, claims: [] } }, body: "The author's supplied manuscript." });
+  vi.mocked(distribution.fetchLinkedInConnection).mockResolvedValue({ configured: true, connected: true, display_name: "Test author", expires_at: null });
+  vi.mocked(distribution.fetchDistributionCopies).mockResolvedValue([]);
 });
 afterEach(() => vi.resetAllMocks());
 
@@ -31,7 +37,23 @@ describe("WritingStudioPage", () => {
     expect(await screen.findByText("Text and entered claims saved as a private revision.")).toBeInTheDocument();
     expect(writing.saveWritingDraft).toHaveBeenCalled();
     expect(writing.releaseWriting).not.toHaveBeenCalled();
+    expect(distribution.shareReleasedWritingOnLinkedIn).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Publish on this website" })).toBeDisabled();
+  });
+
+  it("keeps the native release and saved draft when a selected external share fails", async () => {
+    vi.mocked(distribution.shareReleasedWritingOnLinkedIn).mockRejectedValue(new Error("Network lost"));
+    await write();
+    await screen.findByText(/Connected as Test author/);
+    fireEvent.click(screen.getByRole("checkbox", { name: /Also share a link/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /approve public release/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Publish on this website" }));
+    expect(await screen.findByText(/Your piece is published here. The LinkedIn result/)).toBeInTheDocument();
+    expect(screen.getByText("Version 1 is published on this website.")).toBeInTheDocument();
+    expect(screen.getByText("Text unchanged")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Read released version 1" })).toHaveAttribute("href", "/writing/work-1/releases/1");
+    expect(writing.releaseWriting).toHaveBeenCalledTimes(1);
+    expect(distribution.shareReleasedWritingOnLinkedIn).toHaveBeenCalledWith("work-1", 1);
   });
 
   it("requires author approval and exposes an owned immutable release link", async () => {
@@ -62,5 +84,7 @@ describe("WritingStudioPage", () => {
     expect(await screen.findByDisplayValue("Saved text")).toBeInTheDocument();
     expect(screen.getByLabelText("Statement")).toHaveValue("Saved claim");
     expect(screen.getByLabelText("Source URL")).toHaveValue("https://example.org/source");
+    expect(await screen.findByRole("heading", { name: "Distribute published version 1" })).toBeInTheDocument();
+    expect(writing.releaseWriting).not.toHaveBeenCalled();
   });
 });

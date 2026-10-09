@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");
 
-describe("homepage movement narrative", () => {
+describe("homepage inquiry narrative", () => {
   it("teaches the four layers without inserting a second competing diagram", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
@@ -108,20 +108,21 @@ describe("homepage movement narrative", () => {
     }
   });
 
-  it("closes with the living Academy while keeping the book distinct", () => {
+  it("closes with reading while keeping the living Academy distinct", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
-    expect(home).toContain("Continue with the Academy.");
+    expect(home).toContain("HOME.invitationTitle");
     expect(home).toContain("Explore DOT Academy");
-    expect(home).toContain("Read Book One as a fixed edition");
+    expect(home).toContain("Read Book One");
+    expect(home).toContain("Complete and free · Fixed edition");
     expect(home).not.toContain("Request an invitation to the circle");
   });
 
-  it("places DOT in its lineage without implying endorsement (ADR-0038)", () => {
+  it("keeps related work without claiming movement status or endorsement (ADR-0042)", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
-    expect(home).toContain("A new intellectual movement");
-    expect(home).toContain("theory of everything");
+    expect(home).not.toContain("A new intellectual movement");
+    expect(home).toContain("Related work includes");
     expect(home).toContain("<cite>My Big TOE</cite>");
     expect(home).toContain("Naming these thinkers does not mean they endorse DOT.");
   });
@@ -139,7 +140,7 @@ describe("homepage movement narrative", () => {
     expect(home).not.toContain("Support the work");
   });
 
-  it("moves from the theory directly to the Academy invitation", () => {
+  it("moves from the theory directly to the reading invitation", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
@@ -155,7 +156,7 @@ describe("homepage movement narrative", () => {
     expect(home.toLowerCase()).not.toContain("believe");
   });
 
-  it("places the purpose card after Little c, with the Academy still the ending", () => {
+  it("places the purpose card after Little c and before the final invitation", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const navigation = readFileSync(join(HERE, "HomeJourneyNav.tsx"), "utf8");
     expect(home.indexOf("<TheoryLayerJourney")).toBeLessThan(home.indexOf("<Consciousness101"));

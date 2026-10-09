@@ -14,11 +14,31 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-test("About offers named book navigation and the configured contact", async ({ page }) => {
+test("About offers products, résumé, project inquiries, and named book navigation", async ({ page }) => {
   const problems = collectPageProblems(page);
   await page.goto("/about");
 
   await expect(page.getByRole("heading", { name: BYLINE, exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Discuss a project", exact: true }))
+    .toHaveAttribute("href", "/contact?purpose=project");
+  const pageNav = page.getByRole("navigation", { name: "On this page" });
+  await pageNav.getByRole("link", { name: "Selected work" }).click();
+  await expect(page.getByRole("region", { name: "Selected work" })
+    .getByRole("heading", { name: "Sullix", exact: true })).toBeInViewport();
+  await pageNav.getByRole("link", { name: "Career & résumé", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Career & résumé", exact: true })).toBeInViewport();
+  const resume = page.getByRole("region", { name: "Career & résumé" });
+  await expect(resume.getByRole("heading", { name: "Costco Wholesale", exact: true })).toBeVisible();
+  await expect(resume.getByRole("link", { name: "Download résumé" }))
+    .toHaveAttribute("href", author.resumeUrl);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    resume.getByRole("link", { name: "Download résumé" }).click(),
+  ]);
+  expect(download.suggestedFilename()).toBe("henok-ghebrechristos.pdf");
+  await expect(resume.getByText("Doctoral research", { exact: true })).toBeVisible();
+  await resume.getByText("Doctoral research", { exact: true }).click();
+  await expect(resume.getByText(author.credentials[0].dissertation!.title)).toBeVisible();
   const book = page.getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Book One", exact: true });
   await expect(book).toBeVisible();
@@ -29,6 +49,8 @@ test("About offers named book navigation and the configured contact", async ({ p
   await expect(page.getByRole("main").getByRole("link", { name: "LinkedIn", exact: true }))
     .toHaveAttribute("href", author.links.linkedin);
   await expectNoHorizontalOverflow(page);
+  await pageNav.getByRole("link", { name: "Contact", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeInViewport();
   await book.click();
   await expect(page).toHaveURL("/book/digital-organism-theory");
   await expect(page.locator("h1").first()).toBeVisible();

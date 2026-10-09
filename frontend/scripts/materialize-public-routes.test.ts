@@ -23,6 +23,7 @@ import {
 import { parseEssay } from "./essays.mjs";
 import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
+import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
 
 interface PublicRoute {
   route: string;
@@ -221,18 +222,47 @@ describe("the author", () => {
     expect(person.honorificSuffix).toBe(AUTHOR.suffix);
 
     const theses = about.structuredData["@graph"].filter((node) => node["@type"] === "Thesis");
-    expect(theses.map((thesis) => thesis.url)).toEqual(
+    expect(theses.flatMap((thesis) => thesis.url ?? [])).toEqual(
       credentials.flatMap((credential) => credential.dissertation?.url ?? []),
     );
     for (const thesis of theses) {
       expect((thesis.author as Record<string, string>)["@id"]).toBe(`${SITE_URL}/about#person`);
     }
+    expect(theses.map((thesis) => thesis.name)).toEqual(
+      AUTHOR.credentials.flatMap((credential: { dissertation?: { title: string } }) => credential.dissertation?.title ?? []),
+    );
   });
 
   it("introduces the author in their own words, even without JavaScript", () => {
     const text = routeAt("/about").prerender!;
     expect(text).toContain(AUTHOR.summary);
     expect(text).toContain("For nearly two decades");
+  });
+
+  it("makes products, professional background, and project contact readable without JavaScript", () => {
+    const about = routeAt("/about");
+    const document = new DOMParser().parseFromString(about.prerender!, "text/html");
+    expect(about.title).toBe(`${AUTHOR.name} — ${builder.title}`);
+    expect(about.description).toContain(builder.summary);
+    expect(document.querySelector("#about-products")).not.toBeNull();
+    expect(document.querySelector("#about-resume")).not.toBeNull();
+    for (const project of builderProjects) {
+      const entry = document.getElementById(`project-${project.slug}`)!;
+      expect(entry.textContent).toContain(project.name);
+      expect(entry.textContent).toContain(project.description);
+      expect(document.body.textContent).toContain(project.role);
+      expect(document.body.textContent).toContain(project.period);
+    }
+    for (const job of career.experience) {
+      expect(document.body.textContent).toContain(job.company);
+      expect(document.body.textContent).toContain(job.role);
+      expect(document.body.textContent).toContain(job.period);
+    }
+    const links = [...document.querySelectorAll("a")];
+    expect(links.find((item) => item.textContent === "Discuss a project")?.getAttribute("href"))
+      .toBe(projectInquiryHref());
+    expect(links.find((item) => item.textContent === "Download résumé")?.getAttribute("href"))
+      .toBe(resumeHref());
   });
 });
 
@@ -279,21 +309,21 @@ describe("page text for readers without JavaScript", () => {
 
   it("gives the home page the author, the book, and a way into every chapter", () => {
     const html = rootDocument(shell, manifest);
-    expect(html).toContain('<article data-prerender><h1>Digital Organism Theory</h1>');
+    expect(html).toContain('<p>Digital Organism Theory</p><h1>Love.</h1>');
     for (const section of manifest.sections) {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }
     expect(html).toContain('href="/about"');
     expect(html).toContain(
-      '<a href="/book/digital-organism-theory/preface?path=start-where-you-live">Begin with lived experience</a>',
+      '<a href="/book/digital-organism-theory/preface?path=start-where-you-live">Read Book One</a>',
     );
   });
 
   it("carries the hero proposition into metadata and the script-free home", () => {
     const description = /name="description"\s+content="([^"]+)"/.exec(shell)?.[1];
-    expect(description).toContain("What shapes the life you live?");
-    expect(description).toContain("consciousness-first theory of everything");
-    expect(description).toContain("a construction, not a revelation.");
+    expect(description).toContain("consciousness, Fear, and Love");
+    expect(description).toContain("Henok Ghebrechristos");
+    expect(description).toContain("discuss a project");
     expect(description).not.toContain("greater awareness can support");
     for (const field of ["og:description", "twitter:description"]) {
       const content = new RegExp(`(?:name|property)="${field}"\\s+content="([^"]+)"`)
@@ -301,6 +331,10 @@ describe("page text for readers without JavaScript", () => {
       expect(content).toBe(description);
     }
     expect(rootDocument(shell, manifest)).toContain(`<p>${description}</p>`);
+    expect(rootDocument(shell, manifest)).toContain("Love is the condition in which Fear no longer governs you.");
+    expect(rootDocument(shell, manifest)).toContain("remain hypotheses, open to challenge and revision");
+    expect(rootDocument(shell, manifest)).toContain("there is no timetable for it");
+    expect(rootDocument(shell, manifest)).toContain('/contact?purpose=project');
   });
 
   it("keeps the leave page out of search engines", () => {
@@ -356,6 +390,13 @@ describe("essays", () => {
     expect(sitemap).toContain("<loc>https://dotheory.org/blog</loc>");
     expect(sitemap).not.toContain("<loc>https://dotheory.org/essays</loc>");
     const blog = routes.find((route) => route.route === "/blog")!;
+    expect(blog.title).toBe(`Writing & ideas — ${AUTHOR.name}`);
+    expect(blog.description).toContain("AI, digital products, consciousness");
+    expect(blog.prerender).toContain('href="/about#about-products">Explore the work</a>');
+    expect(blog.prerender).toContain('href="/book/digital-organism-theory">Read Book One</a>');
+    expect(blog.prerender).toContain(`href="${SITE_URL}/feed.xml">Follow with RSS</a>`);
+    expect(blog.prerender).toContain('href="/readers">Open the reader list</a>');
+    expect(blog.prerender).toContain("Discuss a project");
     expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
     expect(blog.prerender).toContain("Read on LinkedIn");
     expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);

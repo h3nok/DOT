@@ -42,8 +42,8 @@ test("old essay archive links resolve to the common blog", async ({ page }) => {
   await page.route("**/essays/index.json", (route) => route.fulfill({ json: { schema: "dot.essays.v1", essays: [] } }));
   await page.goto("/essays");
   await expect(page).toHaveURL(/\/blog$/);
-  await expect(page.getByRole("heading", { name: "Essays & letters" })).toBeVisible();
-  await expect(page.getByText("Nothing has been posted here yet.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /On building.*On being human/ })).toBeVisible();
+  await expect(page.getByText("The archive starts here.")).toBeVisible();
   await expect(page.getByRole("list", { name: "Letters on LinkedIn" }).getByRole("link")).toHaveAttribute("href", /^https:\/\/www\.linkedin\.com\/pulse\//);
   await expect(page.getByRole("navigation", { name: "Blog pages" })).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
@@ -105,4 +105,48 @@ test("a temporary failure can be retried from the shared address", async ({ page
   await page.getByRole("button", { name: "Try again" }).click();
   await expect(page.getByRole("heading", { name: delivery.manifest.title })).toBeVisible();
   await expect(page).toHaveURL(/\/writing\/launch-letter\/releases\/1$/);
+});
+
+test("the author publishes here and prepares full-text copies even when LinkedIn rejects sharing", async ({ page }, testInfo) => {
+  let releases = 0;
+  const fixtureBody = "Complete author-supplied fixture manuscript.";
+  await page.route("**/v1/**", async (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === "/v1/auth/session") return route.fulfill({ json: { user: { id: "author", is_owner: true, role: "owner", display_name: "Test author" } } });
+    if (path === "/v1/academy/workspace") return route.fulfill({ json: { id: "space", slug: "dot-academy", title: "Test workspace" } });
+    if (path === "/v1/academy/spaces/space/works") return route.fulfill({ json: route.request().method() === "POST" ? { id: "launch-letter", canonical_slug: "fixture-letter", kind: "essay" } : [] });
+    if (path === "/v1/academy/works/launch-letter/revisions") return route.fulfill({ json: { id: "revision", revision_number: 1 } });
+    if (path === "/v1/academy/revisions/revision/claims") return route.fulfill({ json: { id: "claim" } });
+    if (path === "/v1/academy/works/launch-letter/releases") {
+      releases += 1;
+      return route.fulfill({ json: { release_number: 1, release_status: "released" } });
+    }
+    if (path === "/v1/distribution/linkedin") return route.fulfill({ json: { configured: true, connected: true, display_name: "Test author", expires_at: null } });
+    if (path.endsWith("/releases/1/linkedin")) return route.fulfill({ json: { platform: "linkedin", status: "failed", external_url: null, error_code: "linkedin_rejected" } });
+    if (path.endsWith("/copies")) return route.fulfill({ json: [] });
+    if (path.endsWith("/delivery/works/launch-letter/releases/1")) return route.fulfill({ json: delivery });
+    if (path.endsWith("/delivery/body/academy/fixture.md")) return route.fulfill({ body: fixtureBody, contentType: "text/markdown" });
+    return route.fulfill({ status: 404, json: { detail: "No fixture" } });
+  });
+  await page.goto("/studio/writing");
+  await page.getByRole("textbox", { name: "Title", exact: true }).fill(delivery.manifest.title);
+  await page.getByRole("textbox", { name: "Manuscript", exact: true }).fill(fixtureBody);
+  await page.getByRole("textbox", { name: "Statement", exact: true }).fill("A fixture claim");
+  await page.getByRole("combobox", { name: "Claim level", exact: true }).selectOption("Observation");
+  await page.getByRole("checkbox", { name: /Also share a link/ }).check();
+  await page.getByRole("checkbox", { name: /approve public release/ }).check();
+  await page.getByRole("button", { name: "Publish on this website", exact: true }).click();
+  await expect(page.getByText("Version 1 is published on this website.")).toBeVisible();
+  await expect(page.getByText(/LinkedIn rejected the share/)).toBeVisible();
+  await expect(page.getByText("Text unchanged")).toBeVisible();
+  await page.getByRole("button", { name: "Medium", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Open Medium editor" })).toHaveAttribute("href", "https://medium.com/p/import");
+  await page.getByText("Export and inspect the complete piece").click();
+  const exported = page.getByRole("textbox", { name: "Complete published text", exact: true });
+  await expect(exported).toHaveValue(/Complete author-supplied fixture manuscript\./);
+  await page.getByRole("textbox", { name: "Manuscript", exact: true }).fill("Private edits after release");
+  await expect(exported).not.toHaveValue(/Private edits after release/);
+  expect(releases).toBe(1);
+  await expectNoHorizontalOverflow(page);
+  await page.screenshot({ path: `/tmp/dot-distribution-${testInfo.project.name}.png`, fullPage: true });
 });
