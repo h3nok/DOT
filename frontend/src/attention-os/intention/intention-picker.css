@@ -1,0 +1,14 @@
+.intention-picker { min-width: 0; }
+.intention-picker legend { margin-bottom: 1rem; }
+.intention-picker-options { display: grid; gap: .75rem; }
+.intention-option { position: relative; display: flex; align-items: start; gap: .8rem; min-height: 5rem; padding: 1rem; border: 1px solid var(--border); border-radius: .8rem; background: var(--background); cursor: pointer; }
+.intention-option input { position: absolute; top: 1.2rem; right: .8rem; width: 1rem; height: 1rem; accent-color: var(--intent-tone); }
+.intention-option:has(input:checked) { border-color: var(--intent-tone); background: color-mix(in oklab, var(--background) 88%, var(--intent-light)); }
+.intention-option:has(input:focus-visible) { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.intention-option-icon { display: grid; place-items: center; flex-shrink: 0; width: 2rem; height: 2rem; border-radius: .6rem; background: color-mix(in oklab, var(--intent-light) 28%, transparent); color: var(--intent-tone); }
+.intention-option-icon svg { width: 1rem; height: 1rem; }
+.intention-option-copy { display: grid; gap: .35rem; padding-right: 1.1rem; }
+.intention-option-copy strong { font-size: .8125rem; font-weight: 600; }
+.intention-option-copy > span { color: var(--muted-foreground); font-size: .75rem; line-height: 1.6; }
+html[data-contrast="high"] .intention-option:has(input:checked) { border: 2px solid var(--foreground); background: var(--background); }
+@media (min-width: 640px) { .intention-picker-options { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

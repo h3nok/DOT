@@ -11,7 +11,7 @@ describe("Consciousness101", () => {
     expect(within(purpose).getByText(/In DOT, the purpose of Little c is to develop toward Love/)).toBeVisible();
     expect(within(purpose).getByText(/boundaries, accountability, and repair/)).toBeVisible();
     expect(purpose.querySelector("svg.home-concept-architecture")).toBeNull();
-    expect(within(purpose).getByRole("link", { name: /Continue with the Academy/ }))
+    expect(within(purpose).getByRole("link", { name: /Read and inquire/ }))
       .toHaveAttribute("href", "#choose-path");
     expect(within(purpose).getByRole("link", { name: "Book One · Love Must Become Operational" }))
       .toHaveAttribute("href", "/book/digital-organism-theory/the-painting#love-must-become-operational");

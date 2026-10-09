@@ -7,6 +7,9 @@ import { PUBLIC_ROUTES, htmlAttribute } from "./helpers";
  */
 test.describe("attention laws at runtime", () => {
   test("no member surface talks to a third party (L9)", async ({ page }) => {
+    // This checks every route in one session, including each network-idle wait.
+    // Give the whole journey more time without relaxing the privacy assertion.
+    test.slow();
     const foreign = new Set<string>();
 
     page.on("request", (request) => {

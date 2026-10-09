@@ -1,0 +1,29 @@
+{
+  "title": "Writing & ideas",
+  "heading": ["On building.", "On being human."],
+  "description": "Essays and letters on AI, digital products, consciousness, and the systems we live in.",
+  "paths": [
+    {
+      "id": "building",
+      "label": "In practice",
+      "title": "AI & digital products",
+      "description": "Systems architecture, agents, and the work of turning an idea into a useful product.",
+      "to": "/about#about-products",
+      "linkLabel": "Explore the work"
+    },
+    {
+      "id": "inquiry",
+      "label": "In inquiry",
+      "title": "Consciousness & human life",
+      "description": "Digital Organism Theory, reflection, and the patterns that shape how we see and act.",
+      "to": "/book/digital-organism-theory",
+      "linkLabel": "Read Book One"
+    }
+  ],
+  "seriesDescription": "Letters on technology, culture, and society, through the lens of Digital Organism Theory.",
+  "followDescription": "Read new pieces in your own RSS reader, or open the reader list for email updates.",
+  "contactTitle": "Have something to build?",
+  "contactDescription": "Independent project work in AI, web and mobile applications, and systems architecture.",
+  "emptyTitle": "The archive starts here.",
+  "emptyDescription": "New writing will appear here as it is published. For now, explore Book One and the letters in The Millennial Manifesto."
+}

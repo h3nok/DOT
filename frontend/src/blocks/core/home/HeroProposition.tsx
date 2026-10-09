@@ -1,7 +1,9 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { ArrowDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
+import HOME from "../../../content/home.json";
 import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
 import { ArchitectureFocusContext, type ArchitectureFocus } from "./architectureFocus";
@@ -34,6 +36,7 @@ export function HeroProposition({
     <div className="home-hero-proposition">
       <div className="home-hero-opening">
         <div className="home-hero-margin">
+          <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
           <div className="home-hero-kicker">
             <span className="dot-mark" aria-hidden="true" />
             <span>Digital Organism Theory</span>
@@ -41,12 +44,12 @@ export function HeroProposition({
 
           <div className="home-hero-masthead">
             <h1 className="dot-page-heading home-hero-title">
-              <span>What shapes</span>
-              {" "}
-              <span>the life you live?</span>
+              <span><span className="home-love-ink">{HOME.title}</span></span>
             </h1>
-
-            <HeroConceptSlideshow reducedMotion={reducedMotion} />
+            <blockquote className="home-hero-love-quote">
+              <p>{HOME.loveDefinition}</p>
+              <cite><Link to={HOME.sourcePath}>{HOME.sourceLabel}</Link></cite>
+            </blockquote>
           </div>
 
           <FocusNav
@@ -54,7 +57,7 @@ export function HeroProposition({
             label="Begin exploring DOT"
             primary={{
               to: "/book/digital-organism-theory/preface?path=start-where-you-live",
-              label: "Begin with lived experience",
+              label: "Read Book One",
               description: "The preface · Free to read",
               icon: <NucleusMark size={24} reducedMotion />,
             }}
@@ -64,6 +67,8 @@ export function HeroProposition({
               endIcon: <ArrowDown />,
             }]}
           />
+
+          <HeroConceptSlideshow reducedMotion={reducedMotion} />
         </div>
 
         {stage}

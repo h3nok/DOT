@@ -59,26 +59,30 @@ describe("HeroProposition", () => {
       </MemoryRouter>,
     );
 
-  it("keeps the human question still while concepts have their own controls", () => {
+  it("keeps Love still while concepts have their own controls", () => {
     renderProposition();
 
     expect(
       screen.getByRole("heading", {
-        name: "What shapes the life you live?",
+        name: "Love.",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
     expect(document.querySelector(".home-hero-statement")).toBeNull();
   });
 
-  it("introduces the idea before asking readers to learn the model's terms", () => {
+  it("attributes the opening definition to the book before introducing model terms", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "What shapes the life you live?",
+      name: "Love.",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
+    expect(screen.getByText("Love is the condition in which Fear no longer governs you."))
+      .toBeVisible();
+    expect(screen.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
+      .toHaveAttribute("href", "/book/digital-organism-theory/preface");
     expect(document.querySelector(".home-hero-lede")).toBeNull();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
@@ -98,7 +102,7 @@ describe("HeroProposition", () => {
   it("offers one primary reading action and a quiet path to the explanation", () => {
     renderProposition();
 
-    expect(screen.getByRole("link", { name: "Begin with lived experience" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Read Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory/preface?path=start-where-you-live",
     );
@@ -107,11 +111,11 @@ describe("HeroProposition", () => {
       "#possibility-field",
     );
     expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
-    expect(screen.getByRole("link", { name: "Begin with lived experience" }))
+    expect(screen.getByRole("link", { name: "Read Book One" }))
       .toHaveAccessibleDescription("The preface · Free to read");
   });
 
-  it("puts the question and reading invitation before the diagram", () => {
+  it("lets readers begin before the concepts or diagram", () => {
     render(
       <MemoryRouter>
         <HeroProposition stage={<figure aria-label="Proposed architecture" />} />
@@ -119,11 +123,12 @@ describe("HeroProposition", () => {
     );
 
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "What shapes the life you live?" });
+    const heading = screen.getByRole("heading", { name: "Love." });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
     const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(reading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 

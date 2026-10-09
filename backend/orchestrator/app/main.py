@@ -11,6 +11,8 @@ import slowapi.errors
 import app.api.v1.academy as _academy_router
 import app.api.v1.auth as _auth_router
 import app.api.v1.commerce as _commerce_router
+import app.api.v1.contact as _contact_router
+import app.api.v1.distribution as _distribution_router
 import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
 import app.api.v1.join as _join_router
@@ -137,6 +139,9 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_sitecontent_router.router)
     fapp.include_router(_support_router.router)
     fapp.include_router(_commerce_router.router)
+    fapp.include_router(_contact_router.public_router)
+    fapp.include_router(_contact_router.router)
+    fapp.include_router(_distribution_router.router)
     fapp.include_router(_join_router.router)
     fapp.include_router(_readers_router.router)
     fapp.include_router(_twin_router.public_router)

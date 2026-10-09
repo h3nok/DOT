@@ -40,6 +40,23 @@ const titles = () => within(screen.getByRole("list", { name: "Posts, newest firs
   .getAllByRole("heading").map((heading) => heading.textContent);
 
 describe("BlogPage", () => {
+  it("balances building and inquiry, keeps the series distinct, and offers direct project contact", async () => {
+    vi.mocked(fetchEssayIndex).mockResolvedValue([]);
+    vi.mocked(fetchReleasedWriting).mockResolvedValue([]);
+    open();
+    expect(await screen.findByText("The archive starts here.")).toBeInTheDocument();
+    const paths = within(screen.getByRole("region", { name: "Building and inquiry" }));
+    expect(paths.getAllByRole("heading", { level: 2 })).toHaveLength(2);
+    expect(paths.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/about#about-products");
+    expect(paths.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
+    const series = within(screen.getByRole("region", { name: "The Millennial Manifesto" }));
+    expect(series.getByRole("link", { name: "Explore the series on LinkedIn" })).toHaveAttribute("href", expect.stringMatching(/^https:\/\/www.linkedin.com\/newsletters\//));
+    expect(screen.getByRole("link", { name: "Discuss a project" })).toHaveAttribute("href", "/contact?purpose=project");
+    expect(screen.getByRole("link", { name: "Follow with RSS" })).toHaveAttribute("href", "/feed.xml");
+    expect(screen.getByRole("link", { name: "Open the reader list" })).toHaveAttribute("href", "/readers");
+    expect(screen.queryByRole("list", { name: "Posts, newest first" })).toBeNull();
+  });
+
   it("merges essays and released writing, newest first, with a stated end", async () => {
     vi.mocked(fetchEssayIndex).mockResolvedValue([essay("old", "2026-09-01")]);
     vi.mocked(fetchReleasedWriting).mockResolvedValue([writing("awork_new", "2026-10-05")]);

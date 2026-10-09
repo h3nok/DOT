@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated September 30, 2026.
+Last updated October 9, 2026.
 
 This site does not sell attention or data. There are no ads, no cross-site trackers, and no behavioural profiles. This page lists everything the site does handle, so that the promise can be checked.
 
@@ -24,13 +24,23 @@ Minty answers questions from the published text.
 
 ## Giving an email address
 
-You give an address only if you choose to: to join the reader list, to ask to join the circle, or to sign in.
+You give an address only if you choose to: to send a contact message, join the reader list, ask to join the circle, or sign in.
 
 - **Delivery.** Codes and messages are sent through [Resend](https://resend.com/legal/privacy-policy).
 - **Storage.** An address is encrypted before it is stored, with a key the database does not hold. A one-way fingerprint sits beside it so that duplicates can be found without decrypting anything. Signing in keeps only the fingerprint.
 - **The reader list** sends nothing until you confirm your address with a code. Messages are rare and only about the work, with no tracking pixels and no rewritten links. Every message has a link that removes you in one click, without an account. Leaving marks you as unsubscribed so that nothing is sent to you again; the encrypted address stays so that an old copy of the list cannot add you back. Ask, and it is deleted outright.
 - **A request to join** keeps your encrypted address and the reason you gave, so that a person can answer you.
 - **Signing in** uses a one-time code. The site keeps your address's fingerprint, when you last signed in, and a session cookie that lasts seven days or until you sign out. Conversations with Minty while signed in are saved to your account until you delete them.
+
+## Contact messages
+
+The [contact page](/contact) accepts project discussions, collaboration, writing, speaking, general messages, and privacy requests. No account is needed.
+
+- Your name, reply address, message, and any organization, timeline, or budget you supply are encrypted before storage. The database keeps the message purpose, date, delivery status, and a submission reference separately.
+- Henok can read and reply from a private owner inbox. A notice containing your message is also sent to **henok@sullix.com** through [Resend](https://resend.com/legal/privacy-policy). Replies are sent through the same provider, using a verified site address with replies directed to Henok's inbox.
+- Details are used to handle your conversation. Sending a message does not subscribe you to a newsletter or create an account. There are no tracking pixels in these messages.
+- Messages and replies remain in the private inbox until Henok deletes them. You can request a copy or deletion using the privacy purpose on the contact page or by direct email. Deleting a conversation removes its stored message and replies; copies already delivered by email are handled separately in those mailboxes.
+- If the form is unavailable, the page provides direct email. A receipt appears only after the server has accepted your message; it does not promise a response time.
 
 ## Payments
 
@@ -43,7 +53,7 @@ The site's server runs on Google Cloud, which keeps standard request logs (IP ad
 ## Your choices
 
 - Leave the reader list with the link in any message it sends.
-- To see or delete what the site holds about you, or to ask about anything on this page, use the contact on the [About](/about) page.
+- To see or delete what the site holds about you, or to ask about anything on this page, use [Contact](/contact?purpose=privacy) or email **henok@sullix.com**.
 
 ## Changes
 

@@ -6,7 +6,7 @@ import { SignIn } from "../../../dot/SignIn";
 import { useAuth } from "../../../dot/useAuth";
 import { DotWordmark } from "../../../shared/DotWordmark";
 
-export function StudioAuthGate({ children }: { children: ReactNode }) {
+export function StudioAuthGate({ children, ownerOnly = false }: { children: ReactNode; ownerOnly?: boolean }) {
   const { user, loading } = useAuth();
   const [signInOpen, setSignInOpen] = useState(false);
 
@@ -19,7 +19,14 @@ export function StudioAuthGate({ children }: { children: ReactNode }) {
     );
   }
 
-  if (user) return children;
+  if (user && (!ownerOnly || ["owner", "admin"].includes(user.role))) return children;
+  if (user) return (
+    <main className="dot-page-container py-24">
+      <h1 className="dot-page-heading">Owner workspace</h1>
+      <p className="dot-lede mt-4">This inbox belongs to the site owner.</p>
+      <Link to="/" className="dot-reading-action mt-6 inline-flex min-h-12 items-center rounded-full px-6">Return home</Link>
+    </main>
+  );
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">

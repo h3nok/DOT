@@ -1,0 +1,27 @@
+.intent-card,
+.intention-option { --intent-tone: #366b55; --intent-light: #b7ceae; }
+[data-tone="copper"] { --intent-tone: #9d542e; --intent-light: #eac29c; }
+[data-tone="blue"] { --intent-tone: #356785; --intent-light: #b2cfdf; }
+[data-tone="plum"] { --intent-tone: #776187; --intent-light: #d1c3df; }
+.dark .intent-card,
+.dark .intention-option { --intent-tone: #b7ceae; }
+.dark [data-tone="copper"] { --intent-tone: #eac29c; }
+.dark [data-tone="blue"] { --intent-tone: #b2cfdf; }
+.dark [data-tone="plum"] { --intent-tone: #d1c3df; }
+.intent-card { position: relative; display: grid; gap: .65rem; min-width: 0; min-height: 15rem; padding: 1.5rem; overflow: hidden; border: 1px solid color-mix(in oklab, var(--intent-tone) 24%, var(--border)); border-radius: 1rem; background: color-mix(in oklab, var(--background) 87%, var(--intent-light)); color: var(--foreground); }
+.intent-card-symbol { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: .65rem; border: 1px solid color-mix(in oklab, var(--intent-tone) 30%, transparent); border-radius: 50%; color: var(--intent-tone); }
+.intent-card-symbol svg { width: 1.4rem; height: 1.4rem; }
+.intent-card-label { color: var(--intent-tone); }
+.intent-card-title { font-family: var(--font-serif, Georgia, serif); font-size: 1.6rem; line-height: 1.15; letter-spacing: -.025em; }
+.intent-card-description { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.75; }
+.intent-card-arrow { position: absolute; top: 1.65rem; right: 1.5rem; width: 1.25rem; height: 1.25rem; color: var(--intent-tone); }
+.intent-card:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+html[data-contrast="high"] .intent-card { border-color: var(--foreground); background: var(--background); }
+html[data-contrast="high"] .intent-card-label,
+html[data-contrast="high"] .intent-card-symbol,
+html[data-contrast="high"] .intent-card-arrow { color: var(--foreground); }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .intent-card { transition: border-color 200ms ease, background-color 200ms ease; }
+  html:not([data-motion="still"]) .intent-card-arrow { transition: transform 200ms ease; }
+  html:not([data-motion="still"]) .intent-card:is(:hover, :focus-visible) .intent-card-arrow { transform: translate(2px, -2px); }
+}

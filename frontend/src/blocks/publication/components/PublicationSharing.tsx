@@ -1,4 +1,4 @@
-import { Copy, Download, ExternalLink } from "lucide-react";
+import { Copy, Download, ExternalLink, Share2 } from "lucide-react";
 import { useState } from "react";
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || "https://dotheory.org";
@@ -21,6 +21,13 @@ export function PublicationSharing({ title, path, distributionTools = false }: {
     }
   }
 
+  async function share() {
+    try { await navigator.share({ title, url }); }
+    catch (reason) {
+      if (!(reason instanceof Error && reason.name === "AbortError")) setMessage("Sharing unavailable. Copy the link to use in any app.");
+    }
+  }
+
   function download() {
     const blobUrl = URL.createObjectURL(new Blob([packageText], { type: "text/plain;charset=utf-8" }));
     const anchor = document.createElement("a");
@@ -36,6 +43,7 @@ export function PublicationSharing({ title, path, distributionTools = false }: {
       <a href={url} className="mt-3 block break-all text-xs text-muted-foreground underline underline-offset-4">{url}</a>
       <div className="mt-4 flex flex-wrap gap-3">
         <button type="button" onClick={() => void copy(url)} className="dot-pill"><Copy className="h-4 w-4" aria-hidden="true" />Copy link</button>
+        {typeof navigator.share === "function" && <button type="button" onClick={() => void share()} className="dot-pill"><Share2 className="h-4 w-4" aria-hidden="true" />Share…</button>}
         <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" className="dot-pill">
           <ExternalLink className="h-4 w-4" aria-hidden="true" />Share on LinkedIn
         </a>

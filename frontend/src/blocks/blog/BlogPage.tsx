@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Asterisk, PenLine } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { author } from "../../content/author";
+import blog from "../../content/blog.json";
 import newsletter from "../../content/newsletter.json";
 import { essayRoute, fetchEssayIndex, formatEssayDate } from "../../content/essays/essays";
 import { fetchReleasedWriting, writingRoute } from "../../services/OrchestratorWritingService";
@@ -10,6 +11,7 @@ import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { AppearanceControl } from "../../organism/AppearanceControl";
 import { BlogReadingLinks } from "./BlogReadingLinks";
+import { BlogCoverArtwork, BlogPathArtwork, BlogPostArtwork, BlogSeriesArtwork } from "./BlogArtwork";
 import "./blog.css";
 
 const PAGE_SIZE = 10;
@@ -29,7 +31,7 @@ interface Post {
 type BlogState = { status: "loading" } | { status: "ready"; posts: Post[]; unavailable: string[] };
 
 /**
- * One chronological record of the movement's writing (L2, L3): essays released
+ * The author's chronological archive (L2, L3): essays released
  * as files and writing released from the Studio, newest first, in finite pages.
  */
 export default function BlogPage() {
@@ -49,7 +51,7 @@ export default function BlogPage() {
   }, [requestedPage]);
 
   useEffect(() => {
-    document.title = "Blog — Digital Organism Theory";
+    document.title = `${blog.title} — ${author.name}`;
   }, []);
 
   useEffect(() => {
@@ -97,21 +99,70 @@ export default function BlogPage() {
       wide
       className="blog-page"
       header={<PageHeader controls={<AppearanceControl placement="inline" />} />}
-      footer={<SiteColophon />}
+      footer={<SiteColophon variant="personal" />}
     >
       <header className="blog-masthead">
-        <p className="dot-label">Blog</p>
-        <h1 className="dot-page-heading blog-title">Essays &amp; letters</h1>
-        <div className="blog-introduction">
-          <p className="blog-description">
-            Essays, analysis and letters that apply Digital Organism Theory to the world.
-          </p>
+        <div className="blog-masthead-line">
+          <p className="dot-label">{blog.title}</p>
           <p className="blog-byline">By <Link to="/about" className={LINK}>{author.name}</Link></p>
+        </div>
+        <div className="blog-hero">
+          <div className="blog-hero-copy">
+            <h1 className="dot-page-heading blog-title">
+              {blog.heading.map((line) => <span key={line}>{line}</span>)}
+            </h1>
+            <p className="blog-description">{blog.description}</p>
+            <a href="#latest-writing" className="blog-jump">Browse the writing <ArrowDown aria-hidden="true" /></a>
+          </div>
+          <div className="blog-hero-art">
+            <BlogCoverArtwork />
+            <div className="blog-art-caption" aria-hidden="true"><span>Systems &amp; self</span><Asterisk /><span>A space for both</span></div>
+          </div>
         </div>
       </header>
 
+      <section className="blog-paths" aria-label="Building and inquiry">
+        {blog.paths.map((path) => (
+          <div key={path.id} className={`blog-path blog-path-${path.id}`}>
+            <div className="blog-path-art"><BlogPathArtwork kind={path.id} /></div>
+            <div className="blog-path-copy">
+              <p className="dot-label">{path.label}</p>
+              <h2 className="dot-section-heading">{path.title}</h2>
+              <p>{path.description}</p>
+              <Link to={path.to} className="blog-path-link">{path.linkLabel}<ArrowUpRight aria-hidden="true" /></Link>
+            </div>
+          </div>
+        ))}
+      </section>
+
       <div className="blog-layout">
         <div className="blog-archive">
+          <section aria-labelledby="manifesto-title" className="blog-series">
+            <div className="blog-series-cover" aria-hidden="true">
+              <span className="blog-cover-kicker">Applied DOT</span>
+              <BlogSeriesArtwork />
+              <span className="blog-cover-name"><span>The</span>Millennial<span>Manifesto</span></span>
+              <span className="blog-cover-foot">Letters on technology &amp; society</span>
+            </div>
+            <div className="blog-series-copy">
+              <p className="dot-label">A series · Applied DOT</p>
+              <h2 id="manifesto-title" className="blog-series-title">{newsletter.title}</h2>
+              <p className="blog-series-description">{blog.seriesDescription}</p>
+              <p className="blog-external-note">These letters are published on LinkedIn.</p>
+              {newsletter.editions.length > 0 && <ul aria-label="Letters on LinkedIn" className="blog-series-letters">
+                {newsletter.editions.map((edition) => (
+                  <li key={edition.url}>
+                    <a href={edition.url} rel="noreferrer">
+                      <span>{edition.title}</span>
+                      <ArrowUpRight aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>}
+              <a href={newsletter.url} className="blog-path-link" rel="noreferrer">Explore the series on LinkedIn<ArrowUpRight aria-hidden="true" /></a>
+            </div>
+          </section>
+
           <section aria-labelledby="latest-writing">
             <header className="blog-section-heading">
               <h2 id="latest-writing" ref={archiveHeading} tabIndex={-1} className="dot-label">Latest writing</h2>
@@ -132,28 +183,34 @@ export default function BlogPage() {
             )}
 
             {state.status === "ready" && state.posts.length === 0 && state.unavailable.length === 0 && (
-              <div className="blog-state">
-                <p className="blog-state-title">Nothing has been posted here yet.</p>
-                <p>New essays and letters will appear here when published.</p>
+              <div className="blog-state blog-state-empty">
+                <div className="blog-empty-art" aria-hidden="true"><span /><span /><PenLine /></div>
+                <div>
+                  <p className="blog-state-title">{blog.emptyTitle}</p>
+                  <p>{blog.emptyDescription}</p>
+                </div>
               </div>
             )}
 
             {shown.length > 0 && (
               <ol aria-label="Posts, newest first" className="blog-posts">
-                {shown.map((post) => (
+                {shown.map((post, index) => (
                   <li key={post.key}>
                     <article className="blog-post">
-                      <p className="blog-post-meta">
-                        <time dateTime={post.date}>{formatEssayDate(post.date)}</time>
-                        {post.note && <><span aria-hidden="true"> · </span><span>{post.note}</span></>}
-                      </p>
-                      <h3 className="dot-section-heading blog-post-title">
-                        <Link to={post.href}>
-                          <span>{post.title}</span>
-                          <ArrowRight className="blog-post-arrow" aria-hidden="true" />
-                        </Link>
-                      </h3>
-                      {post.summary && <p className="blog-post-summary">{post.summary}</p>}
+                      <div className="blog-post-art"><BlogPostArtwork variant={index % 3} /></div>
+                      <div className="blog-post-copy">
+                        <p className="blog-post-meta">
+                          <time dateTime={post.date}>{formatEssayDate(post.date)}</time>
+                          {post.note && <><span aria-hidden="true"> · </span><span>{post.note}</span></>}
+                        </p>
+                        <h3 className="dot-section-heading blog-post-title">
+                          <Link to={post.href}>
+                            <span>{post.title}</span>
+                            <ArrowRight className="blog-post-arrow" aria-hidden="true" />
+                          </Link>
+                        </h3>
+                        {post.summary && <p className="blog-post-summary">{post.summary}</p>}
+                      </div>
                     </article>
                   </li>
                 ))}
@@ -172,31 +229,6 @@ export default function BlogPage() {
               <p className="blog-completion">That is everything posted here so far.</p>
             )}
           </section>
-
-          {newsletter.editions.length > 0 && (
-            <section aria-labelledby="external-letters" className="blog-external">
-              <header className="blog-section-heading">
-                <h2 id="external-letters" className="dot-label">Letters on LinkedIn</h2>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </header>
-              <p className="blog-external-note">From {newsletter.title}. These letters open on LinkedIn.</p>
-              <ul aria-label="Letters on LinkedIn" className="blog-posts">
-                {newsletter.editions.map((edition) => (
-                  <li key={edition.url}>
-                    <article className="blog-post">
-                      <p className="blog-post-meta">Read on LinkedIn</p>
-                      <h3 className="dot-section-heading blog-post-title">
-                        <a href={edition.url} rel="noreferrer">
-                          <span>{edition.title}</span>
-                          <ArrowUpRight className="blog-post-arrow" aria-hidden="true" />
-                        </a>
-                      </h3>
-                    </article>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
         </div>
 
         <BlogReadingLinks />

@@ -5,6 +5,13 @@ import { PublicationSharing } from "./PublicationSharing";
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe("PublicationSharing", () => {
+  it("lets readers choose any supported app through their device share sheet", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { share });
+    render(<PublicationSharing title="Released letter" path="/writing/work-1/releases/1" />);
+    fireEvent.click(screen.getByRole("button", { name: "Share…" }));
+    expect(share).toHaveBeenCalledWith({ title: "Released letter", url: "https://dotheory.org/writing/work-1/releases/1" });
+  });
   it("shares the owned URL, not an external article or localhost", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });

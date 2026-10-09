@@ -17,16 +17,22 @@ const LINK =
  */
 export function SiteColophon({
   essaysPublished = ESSAYS_PUBLISHED,
+  variant = "publication",
 }: {
   essaysPublished?: boolean;
+  variant?: "publication" | "personal";
 }) {
   return (
     <footer className="dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
         <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
         <p className="text-xs leading-relaxed text-muted-foreground/50">
-          Written by {authorByline} · offered as a construction, not a revelation.
-          No ads, no profiling, no data sales.
+          {variant === "personal" ? (
+            <>{authorByline} · Independent builder.</>
+          ) : (
+            <>Written by {authorByline} · offered as a construction, not a revelation.
+            No ads, no profiling, no data sales.</>
+          )}
         </p>
         <nav
           aria-label="Site"
@@ -36,6 +42,7 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
+          <Link to="/contact" className={LINK}>Contact</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
             <a href={FEED_URL} className={LINK}>

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
 import {
-  createWritingWork, emptyClaim, fetchWritingDraft, fetchWritingWorkspace, fetchWritingWorks, releaseWriting, saveWritingDraft, writingRoute,
+  createWritingWork, emptyClaim, fetchWritingDelivery, fetchWritingDraft, fetchWritingWorkspace, fetchWritingWorks, releaseWriting, saveWritingDraft, writingRoute,
   type WritingClaim, type WritingDraft, type WritingWork, type WritingWorkspace,
 } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
-import { PublicationSharing } from "./components/PublicationSharing";
+import { shareReleasedWritingOnLinkedIn, type DistributionCopy } from "../../services/OrchestratorDistributionService";
+import { WritingConnections } from "./components/WritingConnections";
+import { WritingDistribution } from "./components/WritingDistribution";
 import { WritingClaimsEditor } from "./components/WritingClaimsEditor";
 
 const emptyDraft = (): WritingDraft => ({ title: "", summary: "", body: "" });
@@ -26,6 +28,9 @@ export default function WritingStudioPage() {
   const [busy, setBusy] = useState(false);
   const [approved, setApproved] = useState(false);
   const [releaseNumber, setReleaseNumber] = useState<number | null>(null);
+  const [shareLinkedIn, setShareLinkedIn] = useState(false);
+  const [distributionResult, setDistributionResult] = useState<DistributionCopy | null>(null);
+  const [distributionError, setDistributionError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved) || JSON.stringify(claims) !== JSON.stringify(savedClaims);
@@ -61,6 +66,7 @@ export default function WritingStudioPage() {
     setError(null);
     try {
       const content = work ? await fetchWritingDraft(work.id) : null;
+      const published = work ? await fetchWritingDelivery(work.id).catch(() => null) : null;
       const text = content ? { title: content.title, summary: content.summary, body: content.body } : emptyDraft();
       setDraft(text);
       setSaved(text);
@@ -68,7 +74,10 @@ export default function WritingStudioPage() {
       setClaims(content?.claims?.length ? content.claims : [emptyClaim()]);
       setSavedClaims(content?.claims?.length ? content.claims : [emptyClaim()]);
       setApproved(false);
-      setReleaseNumber(null);
+      setReleaseNumber(published?.delivery.manifest?.release.number ?? null);
+      setShareLinkedIn(false);
+      setDistributionResult(null);
+      setDistributionError(null);
       setMessage(null);
     } catch (reason) { setError(reason instanceof Error ? reason.message : "The saved text could not be opened."); }
     finally { setBusy(false); }
@@ -91,8 +100,16 @@ export default function WritingStudioPage() {
       if (publish) {
         const release = await releaseWriting(id, draft, claims);
         setReleaseNumber(release.release_number);
+        setDistributionResult(null);
+        setDistributionError(null);
         setApproved(false);
         setMessage(`Version ${release.release_number} is published on this website.`);
+        // The native release is complete before any external action. A sharing
+        // failure must never turn publication into a failed save or a new release.
+        if (shareLinkedIn) {
+          try { setDistributionResult(await shareReleasedWritingOnLinkedIn(id, release.release_number)); }
+          catch { setDistributionError("Your piece is published here. The LinkedIn result could not be confirmed. Check your account before sharing again."); }
+        }
       } else {
         await saveWritingDraft(id, draft, claims);
         setMessage("Text and entered claims saved as a private revision.");
@@ -134,6 +151,8 @@ export default function WritingStudioPage() {
       <div className="mx-auto max-w-6xl">
         <p className="dot-label">Private writing workspace</p>
         <h1 className="mt-3 font-serif text-3xl">Essays, analysis, and letters</h1>
+        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">Write and save privately. Publish the complete piece to the blog, then distribute that version to your other accounts.</p>
+        <Link to="/blog" className="mr-5 mt-3 inline-block text-sm underline">View public blog</Link>
         <Link to="/studio" className="mt-3 inline-block text-sm text-muted-foreground underline">Book projects</Link>
         {error && <p role="alert" className="mt-5 break-words text-sm text-destructive">{error}</p>}
         {!workspace ? <p role="status" className="mt-8 text-sm text-muted-foreground">{error ? "The workspace could not be opened. Your text has not been published." : "Opening the workspace…"}</p> : (
@@ -162,10 +181,12 @@ export default function WritingStudioPage() {
                 {dirty && <AlertDialog.Root><AlertDialog.Trigger className="text-sm underline">Discard changes</AlertDialog.Trigger><AlertDialog.Portal><AlertDialog.Overlay className="fixed inset-0 z-[80] bg-background/70" /><AlertDialog.Content className="appearance-ui-panel fixed left-1/2 top-1/2 z-[81] w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded border border-border p-6"><AlertDialog.Title className="font-serif text-xl">Discard unsaved changes?</AlertDialog.Title><AlertDialog.Description className="mt-3 text-sm">The text and claims will return to the last saved revision.</AlertDialog.Description><div className="mt-5 flex flex-wrap gap-3"><AlertDialog.Cancel className="dot-pill">Keep editing</AlertDialog.Cancel><AlertDialog.Action className="dot-pill" onClick={() => { setDraft({ ...saved }); setClaims(savedClaims.map((claim) => ({ ...claim }))); setApproved(false); }}>Discard changes</AlertDialog.Action></div></AlertDialog.Content></AlertDialog.Portal></AlertDialog.Root>}
               </div>
               <WritingClaimsEditor claims={claims} onChange={(value) => { setClaims(value); setApproved(false); }} disabled={busy} />
+              <WritingConnections selected={shareLinkedIn} onSelect={setShareLinkedIn} />
               <label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={approved} disabled={busy} onChange={(event) => setApproved(event.target.checked)} className="mt-1" />I have reviewed the text, classified its material claims, and approve public release.</label>
               <button type="button" disabled={busy || !approved || !draft.title.trim() || !draft.body.trim()} onClick={() => void save(true)} className="dot-reading-action mt-5 inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40"><Upload className="h-4 w-4" aria-hidden="true" />Publish on this website</button>
               {message && <p role="status" className="mt-4 text-sm">{message}</p>}
-              {workId && releaseNumber && <div className="mt-8"><Link to={writingRoute(workId, releaseNumber)} className="mb-5 inline-block text-sm underline">Read released version {releaseNumber}</Link><PublicationSharing title={draft.title} path={writingRoute(workId, releaseNumber)} distributionTools /></div>}
+              {distributionError && <p role="status" className="mt-4 text-sm">{distributionError}</p>}
+              {workId && releaseNumber && <div className="mt-8"><Link to={writingRoute(workId, releaseNumber)} className="mb-5 inline-block text-sm underline">Read released version {releaseNumber}</Link><WritingDistribution workId={workId} number={releaseNumber} automaticResult={distributionResult} /></div>}
             </div>
           </div>
         )}

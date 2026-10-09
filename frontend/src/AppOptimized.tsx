@@ -49,6 +49,8 @@ const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 // The author layer (ADR-0033): who writes, what else they have written, how
 // to hear again, and what the site keeps.
 const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
+const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
+const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
@@ -191,6 +193,7 @@ const App: React.FC = () => {
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/join" element={<JoinPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
@@ -213,6 +216,7 @@ const App: React.FC = () => {
                   path="/studio/writing"
                   element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
                 />
+                <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly><ContactInboxPage /></StudioAuthGate>} />
                 <Route
                   path="/studio/:projectId"
                   element={

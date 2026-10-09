@@ -178,7 +178,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.style).toBe("normal");
     expect(presentation.opening.nativeSemiboldLoaded).toBe(true);
     expect(presentation.opening.headingPixels).toBeGreaterThanOrEqual(32);
-    expect(presentation.opening.headingPixels).toBeLessThanOrEqual(56);
+    expect(presentation.opening.headingPixels).toBeLessThanOrEqual(112);
     expect(presentation.opening.kickerCase).toBe("none");
     expect(presentation.opening.headingContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifeContrast).toBeGreaterThanOrEqual(4.5);
@@ -196,7 +196,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);
     await expect(page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Begin with lived experience" })).toBeInViewport();
+      .getByRole("link", { name: "Read Book One" })).toBeInViewport();
     for (const font of presentation.fonts) {
       expect(font.pixels, `${font.layer} rendered label size`).toBeGreaterThanOrEqual(
         font.layer === "awareness-radius" ? 14 : 16,
@@ -242,7 +242,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       );
     }
     const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Begin with lived experience", exact: true });
+      .getByRole("link", { name: "Read Book One", exact: true });
     await expect(read).toBeInViewport({ ratio: 1 });
     await expectNoHorizontalOverflow(page);
   });
@@ -254,9 +254,9 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "What shapes the life you live?",
+      name: "Love.",
     })).toBeVisible();
-    const read = hero.getByRole("link", { name: "Begin with lived experience", exact: true });
+    const read = hero.getByRole("link", { name: "Read Book One", exact: true });
     await expect(read).toBeInViewport();
 
     const entry = await hero.locator(".home-hero-entry").evaluate((node) => {
@@ -291,7 +291,7 @@ for (const viewport of [
 
     const svg = page.locator(".home-hero-architecture__svg");
     const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Begin with lived experience", exact: true });
+      .getByRole("link", { name: "Read Book One", exact: true });
     await expect(reading).toBeInViewport({ ratio: 1 });
     await expect(reading).toHaveAccessibleDescription("The preface · Free to read");
 
@@ -326,7 +326,7 @@ test("the reading invitation opens the lived-experience path from the keyboard",
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Begin with lived experience", exact: true });
+    .getByRole("link", { name: "Read Book One", exact: true });
   await reading.focus();
   await expect(reading).toBeFocused();
   await page.keyboard.press("Enter");

@@ -32,6 +32,11 @@ TENANT_TABLES: frozenset[str] = frozenset(
         "footprint_imports",
         "source_objects",
         "twin_conversations",
+        "publishing_connections",
+        "publishing_authorizations",
+        "distribution_copies",
+        "contact_inquiries",
+        "contact_replies",
     }
 )
 

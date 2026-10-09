@@ -45,6 +45,12 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes("node_modules")) return undefined;
 
+          // Full-text HTML export is private author tooling. Keep its static
+          // renderer out of the public site's eagerly loaded React runtime.
+          if (id.includes("/node_modules/react-dom/") && (id.includes("/server") || id.includes("react-dom-server"))) {
+            return "writing-export-runtime";
+          }
+
           // Keep the entry's actual runtime together. The old entry-based
           // vendor chunk captured only React's wrapper modules (and therefore
           // emitted empty) while react-dom/client stayed in the application

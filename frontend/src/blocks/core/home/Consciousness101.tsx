@@ -1,5 +1,6 @@
 import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import HOME from "../../../content/home.json";
 
 export function Consciousness101() {
   return (
@@ -18,8 +19,10 @@ export function Consciousness101() {
               In DOT, the purpose of Little c is to develop toward Love.
               Relationships are where that development becomes lived experience.
             </p>
+            <blockquote className="home-love-statement">
+              <p>{HOME.loveDefinition}</p>
+            </blockquote>
             <p className="home-theory-layer-human-stakes">
-              Love is the condition in which Fear no longer governs you.
               It is practiced in how you listen, tell the truth, respect another
               person’s agency, and take responsibility for what follows.
             </p>
@@ -37,7 +40,7 @@ export function Consciousness101() {
             <a href="#choose-path" className="home-theory-layer-next">
               <span>
                 <small>From purpose to inquiry</small>
-                <span className="home-theory-layer-next-title">Continue with the Academy</span>
+                <span className="home-theory-layer-next-title">Read and inquire</span>
               </span>
               <ArrowDown aria-hidden="true" />
             </a>

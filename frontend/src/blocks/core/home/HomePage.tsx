@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
+  Blocks,
+  PenLine,
   Mail,
   Network,
 } from "lucide-react";
@@ -17,6 +19,9 @@ import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
+import { IntentCard } from "../../../attention-os/focus-nav/IntentCard";
+import { author } from "../../../content/author";
+import HOME from "../../../content/home.json";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
@@ -39,7 +44,7 @@ export default function HomePage() {
 
   useEffect(() => {
     // Other routes set their own titles; restore the home title on return.
-    document.title = "DOT — Digital Organism Theory";
+    document.title = `${author.name} — Builder, writing & inquiry`;
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -143,6 +148,20 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section id="personal-platform" className="home-personal-section" aria-labelledby="home-personal-title">
+        <div className="dot-page-container dot-page-wide">
+          <header className="home-personal-heading">
+            <div><p className="dot-label">Henok Ghebrechristos, PhD</p><h2 id="home-personal-title" className="dot-page-heading">Things built.<br />Ideas explored.</h2></div>
+            <p>AI and product architecture, independent building, and an open inquiry into consciousness. Choose what brings you here.</p>
+          </header>
+          <nav className="home-personal-doors" aria-label="Work, writing and conversation">
+            <IntentCard to="/about#about-products" title="Build something useful." label="Work · Digital assets" description="Products, AI systems, selected projects, and the experience behind them." icon={<Blocks />} tone="forest" />
+            <IntentCard to="/blog" title="Follow an idea." label="Writing · Open inquiry" description="Technical work, essays, and The Millennial Manifesto, together in one archive." icon={<PenLine />} tone="copper" />
+            <IntentCard to="/contact?purpose=project" title="Start a conversation." label="Contact · Work together" description="Discuss a project, explore a collaboration, or share a question." icon={<Mail />} tone="blue" />
+          </nav>
+        </div>
+      </section>
+
       <AnimatePresence>
         {heroCompanionOpen && (
           <TwinSurface
@@ -158,10 +177,10 @@ export default function HomePage() {
       <TheoryLayerJourney reducedMotion={reducedMotion} />
       <Consciousness101 />
 
-      {/* ── Final invitation into the living inquiry ─────────────────── */}
+      {/* ── Final reading invitation ─────────────────────────────────── */}
       <motion.section
         id="choose-path"
-        aria-label="Continue to the DOT Academy"
+        aria-label="An invitation to inquire"
         initial={reducedMotion ? false : { y: 12 }}
         whileInView={{ y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
@@ -170,24 +189,23 @@ export default function HomePage() {
       >
         <div className="dot-page-container">
           <div className="mx-auto max-w-2xl text-center">
-            <span className="home-ending-label dot-label">A new intellectual movement</span>
+            <span className="home-ending-label dot-label">An invitation to inquire</span>
             <h2 className="dot-page-heading mt-2 text-balance">
-              Continue with the Academy.
+              {HOME.invitationTitle}
             </h2>
             <p className="dot-lede mx-auto mt-4 max-w-xl">
-              DOT is part of a growing movement to build a theory of everything
-              that includes consciousness. Its nearest neighbours include Thomas
-              Campbell’s <cite>My Big TOE</cite>, Bernardo Kastrup’s analytic
-              idealism, and Donald Hoffman’s theory of conscious agents. DOT puts
-              one question at the centre: can anyone see reality clearly while
-              Fear governs what they are willing to find?
+              {HOME.invitation}
             </p>
             <p className="dot-lede mx-auto mt-4 max-w-xl">
-              Read the definitions and examine the questions DOT has yet to
-              answer. The Academy is in development; Book One remains a fixed
-              edition.
+              {HOME.boundary}
+            </p>
+            <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
+              {HOME.edition}
             </p>
             <p className="mx-auto mt-4 max-w-xl text-xs text-muted-foreground">
+              Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
+              Bernardo Kastrup’s analytic idealism, and Donald Hoffman’s theory
+              of conscious agents.{" "}
               Naming these thinkers does not mean they endorse DOT.
             </p>
           </div>
@@ -195,11 +213,16 @@ export default function HomePage() {
           <FocusNav
             label="Continue the inquiry"
             className="mx-auto mt-10 max-w-sm"
-            primary={{ to: "/academy", label: "Explore DOT Academy", icon: <Network /> }}
-            secondary={[{
+            primary={{
               to: "/book/digital-organism-theory",
-              label: "Read Book One as a fixed edition",
+              label: "Read Book One",
+              description: "Complete and free · Fixed edition",
               icon: <BookOpen />,
+            }}
+            secondary={[{
+              to: "/academy",
+              label: "Explore DOT Academy",
+              icon: <Network />,
               endIcon: <ArrowRight />,
             }]}
           />
@@ -216,6 +239,7 @@ export default function HomePage() {
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
           <nav aria-label="Quiet links" className="flex items-center gap-5 text-xs">
+            <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
             <Link
               to="/readers"
               className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"

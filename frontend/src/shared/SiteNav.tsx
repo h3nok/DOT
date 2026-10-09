@@ -1,13 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
 
 const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
-  ["/book/digital-organism-theory", "Book One"],
-  ["/blog", "Blog"],
-  ["/academy", "Academy"],
   ["/about", "About"],
+  ["/blog", "Blog"],
+  ["/book/digital-organism-theory", "Book One"],
+  ["/academy", "Academy"],
+  ["/contact", "Contact"],
 ];
 
-/** The same four doors on every page; a fixed order, nothing counted or ranked. */
+/** Fixed destinations on every page, with an explicit door for conversation. */
 export function SiteNav({ className = "" }: { className?: string }) {
   const { pathname } = useLocation();
   return (

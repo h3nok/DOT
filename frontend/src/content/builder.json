@@ -1,0 +1,27 @@
+{
+  "title": "Independent digital asset builder",
+  "headline": "From an ambitious idea to a working product.",
+  "summary": "AI systems, web and mobile applications, and the architecture that connects them. Independent contract work, from the first prototype through production.",
+  "services": [
+    {
+      "title": "Build a product",
+      "description": "Take a new idea from scope to a working website, application, or platform. Web, mobile, payments, and the workflows in between.",
+      "deliverable": "A focused first release"
+    },
+    {
+      "title": "Put AI to work",
+      "description": "Build agents, assistants, and knowledge systems around a real task, with clear tool boundaries and useful integrations.",
+      "deliverable": "AI connected to your workflow"
+    },
+    {
+      "title": "Strengthen the foundation",
+      "description": "Review an existing system, connect its services, or prepare a prototype for production with maintainable architecture.",
+      "deliverable": "A clear technical path forward"
+    }
+  ],
+  "projectOrder": ["sullix", "medroute", "stay"],
+  "otherProjects": ["hki"],
+  "inquirySubject": "Project inquiry",
+  "inquiryBody": "Hi Henok,\n\nI'd like to discuss a project.\n\nWhat I'd like to build:\nWho it's for:\nCurrent stage:\nTarget timeline:\nBudget range (if known):\n\nThanks!",
+  "contactIntro": "Bring an idea, an existing product, or a workflow that needs better tools. A short note about the problem, the people it serves, and your timeline is enough to start."
+}
