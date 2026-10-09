@@ -100,16 +100,20 @@ export default function AboutPage() {
         <ul className="about-projects">
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
+            const identity = (
+              <div className="about-project-identity">
+                <p className="dot-label">{project.status}</p>
+                <h3>{project.name}</h3>
+                <p className="about-project-role">{project.role}</p>
+                <p className="about-period">{project.period}</p>
+              </div>
+            );
             return (
               <Surface as="li" key={project.slug} id={`project-${project.slug}`} className={`about-project${project.media ? " about-project-with-media" : ""}`} tone={projectTones[project.slug] ?? "forest"}>
+                {project.media && identity}
                 <div className="about-project-visual">{project.media ? <ProjectMedia media={project.media} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
-                  <div className="about-project-identity">
-                    <p className="dot-label">{project.status}</p>
-                    <h3>{project.name}</h3>
-                    <p className="about-project-role">{project.role}</p>
-                    <p className="about-period">{project.period}</p>
-                  </div>
+                  {!project.media && identity}
                   <div className="about-project-detail">
                     <p className="about-project-tagline">{project.tagline}</p>
                     <p>{project.description}</p>
