@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WritingStudioPage from "./WritingStudioPage";
@@ -22,7 +22,12 @@ beforeEach(() => {
   vi.mocked(distribution.fetchLinkedInConnection).mockResolvedValue({ configured: true, connected: true, display_name: "Test author", expires_at: null });
   vi.mocked(distribution.fetchDistributionCopies).mockResolvedValue([]);
 });
-afterEach(() => vi.resetAllMocks());
+afterEach(() => {
+  // Unmount before resetting services so pending React effects cannot call
+  // mocks whose promise implementations have already been cleared.
+  cleanup();
+  vi.resetAllMocks();
+});
 
 async function write() {
   render(<MemoryRouter><WritingStudioPage /></MemoryRouter>);
