@@ -26,6 +26,9 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await pageNav.getByRole("link", { name: "Selected work" }).click();
   await expect(page.getByRole("region", { name: "Selected work" })
     .getByRole("heading", { name: "Sullix", exact: true })).toBeInViewport();
+  await expect(page.getByRole("main")).not.toContainText("Avia");
+  await expect(page.getByRole("link", { name: "Visit website: Sullix", exact: true }))
+    .toHaveAttribute("href", "https://sullix.com/");
   await pageNav.getByRole("link", { name: "Career & résumé", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Career & résumé", exact: true })).toBeInViewport();
   const resume = page.getByRole("region", { name: "Career & résumé" });
@@ -57,6 +60,29 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await book.click();
   await expect(page).toHaveURL("/book/digital-organism-theory");
   await expect(page.locator("h1").first()).toBeVisible();
+  expect(problems).toEqual([]);
+});
+
+test("Sullix's recorded demo plays only on request and carries its evidence limits", async ({ page }) => {
+  const problems = collectPageProblems(page);
+  await page.goto("/about");
+  const demo = page.locator('video[aria-label="Faro prepares a project draft"]');
+  await expect(demo).toHaveAttribute("preload", "none");
+  expect(await demo.evaluate((video: HTMLVideoElement) => ({
+    autoplay: video.autoplay, loop: video.loop, paused: video.paused,
+  }))).toEqual({ autoplay: false, loop: false, paused: true });
+  await expect(page.getByText(/Recorded Sullix software with a fictional kitchen remodel/)).toBeVisible();
+  await demo.scrollIntoViewIfNeeded();
+  await demo.evaluate((video: HTMLVideoElement) => video.play());
+  await expect.poll(() => demo.evaluate((video: HTMLVideoElement) => video.currentTime)).toBeGreaterThan(0);
+  expect(await demo.evaluate((video: HTMLVideoElement) => video.videoWidth)).toBe(1920);
+  await demo.evaluate((video: HTMLVideoElement) => video.pause());
+  const captions = demo.locator('track[kind="captions"]');
+  await expect(captions).toHaveAttribute("srclang", "en");
+  await expect.poll(() => captions.evaluate((track: HTMLTrackElement) => track.readyState)).toBe(2);
+  await page.getByText("Read the video description", { exact: true }).click();
+  await expect(page.getByText(/it does not show an autonomous project completion or a customer result/)).toBeVisible();
+  await expectNoHorizontalOverflow(page);
   expect(problems).toEqual([]);
 });
 

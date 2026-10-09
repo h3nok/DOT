@@ -10,6 +10,16 @@ export interface Project {
   tagline: string;
   description: string;
   stack: string[];
+  media?: {
+    source: string;
+    poster: string;
+    captions: string;
+    title: string;
+    description: string;
+    transcript: string;
+    width: number;
+    height: number;
+  };
   links: {
     repo?: string;
     live?: string;

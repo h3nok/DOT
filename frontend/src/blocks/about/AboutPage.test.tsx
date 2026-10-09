@@ -116,7 +116,9 @@ describe("AboutPage", () => {
     }
     expect(products.getByRole("link", { name: "Hermetic Knowledge Isolation" }))
       .toHaveAttribute("href", "https://github.com/h3nok/HKI");
-    expect(products.queryByRole("link", { name: /Sullix/ })).toBeNull();
+    expect(products.getByRole("link", { name: "Visit website: Sullix" }))
+      .toHaveAttribute("href", "https://sullix.com/");
+    expect(screen.queryByText(/Avia/)).toBeNull();
   });
 
   it("offers a real résumé with generic employer labels and the requested research title", () => {

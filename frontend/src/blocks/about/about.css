@@ -26,6 +26,10 @@
 .about-project { overflow: hidden; }
 .about-project-visual { background: color-mix(in oklab, var(--background) 38%, var(--intent-light)); border-bottom: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
 .about-product-art { display: block; width: 100%; height: auto; color: var(--intent-tone); }
+.about-project-media video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #171719; }
+.about-project-media figcaption { padding: 1rem clamp(1.25rem, 3vw, 2rem) .75rem; font-size: .8125rem; line-height: 1.7; color: var(--muted-foreground); }
+.about-project-media .about-media-title { margin-bottom: .25rem; color: var(--foreground); font-weight: 600; }
+.about-project-media .about-disclosure { margin-top: 0; }
 .about-art-guide { stroke: currentColor; stroke-width: 1; opacity: .16; }
 .about-art-line { stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .about-art-route { stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
@@ -97,9 +101,12 @@ html[data-contrast="high"] .about-art-guide { opacity: .3; }
 .dark .about-art-fill { fill: color-mix(in oklab, var(--background) 72%, var(--intent-light)); }
 @media (min-width: 768px) {
   .about-hero { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
-  .about-projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .about-project:first-child { display: grid; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
-  .about-project:first-child .about-project-visual { display: grid; align-items: center; border-bottom: 0; border-right: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
+  .about-project { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .about-project .about-project-visual { display: grid; align-items: center; border-bottom: 0; border-right: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
+  .about-project-with-media { display: block; }
+  .about-project-with-media .about-project-visual { display: block; border-right: 0; border-bottom: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
+  .about-project-with-media .about-project-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 2rem; }
+  .about-project-with-media .about-project-detail { margin-top: 0; }
   .about-services { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .about-career-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3rem; }
   .about-writing, .about-contact { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); gap: 3rem; }

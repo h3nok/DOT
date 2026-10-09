@@ -19,7 +19,7 @@
       "deliverable": "A clear technical path forward"
     }
   ],
-  "projectOrder": ["sullix", "medroute", "stay"],
+  "projectOrder": ["sullix", "stay"],
   "otherProjects": ["hki"],
   "inquirySubject": "Project inquiry",
   "inquiryBody": "Hi Henok,\n\nI'd like to discuss a project.\n\nWhat I'd like to build:\nWho it's for:\nCurrent stage:\nTarget timeline:\nBudget range (if known):\n\nThanks!",

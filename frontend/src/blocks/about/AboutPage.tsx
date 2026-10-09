@@ -26,6 +26,7 @@ import { SiteColophon } from "../../shared/SiteColophon";
 import { PageIntro, SectionHeading, Surface, TextLink } from "../../shared/design-system/Editorial";
 import type { IntentTone } from "../../attention-os/focus-nav/IntentCard";
 import { BuilderArtwork, ProductArtwork } from "./AboutArtwork";
+import { ProjectMedia } from "./ProjectMedia";
 import "./about.css";
 
 const projectTones: Record<string, IntentTone> = { sullix: "copper", medroute: "blue", stay: "forest" };
@@ -80,7 +81,7 @@ export default function AboutPage() {
           <p className="dot-label">Research depth. Product experience.</p>
           <dl>
             <div><dt>Applied AI research</dt><dd>{career.experience[0].role}<span>{career.experience[0].company}</span></dd></div>
-            <div><dt>Product co-founding</dt><dd>Sullix & Avia<span>Hands-on architecture and engineering</span></dd></div>
+            <div><dt>Product co-founding</dt><dd>Sullix<span>Hands-on architecture and engineering</span></dd></div>
             {author.credentials[0] && <div><dt>Research foundation</dt><dd>{author.credentials[0].degree}<span>{author.credentials[0].institution}</span></dd></div>}
           </dl>
           <p className="about-location">Based in {career.location}</p>
@@ -100,8 +101,8 @@ export default function AboutPage() {
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
             return (
-              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
-                <div className="about-project-visual"><ProductArtwork kind={project.slug} /></div>
+              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className={`about-project${project.media ? " about-project-with-media" : ""}`} tone={projectTones[project.slug] ?? "forest"}>
+                <div className="about-project-visual">{project.media ? <ProjectMedia media={project.media} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
                   <div className="about-project-identity">
                     <p className="dot-label">{project.status}</p>
