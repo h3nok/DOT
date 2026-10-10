@@ -109,6 +109,8 @@ describe("public route metadata", () => {
       const chapter = nodeOfType(route!, "Chapter");
       expect(chapter?.name).toBe(section.title);
       expect(chapter?.url).toBe(`${SITE_URL}/book/digital-organism-theory/${section.slug}/`);
+      // Identifiers are names, not fetched addresses: they keep their original form.
+      expect(chapter?.["@id"]).toBe(`${SITE_URL}/book/digital-organism-theory/${section.slug}#chapter`);
       expect((chapter?.isPartOf as Record<string, string>)["@id"]).toBe(
         `${SITE_URL}/book/digital-organism-theory#book`,
       );

@@ -25,15 +25,13 @@ import {
   DOT_BOOK_ONE_ROUTE,
   DOT_BOOK_ONE_SLUG,
 } from "../../content/publications/dotBookOne";
+import { pageUrl } from "../../content/pageUrl";
 import {
   fetchPublicDeliveryManifest,
   fetchSectionBody,
   type PublicationReleaseManifest,
   type PublicationReleaseManifestSection,
 } from "../../services/OrchestratorPublicationService";
-
-const SITE_URL =
-  import.meta.env.VITE_SITE_URL ?? "https://dotheory.org";
 
 type Manifest = PublicationReleaseManifest;
 type Section = PublicationReleaseManifestSection;
@@ -651,10 +649,9 @@ function PublicationReaderPage() {
   if (!manifest || (sectionSlug && content === null)) return <LoadingState />;
 
   const meta = manifest.project.meta;
-  const canonicalBase = `${SITE_URL}/read/${manifest.project.owner_id}/${manifest.project.slug}`;
-  const canonicalUrl = section
-    ? `${canonicalBase}/${sectionSlugOf(section)}`
-    : canonicalBase;
+  const canonicalUrl = pageUrl(
+    `/read/${manifest.project.owner_id}/${manifest.project.slug}${section ? `/${sectionSlugOf(section)}` : ""}`,
+  );
   const pageTitle = section
     ? `${section.title} — ${manifest.project.title}`
     : meta?.author

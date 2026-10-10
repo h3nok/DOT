@@ -244,6 +244,9 @@ function serializeStructuredData(data) {
 
 const sectionUrl = (section) => pageUrl(`${BOOK_ROUTE}/${section.slug}`);
 const conceptUrl = (concept) => pageUrl(`/doctrine/${concept.id}`);
+// Structured-data identifiers are names, not fetched: they keep their original form.
+const sectionId = (section) => `${SITE_URL}${BOOK_ROUTE}/${section.slug}#chapter`;
+const conceptId = (concept) => `${SITE_URL}/doctrine/${concept.id}#concept`;
 
 /** The author: one entity with one @id, however many works name it. */
 function personNode() {
@@ -314,7 +317,7 @@ function bookNode(manifest) {
     isAccessibleForFree: true,
     hasPart: manifest.sections.map((section) => ({
       "@type": "Chapter",
-      "@id": `${sectionUrl(section)}#chapter`,
+      "@id": sectionId(section),
       name: section.title,
       url: sectionUrl(section),
       position: section.order + 1,
@@ -349,14 +352,14 @@ function chapterNode(manifest, section) {
     .filter(Boolean)
     .map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     }));
 
   return {
     "@type": "Chapter",
-    "@id": `${sectionUrl(section)}#chapter`,
+    "@id": sectionId(section),
     name: section.title,
     alternativeHeadline: section.subtitle ?? undefined,
     url: sectionUrl(section),
@@ -380,7 +383,7 @@ function chapterNode(manifest, section) {
 function conceptNode(concept) {
   return {
     "@type": "DefinedTerm",
-    "@id": `${conceptUrl(concept)}#concept`,
+    "@id": conceptId(concept),
     name: concept.name,
     description: concept.oneLine,
     url: conceptUrl(concept),
@@ -399,7 +402,7 @@ function conceptSetNode() {
     url: pageUrl("/doctrine"),
     hasDefinedTerm: DOCTRINE_CONCEPTS.map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     })),
@@ -521,7 +524,7 @@ function conceptTerms(ids) {
     .filter(Boolean)
     .map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     }));
