@@ -104,10 +104,7 @@
       "Docker",
       "Model Context Protocol"
     ],
-    "links": {
-      "repo": "https://github.com/h3nok/HKI",
-      "npm": "@hki/runtime"
-    },
+    "links": {},
     "gradient": "linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)",
     "glowColor": "rgba(245, 158, 11, 0.4)"
   }
