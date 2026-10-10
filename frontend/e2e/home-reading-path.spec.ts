@@ -1,12 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-test("home attributes Love and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
+test("home questions certainty and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "Love." })).toBeVisible();
-  await expect(opening.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
-    .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+  await expect(opening.getByRole("heading", { level: 1, name: "What if your certainty is the problem?" })).toBeVisible();
+  await expect(opening.getByRole("link", { name: "Question what you know", exact: true }))
+    .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
+  await expect(page.locator("#personal-platform")).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true }).locator('a[href="#personal-platform"]')).toHaveCount(0);
   const invitation = page.getByRole("region", { name: "An invitation to inquire" });
   await expect(invitation.getByText(/remain hypotheses, open to challenge and revision/)).toBeVisible();
   await expect(invitation.getByText(/there is no timetable for it/)).toBeVisible();
@@ -22,7 +24,7 @@ test("home offers a reading path and readable theory comparisons", async ({ page
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const entry = page.getByRole("navigation", { name: "Begin exploring DOT" });
-  const read = entry.getByRole("link", { name: "Read Book One" });
+  const read = entry.getByRole("link", { name: "Question what you know" });
   await expect(read).toBeInViewport();
   await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await page.screenshot({ path: testInfo.outputPath("home-opening.png") });

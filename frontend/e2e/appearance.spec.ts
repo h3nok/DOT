@@ -59,7 +59,7 @@ test.describe("appearance controls change the rendered document", () => {
   test("the reading action keeps DOT's warm paper and forest shades", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");
-    const action = page.locator("#threshold").getByRole("link", { name: "Read Book One", exact: true });
+    const action = page.locator("#threshold").getByRole("link", { name: "Question what you know", exact: true });
     await expect(action).toBeVisible();
 
     for (const colorScheme of ["light", "dark"] as const) {

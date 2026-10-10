@@ -28,7 +28,7 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "Love." }),
+      hero.getByRole("heading", { name: "What if your certainty is the problem?" }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
@@ -61,7 +61,7 @@ test.describe("hero", () => {
     const model = actions.getByRole("link", { name: "Explore the model" });
     await expect(model).toBeVisible();
     await expect(model).toHaveAttribute("href", "#possibility-field");
-    await expect(actions.getByRole("link", { name: "Read Book One" })).toBeVisible();
+    await expect(actions.getByRole("link", { name: "Question what you know" })).toBeVisible();
   });
 
   test("the architecture figure keeps its layer and awareness labels legible", async ({

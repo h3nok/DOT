@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
-  { id: "threshold", label: "Love: an inquiry into consciousness" },
-  { id: "personal-platform", label: "Work, writing and contact" },
+  { id: "threshold", label: "Question what you know: an inquiry into consciousness" },
   { id: "possibility-field", label: "T × E: the source" },
   { id: "big-c", label: "Big C: primordial consciousness" },
   { id: "reality-frame", label: "RF₀: the physical universe" },

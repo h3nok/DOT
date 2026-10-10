@@ -492,62 +492,18 @@ html:has(.home-journey) {
 }
 
 .home-hero-masthead .home-hero-title {
-  font-size: clamp(4.5rem, 8vw, 7rem);
-  line-height: 1;
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  line-height: 1.08;
 }
 
-/* Ink spreads around the word; the letters retain the theme's readable ink. */
-.home-love-ink {
-  color: color-mix(in oklab, var(--foreground) 62%, #b87992);
-  position: relative;
-  display: inline-block;
-  isolation: isolate;
-}
-
-.home-love-ink::before {
-  position: absolute;
-  z-index: -1;
-  inset: -0.45em -0.6em -0.5em -0.4em;
-  background:
-    radial-gradient(ellipse at 36% 58%, color-mix(in oklab, var(--organism-accent-strong) 28%, transparent), transparent 68%),
-    radial-gradient(ellipse at 72% 35%, color-mix(in oklab, var(--organism-accent) 18%, transparent), transparent 65%);
-  mask-image: radial-gradient(ellipse, black 20%, transparent 70%);
-  content: "";
-  pointer-events: none;
-}
-
-.home-hero-love-quote {
-  max-width: 28rem;
+.home-hero-opening-copy {
+  max-width: 30rem;
   margin: 1rem 0 0;
-}
-
-.home-hero-love-quote p {
-  margin: 0;
-  color: var(--foreground);
-  font-family: var(--home-public-reading-font);
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  line-height: 1.45;
-  text-wrap: pretty;
-}
-
-.home-hero-love-quote cite {
-  display: block;
-  margin-top: 0.75rem;
   color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.75rem;
-  font-style: normal;
-  line-height: 1.5;
-}
-
-.home-hero-love-quote a {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-html[data-contrast="high"] .home-love-ink::before,
-html[data-field="off"] .home-love-ink::before {
-  content: none;
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.65;
+  text-wrap: pretty;
 }
 
 .home-hero-ask {
@@ -2120,6 +2076,10 @@ html[data-contrast="high"] .home-hero-kicker {
 }
 
 @media (max-width: 359px) {
+  .home-hero-layout {
+    padding-top: 9.5rem;
+  }
+
   .home-hero-title {
     font-size: 2.5rem;
   }
@@ -3087,7 +3047,6 @@ html[data-field="off"] .home-love-statement::before {
 }
 
 @media print {
-  .home-love-ink::before,
   .home-love-statement::before {
     content: none;
   }
@@ -4786,13 +4745,3 @@ html[data-field="off"] .home-hero-stage::before {
 .home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: 1.5rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
 .home-author-line span { font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
 .home-author-line:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
-.home-personal-section { position: relative; padding: clamp(3rem, 7vw, 6rem) 0; border-block: 1px solid var(--border); background: color-mix(in oklab, var(--background) 95%, #d3c5ad); scroll-margin-top: 7rem; }
-.home-personal-heading { display: grid; gap: 1.5rem; margin-bottom: 2rem; }
-.home-personal-heading h2 { margin-top: .75rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.08; }
-.home-personal-heading > p { align-self: end; max-width: 27rem; color: var(--muted-foreground); font-size: .9375rem; line-height: 1.85; }
-.home-personal-doors { display: grid; gap: 1rem; }
-@media (min-width: 760px) {
-  .home-personal-heading { grid-template-columns: 1fr 1fr; gap: 3rem; }
-  .home-personal-doors { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-html[data-contrast="high"] .home-personal-section { background: var(--background); }

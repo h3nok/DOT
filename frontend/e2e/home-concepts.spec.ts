@@ -27,9 +27,11 @@ test("still concepts visibly explain every idea without clipping or shifting the
   const previous = concepts.getByRole("button", { name: "Previous concept" });
   const next = concepts.getByRole("button", { name: "Next concept" });
   const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Read Book One", exact: true });
+    .getByRole("link", { name: "Question what you know", exact: true });
   const opening = await read.boundingBox();
   expect(opening).not.toBeNull();
+  await expect(read).toBeInViewport({ ratio: 1 });
+  const openingDocumentY = opening!.y + await page.evaluate(() => window.scrollY);
   await expect(previous).toBeDisabled();
 
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
@@ -49,8 +51,10 @@ test("still concepts visibly explain every idea without clipping or shifting the
     expect(fits, `${concept.term}: the complete title and explanation must fit`).toBe(true);
     const position = await read.boundingBox();
     expect(position).not.toBeNull();
-    expect(Math.abs(position!.y - opening!.y), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
-    await expect(read).toBeInViewport({ ratio: 1 });
+    // Focusing controls below the fold can scroll the page; compare document
+    // coordinates so that normal keyboard scrolling is not a layout shift.
+    const documentY = position!.y + await page.evaluate(() => window.scrollY);
+    expect(Math.abs(documentY - openingDocumentY), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
     if (index < HERO_CONCEPTS.length - 1) {
       await next.focus();
       await page.keyboard.press("Enter");
