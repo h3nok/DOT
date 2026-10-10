@@ -1,0 +1,22 @@
+{
+  "title": "DOT Academy — Life in the digital age",
+  "description": "An Academy for life in the digital age: attention, lived experience, and development toward Love. Explore DOT’s hypothesis of consciousness beyond any particular Reality Frame.",
+  "heading": ["An Academy for life", "in the digital age."],
+  "introduction": "Begin with your lived experience. Examine the beliefs shaping your perception, take responsibility for your choices, and develop toward Love: greater coherence, less fear, and care for others.",
+  "hypothesis": {
+    "label": "DOT · Working hypothesis",
+    "heading": "Consciousness beyond the frame.",
+    "body": "DOT proposes that your conscious life exists independently of any particular Reality Frame—the rule-bound environment through which you experience a world. Digital here means informational, not electronic.",
+    "sourceHref": "/doctrine/little-c",
+    "sourceLabel": "Little c · The conscious self"
+  },
+  "start": {
+    "href": "/book/digital-organism-theory/preface?path=start-where-you-live",
+    "label": "Start with your experience",
+    "description": "Book One’s preface · Free to read"
+  },
+  "publication": {
+    "heading": "Begin with Book One.",
+    "body": "The book, concept map, and open questions are public now. Academy responses, experiments, and essays are still in development. Book One remains a fixed, citable edition."
+  }
+}

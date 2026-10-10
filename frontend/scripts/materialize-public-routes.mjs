@@ -30,6 +30,7 @@ const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
 const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
+const ACADEMY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "academy", "landing.json"), "utf8"));
 const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
@@ -67,8 +68,8 @@ const BOOK_DESCRIPTION =
 const STATIC_ROUTES = [
   {
     route: ACADEMY_ROUTE,
-    title: "DOT Academy — Digital Organism Theory",
-    description: "Study and challenge Digital Organism Theory through its concept map and open questions. The Academy is in development; Book One remains a fixed edition.",
+    title: ACADEMY.title,
+    description: ACADEMY.description,
   },
   {
     route: "/applied",
@@ -405,8 +406,7 @@ function academyNode() {
     "@type": "CollectionPage",
     "@id": ACADEMY_ID,
     name: "DOT Academy",
-    description:
-      "The living intellectual home of Digital Organism Theory: theory, critical inquiry, writing, and distinct fixed publications.",
+    description: ACADEMY.description,
     url: `${SITE_URL}${ACADEMY_ROUTE}`,
     inLanguage: "en",
     about: { "@type": "Thing", name: "Digital Organism Theory" },
@@ -734,7 +734,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           breadcrumb([home, { name: "DOT Academy", route: ACADEMY_ROUTE }]),
         ),
         prerender: page(
-          `${heading}<p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")}</p><h2>Book One remains a book.</h2><p>${link(BOOK_ROUTE, "Read the fixed edition")}</p>`,
+          `<p>DOT Academy · In development</p><h1>${escapeHtml(ACADEMY.heading.join(" "))}</h1><p>${escapeHtml(ACADEMY.introduction)}</p><p>${link(ACADEMY.start.href, ACADEMY.start.label)}</p><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")}</p><aside><p>${escapeHtml(ACADEMY.hypothesis.label)}</p><h2>${escapeHtml(ACADEMY.hypothesis.heading)}</h2><p>${escapeHtml(ACADEMY.hypothesis.body)}</p><p>${link(ACADEMY.hypothesis.sourceHref, ACADEMY.hypothesis.sourceLabel)}</p></aside><h2>${escapeHtml(ACADEMY.publication.heading)}</h2><p>${escapeHtml(ACADEMY.publication.body)}</p><p>${link(BOOK_ROUTE, "Open the released edition")}</p>`,
         ),
       };
     }

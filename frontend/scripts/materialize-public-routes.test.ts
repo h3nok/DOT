@@ -24,6 +24,7 @@ import { parseEssay } from "./essays.mjs";
 import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
+import academyLanding from "../src/content/academy/landing.json";
 
 interface PublicRoute {
   route: string;
@@ -87,6 +88,13 @@ describe("public route metadata", () => {
     expect(route).toBeDefined();
     const academy = nodeOfType(route!, "CollectionPage");
     expect(academy?.name).toBe("DOT Academy");
+    expect(academy?.description).toBe(academyLanding.description);
+    const html = new DOMParser().parseFromString(route!.prerender!, "text/html");
+    expect(html.querySelector("h1")?.textContent).toBe(academyLanding.heading.join(" "));
+    expect(html.querySelector("aside")?.textContent).toContain(academyLanding.hypothesis.label);
+    expect(html.querySelector("aside")?.textContent).toContain(academyLanding.hypothesis.body);
+    expect(html.querySelector(`a[href="${academyLanding.start.href}"]`)?.textContent)
+      .toBe(academyLanding.start.label);
     expect(route?.structuredData["@graph"].some((node) => node["@type"] === "Book")).toBe(
       false,
     );

@@ -16,21 +16,29 @@ describe("AcademyPage", () => {
     return result;
   };
 
-  it("explains the inquiry and offers material readers can use now", () => {
+  it("explains the Academy's purpose, labels its hypothesis, and offers a real starting point", () => {
     renderPage();
 
     expect(
-      screen.getByRole("heading", { name: "Study the theory. Question its claims." }),
+      screen.getByRole("heading", { name: "An Academy for life in the digital age." }),
     ).toBeVisible();
     expect(screen.getByText(/DOT Academy · In development/i)).toBeVisible();
     const start = screen.getByRole("navigation", { name: "Begin exploring the Academy" });
+    expect(within(start).getByRole("link", { name: "Start with your experience" }))
+      .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
     expect(within(start).getByRole("link", { name: "Explore the concept map" }))
       .toHaveAttribute("href", "/doctrine");
     expect(within(start).getByRole("link", { name: "Review open questions" }))
       .toHaveAttribute("href", "/applied");
     expect(screen.getByText(/No experiment is recorded yet/)).not.toBeVisible();
     expect(screen.getByText(/No Academy response has been released yet/)).not.toBeVisible();
-    expect(screen.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
+    const hypothesis = screen.getByRole("complementary", { name: "DOT’s working hypothesis" });
+    expect(within(hypothesis).getByText("DOT · Working hypothesis")).toBeVisible();
+    expect(within(hypothesis).getByText(/DOT proposes that your conscious life exists independently/))
+      .toBeVisible();
+    expect(within(hypothesis).getByRole("link", { name: "Little c · The conscious self" }))
+      .toHaveAttribute("href", "/doctrine/little-c");
+    expect(screen.getByRole("heading", { name: "Begin with Book One." })).toBeVisible();
   });
 
   it("presents the four invariants of the intellectual revolution", () => {

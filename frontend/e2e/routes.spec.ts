@@ -210,10 +210,10 @@ test.describe("academy", () => {
     await page.goto("/academy");
 
     await expect(
-      page.getByRole("heading", { name: "Study the theory. Question its claims." }),
+      page.getByRole("heading", { name: "An Academy for life in the digital age." }),
     ).toBeVisible();
     await expect(page.getByText(/DOT Academy · In development/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Begin with Book One." })).toBeVisible();
 
     const disclosure = page.locator("details").filter({ hasText: "About the Academy: principles, programs, and editorial standards" });
     await expect(disclosure).not.toHaveAttribute("open");

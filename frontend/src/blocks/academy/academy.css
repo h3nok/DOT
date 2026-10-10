@@ -178,6 +178,8 @@
 
 .academy-manifesto-card__foot {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   align-items: center;
   justify-content: space-between;
   margin-top: 1.75rem;
@@ -527,6 +529,34 @@
 }
 
 /* ── Media Queries ──────────────────────────────────────────────────────── */
+
+@media (max-width: 639px) {
+  .academy-hero {
+    min-height: auto;
+  }
+
+  .academy-hero__inner {
+    gap: 2rem;
+    padding-block: 2.5rem;
+  }
+
+  .academy-title {
+    margin-top: 1.25rem;
+    font-size: clamp(2.25rem, 9vw, 2.8rem);
+  }
+
+  .academy-hero__lede {
+    margin-top: 1.25rem;
+  }
+
+  .academy-hero__actions {
+    margin-top: 1.5rem;
+  }
+
+  .academy-manifesto-card {
+    padding: 1.5rem;
+  }
+}
 
 @media (min-width: 768px) {
   .academy-hero__inner {
