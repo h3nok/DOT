@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import "./disclosure.css";
 
@@ -6,23 +6,17 @@ interface DisclosureProps {
   summary: ReactNode;
   children: ReactNode;
   className?: string;
-  /** Start expensive or moving content only when a reader opens it. */
-  mountOnOpen?: boolean;
 }
 
 /** Native, initially closed disclosure. Readers control both opening and closing. */
-export function Disclosure({ summary, children, className = "", mountOnOpen = false }: DisclosureProps) {
-  const [open, setOpen] = useState(false);
+export function Disclosure({ summary, children, className = "" }: DisclosureProps) {
   return (
-    <details
-      className={`dot-disclosure ${className}`}
-      onToggle={mountOnOpen ? (event) => setOpen(event.currentTarget.open) : undefined}
-    >
+    <details className={`dot-disclosure ${className}`}>
       <summary>
         <span>{summary}</span>
         <ChevronDown aria-hidden="true" />
       </summary>
-      {(!mountOnOpen || open) && <div className="dot-disclosure__content">{children}</div>}
+      <div className="dot-disclosure__content">{children}</div>
     </details>
   );
 }

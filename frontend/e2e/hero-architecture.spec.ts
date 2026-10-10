@@ -1,11 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { expectNoHorizontalOverflow, openHomeModel } from "./helpers";
+import { expectNoHorizontalOverflow } from "./helpers";
 
 for (const colorScheme of ["light", "dark"] as const) {
-  test(`the optional ${colorScheme} architecture remains readable`, async ({ page }) => {
+  test(`the ${colorScheme} architecture is the hero's readable focal point`, async ({ page }) => {
     await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
     await page.goto("/");
-    await openHomeModel(page);
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
@@ -197,7 +196,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);
     await expect(page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Test the worldview" })).toBeInViewport();
+      .getByRole("link", { name: "Question what you know" })).toBeInViewport();
     for (const font of presentation.fonts) {
       expect(font.pixels, `${font.layer} rendered label size`).toBeGreaterThanOrEqual(
         font.layer === "awareness-radius" ? 14 : 16,
@@ -208,9 +207,10 @@ for (const colorScheme of ["light", "dark"] as const) {
       expect(presentation.opening.headingWidth).toBeGreaterThanOrEqual(512);
       expect(presentation.width).toBeGreaterThanOrEqual(480);
       expect(presentation.width).toBeLessThanOrEqual(600);
-      expect(presentation.top).toBeGreaterThan(presentation.opening.readingBottom);
+      expect(presentation.top).toBeLessThan(300);
       expect(presentation.originBottom).toBeDefined();
-      expect(presentation.originBottom).toBeGreaterThan(presentation.top);
+      expect(presentation.originBottom).toBeLessThanOrEqual((page.viewportSize()?.height ?? 0) + 1);
+      expect(presentation.opening.noteLeft + presentation.opening.headingWidth).toBeLessThan((await svg.boundingBox())!.x);
     } else {
       expect(presentation.opening.readingBottom).toBeLessThan(presentation.top);
     }
@@ -222,7 +222,6 @@ for (const colorScheme of ["light", "dark"] as const) {
     await page.setViewportSize({ width: 320, height: 844 });
     await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
     await page.goto("/");
-    await openHomeModel(page);
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
@@ -243,7 +242,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       );
     }
     const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Test the worldview", exact: true });
+      .getByRole("link", { name: "Question what you know", exact: true });
     await expect(read).toBeInViewport({ ratio: 1 });
     await expectNoHorizontalOverflow(page);
   });
@@ -255,9 +254,9 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "Progress toward what?",
+      name: "Who decided your experience doesn’t count?",
     })).toBeVisible();
-    const read = hero.getByRole("link", { name: "Test the worldview", exact: true });
+    const read = hero.getByRole("link", { name: "Question what you know", exact: true });
     await expect(read).toBeInViewport();
 
     const entry = await hero.locator(".home-hero-entry").evaluate((node) => {
@@ -290,10 +289,9 @@ for (const viewport of [
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
 
-    await openHomeModel(page);
     const svg = page.locator(".home-hero-architecture__svg");
     const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Test the worldview", exact: true });
+      .getByRole("link", { name: "Question what you know", exact: true });
     await expect(reading).toBeInViewport({ ratio: 1 });
     await expect(reading).toHaveAccessibleDescription("Book One’s preface · Free to read");
 
@@ -301,7 +299,11 @@ for (const viewport of [
     const question = await page.locator(".home-hero-title").boundingBox();
     expect(diagram).not.toBeNull();
     expect(question).not.toBeNull();
-    expect(question!.y + question!.height).toBeLessThan(diagram!.y);
+    if (viewport.width >= 1100) {
+      expect(question!.x + question!.width).toBeLessThanOrEqual(diagram!.x);
+    } else {
+      expect(question!.y + question!.height).toBeLessThan(diagram!.y);
+    }
 
     const labels = await svg.evaluate((node) => {
       if (!(node instanceof SVGSVGElement)) throw new Error("Expected an SVG diagram");
@@ -324,7 +326,7 @@ test("the reading invitation opens the lived-experience path from the keyboard",
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Test the worldview", exact: true });
+    .getByRole("link", { name: "Question what you know", exact: true });
   await reading.focus();
   await expect(reading).toBeFocused();
   await page.keyboard.press("Enter");
@@ -344,7 +346,6 @@ test("the reading invitation opens the lived-experience path from the keyboard",
 test("readers can reveal and close the model guide from the keyboard", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await openHomeModel(page);
   const guide = page.locator(".home-architecture-guide");
   const summary = guide.locator("summary");
   await expect(guide.locator("dl")).not.toBeVisible();
@@ -361,7 +362,6 @@ test("readers can reveal and close the model guide from the keyboard", async ({ 
 test("diagram layers remain keyboard-accessible reading paths", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await openHomeModel(page);
   const svg = page.locator(".home-hero-architecture__svg");
 
   for (const layer of ["possibility-field", "big-c", "reality-frame", "little-c"]) {

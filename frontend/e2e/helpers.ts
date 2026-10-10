@@ -94,14 +94,3 @@ export async function openAppearancePanel(page: Page) {
   await expect(panel).toBeVisible();
   return panel;
 }
-
-/** The moving model is opt-in; use the same keyboard control as a reader. */
-export async function openHomeModel(page: Page) {
-  const model = page.locator(".home-hero-model");
-  const summary = model.locator(":scope > summary");
-  await expect(model).not.toHaveAttribute("open");
-  await summary.focus();
-  await page.keyboard.press("Enter");
-  await expect(model).toHaveAttribute("open", "");
-  await expect(model.getByRole("region", { name: "Key concepts from Book One" })).toBeVisible();
-}
