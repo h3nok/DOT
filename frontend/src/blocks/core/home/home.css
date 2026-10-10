@@ -496,9 +496,9 @@ html:has(.home-journey) {
   line-height: 1;
 }
 
-/* Ink spreads around the word; the letters retain the theme's readable ink. */
+/* Ink spreads around the word; the letters retain the theme's readable ink.
+   No romantic tint: this Love is a fundamental condition (ADR-0042). */
 .home-love-ink {
-  color: color-mix(in oklab, var(--foreground) 62%, #b87992);
   position: relative;
   display: inline-block;
   isolation: isolate;
@@ -3091,6 +3091,11 @@ html[data-field="off"] .home-love-statement::before {
   .home-love-statement::before {
     content: none;
   }
+}
+
+/* The accent spread glows strongly against the dark field; keep it quiet. */
+.dark .home-love-ink::before {
+  opacity: 0.5;
 }
 
 .home-consciousness-101-source {
