@@ -67,30 +67,6 @@ homepage, generated HTML, and page map. Work, writing, and contact remain availa
 through the site navigation. This amendment serves L7 (clear and honest framing)
 and L10 (a focused reading invitation) without violating any manifesto law.
 
-## Further amendment — 2026-10-10
-
-The founder asked for a simpler opening and a direct critique of mainstream
-worldviews, specifically secular humanism. Open with “Progress toward what?”
-and “Test the worldview.” Name secular humanism’s promise of human flourishing
-and ask whether its practice produces less fear, greater honesty, and care,
-or rationalizes status and control. Link to Humanist Manifesto III so readers
-can examine the position being challenged. This is an editorial challenge,
-not a finding that secular humanism has no beneficial outcomes or a claim that
-the philosophy itself is pseudoscience. Scientific vocabulary alone supplies
-no evidence; DOT’s own explanations receive the same scrutiny.
-
-Move the linked diagram and finite concept introduction into an initially
-closed “Explore the model” disclosure. Mount them only while it is open, so
-their motion, timers, and field anchor begin at the reader’s request and end
-when closed. Retain their reading paths, accessibility, and existing concept
-content. The first screen contains one primary reading action and a static
-accent line, using the existing appearance tokens.
-
-This serves L1 (a calm first encounter), L7 (specific, source-backed criticism
-with honest claim levels), L10 (one primary action), and L12 (the model is
-requested by the reader). No manifesto law is violated. The released book,
-authored essays, biography, and portfolio are unchanged.
-
 ## Alternatives considered
 
 | Option | Pros | Cons | Verdict |

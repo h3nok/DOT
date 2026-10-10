@@ -310,51 +310,7 @@ html:has(.home-journey) {
   padding-bottom: 4rem;
 }
 
-/* One question and one reading action; the model opens at the reader's request. */
-.home-hero-front-door {
-  max-width: 36rem;
-  margin-inline: auto;
-}
-
-.home-hero-front-door .home-hero-masthead {
-  padding-left: 1.25rem;
-  border-left: 3px solid var(--organism-accent-strong);
-}
-
-.home-hero-critique {
-  max-width: 30rem;
-  margin: 1rem 0 0;
-  color: var(--foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-}
-
-.home-hero-source {
-  display: inline-block;
-  margin-top: 0.5rem;
-  color: var(--muted-foreground);
-  font-size: 0.8125rem;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.home-hero-model {
-  max-width: 36rem;
-  margin: 1.5rem auto 0;
-  font-family: var(--home-public-display-font);
-  font-size: 0.875rem;
-}
-
-.home-hero-model[open] {
-  max-width: 80rem;
-}
-
-.home-hero-model[open] > summary {
-  max-width: 36rem;
-  margin: 0 auto 1.5rem;
-}
-
+/* Read the invitation first; the proposed model accompanies it. */
 .home-hero-opening {
   display: grid;
   max-width: 80rem;

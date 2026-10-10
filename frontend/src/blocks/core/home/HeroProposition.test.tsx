@@ -5,27 +5,17 @@ import { describe, expect, it } from "vitest";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
 
-async function openModel() {
-  const details = screen.getByText("Explore the model").closest("details")!;
-  details.open = true;
-  fireEvent(details, new Event("toggle"));
-  await screen.findByRole("region", { name: "Key concepts from Book One" });
-}
-
 describe("the concept slideshow and the architecture stay one explanation", () => {
-  const renderLinked = async () => {
-    render(
-      <MemoryRouter>
-        <HeroProposition reducedMotion stage={<HeroArchitecture />} />
-      </MemoryRouter>,
-    );
-    await openModel();
-  };
+  const renderLinked = () => render(
+    <MemoryRouter>
+      <HeroProposition reducedMotion stage={<HeroArchitecture />} />
+    </MemoryRouter>,
+  );
   const concepts = () => screen.getByRole("region", { name: "Key concepts from Book One" });
   const focus = () => document.querySelector(".home-hero-architecture__svg")?.getAttribute("data-focus");
 
-  it("brings forward the part each architecture concept explains, and only then", async () => {
-    await renderLinked();
+  it("brings forward the part each architecture concept explains, and only then", () => {
+    renderLinked();
     expect(focus()).toBeNull();
     const next = within(concepts()).getByRole("button", { name: "Next concept" });
     while (!within(concepts()).queryByRole("heading", { name: "T × E: The Source" })) fireEvent.click(next);
@@ -37,8 +27,8 @@ describe("the concept slideshow and the architecture stay one explanation", () =
     expect(focus()).toBe("big-c");
   });
 
-  it("turns to a part's concept when it is chosen in the diagram", async () => {
-    await renderLinked();
+  it("turns to a part's concept when it is chosen in the diagram", () => {
+    renderLinked();
     fireEvent.click(document.querySelector('[data-part="rfn"] .home-architecture-other-frame-zone')!);
     expect(within(concepts()).getByRole("heading", { name: "RFₙ: Every Reality Frame" })).toBeVisible();
     expect(focus()).toBe("rfn");
@@ -47,8 +37,8 @@ describe("the concept slideshow and the architecture stay one explanation", () =
     expect(focus()).toBe("rf0");
   });
 
-  it("shows Big C's outer loop and c₁'s inner loop only with Process Rules", async () => {
-    await renderLinked();
+  it("shows Big C's outer loop and c₁'s inner loop only with Process Rules", () => {
+    renderLinked();
     const loops = document.querySelector(".home-architecture-process-loops")!;
     expect(loops.querySelectorAll("path[marker-end]")).toHaveLength(2);
     const next = within(concepts()).getByRole("button", { name: "Next concept" });
@@ -74,7 +64,7 @@ describe("HeroProposition", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Progress toward what?",
+        name: "What if your certainty is the problem?",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
@@ -85,13 +75,11 @@ describe("HeroProposition", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "Progress toward what?",
+      name: "What if your certainty is the problem?",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText(/No worldview gets an exemption—including DOT/)).toBeVisible();
-    expect(screen.getByRole("link", { name: "The humanist promise" })).toHaveAttribute("href", "https://americanhumanist.org/humanism/humanist-manifesto-iii/");
-    expect(screen.getByText(/Secular humanism promises human flourishing/))
+    expect(screen.getByText(/A belief can feel like truth simply because it is familiar/))
       .toBeVisible();
     // The opening is an invitation to examine beliefs, not an attributed quotation.
     expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
@@ -100,11 +88,9 @@ describe("HeroProposition", () => {
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("lets the first concept carry DOT's proposal at its honest claim level", async () => {
+  it("lets the first concept carry DOT's proposal at its honest claim level", () => {
     renderProposition();
 
-    expect(screen.queryByRole("region", { name: "Key concepts from Book One" })).not.toBeInTheDocument();
-    await openModel();
     expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
     const concepts = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
@@ -117,39 +103,34 @@ describe("HeroProposition", () => {
   it("offers one primary reading action and a quiet path to the explanation", () => {
     renderProposition();
 
-    expect(screen.getByRole("link", { name: "Test the worldview" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Question what you know" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory/preface?path=start-where-you-live",
     );
-    expect(screen.getByText("Explore the model").closest("details")).not.toHaveAttribute("open");
-    expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(1);
-    expect(screen.getByRole("link", { name: "Test the worldview" }))
+    expect(screen.getByRole("link", { name: /explore the model/i })).toHaveAttribute(
+      "href",
+      "#possibility-field",
+    );
+    expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
+    expect(screen.getByRole("link", { name: "Question what you know" }))
       .toHaveAccessibleDescription("Book One’s preface · Free to read");
   });
 
-  it("starts the model only when a reader opens it and removes it when closed", async () => {
+  it("lets readers begin before the concepts or diagram", () => {
     render(
       <MemoryRouter>
         <HeroProposition stage={<figure aria-label="Proposed architecture" />} />
       </MemoryRouter>,
     );
 
-    expect(screen.queryByRole("figure", { name: "Proposed architecture" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("region", { name: "Key concepts from Book One" })).not.toBeInTheDocument();
-    await openModel();
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "Progress toward what?" });
+    const heading = screen.getByRole("heading", { name: "What if your certainty is the problem?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
     const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    const details = diagram.closest("details")!;
-    details.open = false;
-    fireEvent(details, new Event("toggle"));
-    expect(screen.queryByRole("figure", { name: "Proposed architecture" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("region", { name: "Key concepts from Book One" })).not.toBeInTheDocument();
   });
 
   it("keeps the question tools behind a reader-controlled disclosure", () => {

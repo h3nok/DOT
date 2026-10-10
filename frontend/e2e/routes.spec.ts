@@ -3,7 +3,6 @@ import {
   PUBLIC_ROUTES,
   collectPageProblems,
   expectNoHorizontalOverflow,
-  openHomeModel,
 } from "./helpers";
 
 test.describe("public routes", () => {
@@ -29,7 +28,7 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "Progress toward what?" }),
+      hero.getByRole("heading", { name: "What if your certainty is the problem?" }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
@@ -43,7 +42,6 @@ test.describe("hero", () => {
     expect((await inquiry.boundingBox())?.width).toBeGreaterThanOrEqual(120);
     await expect(page.locator(".home-journey-nav ol")).toHaveCount(0);
 
-    await openHomeModel(page);
     const diagram = hero.getByRole("figure", { name: "DOT’s proposed architecture" });
     await expect(diagram).toHaveAccessibleDescription(/The rings are conceptual, not spatial/);
     const guide = diagram.locator("details");
@@ -56,22 +54,20 @@ test.describe("hero", () => {
   }) => {
     await page.goto("/");
 
-    await expect(page.locator(".home-concept-slideshow")).toHaveCount(0);
-    await expect(page.locator(".home-hero-architecture__svg")).toHaveCount(0);
-    await openHomeModel(page);
     await expect(page.locator(".home-concept-slideshow")).toBeVisible();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
-    await expect(actions.getByRole("link")).toHaveCount(1);
-    await expect(actions.getByRole("link", { name: "Test the worldview" })).toBeVisible();
+    const model = actions.getByRole("link", { name: "Explore the model" });
+    await expect(model).toBeVisible();
+    await expect(model).toHaveAttribute("href", "#possibility-field");
+    await expect(actions.getByRole("link", { name: "Question what you know" })).toBeVisible();
   });
 
   test("the architecture figure keeps its layer and awareness labels legible", async ({
     page,
   }) => {
     await page.goto("/");
-    await openHomeModel(page);
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toHaveAttribute("viewBox", "0 0 700 700");
     const labels = svg.locator(".home-architecture-ring-label");
