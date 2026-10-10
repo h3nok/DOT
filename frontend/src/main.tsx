@@ -16,12 +16,16 @@ import "@fontsource/jetbrains-mono/latin-400.css";
 import "@fontsource/jetbrains-mono/latin-500.css";
 import "@fontsource/space-grotesk/latin-400.css";
 import "@fontsource/space-grotesk/latin-500.css";
+// Space Grotesk is the interface face, so it carries semibold and bold too;
+// without them the browser would synthesize a blurred bold.
+import "@fontsource/space-grotesk/latin-600.css";
+import "@fontsource/space-grotesk/latin-700.css";
 import "@fontsource/playfair-display/latin-400.css";
 import "@fontsource/playfair-display/latin-700.css";
 import "@fontsource/playfair-display/latin-900.css";
-// Source Serif 4 sets long-form chapter prose. Playfair is a display face —
-// small x-height and high stroke contrast — which thins out badly across the
-// 3,000-word chapters it was carrying. It stays on headings, where it belongs.
+// Source Serif 4 sets long-form chapter prose and the site's serif headings.
+// Inter and Playfair stay registered only for reader-chosen Appearance options
+// (Sans, the classic palette); browsers fetch a face only when a page uses it.
 import "@fontsource/source-serif-4/latin-400.css";
 import "@fontsource/source-serif-4/latin-400-italic.css";
 import "@fontsource/source-serif-4/latin-600.css";

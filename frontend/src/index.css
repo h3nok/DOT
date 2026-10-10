@@ -264,7 +264,7 @@ html[data-minty-modal="true"] [data-appearance-control] {
   display: block;
   margin-bottom: 0.12rem;
   color: var(--organism-accent-strong);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.78em;
   font-weight: 650;
   letter-spacing: 0.075em;
@@ -3680,7 +3680,7 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-coda__tool strong {
   color: var(--book-ink);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.82rem;
   font-weight: 650;
   line-height: 1.35;
@@ -3710,7 +3710,7 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-coda__section-title {
   margin: 0;
   color: var(--book-ink);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.72rem;
   font-weight: 680;
   letter-spacing: 0.09em;
@@ -3793,7 +3793,7 @@ html[data-motion="still"] .dot-emergence-signal {
   background: color-mix(in oklab, var(--book-paper) 78%, transparent);
   padding: 0.45rem 0.72rem;
   color: var(--book-ink);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.78rem;
   font-weight: 570;
   transition: border-color 160ms ease, background-color 160ms ease;
@@ -3839,7 +3839,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border-radius: 0.24rem;
   padding-inline: 0.75rem;
   color: var(--book-muted);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.72rem;
   transition: background-color 160ms ease, color 160ms ease;
 }
@@ -3878,7 +3878,7 @@ html[data-motion="still"] .dot-emergence-signal {
   border-radius: 0.35rem;
   padding-inline: 0.8rem;
   color: var(--book-ink);
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 0.72rem;
   font-weight: 600;
   transition: border-color 160ms ease, background-color 160ms ease;
@@ -3972,7 +3972,7 @@ html[data-motion="still"] .dot-emergence-signal {
 /* ── Minty's reading type ─────────────────────────────────────────────────────
  *
  * Minty answered in Playfair Display at 16px. Not by choice — the markup asked
- * for Tailwind's `font-serif`, and in this project that utility resolves to
+ * for Tailwind's `font-serif`, and in this project that utility then resolved to
  * Playfair, the display face. The book itself was moved off Playfair for
  * exactly this reason: small x-height and high stroke contrast thin out badly
  * across long prose. The companion was left behind on it, at a smaller size and

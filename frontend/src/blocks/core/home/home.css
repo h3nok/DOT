@@ -375,21 +375,10 @@ html:has(.home-journey) {
 }
 
 .home-hero-entry {
-  --home-cta-paper: color-mix(in oklab, var(--background) 55%, white);
-  --home-cta-edge: color-mix(in oklab, var(--foreground) 10%, transparent);
   display: grid;
   gap: 0.25rem;
   max-width: var(--home-hero-measure);
   margin: 1.75rem 0 0;
-}
-
-.dark .home-hero-entry {
-  --home-cta-paper: color-mix(in oklab, var(--background) 93%, var(--foreground));
-  --home-cta-edge: color-mix(in oklab, var(--foreground) 14%, transparent);
-}
-
-html[data-contrast="high"] .home-hero-entry {
-  --home-cta-edge: var(--foreground);
 }
 
 /* The secondary path starts on the column's left edge, like everything above it. */
@@ -403,16 +392,12 @@ html[data-contrast="high"] .home-hero-entry {
   white-space: normal;
 }
 
-/* The primary invitation reads like a chapter opener: plain paper with a
-   hairline edge, and a line of ink that draws under it when it is chosen. */
+/* The primary invitation reads like a chapter opener: the shared paper button,
+   with a line of ink that draws under it when it is chosen. */
 .home-hero-entry .dot-focus-nav__primary.dot-button {
   min-height: 4.5rem;
   gap: 1rem;
   padding: 1rem 1rem 1rem 1.125rem;
-  background: var(--home-cta-paper);
-  box-shadow:
-    0 0 0 1px var(--home-cta-edge),
-    0 1px 2px color-mix(in oklab, var(--foreground) 5%, transparent);
 }
 
 .home-hero-entry .dot-button__icon {
@@ -467,12 +452,6 @@ html[data-contrast="high"] .home-hero-entry {
 }
 
 @media (hover: hover) {
-  .home-hero-entry .dot-focus-nav__primary:hover {
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--foreground) 16%, transparent),
-      0 0.5rem 1.25rem -0.75rem color-mix(in oklab, var(--foreground) 28%, transparent);
-  }
-
   .home-hero-entry .dot-focus-nav__primary:hover .dot-button__copy strong {
     background-size: 100% 1.5px;
   }
@@ -487,10 +466,6 @@ html[data-contrast="high"] .home-hero-entry {
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .home-hero-entry .dot-button__copy strong {
     transition: background-size 560ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  html:not([data-motion="still"]) .home-hero-entry .dot-focus-nav__primary {
-    transition: box-shadow 220ms ease;
   }
 
   html:not([data-motion="still"]) .home-hero-entry .dot-button__end-icon {
