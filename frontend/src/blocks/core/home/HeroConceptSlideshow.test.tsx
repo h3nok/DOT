@@ -95,10 +95,7 @@ describe("HeroConceptSlideshow", () => {
     expect(reply).toHaveAttribute("data-epistemic-status", "model");
     expect(eyebrow).toHaveTextContent("DOT’s response");
 
-    const rail = region.querySelectorAll(".home-concept-slideshow-rail > li");
-    expect(rail[1]).toHaveAttribute("data-frame", "status-quo");
-    expect(rail[4]).toHaveAttribute("data-frame", "reply");
-    expect(rail[0]).not.toHaveAttribute("data-frame");
+    expect(region.querySelector(".home-concept-slideshow-count")).toHaveTextContent(`5 / ${TOTAL}`);
   });
 
   it("starts a finite sequence, allows reading time after typing, and never loops", () => {

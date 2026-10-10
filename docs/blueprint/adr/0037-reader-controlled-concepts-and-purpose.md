@@ -100,6 +100,17 @@ reduced motion show the complete figure immediately. Animation represents the
 proposed model, not observed cosmological history. Geometry and click-through
 reading remain unchanged.
 
+### Amendment — 2026-10-10 (position without a countdown)
+
+The founder kept the finite autoplay with its manual controls and asked that
+the progress line go: a bar that fills toward the next turn read as a
+countdown and drew the eye away from the words. Position is now a static
+count (“3 / 20”) beside Pause/Play and Previous/Next. Nothing moves while a
+concept waits; the reading interval and every suspension rule are unchanged.
+The sizing copies that reserve the longest slide draw their text with CSS, so
+copied hero text contains each concept once and no blank lines. Serves L1
+(calm) and L3 (no pressure toward the next item); violates no law.
+
 Component tests require all ten visible explanations and claim levels, the
 full post-typing reading interval, a finite autoplay endpoint, disabled endpoints,
 Pause/Play, suspension and timer cleanup, and no timers under either stillness

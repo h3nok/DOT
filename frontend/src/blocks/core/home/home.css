@@ -659,9 +659,13 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   min-width: 0;
 }
 
-/* The sizing copies and the visual label (repeated for screen readers inside
-   the slide) stay out of the selection, so copied text reads once, in order. */
-.home-concept-slideshow-size,
+/* The sizing copies draw their text from data-ghost, and the visual label is
+   repeated for screen readers inside the slide; neither enters a selection, so
+   copied text reads once, in order. */
+.home-concept-slideshow-size [data-ghost]::before {
+  content: attr(data-ghost);
+}
+
 .home-concept-slideshow-eyebrow {
   user-select: none;
 }
@@ -779,15 +783,6 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   outline-offset: 4px;
 }
 
-.home-concept-slideshow-rail > li[data-frame][data-state="current"],
-.home-concept-slideshow-rail > li[data-frame] > span {
-  background: var(--home-frame-ink);
-}
-
-.home-concept-slideshow-rail > li[data-frame][data-state="current"]:has(> span) {
-  background: color-mix(in oklab, var(--home-frame-ink) 24%, transparent);
-}
-
 html[data-contrast="high"] .home-concept-slideshow {
   --home-frame-status-quo: var(--foreground);
   --home-frame-status-quo-rule: var(--foreground);
@@ -805,59 +800,18 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
   border-color: var(--foreground);
 }
 
-/* Position in a finite sequence, drawn as one quiet line rather than a row of
-   dashes; the current mark fills while it waits to turn. */
-.home-concept-slideshow-rail {
-  display: flex;
+/* Position in a finite sequence, as a quiet count rather than a moving bar. */
+.home-concept-slideshow-count {
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border-radius: 1px;
-  list-style: none;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
-.home-concept-slideshow-rail > li {
-  position: relative;
-  flex: 1;
-  height: 2px;
-  overflow: hidden;
-  background: color-mix(in oklab, var(--foreground) 10%, transparent);
-}
-
-.home-concept-slideshow-rail > li[data-state="read"] {
-  background: color-mix(in oklab, var(--foreground) 32%, transparent);
-}
-
-.home-concept-slideshow-rail > li[data-state="current"] {
-  background: var(--organism-accent-strong);
-}
-
-.home-concept-slideshow-rail > li[data-state="current"]:has(> span) {
-  background: color-mix(in oklab, var(--organism-accent-strong) 24%, transparent);
-}
-
-.home-concept-slideshow-rail > li > span {
-  position: absolute;
-  inset: 0;
-  background: var(--organism-accent-strong);
-  transform-origin: left center;
-  animation: home-concept-rail-fill linear both;
-}
-
-@keyframes home-concept-rail-fill {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-concept-slideshow-rail > li > span {
-    animation: none;
-  }
+.home-concept-slideshow-count > span {
+  color: var(--foreground);
 }
 
 .home-concept-slideshow-controls {

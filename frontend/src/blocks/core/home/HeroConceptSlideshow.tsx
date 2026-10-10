@@ -123,12 +123,13 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
         <span data-level={concept.level}>{LEVEL_LABEL[concept.level]}</span>
       </p>
       <div className="home-concept-slideshow-body">
-        {/* Reserve the longest slide at the current font and width, without clipping text. */}
+        {/* Reserve the longest slide at the current font and width, without clipping text.
+            The text is drawn from data-ghost by CSS, so copying the hero never picks it up. */}
         {HERO_CONCEPTS.map(item => (
           <div key={item.id} className="home-concept-slideshow-size" aria-hidden="true" data-frame={item.frame}>
-            <span className="home-concept-slideshow-term">{item.term}</span>
-            <p className="home-concept-slideshow-explanation">{item.text}</p>
-            {item.source && <cite className="home-concept-slideshow-source">{item.source}</cite>}
+            <span className="home-concept-slideshow-term" data-ghost={item.term} />
+            <p className="home-concept-slideshow-explanation" data-ghost={item.text} />
+            {item.source && <cite className="home-concept-slideshow-source" data-ghost={item.source} />}
           </div>
         ))}
         <div
@@ -166,19 +167,10 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
         </div>
       </div>
       <div className="home-concept-slideshow-footer">
-        <ol className="home-concept-slideshow-rail" aria-hidden="true">
-          {HERO_CONCEPTS.map((item, position) => (
-            <li
-              key={item.id}
-              data-frame={item.frame}
-              data-state={position < index ? "read" : position === index ? "current" : "ahead"}
-            >
-              {position === index && counting && (
-                <span style={{ animationDuration: `${readingTime}ms` }} />
-              )}
-            </li>
-          ))}
-        </ol>
+        {/* Position without motion: a quiet count, not a bar that fills toward the next turn. */}
+        <p className="home-concept-slideshow-count" aria-hidden="true">
+          <span>{index + 1}</span> / {HERO_CONCEPTS.length}
+        </p>
         <div className="home-concept-slideshow-controls">
           <button
             type="button"
