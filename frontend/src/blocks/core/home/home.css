@@ -3093,6 +3093,16 @@ html[data-field="off"] .home-love-statement::before {
   }
 }
 
+/* On the dark field the near-white ink turns the rose mix pink and the accent
+   spread glows: keep a blush that sets Love apart, at a quieter level. */
+.dark .home-love-ink {
+  color: color-mix(in oklab, var(--foreground) 84%, #b87992);
+}
+
+.dark .home-love-ink::before {
+  opacity: 0.5;
+}
+
 .home-consciousness-101-source {
   margin-top: 1.5rem;
   font-family: var(--home-theory-interface-font);
