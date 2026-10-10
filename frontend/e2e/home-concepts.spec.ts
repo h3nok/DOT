@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { HERO_CONCEPTS } from "../src/blocks/core/home/heroData";
-import { expectNoHorizontalOverflow } from "./helpers";
+import { expectNoHorizontalOverflow, openHomeModel } from "./helpers";
 
 const TOTAL = HERO_CONCEPTS.length;
 const PENULTIMATE = HERO_CONCEPTS[TOTAL - 2];
@@ -22,12 +22,13 @@ test("still concepts visibly explain every idea without clipping or shifting the
   await page.setViewportSize({ width: 320, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await openHomeModel(page);
   await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   const previous = concepts.getByRole("button", { name: "Previous concept" });
   const next = concepts.getByRole("button", { name: "Next concept" });
   const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Question what you know", exact: true });
+    .getByRole("link", { name: "Test the worldview", exact: true });
   const opening = await read.boundingBox();
   expect(opening).not.toBeNull();
   await expect(read).toBeInViewport({ ratio: 1 });
@@ -74,6 +75,7 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await openHomeModel(page);
   await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   await concepts.scrollIntoViewIfNeeded();
@@ -108,6 +110,7 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await openHomeModel(page);
   await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   await concepts.scrollIntoViewIfNeeded();
@@ -122,7 +125,7 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
   await concepts.scrollIntoViewIfNeeded();
-  await page.getByRole("link", { name: "Explore the model", exact: true }).hover();
+  await page.locator(".home-hero-model > summary").hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();
@@ -133,6 +136,7 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await openHomeModel(page);
   await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
   await concepts.scrollIntoViewIfNeeded();

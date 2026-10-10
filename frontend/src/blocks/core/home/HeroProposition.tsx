@@ -1,5 +1,4 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
@@ -13,7 +12,7 @@ import { HeroConceptSlideshow } from "./HeroConceptSlideshow";
 interface HeroPropositionProps {
   inquiry?: ReactNode;
   reducedMotion?: boolean;
-  /** The proposed architecture accompanies the reading invitation. */
+  /** The proposed architecture is available when the reader opens the model. */
   stage?: ReactNode;
 }
 
@@ -34,7 +33,7 @@ export function HeroProposition({
   return (
     <ArchitectureFocusContext.Provider value={architecture}>
     <div className="home-hero-proposition">
-      <div className="home-hero-opening">
+      <div className="home-hero-front-door">
         <div className="home-hero-margin">
           <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
           <div className="home-hero-kicker">
@@ -47,6 +46,10 @@ export function HeroProposition({
               <span>{HOME.title}</span>
             </h1>
             <p className="home-hero-opening-copy">{HOME.opening}</p>
+            <p className="home-hero-critique">{HOME.critique}</p>
+            <a className="home-hero-source" href={HOME.critiqueSourceUrl}>
+              {HOME.critiqueSourceLabel}
+            </a>
           </div>
 
           <FocusNav
@@ -58,18 +61,18 @@ export function HeroProposition({
               description: HOME.primaryActionDescription,
               icon: <NucleusMark size={24} reducedMotion />,
             }}
-            secondary={[{
-              href: "#possibility-field",
-              label: "Explore the model",
-              endIcon: <ArrowDown />,
-            }]}
           />
-
-          <HeroConceptSlideshow reducedMotion={reducedMotion} />
         </div>
-
-        {stage}
       </div>
+
+      <Disclosure className="home-hero-model" summary="Explore the model" mountOnOpen>
+        <div className="home-hero-opening">
+          <div className="home-hero-margin">
+            <HeroConceptSlideshow reducedMotion={reducedMotion} />
+          </div>
+          {stage}
+        </div>
+      </Disclosure>
 
       {inquiry && (
         <Disclosure className="home-hero-inquiry" summary="Have a question about Book One?">
