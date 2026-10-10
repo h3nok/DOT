@@ -73,9 +73,11 @@ export default function ContactPage() {
               <DotButton label="Explore the work" to="/about#about-products" endIcon={<ArrowUpRight />} />
               <button type="button" className="contact-quiet-action" onClick={() => { setReceipt(null); submission.current = null; }}>Write another message</button>
             </div>
-          ) : availability === "open" ? (
-            <form onSubmit={event => { event.preventDefault(); if (!sending) void send(); }}>
-              <fieldset disabled={sending} className="contact-form-body">
+          ) : availability === "open" || availability === "loading" ? (
+            // The form is laid out while availability is checked, so it does not
+            // push the direct-contact panel down when the answer arrives.
+            <form onSubmit={event => { event.preventDefault(); if (!sending && availability === "open") void send(); }}>
+              <fieldset disabled={sending || availability === "loading"} className="contact-form-body">
                 <IntentionPicker label="What brings you here?" options={purposes} value={draft.purpose} onChange={value => update("purpose", value)} />
                 <div className="contact-fields">
                   <FormField label="Your name">{props => <input {...props} name="name" autoComplete="name" required maxLength={120} value={draft.name} onChange={event => update("name", event.target.value)} />}</FormField>
@@ -90,16 +92,15 @@ export default function ContactPage() {
                 <div className="contact-honeypot" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" value={draft.website} onChange={event => update("website", event.target.value)} /></label></div>
                 <label className="contact-consent"><input type="checkbox" checked={draft.consent} required onChange={event => update("consent", event.target.checked)} /><span>I agree to have my details used to respond to this message.</span></label>
                 <p className="contact-privacy">{contact.privacy} <Link to="/privacy">Read the privacy page.</Link></p>
+                {availability === "loading" && <p role="status" className="contact-privacy">Checking contact availability…</p>}
                 {error && <p role="alert" className="contact-error">{error}</p>}
                 <DotButton label={sending ? "Sending your message…" : "Send message"} type="submit" disabled={sending} endIcon={<ArrowUpRight />} />
               </fieldset>
             </form>
           ) : <div className="contact-availability">
-            {availability === "loading" ? <p role="status">Checking contact availability…</p> : <>
-              <h2 className="dot-section-heading">{availability === "error" ? "The form could not be reached." : "Please use email for now."}</h2>
-              <p>{availability === "error" ? "You can still contact Henok directly. No message has been sent." : "The contact form is temporarily unavailable. Send a note directly to the address alongside."}</p>
-              <button className="contact-quiet-action" type="button" onClick={() => setAttempt(value => value + 1)}>Try the form again</button>
-            </>}
+            <h2 className="dot-section-heading">{availability === "error" ? "The form could not be reached." : "Please use email for now."}</h2>
+            <p>{availability === "error" ? "You can still contact Henok directly. No message has been sent." : "The contact form is temporarily unavailable. Send a note directly to the address alongside."}</p>
+            <button className="contact-quiet-action" type="button" onClick={() => setAttempt(value => value + 1)}>Try the form again</button>
           </div>}
         </section>
         <Surface as="aside" className="contact-aside" aria-label="Direct contact and next steps">
