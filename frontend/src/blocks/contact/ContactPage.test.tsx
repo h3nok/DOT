@@ -9,13 +9,28 @@ vi.mock("../../services/OrchestratorContactService", () => ({ fetchContactStatus
 beforeEach(() => { vi.resetAllMocks(); vi.mocked(fetchContactStatus).mockResolvedValue({ available: true }); });
 const open = (path = "/contact") => render(<MemoryRouter initialEntries={[path]}><ContactPage /></MemoryRouter>);
 async function fill() {
-  fireEvent.change(await screen.findByRole("textbox", { name: "Your name" }), { target: { value: "Visitor" } });
+  // The form is laid out at once and enabled when the inbox reports it is open.
+  await waitFor(() => expect(screen.getByRole("textbox", { name: "Your name" })).toBeEnabled());
+  fireEvent.change(screen.getByRole("textbox", { name: "Your name" }), { target: { value: "Visitor" } });
   fireEvent.change(screen.getByRole("textbox", { name: "Email address" }), { target: { value: "visitor@example.org" } });
   fireEvent.change(screen.getByRole("textbox", { name: "Your message" }), { target: { value: "I'd like to build a useful digital product." } });
   fireEvent.click(screen.getByRole("checkbox"));
 }
 
 describe("ContactPage", () => {
+  it("lays the form out while availability is checked, so nothing below it moves", async () => {
+    let answer: (status: { available: boolean }) => void = () => {};
+    vi.mocked(fetchContactStatus).mockReturnValue(new Promise(resolve => { answer = resolve; }));
+    open();
+    expect(screen.getByRole("status")).toHaveTextContent("Checking contact availability…");
+    expect(screen.getByRole("textbox", { name: "Your name" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Send message/ })).toBeDisabled();
+    expect(screen.getByRole("complementary", { name: "Direct contact and next steps" })).toBeVisible();
+    answer({ available: true });
+    await waitFor(() => expect(screen.getByRole("textbox", { name: "Your name" })).toBeEnabled());
+    expect(screen.queryByText("Checking contact availability…")).toBeNull();
+  });
+
   it("opens the selected purpose and only asks project details for projects", async () => {
     open("/contact?purpose=writing");
     expect(await screen.findByRole("radio", { name: /Writing & inquiry/ })).toBeChecked();
