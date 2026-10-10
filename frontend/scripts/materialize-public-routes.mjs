@@ -800,7 +800,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
             const showcase = project.showcase ? `<figure><img src="${escapeHtml(project.showcase.mark)}" alt="" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p><img src="${escapeHtml(project.showcase.source)}" alt="${escapeHtml(project.showcase.alt)}" width="${project.showcase.width}" height="${project.showcase.height}" loading="lazy"><figcaption>${escapeHtml(project.showcase.caption)}</figcaption></figure>` : "";
             return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3>${showcase}<p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
           }).join("")}</ul>`,
-          OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
+          // The live page's rule (projectDestination): only work with a public destination is named.
+          OTHER_BUILDER_PROJECTS.map((project) => ({ project, href: project.links.live || project.links.website || project.links.repo }))
+            .filter(({ href }) => href)
+            .map(({ project, href }) => `<p>Also in open source: ${link(href, project.name)}. Isolation for AI agent tools.</p>`).join(""),
           '<h2 id="about-services">Ways to work together</h2>',
           BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p><p>${escapeHtml(service.deliverable)}</p>`).join(""),
           '<h2 id="about-resume">Career & résumé</h2>',

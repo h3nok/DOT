@@ -114,8 +114,9 @@ describe("AboutPage", () => {
     for (const project of builderProjects) {
       expect(products.getByRole("heading", { name: project.name })).toBeVisible();
     }
-    expect(products.getByRole("link", { name: "Hermetic Knowledge Isolation" }))
-      .toHaveAttribute("href", "https://github.com/h3nok/HKI");
+    // HKI's repository is private: no link to a page visitors cannot open.
+    expect(products.queryByRole("link", { name: "Hermetic Knowledge Isolation" })).toBeNull();
+    expect(products.queryByText(/Also in open source/)).toBeNull();
     expect(products.getByRole("link", { name: "Visit website: Sullix" }))
       .toHaveAttribute("href", "https://sullix.com/");
     expect(screen.queryByText(/Avia/)).toBeNull();
