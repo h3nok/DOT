@@ -44,12 +44,9 @@ export function HeroProposition({
 
           <div className="home-hero-masthead">
             <h1 className="dot-page-heading home-hero-title">
-              <span><span className="home-love-ink">{HOME.title}</span></span>
+              <span>{HOME.title}</span>
             </h1>
-            <blockquote className="home-hero-love-quote">
-              <p>{HOME.loveDefinition}</p>
-              <cite><Link to={HOME.sourcePath}>{HOME.sourceLabel}</Link></cite>
-            </blockquote>
+            <p className="home-hero-opening-copy">{HOME.opening}</p>
           </div>
 
           <FocusNav
@@ -57,8 +54,8 @@ export function HeroProposition({
             label="Begin exploring DOT"
             primary={{
               to: "/book/digital-organism-theory/preface?path=start-where-you-live",
-              label: "Read Book One",
-              description: "The preface · Free to read",
+              label: HOME.primaryAction,
+              description: HOME.primaryActionDescription,
               icon: <NucleusMark size={24} reducedMotion />,
             }}
             secondary={[{

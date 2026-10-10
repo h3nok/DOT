@@ -196,7 +196,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);
     await expect(page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Read Book One" })).toBeInViewport();
+      .getByRole("link", { name: "Question what you know" })).toBeInViewport();
     for (const font of presentation.fonts) {
       expect(font.pixels, `${font.layer} rendered label size`).toBeGreaterThanOrEqual(
         font.layer === "awareness-radius" ? 14 : 16,
@@ -242,7 +242,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       );
     }
     const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Read Book One", exact: true });
+      .getByRole("link", { name: "Question what you know", exact: true });
     await expect(read).toBeInViewport({ ratio: 1 });
     await expectNoHorizontalOverflow(page);
   });
@@ -254,9 +254,9 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "Love.",
+      name: "What if your certainty is the problem?",
     })).toBeVisible();
-    const read = hero.getByRole("link", { name: "Read Book One", exact: true });
+    const read = hero.getByRole("link", { name: "Question what you know", exact: true });
     await expect(read).toBeInViewport();
 
     const entry = await hero.locator(".home-hero-entry").evaluate((node) => {
@@ -291,9 +291,9 @@ for (const viewport of [
 
     const svg = page.locator(".home-hero-architecture__svg");
     const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Read Book One", exact: true });
+      .getByRole("link", { name: "Question what you know", exact: true });
     await expect(reading).toBeInViewport({ ratio: 1 });
-    await expect(reading).toHaveAccessibleDescription("The preface · Free to read");
+    await expect(reading).toHaveAccessibleDescription("Book One’s preface · Free to read");
 
     const diagram = await svg.boundingBox();
     const question = await page.locator(".home-hero-title").boundingBox();
@@ -326,7 +326,7 @@ test("the reading invitation opens the lived-experience path from the keyboard",
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Read Book One", exact: true });
+    .getByRole("link", { name: "Question what you know", exact: true });
   await reading.focus();
   await expect(reading).toBeFocused();
   await page.keyboard.press("Enter");

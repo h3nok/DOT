@@ -27,9 +27,11 @@ test("still concepts visibly explain every idea without clipping or shifting the
   const previous = concepts.getByRole("button", { name: "Previous concept" });
   const next = concepts.getByRole("button", { name: "Next concept" });
   const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Read Book One", exact: true });
+    .getByRole("link", { name: "Question what you know", exact: true });
   const opening = await read.boundingBox();
   expect(opening).not.toBeNull();
+  await expect(read).toBeInViewport({ ratio: 1 });
+  const openingDocumentY = opening!.y + await page.evaluate(() => window.scrollY);
   await expect(previous).toBeDisabled();
 
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
@@ -49,8 +51,10 @@ test("still concepts visibly explain every idea without clipping or shifting the
     expect(fits, `${concept.term}: the complete title and explanation must fit`).toBe(true);
     const position = await read.boundingBox();
     expect(position).not.toBeNull();
-    expect(Math.abs(position!.y - opening!.y), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
-    await expect(read).toBeInViewport({ ratio: 1 });
+    // Focusing controls below the fold can scroll the page; compare document
+    // coordinates so that normal keyboard scrolling is not a layout shift.
+    const documentY = position!.y + await page.evaluate(() => window.scrollY);
+    expect(Math.abs(documentY - openingDocumentY), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
     if (index < HERO_CONCEPTS.length - 1) {
       await next.focus();
       await page.keyboard.press("Enter");
@@ -70,7 +74,9 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await expect(concepts.getByRole("heading", { name: "The Digital Organism" }))
@@ -102,7 +108,9 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.runFor(1_000);
   await concepts.getByRole("button", { name: "Pause concept introduction" }).click();
@@ -113,7 +121,8 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.clock.fastForward(90_000);
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
-  await page.getByRole("heading", { level: 1 }).hover();
+  await concepts.scrollIntoViewIfNeeded();
+  await page.getByRole("link", { name: "Explore the model", exact: true }).hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();
@@ -124,7 +133,9 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
   const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await concepts.hover();
@@ -136,7 +147,7 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts).toHaveAttribute("data-playback", "paused");
   await page.clock.fastForward(90_000);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(7_900);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();

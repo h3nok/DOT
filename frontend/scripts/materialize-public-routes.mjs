@@ -1096,10 +1096,10 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   const body = [
     `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1>`,
     `<p>${description}</p>`,
-    `<blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
+    `<p>${escapeHtml(HOME.opening)}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
-    `<h2>Things built. Ideas explored.</h2><p>${link(`${ABOUT_ROUTE}#about-products`, "Build something useful.")} · ${link(BLOG_ROUTE, "Follow an idea.")} · ${link(`${CONTACT_ROUTE}?purpose=project`, "Start a conversation.")}</p>`,
-    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, "Read Book One")} — ${escapeHtml(manifest.project.title)}, complete and free.</p>`,
+    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)} — ${escapeHtml(HOME.primaryActionDescription)}.</p>`,
+    `<h2>Consciousness 101</h2><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
     `<h2>${escapeHtml(HOME.invitationTitle)}</h2><p>${escapeHtml(HOME.invitation)}</p><p>${escapeHtml(HOME.boundary)}</p><p>${escapeHtml(HOME.edition)}</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0

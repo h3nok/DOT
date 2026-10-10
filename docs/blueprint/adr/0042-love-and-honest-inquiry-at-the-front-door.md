@@ -54,6 +54,19 @@ for developing definitions and questions; Book One stays a fixed edition.
 Future experience or evidence may revise the framing without rewriting the
 released book.
 
+## Amendment — 2026-10-10
+
+At the founder’s request, the homepage now opens with “What if your certainty
+is the problem?” and the primary reading action is “Question what you know.”
+The supporting copy invites readers to examine inherited beliefs, fear, and
+their own experience. Love remains defined within the theory rather than serving
+as an ambiguous opening slogan. The released manuscript is unchanged.
+
+Remove the “Things built. Ideas explored.” section and its three cards from the
+homepage, generated HTML, and page map. Work, writing, and contact remain available
+through the site navigation. This amendment serves L7 (clear and honest framing)
+and L10 (a focused reading invitation) without violating any manifesto law.
+
 ## Alternatives considered
 
 | Option | Pros | Cons | Verdict |

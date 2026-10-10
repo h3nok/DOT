@@ -59,30 +59,31 @@ describe("HeroProposition", () => {
       </MemoryRouter>,
     );
 
-  it("keeps Love still while concepts have their own controls", () => {
+  it("keeps the opening question still while concepts have their own controls", () => {
     renderProposition();
 
     expect(
       screen.getByRole("heading", {
-        name: "Love.",
+        name: "What if your certainty is the problem?",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
     expect(document.querySelector(".home-hero-statement")).toBeNull();
   });
 
-  it("attributes the opening definition to the book before introducing model terms", () => {
+  it("opens with critical inquiry and keeps one reading path into the book", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "Love.",
+      name: "What if your certainty is the problem?",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText("Love is the condition in which Fear no longer governs you."))
+    expect(screen.getByText(/A belief can feel like truth simply because it is familiar/))
       .toBeVisible();
-    expect(screen.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
-      .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+    // The opening is an invitation to examine beliefs, not an attributed quotation.
+    expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
+    expect(document.querySelector(".home-hero-masthead blockquote")).toBeNull();
     expect(document.querySelector(".home-hero-lede")).toBeNull();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
@@ -102,7 +103,7 @@ describe("HeroProposition", () => {
   it("offers one primary reading action and a quiet path to the explanation", () => {
     renderProposition();
 
-    expect(screen.getByRole("link", { name: "Read Book One" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Question what you know" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory/preface?path=start-where-you-live",
     );
@@ -111,8 +112,8 @@ describe("HeroProposition", () => {
       "#possibility-field",
     );
     expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
-    expect(screen.getByRole("link", { name: "Read Book One" }))
-      .toHaveAccessibleDescription("The preface · Free to read");
+    expect(screen.getByRole("link", { name: "Question what you know" }))
+      .toHaveAccessibleDescription("Book One’s preface · Free to read");
   });
 
   it("lets readers begin before the concepts or diagram", () => {
@@ -123,7 +124,7 @@ describe("HeroProposition", () => {
     );
 
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "Love." });
+    const heading = screen.getByRole("heading", { name: "What if your certainty is the problem?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
     const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

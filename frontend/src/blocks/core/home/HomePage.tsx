@@ -2,8 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  Blocks,
-  PenLine,
   Mail,
   Network,
 } from "lucide-react";
@@ -19,7 +17,6 @@ import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
-import { IntentCard } from "../../../attention-os/focus-nav/IntentCard";
 import { author } from "../../../content/author";
 import HOME from "../../../content/home.json";
 import { HeroAsk } from "./HeroAsk";
@@ -145,20 +142,6 @@ export default function HomePage() {
               </div>
             }
           />
-        </div>
-      </section>
-
-      <section id="personal-platform" className="home-personal-section" aria-labelledby="home-personal-title">
-        <div className="dot-page-container dot-page-wide">
-          <header className="home-personal-heading">
-            <div><p className="dot-label">Henok Ghebrechristos, PhD</p><h2 id="home-personal-title" className="dot-page-heading">Things built.<br />Ideas explored.</h2></div>
-            <p>AI and product architecture, independent building, and an open inquiry into consciousness. Choose what brings you here.</p>
-          </header>
-          <nav className="home-personal-doors" aria-label="Work, writing and conversation">
-            <IntentCard to="/about#about-products" title="Build something useful." label="Work · Digital assets" description="Products, AI systems, selected projects, and the experience behind them." icon={<Blocks />} tone="forest" />
-            <IntentCard to="/blog" title="Follow an idea." label="Writing · Open inquiry" description="Technical work, essays, and The Millennial Manifesto, together in one archive." icon={<PenLine />} tone="copper" />
-            <IntentCard to="/contact?purpose=project" title="Start a conversation." label="Contact · Work together" description="Discuss a project, explore a collaboration, or share a question." icon={<Mail />} tone="blue" />
-          </nav>
         </div>
       </section>
 
