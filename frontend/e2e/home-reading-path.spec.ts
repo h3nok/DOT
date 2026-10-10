@@ -1,12 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-test("home questions certainty and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
+test("home challenges promised progress and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "What if your certainty is the problem?" })).toBeVisible();
-  await expect(opening.getByRole("link", { name: "Question what you know", exact: true }))
+  await expect(opening.getByRole("heading", { level: 1, name: "Progress toward what?" })).toBeVisible();
+  await expect(opening.getByRole("link", { name: "Test the worldview", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
+  await expect(opening.getByText(/Secular humanism promises human flourishing/)).toBeVisible();
+  await expect(opening.getByText(/No worldview gets an exemption—including DOT/)).toBeVisible();
+  await expect(opening.getByRole("link", { name: "The humanist promise" }))
+    .toHaveAttribute("href", "https://americanhumanist.org/humanism/humanist-manifesto-iii/");
+  await expect(opening.locator(".home-hero-architecture__svg, .home-concept-slideshow")).toHaveCount(0);
   await expect(page.locator("#personal-platform")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true }).locator('a[href="#personal-platform"]')).toHaveCount(0);
   const invitation = page.getByRole("region", { name: "An invitation to inquire" });
@@ -24,7 +29,7 @@ test("home offers a reading path and readable theory comparisons", async ({ page
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const entry = page.getByRole("navigation", { name: "Begin exploring DOT" });
-  const read = entry.getByRole("link", { name: "Question what you know" });
+  const read = entry.getByRole("link", { name: "Test the worldview" });
   await expect(read).toBeInViewport();
   await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await page.screenshot({ path: testInfo.outputPath("home-opening.png") });

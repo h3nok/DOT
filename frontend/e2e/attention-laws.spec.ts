@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { PUBLIC_ROUTES, htmlAttribute } from "./helpers";
+import { PUBLIC_ROUTES, htmlAttribute, openHomeModel } from "./helpers";
 
 /**
  * Runtime companions to src/test/manifesto-laws.test.ts. Source greps cannot see
@@ -62,6 +62,9 @@ test.describe("stillness is honoured", () => {
     await page.goto("/");
 
     const thesis = page.locator(".home-concept-slideshow");
+    await expect(thesis).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 1, name: "Progress toward what?" })).toBeVisible();
+    await openHomeModel(page);
     await expect(thesis).toBeVisible();
     await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
 

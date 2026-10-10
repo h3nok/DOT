@@ -1097,6 +1097,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1>`,
     `<p>${description}</p>`,
     `<p>${escapeHtml(HOME.opening)}</p>`,
+    `<p>${escapeHtml(HOME.critique)}</p><p>${link(HOME.critiqueSourceUrl, HOME.critiqueSourceLabel)}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)} — ${escapeHtml(HOME.primaryActionDescription)}.</p>`,
     `<h2>Consciousness 101</h2><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,

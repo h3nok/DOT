@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { htmlAttribute, openAppearancePanel } from "./helpers";
+import { htmlAttribute, openAppearancePanel, openHomeModel } from "./helpers";
 import identity from "../src/content/identity.json" with { type: "json" };
 
 function renderedStyle(page: import("@playwright/test").Page, selector: string, property: string) {
@@ -59,7 +59,7 @@ test.describe("appearance controls change the rendered document", () => {
   test("the reading action keeps DOT's warm paper and forest shades", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");
-    const action = page.locator("#threshold").getByRole("link", { name: "Question what you know", exact: true });
+    const action = page.locator("#threshold").getByRole("link", { name: "Test the worldview", exact: true });
     await expect(action).toBeVisible();
 
     for (const colorScheme of ["light", "dark"] as const) {
@@ -151,6 +151,7 @@ test.describe("appearance controls change the rendered document", () => {
   test("the still radial field follows the architecture as the page scrolls", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
+    await openHomeModel(page);
     await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
     await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
     const pixels = () => page.locator(".organism-membrane canvas").evaluate(
@@ -166,6 +167,7 @@ test.describe("appearance controls change the rendered document", () => {
     await page.goto("/");
     // The loader also has an animated field. Measure only after the real
     // architecture mounts, so its handoff cannot invalidate the cached raster.
+    await openHomeModel(page);
     await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     const canvas = page.locator(".organism-membrane canvas");
@@ -209,6 +211,7 @@ test.describe("appearance controls change the rendered document", () => {
 
   test("tint recolours the hero architecture", async ({ page }) => {
     await page.goto("/");
+    await openHomeModel(page);
     const panel = await openAppearancePanel(page);
     await openEnvironmentFineTune(panel);
 
@@ -225,6 +228,7 @@ test.describe("appearance controls change the rendered document", () => {
   test("ui style changes controls while keeping one home diagram", async ({ page }) => {
     test.slow();
     await page.goto("/");
+    await openHomeModel(page);
     const panel = await openAppearancePanel(page);
     await openEnvironmentFineTune(panel);
 
