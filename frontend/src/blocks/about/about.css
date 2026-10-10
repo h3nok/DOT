@@ -26,15 +26,15 @@
 .about-project { overflow: hidden; }
 .about-project-visual { background: color-mix(in oklab, var(--background) 38%, var(--intent-light)); border-bottom: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
 .about-product-art { display: block; width: 100%; height: auto; color: var(--intent-tone); }
-.about-project-showcase { display: grid; gap: 1rem; padding: clamp(1.25rem, 3vw, 2rem); }
+.about-project-showcase { display: grid; align-content: center; gap: 1.5rem; padding: clamp(1.5rem, 4vw, 3rem); }
+.about-showcase-platform { display: flex; align-items: center; justify-content: center; gap: .5rem; }
+.about-showcase-platform img { width: 5rem; height: 5rem; object-fit: contain; }
+.about-showcase-platform span { font-size: clamp(2rem, 4vw, 3rem); font-weight: 600; letter-spacing: -.045em; }
 .about-showcase-brand { display: flex; align-items: center; gap: .875rem; }
 .about-showcase-mark { width: 3rem; height: 3rem; object-fit: contain; }
 .about-showcase-name { font-size: 1.375rem; font-weight: 600; letter-spacing: -.04em; }
 .about-showcase-role { margin-top: .125rem; font-size: .75rem; line-height: 1.6; color: var(--muted-foreground); }
-.about-showcase-screen { min-width: 0; overflow: hidden; border: 1px solid color-mix(in oklab, var(--intent-tone) 24%, var(--border)); border-radius: .5rem; box-shadow: 0 .625rem 1.5rem color-mix(in oklab, var(--intent-tone) 10%, transparent); }
-.about-showcase-screen img { display: block; width: 100%; height: auto; }
-.about-project-showcase figcaption { font-size: .6875rem; line-height: 1.6; color: var(--muted-foreground); }
-.about-project-with-showcase > .about-project-identity { padding: clamp(1.25rem, 3vw, 2rem); }
+.about-project-showcase .about-showcase-brand { justify-content: center; border-top: 1px solid color-mix(in oklab, var(--intent-tone) 25%, var(--border)); padding-top: 1.25rem; }
 .about-art-guide { stroke: currentColor; stroke-width: 1; opacity: .16; }
 .about-art-line { stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .about-art-route { stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
@@ -108,16 +108,6 @@ html[data-contrast="high"] .about-art-guide { opacity: .3; }
   .about-hero { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
   .about-project { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
   .about-project .about-project-visual { display: grid; align-items: center; border-bottom: 0; border-right: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
-  .about-project-with-showcase { display: block; }
-  .about-project-with-showcase > .about-project-identity { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .about-project-with-showcase .about-project-role { margin-top: 0; }
-  .about-project-with-showcase .about-project-visual { display: block; border-right: 0; border-bottom: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
-  .about-project-with-showcase .about-project-detail { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2rem; margin-top: 0; }
-  .about-project-with-showcase .about-project-stack { margin-top: 0; }
-  .about-project-showcase { grid-template-columns: minmax(7rem, .2fr) minmax(0, 1fr); gap: .75rem 1.75rem; }
-  .about-showcase-brand { flex-direction: column; justify-content: center; text-align: center; grid-row: span 2; }
-  .about-showcase-mark { width: clamp(5rem, 8vw, 8rem); height: clamp(5rem, 8vw, 8rem); }
-  .about-project-showcase figcaption { grid-column: 2; }
   .about-services { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .about-career-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3rem; }
   .about-writing, .about-contact { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); gap: 3rem; }

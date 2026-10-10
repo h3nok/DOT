@@ -1,10 +1,34 @@
 {
-  "title": "Who decided your experience doesn’t count?",
-  "opening": "Challenge secular humanism and mainstream science wherever they dismiss subjective experience without examining it. Excluding experience in advance closes inquiry.",
-  "primaryAction": "Question what you know",
-  "primaryActionDescription": "Book One’s preface · Free to read",
+  "title": "Trust your experience.",
+  "subtitle": "Feelings are data.",
+  "interpretation": "Tune your interpretation toward coherence.",
+  "criticalLine": "Challenge models that exclude you or ask you to be someone else.",
+  "primaryAction": "Read Book One",
+  "critiques": [
+    {
+      "id": "home.concept.status-quo",
+      "term": "The Closed Question",
+      "rejected": true,
+      "text": "Mainstream science should examine subjective experience, not dismiss it in advance. Explaining what the brain does does not, by itself, explain why there is something it feels like to be you.",
+      "source": "Chalmers, 1995",
+      "sourceHref": "https://consc.net/papers/facing.pdf"
+    },
+    {
+      "id": "home.concept.physicalism",
+      "term": "Physicalism",
+      "text": "Physicalism proposes that everything, including mind, is physical. Does the evidence establish that worldview, or is the worldview deciding which evidence counts? Keep the question open.",
+      "source": "Nagel, 2012 · Strawson, 2006"
+    },
+    {
+      "id": "home.concept.humanism",
+      "term": "Secular Humanism",
+      "text": "Secular humanism values reason, experience, and human flourishing. Hold it to those commitments: when experience challenges its assumptions, is it investigated or explained away? A worldview must answer to inquiry, too.",
+      "source": "Humanist Manifesto III, 2003",
+      "sourceHref": "https://americanhumanist.org/humanism/humanist-manifesto-iii/"
+    }
+  ],
   "loveDefinition": "Love is the condition in which Fear no longer governs you.",
-  "sourceLabel": "Henok Ghebrechristos · Book One, preface",
+  "sourceLabel": "Book One, preface",
   "sourcePath": "/book/digital-organism-theory/preface",
   "invitationTitle": "Read. Inquire. Open up.",
   "invitation": "Read the book. Examine your experience. Ask questions, and be willing to change what you hold to be true. This work can be long and difficult. Take your time; there is no timetable for it.",

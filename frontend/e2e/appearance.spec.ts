@@ -59,7 +59,7 @@ test.describe("appearance controls change the rendered document", () => {
   test("the reading action keeps DOT's warm paper and forest shades", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");
-    const action = page.locator("#threshold").getByRole("link", { name: "Question what you know", exact: true });
+    const action = page.locator("#threshold").getByRole("link", { name: "Read Book One", exact: true });
     await expect(action).toBeVisible();
 
     for (const colorScheme of ["light", "dark"] as const) {
@@ -166,6 +166,7 @@ test.describe("appearance controls change the rendered document", () => {
     await page.goto("/");
     // The loader also has an animated field. Measure only after the real
     // architecture mounts, so its handoff cannot invalidate the cached raster.
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     const canvas = page.locator(".organism-membrane canvas");
@@ -225,6 +226,9 @@ test.describe("appearance controls change the rendered document", () => {
   test("ui style changes controls while keeping one home diagram", async ({ page }) => {
     test.slow();
     await page.goto("/");
+    const figure = page.locator(".home-hero-architecture");
+    await figure.scrollIntoViewIfNeeded();
+    await expect(figure).toHaveAttribute("data-emergence", "ready");
     const panel = await openAppearancePanel(page);
     await openEnvironmentFineTune(panel);
 

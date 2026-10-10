@@ -1,11 +1,15 @@
 import type { AgentLens } from "../../../dot/agent";
+import HOME from "../../../content/home.json" with { type: "json" };
 
 export type HeroAskRequest = {
   query: string;
   lens: AgentLens;
 };
 
-type ClaimLevel = "observation" | "model" | "hypothesis";
+export type ClaimLevel = "observation" | "model" | "hypothesis";
+
+/** Whose frame a slide speaks from. The status quo and DOT's reply each keep their own ink. */
+export type ConceptFrame = "status-quo" | "reply";
 
 /** A part of the hero architecture a concept explains; the diagram brings it forward. */
 export type ArchitecturePartId = "te" | "awareness" | "big-c" | "rf0" | "rfn" | "little-c" | "process";
@@ -16,14 +20,35 @@ export interface Concept {
   text: string;
   level: ClaimLevel;
   part?: ArchitecturePartId;
+  frame?: ConceptFrame;
+  /** Marks an assumption explicitly rejected by DOT, rather than a perspective it questions. */
+  rejected?: boolean;
+  /** A cited admission the slide rests on. */
+  source?: string;
+  sourceHref?: string;
 }
 
 export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.organism",
     term: "The Digital Organism",
-    text: "DOT proposes that you are not physical: a conscious process that receives this world through a body. Digital means informational, not electronic.",
+    text: "You are not your body. You are the process that lives through it: carrying state, registering what matters, responding, and holding together across change. Digital here means informational, not electronic.",
     level: "hypothesis",
+  },
+  ...HOME.critiques.map((concept): Concept => ({ ...concept, level: "model", frame: "status-quo" })),
+  {
+    id: "home.concept.rejection",
+    term: "DOT Rejects the Closed Question",
+    text: "An unanswered question is not a settled one. Experience is the primary data. The physical frame is one hypothesis among others, and it is held to the same standard as this one.",
+    level: "model",
+    frame: "reply",
+  },
+  {
+    id: "home.concept.stakes",
+    term: "The Stakes",
+    text: "We keep believing we are in control. The control keeps failing. What dies in that gap is not the body.",
+    level: "model",
+    frame: "reply",
   },
   {
     id: "home.concept.feeling",

@@ -73,6 +73,33 @@ developmental purpose remain hypotheses, not conclusions derived from physics.
 
 ## Enforcement
 
+### Amendment — 2026-10-10
+
+The concept sequence now includes the founder’s critical questions alongside
+the model definitions. Its region is named “Key concepts and questions” so new
+editorial questions are not represented as quotations from the fixed book.
+The current sequence contains twenty entries and retains the same finite
+endpoint, accessible manual controls, suspension rules, and stillness behavior.
+Critiques carry Model status and sources where available. Reading stays first
+and immediately available. This extends the public explanation, not the scoped
+autoplay exception or any member-facing primitive.
+
+Outside perspectives and rejected assumptions use copper headers, with
+“Outside perspective” and “DOT rejects” labels respectively. DOT’s response
+uses its existing accent and a separate label. Only the closed-question
+assumption is marked rejected; questioning a worldview does not label every
+part of it rejected. Labels and border patterns preserve the distinction
+in high contrast. This serves L7’s honest framing and L10’s clear presentation.
+
+The figure’s entrance now follows the founder’s explicit causal order:
+Big C completes its emergence before any Reality Frame begins resolving;
+RF₀ and the other Frames all resolve before Little c appears. Awareness,
+relations, and Intent follow the local experiencers. Labels accompany their
+layers. The single entrance starts when the figure enters view; stillness and
+reduced motion show the complete figure immediately. Animation represents the
+proposed model, not observed cosmological history. Geometry and click-through
+reading remain unchanged.
+
 Component tests require all ten visible explanations and claim levels, the
 full post-typing reading interval, a finite autoplay endpoint, disabled endpoints,
 Pause/Play, suspension and timer cleanup, and no timers under either stillness

@@ -10,6 +10,14 @@ const LEVEL_LABEL: Record<Concept["level"], string> = {
   hypothesis: "Hypothesis",
 };
 
+const FRAME_LABEL: Record<NonNullable<Concept["frame"]>, string> = {
+  "status-quo": "Outside perspective",
+  reply: "DOT’s response",
+};
+
+const frameLabel = (concept: Concept) => concept.rejected ? "DOT rejects"
+  : concept.frame ? FRAME_LABEL[concept.frame] : "DOT concept";
+
 const TERM_TICK_MS = 35;
 const PASSAGE_TICK_MS = 20;
 
@@ -101,7 +109,7 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
     <section
       ref={ref}
       className="home-concept-slideshow"
-      aria-label="Key concepts from Book One"
+      aria-label="Key concepts and questions"
       aria-roledescription="carousel"
       data-playback={last ? "complete" : still ? "still" : advancing ? "playing" : "paused"}
       onFocusCapture={pause}
@@ -110,16 +118,17 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
       }}
       onPointerLeave={() => setHovered(false)}
     >
-      <p className="home-concept-slideshow-eyebrow" aria-hidden="true">
-        <span>Key concept</span>
+      <p className="home-concept-slideshow-eyebrow" aria-hidden="true" data-frame={concept.frame}>
+        <span>{frameLabel(concept)}</span>
         <span data-level={concept.level}>{LEVEL_LABEL[concept.level]}</span>
       </p>
       <div className="home-concept-slideshow-body">
         {/* Reserve the longest slide at the current font and width, without clipping text. */}
         {HERO_CONCEPTS.map(item => (
-          <div key={item.id} className="home-concept-slideshow-size" aria-hidden="true">
+          <div key={item.id} className="home-concept-slideshow-size" aria-hidden="true" data-frame={item.frame}>
             <span className="home-concept-slideshow-term">{item.term}</span>
             <p className="home-concept-slideshow-explanation">{item.text}</p>
+            {item.source && <cite className="home-concept-slideshow-source">{item.source}</cite>}
           </div>
         ))}
         <div
@@ -130,13 +139,14 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
           aria-live={playing && !still ? "off" : "polite"}
           aria-atomic="true"
           data-epistemic-status={concept.level}
+          data-frame={concept.frame}
         >
           <h2 className="home-concept-slideshow-term" aria-label={concept.term}>
             <span aria-hidden="true" data-typing={typing && termShown < concept.term.length}>
               {concept.term.slice(0, termShown)}
             </span>
           </h2>
-          <span className="sr-only">{LEVEL_LABEL[concept.level]}.</span>
+          <span className="sr-only">{frameLabel(concept)}. {LEVEL_LABEL[concept.level]}.</span>
           <p className="home-concept-slideshow-explanation">
             {typingText ? (
               <>
@@ -150,6 +160,9 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
               </>
             ) : concept.text}
           </p>
+          {concept.source && <cite className="home-concept-slideshow-source">
+            {concept.sourceHref ? <a href={concept.sourceHref}>{concept.source}</a> : concept.source}
+          </cite>}
         </div>
       </div>
       <div className="home-concept-slideshow-footer">
@@ -157,6 +170,7 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
           {HERO_CONCEPTS.map((item, position) => (
             <li
               key={item.id}
+              data-frame={item.frame}
               data-state={position < index ? "read" : position === index ? "current" : "ahead"}
             >
               {position === index && counting && (

@@ -1,6 +1,86 @@
 import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
 
+test("Big C emerges before every Reality Frame, then Little c and its relations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const figure = page.locator(".home-hero-architecture");
+  await figure.scrollIntoViewIfNeeded();
+  await expect(figure).toHaveAttribute("data-emergence", "ready");
+  const svg = page.locator(".home-hero-architecture__svg");
+  const stages = await svg.evaluate((node) => {
+    const timing = (selector: string) => {
+      const effect = node.querySelector(selector)?.getAnimations()[0]?.effect;
+      if (!effect) throw new Error(`Missing entrance animation for ${selector}`);
+      const { delay, duration } = effect.getTiming();
+      return { start: delay, end: delay + Number(duration) };
+    };
+    return {
+      bigC: timing(".home-architecture-organism-membrane"),
+      frames: [timing(".home-architecture-frame"), ...[1, 2, 3].map((index) =>
+        timing(`.home-architecture-other-frame:nth-child(${index}) .home-architecture-other-frame-body`))],
+      local: timing(".home-architecture-little-c"),
+      awareness: timing(".home-architecture-awareness-radius"),
+      relations: timing(".home-architecture-social-relations"),
+      intent: timing(".home-architecture-awareness-trace"),
+      outerLoop: timing('[data-loop="outer"]'),
+      innerLoop: timing('[data-loop="inner"]'),
+    };
+  });
+  expect(stages.frames.every((frame) => frame.start >= stages.bigC.end)).toBe(true);
+  expect(stages.local.start).toBeGreaterThanOrEqual(Math.max(...stages.frames.map((frame) => frame.end)));
+  expect(stages.awareness.start).toBeGreaterThanOrEqual(stages.local.end);
+  expect(stages.relations.start).toBeGreaterThanOrEqual(stages.local.end);
+  expect(stages.intent.start).toBeGreaterThanOrEqual(stages.awareness.end);
+  expect(stages.outerLoop.start).toBeGreaterThanOrEqual(stages.bigC.end);
+  expect(stages.innerLoop.start).toBeGreaterThanOrEqual(stages.local.end);
+
+  const sample = (time: number) => svg.evaluate((node, currentTime) => {
+    for (const animation of node.getAnimations({ subtree: true })) {
+      animation.pause();
+      animation.currentTime = currentTime;
+    }
+    const opacity = (selector: string) => {
+      const element = node.querySelector(selector);
+      if (!element) throw new Error(`Missing diagram part ${selector}`);
+      return Number(getComputedStyle(element).opacity);
+    };
+    return {
+      bigC: opacity(".home-architecture-big-c-zone"),
+      frame: opacity(".home-architecture-frame"),
+      others: [...node.querySelectorAll(".home-architecture-other-frame-body")].map((element) => Number(getComputedStyle(element).opacity)),
+      local: opacity('.home-architecture-experiencer-stage'),
+      outerLoop: opacity('[data-loop="outer"]'),
+      innerLoop: opacity('[data-loop="inner"]'),
+      intentDrawn: parseFloat(getComputedStyle(node.querySelector(".home-architecture-awareness-trace")!).strokeDashoffset) === 0,
+    };
+  }, time);
+  const primordial = await sample(1500);
+  expect(primordial.bigC).toBeGreaterThan(.9);
+  expect(primordial.frame).toBe(0);
+  expect(primordial.others).toEqual([0, 0, 0]);
+  expect(primordial.local).toBe(0);
+  expect(primordial.outerLoop).toBe(0);
+  expect(primordial.innerLoop).toBe(0);
+  const frames = await sample(3000);
+  expect(frames.frame).toBe(1);
+  expect(frames.others).toEqual([1, 1, 1]);
+  expect(frames.local).toBe(0);
+  expect(frames.outerLoop).toBe(1);
+  expect(frames.innerLoop).toBe(0);
+  const local = await sample(3600);
+  expect(local.local).toBe(1);
+  expect(local.intentDrawn).toBe(false);
+  const complete = await sample(6000);
+  expect(complete.intentDrawn).toBe(true);
+  // The entrance must not freeze the opacity that concept selection controls.
+  await page.locator(".home-architecture-other-frame-label").first().click();
+  await expect(svg).toHaveAttribute("data-focus", "rfn");
+  await expect.poll(() => page.locator('[data-part="little-c"]').evaluate((node) =>
+    Number(getComputedStyle(node).opacity))).toBeCloseTo(.24, 2);
+  await expectNoHorizontalOverflow(page);
+});
+
 for (const colorScheme of ["light", "dark"] as const) {
   test(`the ${colorScheme} architecture is the hero's readable focal point`, async ({ page }) => {
     await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
@@ -96,7 +176,6 @@ for (const colorScheme of ["light", "dark"] as const) {
       const lifeStyle = getComputedStyle(life);
       const readingStyle = getComputedStyle(read);
       const readingNote = read.querySelector(".dot-button__copy > span");
-      if (!readingNote) throw new Error("Reading invitation has no description");
 
       return {
         width: node.getBoundingClientRect().width,
@@ -132,7 +211,7 @@ for (const colorScheme of ["light", "dark"] as const) {
           readingHeight: read.getBoundingClientRect().height,
           readingRadius: parseFloat(readingStyle.borderTopLeftRadius),
           readingContrast: contrast(readingStyle.color, readingStyle.backgroundColor),
-          readingNoteContrast: contrast(getComputedStyle(readingNote).color, readingStyle.backgroundColor),
+          hasReadingSubtitle: readingNote !== null,
         },
         overlap: boxes.some((box, index) => boxes.slice(index + 1).some((other) =>
           box.left < other.right && box.right > other.left &&
@@ -190,13 +269,13 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.readingRadius).toBeLessThan(presentation.opening.readingHeight / 2);
     expect(presentation.opening.readingBottom).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);
     expect(presentation.opening.readingContrast).toBeGreaterThanOrEqual(4.5);
-    expect(presentation.opening.readingNoteContrast).toBeGreaterThanOrEqual(4.5);
+    expect(presentation.opening.hasReadingSubtitle).toBe(false);
     expect(presentation.opening.washBottom).toBeLessThanOrEqual(presentation.opening.readingTop);
-    await expect(page.getByRole("region", { name: "Key concepts from Book One" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Key concepts and questions" })).toBeVisible();
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);
     await expect(page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Question what you know" })).toBeInViewport();
+      .getByRole("link", { name: "Read Book One" })).toBeInViewport();
     for (const font of presentation.fonts) {
       expect(font.pixels, `${font.layer} rendered label size`).toBeGreaterThanOrEqual(
         font.layer === "awareness-radius" ? 14 : 16,
@@ -242,7 +321,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       );
     }
     const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Question what you know", exact: true });
+      .getByRole("link", { name: "Read Book One", exact: true });
     await expect(read).toBeInViewport({ ratio: 1 });
     await expectNoHorizontalOverflow(page);
   });
@@ -254,9 +333,9 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "Who decided your experience doesn’t count?",
+      name: "Trust your experience.",
     })).toBeVisible();
-    const read = hero.getByRole("link", { name: "Question what you know", exact: true });
+    const read = hero.getByRole("link", { name: "Read Book One", exact: true });
     await expect(read).toBeInViewport();
 
     const entry = await hero.locator(".home-hero-entry").evaluate((node) => {
@@ -291,9 +370,9 @@ for (const viewport of [
 
     const svg = page.locator(".home-hero-architecture__svg");
     const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-      .getByRole("link", { name: "Question what you know", exact: true });
+      .getByRole("link", { name: "Read Book One", exact: true });
     await expect(reading).toBeInViewport({ ratio: 1 });
-    await expect(reading).toHaveAccessibleDescription("Book One’s preface · Free to read");
+    await expect(reading).toHaveAccessibleDescription("");
 
     const diagram = await svg.boundingBox();
     const question = await page.locator(".home-hero-title").boundingBox();
@@ -326,7 +405,7 @@ test("the reading invitation opens the lived-experience path from the keyboard",
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const reading = page.getByRole("navigation", { name: "Begin exploring DOT" })
-    .getByRole("link", { name: "Question what you know", exact: true });
+    .getByRole("link", { name: "Read Book One", exact: true });
   await reading.focus();
   await expect(reading).toBeFocused();
   await page.keyboard.press("Enter");

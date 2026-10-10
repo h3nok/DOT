@@ -56,19 +56,38 @@ released book.
 
 ## Amendment — 2026-10-10
 
-At the founder’s request, the homepage now opens with “Who decided your
-experience doesn’t count?” and the primary reading action is “Question what
-you know.” The supporting copy challenges secular humanism and mainstream
-science wherever they dismiss subjective experience without examining it.
-The criticism targets exclusion in advance; it does not claim that all
-humanists or all scientific research exclude subjective experience. Love
-remains defined within the theory rather than serving
-as an ambiguous opening slogan. The released manuscript is unchanged.
+At the founder’s request, the homepage now opens with “Love is the answer.”
+and the primary reading action is “Read Book One.” The opening has no supporting paragraph or action subtitle.
+Critiques of mainstream science, physicalism, and secular humanism appear
+within the concept introduction, labeled “Outside perspective” or “DOT rejects” at Model
+level. Primary sources are linked where available; references support the
+underlying position or problem, not an endorsement of DOT. The criticism
+targets exclusion in advance; it does not claim that all humanists or all
+scientific research exclude subjective experience. Love
+is defined within the theory as the condition in which Fear no longer governs;
+the opening states the founder’s proposition, not a settled scientific result. The released manuscript is unchanged.
 
 Remove the “Things built. Ideas explored.” section and its three cards from the
 homepage, generated HTML, and page map. Work, writing, and contact remain available
 through the site navigation. This amendment serves L7 (clear and honest framing)
 and L10 (a focused reading invitation) without violating any manifesto law.
+
+## Opening refinement — 2026-10-10
+
+The founder’s current heading is “Trust your experience.” The requested two-line
+subtitle treats feelings as data and invites readers to “Tune your interpretation
+toward coherence.” Tuning here means development toward a coherent, low-entropy
+attitude in DOT’s vocabulary, including less inner conflict. Only this tuning
+clause takes bold copper; the invitation to challenge models that exclude the
+reader or ask them to be someone else uses neutral body text. There is one
+emphasis rather than competing colored statements. High contrast preserves
+that emphasis with an underline. This is an
+editorial invitation to inquiry, not a claim that interoception research proves
+DOT’s proposed architecture. Research distinguishes sensing bodily signals
+from interpreting them ([Khalsa et al., 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6054486/)).
+The runtime and script-free homepage carry the same wording and emphasis. This
+serves L7’s honest framing and L10’s concise reading invitation without violating
+any manifesto law or changing the book.
 
 ## Alternatives considered
 

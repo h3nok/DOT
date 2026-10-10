@@ -20,6 +20,7 @@ for (const scheme of ["light", "dark"] as const) {
     );
     await expect.poll(fieldOrigin).toEqual([viewport.width / 2, viewport.height / 2]);
     release();
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
     await expect(page.locator(".splash-emergence")).toHaveCount(0);
     const diagram = await page.locator(".home-architecture-origin-boundary").boundingBox();
@@ -35,6 +36,7 @@ for (const scheme of ["light", "dark"] as const) {
     await expect(page.locator(".splash-emergence")).toHaveCount(0);
     await expect.poll(fieldOrigin).toEqual([viewport.width / 2, viewport.height / 2]);
     await page.goBack();
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
     await expect(page.locator(".splash-emergence")).toHaveCount(0);
     await expect.poll(async () => {

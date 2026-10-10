@@ -30,6 +30,7 @@ const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
 const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
+const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
 const CAREER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "career.json"), "utf8"));
@@ -797,7 +798,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<ul>${BUILDER_PROJECTS.map((project) => {
             const href = project.links.live || project.links.website || project.links.repo;
             const label = project.links.live ? "Explore project" : project.links.website ? "Visit website" : "View source";
-            const showcase = project.showcase ? `<figure><img src="${escapeHtml(project.showcase.mark)}" alt="" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p><img src="${escapeHtml(project.showcase.source)}" alt="${escapeHtml(project.showcase.alt)}" width="${project.showcase.width}" height="${project.showcase.height}" loading="lazy"><figcaption>${escapeHtml(project.showcase.caption)}</figcaption></figure>` : "";
+            const showcase = project.showcase ? `<div><img src="${escapeHtml(project.showcase.brandMark)}" alt="Sullix mark" width="200" height="200"><img src="${escapeHtml(project.showcase.mark)}" alt="Faro mark" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p></div>` : "";
             return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3>${showcase}<p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
           }).join("")}</ul>`,
           OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
@@ -845,14 +846,14 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     },
     {
       route: READERS_ROUTE,
-      title: "The reader list — Digital Organism Theory",
-      description:
-        "Hear when there is more to read: double opt-in, a one-click way out, no tracking, and no count of readers.",
+      title: `${READERS.title} — ${AUTHOR.name}`,
+      description: READERS.description,
+      body: `<p>${escapeHtml(READERS.title)}</p><h1>${escapeHtml(READERS.heading)}</h1><p>${escapeHtml(READERS.description)}</p><ul>${READERS.topics.map(topic => `<li><h2>${escapeHtml(topic.label)}</h2><p>${escapeHtml(topic.description)}</p></li>`).join("")}</ul><h2>${escapeHtml(READERS.formTitle)}</h2><p>${escapeHtml(READERS.formDescription)}</p><p>The signup form needs JavaScript. Everything published remains available without joining.</p><ul>${READERS.commitments.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul><p>${link(PRIVACY_ROUTE, "How addresses are kept")} · ${link(BLOG_ROUTE, "Browse the writing")}</p>`,
     },
     {
       route: `${READERS_ROUTE}/leave`,
-      title: "Leave the reader list — Digital Organism Theory",
-      description: "Remove an address from the Digital Organism Theory reader list.",
+      title: `Leave the reader list — ${AUTHOR.name}`,
+      description: `Remove an address from ${AUTHOR.name}’s reader list.`,
       // Where a message's leave link lands. There is nothing here to find.
       noindex: true,
       body: `<h1>Leave the reader list</h1><p>Opened from the link in a message, this page removes you at once, which needs JavaScript. Without it, reach the author via ${authorContactLink()} and you will be removed by hand.</p>`,
@@ -1094,11 +1095,11 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   const description = /<meta\s+name="description"\s+content="([^"]*)"/.exec(shell)?.[1] ?? "";
   const latest = essays.slice(0, 5);
   const body = [
-    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1>`,
+    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1><p>${escapeHtml(HOME.subtitle)} <strong>${escapeHtml(HOME.interpretation)}</strong><br>${escapeHtml(HOME.criticalLine)}</p>`,
     `<p>${description}</p>`,
-    `<p>${escapeHtml(HOME.opening)}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
-    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)} — ${escapeHtml(HOME.primaryActionDescription)}.</p>`,
+    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
+    `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
     `<h2>Consciousness 101</h2><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
     `<h2>${escapeHtml(HOME.invitationTitle)}</h2><p>${escapeHtml(HOME.invitation)}</p><p>${escapeHtml(HOME.boundary)}</p><p>${escapeHtml(HOME.edition)}</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,

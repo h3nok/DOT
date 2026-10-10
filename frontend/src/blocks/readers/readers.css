@@ -1,0 +1,41 @@
+.readers-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; gap: clamp(2rem, 6vw, 5rem); }
+.readers-editorial, .readers-signup { min-width: 0; }
+.readers-title { max-width: 12ch; font-size: clamp(2.35rem, 4.4vw, 4rem); }
+.readers-description { max-width: 37rem; margin-top: var(--public-space-md); color: var(--muted-foreground); font-size: 1rem; line-height: 1.8; }
+.readers-topics { display: grid; gap: .75rem; list-style: none; padding: 0; margin: 2rem 0 0; }
+.readers-topic { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-inline-start: 3px solid var(--intent-tone); }
+.readers-topic > svg { width: 1.25rem; height: 1.25rem; flex: 0 0 auto; color: var(--intent-tone); }
+.readers-topic h2 { font-family: var(--font-serif, Georgia, serif); font-size: 1.125rem; line-height: 1.4; }
+.readers-topic p { margin-top: .2rem; font-size: .75rem; line-height: 1.6; color: var(--muted-foreground); }
+.readers-paper-lines { display: grid; gap: .3rem; width: 2.5rem; margin-inline-start: auto; flex: 0 0 auto; }
+.readers-paper-lines i { display: block; height: 1px; background: color-mix(in oklab, var(--intent-tone) 40%, transparent); }
+.readers-paper-lines i:last-child { width: 65%; }
+.readers-signup { padding-top: .5rem; }
+.readers-state { padding: clamp(1.25rem, 3vw, 2rem); }
+.readers-signup .reader-list-form { margin-bottom: 0; padding: clamp(1.25rem, 3vw, 2rem); border-color: color-mix(in oklab, var(--public-forest) 25%, var(--border)); background: color-mix(in oklab, var(--background) 94%, var(--public-sage)); }
+.readers-signup .reader-list-form h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.2; }
+.readers-signup .reader-list-form form { flex-direction: column; margin-top: 1.5rem; }
+.readers-signup .reader-list-form form label { margin-bottom: -.4rem; }
+.readers-signup .reader-list-submit { min-height: 2.75rem; background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+.readers-signup .reader-list-submit:hover { background: color-mix(in oklab, var(--foreground) 85%, var(--background)); }
+.readers-commitments { margin-top: 1.5rem; padding-inline: .25rem; color: var(--muted-foreground); }
+.readers-commitment-heading { display: flex; align-items: center; gap: .5rem; color: var(--foreground); font-size: .8125rem; font-weight: 500; }
+.readers-commitment-heading svg { width: 1rem; height: 1rem; }
+.readers-commitments ul { margin-top: .75rem; padding-inline-start: 1rem; list-style: disc; font-size: .75rem; line-height: 1.8; }
+.readers-commitments li + li { margin-top: .4rem; }
+.readers-commitments .public-text-link { margin-top: .5rem; font-size: .75rem; }
+.readers-browse { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .6rem; border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.25rem; font-size: .8125rem; color: var(--muted-foreground); }
+.reader-list-field:focus-visible, .reader-list-submit:focus-visible, .reader-list-change:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+html[data-contrast="high"] .readers-signup .reader-list-form { background: var(--background); border-color: var(--foreground); }
+html[data-contrast="high"] .readers-paper-lines i { background: var(--foreground); }
+@media (max-width: 760px) {
+  .readers-layout { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .readers-editorial { display: contents; }
+  .readers-editorial > .public-masthead { order: 0; }
+  .readers-signup { order: 1; }
+  .readers-topics { order: 2; margin-top: 0; }
+  .readers-title { max-width: 17ch; }
+  .readers-signup { padding-top: 0; }
+  .readers-topic { padding: .85rem 1rem; }
+}
+@media (max-width: 360px) { .readers-paper-lines { display: none; } }

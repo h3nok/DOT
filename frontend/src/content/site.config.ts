@@ -11,14 +11,10 @@ export interface Project {
   description: string;
   stack: string[];
   showcase?: {
-    source: string;
-    alt: string;
+    brandMark: string;
     mark: string;
     agentName: string;
     agentRole: string;
-    caption: string;
-    width: number;
-    height: number;
   };
   links: {
     repo?: string;

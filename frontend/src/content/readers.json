@@ -1,0 +1,17 @@
+{
+  "title": "The reader list",
+  "heading": "Writing, when there’s something to share.",
+  "description": "Technical work, essays, and books by Henok Ghebrechristos. Occasional emails when there’s something new to read.",
+  "formTitle": "Get the next piece.",
+  "formDescription": "Receive technical writing, essays, and book updates. Confirm your address to join; reading never requires signing up.",
+  "topics": [
+    { "id": "systems", "label": "Technical work", "description": "AI, architecture & building products", "tone": "forest" },
+    { "id": "essays", "label": "Essays & letters", "description": "Consciousness, conditioning & society", "tone": "copper" },
+    { "id": "books", "label": "Books", "description": "Longer work & new editions", "tone": "blue" }
+  ],
+  "commitments": [
+    "Nothing is sent until you confirm your address with a code.",
+    "No tracking pixels or rewritten links.",
+    "Every message carries a link that removes you in one click, with no account."
+  ]
+}

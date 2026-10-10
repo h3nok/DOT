@@ -4,8 +4,8 @@ test("home questions certainty and invites inquiry with an honest boundary and r
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "Who decided your experience doesn’t count?" })).toBeVisible();
-  await expect(opening.getByRole("link", { name: "Question what you know", exact: true }))
+  await expect(opening.getByRole("heading", { level: 1, name: "Trust your experience." })).toBeVisible();
+  await expect(opening.getByRole("link", { name: "Read Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await expect(page.locator("#personal-platform")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true }).locator('a[href="#personal-platform"]')).toHaveCount(0);
@@ -24,7 +24,7 @@ test("home offers a reading path and readable theory comparisons", async ({ page
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const entry = page.getByRole("navigation", { name: "Begin exploring DOT" });
-  const read = entry.getByRole("link", { name: "Question what you know" });
+  const read = entry.getByRole("link", { name: "Read Book One" });
   await expect(read).toBeInViewport();
   await expect(read).toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await page.screenshot({ path: testInfo.outputPath("home-opening.png") });

@@ -317,13 +317,13 @@ describe("page text for readers without JavaScript", () => {
 
   it("gives the home page the author, the book, and a way into every chapter", () => {
     const html = rootDocument(shell, manifest);
-    expect(html).toContain('<p>Digital Organism Theory</p><h1>Who decided your experience doesn’t count?</h1>');
+    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Feelings are data. <strong>Tune your interpretation toward coherence.</strong><br>Challenge models that exclude you or ask you to be someone else.</p>');
     for (const section of manifest.sections) {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }
     expect(html).toContain('href="/about"');
     expect(html).toContain(
-      '<a href="/book/digital-organism-theory/preface?path=start-where-you-live">Question what you know</a>',
+      '<a href="/book/digital-organism-theory/preface?path=start-where-you-live">Read Book One</a>',
     );
   });
 
@@ -345,7 +345,9 @@ describe("page text for readers without JavaScript", () => {
     expect(rootDocument(shell, manifest)).not.toContain("Things built. Ideas explored.");
     expect(rootDocument(shell, manifest)).not.toContain("Build something useful.");
     expect(rootDocument(shell, manifest)).not.toContain("Follow an idea.");
-    expect(rootDocument(shell, manifest)).toContain("Challenge secular humanism and mainstream science wherever they dismiss subjective experience without examining it. Excluding experience in advance closes inquiry.");
+    expect(rootDocument(shell, manifest)).not.toContain("Book One’s preface · Free to read");
+    expect(rootDocument(shell, manifest)).toContain("<h2>Questions for inquiry</h2>");
+    expect(rootDocument(shell, manifest)).toContain("<h3>Secular Humanism</h3>");
   });
 
   it("keeps the leave page out of search engines", () => {

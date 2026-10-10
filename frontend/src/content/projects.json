@@ -62,14 +62,10 @@
     "gradient": "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
     "glowColor": "rgba(6, 182, 212, 0.4)",
     "showcase": {
-      "source": "/work/sullix/project-command-center.webp",
-      "alt": "Sullix project command center showing budget, actual costs, and cost breakdown by category.",
+      "brandMark": "/work/sullix/sullix-mark.svg",
       "mark": "/work/sullix/faro-mark.svg",
       "agentName": "Faro",
-      "agentRole": "Sullix’s field assistant",
-      "caption": "Project command center · Budget & job costing",
-      "width": 1920,
-      "height": 870
+      "agentRole": "Sullix’s field assistant"
     }
   },
   {

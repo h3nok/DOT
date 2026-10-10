@@ -231,6 +231,10 @@ html:has(.home-journey) {
   /* Reality Frames are built, not grown: a fixed bronze, apart from any theme accent. */
   --architecture-rf-ring: oklch(0.56 0.095 62);
   --architecture-local: var(--theory-local);
+  /* The two process loops take hues no ring uses: plum for Big C's outer loop,
+     amber for Little c's inner loop, so direction of travel reads at a glance. */
+  --architecture-loop-outer: oklch(0.55 0.17 350);
+  --architecture-loop-inner: oklch(0.64 0.17 48);
   --architecture-live: color-mix(
     in oklch,
     var(--organism-accent-strong) 28%,
@@ -350,7 +354,7 @@ html:has(.home-journey) {
   display: grid;
   gap: 0.25rem;
   max-width: 28rem;
-  margin: 2.25rem 0 0;
+  margin: 1.5rem 0 0;
 }
 
 .home-hero-entry > a {
@@ -466,7 +470,7 @@ html:has(.home-journey) {
     var(--foreground)
   );
   font-family: var(--home-public-display-font);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.015em;
@@ -491,9 +495,60 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
+/* One wide line on desktop: the sentence is about 10.3 × its size wide, so
+   4vw keeps it clear of the architecture figure at every desktop width. */
 .home-hero-masthead .home-hero-title {
-  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 1.08;
+}
+
+@media (min-width: 1024px) {
+  .home-hero-masthead .home-hero-title > span {
+    white-space: nowrap;
+  }
+}
+
+.home-hero-proposition,
+.home-concept-slideshow {
+  --home-critical-ink: color-mix(in oklab, var(--public-copper) 85%, var(--foreground));
+}
+
+.dark .home-hero-proposition,
+.dark .home-concept-slideshow {
+  --home-critical-ink: var(--public-sand);
+}
+
+html[data-contrast="high"] .home-hero-proposition,
+html[data-contrast="high"] .home-concept-slideshow {
+  --home-critical-ink: var(--foreground);
+}
+
+.home-hero-subtitle {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: color-mix(in oklab, var(--foreground) 88%, var(--background));
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.home-hero-subtitle > span {
+  display: block;
+}
+
+.home-hero-subtitle > span + span {
+  margin-top: .25rem;
+}
+
+.home-hero-subtitle strong {
+  color: var(--home-critical-ink);
+  font-weight: 600;
+}
+
+html[data-contrast="high"] .home-hero-subtitle strong {
+  text-decoration: underline;
+  text-underline-offset: .2em;
 }
 
 .home-hero-opening-copy {
@@ -509,14 +564,14 @@ html:has(.home-journey) {
 .home-hero-ask {
   width: 100%;
   max-width: none;
-  margin-top: 0.85rem;
+  margin-top: 0.75rem;
   opacity: 0.94;
   transition: opacity 180ms ease;
 }
 
 .home-concept-slideshow {
   max-width: 32rem;
-  margin-top: 1.75rem;
+  margin-top: 1.25rem;
   text-align: left;
 }
 
@@ -607,6 +662,103 @@ html:has(.home-journey) {
   gap: 1rem;
   align-items: center;
   margin-top: 0.5rem;
+}
+
+/* ── Frames ──────────────────────────────────────────────────────────────
+   Outside perspectives and rejected assumptions take copper; DOT's response
+   takes the organism's accent. Explicit labels carry the distinction in
+   high contrast too. DOT concepts keep the page's own ink. */
+.home-concept-slideshow {
+  --home-frame-status-quo: var(--home-critical-ink);
+  --home-frame-status-quo-rule: color-mix(in oklab, var(--home-frame-status-quo) 70%, transparent);
+  --home-frame-reply: color-mix(in oklab, var(--foreground) 28%, var(--organism-accent-strong));
+  --home-frame-reply-rule: color-mix(in oklab, var(--organism-accent-strong) 70%, transparent);
+}
+
+.home-concept-slideshow [data-frame="status-quo"] {
+  --home-frame-ink: var(--home-frame-status-quo);
+  --home-frame-rule: var(--home-frame-status-quo-rule);
+}
+
+.home-concept-slideshow [data-frame="reply"] {
+  --home-frame-ink: var(--home-frame-reply);
+  --home-frame-rule: var(--home-frame-reply-rule);
+}
+
+.home-concept-slideshow-size[data-frame],
+.home-concept-slideshow-content[data-frame] {
+  padding-left: 0.875rem;
+  border-left: 2px solid var(--home-frame-rule);
+}
+
+.home-concept-slideshow-eyebrow[data-frame] > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.5rem 0.25rem;
+  border: 1px solid color-mix(in oklab, var(--home-frame-ink) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--home-frame-ink) 9%, transparent);
+  color: var(--home-frame-ink);
+  letter-spacing: 0.1em;
+}
+
+.home-concept-slideshow-content[data-frame] .home-concept-slideshow-term {
+  color: var(--home-frame-ink);
+}
+
+.home-concept-slideshow-source {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.6875rem;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.home-concept-slideshow-rail > li[data-frame] {
+  background: color-mix(in oklab, var(--home-frame-ink) 24%, transparent);
+}
+
+.home-concept-slideshow-source a {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.home-concept-slideshow-source a:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+.home-concept-slideshow-rail > li[data-frame][data-state="read"] {
+  background: color-mix(in oklab, var(--home-frame-ink) 72%, transparent);
+}
+
+.home-concept-slideshow-rail > li[data-frame][data-state="current"],
+.home-concept-slideshow-rail > li[data-frame] > span {
+  background: var(--home-frame-ink);
+}
+
+.home-concept-slideshow-rail > li[data-frame][data-state="current"]:has(> span) {
+  background: color-mix(in oklab, var(--home-frame-ink) 24%, transparent);
+}
+
+html[data-contrast="high"] .home-concept-slideshow {
+  --home-frame-status-quo: var(--foreground);
+  --home-frame-status-quo-rule: var(--foreground);
+  --home-frame-reply: var(--foreground);
+  --home-frame-reply-rule: var(--foreground);
+}
+
+html[data-contrast="high"] .home-concept-slideshow-content[data-frame="reply"] {
+  border-left-style: double;
+  border-left-width: 4px;
+}
+
+html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:first-child {
+  background: var(--background);
+  border-color: var(--foreground);
 }
 
 /* Position in a finite sequence; the current mark fills while it waits to turn. */
@@ -810,13 +962,13 @@ html:has(.home-journey) {
   opacity: 1;
 }
 
-/* The loops exist only while Process is the concept in view. */
+/* Process loops follow their owning process's entrance; Process Rules brings
+   them fully forward. Their existing dash flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
-  opacity: 0;
+  opacity: 0.62;
   pointer-events: none;
   stroke-linecap: round;
-  stroke-width: 1.4;
   transition: opacity 360ms ease;
 }
 
@@ -824,26 +976,53 @@ html:has(.home-journey) {
   opacity: 1;
 }
 
+.home-architecture-process-loop {
+  stroke: var(--loop-ink);
+  stroke-width: 2.2;
+  stroke-dasharray: 7 7;
+}
+
+.home-architecture-process-loop-halo {
+  stroke: var(--background);
+  stroke-width: 6.5;
+  opacity: 0.85;
+}
+
 .home-architecture-process-loop--outer {
-  stroke: var(--architecture-big-c);
+  --loop-ink: var(--architecture-loop-outer);
 }
 
 .home-architecture-process-loop--inner {
-  stroke: var(--architecture-local);
+  --loop-ink: var(--architecture-loop-inner);
 }
 
 .home-architecture-loop-arrow--outer {
-  fill: var(--architecture-big-c);
+  fill: var(--architecture-loop-outer);
 }
 
 .home-architecture-loop-arrow--inner {
-  fill: var(--architecture-local);
+  fill: var(--architecture-loop-inner);
+}
+
+/* Dashes travel clockwise, the way the arcs are drawn; one period per cycle keeps it seamless. */
+@keyframes home-architecture-loop-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+html:not([data-motion="still"]) .home-architecture-process-loop {
+  animation: home-architecture-loop-flow 1.8s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .home-hero-architecture__svg [data-part],
   .home-architecture-process-loops {
     transition: none;
+  }
+
+  .home-architecture-process-loop {
+    animation: none !important;
   }
 }
 
@@ -1567,6 +1746,8 @@ html:has(.home-journey) {
   --architecture-rf: color-mix(in oklab, var(--theory-rf) 68%, var(--foreground));
   --architecture-rf-ring: oklch(0.76 0.09 68);
   --architecture-local: color-mix(in oklab, var(--theory-local) 68%, var(--foreground));
+  --architecture-loop-outer: oklch(0.76 0.15 350);
+  --architecture-loop-inner: oklch(0.8 0.15 60);
 }
 
 .dark .home-hero-architecture .home-architecture-ring-label text {
@@ -1602,6 +1783,8 @@ html[data-contrast="high"] .home-hero-environment {
   --architecture-rf: var(--foreground);
   --architecture-rf-ring: var(--foreground);
   --architecture-local: var(--foreground);
+  --architecture-loop-outer: oklch(0.45 0.2 350);
+  --architecture-loop-inner: oklch(0.55 0.19 48);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 34%, transparent);
   --architecture-live: var(--foreground);
   --architecture-thread-from: var(--foreground);
@@ -1679,125 +1862,153 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-hero-copy-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) 1.3s both;
   }
 
-  /* ─ Emergence choreography: the diagram assembles in the theory's own
-     causal order. T·E field first; Big C expands from a single dot within
-     it; RF₀ resolves inside Big C; Little c emerges within RF₀; relations
-     and options arrive; intent reaches out; the names come last. ─ */
+  /* The source is context. Big C emerges first; every Frame resolves next;
+     only then do local experiencers, their relations, and Intent appear.
+     The figure starts once when it enters view, rather than offscreen. */
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="waiting"] .home-hero-architecture__svg {
+    opacity: 0;
+    visibility: hidden;
+  }
 
-  /* 1 · T·E: the field of continuity and possibility. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-field-wash {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-field-wash {
     animation: home-field-reveal 650ms ease-out 100ms both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-origin-boundary {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-origin-boundary,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-field-contours {
     animation: home-architecture-emerge 650ms ease-out 150ms both;
   }
 
-  /* 2 · Big C: one dot of consciousness, expanding to hold everything. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c-zone,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c circle {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c-zone,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle {
     transform-box: fill-box;
     transform-origin: center;
     animation: home-big-c-emerge 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c-zone {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c-zone {
     animation-delay: 350ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c circle[data-contour="1"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle[data-contour="1"] {
     animation-delay: 420ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c circle[data-contour="2"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle[data-contour="2"] {
     animation-delay: 560ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-organism-membrane {
-    animation: home-architecture-emerge 500ms ease-out 1.3s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-organism-membrane {
+    animation: home-architecture-emerge 280ms ease-out 1.5s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-measure-marks {
-    animation: home-architecture-emerge 520ms ease-out 1.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-process-loop-stage[data-loop="outer"] {
+    animation: home-architecture-emerge 300ms ease-out 1.8s both;
   }
 
-  /* 3 · RF₀: a generated Reality Frame resolving inside Big C. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-process-loop-stage[data-loop="inner"] {
+    animation: home-architecture-emerge 300ms ease-out 3.6s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="origin"] {
+    animation: home-architecture-emerge 300ms ease-out 400ms both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="big-c"] {
+    animation: home-architecture-emerge 300ms ease-out 1.15s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame {
     transform-box: fill-box;
     transform-origin: center;
-    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
+    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-polar-scale {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame-body {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: home-frame-resolve 650ms cubic-bezier(0.22, 1, 0.36, 1) 1.95s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(2) .home-architecture-other-frame-body {
+    animation-delay: 2.15s;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(3) .home-architecture-other-frame-body {
+    animation-delay: 2.35s;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-polar-scale {
     transform-box: view-box;
     transform-origin: 348px 352px;
-    animation: home-polar-calibrate 860ms cubic-bezier(0.22, 1, 0.36, 1) 1.7s both;
+    animation: home-polar-calibrate 600ms cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-coordinate-axis {
-    animation: home-architecture-emerge 520ms ease-out 1.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-coordinate-axis,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-measure-marks {
+    animation: home-architecture-emerge 350ms ease-out 2.3s both;
   }
 
-  /* 4 · Little c: a local experiencer condensing within the Frame. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-little-c {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="reality-frame"] {
+    animation: home-architecture-emerge 300ms ease-out 2.4s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-experiencer-stage {
+    animation: home-architecture-layer-available 1ms linear 3.15s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-little-c {
     transform-box: fill-box;
     transform-origin: center;
-    animation: home-local-resolve 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: home-local-resolve 400ms cubic-bezier(0.22, 1, 0.36, 1) 3.15s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-ring-label[data-layer="little-c"] {
-    animation: home-architecture-emerge 400ms ease-out both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-peer-centres {
+    animation: home-architecture-emerge 400ms ease-out 3.35s both;
   }
 
-  /* 5 · Relations: awareness boundary, offered options, other centres. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-awareness-radius {
-    animation: home-architecture-emerge 480ms ease-out 2.2s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"] {
+    animation: home-architecture-emerge 300ms ease-out 3.4s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame-options,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame-constraint,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-social-field {
-    animation: home-architecture-emerge 520ms ease-out 2.3s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-awareness-radius {
+    animation: home-architecture-emerge 450ms ease-out 3.7s both;
   }
 
-  /* 6 · Intent: the chosen line draws solid, its potential continues dotted. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-awareness-trace {
-    animation: home-awareness-trace-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) 2.5s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="awareness-radius"] {
+    animation: home-architecture-emerge 300ms ease-out 3.95s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-potential-trace {
-    animation: home-potential-trace-emerge 450ms ease-out 2.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame-options,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame-constraint {
+    animation: home-architecture-emerge 400ms ease-out 4.1s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-causal-trace circle {
-    animation: home-architecture-emerge 260ms ease-out 3.2s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-social-relations {
+    animation: home-architecture-emerge 400ms ease-out 4.3s both;
   }
 
-  /* 7 · The names arrive only after the things they name. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-ring-label:not([data-layer="little-c"]) {
-    animation: home-architecture-emerge 480ms ease-out 2.9s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-awareness-trace,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-thread-glow {
+    animation: home-awareness-trace-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) 4.55s both;
   }
 
-  /* 8 · Big C's further Reality Frames resolve last, one after another. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame-body {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: home-frame-resolve 700ms cubic-bezier(0.22, 1, 0.36, 1) 3.5s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-potential-trace {
+    animation: home-potential-trace-emerge 450ms ease-out 4.95s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame:nth-child(2) .home-architecture-other-frame-body {
-    animation-delay: 3.85s;
-  }
-
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame:nth-child(3) .home-architecture-other-frame-body {
-    animation-delay: 4.2s;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-causal-trace circle {
+    animation: home-architecture-emerge 260ms ease-out 5.45s both;
   }
 
   .home-scroll-cue svg {
     animation: home-cue-breathe 2.4s ease-in-out 3;
   }
+}
+
+@keyframes home-architecture-layer-available {
+  from { opacity: 0; visibility: hidden; }
+  to { opacity: 1; visibility: visible; }
 }
 
 @keyframes home-hero-copy-arrive {
@@ -1920,6 +2131,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 }
 
+
 @keyframes home-cue-breathe {
   0%,
   100% {
@@ -2016,7 +2228,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-entry {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
   }
 
   .home-hero-entry .dot-focus-nav__primary.dot-button {
@@ -2037,7 +2249,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-concept-slideshow {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
   }
 
   .home-concept-slideshow-explanation {
@@ -4742,6 +4954,6 @@ html[data-field="off"] .home-hero-stage::before {
     display: none !important;
   }
 }
-.home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: 1.5rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
+.home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: .75rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
 .home-author-line span { font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
 .home-author-line:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }

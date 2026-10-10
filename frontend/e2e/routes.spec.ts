@@ -28,7 +28,7 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "Who decided your experience doesn’t count?" }),
+      hero.getByRole("heading", { name: "Trust your experience." }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
@@ -55,13 +55,14 @@ test.describe("hero", () => {
     await page.goto("/");
 
     await expect(page.locator(".home-concept-slideshow")).toBeVisible();
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
     const model = actions.getByRole("link", { name: "Explore the model" });
     await expect(model).toBeVisible();
     await expect(model).toHaveAttribute("href", "#possibility-field");
-    await expect(actions.getByRole("link", { name: "Question what you know" })).toBeVisible();
+    await expect(actions.getByRole("link", { name: "Read Book One" })).toBeVisible();
   });
 
   test("the architecture figure keeps its layer and awareness labels legible", async ({

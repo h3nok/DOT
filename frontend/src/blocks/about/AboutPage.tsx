@@ -113,11 +113,10 @@ export default function AboutPage() {
               </div>
             );
             return (
-              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className={`about-project${project.showcase ? " about-project-with-showcase" : ""}`} tone={projectTones[project.slug] ?? "forest"}>
-                {project.showcase && identity}
+              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
                 <div className="about-project-visual">{project.showcase ? <ProjectShowcase showcase={project.showcase} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
-                  {!project.showcase && identity}
+                  {identity}
                   <div className="about-project-detail">
                     <div className="about-project-description">
                       <p className="about-project-tagline">{project.tagline}</p>

@@ -63,14 +63,16 @@ test("About offers products, résumé, project inquiries, and named book navigat
   expect(problems).toEqual([]);
 });
 
-test("Sullix showcases its interface with still images instead of video", async ({ page }) => {
+test("Sullix offers its marks and a direct website link without a dashboard showcase", async ({ page }) => {
   const problems = collectPageProblems(page);
   await page.goto("/about");
   const project = page.locator("#project-sullix");
   await project.scrollIntoViewIfNeeded();
   await expect(project.locator("video")).toHaveCount(0);
-  const screen = project.getByRole("img", { name: /Sullix project command center/ });
-  await expect(screen).toBeVisible();
+  await expect(project.getByRole("img", { name: "Sullix mark", exact: true })).toBeVisible();
+  await expect(project.getByRole("img", { name: "Faro mark", exact: true })).toBeVisible();
+  await expect(project.getByRole("link", { name: "Visit website: Sullix" })).toHaveAttribute("href", "https://sullix.com/");
+  await expect(project.locator('img[src*="project-command-center"]')).toHaveCount(0);
   for (const image of await project.locator("img").all()) {
     await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
       element.complete && element.naturalWidth > 0)).toBe(true);
@@ -171,16 +173,16 @@ test("reader signup requires a correct code and never requests membership", asyn
 
   const code = page.getByRole("textbox", { name: "Confirmation code" });
   await expect(code).toBeVisible();
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toHaveCount(0);
-  await expect(page.getByText("This is not membership and not a queue", { exact: false })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toHaveCount(0);
+  await expect(page.getByRole("main")).toContainText("Technical work, essays, and books");
   await code.fill("000000");
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await expect(page.getByRole("alert")).toHaveText("Incorrect code. 4 attempts left.");
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toHaveCount(0);
 
   await code.fill("123456");
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
   await expect(page.getByRole("main")).toContainText("removes you in one click");
   expect(sent).toEqual([
