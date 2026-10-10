@@ -845,28 +845,28 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     },
     {
       route: READERS_ROUTE,
-      title: "The reader list — Digital Organism Theory",
+      title: `The reader list — ${AUTHOR.name}`,
       description:
         "Hear when there is more to read: double opt-in, a one-click way out, no tracking, and no count of readers.",
     },
     {
       route: `${READERS_ROUTE}/leave`,
-      title: "Leave the reader list — Digital Organism Theory",
-      description: "Remove an address from the Digital Organism Theory reader list.",
+      title: `Leave the reader list — ${AUTHOR.name}`,
+      description: "Remove an address from the reader list.",
       // Where a message's leave link lands. There is nothing here to find.
       noindex: true,
       body: `<h1>Leave the reader list</h1><p>Opened from the link in a message, this page removes you at once, which needs JavaScript. Without it, reach the author via ${authorContactLink()} and you will be removed by hand.</p>`,
     },
     {
       route: PRIVACY_ROUTE,
-      title: "Privacy — Digital Organism Theory",
+      title: `Privacy — ${AUTHOR.name}`,
       description:
         "What this site keeps, what it never collects, and which services handle what.",
       body: renderMarkdown(privacyText),
     },
     {
       route: TERMS_ROUTE,
-      title: "Terms and refunds — Digital Organism Theory",
+      title: `Terms and refunds — ${AUTHOR.name}`,
       description:
         "Who runs this site, what an optional payment to the author is, and how to get a refund.",
       body: renderMarkdown(termsText),
