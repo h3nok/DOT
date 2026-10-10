@@ -551,7 +551,7 @@ html[data-contrast="high"] .home-hero-entry {
 
 .home-hero-proposition,
 .home-concept-slideshow {
-  --home-critical-ink: color-mix(in oklab, var(--public-copper) 85%, var(--foreground));
+  --home-critical-ink: color-mix(in oklab, var(--public-copper) 75%, var(--foreground));
 }
 
 .dark .home-hero-proposition,
@@ -572,6 +572,11 @@ html[data-contrast="high"] .home-concept-slideshow {
   font-size: clamp(1rem, 1.2vw, 1.125rem);
   line-height: 1.6;
   text-wrap: pretty;
+}
+
+/* Light paper takes near-full ink; dark keeps its softer step. */
+html:not(.dark) .home-hero-subtitle {
+  color: color-mix(in oklab, var(--foreground) 95%, var(--background));
 }
 
 .home-hero-subtitle > span {
@@ -693,13 +698,14 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   margin-left: 0.05em;
 }
 
+/* Reading prose takes the reading face and ink, like the subtitle above it. */
 .home-concept-slideshow-explanation {
-  max-width: 48ch;
+  max-width: 31rem;
   margin: 0.375rem 0 0;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.9375rem;
-  line-height: 1.55;
+  color: color-mix(in oklab, var(--foreground) 80%, var(--background));
+  font-family: var(--home-public-reading-font);
+  font-size: 1rem;
+  line-height: 1.6;
   text-wrap: pretty;
 }
 
@@ -2313,7 +2319,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-concept-slideshow-explanation {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 
   /* Keep the complete concentric model large enough to read without letting
