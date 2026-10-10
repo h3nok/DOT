@@ -64,7 +64,7 @@ describe("HeroProposition", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "What if your certainty is the problem?",
+        name: "Who decided your experience doesn’t count?",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
@@ -75,11 +75,11 @@ describe("HeroProposition", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "What if your certainty is the problem?",
+      name: "Who decided your experience doesn’t count?",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText(/A belief can feel like truth simply because it is familiar/))
+    expect(screen.getByText(/Challenge secular humanism and mainstream science wherever they dismiss subjective experience without examining it/))
       .toBeVisible();
     // The opening is an invitation to examine beliefs, not an attributed quotation.
     expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
@@ -124,7 +124,7 @@ describe("HeroProposition", () => {
     );
 
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "What if your certainty is the problem?" });
+    const heading = screen.getByRole("heading", { name: "Who decided your experience doesn’t count?" });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
     const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

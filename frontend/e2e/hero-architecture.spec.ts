@@ -254,7 +254,7 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "What if your certainty is the problem?",
+      name: "Who decided your experience doesn’t count?",
     })).toBeVisible();
     const read = hero.getByRole("link", { name: "Question what you know", exact: true });
     await expect(read).toBeInViewport();

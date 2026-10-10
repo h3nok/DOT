@@ -56,10 +56,13 @@ released book.
 
 ## Amendment — 2026-10-10
 
-At the founder’s request, the homepage now opens with “What if your certainty
-is the problem?” and the primary reading action is “Question what you know.”
-The supporting copy invites readers to examine inherited beliefs, fear, and
-their own experience. Love remains defined within the theory rather than serving
+At the founder’s request, the homepage now opens with “Who decided your
+experience doesn’t count?” and the primary reading action is “Question what
+you know.” The supporting copy challenges secular humanism and mainstream
+science wherever they dismiss subjective experience without examining it.
+The criticism targets exclusion in advance; it does not claim that all
+humanists or all scientific research exclude subjective experience. Love
+remains defined within the theory rather than serving
 as an ambiguous opening slogan. The released manuscript is unchanged.
 
 Remove the “Things built. Ideas explored.” section and its three cards from the

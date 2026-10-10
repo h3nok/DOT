@@ -4,7 +4,7 @@ test("home questions certainty and invites inquiry with an honest boundary and r
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "What if your certainty is the problem?" })).toBeVisible();
+  await expect(opening.getByRole("heading", { level: 1, name: "Who decided your experience doesn’t count?" })).toBeVisible();
   await expect(opening.getByRole("link", { name: "Question what you know", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await expect(page.locator("#personal-platform")).toHaveCount(0);
