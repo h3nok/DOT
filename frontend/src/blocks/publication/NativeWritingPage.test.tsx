@@ -17,7 +17,7 @@ describe("NativeWritingPage", () => {
     expect(screen.getByText("The complete author-supplied text.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "https://example.org/source" })).toBeInTheDocument();
     expect(fetchWritingDelivery).toHaveBeenCalledWith("work-1", 2, expect.any(AbortSignal));
-    expect(screen.getByRole("link", { name: "https://dotheory.org/writing/work-1/releases/2" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "https://dotheory.org/writing/work-1/releases/2/" })).toBeInTheDocument();
     expect(screen.getByText("End of piece")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute("href", "/blog");
     expect(within(screen.getByRole("navigation", { name: "Primary" })).getByRole("link", { name: "Blog" })).toHaveAttribute("aria-current", "page");

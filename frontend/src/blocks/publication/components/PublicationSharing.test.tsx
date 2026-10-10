@@ -10,7 +10,7 @@ describe("PublicationSharing", () => {
     vi.stubGlobal("navigator", { share });
     render(<PublicationSharing title="Released letter" path="/writing/work-1/releases/1" />);
     fireEvent.click(screen.getByRole("button", { name: "Share…" }));
-    expect(share).toHaveBeenCalledWith({ title: "Released letter", url: "https://dotheory.org/writing/work-1/releases/1" });
+    expect(share).toHaveBeenCalledWith({ title: "Released letter", url: "https://dotheory.org/writing/work-1/releases/1/" });
   });
   it("shares the owned URL, not an external article or localhost", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
@@ -18,8 +18,8 @@ describe("PublicationSharing", () => {
     render(<PublicationSharing title="My analysis" path="/essays/my-analysis" />);
     fireEvent.click(screen.getByRole("button", { name: "Copy link" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Copied.");
-    expect(writeText).toHaveBeenCalledWith("https://dotheory.org/essays/my-analysis");
-    expect(screen.getByRole("link", { name: "Share on LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fdotheory.org%2Fessays%2Fmy-analysis");
+    expect(writeText).toHaveBeenCalledWith("https://dotheory.org/essays/my-analysis/");
+    expect(screen.getByRole("link", { name: "Share on LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fdotheory.org%2Fessays%2Fmy-analysis%2F");
     expect(screen.queryByRole("button", { name: "Copy title and link" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Export sharing text" })).toBeNull();
   });
@@ -30,7 +30,7 @@ describe("PublicationSharing", () => {
     render(<PublicationSharing title="My analysis" path="/essays/my-analysis" distributionTools />);
     fireEvent.click(screen.getByRole("button", { name: "Copy title and link" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Copied.");
-    expect(writeText).toHaveBeenCalledWith("My analysis\n\nhttps://dotheory.org/essays/my-analysis\n");
+    expect(writeText).toHaveBeenCalledWith("My analysis\n\nhttps://dotheory.org/essays/my-analysis/\n");
     expect(screen.getByRole("button", { name: "Export sharing text" })).toBeInTheDocument();
   });
 
@@ -39,6 +39,6 @@ describe("PublicationSharing", () => {
     render(<PublicationSharing title="My analysis" path="/essays/my-analysis" />);
     fireEvent.click(screen.getByRole("button", { name: "Copy link" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Clipboard unavailable");
-    expect(screen.getByRole("link", { name: "https://dotheory.org/essays/my-analysis" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "https://dotheory.org/essays/my-analysis/" })).toBeInTheDocument();
   });
 });

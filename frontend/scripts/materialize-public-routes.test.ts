@@ -108,7 +108,7 @@ describe("public route metadata", () => {
       expect(route, section.slug).toBeDefined();
       const chapter = nodeOfType(route!, "Chapter");
       expect(chapter?.name).toBe(section.title);
-      expect(chapter?.url).toBe(`${SITE_URL}/book/digital-organism-theory/${section.slug}`);
+      expect(chapter?.url).toBe(`${SITE_URL}/book/digital-organism-theory/${section.slug}/`);
       expect((chapter?.isPartOf as Record<string, string>)["@id"]).toBe(
         `${SITE_URL}/book/digital-organism-theory#book`,
       );
@@ -161,7 +161,7 @@ describe("sitemap", () => {
     const locations = Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g), (match) => match[1]);
     expect(locations).toEqual([
       `${SITE_URL}/`,
-      ...routes.filter((route) => !route.noindex && !route.canonicalRoute).map((route) => `${SITE_URL}${route.route}`),
+      ...routes.filter((route) => !route.noindex && !route.canonicalRoute).map((route) => `${SITE_URL}${route.route}/`),
     ]);
     expect(new Set(locations).size).toBe(locations.length);
   });
@@ -392,11 +392,11 @@ describe("essays", () => {
     const alias = routes.find((route) => route.route === "/essays")!;
     expect(alias.canonicalRoute).toBe("/blog");
     expect(alias.prerender).toContain('href="/blog">All writing</a>');
-    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" />');
+    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog/" />');
     expect(renderRoute(shell, alias)).not.toContain('name="robots" content="noindex"');
     const sitemap = sitemapXml(routes, "2026-10-06");
-    expect(sitemap).toContain("<loc>https://dotheory.org/blog</loc>");
-    expect(sitemap).not.toContain("<loc>https://dotheory.org/essays</loc>");
+    expect(sitemap).toContain("<loc>https://dotheory.org/blog/</loc>");
+    expect(sitemap).not.toContain("<loc>https://dotheory.org/essays/</loc>");
     const blog = routes.find((route) => route.route === "/blog")!;
     expect(blog.title).toBe(`Writing & ideas — ${AUTHOR.name}`);
     expect(blog.description).toContain("AI, digital products, consciousness");
@@ -442,8 +442,8 @@ describe("essays", () => {
 
     const items = Array.from(feed.querySelectorAll("item"));
     expect(items.map((item) => item.querySelector("link")?.textContent)).toEqual([
-      `${SITE_URL}/essays/language-models`,
-      `${SITE_URL}/essays/fear-narrows`,
+      `${SITE_URL}/essays/language-models/`,
+      `${SITE_URL}/essays/fear-narrows/`,
     ]);
     expect(items[0].querySelector("title")?.textContent).toBe(
       "Is a language model a Digital Organism? Q&A",
@@ -461,7 +461,7 @@ describe("essays", () => {
   it("lets readers subscribe before the first piece without inventing an item or date", () => {
     const feed = new DOMParser().parseFromString(rssXml([]), "application/xml");
     expect(feed.querySelector("parsererror")).toBeNull();
-    expect(feed.querySelector("channel > link")?.textContent).toBe(`${SITE_URL}/blog`);
+    expect(feed.querySelector("channel > link")?.textContent).toBe(`${SITE_URL}/blog/`);
     expect(feed.querySelectorAll("item")).toHaveLength(0);
     expect(feed.querySelector("lastBuildDate")).toBeNull();
     expect(feed.getElementsByTagNameNS("http://www.w3.org/2005/Atom", "link")[0].getAttribute("href")).toBe(`${SITE_URL}/feed.xml`);
@@ -519,7 +519,7 @@ describe("native writing", () => {
     expect(page.prerender).toContain('href="/blog">All writing</a>');
     expect(page.prerender).toContain("End of piece");
     const html = renderRoute(shell, page);
-    expect(html).toContain(`<meta property="og:url" content="${SITE_URL}/writing/awork_abc123/releases/2" />`);
+    expect(html).toContain(`<meta property="og:url" content="${SITE_URL}/writing/awork_abc123/releases/2/" />`);
     expect(html).toContain('<meta property="og:title" content="AI letter — ');
 
     const publications = withWriting.find((route) => route.route === "/publications")!;
