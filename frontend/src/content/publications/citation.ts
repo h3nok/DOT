@@ -4,7 +4,7 @@ import {
   type DotBookOneManifest,
 } from "./dotBookOne";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL ?? "https://dotheory.org";
+import { pageUrl } from "../pageUrl";
 
 /**
  * A citation for a book that ships new versions.
@@ -41,9 +41,7 @@ function isoDate(date: Date): string {
 }
 
 export function citationUrl(section: BookReleaseSection | null): string {
-  return section
-    ? `${SITE_URL}${DOT_BOOK_ONE_ROUTE}/${section.slug}`
-    : `${SITE_URL}${DOT_BOOK_ONE_ROUTE}`;
+  return pageUrl(section ? `${DOT_BOOK_ONE_ROUTE}/${section.slug}` : DOT_BOOK_ONE_ROUTE);
 }
 
 /** An author–date reference, for pasting into prose or a bibliography. */

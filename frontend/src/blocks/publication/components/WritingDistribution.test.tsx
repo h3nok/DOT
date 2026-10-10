@@ -26,7 +26,7 @@ describe("published writing distribution", () => {
     expect(exported.markdown).toContain(source.body);
     expect(exported.markdown).toContain("Declared claim");
     expect(exported.markdown).toContain("https://example.org/source");
-    expect(exported.document).toContain('rel="canonical" href="https://dotheory.org/writing/work-1/releases/1"');
+    expect(exported.document).toContain('rel="canonical" href="https://dotheory.org/writing/work-1/releases/1/"');
     expect(() => writingExport("work-1", 2, source)).toThrow();
     expect(() => writingExport("work-1", 1, { ...source, delivery: { ...source.delivery, withdrawn: true } })).toThrow();
   });

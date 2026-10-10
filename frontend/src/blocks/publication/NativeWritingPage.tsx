@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import BookMarkdown from "../../attention-os/reader/BookMarkdown";
 import { author } from "../../content/author";
+import { pageUrl } from "../../content/pageUrl";
 import { fetchWritingDelivery, writingRoute } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
@@ -29,7 +30,7 @@ export default function NativeWritingPage() {
     return () => abort.abort();
   }, [workId, version, requested, attempt]);
   const manifest = content?.delivery.manifest;
-  const canonical = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${writingRoute(workId, version)}`;
+  const canonical = pageUrl(writingRoute(workId, version));
   return (
     <PageShell header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon />}>
       <div className="book-surface mx-auto" style={{ maxWidth: "var(--reading-measure)" }}>

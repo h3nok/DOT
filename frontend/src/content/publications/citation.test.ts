@@ -21,13 +21,13 @@ const accessed = new Date("2026-08-13T00:00:00Z");
 describe("citing Book One", () => {
   it("cites the whole edition by author, year, edition, and URL", () => {
     expect(formatReference(manifest, null)).toBe(
-      "Ghebrechristos, H. (2026). Consciousness: A Digital Organism (Digital edition, version 4). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory",
+      "Ghebrechristos, H. (2026). Consciousness: A Digital Organism (Digital edition, version 4). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory/",
     );
   });
 
   it("cites a chapter inside the edition it was read in", () => {
     expect(formatReference(manifest, canvas)).toBe(
-      `Ghebrechristos, H. (2026). ${canvas.title}. In Consciousness: A Digital Organism (Digital edition, version 4). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory/the-canvas`,
+      `Ghebrechristos, H. (2026). ${canvas.title}. In Consciousness: A Digital Organism (Digital edition, version 4). Digital Organism Theory. https://dotheory.org/book/digital-organism-theory/the-canvas/`,
     );
   });
 
