@@ -661,3 +661,66 @@ def test_public_ask_forwards_the_reader_s_position_to_retrieval(monkeypatch) -> 
     assert isinstance(position, schemas.ReadingPosition)
     assert position.section == "the-canvas"
     assert position.title == "The Canvas"
+
+
+def test_public_questions_share_a_site_wide_ceiling(monkeypatch) -> None:
+    """Per-visitor limits alone would let many visitors run up model spend."""
+
+    import app.domains.twin.schemas as schemas
+    import app.domains.twin.service as service
+    from app.main import app as fastapi_app
+
+    async def _answer(session, requester, payload, client=None, history=()):  # noqa: ANN001
+        return schemas.TwinAskResponse(answer="ok", citations=[], grounded=False)
+
+    monkeypatch.setattr(service, "ask", _answer)
+    question = {"question": "What is this about?", "owner_id": "henok"}
+
+    with fastapi.testclient.TestClient(fastapi_app) as client:
+        # Six visitors, each within their own ten a minute.
+        for visitor in range(6):
+            for _ in range(10):
+                response = client.post(
+                    "/v1/twin/public/ask",
+                    json=question,
+                    headers={"X-Forwarded-For": f"81.2.69.{visitor + 10}"},
+                )
+                assert response.status_code == 200
+        seventh = client.post(
+            "/v1/twin/public/ask", json=question, headers={"X-Forwarded-For": "81.2.69.99"}
+        )
+        stream = client.post(
+            "/v1/twin/public/ask/stream", json=question, headers={"X-Forwarded-For": "81.2.69.98"}
+        )
+
+    assert seventh.status_code == 429
+    assert stream.status_code == 429
+
+
+def test_a_visitor_over_their_own_limit_does_not_spend_the_shared_ceiling(monkeypatch) -> None:
+    """Requests refused by a visitor's own limit must not count against everyone."""
+
+    import app.domains.twin.schemas as schemas
+    import app.domains.twin.service as service
+    from app.main import app as fastapi_app
+
+    async def _answer(session, requester, payload, client=None, history=()):  # noqa: ANN001
+        return schemas.TwinAskResponse(answer="ok", citations=[], grounded=False)
+
+    monkeypatch.setattr(service, "ask", _answer)
+    question = {"question": "What is this about?", "owner_id": "henok"}
+
+    def ask(client, visitor: str) -> int:
+        return client.post(
+            "/v1/twin/public/ask", json=question, headers={"X-Forwarded-For": visitor}
+        ).status_code
+
+    with fastapi.testclient.TestClient(fastapi_app) as client:
+        persistent = [ask(client, "81.2.69.5") for _ in range(25)]
+        assert persistent.count(200) == 10
+        assert persistent.count(429) == 15
+        # The other 50 of the 60 a minute remain for everyone else.
+        for visitor in range(5):
+            for _ in range(10):
+                assert ask(client, f"81.2.69.{visitor + 20}") == 200
+        assert ask(client, "81.2.69.30") == 429

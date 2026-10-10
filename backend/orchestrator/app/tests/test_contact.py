@@ -292,3 +292,29 @@ def test_public_rate_limit_caps_abuse(client):
     for _ in range(5):
         assert submit(client, {**MESSAGE, "website": "bot"}).status_code == 201
     assert submit(client).status_code == 429
+
+
+def test_one_visitor_exhausting_the_limit_does_not_close_contact_for_others(client):
+    # Behind Cloud Run every request shares the proxy's socket address.
+    abuser = {"X-Forwarded-For": "81.2.69.142"}
+    for _ in range(5):
+        response = client.post(
+            "/v1/contact/messages",
+            json={**MESSAGE, "website": "bot"},
+            headers={**abuser, "Idempotency-Key": str(uuid.uuid4())},
+        )
+        assert response.status_code == 201
+    spoofed = {"X-Forwarded-For": "81.2.69.50, 81.2.69.142"}
+    blocked = client.post(
+        "/v1/contact/messages",
+        json=MESSAGE,
+        headers={**spoofed, "Idempotency-Key": str(uuid.uuid4())},
+    )
+    assert blocked.status_code == 429
+
+    visitor = client.post(
+        "/v1/contact/messages",
+        json=MESSAGE,
+        headers={"X-Forwarded-For": "81.2.69.160", "Idempotency-Key": str(uuid.uuid4())},
+    )
+    assert visitor.status_code == 201

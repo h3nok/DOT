@@ -21,6 +21,30 @@ def test_rate_limiters_share_one_store(monkeypatch) -> None:
     assert router_limiter is app_limiter
 
 
+def _request(forwarded: str | None, peer: str = "169.254.1.1") -> starlette.requests.Request:
+    headers = [] if forwarded is None else [(b"x-forwarded-for", forwarded.encode())]
+    return starlette.requests.Request({"type": "http", "headers": headers, "client": (peer, 40000)})
+
+
+@pytest.mark.parametrize(
+    ("forwarded", "expected"),
+    [
+        (None, "169.254.1.1"),
+        ("81.2.69.160", "81.2.69.160"),
+        # A client can only write to the left of what Google appends.
+        ("81.2.69.142, 81.2.69.160", "81.2.69.160"),
+        ("not-an-address, 81.2.69.160", "81.2.69.160"),
+        # Load-balancer and link-local hops to the right are not the visitor.
+        ("81.2.69.160, 35.191.10.4", "81.2.69.160"),
+        ("81.2.69.160, 130.211.0.9, 169.254.1.1", "81.2.69.160"),
+        ("2a02:c7c:abcd:12:1:2:3:4", "2a02:c7c:abcd:12::/64"),
+        ("10.0.0.3, 169.254.1.1", "169.254.1.1"),
+    ],
+)
+def test_rate_limits_count_the_visitor_not_the_proxy(forwarded: str | None, expected: str) -> None:
+    assert security.client_address(_request(forwarded)) == expected
+
+
 @pytest.mark.parametrize(
     ("origin", "with_cookie", "require_origin", "expected"),
     [
