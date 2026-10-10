@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { describe, expect, it } from "vitest";
 
 import TermsPage from "./TermsPage";
@@ -8,7 +9,7 @@ const renderPage = () =>
   render(
     <MemoryRouter>
       <TermsPage />
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("TermsPage", () => {

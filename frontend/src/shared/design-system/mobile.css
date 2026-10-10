@@ -1,0 +1,92 @@
+/* Shared phone foundations. Inline prose and diagram labels retain their
+   reading geometry; standalone controls get real thumb-sized rows. */
+/* A shared page header owns appearance; legacy canvases keep their floating
+   fallback. Never float another button over a page's fields or reading. */
+body:has(.site-page-header [data-appearance-control]) .app-floating-appearance { display: none; }
+
+@media (pointer: coarse), (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
+  textarea, select { font-size: max(1rem, 16px); }
+  a, button, summary { touch-action: manipulation; }
+
+  .site-colophon { padding-bottom: max(3rem, calc(var(--safe-bottom) + 2rem)); }
+  .site-colophon nav a, .site-colophon nav button { display: inline-flex; align-items: center; justify-content: center; min-width: var(--touch-target); min-height: var(--touch-target); padding: .5rem; font-size: .8125rem; line-height: 1.5; }
+  .site-colophon nav[aria-label="Site"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: .25rem .5rem; }
+
+  .book-chrome-action, .book-chrome .book-dot-link,
+  .book-cover-controls > a, .book-cover-controls > button,
+  .book-focus-exit, .book-citation__format, .book-citation__copy,
+  .book-coda__concept, .book-coda__text-link,
+  .book-contents-dialog button, .bloom-close {
+    min-width: var(--touch-target); min-height: var(--touch-target);
+  }
+  .book-coda__text-link { display: inline-flex; align-items: center; }
+  .reader-list-field, .reader-list-submit, .reader-list-change { min-height: var(--touch-target); }
+
+  .appearance-panel button[aria-label="Close appearance panel"] { width: var(--touch-target); height: var(--touch-target); flex-shrink: 0; }
+  .appearance-panel [role="tab"] { min-height: var(--touch-target); }
+}
+
+@media (max-width: 639px) {
+  .dot-page-container { padding-left: max(1.25rem, var(--safe-left)); padding-right: max(1.25rem, var(--safe-right)); }
+  .site-page-header { padding-top: var(--safe-top); }
+  .site-page-header-inner { gap: .25rem .75rem; padding-block: .375rem; }
+  .site-page-main { padding-top: 2rem; padding-bottom: max(4rem, calc(var(--safe-bottom) + 3rem)); }
+  .site-page-header nav[aria-label="Page context"] { flex-wrap: wrap; }
+  .site-page-header nav[aria-label="Page context"] a { min-height: var(--touch-target); min-width: var(--touch-target); }
+
+  /* In-flow chrome follows owner tools and larger text without hiding the
+     opening underneath a fixed, assumed-height header. */
+  .home-site-header { position: sticky; top: 0; padding-top: calc(.5rem + var(--safe-top)); padding-bottom: .5rem; }
+  .home-header-layout { gap: .375rem .5rem; }
+  .home-header-action[href="/readers"] { display: inline-flex; align-items: center; justify-content: center; width: var(--touch-target); padding-inline: .5rem; }
+  .home-header-action[href="/readers"] svg { width: 1rem; height: 1rem; }
+  .home-journey .home-ask__input, .home-journey .home-ask__measure { font-size: max(1rem, 16px); }
+  .home-inquiry__header { flex-wrap: wrap; gap: .25rem .5rem; }
+
+  .contact-masthead { padding-bottom: 2rem; }
+  .contact-layout { gap: 2rem; }
+  .contact-form-body > .dot-button { width: 100%; max-width: none; }
+  .contact-aside, .contact-receipt, .contact-availability { padding: 1.25rem; }
+  .intent-field > label { font-size: .875rem; }
+  .contact-consent { align-items: center; padding-block: .5rem; }
+  .contact-consent input { margin-top: 0; }
+  .inbox-toolbar .intent-field { flex: 1; }
+  .inbox-context div { flex-wrap: wrap; gap: .25rem .75rem; }
+
+  .book-chrome { padding-top: var(--safe-top); }
+  .book-chrome > div { gap: .5rem; padding-left: max(.75rem, var(--safe-left)); padding-right: max(.75rem, var(--safe-right)); }
+  .book-chrome .book-dot-link { gap: .5rem; }
+  .book-cover-controls { top: max(.75rem, var(--safe-top)); right: max(.75rem, var(--safe-right)); height: auto; min-height: 3rem; }
+  .book-focus-exit { top: max(.75rem, var(--safe-top)); right: max(.75rem, var(--safe-right)); }
+  .book-volume-hero { flex-direction: column; min-height: auto; padding-top: calc(5rem + var(--safe-top)); padding-bottom: 2.5rem; }
+  .book-volume-hero__layout { gap: 1.75rem; }
+  .book-volume-hero__cover .book-one-cover { width: min(11rem, 48vw); }
+  .book-volume-hero__copy { display: flex; flex-direction: column; }
+  .book-volume-hero__copy h1 { margin-top: 1rem; font-size: clamp(2rem, 8vw, 2.75rem); line-height: 1.06; }
+  .book-volume-actions { order: 1; gap: .5rem 1rem; margin-top: 1.25rem; }
+  .book-volume-actions .book-frontispiece-action { justify-content: center; width: 100%; padding-inline: 1rem; white-space: normal; }
+  .book-volume-hero__copy > .book-volume-description { order: 2; margin-top: 1.5rem; font-size: 1rem; line-height: 1.7; }
+  .book-volume-position { order: 3; margin-top: 1.5rem; }
+  .book-volume-written-order { order: 4; }
+  .book-volume-facts { order: 5; margin-top: 1.5rem; }
+  .book-volume-scroll { position: relative; bottom: auto; left: auto; transform: none; justify-content: center; width: 100%; min-height: var(--touch-target); margin-top: 1.5rem; }
+  .book-volume-guide a { display: inline-flex; align-items: center; min-height: var(--touch-target); }
+  .book-contents-overlay { top: var(--visible-top); bottom: auto; height: var(--visible-height); }
+  .book-contents-dialog { display: flex; flex-direction: column; overflow: hidden; padding-top: max(1rem, var(--safe-top)); padding-bottom: max(1rem, var(--safe-bottom)); }
+  .book-contents-dialog > div:first-child { flex-shrink: 0; margin-bottom: 1rem; padding-bottom: 1rem; }
+  .book-contents-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+
+  [data-appearance-control]:not([data-inline="true"]) { left: max(1rem, var(--safe-left)); bottom: max(1rem, var(--safe-bottom)); }
+  .appearance-panel { max-height: min(41rem, calc(var(--visible-height) - var(--safe-top) - var(--safe-bottom) - 6rem)); }
+  [data-appearance-control][data-inline="true"] .appearance-panel { top: calc(var(--visible-top) + 4.25rem + var(--safe-top)); left: max(1rem, var(--safe-left)); right: max(1rem, var(--safe-right)); }
+  .appearance-scroll, .bloom-body { overscroll-behavior: contain; }
+  .bloom-overlay { top: var(--visible-top); bottom: auto; height: var(--visible-height); padding-top: max(1rem, var(--safe-top)); padding-bottom: max(1rem, var(--safe-bottom)); }
+  .bloom-surface { max-height: calc(var(--visible-height) - var(--safe-top) - var(--safe-bottom) - 2rem); }
+  .bloom-surface > header { padding: 1.25rem 1.25rem 0; }
+  .bloom-body { padding-inline: 1.25rem; }
+  .bloom-surface > header h2 { font-size: 1.75rem; }
+  .bloom-surface > header p { overflow-wrap: anywhere; }
+  [role="dialog"][aria-label="Minty, the DOT Companion"] { top: var(--visible-top); bottom: auto; height: var(--visible-height); padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); }
+  [role="dialog"][aria-label="Minty, the DOT Companion"] button[aria-label="Close"] { min-width: var(--touch-target); min-height: var(--touch-target); }
+}

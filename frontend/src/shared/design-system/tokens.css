@@ -1,5 +1,12 @@
 /* Public-page foundations extend the reader's existing appearance tokens. */
 :root {
+  --touch-target: 2.75rem;
+  --visible-height: 100dvh;
+  --visible-top: 0px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
   --public-space-xs: .5rem;
   --public-space-sm: .75rem;
   --public-space-md: 1.25rem;

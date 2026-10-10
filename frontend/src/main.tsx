@@ -36,6 +36,7 @@ import { OrganismProvider } from "./organism";
 import "./organism/organism.css";
 import "./organism/identity.css";
 import "./shared/design-system/tokens.css";
+import "./shared/design-system/mobile.css";
 import { AppProviders } from "./shared/contexts";
 import { ThemeProvider } from "./shared/contexts/SimpleThemeContext";
 

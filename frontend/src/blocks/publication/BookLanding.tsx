@@ -116,7 +116,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             >
               A proposed architecture of consciousness.
             </h1>
-            <p className="book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
+            <p className="book-volume-description book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
               Examine experience, inherited conditioning, meaningful choice, and
               development toward Love. Book One also develops DOT’s proposed
               wider architecture of consciousness and the physical universe,
@@ -131,7 +131,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <div className="book-volume-actions mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
                 to={primaryHref}
                 className="book-frontispiece-action dot-reading-action group inline-flex min-h-12 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-7 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -155,7 +155,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               </Link>
             </div>
             {!savedPath && (
-              <p className="book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
+              <p className="book-volume-written-order book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
                 Prefer to build the theory from its foundations?{" "}
                 <Link
                   to={writtenOrderHref}

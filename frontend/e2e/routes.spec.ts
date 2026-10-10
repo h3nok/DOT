@@ -84,7 +84,7 @@ test.describe("hero", () => {
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);
 
     const presentation = await labels.evaluateAll((items) => {
-      const boxes = items.map((item) => (item as SVGGraphicsElement).getBBox());
+      const boxes = items.map((item) => item.getBoundingClientRect());
       const overlap = boxes.some((box, index) =>
         boxes.slice(index + 1).some(
           (other) =>
@@ -101,8 +101,6 @@ test.describe("hero", () => {
           color: style?.fill ?? "",
           family: style?.fontFamily ?? "",
           transform: style?.textTransform ?? "",
-          stroke: style?.stroke ?? "",
-          strokeWidth: Number.parseFloat(style?.strokeWidth ?? "0"),
         };
       });
 
@@ -111,7 +109,6 @@ test.describe("hero", () => {
         distinctColors: new Set(styles.map(({ color }) => color)).size,
         families: styles.map(({ family }) => family),
         transforms: styles.map(({ transform }) => transform),
-        knockouts: styles.map(({ stroke, strokeWidth }) => ({ stroke, strokeWidth })),
       };
     });
 
@@ -121,11 +118,6 @@ test.describe("hero", () => {
       true,
     );
     expect(presentation.transforms.every((transform) => transform === "none")).toBe(true);
-    expect(
-      presentation.knockouts.every(
-        ({ stroke, strokeWidth }) => stroke !== "none" && strokeWidth >= 4,
-      ),
-    ).toBe(true);
   });
 
   test("theory panels guide the reader from known ground to an explicit boundary", async ({

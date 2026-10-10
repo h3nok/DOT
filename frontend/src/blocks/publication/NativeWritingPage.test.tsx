@@ -3,11 +3,12 @@ import { HelmetProvider } from "react-helmet-async";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import NativeWritingPage from "./NativeWritingPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { fetchWritingDelivery } from "../../services/OrchestratorWritingService";
 
 vi.mock("../../services/OrchestratorWritingService", async (original) => ({ ...await original<typeof import("../../services/OrchestratorWritingService")>(), fetchWritingDelivery: vi.fn() }));
 afterEach(() => vi.resetAllMocks());
-const open = () => render(<HelmetProvider><MemoryRouter initialEntries={["/writing/work-1/releases/2"]}><Routes><Route path="/writing/:workId/releases/:releaseNumber" element={<NativeWritingPage />} /></Routes></MemoryRouter></HelmetProvider>);
+const open = () => render(<HelmetProvider><MemoryRouter initialEntries={["/writing/work-1/releases/2"]}><Routes><Route path="/writing/:workId/releases/:releaseNumber" element={<NativeWritingPage />} /></Routes></MemoryRouter></HelmetProvider>, { wrapper: PublicPageTestProvider });
 
 describe("NativeWritingPage", () => {
   it("reads the complete owned text, source ledger and exact release", async () => {

@@ -133,7 +133,7 @@ export const SignIn: React.FC<SignInProps> = ({
           <button
             type="button"
             onClick={() => { setStep("email"); setCode(""); setError(null); }}
-            className="mt-3 w-full text-center text-xs text-muted-foreground hover:text-foreground"
+            className="mt-3 min-h-11 w-full text-center text-xs text-muted-foreground hover:text-foreground"
           >
             Use a different email
           </button>

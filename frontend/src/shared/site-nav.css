@@ -1,0 +1,35 @@
+.site-nav { min-width: 0; }
+.site-nav-links { display: flex; flex-wrap: wrap; align-items: center; gap: .125rem; list-style: none; padding: 0; margin: 0; }
+.site-nav-links a { position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: .75rem; min-height: var(--touch-target, 2.75rem); padding: .5rem .75rem; border-radius: 999px; color: var(--muted-foreground); font-size: .8125rem; font-weight: 500; letter-spacing: .005em; }
+/* Hover is a soft pill inside the thumb-sized target, not the whole 44px slab. */
+.site-nav-links a::before { position: absolute; z-index: -1; inset: .375rem 0; border-radius: inherit; background: transparent; content: ""; }
+.site-nav-links a:hover { color: var(--foreground); }
+.site-nav-links a:hover::before { background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+/* The current page keeps its ink and a short, crisp mark instead of a full underline. */
+.site-nav-links a[aria-current="page"] { color: var(--foreground); }
+.site-nav-desktop a[aria-current="page"]::after { position: absolute; bottom: .5rem; left: 50%; width: 1rem; height: 1.5px; border-radius: 1px; background: var(--organism-accent-strong, currentColor); content: ""; transform: translateX(-50%); }
+.site-nav-trigger { display: none; }
+.site-nav-links a:focus-visible, .site-nav-trigger:focus-visible, .site-nav-panel button:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.site-nav-panel { z-index: 55; width: min(20rem, calc(100vw - 2rem)); max-height: min(28rem, var(--radix-popover-content-available-height)); overflow-y: auto; overscroll-behavior: contain; padding: .5rem; border: 1px solid var(--border); border-radius: var(--public-radius); background: var(--background); color: var(--foreground); box-shadow: 0 .75rem 2rem color-mix(in oklab, var(--foreground) 12%, transparent); transform-origin: var(--radix-popover-content-transform-origin); }
+.site-nav-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-inline: .75rem 0; margin-bottom: .25rem; }
+.site-nav-panel-heading button { display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); border-radius: 50%; }
+.site-nav-panel-heading svg { width: 1rem; height: 1rem; }
+/* One calm list: hairlines between rows instead of a grid of framed tiles. */
+.site-nav-panel .site-nav-links { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.site-nav-panel .site-nav-links li + li { border-top: 1px solid color-mix(in oklab, var(--border) 70%, transparent); }
+.site-nav-panel .site-nav-links a { display: flex; justify-content: space-between; min-height: 3rem; padding: .75rem; border-radius: .5rem; color: var(--foreground); font-size: .9375rem; }
+.site-nav-panel .site-nav-links a::before { inset: .125rem 0; }
+.site-nav-panel a[aria-current="page"] { font-weight: 600; }
+.site-nav-panel a[aria-current="page"]::after { width: .375rem; height: .375rem; border-radius: 50%; background: var(--organism-accent-strong, currentColor); content: ""; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .site-nav-links a { transition: color 160ms ease; }
+  html:not([data-motion="still"]) .site-nav-links a::before { transition: background-color 160ms ease; }
+  html:not([data-motion="still"]) .site-nav-panel[data-state="open"] { animation: site-nav-panel-in 180ms cubic-bezier(.22, 1, .36, 1); }
+}
+@keyframes site-nav-panel-in { from { opacity: 0; transform: translateY(-.25rem) scale(.98); } }
+@media (max-width: 639px) {
+  .site-nav { margin-inline-start: auto; }
+  .site-nav-desktop { display: none; }
+  .site-nav-trigger { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-width: var(--touch-target); min-height: var(--touch-target); padding: .5rem .75rem; border: 1px solid var(--border); border-radius: var(--appearance-ui-control-radius, .75rem); background: var(--background); color: var(--foreground); font-size: .8125rem; }
+  .site-nav-trigger svg { width: 1rem; height: 1rem; }
+}

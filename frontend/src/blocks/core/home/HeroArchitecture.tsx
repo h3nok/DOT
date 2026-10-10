@@ -374,6 +374,12 @@ export function HeroArchitecture() {
           are conceptual, not spatial. DOT proposes this environment as a
           setting for Little c to live, explore possibilities, and develop.
         </span>
+        <nav className="home-architecture-touch-nav" aria-label="Read the diagram">
+          <a href="#possibility-field">T × E</a>
+          <a href="#big-c">Big C</a>
+          <a href="#reality-frame">RF₀</a>
+          <a href="#little-c">Little c</a>
+        </nav>
         <Disclosure className="home-architecture-guide" summary="About the diagram">
           <p>
             Conceptual rings, not spatial boundaries. Shading adds visual depth,

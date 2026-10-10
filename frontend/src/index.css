@@ -953,6 +953,19 @@ html[data-contrast="high"] .book-chrome {
   text-transform: uppercase;
 }
 
+/* A thumbnail keeps the jacket's proportions rather than forcing display
+   type minimums into a cover that is less than fifteen rem wide. */
+@container (max-width: 239px) {
+  .book-one-cover-header { gap: 4cqi; font-size: 2.05cqi; }
+  .book-one-cover-kicker { font-size: 3.7cqi; }
+  .book-one-cover-title { font-size: 9.6cqi; }
+  .book-one-cover-organism > span { font-size: 1.9cqi; }
+  .book-one-cover-footer > p { font-size: 2.55cqi; }
+  .book-one-cover-footer > div { gap: 4cqi; }
+  .book-one-cover-footer strong { font-size: 2.8cqi; }
+  .book-one-cover-footer span { font-size: 1.72cqi; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .book-one-cover-scan {
     animation: book-cover-scan 1.8s ease-out 0.35s 1 both;

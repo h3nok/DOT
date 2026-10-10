@@ -45,10 +45,6 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expect(resume.getByText("Doctoral research", { exact: true })).toBeVisible();
   await resume.getByText("Doctoral research", { exact: true }).click();
   await expect(resume.getByText(author.credentials[0].dissertation!.title)).toBeVisible();
-  const book = page.getByRole("navigation", { name: "Primary", exact: true })
-    .getByRole("link", { name: "Book One", exact: true });
-  await expect(book).toBeVisible();
-  await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(page.getByRole("region", { name: "Contact" })
     .getByRole("link", { name: CONTACT.label, exact: true }))
     .toHaveAttribute("href", CONTACT.href);
@@ -57,6 +53,12 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expectNoHorizontalOverflow(page);
   await pageNav.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeInViewport();
+  const menu = page.getByRole("button", { name: "Menu", exact: true });
+  if (await menu.isVisible()) await menu.click();
+  const book = page.getByRole("navigation", { name: "Primary", exact: true })
+    .getByRole("link", { name: "Book One", exact: true });
+  await expect(book).toBeVisible();
+  await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");
   await book.click();
   await expect(page).toHaveURL("/book/digital-organism-theory");
   await expect(page.locator("h1").first()).toBeVisible();
@@ -123,14 +125,17 @@ test("the header offers strangers the readers’ list; members sign in from the 
   await expect(page.getByRole("dialog", { name: "Sign in" })).toBeVisible();
 });
 
-test("while the list is closed, the header offers the book instead of a closed door", async ({ page }) => {
+test("while the list is closed, navigation offers the book and no header signup", async ({ page }) => {
   await page.route("**/v1/readers/status", (route) => route.fulfill({
     json: { available: false },
   }));
   await page.goto("/");
 
   const header = page.locator('header[aria-label="Site Header"]');
-  await expect(header.getByRole("link", { name: "Book One", exact: true }))
+  await expect(header).toBeVisible();
+  const menu = header.getByRole("button", { name: "Menu", exact: true });
+  if (await menu.isVisible()) await menu.click();
+  await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(header.getByRole("link", { name: "Readers’ list", exact: true })).toHaveCount(0);
   await expect(header.getByRole("button", { name: "Sign in" })).toHaveCount(0);

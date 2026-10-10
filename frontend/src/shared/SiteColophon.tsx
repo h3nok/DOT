@@ -23,7 +23,7 @@ export function SiteColophon({
   variant?: "publication" | "personal";
 }) {
   return (
-    <footer className="dot-page-container py-12">
+    <footer className="site-colophon dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
         <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
         <p className="text-xs leading-relaxed text-muted-foreground/50">

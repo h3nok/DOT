@@ -11,9 +11,16 @@ export function IntentionPicker<T extends string>({ label, options, value, onCha
   onChange: (value: T) => void;
 }) {
   const name = useId();
+  const selected = options.find(option => option.value === value);
   return (
     <fieldset className="intention-picker">
-      <legend className="dot-label">{label}</legend>
+      <legend id={`${name}-label`} className="dot-label">{label}</legend>
+      <div className="intention-picker-native" data-tone={selected?.tone}>
+        <select value={value} aria-labelledby={`${name}-label`} aria-describedby={`${name}-description`} onChange={event => onChange(event.target.value as T)}>
+          {options.map(option => <option key={option.value} value={option.value}>{option.title}</option>)}
+        </select>
+        <p id={`${name}-description`}>{selected?.description}</p>
+      </div>
       <div className="intention-picker-options">
         {options.map(option => (
           <label key={option.value} className="intention-option" data-tone={option.tone}>

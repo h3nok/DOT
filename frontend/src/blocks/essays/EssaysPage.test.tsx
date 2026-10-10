@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import EssayPage from "./EssayPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import EssaysPage from "./EssaysPage";
 import type { EssaySummary } from "../../content/essays/essays";
 
@@ -52,7 +53,7 @@ const openAt = (path: string) =>
         <Route path="/blog" element={<h1>Writing archive</h1>} />
         <Route path="/essays/:slug" element={<EssayPage />} />
       </Routes>
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("EssaysPage", () => {

@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WritingStudioPage from "./WritingStudioPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import * as writing from "../../services/OrchestratorWritingService";
 import * as distribution from "../../services/OrchestratorDistributionService";
 
@@ -30,7 +31,7 @@ afterEach(() => {
 });
 
 async function write() {
-  render(<MemoryRouter><WritingStudioPage /></MemoryRouter>);
+  render(<MemoryRouter><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
   fireEvent.change(await screen.findByLabelText("Title"), { target: { value: "My analysis" } });
   fireEvent.change(screen.getByLabelText("Manuscript"), { target: { value: "The author's supplied manuscript." } });
 }
@@ -84,7 +85,7 @@ describe("WritingStudioPage", () => {
   it("reopens saved text and claim declarations", async () => {
     vi.mocked(writing.fetchWritingWorks).mockResolvedValue([{ id: "work-2", kind: "essay", canonical_slug: "existing-letter", lifecycle_state: "draft" }]);
     vi.mocked(writing.fetchWritingDraft).mockResolvedValue({ title: "Existing letter", summary: "An existing summary", body: "Saved text", claims: [{ statement: "Saved claim", level: "Speculation", origin: "sourced", source: "https://example.org/source" }] });
-    render(<MemoryRouter><WritingStudioPage /></MemoryRouter>);
+    render(<MemoryRouter><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
     fireEvent.click(await screen.findByRole("button", { name: "existing letter" }));
     expect(await screen.findByDisplayValue("Saved text")).toBeInTheDocument();
     expect(screen.getByLabelText("Statement")).toHaveValue("Saved claim");

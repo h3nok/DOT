@@ -52,10 +52,11 @@ globalThis.ResizeObserver = vi.fn().mockImplementation((_callback) => ({
   disconnect: vi.fn(),
 }));
 
-// Mock matchMedia
+// Preserve this browser API when a service test resets all mock functions.
+// Vitest resets vi.fn(callback) to its initial implementation.
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: vi.fn().mockImplementation((query) => ({
+  value: vi.fn((query) => ({
     matches: false,
     media: query,
     onchange: null,

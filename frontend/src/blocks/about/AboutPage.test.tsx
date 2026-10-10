@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import AboutPage from "./AboutPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { author, authorByline } from "../../content/author";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../../content/builder";
 
@@ -24,7 +25,7 @@ const renderPage = () =>
   render(
     <MemoryRouter>
       <AboutPage />
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("AboutPage", () => {

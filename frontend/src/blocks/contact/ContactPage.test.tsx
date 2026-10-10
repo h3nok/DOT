@@ -3,11 +3,12 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import ContactPage from "./ContactPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { fetchContactStatus, sendContactMessage } from "../../services/OrchestratorContactService";
 
 vi.mock("../../services/OrchestratorContactService", () => ({ fetchContactStatus: vi.fn(), sendContactMessage: vi.fn() }));
 beforeEach(() => { vi.resetAllMocks(); vi.mocked(fetchContactStatus).mockResolvedValue({ available: true }); });
-const open = (path = "/contact") => render(<MemoryRouter initialEntries={[path]}><ContactPage /></MemoryRouter>);
+const open = (path = "/contact") => render(<MemoryRouter initialEntries={[path]}><ContactPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
 async function fill() {
   fireEvent.change(await screen.findByRole("textbox", { name: "Your name" }), { target: { value: "Visitor" } });
   fireEvent.change(screen.getByRole("textbox", { name: "Email address" }), { target: { value: "visitor@example.org" } });

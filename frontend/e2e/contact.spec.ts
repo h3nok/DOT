@@ -8,7 +8,9 @@ test("native project intake keeps a failed draft and receives a retry once", asy
     return route.fulfill(submissions.length === 1 ? { status: 503, json: { detail: "Please try again. Your message is still here." } } : { status: 201, json: { status: "received", reference: "inq_browser_test" } });
   });
   await page.goto("/contact?purpose=project");
-  await expect(page.getByRole("radio", { name: /Discuss a project/ })).toBeChecked();
+  const purpose = page.getByRole("combobox", { name: "What brings you here?" });
+  if (page.viewportSize()!.width < 640) await expect(purpose).toHaveValue("project");
+  else await expect(page.getByRole("radio", { name: /Discuss a project/ })).toBeChecked();
   await page.getByRole("textbox", { name: "Your name" }).fill("Example visitor");
   await page.getByRole("textbox", { name: "Email address" }).fill("visitor@example.org");
   await page.getByRole("textbox", { name: "Your message" }).fill("I would like to discuss building a digital product.");

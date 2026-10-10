@@ -95,7 +95,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center px-4"
+      className="bloom-overlay fixed inset-0 flex items-center justify-center px-4"
       style={{ zIndex }}
     >
       {/* Scrim — closing collapses the bloom. */}
@@ -149,7 +149,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
         animate={bloom.animate}
         exit={bloom.exit}
         transition={bloom.transition}
-        className={`organism-alive relative z-10 flex max-h-[82vh] w-full ${WIDTHS[size]} flex-col overflow-hidden rounded-3xl border border-white/10 dark:border-white/5 bg-background/20 shadow-[var(--premium-shadow),0_0_80px_var(--organism-accent-soft)] backdrop-blur-3xl`}
+        className={`bloom-surface organism-alive relative z-10 flex max-h-[82vh] w-full ${WIDTHS[size]} flex-col overflow-hidden rounded-3xl border border-white/10 dark:border-white/5 bg-background/20 shadow-[var(--premium-shadow),0_0_80px_var(--organism-accent-soft)] backdrop-blur-3xl`}
         style={{ transformOrigin: "center center" }}
       >
         {/* Living top edge. */}
@@ -186,13 +186,13 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="shrink-0 rounded-full border border-border/50 p-2 text-muted-foreground transition-colors hover:text-foreground"
+            className="bloom-close shrink-0 rounded-full border border-border/50 p-2 text-muted-foreground transition-colors hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
         </header>
 
-        <div className="relative mt-6 min-h-0 flex-1">
+        <div className="relative mt-6 flex min-h-0 flex-1 flex-col overflow-hidden">
           {/* Top scroll shadow — appears once the body is scrolled. */}
           <span
             aria-hidden="true"
@@ -202,7 +202,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
           />
           <motion.div
             ref={bodyRef}
-            className="h-full min-h-0 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
+            className="bloom-body min-h-0 flex-1 overflow-y-auto px-7 pb-7 sm:px-8 sm:pb-8"
             variants={staggerContainer}
             initial="hidden"
             animate="visible"

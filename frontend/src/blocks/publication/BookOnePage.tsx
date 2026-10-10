@@ -784,7 +784,7 @@ export default function BookOnePage() {
         </header>
       ) : (
         // The cover is the whole page: its controls float instead of sitting in a bar.
-        <div className="book-focus-hidden fixed right-6 top-6 z-30 flex h-9 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
+        <div className="book-cover-controls book-focus-hidden fixed right-6 top-6 z-30 flex h-9 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
           <Link
             to="/"
             className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -882,12 +882,14 @@ export default function BookOnePage() {
                 <X className="h-4 w-4" />
               </button>
             </div>
+            <div className="book-contents-scroll">
             <BookContents
               manifest={manifest}
               currentSlug={section?.slug}
               path={activePath}
               onNavigate={closeContents}
             />
+            </div>
           </aside>
         </div>
       )}

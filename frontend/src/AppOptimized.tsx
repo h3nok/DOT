@@ -14,6 +14,7 @@ import {
 } from "./organism";
 import { SiteContentProvider } from "./content/editable";
 import { RouteLoadingBoundary } from "./shared/RouteLoadingBoundary";
+import { ViewportObserver } from "./shared/ViewportObserver";
 
 // Lazy load surfaces for code splitting.
 const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
@@ -128,7 +129,7 @@ const FloatingAppearanceControl: React.FC = () => {
     return null;
   }
   if (pathname === "/" || /^\/blog\/?$/.test(pathname)) return null;
-  return <AppearanceControl />;
+  return <div className="app-floating-appearance" key={pathname}><AppearanceControl /></div>;
 };
 
 class ErrorBoundary extends React.Component<
@@ -181,6 +182,7 @@ const App: React.FC = () => {
           <OrganismReadingProbe />
           <OrganismHud />
           <RouteScrollManager />
+          <ViewportObserver />
           {/* Routes render their own <main>; a second landmark here would nest them. */}
           <div>
             <RouteLoadingBoundary>

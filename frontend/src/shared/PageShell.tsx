@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { DotWordmark } from "./DotWordmark";
 import { SiteNav } from "./SiteNav";
+import { AppearanceControl } from "../organism/AppearanceControl";
 
 interface PageHeaderProps {
   backTo?: string;
@@ -15,11 +16,11 @@ export function PageHeader({
   backTo = "/",
   backLabel = "DOT",
   right,
-  controls,
+  controls = <AppearanceControl placement="inline" />,
 }: PageHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-transparent bg-background/80 backdrop-blur-md">
-      <div className="dot-page-container flex min-h-14 flex-wrap items-center justify-between gap-x-4">
+    <header className="site-page-header sticky top-0 z-30 border-b border-transparent bg-background/80 backdrop-blur-md">
+      <div className="site-page-header-inner dot-page-container flex min-h-14 flex-wrap items-center justify-between gap-x-4">
         <Link
           to={backTo}
           className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -31,7 +32,7 @@ export function PageHeader({
             <span>{backLabel}</span>
           )}
         </Link>
-        <SiteNav className="order-last w-full sm:order-none sm:w-auto" />
+        <SiteNav />
         {right && (
           <nav aria-label="Page context" className="flex items-center gap-1">
             {right}
@@ -62,7 +63,7 @@ export function PageShell({
   return (
     <div className="min-h-screen bg-background text-foreground">
       {header}
-      <main className={`dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}>
+      <main className={`site-page-main dot-page-container pb-24 pt-12 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}>
         {children}
       </main>
       {footer}

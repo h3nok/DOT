@@ -225,6 +225,9 @@ html:has(.home-journey) {
   --architecture-line: color-mix(in oklch, var(--foreground) 68%, transparent);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 38%, transparent);
   --architecture-label: color-mix(in oklch, var(--foreground) 94%, transparent);
+  /* Labels sit on tinted rings, not the page: a translucent halo still lifts
+     them off crossing lines without glowing against the tint. */
+  --architecture-label-halo: color-mix(in oklch, var(--background) 40%, transparent);
   --architecture-origin: var(--theory-origin);
   --architecture-big-c: var(--theory-big-c);
   --architecture-rf: var(--theory-rf);
@@ -306,6 +309,8 @@ html:has(.home-journey) {
   max-width: 86rem;
 }
 
+.home-architecture-touch-nav { display: none; }
+
 .home-hero-layout {
   display: block;
   width: 100%;
@@ -325,36 +330,72 @@ html:has(.home-journey) {
 }
 
 .home-hero-margin {
+  /* One measure for every block under the headline, so the column keeps a
+     single right edge. The headline alone may run to the full column. */
+  --home-hero-measure: 34rem;
+  position: relative;
+  isolation: isolate;
   width: 100%;
   max-width: 36rem;
   min-width: 0;
   margin-inline: auto;
 }
 
-.home-hero-masthead {
-  position: relative;
-  isolation: isolate;
-  text-align: left;
-}
-
-.home-hero-masthead::before {
+/* Quiet the chosen field behind the words, as reading mode does. Eased ramps
+   on every side let the edge dissolve instead of reading as a panel. */
+.home-hero-margin::before {
+  --home-hero-fade:
+    transparent,
+    rgb(0 0 0 / 0.3) 1.5rem,
+    rgb(0 0 0 / 0.75) 3.5rem,
+    #000 5.5rem,
+    #000 calc(100% - 5.5rem),
+    rgb(0 0 0 / 0.75) calc(100% - 3.5rem),
+    rgb(0 0 0 / 0.3) calc(100% - 1.5rem),
+    transparent;
   position: absolute;
   z-index: -1;
-  inset: -1.5rem -1rem 0;
-  background: radial-gradient(
-    ellipse,
-    color-mix(in oklab, var(--appearance-page-tone, var(--background)) 92%, transparent),
-    transparent 78%
-  );
+  inset: -4.5rem -5.5rem;
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 80%, transparent);
   content: "";
+  -webkit-mask-image:
+    linear-gradient(to right, var(--home-hero-fade)),
+    linear-gradient(to bottom, var(--home-hero-fade));
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, var(--home-hero-fade)),
+    linear-gradient(to bottom, var(--home-hero-fade));
+  mask-composite: intersect;
   pointer-events: none;
 }
 
+.home-hero-masthead {
+  position: relative;
+  text-align: left;
+}
+
 .home-hero-entry {
+  --home-cta-paper: color-mix(in oklab, var(--background) 55%, white);
+  --home-cta-edge: color-mix(in oklab, var(--foreground) 10%, transparent);
   display: grid;
   gap: 0.25rem;
-  max-width: 28rem;
-  margin: 1.5rem 0 0;
+  max-width: var(--home-hero-measure);
+  margin: 1.75rem 0 0;
+}
+
+.dark .home-hero-entry {
+  --home-cta-paper: color-mix(in oklab, var(--background) 93%, var(--foreground));
+  --home-cta-edge: color-mix(in oklab, var(--foreground) 14%, transparent);
+}
+
+html[data-contrast="high"] .home-hero-entry {
+  --home-cta-edge: var(--foreground);
+}
+
+/* The secondary path starts on the column's left edge, like everything above it. */
+.home-hero-entry .dot-focus-nav__secondary {
+  justify-self: start;
+  padding-inline: 0 0.25rem;
 }
 
 .home-hero-entry > a {
@@ -362,30 +403,21 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
-/* The primary invitation reads like a chapter opener: a quiet note, then the
-   line itself, underlined by a seed of ink that grows when it is chosen. */
+/* The primary invitation reads like a chapter opener: plain paper with a
+   hairline edge, and a line of ink that draws under it when it is chosen. */
 .home-hero-entry .dot-focus-nav__primary.dot-button {
+  min-height: 4.5rem;
   gap: 1rem;
-  padding: 1.125rem 1rem 1.125rem 1.125rem;
-  background:
-    radial-gradient(
-      ellipse at 0% 0%,
-      color-mix(in oklab, var(--organism-accent-strong) 12%, transparent),
-      transparent 65%
-    ),
-    color-mix(in oklab, var(--background) 95%, var(--foreground));
-  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--foreground) 7%, transparent);
+  padding: 1rem 1rem 1rem 1.125rem;
+  background: var(--home-cta-paper);
+  box-shadow:
+    0 0 0 1px var(--home-cta-edge),
+    0 1px 2px color-mix(in oklab, var(--foreground) 5%, transparent);
 }
 
 .home-hero-entry .dot-button__icon {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--organism-accent-strong) 20%, transparent),
-    transparent 70%
-  );
 }
 
 .home-hero-entry .dot-button__copy {
@@ -412,7 +444,7 @@ html:has(.home-journey) {
       var(--organism-accent-strong),
       color-mix(in oklab, var(--organism-accent-strong) 35%, transparent)
     )
-    no-repeat 0 100% / 1.75rem 1.5px;
+    no-repeat 0 100% / 0 1.5px;
   font-size: clamp(1.25rem, 1.6vw, 1.375rem);
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -435,6 +467,12 @@ html:has(.home-journey) {
 }
 
 @media (hover: hover) {
+  .home-hero-entry .dot-focus-nav__primary:hover {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--foreground) 16%, transparent),
+      0 0.5rem 1.25rem -0.75rem color-mix(in oklab, var(--foreground) 28%, transparent);
+  }
+
   .home-hero-entry .dot-focus-nav__primary:hover .dot-button__copy strong {
     background-size: 100% 1.5px;
   }
@@ -449,6 +487,10 @@ html:has(.home-journey) {
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .home-hero-entry .dot-button__copy strong {
     transition: background-size 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html:not([data-motion="still"]) .home-hero-entry .dot-focus-nav__primary {
+    transition: box-shadow 220ms ease;
   }
 
   html:not([data-motion="still"]) .home-hero-entry .dot-button__end-icon {
@@ -470,7 +512,6 @@ html:has(.home-journey) {
     var(--foreground)
   );
   font-family: var(--home-public-display-font);
-  margin-bottom: 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.015em;
@@ -524,7 +565,7 @@ html[data-contrast="high"] .home-concept-slideshow {
 }
 
 .home-hero-subtitle {
-  max-width: 34rem;
+  max-width: var(--home-hero-measure);
   margin: 1rem 0 0;
   color: color-mix(in oklab, var(--foreground) 88%, var(--background));
   font-family: var(--home-public-reading-font);
@@ -569,39 +610,38 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   transition: opacity 180ms ease;
 }
 
+/* An aside to the invitation, set off by a hairline rather than a box. */
 .home-concept-slideshow {
-  max-width: 32rem;
+  max-width: var(--home-hero-measure, 34rem);
   margin-top: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
   text-align: left;
 }
 
 .home-concept-slideshow-eyebrow {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin: 0 0 0.625rem;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
   color: var(--muted-foreground);
   font-family: var(--home-public-display-font);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
 .home-concept-slideshow-eyebrow > span + span {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
   color: color-mix(in oklab, var(--organism-accent-strong) 70%, var(--foreground));
 }
 
 .home-concept-slideshow-eyebrow > span + span::before {
-  width: 1.25rem;
-  height: 1px;
-  background: currentColor;
-  content: "";
-  opacity: 0.5;
+  color: var(--muted-foreground);
+  content: "·";
 }
 
 .home-concept-slideshow-body {
@@ -612,6 +652,13 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 .home-concept-slideshow-content {
   grid-area: 1 / 1;
   min-width: 0;
+}
+
+/* The sizing copies and the visual label (repeated for screen readers inside
+   the slide) stay out of the selection, so copied text reads once, in order. */
+.home-concept-slideshow-size,
+.home-concept-slideshow-eyebrow {
+  user-select: none;
 }
 
 .home-concept-slideshow-size {
@@ -699,7 +746,6 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   border-radius: 999px;
   background: color-mix(in oklab, var(--home-frame-ink) 9%, transparent);
   color: var(--home-frame-ink);
-  letter-spacing: 0.1em;
 }
 
 .home-concept-slideshow-content[data-frame] .home-concept-slideshow-term {
@@ -717,10 +763,6 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   line-height: 1;
 }
 
-.home-concept-slideshow-rail > li[data-frame] {
-  background: color-mix(in oklab, var(--home-frame-ink) 24%, transparent);
-}
-
 .home-concept-slideshow-source a {
   text-decoration: underline;
   text-underline-offset: .2em;
@@ -729,10 +771,6 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 .home-concept-slideshow-source a:focus-visible {
   outline: 2px solid var(--foreground);
   outline-offset: 4px;
-}
-
-.home-concept-slideshow-rail > li[data-frame][data-state="read"] {
-  background: color-mix(in oklab, var(--home-frame-ink) 72%, transparent);
 }
 
 .home-concept-slideshow-rail > li[data-frame][data-state="current"],
@@ -761,12 +799,14 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
   border-color: var(--foreground);
 }
 
-/* Position in a finite sequence; the current mark fills while it waits to turn. */
+/* Position in a finite sequence, drawn as one quiet line rather than a row of
+   dashes; the current mark fills while it waits to turn. */
 .home-concept-slideshow-rail {
   display: flex;
-  gap: 0.25rem;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+  border-radius: 1px;
   list-style: none;
 }
 
@@ -775,12 +815,11 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
   flex: 1;
   height: 2px;
   overflow: hidden;
-  border-radius: 1px;
-  background: color-mix(in oklab, var(--foreground) 14%, transparent);
+  background: color-mix(in oklab, var(--foreground) 10%, transparent);
 }
 
 .home-concept-slideshow-rail > li[data-state="read"] {
-  background: color-mix(in oklab, var(--foreground) 42%, transparent);
+  background: color-mix(in oklab, var(--foreground) 32%, transparent);
 }
 
 .home-concept-slideshow-rail > li[data-state="current"] {
@@ -1541,9 +1580,9 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   font-style: italic;
   font-weight: 500;
   paint-order: stroke fill;
-  stroke: var(--background);
+  stroke: var(--architecture-label-halo, var(--background));
   stroke-linejoin: round;
-  stroke-width: 4px;
+  stroke-width: 3.5px;
 }
 
 /* Beyond c₁'s current awareness: present in RF₀, not yet coupled. */
@@ -1715,9 +1754,9 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   font-weight: 600;
   letter-spacing: -0.1px;
   paint-order: stroke fill;
-  stroke: var(--background);
+  stroke: var(--architecture-label-halo, var(--background));
   stroke-linejoin: round;
-  stroke-width: 5px;
+  stroke-width: 3px;
 }
 
 .home-architecture-label-leader {
@@ -2161,6 +2200,23 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 }
 
+/* The "On this page" rail appears at 1280px; until the layout is wide enough
+   to clear it, give the diagram's column room on the right. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .home-hero-opening {
+    padding-right: 2.5rem;
+  }
+}
+
+/* Short laptop screens: start the column nearer the header so the concept
+   aside clears the fold instead of being cut by it. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .home-hero-layout {
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+  }
+}
+
 @media (max-width: 1023px) {
   .home-hero-environment {
     min-height: auto;
@@ -2186,12 +2242,16 @@ html[data-contrast="high"] .home-hero-kicker {
 }
 
 @media (max-width: 639px) {
+  .home-architecture-touch-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .375rem; margin-bottom: 1rem; }
+  .home-architecture-touch-nav a { display: flex; align-items: center; justify-content: center; min-height: var(--touch-target); border: 1px solid var(--border); border-radius: .5rem; font-size: .8125rem; color: var(--foreground); }
+  .home-architecture-touch-nav a:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
   .home-hero-environment {
     min-height: auto;
   }
 
   .home-hero-layout {
-    padding-top: 7rem;
+    padding-top: 1.25rem;
     padding-bottom: 3rem;
   }
 
@@ -2288,10 +2348,6 @@ html[data-contrast="high"] .home-hero-kicker {
 }
 
 @media (max-width: 359px) {
-  .home-hero-layout {
-    padding-top: 9.5rem;
-  }
-
   .home-hero-title {
     font-size: 2.5rem;
   }
@@ -4954,6 +5010,16 @@ html[data-field="off"] .home-hero-stage::before {
     display: none !important;
   }
 }
-.home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: .75rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
-.home-author-line span { font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
+/* One quiet byline: what this is, then who wrote it, in the eyebrow's own face. */
+.home-hero-byline { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem 0; margin-bottom: .875rem; }
+.home-author-line { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; color: var(--foreground); font-family: var(--home-public-display-font); font-size: .875rem; font-weight: 500; line-height: 1.4; transition: color 160ms ease; }
+.home-author-line span { color: var(--muted-foreground); font-size: .75rem; font-weight: 400; }
+.home-author-line::before { align-self: center; width: 1px; height: .875rem; margin-inline: .75rem .25rem; background: color-mix(in oklab, var(--foreground) 22%, transparent); content: ""; }
+/* A thumb-sized target without the empty band a min-height would leave. */
+.home-author-line::after { position: absolute; inset: -.75rem -.5rem; content: ""; }
+.home-author-line:hover { color: var(--organism-accent-strong); }
 .home-author-line:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+@media (max-width: 639px) {
+  .home-hero-byline { flex-direction: column; align-items: flex-start; }
+  .home-author-line::before { display: none; }
+}

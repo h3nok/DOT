@@ -36,10 +36,12 @@ export function HeroProposition({
     <div className="home-hero-proposition">
       <div className="home-hero-opening">
         <div className="home-hero-margin">
-          <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
-          <div className="home-hero-kicker">
-            <span className="dot-mark" aria-hidden="true" />
-            <span>Digital Organism Theory</span>
+          <div className="home-hero-byline">
+            <div className="home-hero-kicker">
+              <span className="dot-mark" aria-hidden="true" />
+              <span>Digital Organism Theory</span>
+            </div>
+            <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
           </div>
 
           <div className="home-hero-masthead">

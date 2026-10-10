@@ -71,7 +71,7 @@ export default function HomePage() {
         aria-label="Site Header"
         className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
           scrolled
-            ? "bg-background/70 py-3.5 backdrop-blur-xl border-b border-border/30 shadow-sm"
+            ? "bg-background/75 py-3.5 backdrop-blur-xl border-b border-border/40"
             : "bg-transparent py-5"
         }`}
       >
@@ -85,7 +85,7 @@ export default function HomePage() {
             <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
           </Link>
 
-          <SiteNav className="order-last w-full sm:order-none sm:w-auto" />
+          <SiteNav />
 
           <div className="flex items-center gap-3">
             <AppearanceControl placement="inline" />
@@ -116,7 +116,7 @@ export default function HomePage() {
                 title="Hear by email when there is more DOT to read"
               >
                 <Mail className="h-3 w-3" aria-hidden="true" />
-                <span>Readers’ list</span>
+                <span className="sr-only sm:not-sr-only">Readers’ list</span>
               </Link>
             ) : null}
           </div>
@@ -213,7 +213,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* ── Colophon ─────────────────────────────────────────────────── */}
-      <footer className="py-12 dot-page-container">
+      <footer className="site-colophon py-12 dot-page-container">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
           <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
           <p className="text-xs leading-relaxed text-muted-foreground">
@@ -221,7 +221,7 @@ export default function HomePage() {
             No ads, no profiling, no data sales.
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
-          <nav aria-label="Quiet links" className="flex items-center gap-5 text-xs">
+          <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 text-xs">
             <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
             <Link
               to="/readers"

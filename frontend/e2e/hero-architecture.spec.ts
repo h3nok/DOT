@@ -204,8 +204,10 @@ for (const colorScheme of ["light", "dark"] as const) {
           noteLeft: masthead.getBoundingClientRect().left,
           noteTop: masthead.getBoundingClientRect().top,
           kickerCase: getComputedStyle(kicker).textTransform,
-          washBottom: masthead.getBoundingClientRect().bottom -
-            parseFloat(getComputedStyle(masthead, "::before").bottom),
+          readingUnobstructed: read.contains(document.elementFromPoint(
+            read.getBoundingClientRect().left + read.getBoundingClientRect().width / 2,
+            read.getBoundingClientRect().top + read.getBoundingClientRect().height / 2,
+          )),
           readingTop: read.getBoundingClientRect().top,
           readingBottom: read.getBoundingClientRect().bottom,
           readingHeight: read.getBoundingClientRect().height,
@@ -270,7 +272,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.readingBottom).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);
     expect(presentation.opening.readingContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.hasReadingSubtitle).toBe(false);
-    expect(presentation.opening.washBottom).toBeLessThanOrEqual(presentation.opening.readingTop);
+    expect(presentation.opening.readingUnobstructed, "The reading action must remain reachable")
+      .toBe(true);
     await expect(page.getByRole("region", { name: "Key concepts and questions" })).toBeVisible();
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);

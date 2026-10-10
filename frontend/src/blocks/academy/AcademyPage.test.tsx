@@ -3,13 +3,14 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import AcademyPage from "./AcademyPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 
 describe("AcademyPage", () => {
   const renderPage = (expanded = false) => {
     const result = render(
       <MemoryRouter>
         <AcademyPage />
-      </MemoryRouter>,
+      </MemoryRouter>, { wrapper: PublicPageTestProvider },
     );
     if (expanded) fireEvent.click(screen.getByText("About the Academy: principles, programs, and editorial standards"));
     return result;
