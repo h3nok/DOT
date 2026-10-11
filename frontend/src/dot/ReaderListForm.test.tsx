@@ -49,13 +49,15 @@ describe("ReaderListForm", () => {
     fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "wrong@example.com" } });
     fireEvent.click(screen.getByRole("button", { name: "Send me a code" }));
     const code = await screen.findByLabelText("Confirmation code");
-    expect(code).toHaveFocus();
+    // Focus moves in an effect after the field appears; wait for it rather
+    // than racing the commit on a loaded machine.
+    await waitFor(() => expect(code).toHaveFocus());
     fireEvent.change(code, { target: { value: "000000" } });
     fireEvent.click(screen.getByRole("button", { name: "Confirm" }));
     await screen.findByRole("alert");
     fireEvent.click(screen.getByRole("button", { name: "Change address or request a new code" }));
     const address = screen.getByLabelText("Email address");
-    expect(address).toHaveFocus();
+    await waitFor(() => expect(address).toHaveFocus());
     expect(screen.queryByRole("alert")).toBeNull();
     fireEvent.change(address, { target: { value: "correct@example.com" } });
     fireEvent.click(screen.getByRole("button", { name: "Send me a code" }));
