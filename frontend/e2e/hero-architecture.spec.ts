@@ -267,7 +267,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.headingWidth).toBeLessThanOrEqual(600);
     expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(600);
     expect(presentation.opening.questionBeforeDiagram).toBe(true);
-    expect(presentation.opening.readingHeight).toBeGreaterThanOrEqual(72);
+    // A compact, thumb-sized action: well above the 44px target, not a band.
+    expect(presentation.opening.readingHeight).toBeGreaterThanOrEqual(48);
     expect(presentation.opening.readingRadius).toBeLessThan(presentation.opening.readingHeight / 2);
     expect(presentation.opening.readingBottom).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);
     expect(presentation.opening.readingContrast).toBeGreaterThanOrEqual(4.5);
