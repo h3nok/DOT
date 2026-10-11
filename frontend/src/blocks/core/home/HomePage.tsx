@@ -15,6 +15,7 @@ import { useReaderList } from "../../../dot/useReaderList";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
 import { DotWordmark } from "../../../shared/DotWordmark";
+import { DoWordmark } from "../../../shared/DoWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { author } from "../../../content/author";
@@ -78,11 +79,12 @@ export default function HomePage() {
         <div className="home-header-layout dot-page-container dot-page-wide flex flex-wrap items-center justify-between gap-y-1">
           <Link
             to="/"
+            aria-label="DO — Home"
             // -my-2.5 keeps the header its original height while the link itself
             // reaches a thumb-sized target.
-            className="-my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
+            className="home-wordmark-link -my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
           >
-            <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
+            <DoWordmark emerge={!reducedMotion} />
           </Link>
 
           <SiteNav />
