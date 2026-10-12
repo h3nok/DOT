@@ -30,6 +30,7 @@ const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
 const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
+const BOOK_LANDING = JSON.parse(readFileSync(path.join(CONTENT_DIR, "publications", "bookLanding.json"), "utf8"));
 const ACADEMY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "academy", "landing.json"), "utf8"));
 const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
@@ -62,8 +63,7 @@ const RELEASE_MANIFEST = path.join(
   "manifest.json",
 );
 
-const BOOK_DESCRIPTION =
-  "Examine experience, inherited conditioning, meaningful choice, and development toward Love. Book One also develops DOT’s proposed wider architecture of consciousness and the physical universe, with its evidence boundaries in view.";
+const BOOK_DESCRIPTION = BOOK_LANDING.description;
 
 const STATIC_ROUTES = [
   {
@@ -688,7 +688,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         ogType: "book",
         structuredData: graph(bookNode(manifest), breadcrumb([home, book])),
         prerender: page(
-          `<h1>${escapeHtml(manifest.project.title)}</h1><p>${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><h2>Contents</h2>${contentsList(manifest)}`,
+          `<h1>${escapeHtml(BOOK_LANDING.heading)}</h1><p>${escapeHtml(manifest.project.title)} · ${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><aside><h2>${escapeHtml(BOOK_LANDING.positionLabel)}</h2><p>${escapeHtml(BOOK_LANDING.position)}</p></aside><h2>Contents</h2>${contentsList(manifest)}`,
         ),
       };
     }
