@@ -65,6 +65,18 @@ describe("public route metadata", () => {
     expect(AUTHOR_PROFILE).toBe(siteConfig.social.linkedin);
   });
 
+  it("names the home breadcrumb DO on About and the other public pages", () => {
+    for (const route of routes) {
+      const breadcrumb = nodeOfType(route, "BreadcrumbList");
+      const trail = breadcrumb?.itemListElement as { name: string; item: string }[] | undefined;
+      const home = trail?.find((entry) => entry.item === `${SITE_URL}/`);
+      if (home) expect(home.name, route.route).toBe("DO");
+    }
+    const about = routes.find((route) => route.route === "/about")!;
+    const trail = nodeOfType(about, "BreadcrumbList")?.itemListElement as { name: string }[];
+    expect(trail[0].name).toBe("DO");
+  });
+
   it("gives every concept its own title and description", () => {
     const conceptRoutes = routes.filter((route) => route.route.startsWith("/doctrine/"));
     expect(conceptRoutes).toHaveLength(doctrineNodes.length);

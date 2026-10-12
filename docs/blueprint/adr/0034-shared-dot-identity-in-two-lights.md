@@ -72,6 +72,17 @@ and a disabled organism render the settled mark. Other DOT publication and
 navigation labels retain their existing names. Serves L1, L2, L7, and L10;
 violates no manifesto law.
 
+## Shared site signature — 2026-10-12
+
+The founder requested the same **DO** signature on About and the other pages.
+Use DoWordmark for the shared page header, reader and studio chrome, and
+footers. Compact controls and footers use a smaller, matching lockup; footers
+stay still. Home links and breadcrumb labels name DO consistently. The
+finite emergence and deliberate hover/focus response obey system reduced
+motion, Appearance stillness, and disabled organism settings on every route.
+DOT remains the acronym in theory and publication content. This extends the
+home-only scope above. Serves L1, L2, L7, and L10; violates no manifesto law.
+
 ## Enforcement
 
 - Identity tests require AAA contrast for body text and AA for supporting

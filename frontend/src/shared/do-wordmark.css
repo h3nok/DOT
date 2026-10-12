@@ -10,6 +10,10 @@
   line-height: 1;
 }
 
+.do-wordmark--compact {
+  font-size: 1.25rem;
+}
+
 .do-wordmark__o {
   display: block;
   width: 1.075em;
@@ -29,30 +33,30 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]) .do-wordmark[data-emergence="play"] .nucleus-mark-arcs path {
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-arcs path {
     stroke-dasharray: 110;
     animation: do-contour-emerge 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  html:not([data-motion="still"]) .do-wordmark[data-emergence="play"] .nucleus-mark-arcs path:last-child {
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-arcs path:last-child {
     animation-delay: 100ms;
   }
 
-  html:not([data-motion="still"]) .do-wordmark[data-emergence="play"] .nucleus-mark-core,
-  html:not([data-motion="still"]) .do-wordmark[data-emergence="play"] svg > circle:last-child {
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-core,
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] svg > circle:last-child {
     animation: do-dot-emerge 1100ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
   }
 
-  html:not([data-motion="still"]) .do-wordmark[data-emergence="play"] .do-wordmark__o {
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .do-wordmark__o {
     transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  html:not([data-motion="still"]) .home-wordmark-link:focus-visible .do-wordmark[data-emergence="play"] .do-wordmark__o {
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark-link:focus-visible .do-wordmark[data-emergence="play"] .do-wordmark__o {
     transform: rotate(12deg) scale(1.05);
   }
 
   @media (hover: hover) {
-    html:not([data-motion="still"]) .home-wordmark-link:hover .do-wordmark[data-emergence="play"] .do-wordmark__o {
+    html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark-link:hover .do-wordmark[data-emergence="play"] .do-wordmark__o {
       transform: rotate(12deg) scale(1.05);
     }
   }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { authorByline, authorProfiles } from "../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
-import { DotWordmark } from "./DotWordmark";
+import { DoWordmark } from "./DoWordmark";
 
 const LINK =
   "text-muted-foreground/60 underline-offset-4 transition-colors hover:text-foreground hover:underline";
@@ -25,7 +25,7 @@ export function SiteColophon({
   return (
     <footer className="site-colophon dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-        <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
+        <DoWordmark compact />
         <p className="text-xs leading-relaxed text-muted-foreground/50">
           {variant === "personal" ? (
             <>{authorByline} · Independent builder.</>

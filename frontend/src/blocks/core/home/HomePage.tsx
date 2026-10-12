@@ -14,7 +14,6 @@ import { useAuth } from "../../../dot/useAuth";
 import { useReaderList } from "../../../dot/useReaderList";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
-import { DotWordmark } from "../../../shared/DotWordmark";
 import { DoWordmark } from "../../../shared/DoWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
@@ -82,7 +81,7 @@ export default function HomePage() {
             aria-label="DO — Home"
             // -my-2.5 keeps the header its original height while the link itself
             // reaches a thumb-sized target.
-            className="home-wordmark-link -my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
+            className="do-wordmark-link -my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
           >
             <DoWordmark emerge={!reducedMotion} />
           </Link>
@@ -217,7 +216,7 @@ export default function HomePage() {
       {/* ── Colophon ─────────────────────────────────────────────────── */}
       <footer className="site-colophon py-12 dot-page-container">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-          <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
+          <DoWordmark compact />
           <p className="text-xs leading-relaxed text-muted-foreground">
             Written by Henok Ghebrechristos · offered as a construction, not a revelation.
             No ads, no profiling, no data sales.

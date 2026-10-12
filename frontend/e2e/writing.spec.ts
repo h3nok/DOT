@@ -61,7 +61,7 @@ test("old essay archive links resolve to the common blog", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-organism-reading", "true");
   const fieldOpacity = await page.locator(".organism-membrane").evaluate((node) => Number(getComputedStyle(node).opacity));
   expect(fieldOpacity).toBeLessThanOrEqual(0.3);
-  await page.getByRole("link", { name: "DOT", exact: true }).first().click();
+  await page.getByRole("link", { name: "DO — Home", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-organism-reading", "false");
 });
 

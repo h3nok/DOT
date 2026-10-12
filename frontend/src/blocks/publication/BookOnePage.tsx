@@ -41,6 +41,7 @@ import {
 } from "../../content/publications/dotBookOne";
 import { bookConceptsForSection } from "../../content/publications/dotBookConcepts";
 import { AppearanceControl } from "../../organism";
+import { DoWordmark } from "../../shared/DoWordmark";
 import BookCitation from "./BookCitation";
 import { ReaderListForm } from "../../dot/ReaderListForm";
 import BookLanding from "./BookLanding";
@@ -109,8 +110,8 @@ function LoadingState() {
       <header className="appearance-ui-chrome book-chrome h-16 border-b border-[var(--book-hairline)]">
         <div className="mx-auto flex h-full max-w-7xl items-center px-5 sm:px-8">
           <span className="book-dot-link inline-flex items-center gap-2 text-xs font-medium">
-            <span className="book-dot-link-mark" aria-hidden="true" />
-            DOT · Book One
+            <DoWordmark compact />
+            <span>· Book One</span>
           </span>
         </div>
       </header>
@@ -784,13 +785,14 @@ export default function BookOnePage() {
         </header>
       ) : (
         // The cover is the whole page: its controls float instead of sitting in a bar.
-        <div className="book-cover-controls book-focus-hidden fixed right-6 top-6 z-30 flex h-9 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
+        <div className="book-cover-controls book-focus-hidden fixed right-6 top-6 z-30 flex min-h-11 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="DO — Home"
+            className="do-wordmark-link inline-flex min-h-11 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>DOT</span>
+            <DoWordmark compact emerge />
           </Link>
           <AppearanceControl placement="inline" />
           {isOwner && (

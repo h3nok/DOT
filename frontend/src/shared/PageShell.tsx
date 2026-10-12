@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { DotWordmark } from "./DotWordmark";
+import { DoWordmark } from "./DoWordmark";
 import { SiteNav } from "./SiteNav";
 import { AppearanceControl } from "../organism/AppearanceControl";
 
@@ -14,7 +14,7 @@ interface PageHeaderProps {
 
 export function PageHeader({
   backTo = "/",
-  backLabel = "DOT",
+  backLabel = "DO",
   right,
   controls = <AppearanceControl placement="inline" />,
 }: PageHeaderProps) {
@@ -23,11 +23,12 @@ export function PageHeader({
       <div className="site-page-header-inner dot-page-container flex min-h-14 flex-wrap items-center justify-between gap-x-4">
         <Link
           to={backTo}
-          className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          aria-label={backTo === "/" && backLabel === "DO" ? "DO — Home" : undefined}
+          className="do-wordmark-link inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          {backLabel === "DOT" ? (
-            <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
+          {backLabel === "DO" ? (
+            <DoWordmark emerge />
           ) : (
             <span>{backLabel}</span>
           )}

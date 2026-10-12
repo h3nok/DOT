@@ -4,13 +4,15 @@ import "./do-wordmark.css";
 interface DoWordmarkProps {
   /** One brief emergence, followed by stillness. Never starts a breathing loop. */
   emerge?: boolean;
+  /** Smaller signature for footers and compact reading controls. */
+  compact?: boolean;
 }
 
-/** The home signature: the shared nucleus supplies the O and its central dot. */
-export function DoWordmark({ emerge = false }: DoWordmarkProps) {
+/** The site signature: the shared nucleus supplies the O and its central dot. */
+export function DoWordmark({ emerge = false, compact = false }: DoWordmarkProps) {
   return (
     <span
-      className="do-wordmark"
+      className={`do-wordmark${compact ? " do-wordmark--compact" : ""}`}
       role="img"
       aria-label="DO"
       data-emergence={emerge ? "play" : "still"}
