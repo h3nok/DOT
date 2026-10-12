@@ -49,8 +49,7 @@ export function HeroProposition({
               <span>{HOME.title}</span>
             </h1>
             <p className="home-hero-subtitle">
-              <span>{HOME.subtitle}{" "}<strong>{HOME.interpretation}</strong></span>{" "}
-              <span>{HOME.criticalLine}</span>
+              {HOME.criticalLine}
             </p>
           </div>
 

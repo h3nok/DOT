@@ -80,13 +80,11 @@ describe("HeroProposition", () => {
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
     expect(document.querySelector(".home-hero-opening-copy")).toBeNull();
-    // Emphasize developing coherence while keeping the challenge secondary.
+    // One plain-language invitation before the model introduces its vocabulary.
     expect(document.querySelector(".home-hero-subtitle")).toHaveTextContent(
-      "Feelings are data. Tune your interpretation toward coherence. Challenge models that exclude you or ask you to be someone else.",
+      "Challenge any model that leaves your experience out.",
     );
-    expect(document.querySelector(".home-hero-subtitle strong")).toHaveTextContent(
-      "Tune your interpretation toward coherence.",
-    );
+    expect(document.querySelector(".home-hero-subtitle strong")).toBeNull();
     // The opening is an invitation to examine beliefs, not an attributed quotation.
     expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
     expect(document.querySelector(".home-hero-masthead blockquote")).toBeNull();

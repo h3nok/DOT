@@ -45,7 +45,7 @@ test("old essay archive links resolve to the common blog", async ({ page }) => {
   await page.route("**/essays/index.json", (route) => route.fulfill({ json: { schema: "dot.essays.v1", essays: [] } }));
   await page.goto("/essays");
   await expect(page).toHaveURL(/\/blog$/);
-  await expect(page.getByRole("heading", { name: /On building.*On being human/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /On struggle.*On being human/ })).toBeVisible();
   await expect(page.getByText("The archive starts here.")).toBeVisible();
   await expect(page.getByRole("list", { name: "Letters on LinkedIn" }).getByRole("link")).toHaveAttribute("href", /^https:\/\/www\.linkedin\.com\/pulse\//);
   await expect(page.getByRole("navigation", { name: "Blog pages" })).toHaveCount(0);
