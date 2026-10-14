@@ -1,6 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { ArrowDown, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
@@ -40,7 +39,6 @@ export function HeroProposition({
               <span className="dot-mark" aria-hidden="true" />
               <span>Digital Organism Theory</span>
             </div>
-            <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
           </div>
 
           <div className="home-hero-masthead">
@@ -48,8 +46,7 @@ export function HeroProposition({
               <span>{HOME.title}</span>
             </h1>
             <p className="home-hero-subtitle">
-              <span>{HOME.criticalLine}</span>{" "}
-              <span><strong>{HOME.emphasisLine}</strong></span>
+              {HOME.criticalLine}
             </p>
           </div>
 
