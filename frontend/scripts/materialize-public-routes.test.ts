@@ -360,6 +360,9 @@ describe("page text for readers without JavaScript", () => {
     }
     expect(rootDocument(shell, manifest)).toContain(`<p>${description}</p>`);
     expect(rootDocument(shell, manifest)).toContain("Love is the condition in which Fear no longer governs you.");
+    expect(rootDocument(shell, manifest)).toContain("<h2>A society can be productive and still be lost.</h2>");
+    expect(rootDocument(shell, manifest)).toContain('href="/book/digital-organism-theory/the-painting#the-culture-inside-you"');
+    expect(rootDocument(shell, manifest)).not.toContain("What happens when you feel challenged?");
     expect(rootDocument(shell, manifest)).toContain("remain hypotheses, open to challenge and revision");
     expect(rootDocument(shell, manifest)).toContain("there is no timetable for it");
     expect(rootDocument(shell, manifest)).not.toContain("Things built. Ideas explored.");

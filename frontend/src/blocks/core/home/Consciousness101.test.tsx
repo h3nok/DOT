@@ -4,17 +4,18 @@ import { describe, expect, it } from "vitest";
 import { Consciousness101 } from "./Consciousness101";
 
 describe("Consciousness101", () => {
-  it("presents Love and relationships as purpose within DOT, not another architecture layer", () => {
+  it("connects the cultural critique to DOT’s direction and its book source", () => {
     render(<MemoryRouter><Consciousness101 /></MemoryRouter>);
-    const purpose = screen.getByRole("region", { name: "What happens when you feel challenged?" });
-    expect(within(purpose).getByText("Love and relationships")).toBeVisible();
-    expect(within(purpose).getByText("In DOT, Love describes a way of being.")).toBeVisible();
-    expect(within(purpose).getByRole("list", { name: "Questions for reflection" }).children).toHaveLength(3);
-    expect(within(purpose).getByText(/boundaries, accountability, and repair/)).toBeVisible();
+    const purpose = screen.getByRole("region", { name: "A society can be productive and still be lost." });
+    expect(within(purpose).getByText(/rewarding short-term gain/)).toBeVisible();
+    expect(within(purpose).getByText("What is all this progress for?")).toBeVisible();
+    expect(within(purpose).getByText(/Its proposed direction is Love/)).toBeVisible();
+    expect(within(purpose).getByText("Love is the condition in which Fear no longer governs you.")).toBeVisible();
+    expect(within(purpose).queryByRole("list")).not.toBeInTheDocument();
     expect(purpose.querySelector("svg.home-concept-architecture")).toBeNull();
     expect(within(purpose).getByRole("link", { name: "Explore the proposed architecture" }))
       .toHaveAttribute("href", "#possibility-field");
-    expect(within(purpose).getByRole("link", { name: "Book One · Love Must Become Operational" }))
-      .toHaveAttribute("href", "/book/digital-organism-theory/the-painting#love-must-become-operational");
+    expect(within(purpose).getByRole("link", { name: "Book One · The Culture Inside You" }))
+      .toHaveAttribute("href", "/book/digital-organism-theory/the-painting#the-culture-inside-you");
   });
 });

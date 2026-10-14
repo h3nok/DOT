@@ -146,9 +146,12 @@ controls, and diagram connections remain intact. The organism explanation
 explicitly speaks within DOT.
 
 Consciousness 101 moves between the hero and the four architecture sections.
-An ordinary difficult-message example introduces three optional reflection
-questions; the existing definition of Love remains a state, with relationships,
-agency, boundaries, and accountability as its expression. The old section
+Following the founder's review, this introduction critiques inherited cultural
+assumptions, short-term incentives, and the substitution of output for meaning.
+It replaces the difficult-message exercise and behavioral checklist, which
+read as moral instruction. The critique includes the conditioning inside the
+questioner; Love remains DOT's proposed direction and a state of being.
+The section links to “The Culture Inside You” in the fixed book. The old section
 anchor remains valid. Its next link enters the architecture; Little c now
 leads directly to the final reading invitation. Page navigation follows this
 reading order. The causal architecture and emergence animation retain T × E,
@@ -156,7 +159,7 @@ Big C, Reality Frames, and Little c in their existing order.
 
 Content-sized theory sections replace the viewport-height minimum and large
 vertical gaps. Evidence boundaries and optional reasoning remain visible and
-reader-controlled. Runtime and generated public HTML share the reflection copy.
+reader-controlled. Runtime and generated public HTML share the cultural critique.
 This is introductory UI, not a revision of the fixed manuscript or a claimed
 scientific intervention. Serves L1, L7, L8, L10, and L12; violates no law.
 

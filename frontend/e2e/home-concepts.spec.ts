@@ -162,25 +162,24 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
 });
 
-test("everyday reflection precedes the architecture and leads to its explanation or book source", async ({ page }) => {
+test("the cultural critique precedes the architecture and leads to its explanation or book source", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const purpose = page.getByRole("region", { name: "What happens when you feel challenged?" });
+  const purpose = page.getByRole("region", { name: "A society can be productive and still be lost." });
   await expect(purpose).toBeVisible();
   const order = await page.locator("#consciousness-101, #possibility-field, #big-c, #reality-frame, #little-c, #choose-path")
     .evaluateAll(sections => sections.map(section => section.id));
   expect(order).toEqual(["consciousness-101", "possibility-field", "big-c", "reality-frame", "little-c", "choose-path"]);
-  await expect(purpose.getByRole("list", { name: "Questions for reflection" }).getByRole("listitem")).toHaveCount(3);
-  await expect(purpose.getByText("Love and relationships", { exact: true })).toBeVisible();
-  await expect(purpose.getByText("In DOT, Love describes a way of being.")).toBeVisible();
+  await expect(purpose.getByText("What is all this progress for?")).toBeVisible();
+  await expect(purpose.getByText(/Its proposed direction is Love/)).toBeVisible();
   await purpose.getByRole("link", { name: "Explore the proposed architecture" }).click();
   await expect(page).toHaveURL(/#possibility-field$/);
   await page.locator("#little-c").getByRole("link", { name: /Read and inquire/ }).click();
   await expect(page).toHaveURL(/#choose-path$/);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true })
-    .getByRole("link", { name: "Consciousness 101: Love and relationships", includeHidden: true }))
+    .getByRole("link", { name: "The culture inside us", includeHidden: true }))
     .toHaveAttribute("href", "#consciousness-101");
   await expectNoHorizontalOverflow(page);
-  await purpose.getByRole("link", { name: "Book One · Love Must Become Operational" }).click();
-  await expect(page.getByRole("heading", { name: "Love Must Become Operational", exact: true })).toBeVisible();
+  await purpose.getByRole("link", { name: "Book One · The Culture Inside You" }).click();
+  await expect(page.getByRole("heading", { name: "The Culture Inside You", exact: true })).toBeVisible();
 });

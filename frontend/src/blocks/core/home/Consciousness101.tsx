@@ -6,33 +6,28 @@ export function Consciousness101() {
   return (
     <section
       id="consciousness-101"
-      className="home-environment home-practice-environment"
+      className="home-environment home-culture-environment"
       aria-labelledby="consciousness-101-title"
     >
       <div className="dot-page-container dot-page-wide">
-        <div className="home-practice-layout">
-          <div className="home-practice-reflection">
-            <p className="dot-label">{HOME.practice.eyebrow}</p>
-            <h2 id="consciousness-101-title" className="dot-section-heading">{HOME.practice.title}</h2>
-            <p className="home-practice-situation">{HOME.practice.situation}</p>
-            <ol className="home-practice-questions" aria-label="Questions for reflection">
-              {HOME.practice.questions.map(item => (
-                <li key={item.label}><span>{item.label}</span><p>{item.question}</p></li>
-              ))}
-            </ol>
-            <p className="home-practice-invitation">{HOME.practice.invitation}</p>
+        <div className="home-culture-layout">
+          <div className="home-culture-critique">
+            <p className="dot-label">{HOME.culture.eyebrow}</p>
+            <h2 id="consciousness-101-title" className="dot-section-heading">{HOME.culture.title}</h2>
+            <p className="home-culture-body">{HOME.culture.critique}</p>
+            <p className="home-culture-body">{HOME.culture.questions}</p>
+            <p className="home-culture-challenge"><strong>{HOME.culture.challenge}</strong></p>
           </div>
-          <div className="home-practice-love">
-            <p className="dot-label">Love and relationships</p>
-            <p className="home-practice-intro">{HOME.practice.loveIntro}</p>
+          <div className="home-culture-love">
+            <p className="dot-label">{HOME.culture.loveLabel}</p>
+            <p className="home-culture-body">{HOME.culture.loveIntro}</p>
             <blockquote className="home-love-statement">
               <p>{HOME.loveDefinition}</p>
             </blockquote>
-            <p className="home-practice-body">{HOME.practice.relationships}</p>
-            <p className="home-practice-body">{HOME.practice.boundaries}</p>
-            <TextLink className="home-practice-source" to={HOME.practice.sourcePath}>{HOME.practice.sourceLabel}</TextLink>
+            <p className="home-culture-body">{HOME.culture.reflection}</p>
+            <TextLink className="home-culture-source" to={HOME.culture.sourcePath}>{HOME.culture.sourceLabel}</TextLink>
           </div>
-          <TextLink href="#possibility-field" className="home-practice-next" icon={<ArrowDown />}>Explore the proposed architecture</TextLink>
+          <TextLink href="#possibility-field" className="home-culture-next" icon={<ArrowDown />}>Explore the proposed architecture</TextLink>
         </div>
       </div>
     </section>

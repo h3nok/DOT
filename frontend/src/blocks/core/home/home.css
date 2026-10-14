@@ -3215,23 +3215,23 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
 
 
-/* A human entry into the model: one ordinary encounter, then its purpose. */
-.home-practice-environment {
+/* Cultural conditioning introduces the inquiry before its architecture. */
+.home-culture-environment {
   padding-block: clamp(2.5rem, 5vw, 4.5rem);
   background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 96%, var(--foreground));
 }
 
-.home-practice-layout {
+.home-culture-layout {
   display: grid;
   gap: 2rem;
   max-width: 72rem;
   margin-inline: auto;
 }
 
-.home-practice-reflection,
-.home-practice-love { min-width: 0; }
+.home-culture-critique,
+.home-culture-love { min-width: 0; }
 
-.home-practice-reflection h2 {
+.home-culture-critique h2 {
   max-width: 23ch;
   margin-top: 1rem;
   font-family: var(--home-public-reading-font);
@@ -3240,8 +3240,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
   text-wrap: balance;
 }
 
-.home-practice-situation,
-.home-practice-body {
+.home-culture-body {
   max-width: 48ch;
   margin-top: 1rem;
   font-family: var(--home-public-reading-font);
@@ -3249,53 +3248,27 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
   line-height: 1.65;
 }
 
-.home-practice-questions {
-  display: grid;
-  gap: 0;
+.home-culture-challenge {
   margin-top: 1.5rem;
-  list-style: none;
-}
-
-.home-practice-questions li {
-  display: grid;
-  grid-template-columns: 5rem minmax(0, 1fr);
-  gap: .75rem;
-  padding-block: .875rem;
-  border-top: 1px solid var(--border);
-}
-
-.home-practice-questions li > span {
-  align-self: center;
   color: var(--organism-accent-strong, var(--foreground));
-  font-size: .8125rem;
-}
-
-.home-practice-questions p {
   font-family: var(--home-public-reading-font);
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.5;
+  text-wrap: balance;
 }
 
-.home-practice-invitation,
-.home-practice-intro {
-  margin-top: 1rem;
-  color: var(--muted-foreground);
-  font-size: .9375rem;
-  line-height: 1.65;
-}
-
-.home-practice-love {
+.home-culture-love {
   border-top: 1px solid var(--border);
   padding-top: 2rem;
 }
 
-.home-practice-source { margin-top: 1.25rem; font-size: .8125rem; }
-.home-practice-next { justify-self: start; font-size: .875rem; }
+.home-culture-source { margin-top: 1.25rem; font-size: .8125rem; }
+.home-culture-next { justify-self: start; font-size: .875rem; }
 
 @media (min-width: 900px) {
-  .home-practice-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem clamp(3rem, 6vw, 6rem); }
-  .home-practice-love { padding: 0 0 0 clamp(2rem, 3vw, 3rem); border-top: 0; border-left: 1px solid var(--border); }
-  .home-practice-next { grid-column: 1 / -1; }
+  .home-culture-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem clamp(3rem, 6vw, 6rem); }
+  .home-culture-love { padding: 0 0 0 clamp(2rem, 3vw, 3rem); border-top: 0; border-left: 1px solid var(--border); }
+  .home-culture-next { grid-column: 1 / -1; }
 }
 
 .home-love-statement {
