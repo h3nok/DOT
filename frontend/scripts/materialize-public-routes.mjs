@@ -606,7 +606,7 @@ function authorContactLink() {
 }
 
 async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = {}) {
-  const home = { name: "DO", route: "/" };
+  const home = { name: "DOT", route: "/" };
   const book = { name: manifest.project.title, route: BOOK_ROUTE };
   const essaysPublished = essays.length > 0;
   const page = (body) => prerenderArticle(body, essaysPublished);

@@ -14,7 +14,7 @@ interface PageHeaderProps {
 
 export function PageHeader({
   backTo = "/",
-  backLabel = "DO",
+  backLabel = "DOT",
   right,
   controls = <AppearanceControl placement="inline" />,
 }: PageHeaderProps) {
@@ -23,11 +23,11 @@ export function PageHeader({
       <div className="site-page-header-inner dot-page-container flex min-h-14 flex-wrap items-center justify-between gap-x-4">
         <Link
           to={backTo}
-          aria-label={backTo === "/" && backLabel === "DO" ? "DO — Home" : undefined}
+          aria-label={backTo === "/" && backLabel === "DOT" ? "DOT — Home" : undefined}
           className="do-wordmark-link inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          {backLabel === "DO" ? (
+          {backTo !== "/" && <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />}
+          {backLabel === "DOT" ? (
             <DoWordmark emerge />
           ) : (
             <span>{backLabel}</span>

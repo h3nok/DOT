@@ -788,7 +788,7 @@ export default function BookOnePage() {
         <div className="book-cover-controls book-focus-hidden fixed right-6 top-6 z-30 flex min-h-11 items-center gap-1 rounded-full border border-[var(--book-hairline)] bg-[color-mix(in_oklch,var(--book-paper)_78%,transparent)] px-1.5 backdrop-blur-md print:hidden sm:right-8 sm:top-8">
           <Link
             to="/"
-            aria-label="DO — Home"
+            aria-label="DOT — Home"
             className="do-wordmark-link inline-flex min-h-11 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />

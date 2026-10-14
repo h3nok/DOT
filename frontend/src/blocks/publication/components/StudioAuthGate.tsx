@@ -31,7 +31,7 @@ export function StudioAuthGate({ children, ownerOnly = false, title = "Publicati
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
       <section className="w-full max-w-md border-block border-border/60 py-10 text-center">
-        <Link to="/" aria-label="DO — Home" className="do-wordmark-link inline-flex min-h-11 items-center">
+        <Link to="/" aria-label="DOT — Home" className="do-wordmark-link inline-flex min-h-11 items-center">
           <DoWordmark emerge />
         </Link>
         <p className="mt-8 font-mono dot-micro uppercase text-[color:var(--organism-accent-strong)]">

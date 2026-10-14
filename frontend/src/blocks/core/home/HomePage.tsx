@@ -68,7 +68,7 @@ export default function HomePage() {
       {/* ── Dynamic Scroll-Aware Header ───────────────────────────────────────── */}
       <header
         aria-label="Site Header"
-        className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-[background-color,border-color] duration-200 motion-reduce:transition-none ${
           scrolled
             ? "bg-background/75 py-3.5 backdrop-blur-xl border-b border-border/40"
             : "bg-transparent py-5"
@@ -77,7 +77,7 @@ export default function HomePage() {
         <div className="home-header-layout dot-page-container dot-page-wide flex flex-wrap items-center justify-between gap-y-1">
           <Link
             to="/"
-            aria-label="DO — Home"
+            aria-label="DOT — Home"
             // -my-2.5 keeps the header its original height while the link itself
             // reaches a thumb-sized target.
             className="do-wordmark-link -my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"

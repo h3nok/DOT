@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import "./site-nav.css";
 
 const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
+  ["/", "Home"],
   ["/about", "Work with me"],
   ["/blog", "Blog"],
   ["/book/digital-organism-theory", "Book One"],
@@ -25,7 +26,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
   }, []);
 
   const links = (destinations: ReadonlyArray<readonly [string, string]>) => destinations.map(([to, label]) => {
-    const current = pathname === to || pathname.startsWith(`${to}/`) ||
+    const current = pathname === to || (to !== "/" && pathname.startsWith(`${to}/`)) ||
       (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname)));
     return (
       <li key={to}>

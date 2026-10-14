@@ -1,12 +1,13 @@
 .do-wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 0.035em;
+  gap: 0.055em;
+  flex-shrink: 0;
   color: var(--foreground);
   font-family: var(--identity-display-font, var(--font-sans, sans-serif));
-  font-size: 1.75rem;
+  font-size: 1.625rem;
   font-weight: 600;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 1;
 }
 
@@ -16,9 +17,18 @@
 
 .do-wordmark__o {
   display: block;
-  width: 1.075em;
-  height: 1.075em;
+  width: 0.96em;
+  height: 0.96em;
   flex: 0 0 auto;
+}
+
+.do-wordmark-link {
+  border-radius: 0.5rem;
+}
+
+.do-wordmark-link:focus-visible {
+  outline: 2px solid var(--organism-accent-strong, currentColor);
+  outline-offset: 4px;
 }
 
 .do-wordmark .nucleus-mark-core,
