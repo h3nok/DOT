@@ -21,11 +21,14 @@ export function MovementShowcase({ movement }: { movement: NonNullable<Project["
           <p className="about-movement-role">{movement.role}</p>
         </div>
         <p className="about-movement-tagline">{movement.tagline}</p>
-        <p className="about-movement-description">{movement.description}</p>
         <div className="about-movement-actions">
           <TextLink href={movement.href}>Explore {movement.name}</TextLink>
           <span className="about-movement-status">{movement.status}</span>
         </div>
+        <details className="about-disclosure about-movement-description">
+          <summary>About the movement</summary>
+          <p>{movement.description}</p>
+        </details>
       </div>
       <p className="about-movement-connection"><span aria-hidden="true" />{movement.relationship}</p>
     </section>

@@ -31,7 +31,6 @@ const CONTENT_DIR = path.join("src", "content");
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
 const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
 const BOOK_LANDING = JSON.parse(readFileSync(path.join(CONTENT_DIR, "publications", "bookLanding.json"), "utf8"));
-const ACADEMY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "academy", "landing.json"), "utf8"));
 const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
@@ -68,8 +67,9 @@ const BOOK_DESCRIPTION = BOOK_LANDING.description;
 const STATIC_ROUTES = [
   {
     route: ACADEMY_ROUTE,
-    title: ACADEMY.title,
-    description: ACADEMY.description,
+    title: "Book One — Digital Organism Theory",
+    description: BOOK_DESCRIPTION,
+    canonicalRoute: BOOK_ROUTE,
   },
   {
     route: "/applied",
@@ -221,7 +221,6 @@ export const DOCTRINE_CONCEPTS = [
 const routePattern = /^\/[a-z0-9]+(?:\/[a-z0-9_-]+)*$/;
 
 const BOOK_ID = `${SITE_URL}${BOOK_ROUTE}#book`;
-const ACADEMY_ID = `${SITE_URL}${ACADEMY_ROUTE}#academy`;
 const CONCEPT_SET_ID = `${SITE_URL}/doctrine#concepts`;
 
 function escapeHtml(value) {
@@ -401,22 +400,6 @@ function conceptSetNode() {
   };
 }
 
-function academyNode() {
-  return {
-    "@type": "CollectionPage",
-    "@id": ACADEMY_ID,
-    name: "DOT Academy",
-    description: ACADEMY.description,
-    url: `${SITE_URL}${ACADEMY_ROUTE}`,
-    inLanguage: "en",
-    about: { "@type": "Thing", name: "Digital Organism Theory" },
-    hasPart: [
-      { "@id": CONCEPT_SET_ID, "@type": "DefinedTermSet" },
-      { "@id": `${SITE_URL}/applied#page`, "@type": "WebPage" },
-    ],
-  };
-}
-
 const graph = (...nodes) => ({ "@context": "https://schema.org", "@graph": nodes });
 
 /** What the site is, for a crawler that only ever sees the root document. */
@@ -432,11 +415,9 @@ function siteStructuredData(manifest) {
       author: personNode(),
       about: [{ "@type": "Thing", name: "AI and product architecture" }, { "@type": "Thing", name: "Digital Organism Theory" }],
       hasPart: [
-        { "@id": ACADEMY_ID, "@type": "CollectionPage" },
         { "@id": BOOK_ID, "@type": "Book" },
       ],
     },
-    academyNode(),
     bookNode(manifest),
   );
 }
@@ -569,11 +550,10 @@ function siteNav(essaysPublished) {
     [BOOK_ROUTE, "Book One"],
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
-    [ACADEMY_ROUTE, "DOT Academy"],
     [BLOG_ROUTE, "Blog"],
     [PUBLICATIONS_ROUTE, "Books"],
     ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
-    [ABOUT_ROUTE, "Work with me"],
+    [ABOUT_ROUTE, "About"],
     [CONTACT_ROUTE, "Contact"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
@@ -729,13 +709,8 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     if (route.route === ACADEMY_ROUTE) {
       return {
         ...route,
-        structuredData: graph(
-          academyNode(),
-          breadcrumb([home, { name: "DOT Academy", route: ACADEMY_ROUTE }]),
-        ),
-        prerender: page(
-          `<p>DOT Academy · In development</p><h1>${escapeHtml(ACADEMY.heading.join(" "))}</h1><p>${escapeHtml(ACADEMY.introduction)}</p><p>${link(ACADEMY.start.href, ACADEMY.start.label)}</p><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")}</p><aside><p>${escapeHtml(ACADEMY.hypothesis.label)}</p><h2>${escapeHtml(ACADEMY.hypothesis.heading)}</h2><p>${escapeHtml(ACADEMY.hypothesis.body)}</p><p>${link(ACADEMY.hypothesis.sourceHref, ACADEMY.hypothesis.sourceLabel)}</p></aside><h2>${escapeHtml(ACADEMY.publication.heading)}</h2><p>${escapeHtml(ACADEMY.publication.body)}</p><p>${link(BOOK_ROUTE, "Open the released edition")}</p>`,
-        ),
+        structuredData: graph(webPageNode(route), breadcrumb([home, book])),
+        prerender: page(`<h1>Book One</h1><p>${link(BOOK_ROUTE, "Read Book One")}</p>`),
       };
     }
     return {
@@ -789,11 +764,9 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<p>${escapeHtml(BUILDER.title)}</p>`,
           `<p>${escapeHtml(AUTHOR.role)}</p>`,
           `<p>${escapeHtml(BUILDER.headline)}</p>`,
-          `<p>${escapeHtml(BUILDER.summary)}</p>`,
           `<p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p>`,
-          `<p>${link("#about-resume", "Explore the background")}</p>`,
-          `<aside><p>Research depth. Product experience.</p><dl><dt>Applied AI research</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Founding &amp; product work</dt><dd>4Us · Sullix — Movement founder · Product co-founder</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
-          `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Ways to work together")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
+          `<p>${link("#about-resume", "View résumé")}</p>`,
+          `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Project work")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
           '<h2 id="about-products">Selected work</h2>',
           `<ul>${BUILDER_PROJECTS.map((project) => {
             const href = project.links.live || project.links.website || project.links.repo;
@@ -801,15 +774,15 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
             const showcase = project.showcase ? `<div><img src="${escapeHtml(project.showcase.brandMark)}" alt="Sullix mark" width="200" height="200"><img src="${escapeHtml(project.showcase.mark)}" alt="Faro mark" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p></div>` : "";
             const movement = project.movement;
             const heading = movement ? "h4" : "h3";
-            const body = `<${heading}>${escapeHtml(project.name)}</${heading}>${showcase}<p>${escapeHtml(project.status)}</p><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}`;
+            const body = `<${heading}>${escapeHtml(project.name)}</${heading}>${showcase}<p>${escapeHtml(project.status)}</p><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}<details><summary>Project details</summary><p>${escapeHtml(project.description)}</p><ul>${project.stack.map((technology) => `<li>${escapeHtml(technology)}</li>`).join("")}</ul></details>`;
             if (!movement) return `<li id="project-${escapeHtml(project.slug)}">${body}</li>`;
-            return `<li><section id="project-${escapeHtml(movement.slug)}"><p>${escapeHtml(movement.category)}</p><h3>${escapeHtml(movement.name)}</h3><p>${escapeHtml(movement.subtitle)}</p><p>${escapeHtml(movement.role)}</p><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy"><p>${escapeHtml(movement.tagline)}</p><p>${escapeHtml(movement.description)}</p><p>${escapeHtml(movement.status)}</p><p>${link(movement.href, `Explore ${movement.name}`)}</p><p>${escapeHtml(movement.relationship)}</p></section><article id="project-${escapeHtml(project.slug)}">${body}</article></li>`;
+            return `<li><section id="project-${escapeHtml(movement.slug)}"><p>${escapeHtml(movement.category)}</p><h3>${escapeHtml(movement.name)}</h3><p>${escapeHtml(movement.subtitle)}</p><p>${escapeHtml(movement.role)}</p><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy"><p>${escapeHtml(movement.tagline)}</p><details><summary>About the movement</summary><p>${escapeHtml(movement.description)}</p></details><p>${escapeHtml(movement.status)}</p><p>${link(movement.href, `Explore ${movement.name}`)}</p><p>${escapeHtml(movement.relationship)}</p></section><article id="project-${escapeHtml(project.slug)}">${body}</article></li>`;
           }).join("")}</ul>`,
           OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
-          '<h2 id="about-services">Ways to work together</h2>',
-          BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p><p>${escapeHtml(service.deliverable)}</p>`).join(""),
-          '<h2 id="about-resume">Career & résumé</h2>',
-          `<ol>${CAREER.experience.map((job) => `<li><p>${escapeHtml(job.period)}</p><h3>${escapeHtml(job.company)}</h3><p>${escapeHtml(job.role)}</p><p>${escapeHtml(job.summary)}</p></li>`).join("")}</ol>`,
+          '<h2 id="about-services">Project work</h2>',
+          BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p>`).join(""),
+          `<p>${escapeHtml(CAREER.background)}</p><h2 id="about-resume">Career & résumé</h2>`,
+          `<ol>${CAREER.experience.map((job) => `<li><p>${escapeHtml(job.period)}</p><h3>${escapeHtml(job.company)}</h3><p>${escapeHtml(job.role)}</p></li>`).join("")}</ol>`,
           AUTHOR.credentials.length > 0
             ? `<h3>Education</h3><ul>${AUTHOR.credentials
                 .map(
@@ -1004,19 +977,18 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
       [
         `<p>${escapeHtml(BLOG.title)}</p><h1>${BLOG.heading.map(escapeHtml).join("<br />")}</h1>`,
         `<p>${escapeHtml(BLOG.description)}</p><p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p>`,
-        `<section id="start-reading"><p>${escapeHtml(BLOG.startingPoint.label)}</p><h2>${escapeHtml(BLOG.startingPoint.title)}</h2><p>${escapeHtml(BLOG.startingPoint.description)}</p><blockquote><p>${escapeHtml(BLOG.startingPoint.quote)}</p><cite>${escapeHtml(BLOG.startingPoint.sourceLabel)}</cite></blockquote><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></section>`,
-        `<section aria-label="Building and inquiry">${BLOG.paths.map((entry) => `<p>${escapeHtml(entry.label)}</p><h2>${escapeHtml(entry.title)}</h2><p>${escapeHtml(entry.description)}</p><p>${link(entry.to, entry.linkLabel)}</p>`).join("")}</section>`,
-        `<section><p>A series · Applied DOT</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(BLOG.seriesDescription)}</p><p>These letters are published on LinkedIn.</p>`,
+        `<div id="start-reading"><section><p>Book One · Free to read</p><h2>${escapeHtml(manifest.project.title)}</h2><p>${link(BOOK_ROUTE, "Read Book One")}</p><details><summary>Start with a passage</summary><p>${escapeHtml(BLOG.startingPoint.label)}</p><p>${escapeHtml(BLOG.startingPoint.title)}</p><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></details></section>`,
+        `<section><p>A series · On LinkedIn</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${link(NEWSLETTER.url, "Explore the series on LinkedIn")}</p>`,
         NEWSLETTER.editions.length > 0
-          ? `<ul aria-label="Letters on LinkedIn">${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}<p>Read on LinkedIn</p></li>`).join("")}</ul>`
+          ? `<details><summary>Read a letter</summary><ul aria-label="Letters on LinkedIn">${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}</li>`).join("")}</ul></details>`
           : "",
-        `<p>${link(NEWSLETTER.url, "Explore the series on LinkedIn")}</p></section>`,
+        "</section></div>",
         "<h2>Latest writing</h2><p>Newest first</p>",
         blogPosts.length > 0
           ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
           : `<p>${escapeHtml(BLOG.emptyTitle)}</p><p>${escapeHtml(BLOG.emptyDescription)}</p>`,
-        `<h2>Read at your pace.</h2><p>${escapeHtml(BLOG.followDescription)}</p><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
-        `<h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${escapeHtml(BLOG.contactDescription)}</p><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
+        `<h2>Read at your pace.</h2><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
+        `<p>AI &amp; digital products</p><h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-products`, "Explore the work")}</p>`,
       ].join(""),
     ),
   };

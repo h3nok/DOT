@@ -21,7 +21,7 @@ test("phone navigation opens deliberately, dismisses, routes, and yields to desk
   await menu.click();
   const panel = page.getByRole("dialog", { name: "Site navigation" });
   await expect(panel).toBeVisible();
-  await expect(panel.getByRole("link")).toHaveCount(7);
+  await expect(panel.getByRole("link")).toHaveCount(6);
   await expect(panel.getByRole("link", { name: "Blog", exact: true })).toHaveAttribute("aria-current", "page");
   for (const link of await panel.getByRole("link").all()) await thumbControl(link);
   await page.keyboard.press("Escape");
@@ -43,7 +43,7 @@ test("phone navigation opens deliberately, dismisses, routes, and yields to desk
   await page.setViewportSize({ width: 640, height: 844 });
   await expect(menu).toBeVisible();
   await menu.click();
-  await expect(panel.getByRole("link", { name: "Work with me", exact: true })).toHaveAttribute("href", "/about");
+  await expect(panel.getByRole("link", { name: "About", exact: true })).toHaveAttribute("href", "/about");
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(panel).toHaveCount(0);
   await expect(menu).toBeHidden();

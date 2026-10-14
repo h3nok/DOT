@@ -40,7 +40,7 @@ describe("SiteColophon", () => {
     const elsewhere = within(screen.getByRole("navigation", { name: "Elsewhere" }));
     expect(elsewhere.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("rel", "noreferrer me");
     expect(elsewhere.queryByRole("link", { name: "YouTube" })).toBeNull();
-    expect(elsewhere.getByRole("link", { name: "The Millennial Manifesto" })).toBeInTheDocument();
+    expect(elsewhere.getByRole("link", { name: "The American Millennial Manifesto" })).toBeInTheDocument();
   });
 
   it("sends readers to the reader list, never the invitation queue (ADR-0025)", () => {

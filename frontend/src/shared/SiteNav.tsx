@@ -6,10 +6,9 @@ import "./site-nav.css";
 
 const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
   ["/", "Home"],
-  ["/about", "Work with me"],
+  ["/about", "About"],
   ["/blog", "Blog"],
   ["/book/digital-organism-theory", "Book One"],
-  ["/academy", "Academy"],
   ["/contact", "Contact"],
 ];
 

@@ -203,28 +203,11 @@ test.describe("hero", () => {
   });
 });
 
-test.describe("academy", () => {
-  test("keeps living inquiry and the fixed publication visibly separate", async ({
-    page,
-  }) => {
-    await page.goto("/academy");
-
-    await expect(
-      page.getByRole("heading", { name: "An Academy for life in the digital age." }),
-    ).toBeVisible();
-    await expect(page.getByText(/DOT Academy · In development/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Begin with Book One." })).toBeVisible();
-
-    const disclosure = page.locator("details").filter({ hasText: "About the Academy: principles, programs, and editorial standards" });
-    await expect(disclosure).not.toHaveAttribute("open");
-    await expect(page.getByText(/No experiment is recorded yet/)).not.toBeVisible();
-    await disclosure.locator("summary").click();
-    const programs = page.locator("#academy-programs");
-    await expect(programs.locator(".academy-program-card")).toHaveCount(3);
-    await expect(programs.locator(".academy-program-card__area-item")).toHaveCount(8);
-    await expect(programs.getByText("Experiments", { exact: true })).toBeVisible();
-    await expect(programs.getByText(/No experiment is recorded yet/)).toBeVisible();
-  });
+test("the hidden Academy address opens Book One", async ({ page }) => {
+  await page.goto("/academy");
+  await expect(page).toHaveURL("/book/digital-organism-theory");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.locator('a[href="/academy"]')).toHaveCount(0);
 });
 
 test.describe("book reader", () => {

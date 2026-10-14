@@ -108,12 +108,12 @@ describe("homepage inquiry narrative", () => {
     }
   });
 
-  it("closes with reading while keeping the living Academy distinct", () => {
+  it("closes with the released book while Academy is hidden", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
     expect(home).not.toContain("HOME.invitationTitle");
     expect(home).not.toContain("An invitation to inquire");
-    expect(home).toContain("Explore DOT Academy");
+    expect(home).not.toContain('to: "/academy"');
     expect(home).toContain("Read Book One");
     expect(home).toContain("Complete and free · Fixed edition");
     expect(home).not.toContain("Request an invitation to the circle");

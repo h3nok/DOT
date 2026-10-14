@@ -24,7 +24,6 @@ import { parseEssay } from "./essays.mjs";
 import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
-import academyLanding from "../src/content/academy/landing.json";
 
 interface PublicRoute {
   route: string;
@@ -95,21 +94,14 @@ describe("public route metadata", () => {
     }
   });
 
-  it("describes the Academy as a collection rather than as the book", () => {
-    const route = routes.find((candidate) => candidate.route === "/academy");
-    expect(route).toBeDefined();
-    const academy = nodeOfType(route!, "CollectionPage");
-    expect(academy?.name).toBe("DOT Academy");
-    expect(academy?.description).toBe(academyLanding.description);
-    const html = new DOMParser().parseFromString(route!.prerender!, "text/html");
-    expect(html.querySelector("h1")?.textContent).toBe(academyLanding.heading.join(" "));
-    expect(html.querySelector("aside")?.textContent).toContain(academyLanding.hypothesis.label);
-    expect(html.querySelector("aside")?.textContent).toContain(academyLanding.hypothesis.body);
-    expect(html.querySelector(`a[href="${academyLanding.start.href}"]`)?.textContent)
-      .toBe(academyLanding.start.label);
-    expect(route?.structuredData["@graph"].some((node) => node["@type"] === "Book")).toBe(
-      false,
-    );
+  it("keeps the hidden Academy address as a book alias without advertising it", () => {
+    const route = routes.find((candidate) => candidate.route === "/academy")!;
+    expect(route.canonicalRoute).toBe("/book/digital-organism-theory");
+    expect(route.prerender).toContain('href="/book/digital-organism-theory">Read Book One</a>');
+    expect(route.prerender).not.toContain("DOT Academy");
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/academy");
+    expect(rootDocument(shell, manifest)).not.toContain('href="/academy"');
+    expect(rootDocument(shell, manifest)).not.toContain('"name":"DOT Academy"');
   });
 
   it("gives the Book One landing its own share image", () => {
@@ -446,7 +438,7 @@ describe("essays", () => {
     expect(blog.prerender).toContain("Start here · From Book One");
     expect(blog.prerender).toContain('href="/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings">Read the passage</a>');
     expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
-    expect(blog.prerender).toContain("Read on LinkedIn");
+    expect(blog.prerender).toContain("A series · On LinkedIn");
     expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
     const home = rootDocument(shell, manifest);
     expect(home).toContain('href="/blog"');

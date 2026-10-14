@@ -31,8 +31,12 @@ for (const scheme of ["light", "dark"] as const) {
 
     // Unmounting the diagram releases its anchor. A cached return registers
     // it again without leaving a loading mark or a stale viewport origin.
-    await page.getByRole("link", { name: "Explore DOT Academy", exact: true }).click();
-    await expect(page).toHaveURL(/\/academy$/);
+    const menu = page.getByRole("button", { name: "Menu", exact: true });
+    if (await menu.isVisible()) await menu.click();
+    await page.getByRole("navigation", { name: "Primary", exact: true })
+      .getByRole("link", { name: "About", exact: true }).click();
+    await expect(page).toHaveURL(/\/about$/);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.locator(".splash-emergence")).toHaveCount(0);
     await expect.poll(fieldOrigin).toEqual([viewport.width / 2, viewport.height / 2]);
     await page.goBack();

@@ -47,6 +47,7 @@ test("old essay archive links resolve to the common blog", async ({ page }) => {
   await expect(page).toHaveURL(/\/blog$/);
   await expect(page.getByRole("heading", { name: /On struggle.*On being human/ })).toBeVisible();
   await expect(page.getByText("The archive starts here.")).toBeVisible();
+  await page.getByText("Read a letter", { exact: true }).click();
   await expect(page.getByRole("list", { name: "Letters on LinkedIn" }).getByRole("link")).toHaveAttribute("href", /^https:\/\/www\.linkedin\.com\/pulse\//);
   await expect(page.getByRole("navigation", { name: "Blog pages" })).toHaveCount(0);
   await expectNoHorizontalOverflow(page);

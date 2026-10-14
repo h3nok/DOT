@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 import {
@@ -21,7 +22,6 @@ const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
 const DoctrinePage = React.lazy(
   () => import("./blocks/knowledge/DoctrinePage"),
 );
-const AcademyPage = React.lazy(() => import("./blocks/academy/AcademyPage"));
 const PublicationStudioPage = React.lazy(
   () => import("./blocks/publication/PublicationStudioPage"),
 );
@@ -188,7 +188,7 @@ const App: React.FC = () => {
             <RouteLoadingBoundary>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/academy" element={<AcademyPage />} />
+                <Route path="/academy" element={<Navigate to="/book/digital-organism-theory" replace />} />
                 <Route path="/doctrine" element={<DoctrinePage />} />
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/applied" element={<AppliedPage />} />

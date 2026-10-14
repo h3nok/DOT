@@ -24,7 +24,6 @@
 .site-nav-panel a[aria-current="page"]::before { background: color-mix(in oklab, var(--organism-accent-strong, currentColor) 7%, transparent); }
 .site-nav-panel a[aria-current="page"]::after { width: .375rem; height: .375rem; border-radius: 50%; background: var(--organism-accent-strong, currentColor); content: ""; }
 @media (forced-colors: active) {
-  .site-nav-links a[aria-current="page"] { outline: 1px solid currentColor; outline-offset: -3px; }
   .site-nav-links a[aria-current="page"]::after { background: currentColor; forced-color-adjust: none; }
 }
 @media (prefers-reduced-motion: no-preference) {

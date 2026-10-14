@@ -1,9 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import {
-  ArrowRight,
   BookOpen,
   Mail,
-  Network,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -168,7 +166,7 @@ export default function HomePage() {
         className="home-reading-links dot-page-container"
       >
         <FocusNav
-          label="Book and Academy"
+          label="Further reading"
           className="mx-auto max-w-sm"
           primary={{
             to: "/book/digital-organism-theory",
@@ -176,12 +174,6 @@ export default function HomePage() {
             description: "Complete and free · Fixed edition",
             icon: <BookOpen />,
           }}
-          secondary={[{
-            to: "/academy",
-            label: "Explore DOT Academy",
-            icon: <Network />,
-            endIcon: <ArrowRight />,
-          }]}
         />
         <p className="mx-auto mt-6 max-w-xl text-center text-xs text-muted-foreground">
           Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,

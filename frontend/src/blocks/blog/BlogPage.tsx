@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowRight, ArrowUpRight, Asterisk, PenLine } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, PenLine } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { author } from "../../content/author";
@@ -11,8 +11,10 @@ import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { PageIntro, Surface, TextLink } from "../../shared/design-system/Editorial";
 import { AppearanceControl } from "../../organism/AppearanceControl";
+import { DOT_BOOK_ONE_ROUTE } from "../../content/publications/dotBookOne";
+import BookOneCover from "../publication/BookOneCover";
 import { BlogReadingLinks } from "./BlogReadingLinks";
-import { BlogCoverArtwork, BlogPathArtwork, BlogPostArtwork, BlogSeriesArtwork } from "./BlogArtwork";
+import { BlogPostArtwork, BlogSeriesArtwork } from "./BlogArtwork";
 import "./blog.css";
 
 const PAGE_SIZE = 10;
@@ -108,59 +110,46 @@ export default function BlogPage() {
           <p className="blog-byline">By <Link to="/about" className={LINK}>{author.name}</Link></p>
         </div>
         <div className="blog-hero">
-          <PageIntro className="blog-hero-copy" titleClassName="blog-title" title={blog.heading.map((line) => <span key={line}>{line}</span>)}>
+          <PageIntro className="blog-hero-copy" titleClassName="blog-title" title={blog.heading.map((line) => <span key={line}>{line}</span>)} />
+          <div className="blog-hero-note">
             <p className="blog-description">{blog.description}</p>
-            <a href="#start-reading" className="blog-jump">Start reading <ArrowDown aria-hidden="true" /></a>
-          </PageIntro>
-          <div className="blog-hero-art">
-            <BlogCoverArtwork />
-            <div className="blog-art-caption" aria-hidden="true"><span>Systems &amp; self</span><Asterisk /><span>A space for both</span></div>
+            <a href="#latest-writing" className="blog-jump">Latest writing <ArrowDown aria-hidden="true" /></a>
           </div>
         </div>
       </header>
 
-      <Surface as="section" tone="forest" id="start-reading" aria-labelledby="blog-start-title" className="blog-starting-point">
-        <div>
-          <p className="dot-label">{blog.startingPoint.label}</p>
-          <h2 id="blog-start-title" className="dot-section-heading">{blog.startingPoint.title}</h2>
-          <p className="blog-start-description">{blog.startingPoint.description}</p>
-          <TextLink to={blog.startingPoint.to}>{blog.startingPoint.linkLabel}</TextLink>
-        </div>
-        <figure>
-          <blockquote><p>“{blog.startingPoint.quote}”</p></blockquote>
-          <figcaption>{blog.startingPoint.sourceLabel}</figcaption>
-        </figure>
-      </Surface>
-
-      <section className="blog-paths" aria-label="Building and inquiry">
-        {blog.paths.map((path) => (
-          <Surface key={path.id} className={`blog-path blog-path-${path.id}`} tone={path.id === "building" ? "forest" : "copper"}>
-            <div className="blog-path-art"><BlogPathArtwork kind={path.id} /></div>
-            <div className="blog-path-copy">
-              <p className="dot-label">{path.label}</p>
-              <h2 className="dot-section-heading">{path.title}</h2>
-              <p>{path.description}</p>
-              <TextLink to={path.to} className="blog-path-link">{path.linkLabel}</TextLink>
-            </div>
-          </Surface>
-        ))}
-      </section>
-
-      <div className="blog-layout">
-        <div className="blog-archive">
-          <section aria-labelledby="manifesto-title" className="blog-series">
+      <div id="start-reading" className="blog-bookshelf">
+        <Surface as="section" tone="forest" aria-labelledby="blog-book-title" className="blog-feature blog-book">
+          <Link to={DOT_BOOK_ONE_ROUTE} className="blog-feature-art blog-book-art" aria-label="Open Book One: Consciousness, A Digital Organism">
+            <BookOneCover />
+          </Link>
+          <div className="blog-feature-copy">
+            <p className="dot-label">Book One · Free to read</p>
+            <h2 id="blog-book-title" className="dot-section-heading">Consciousness: A Digital Organism</h2>
+            <TextLink to={DOT_BOOK_ONE_ROUTE}>Read Book One</TextLink>
+            <details className="blog-feature-details">
+              <summary>Start with a passage</summary>
+              <p className="dot-label">{blog.startingPoint.label}</p>
+              <p className="blog-passage-title">{blog.startingPoint.title}</p>
+              <TextLink to={blog.startingPoint.to}>{blog.startingPoint.linkLabel}</TextLink>
+            </details>
+          </div>
+        </Surface>
+        <Surface as="section" tone="copper" aria-labelledby="manifesto-title" className="blog-feature blog-series">
+          <a href={newsletter.url} className="blog-feature-art blog-series-art" aria-label={`Open ${newsletter.title} on LinkedIn`}>
             <div className="blog-series-cover" aria-hidden="true">
               <span className="blog-cover-kicker">Applied DOT</span>
               <BlogSeriesArtwork />
-              <span className="blog-cover-name"><span>The</span>Millennial<span>Manifesto</span></span>
-              <span className="blog-cover-foot">Letters on technology &amp; society</span>
+              <span className="blog-cover-name"><span>The American</span>Millennial<span>Manifesto</span></span>
             </div>
-            <div className="blog-series-copy">
-              <p className="dot-label">A series · Applied DOT</p>
-              <h2 id="manifesto-title" className="blog-series-title">{newsletter.title}</h2>
-              <p className="blog-series-description">{blog.seriesDescription}</p>
-              <p className="blog-external-note">These letters are published on LinkedIn.</p>
-              {newsletter.editions.length > 0 && <ul aria-label="Letters on LinkedIn" className="blog-series-letters">
+          </a>
+          <div className="blog-feature-copy">
+            <p className="dot-label">A series · On LinkedIn</p>
+            <h2 id="manifesto-title" className="dot-section-heading">{newsletter.title}</h2>
+            <TextLink href={newsletter.url}>Explore the series on LinkedIn</TextLink>
+            {newsletter.editions.length > 0 && <details className="blog-feature-details">
+              <summary>Read a letter</summary>
+              <ul aria-label="Letters on LinkedIn" className="blog-series-letters">
                 {newsletter.editions.map((edition) => (
                   <li key={edition.url}>
                     <a href={edition.url} rel="noreferrer">
@@ -169,11 +158,14 @@ export default function BlogPage() {
                     </a>
                   </li>
                 ))}
-              </ul>}
-              <a href={newsletter.url} className="blog-path-link" rel="noreferrer">Explore the series on LinkedIn<ArrowUpRight aria-hidden="true" /></a>
-            </div>
-          </section>
+              </ul>
+            </details>}
+          </div>
+        </Surface>
+      </div>
 
+      <div className="blog-layout">
+        <div className="blog-archive">
           <section aria-labelledby="latest-writing">
             <header className="blog-section-heading">
               <h2 id="latest-writing" ref={archiveHeading} tabIndex={-1} className="dot-label">Latest writing</h2>

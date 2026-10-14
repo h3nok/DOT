@@ -133,6 +133,7 @@ describe("AboutPage", () => {
     renderPage();
 
     const resume = within(screen.getByRole("region", { name: "Career & résumé" }));
+    expect(resume.getByText("Enterprise IT since 2012")).toBeVisible();
     const download = resume.getByRole("link", { name: "Download résumé" });
     expect(download).toHaveAttribute("href", author.resumeUrl);
     expect(download).toHaveAttribute("download");
@@ -143,6 +144,8 @@ describe("AboutPage", () => {
     const online = readFileSync(`public${author.resumeOnlineUrl}`, "utf8");
     expect(online).toContain("Research Scientist");
     expect(online).toContain("Enterprise applied research");
+    expect(online).toContain("Enterprise IT since 2012");
+    expect(online).toContain("Selected recent experience");
     expect(online).not.toMatch(/Costco|AI Principal|Avia Solutions LLC|<h3>Sullix<\/h3>/i);
     expect(screen.queryByText(/Costco Wholesale/)).toBeNull();
     expect(online).toContain(author.credentials[0].dissertation!.title);

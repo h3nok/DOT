@@ -16,8 +16,7 @@ test("home keeps direct reading routes without the closing invitation copy", asy
     .toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(reading.getByRole("link", { name: "Read Book One", exact: true }))
     .toHaveAccessibleDescription("Complete and free · Fixed edition");
-  await expect(reading.getByRole("link", { name: "Explore DOT Academy" }))
-    .toHaveAttribute("href", "/academy");
+  await expect(page.locator('a[href="/academy"]')).toHaveCount(0);
 });
 
 test("home offers a reading path and readable theory comparisons", async ({ page }, testInfo) => {
