@@ -27,6 +27,7 @@ import { PageIntro, SectionHeading, Surface, TextLink } from "../../shared/desig
 import type { IntentTone } from "../../attention-os/focus-nav/IntentCard";
 import { BuilderArtwork, ProductArtwork } from "./AboutArtwork";
 import { ProjectShowcase } from "./ProjectShowcase";
+import { MovementShowcase } from "./MovementShowcase";
 import "./about.css";
 
 const projectTones: Record<string, IntentTone> = { sullix: "copper", medroute: "blue", stay: "forest" };
@@ -81,7 +82,7 @@ export default function AboutPage() {
           <p className="dot-label">Research depth. Product experience.</p>
           <dl>
             <div><dt>Applied AI research</dt><dd>{career.experience[0].role}<span>{career.experience[0].company}</span></dd></div>
-            <div><dt>Product co-founding</dt><dd>Sullix<span>Hands-on architecture and engineering</span></dd></div>
+            <div><dt>Founding & product work</dt><dd>4Us · Sullix<span>Movement founder · Product co-founder</span></dd></div>
             {author.credentials[0] && <div><dt>Research foundation</dt><dd>{author.credentials[0].degree}<span>{author.credentials[0].institution}</span></dd></div>}
           </dl>
           <p className="about-location">Based in {career.location}</p>
@@ -96,15 +97,16 @@ export default function AboutPage() {
       </nav>
 
       <section aria-labelledby="about-products" className="about-section">
-        <SectionHeading id="about-products" eyebrow="Products & projects" title="Selected work" />
+        <SectionHeading id="about-products" eyebrow="Ventures & products" title="Selected work" />
         <ul className="about-projects">
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
+            const ProjectHeading = project.movement ? "h4" : "h3";
             const identity = (
               <div className="about-project-identity">
                 <div className="about-project-name">
                   <p className="dot-label">{project.status}</p>
-                  <h3>{project.name}</h3>
+                  <ProjectHeading>{project.name}</ProjectHeading>
                 </div>
                 <div className="about-project-byline">
                   <p className="about-project-role">{project.role}</p>
@@ -112,8 +114,8 @@ export default function AboutPage() {
                 </div>
               </div>
             );
-            return (
-              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
+            const card = (
+              <Surface as={project.movement ? "article" : "li"} key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
                 <div className="about-project-visual">{project.showcase ? <ProjectShowcase showcase={project.showcase} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
                   {identity}
@@ -134,6 +136,12 @@ export default function AboutPage() {
                 </div>
               </Surface>
             );
+            return project.movement ? (
+              <Surface as="li" key={project.slug} className="about-project-family" tone="forest">
+                <MovementShowcase movement={project.movement} />
+                {card}
+              </Surface>
+            ) : card;
           })}
         </ul>
         {otherBuilderProjects.map((project) => {

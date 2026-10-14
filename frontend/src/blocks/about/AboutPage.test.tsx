@@ -119,6 +119,13 @@ describe("AboutPage", () => {
       .toHaveAttribute("href", "https://github.com/h3nok/HKI");
     expect(products.getByRole("link", { name: "Visit website: Sullix" }))
       .toHaveAttribute("href", "https://sullix.com/");
+    const movement = within(products.getByRole("region", { name: "4Us" }));
+    expect(movement.getByText("Founder", { exact: true })).toBeVisible();
+    expect(movement.getByText("Working proposal")).toBeVisible();
+    expect(movement.getByText("Sullix · The first product within 4Us")).toBeVisible();
+    expect(movement.getByRole("link", { name: "Explore 4Us" }))
+      .toHaveAttribute("href", "https://sullix.com/venture");
+    expect(products.getByRole("heading", { level: 4, name: "Sullix" })).toBeVisible();
     expect(screen.queryByText(/Avia/)).toBeNull();
   });
 

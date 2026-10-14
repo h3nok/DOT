@@ -10,6 +10,20 @@ export interface Project {
   tagline: string;
   description: string;
   stack: string[];
+  movement?: {
+    slug: string;
+    name: string;
+    subtitle: string;
+    role: string;
+    category: string;
+    status: string;
+    tagline: string;
+    description: string;
+    relationship: string;
+    href: string;
+    artwork: string;
+    artworkAlt: string;
+  };
   showcase?: {
     brandMark: string;
     mark: string;

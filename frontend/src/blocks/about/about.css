@@ -1,5 +1,5 @@
 .about-page { padding-top: var(--public-space-xl); padding-bottom: var(--public-space-xl); }
-.about-page :is(h2, h3, li[id]) { scroll-margin-top: 8rem; }
+.about-page :is(h2, h3, h4, li[id], article[id], section[id]) { scroll-margin-top: 8rem; }
 .about-hero { display: grid; align-items: center; gap: var(--public-space-xl); }
 .about-hero-copy { min-width: 0; }
 .about-portrait { margin-bottom: 1.5rem; width: 5rem; height: 5rem; border-radius: 50%; object-fit: cover; }
@@ -23,6 +23,25 @@
 .about-section-nav a:hover { color: var(--foreground); }
 .about-section { margin-top: var(--public-space-section); }
 .about-projects { display: grid; gap: 1.25rem; }
+.about-project-family { overflow: hidden; }
+.about-project-family > .about-project { border: 0; border-radius: 0; }
+.about-movement { display: grid; min-width: 0; }
+.about-movement-artwork { position: relative; isolation: isolate; display: grid; place-items: center; align-content: center; min-width: 0; overflow: hidden; padding: 1.25rem; color: var(--public-sage); background: color-mix(in oklab, var(--public-forest) 20%, #0b1510); }
+.about-movement-orbit { position: absolute; z-index: -1; width: 75%; aspect-ratio: 1; border: 1px solid color-mix(in oklab, currentColor 23%, transparent); border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--public-forest) 55%, transparent), transparent 70%); }
+.about-movement-orbit::after { content: ""; position: absolute; inset: 12%; border: 1px solid color-mix(in oklab, currentColor 14%, transparent); border-radius: inherit; }
+.about-movement-artwork img { display: block; width: auto; height: clamp(15rem, 30vw, 24rem); max-width: 100%; object-fit: contain; }
+.about-movement-artwork > p { margin-top: .25rem; font-family: var(--font-mono, monospace); font-size: .6875rem; letter-spacing: .16em; text-transform: uppercase; }
+.about-movement-copy { min-width: 0; padding: clamp(1.5rem, 3.5vw, 3rem); align-self: center; }
+.about-movement-copy > .dot-label { color: var(--intent-tone); font-size: .6875rem; line-height: 1.7; }
+.about-movement-identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem 1.5rem; margin-top: .75rem; }
+.about-movement-identity h3 { font-family: var(--font-sans, sans-serif); font-size: clamp(4rem, 7vw, 6rem); font-weight: 600; line-height: 1; letter-spacing: -.07em; }
+.about-movement-role { border-left: 1px solid var(--border); padding-left: 1rem; font-size: .875rem; color: var(--intent-tone); }
+.about-movement-tagline { margin-top: 1.5rem; max-width: 24ch; font-family: var(--font-serif, Georgia, serif); font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.25; text-wrap: balance; }
+.about-movement-description { margin-top: 1rem; max-width: 46ch; font-size: .9375rem; line-height: 1.8; color: var(--muted-foreground); }
+.about-movement-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; margin-top: 1.25rem; }
+.about-movement-status { font-size: .6875rem; color: var(--muted-foreground); }
+.about-movement-connection { display: flex; align-items: center; gap: .75rem; padding: .875rem clamp(1.25rem, 3vw, 2rem); border-block: 1px solid var(--border); font-size: .75rem; line-height: 1.6; }
+.about-movement-connection > span { width: .6rem; height: .6rem; flex: 0 0 auto; border-left: 1px solid var(--intent-tone); border-bottom: 1px solid var(--intent-tone); }
 .about-project { overflow: hidden; }
 .about-project-visual { background: color-mix(in oklab, var(--background) 38%, var(--intent-light)); border-bottom: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }
 .about-product-art { display: block; width: 100%; height: auto; color: var(--intent-tone); }
@@ -43,7 +62,7 @@
 .about-art-solid { fill: currentColor; }
 .about-project-copy { padding: clamp(1.25rem, 3vw, 2rem); }
 .about-project-identity .dot-label { color: var(--intent-tone); font-size: .6875rem; }
-.about-project h3 { margin-top: .6rem; font-family: var(--font-serif, Georgia, serif); font-size: 2rem; line-height: 1.15; letter-spacing: -.025em; }
+.about-project :is(h3, h4) { margin-top: .6rem; font-family: var(--font-serif, Georgia, serif); font-size: 2rem; line-height: 1.15; letter-spacing: -.025em; }
 .about-project-role { margin-top: .75rem; font-size: .8125rem; line-height: 1.7; color: var(--muted-foreground); }
 .about-period { margin-top: .25rem; font-size: .75rem; line-height: 1.8; color: var(--muted-foreground); }
 .about-project-detail { margin-top: 1.25rem; }
@@ -102,9 +121,14 @@
 .about-page :is(a, summary):focus-visible { outline: 2px solid var(--foreground); outline-offset: 5px; border-radius: 2px; }
 html[data-contrast="high"] .about-project-visual { background: var(--background); border-color: var(--foreground); }
 html[data-contrast="high"] .about-art-guide { opacity: .3; }
+html[data-contrast="high"] .about-movement-artwork { color: var(--foreground); background: var(--background); }
+html[data-contrast="high"] .about-movement-orbit { display: none; }
 .dark .about-project-visual { background: color-mix(in oklab, var(--background) 82%, var(--intent-light)); }
 .dark .about-art-fill { fill: color-mix(in oklab, var(--background) 72%, var(--intent-light)); }
 @media (min-width: 768px) {
+  .about-movement { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .about-movement-artwork { border-right: 1px solid var(--border); }
+  .about-movement-connection { grid-column: 1 / -1; }
   .about-hero { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
   .about-project { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
   .about-project .about-project-visual { display: grid; align-items: center; border-bottom: 0; border-right: 1px solid color-mix(in oklab, var(--intent-tone) 20%, var(--border)); }

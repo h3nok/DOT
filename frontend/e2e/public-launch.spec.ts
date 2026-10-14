@@ -25,7 +25,7 @@ test("About offers products, résumé, project inquiries, and named book navigat
   const pageNav = page.getByRole("navigation", { name: "On this page" });
   await pageNav.getByRole("link", { name: "Selected work" }).click();
   await expect(page.getByRole("region", { name: "Selected work" })
-    .getByRole("heading", { name: "Sullix", exact: true })).toBeInViewport();
+    .getByRole("heading", { name: "4Us", exact: true })).toBeInViewport();
   await expect(page.getByRole("main")).not.toContainText("Avia");
   await expect(page.getByRole("link", { name: "Visit website: Sullix", exact: true }))
     .toHaveAttribute("href", "https://sullix.com/");
@@ -65,11 +65,22 @@ test("About offers products, résumé, project inquiries, and named book navigat
   expect(problems).toEqual([]);
 });
 
-test("Sullix offers its marks and a direct website link without a dashboard showcase", async ({ page }) => {
+test("4Us introduces its first product Sullix with founder credit, artwork, and source links", async ({ page }) => {
   const problems = collectPageProblems(page);
   await page.goto("/about");
+  const movement = page.getByRole("region", { name: "4Us", exact: true });
+  await movement.scrollIntoViewIfNeeded();
+  await expect(movement.getByText("Founder", { exact: true })).toBeVisible();
+  await expect(movement.getByText("Working proposal")).toBeVisible();
+  await expect(movement.getByRole("link", { name: "Explore 4Us" })).toHaveAttribute("href", "https://sullix.com/venture");
+  const artwork = movement.getByRole("img", { name: "Woven Mesob artwork from 4Us" });
+  await expect.poll(() => artwork.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
+  const family = page.locator(".about-project-family");
+  await expect(family.locator("#project-4us, #project-sullix")).toHaveCount(2);
   const project = page.locator("#project-sullix");
   await project.scrollIntoViewIfNeeded();
+  await expect(project.getByText("Co-Founder & Principal Engineer", { exact: true })).toBeVisible();
+  await expect(project.getByText("Private testing", { exact: true })).toBeVisible();
   await expect(project.locator("video")).toHaveCount(0);
   await expect(project.getByRole("img", { name: "Sullix mark", exact: true })).toBeVisible();
   await expect(project.getByRole("img", { name: "Faro mark", exact: true })).toBeVisible();

@@ -792,14 +792,18 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<p>${escapeHtml(BUILDER.summary)}</p>`,
           `<p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p>`,
           `<p>${link("#about-resume", "Explore the background")}</p>`,
-          `<aside><p>Research depth. Product experience.</p><dl><dt>Applied AI research</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Product co-founding</dt><dd>Sullix — Hands-on architecture and engineering</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
+          `<aside><p>Research depth. Product experience.</p><dl><dt>Applied AI research</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Founding &amp; product work</dt><dd>4Us · Sullix — Movement founder · Product co-founder</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
           `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Ways to work together")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
           '<h2 id="about-products">Selected work</h2>',
           `<ul>${BUILDER_PROJECTS.map((project) => {
             const href = project.links.live || project.links.website || project.links.repo;
             const label = project.links.live ? "Explore project" : project.links.website ? "Visit website" : "View source";
             const showcase = project.showcase ? `<div><img src="${escapeHtml(project.showcase.brandMark)}" alt="Sullix mark" width="200" height="200"><img src="${escapeHtml(project.showcase.mark)}" alt="Faro mark" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p></div>` : "";
-            return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3>${showcase}<p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
+            const movement = project.movement;
+            const heading = movement ? "h4" : "h3";
+            const body = `<${heading}>${escapeHtml(project.name)}</${heading}>${showcase}<p>${escapeHtml(project.status)}</p><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}`;
+            if (!movement) return `<li id="project-${escapeHtml(project.slug)}">${body}</li>`;
+            return `<li><section id="project-${escapeHtml(movement.slug)}"><p>${escapeHtml(movement.category)}</p><h3>${escapeHtml(movement.name)}</h3><p>${escapeHtml(movement.subtitle)}</p><p>${escapeHtml(movement.role)}</p><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy"><p>${escapeHtml(movement.tagline)}</p><p>${escapeHtml(movement.description)}</p><p>${escapeHtml(movement.status)}</p><p>${link(movement.href, `Explore ${movement.name}`)}</p><p>${escapeHtml(movement.relationship)}</p></section><article id="project-${escapeHtml(project.slug)}">${body}</article></li>`;
           }).join("")}</ul>`,
           OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
           '<h2 id="about-services">Ways to work together</h2>',

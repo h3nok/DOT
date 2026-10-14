@@ -272,6 +272,14 @@ describe("the author", () => {
       expect(entry.textContent).toContain(project.description);
       expect(document.body.textContent).toContain(project.role);
       expect(document.body.textContent).toContain(project.period);
+      if (project.movement) {
+        const movement = document.getElementById(`project-${project.movement.slug}`)!;
+        expect(movement.textContent).toContain(project.movement.description);
+        expect(movement.textContent).toContain(project.movement.role);
+        expect(movement.textContent).toContain(project.movement.relationship);
+        expect(movement.querySelector("a")?.getAttribute("href")).toBe(project.movement.href);
+        expect(movement.parentElement).toBe(entry.parentElement);
+      }
     }
     for (const job of career.experience) {
       expect(document.body.textContent).toContain(job.company);
