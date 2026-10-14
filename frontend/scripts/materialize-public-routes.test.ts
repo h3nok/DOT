@@ -287,6 +287,15 @@ describe("the author", () => {
 });
 
 describe("page text for readers without JavaScript", () => {
+  it("gives Writing Studio its own private entry so direct links do not use the 404 fallback", () => {
+    const studio = routeAt("/studio/writing");
+    expect(studio.noindex).toBe(true);
+    expect(studio.prerender).toContain("Sign in to import Markdown");
+    expect(renderRoute(readFileSync("index.html", "utf8"), studio))
+      .toContain('<meta name="robots" content="noindex" />');
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/studio/writing");
+  });
+
   it("gives the private inbox a non-indexed entry without exposing messages", () => {
     const inbox = routeAt("/studio/inbox");
     expect(inbox.noindex).toBe(true);

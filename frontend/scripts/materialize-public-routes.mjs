@@ -760,6 +760,19 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   };
   const authorRoutes = [
     {
+      route: "/studio/writing",
+      title: `Writing studio — ${AUTHOR.name}`,
+      description: "Sign in to import, edit and publish your writing.",
+      noindex: true,
+      structuredData: graph({
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/studio/writing#page`,
+        url: `${SITE_URL}/studio/writing`,
+        name: "Writing studio",
+      }),
+      prerender: page('<p>Private workspace</p><h1>Writing studio</h1><p>Sign in to import Markdown, add images, edit and publish your writing. This workspace requires JavaScript.</p>'),
+    },
+    {
       route: INBOX_ROUTE,
       title: `Contact inbox — ${AUTHOR.name}`,
       description: "Sign in with the site owner's account to review and reply to private inquiries.",
