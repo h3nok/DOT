@@ -174,7 +174,7 @@ test("the cultural critique precedes the architecture and leads to its explanati
   await expect(purpose.getByText(/Its proposed direction is Love/)).toBeVisible();
   await purpose.getByRole("link", { name: "Explore the proposed architecture" }).click();
   await expect(page).toHaveURL(/#possibility-field$/);
-  await page.locator("#little-c").getByRole("link", { name: /Read and inquire/ }).click();
+  await page.locator("#little-c").getByRole("link", { name: /Continue reading/ }).click();
   await expect(page).toHaveURL(/#choose-path$/);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true })
     .getByRole("link", { name: "The culture inside us", includeHidden: true }))

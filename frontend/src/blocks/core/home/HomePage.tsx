@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
@@ -18,7 +18,6 @@ import { DoWordmark } from "../../../shared/DoWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import { author } from "../../../content/author";
-import HOME from "../../../content/home.json";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
@@ -157,62 +156,40 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* Everyday experience gives readers a way into the proposed architecture. */}
+      {/* Cultural conditioning gives readers a way into the proposed architecture. */}
       <Consciousness101 />
       {/* The architecture keeps its outside-to-inside causal order. */}
       <TheoryLayerJourney reducedMotion={reducedMotion} />
 
-      {/* ── Final reading invitation ─────────────────────────────────── */}
-      <motion.section
+      {/* ── Further reading ──────────────────────────────────────────── */}
+      <section
         id="choose-path"
-        aria-label="An invitation to inquire"
-        initial={reducedMotion ? false : { y: 12 }}
-        whileInView={{ y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: reducedMotion ? 0 : 0.5 }}
-        className="home-environment home-entrances-environment scroll-mt-4"
+        aria-label="Further reading"
+        className="home-reading-links dot-page-container"
       >
-        <div className="dot-page-container">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="home-ending-label dot-label">An invitation to inquire</span>
-            <h2 className="dot-page-heading mt-2 text-balance">
-              {HOME.invitationTitle}
-            </h2>
-            <p className="dot-lede mx-auto mt-4 max-w-xl">
-              {HOME.invitation}
-            </p>
-            <p className="dot-lede mx-auto mt-4 max-w-xl">
-              {HOME.boundary}
-            </p>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-              {HOME.edition}
-            </p>
-            <p className="mx-auto mt-4 max-w-xl text-xs text-muted-foreground">
-              Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
-              Bernardo Kastrup’s analytic idealism, and Donald Hoffman’s theory
-              of conscious agents.{" "}
-              Naming these thinkers does not mean they endorse DOT.
-            </p>
-          </div>
-
-          <FocusNav
-            label="Continue the inquiry"
-            className="mx-auto mt-10 max-w-sm"
-            primary={{
-              to: "/book/digital-organism-theory",
-              label: "Read Book One",
-              description: "Complete and free · Fixed edition",
-              icon: <BookOpen />,
-            }}
-            secondary={[{
-              to: "/academy",
-              label: "Explore DOT Academy",
-              icon: <Network />,
-              endIcon: <ArrowRight />,
-            }]}
-          />
-        </div>
-      </motion.section>
+        <FocusNav
+          label="Book and Academy"
+          className="mx-auto max-w-sm"
+          primary={{
+            to: "/book/digital-organism-theory",
+            label: "Read Book One",
+            description: "Complete and free · Fixed edition",
+            icon: <BookOpen />,
+          }}
+          secondary={[{
+            to: "/academy",
+            label: "Explore DOT Academy",
+            icon: <Network />,
+            endIcon: <ArrowRight />,
+          }]}
+        />
+        <p className="mx-auto mt-6 max-w-xl text-center text-xs text-muted-foreground">
+          Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
+          Bernardo Kastrup’s analytic idealism, and Donald Hoffman’s theory
+          of conscious agents.{" "}
+          Naming these thinkers does not mean they endorse DOT.
+        </p>
+      </section>
 
       {/* ── Colophon ─────────────────────────────────────────────────── */}
       <footer className="site-colophon py-12 dot-page-container">

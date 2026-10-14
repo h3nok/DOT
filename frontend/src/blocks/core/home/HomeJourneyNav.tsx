@@ -7,7 +7,7 @@ const HOME_SECTIONS = [
   { id: "big-c", label: "Big C: primordial consciousness" },
   { id: "reality-frame", label: "RF₀: the physical universe" },
   { id: "little-c", label: "Little c: the local experiencer" },
-  { id: "choose-path", label: "Read and inquire" },
+  { id: "choose-path", label: "Book and Academy" },
 ] as const;
 
 type HomeSectionId = (typeof HOME_SECTIONS)[number]["id"];

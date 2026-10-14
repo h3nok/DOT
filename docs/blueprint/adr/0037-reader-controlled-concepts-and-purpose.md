@@ -153,7 +153,10 @@ read as moral instruction. The critique includes the conditioning inside the
 questioner; Love remains DOT's proposed direction and a state of being.
 The section links to “The Culture Inside You” in the fixed book. The old section
 anchor remains valid. Its next link enters the architecture; Little c now
-leads directly to the final reading invitation. Page navigation follows this
+leads directly to compact book and Academy links. The founder removed the final
+invitation heading and explanatory paragraphs; these are also absent from the
+generated public HTML. Related-work attribution remains below the links.
+Page navigation follows this
 reading order. The causal architecture and emergence animation retain T × E,
 Big C, Reality Frames, and Little c in their existing order.
 

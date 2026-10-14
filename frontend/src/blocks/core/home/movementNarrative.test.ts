@@ -111,7 +111,8 @@ describe("homepage inquiry narrative", () => {
   it("closes with reading while keeping the living Academy distinct", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
-    expect(home).toContain("HOME.invitationTitle");
+    expect(home).not.toContain("HOME.invitationTitle");
+    expect(home).not.toContain("An invitation to inquire");
     expect(home).toContain("Explore DOT Academy");
     expect(home).toContain("Read Book One");
     expect(home).toContain("Complete and free · Fixed edition");
@@ -140,7 +141,7 @@ describe("homepage inquiry narrative", () => {
     expect(home).not.toContain("Support the work");
   });
 
-  it("moves from the theory directly to the reading invitation", () => {
+  it("moves from the theory directly to the reading links", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
@@ -156,7 +157,7 @@ describe("homepage inquiry narrative", () => {
     expect(home.toLowerCase()).not.toContain("believe");
   });
 
-  it("places everyday experience before the architecture and keeps the final invitation", () => {
+  it("places the cultural critique before the architecture and keeps the reading links", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const navigation = readFileSync(join(HERE, "HomeJourneyNav.tsx"), "utf8");
     expect(home.indexOf("<Consciousness101")).toBeLessThan(home.indexOf("<TheoryLayerJourney"));

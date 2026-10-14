@@ -363,8 +363,10 @@ describe("page text for readers without JavaScript", () => {
     expect(rootDocument(shell, manifest)).toContain("<h2>A society can be productive and still be lost.</h2>");
     expect(rootDocument(shell, manifest)).toContain('href="/book/digital-organism-theory/the-painting#the-culture-inside-you"');
     expect(rootDocument(shell, manifest)).not.toContain("What happens when you feel challenged?");
-    expect(rootDocument(shell, manifest)).toContain("remain hypotheses, open to challenge and revision");
-    expect(rootDocument(shell, manifest)).toContain("there is no timetable for it");
+    expect(rootDocument(shell, manifest)).not.toContain("Read. Inquire. Open up.");
+    expect(rootDocument(shell, manifest)).not.toContain("Henok’s account begins with lived experience.");
+    expect(rootDocument(shell, manifest)).not.toContain("there is no timetable for it");
+    expect(rootDocument(shell, manifest)).not.toContain("The Academy holds definitions and open questions as the inquiry develops.");
     expect(rootDocument(shell, manifest)).not.toContain("Things built. Ideas explored.");
     expect(rootDocument(shell, manifest)).not.toContain("Build something useful.");
     expect(rootDocument(shell, manifest)).not.toContain("Follow an idea.");

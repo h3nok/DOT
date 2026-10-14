@@ -297,8 +297,8 @@ export function TheoryLayerJourney({
                   {item.layer === "little-c" && (
                     <a href="#choose-path" className="home-theory-layer-next">
                       <span>
-                        <small>From the model to inquiry</small>
-                        <span className="home-theory-layer-next-title">Read and inquire</span>
+                        <small>Book One and DOT Academy</small>
+                        <span className="home-theory-layer-next-title">Continue reading</span>
                       </span>
                       <ArrowDown aria-hidden="true" />
                     </a>
