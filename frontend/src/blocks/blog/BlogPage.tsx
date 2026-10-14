@@ -88,6 +88,8 @@ export default function BlogPage() {
           summary: entry.summary ?? "",
           date: entry.released_at.slice(0, 10),
           href: writingRoute(entry.work_id),
+          cover: entry.cover ?? undefined,
+          label: entry.presentation?.series || ESSAY_FORMAT_LABELS[entry.presentation?.format ?? "essay"],
           note: entry.release_number > 1 ? `Version ${entry.release_number}` : null,
         })));
       } else unavailable.push("writing released from the Studio");

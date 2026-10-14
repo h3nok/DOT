@@ -16,6 +16,7 @@ import app.db.session
 import app.domains.academy.models
 import app.domains.academy.schemas as schemas
 import app.domains.academy.service as service
+import app.domains.academy.writing_media as writing_media
 import app.integrations.object_store
 
 router = fastapi.APIRouter(prefix="/v1/academy", tags=["academy"])
@@ -87,6 +88,8 @@ def _delivery_item(
         released_at=row.released_at,
         withdrawn_at=row.withdrawn_at,
         withdrawal_reason=row.withdrawal_reason,
+        presentation=row.manifest.get("presentation", {}),
+        cover=writing_media.public_artwork(row.manifest)["cover"],
     )
 
 

@@ -575,6 +575,27 @@ describe("native writing", () => {
     expect(publications.prerender).toContain('href="/blog">Letters and essays</a>');
   });
 
+  it("carries released artwork into reading HTML, sharing metadata and RSS", async () => {
+    const src = "/v1/academy/delivery/works/awork_abc123/releases/2/media/banner";
+    const enriched = async (url: string) => {
+      if (url.endsWith("/works/awork_abc123/releases/2")) return Response.json({
+        manifest: { ...manifestFor("AI letter"), presentation: { format: "letter", series: "Fixture", cover: { path: "post/banner.png", alt: "Banner description", caption: "Image credit" } }, assets: [{ path: "post/banner.png", src, width: 1600, height: 900 }] },
+        body_ref: "academy/space/releases/2.md",
+      });
+      if (url.includes("/delivery/body/")) return new Response("![Inline description][image]\n\n[image]: post/banner.png");
+      return fetchImpl(url);
+    };
+    const writing = await fetchNativeWriting(api, { fetchImpl: enriched });
+    const routes: PublicRoute[] = await publicRoutes(manifest, { essays: [], writing });
+    const page = routes.find(route => route.route === "/writing/awork_abc123")!;
+    expect(page.prerender).toContain(`src="${api}${src}"`);
+    expect(page.prerender).toContain('alt="Banner description"');
+    expect(page.prerender).toContain('alt="Inline description"');
+    expect(renderRoute(shell, page)).toContain(`<meta property="og:image" content="${api}${src}"`);
+    const item = writing[0];
+    expect(rssXml([{ ...item, ...item.releases.at(-1), url: `${SITE_URL}/writing/awork_abc123` }])).toContain(`${api}${src}`);
+  });
+
   it("fails the build rather than silently dropping published work", async () => {
     const broken = async () => new Response("down", { status: 503 });
     await expect(fetchNativeWriting(api, { fetchImpl: broken })).rejects.toThrow(/503/);

@@ -272,6 +272,8 @@ async def create_revision(
     work_id: str,
     actor_id: str,
     payload: schemas.RevisionCreate,
+    editor_metadata: dict | None = None,
+    commit: bool = True,
 ) -> models.AcademyRevision:
     """Freeze an immutable revision: body to write-once storage, hash recorded."""
 
@@ -282,6 +284,11 @@ async def create_revision(
         actor_id=actor_id,
         action="create_revision",
         program_id=work.program_id,
+    )
+    await session.execute(
+        sqlalchemy.select(models.AcademyWork.id)
+        .where(models.AcademyWork.id == work.id)
+        .with_for_update()
     )
 
     next_number = (
@@ -311,6 +318,7 @@ async def create_revision(
         schema_version=payload.schema_version,
         title=payload.title,
         summary=payload.summary,
+        editor_metadata=editor_metadata or {},
         body_ref=body_key,
         content_hash=content_hash,
         language=payload.language,
@@ -333,7 +341,8 @@ async def create_revision(
         policy_revision_id=authority.policy_revision_id,
         payload={"work_id": work.id, "revision_number": next_number},
     )
-    await session.commit()
+    if commit:
+        await session.commit()
     return revision
 
 
@@ -390,7 +399,16 @@ async def get_revision_editor(
     session: sqlalchemy.ext.asyncio.AsyncSession, *, revision_id: str, actor_id: str
 ) -> dict[str, typing.Any]:
     body = await get_revision_body(session, revision_id=revision_id, actor_id=actor_id)
-    _, work = await _get_revision_scoped(session, revision_id, actor_id)
+    revision, work = await _get_revision_scoped(session, revision_id, actor_id)
+    if revision.editor_metadata:
+        from app.domains.academy.writing_media import editor_assets
+
+        return {
+            "body": body,
+            "claims": revision.editor_metadata.get("claims", []),
+            "presentation": revision.editor_metadata.get("presentation", {}),
+            "assets": editor_assets(revision),
+        }
     claims = (
         (
             await session.execute(
@@ -442,6 +460,7 @@ async def add_claim(
     revision_id: str,
     actor_id: str,
     payload: schemas.ClaimCreate,
+    commit: bool = True,
 ) -> models.AcademyClaimRevision:
     revision, work = await _get_revision_scoped(session, revision_id, actor_id)
     authority = await policy.require_authority(
@@ -494,7 +513,10 @@ async def add_claim(
         policy_revision_id=authority.policy_revision_id,
         payload={"revision_id": revision.id, "level": payload.epistemic_level},
     )
-    await session.commit()
+    if commit:
+        await session.commit()
+    else:
+        await session.flush()
     return claim_revision
 
 
@@ -575,6 +597,7 @@ async def add_source_link(
     revision_id: str,
     actor_id: str,
     payload: schemas.SourceLinkCreate,
+    commit: bool = True,
 ) -> models.AcademySourceLink:
     revision, work = await _get_revision_scoped(session, revision_id, actor_id)
     authority = await policy.require_authority(
@@ -627,7 +650,10 @@ async def add_source_link(
         actor_id=actor_id,
         policy_revision_id=authority.policy_revision_id,
     )
-    await session.commit()
+    if commit:
+        await session.commit()
+    else:
+        await session.flush()
     return link
 
 
@@ -731,10 +757,45 @@ async def create_release(
         action="release",
         program_id=work.program_id,
     )
+    await session.execute(
+        sqlalchemy.select(models.AcademyWork.id)
+        .where(models.AcademyWork.id == work.id)
+        .with_for_update()
+    )
 
     revision = await session.get(models.AcademyRevision, payload.revision_id)
     if revision is None or revision.work_id != work.id:
         raise _not_found("Revision of this work")
+
+    # A repeated approval of the same snapshot returns the original release.
+    # It must not publish a second version after a lost HTTP response.
+    existing_release = (
+        (
+            await session.execute(
+                sqlalchemy.select(models.AcademyRelease).where(
+                    models.AcademyRelease.work_id == work.id,
+                    models.AcademyRelease.revision_id == revision.id,
+                    models.AcademyRelease.academy_space_id == work.academy_space_id,
+                    models.AcademyRelease.visibility == payload.visibility,
+                    models.AcademyRelease.release_status.in_(["released", "withdrawn"]),
+                )
+            )
+        )
+        .scalars()
+        .first()
+    )
+    if existing_release:
+        if existing_release.release_status == "withdrawn":
+            raise _conflict("This revision was withdrawn. Save a new revision to publish again.")
+        return existing_release
+
+    if revision.editor_metadata:
+        from app.domains.academy.writing_drafts import validate_release
+
+        draft_body = await app.integrations.object_store.get_object_store().get_text(
+            revision.body_ref
+        )
+        validate_release(draft_body, revision.editor_metadata)
 
     claim_revisions = await _validate_release(session, work, revision)
     source_links = (
@@ -830,6 +891,18 @@ async def create_release(
                 if link.external_uri
             ],
         }
+        if revision.editor_metadata:
+            from app.domains.academy.writing_media import copy_release_assets
+
+            manifest.update(
+                await copy_release_assets(
+                    body=body_markdown,
+                    metadata=revision.editor_metadata,
+                    work_id=work.id,
+                    number=next_number,
+                    prefix=release_prefix,
+                )
+            )
         manifest_json = _canonical_json(manifest)
         manifest_hash = _sha256(manifest_json)
 

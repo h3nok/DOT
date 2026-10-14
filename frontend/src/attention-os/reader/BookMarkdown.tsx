@@ -324,13 +324,16 @@ export function BookMarkdown({
   variant = "chapter",
   completeEditionHref,
   images,
+  restrictImages = false,
 }: {
   content: string;
   afterHeading?: Readonly<Record<string, ReactNode>>;
   concepts?: readonly ReaderConceptDefinition[];
   references?: ReadonlyMap<number, ReaderReference>;
   variant?: "chapter" | "references" | "post";
-  images?: Readonly<Record<string, { width: number; height: number }>>;
+  images?: Readonly<Record<string, { width: number; height: number; src?: string }>>;
+  /** Native posts only load artwork attached to the reviewed revision. */
+  restrictImages?: boolean;
   /** Where the printed Complete Edition can be read; offered inside depth passages. */
   completeEditionHref?: string;
 }) {
@@ -441,7 +444,11 @@ export function BookMarkdown({
               );
             },
             li: ({ children }) => <li>{withConceptLinks(children)}</li>,
-            img: ({ src, alt, title }) => <img src={src} alt={alt ?? ""} title={variant === "post" ? undefined : title} {...(src ? images?.[src] : undefined)} loading="lazy" decoding="async" />,
+            img: ({ src, alt, title }) => {
+              const attached = src ? images?.[src] : undefined;
+              if (restrictImages && !attached) return <span className="text-sm text-muted-foreground">Image not attached: {alt || src}</span>;
+              return <img src={attached?.src ?? src} alt={alt ?? ""} title={variant === "post" ? undefined : title} width={attached?.width} height={attached?.height} loading="lazy" decoding="async" />;
+            },
             table: ({ children }) => (
               <div className="book-table-scroll" tabIndex={0}>
                 <table>{children}</table>

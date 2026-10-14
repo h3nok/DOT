@@ -477,7 +477,12 @@ export async function fetchNativeWriting(apiUrl, { fetchImpl = fetch, space = "d
         if (delivery.withdrawn) continue;
         if (!delivery.manifest || !delivery.body_ref) throw new Error(`Release ${number} of ${entry.work_id} is incomplete.`);
         const body = await get(`/delivery/body/${delivery.body_ref.split("/").map(encodeURIComponent).join("/")}`, true);
-        releases.push({ number, manifest: delivery.manifest, body });
+        const images = Object.fromEntries((delivery.manifest.assets ?? []).flatMap(asset =>
+          [asset.path, `./${asset.path}`].map(name => [name, { src: new URL(asset.src, apiUrl).href, width: asset.width, height: asset.height }]),
+        ));
+        const banner = delivery.manifest.presentation?.cover;
+        const cover = banner && images[banner.path] ? { ...images[banner.path], alt: banner.alt, caption: banner.caption } : undefined;
+        releases.push({ number, manifest: delivery.manifest, body, images, cover });
       }
       return {
         id: entry.work_id,
@@ -485,6 +490,7 @@ export async function fetchNativeWriting(apiUrl, { fetchImpl = fetch, space = "d
         summary: entry.summary ?? "",
         published: entry.released_at.slice(0, 10),
         releases,
+        cover: releases.at(-1)?.cover,
       };
     }),
   ).then((items) => items.filter((item) => item.releases.length > 0).reverse());
@@ -510,7 +516,7 @@ function articleNode(essay) {
     "@id": `${url}#article`,
     headline: essay.title,
     description: essay.summary,
-    image: essay.cover ? `${SITE_URL}${essay.cover.src}` : undefined,
+    image: essay.cover ? new URL(essay.cover.src, SITE_URL).href : undefined,
     url,
     mainEntityOfPage: url,
     author: personNode(),
@@ -530,7 +536,7 @@ function articleNode(essay) {
  * that never run the app. Math becomes MathML: no fonts, no script, and still
  * legible to a screen reader.
  */
-export function renderMarkdown(markdown, { images = {}, post = false } = {}) {
+export function renderMarkdown(markdown, { images = {}, post = false, restrictImages = false } = {}) {
   return renderToStaticMarkup(
     createElement(ReactMarkdown, {
       skipHtml: true,
@@ -538,7 +544,7 @@ export function renderMarkdown(markdown, { images = {}, post = false } = {}) {
       rehypePlugins: [[rehypeKatex, { output: "mathml" }]],
       children: markdown,
       components: post ? {
-        img: ({ src, alt }) => createElement("img", { src, alt, ...images[src], loading: "lazy", decoding: "async" }),
+        img: ({ src, alt }) => restrictImages && !images[src] ? createElement("span", null, `Image not attached: ${alt || src}`) : createElement("img", { src, alt, ...images[src], loading: "lazy", decoding: "async" }),
         p: ({ children, node }) => {
           const child = node?.children.length === 1 ? node.children[0] : undefined;
           return child?.type === "element" && child.tagName === "img"
@@ -926,16 +932,17 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     const pages = item.releases.map((release) => ({ path: writingPath(item, release.number), release }));
     pages.push({ path: writingPath(item), release: item.releases.at(-1) });
     return pages.map(({ path: route, release }) => {
-      const { manifest: delivered, body } = release;
+      const { manifest: delivered, body, cover, images } = release;
       const sources = delivered.sources ?? [];
       return {
         route,
         title: `${delivered.title} — ${AUTHOR.name}`,
         description: delivered.summary || `${delivered.title}, by ${AUTHOR.name}.`,
         ogType: "article",
+        image: cover?.src, imageAlt: cover?.alt, imageWidth: cover?.width, imageHeight: cover?.height,
         lastmod: item.published,
         structuredData: graph(
-          articleNode({ ...item, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
+          articleNode({ ...item, cover, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
           breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }, { name: delivered.title, route }]),
         ),
         prerender: page(
@@ -943,7 +950,8 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
             `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
             `<header><p>By ${link(ABOUT_ROUTE, AUTHOR.name)} · Version ${release.number}</p>`,
             `<h1>${escapeHtml(delivered.title)}</h1>${delivered.summary ? `<p>${escapeHtml(delivered.summary)}</p>` : ""}</header>`,
-            renderMarkdown(body),
+            coverHtml(cover),
+            renderMarkdown(body, { images, post: true, restrictImages: true }),
             "<p>End of piece</p>",
             `<h2>Claims</h2><ul>${delivered.claims.map((claim) => `<li>${escapeHtml(claim.statement)} (${escapeHtml(claim.epistemic_level)})</li>`).join("")}</ul>`,
             sources.length > 0
@@ -976,7 +984,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
 
   const blogPosts = [
     ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, cover: essay.cover, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
-    ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, href: writingPath(item) })),
+    ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, cover: item.cover, href: writingPath(item) })),
   ].sort((first, second) => second.date.localeCompare(first.date));
   const blogRoute = {
     route: BLOG_ROUTE,
@@ -1055,7 +1063,7 @@ export function renderRoute(shell, route, { headTags = [] } = {}) {
   const url = `${SITE_URL}${route.canonicalRoute ?? route.route}`;
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
-  const image = `${SITE_URL}${route.image ?? "/og-image.png"}`;
+  const image = new URL(route.image ?? "/og-image.png", SITE_URL).href;
   const imageAlt = escapeHtml(
     route.imageAlt ?? "DOT — Consciousness: A Digital Organism, Book One",
   );
@@ -1159,7 +1167,7 @@ export function rssXml(essays) {
       `      <dc:creator>${escapeHtml(AUTHOR.name)}</dc:creator>`,
       `      <pubDate>${rfc822(essay.published)}</pubDate>`,
       `      <description>${escapeHtml(essay.summary)}</description>`,
-      `      <content:encoded><![CDATA[${cdata(absoluteLinks(coverHtml(essay.cover) + renderMarkdown(essay.body, { images: essay.images, post: true })))}]]></content:encoded>`,
+      `      <content:encoded><![CDATA[${cdata(absoluteLinks(coverHtml(essay.cover) + renderMarkdown(essay.body, { images: essay.images, post: true, restrictImages: essay.restrictImages })))}]]></content:encoded>`,
       "    </item>",
     ].join("\n"),
   );
@@ -1199,6 +1207,9 @@ async function main() {
       summary: item.summary,
       published: item.published,
       body: item.releases.at(-1).body,
+      images: item.releases.at(-1).images,
+      cover: item.cover,
+      restrictImages: true,
       url: `${SITE_URL}${writingPath(item)}`,
     })),
   ].sort((first, second) => second.published.localeCompare(first.published));
@@ -1209,7 +1220,7 @@ async function main() {
     // A route whose card was never generated shares the site card rather than
     // a URL that resolves to nothing. Resolve the full path: Book One's own
     // card lives beside, not inside, the chapter-card directory.
-    const imageExists = entry.image
+    const imageExists = entry.image?.startsWith("https://") ? true : entry.image
       ? await access(path.join("dist", ...entry.image.slice(1).split("/")))
           .then(() => true)
           .catch(() => false)
