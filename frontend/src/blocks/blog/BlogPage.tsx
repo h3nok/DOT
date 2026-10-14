@@ -5,7 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { author } from "../../content/author";
 import blog from "../../content/blog.json";
 import newsletter from "../../content/newsletter.json";
-import { essayRoute, fetchEssayIndex, formatEssayDate } from "../../content/essays/essays";
+import { essayRoute, fetchEssayIndex, formatEssayDate, ESSAY_FORMAT_LABELS, type EssayCover } from "../../content/essays/essays";
 import { fetchReleasedWriting, writingRoute } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
@@ -29,6 +29,8 @@ interface Post {
   date: string;
   href: string;
   note: string | null;
+  cover?: EssayCover;
+  label?: string;
 }
 
 type BlogState = { status: "loading" } | { status: "ready"; posts: Post[]; unavailable: string[] };
@@ -75,6 +77,8 @@ export default function BlogPage() {
           date: essay.published,
           href: essayRoute(essay.slug),
           note: `${essay.readingMinutes} min read`,
+          cover: essay.cover,
+          label: essay.series ?? ESSAY_FORMAT_LABELS[essay.format ?? "essay"],
         })));
       } else unavailable.push("essays");
       if (writing.status === "fulfilled") {
@@ -200,9 +204,10 @@ export default function BlogPage() {
                 {shown.map((post, index) => (
                   <li key={post.key}>
                     <article className="blog-post">
-                      <div className="blog-post-art"><BlogPostArtwork variant={index % 3} /></div>
+                      <div className="blog-post-art">{post.cover ? <img src={post.cover.src} alt="" width={post.cover.width} height={post.cover.height} loading="lazy" decoding="async" /> : <BlogPostArtwork variant={index % 3} />}</div>
                       <div className="blog-post-copy">
                         <p className="blog-post-meta">
+                          {post.label && <><span>{post.label}</span><span aria-hidden="true"> · </span></>}
                           <time dateTime={post.date}>{formatEssayDate(post.date)}</time>
                           {post.note && <><span aria-hidden="true"> · </span><span>{post.note}</span></>}
                         </p>

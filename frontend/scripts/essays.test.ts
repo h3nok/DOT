@@ -66,6 +66,13 @@ describe("essay front matter", () => {
 });
 
 describe("a released essay", () => {
+  it("requires alt text for a banner and accepts named series and post formats", () => {
+    expect(() => parseEssay(essay(`${VALID}\ncover: on-machines/cover.webp`), "on-machines")).toThrow(/cover_alt/);
+    expect(() => parseEssay(essay(`${VALID}\ncover_alt: A picture`), "on-machines")).toThrow(/need a cover/);
+    expect(() => parseEssay(essay(`${VALID}\nformat: video`), "on-machines")).toThrow(/format/);
+    expect(parseEssay(essay(`${VALID}\nformat: letter\nseries: The American Millennial Manifesto`), "on-machines"))
+      .toMatchObject({ format: "letter", series: "The American Millennial Manifesto" });
+  });
   it("states its claim levels (ADR-0030)", () => {
     const withoutLevels = VALID.replace("levels: [model, hypothesis]", "");
     expect(() => parseEssay(essay(withoutLevels), "on-machines")).toThrow(/levels/);

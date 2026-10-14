@@ -55,6 +55,7 @@ const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxP
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
+const EssayDraftsPage = import.meta.env.DEV ? React.lazy(() => import("./blocks/essays/EssayDraftsPage")) : null;
 const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
 const PublicationsPage = React.lazy(() => import("./blocks/publication/PublicationsPage"));
 const NativeWritingPage = React.lazy(() => import("./blocks/publication/NativeWritingPage"));
@@ -199,6 +200,8 @@ const App: React.FC = () => {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
+                {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}
+                {import.meta.env.DEV && <Route path="/_preview/essays/:slug" element={<EssayPage preview />} />}
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/writing/:workId" element={<NativeWritingPage />} />
                 <Route path="/writing/:workId/releases/:releaseNumber" element={<NativeWritingPage />} />

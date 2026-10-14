@@ -467,6 +467,23 @@ describe("essays", () => {
     await expect(publicRoutes(manifest, { essays: [stray] })).rejects.toThrow(/not a concept/);
   });
 
+  it("carries the same banner into HTML, Article metadata, link previews, the archive, and RSS", async () => {
+    const covered = { ...older, format: "case-study", series: "Architecture notes", cover: { src: "/essay-media/fear-narrows/abc-cover.webp", alt: 'A diagram with "connections"', caption: "Diagram & credit", width: 1600, height: 900 }, body: '![Detail](/essay-media/fear-narrows/detail.png "Figure & credit")' };
+    const entries: PublicRoute[] = await publicRoutes(manifest, { essays: [covered] });
+    const route = entries.find((item) => item.route === "/essays/fear-narrows")!;
+    expect(route.image).toBe(covered.cover.src);
+    expect(route.prerender).toContain("Case study · Architecture notes");
+    expect(route.prerender).toContain("End of case study");
+    expect(route.prerender).toContain("<figcaption>Diagram &amp; credit</figcaption>");
+    expect(route.prerender).toContain("<figcaption>Figure &amp; credit</figcaption>");
+    expect((nodeOfType(route, "Article") as Record<string, unknown>).image).toBe(`${SITE_URL}${covered.cover.src}`);
+    expect(renderRoute(shell, route)).toContain(`property="og:image" content="${SITE_URL}${covered.cover.src}"`);
+    expect(renderRoute(shell, route)).toContain('property="og:image:height" content="900"');
+    expect(entries.find((item) => item.route === "/blog")!.prerender).toContain(covered.cover.src);
+    expect(rssXml([covered])).toContain(`src="${SITE_URL}${covered.cover.src}"`);
+    expect(rssXml([covered])).toContain("<figcaption>Figure &amp; credit</figcaption>");
+  });
+
   it("are carried whole by a feed a reader's own software can pull", () => {
     const xml = rssXml(essays);
     const feed = new DOMParser().parseFromString(xml, "application/xml");

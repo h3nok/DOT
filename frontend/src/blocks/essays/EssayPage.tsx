@@ -10,6 +10,7 @@ import {
   fetchEssayText,
   formatEssayDate,
   type EssaySummary,
+  ESSAY_FORMAT_LABELS,
 } from "../../content/essays/essays";
 import { bookConceptDefinitions } from "../../content/publications/dotBookConcepts";
 import { DOT_BOOK_ONE_ROUTE } from "../../content/publications/dotBookOne";
@@ -17,6 +18,7 @@ import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { ClaimLevels } from "./ClaimLevels";
 import { PublicationSharing } from "../publication/components/PublicationSharing";
+import "./essay.css";
 
 const LINK =
   "text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]";
@@ -37,7 +39,7 @@ type EssayState =
  * It ends where the text ends: the concepts it builds on, a way to object, and
  * the way back. No "read next", no related rail (L2, L3).
  */
-export default function EssayPage() {
+export default function EssayPage({ preview = false }: { preview?: boolean }) {
   const { slug = "" } = useParams();
   const [state, setState] = useState<EssayState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
@@ -45,7 +47,7 @@ export default function EssayPage() {
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: "loading" });
-    Promise.all([fetchEssayIndex(controller.signal), fetchEssayText(slug, controller.signal)])
+    Promise.all([fetchEssayIndex(controller.signal, preview), fetchEssayText(slug, controller.signal, preview)])
       .then(([essays, text]) => {
         if (controller.signal.aborted) return;
         const essay = essays.find((candidate) => candidate.slug === slug);
@@ -55,7 +57,16 @@ export default function EssayPage() {
         if (!controller.signal.aborted) setState({ status: "failed" });
       });
     return () => controller.abort();
-  }, [slug, attempt]);
+  }, [slug, attempt, preview]);
+
+  useEffect(() => {
+    if (!preview) return;
+    const tag = document.createElement("meta");
+    tag.name = "robots";
+    tag.content = "noindex, nofollow";
+    document.head.append(tag);
+    return () => tag.remove();
+  }, [preview]);
 
   const title = state.status === "ready" ? state.essay.title : null;
   useEffect(() => {
@@ -64,9 +75,12 @@ export default function EssayPage() {
 
   return (
     <PageShell
+      wide
+      className="essay-page"
       header={<PageHeader backTo="/blog" backLabel="Blog" />}
       footer={<SiteColophon />}
     >
+      {preview && <aside className="post-preview-note"><strong>Local preview</strong><span>Changes here do not publish the post.</span><Link to="/_preview/essays" className={LINK}>All local posts</Link></aside>}
       {state.status === "loading" && (
         <p className="mx-auto text-sm text-muted-foreground" style={COLUMN} role="status">
           Loading the essay…
@@ -88,7 +102,7 @@ export default function EssayPage() {
           </button>
         </Notice>
       )}
-      {state.status === "ready" && <Essay essay={state.essay} text={state.text} />}
+      {state.status === "ready" && <Essay essay={state.essay} text={state.text} preview={preview} />}
     </PageShell>
   );
 }
@@ -103,7 +117,7 @@ function Notice({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function Essay({ essay, text }: { essay: EssaySummary; text: string }) {
+function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; preview: boolean }) {
   const contact = authorContact();
   const concepts = essay.concepts.flatMap((id) => {
     const node = doctrineNodes.find((candidate) => candidate.id === id);
@@ -111,16 +125,19 @@ function Essay({ essay, text }: { essay: EssaySummary; text: string }) {
   });
 
   return (
-    <article className="book-surface mx-auto" style={COLUMN}>
-      <header>
-        <p className="dot-label">
-          Essay · <time dateTime={essay.published}>{formatEssayDate(essay.published)}</time>
-          {" · "}
-          {essay.readingMinutes} min read
+    <article className="book-surface post-article">
+      <header className="post-heading">
+        <p className="dot-label post-kicker">
+          {ESSAY_FORMAT_LABELS[essay.format ?? "essay"]}
+          {essay.series && <><span aria-hidden="true"> · </span><span>{essay.series}</span></>}
         </p>
-        <h1 className="dot-page-heading mt-4 text-balance">{essay.title}</h1>
-        <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{essay.summary}</p>
-        <ClaimLevels levels={essay.levels} className="mt-5" />
+        <h1 className="post-title">{essay.title}</h1>
+        <p className="post-summary">{essay.summary}</p>
+        <div className="post-byline">
+          <Link to="/about" className={LINK}>{author.name}</Link>
+          <span><time dateTime={essay.published}>{formatEssayDate(essay.published)}</time>{" · "}{essay.readingMinutes} min read</span>
+        </div>
+        <ClaimLevels levels={essay.levels} className="post-claims" />
         {essay.updated && (
           <p className="mt-3 text-xs text-muted-foreground">
             Revised <time dateTime={essay.updated}>{formatEssayDate(essay.updated)}</time>
@@ -128,10 +145,16 @@ function Essay({ essay, text }: { essay: EssaySummary; text: string }) {
         )}
       </header>
 
-      <BookMarkdown content={text} concepts={bookConceptDefinitions(essay.concepts)} />
+      {essay.cover && <figure className="post-cover">
+        <img src={essay.cover.src} alt={essay.cover.alt} width={essay.cover.width} height={essay.cover.height} fetchPriority="high" decoding="async" />
+        {essay.cover.caption && <figcaption>{essay.cover.caption}</figcaption>}
+      </figure>}
+
+      <div className="post-reading-column">
+      <BookMarkdown content={text} concepts={bookConceptDefinitions(essay.concepts)} variant="post" images={essay.images} />
 
       <footer className="border-t border-border/60 pt-10">
-        <p className="dot-label">End of essay</p>
+        <p className="dot-label">End of {ESSAY_FORMAT_LABELS[essay.format ?? "essay"].toLowerCase()}</p>
 
         {concepts.length > 0 && (
           <section aria-labelledby="essay-concepts" className="mt-8">
@@ -177,10 +200,11 @@ function Essay({ essay, text }: { essay: EssaySummary; text: string }) {
             Book One
           </Link>
         </nav>
-        <div className="mt-8">
+        {!preview && <div className="mt-8">
           <PublicationSharing title={essay.title} path={`/essays/${essay.slug}`} />
-        </div>
+        </div>}
       </footer>
+      </div>
     </article>
   );
 }

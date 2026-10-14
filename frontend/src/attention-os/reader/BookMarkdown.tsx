@@ -323,12 +323,14 @@ export function BookMarkdown({
   references,
   variant = "chapter",
   completeEditionHref,
+  images,
 }: {
   content: string;
   afterHeading?: Readonly<Record<string, ReactNode>>;
   concepts?: readonly ReaderConceptDefinition[];
   references?: ReadonlyMap<number, ReaderReference>;
-  variant?: "chapter" | "references";
+  variant?: "chapter" | "references" | "post";
+  images?: Readonly<Record<string, { width: number; height: number }>>;
   /** Where the printed Complete Edition can be read; offered inside depth passages. */
   completeEditionHref?: string;
 }) {
@@ -377,9 +379,9 @@ export function BookMarkdown({
               return (
                 <>
                   <h2 id={id} className="book-section-heading scroll-mt-24">
-                    <span className="book-section-heading__marker" aria-hidden="true">
+                    {variant !== "post" && <span className="book-section-heading__marker" aria-hidden="true">
                       {terminal ? "Coda" : `§ ${String(sectionNumber).padStart(2, "0")}`}
-                    </span>
+                    </span>}
                     <span className="book-section-heading__title">{children}</span>
                   </h2>
                   {afterHeading?.[id]}
@@ -399,7 +401,12 @@ export function BookMarkdown({
                 {children}
               </h4>
             ),
-            p: ({ children, className: incoming, ...rest }) => {
+            p: ({ children, node, className: incoming, ...rest }) => {
+              const child = node?.children.length === 1 ? node.children[0] : undefined;
+              if (variant === "post" && child?.type === "element" && child.tagName === "img") {
+                const caption = child.properties.title;
+                return <figure className="post-inline-image">{children}{caption && <figcaption>{String(caption)}</figcaption>}</figure>;
+              }
               const presentation = paragraphPresentation(children);
               // Runs of stacked one-sentence lines arrive already marked by
               // remarkStichicRuns; keep that class alongside the content-derived one.
@@ -434,6 +441,7 @@ export function BookMarkdown({
               );
             },
             li: ({ children }) => <li>{withConceptLinks(children)}</li>,
+            img: ({ src, alt, title }) => <img src={src} alt={alt ?? ""} title={variant === "post" ? undefined : title} {...(src ? images?.[src] : undefined)} loading="lazy" decoding="async" />,
             table: ({ children }) => (
               <div className="book-table-scroll" tabIndex={0}>
                 <table>{children}</table>

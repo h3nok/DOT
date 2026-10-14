@@ -18,6 +18,7 @@
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { prepareEssayMedia } from "./essay-media.mjs";
 
 // Relative to the frontend package, like every path the build scripts use:
 // under Vitest's DOM environment `import.meta.url` is not a file URL.
@@ -34,7 +35,7 @@ const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 // `/essays/index.json` is the published index; an essay named `index` would
 // be served in its place.
 const RESERVED_SLUGS = new Set(["index"]);
-const FIELDS = ["title", "summary", "published", "updated", "levels", "concepts", "draft"];
+const FIELDS = ["title", "summary", "published", "updated", "levels", "concepts", "draft", "format", "series", "cover", "cover_alt", "cover_caption"];
 const TITLE_LIMIT = 140;
 const SUMMARY_LIMIT = 280;
 
@@ -159,6 +160,19 @@ export function parseEssay(source, slug, file = `${slug}.md`) {
   if (data.draft !== undefined && typeof data.draft !== "boolean") {
     fail(file, "draft must be true or false.");
   }
+  const format = data.format ?? "essay";
+  if (!["essay", "case-study", "letter"].includes(format)) fail(file, "format must be essay, case-study, or letter.");
+  const series = data.series === undefined ? undefined : requireText(file, data, "series", 100);
+  let cover;
+  if (data.cover !== undefined) {
+    cover = {
+      src: requireText(file, data, "cover", 240),
+      alt: requireText(file, data, "cover_alt", 300),
+      caption: data.cover_caption === undefined ? undefined : requireText(file, data, "cover_caption", 400),
+    };
+  } else if (data.cover_alt !== undefined || data.cover_caption !== undefined) {
+    fail(file, "cover_alt and cover_caption need a cover image.");
+  }
 
   if (!body) fail(file, "has no text after its front matter.");
   if (/^#\s/.test(body)) {
@@ -175,6 +189,9 @@ export function parseEssay(source, slug, file = `${slug}.md`) {
     levels,
     concepts,
     draft: data.draft === true,
+    format,
+    series,
+    cover,
     words,
     readingMinutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
     body,
@@ -185,7 +202,7 @@ const newestFirst = (a, b) =>
   b.published.localeCompare(a.published) || a.title.localeCompare(b.title);
 
 /** Every publishable essay, newest first. Drafts and `_` files are left out. */
-export function readEssays({ dir = ESSAYS_DIR, includeDrafts = false } = {}) {
+export function readEssays({ dir = ESSAYS_DIR, includeDrafts = false, preview = false } = {}) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((name) => name.endsWith(".md") && !name.startsWith("_"))
@@ -197,14 +214,15 @@ export function readEssays({ dir = ESSAYS_DIR, includeDrafts = false } = {}) {
       ),
     )
     .filter((essay) => includeDrafts || !essay.draft)
+    .map((essay) => prepareEssayMedia(essay, dir, { preview }))
     .sort(newestFirst);
 }
 
 /** What `/essays/index.json` publishes: everything but the text itself. */
-export function essayIndex(essays) {
+export function essayIndex(essays, { preview = false } = {}) {
   return {
     schema: ESSAY_INDEX_SCHEMA,
-    essays: essays.map(({ body: _body, draft: _draft, ...summary }) => summary),
+    essays: essays.map(({ body: _body, draft, _assets, ...summary }) => preview ? { ...summary, draft } : summary),
   };
 }
 
@@ -230,18 +248,30 @@ export function essaysPlugin({ dir = ESSAYS_DIR } = {}) {
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
         const pathname = (request.url ?? "").split("?")[0];
-        const isIndex = pathname === `${ESSAYS_ROUTE}/index.json`;
-        const essayFile = /^\/essays\/([^/]+)\.md$/.exec(pathname);
-        if (!isIndex && !essayFile) {
+        const preview = pathname.startsWith("/__essay-preview/");
+        const prefix = preview ? "/__essay-preview" : ESSAYS_ROUTE;
+        const isIndex = pathname === `${prefix}/index.json`;
+        const essayFile = new RegExp(`^${prefix}/([^/]+)\\.md$`).exec(pathname);
+        const isMedia = pathname.startsWith(preview ? `${prefix}/media/` : "/essay-media/");
+        if (!isIndex && !essayFile && !isMedia) {
           next();
           return;
         }
         try {
           // Re-read on every request so an edit shows on reload.
-          const essays = readEssays({ dir });
+          const essays = readEssays({ dir, includeDrafts: preview, preview });
+          response.setHeader("Cache-Control", "no-store");
+          if (preview) response.setHeader("X-Robots-Tag", "noindex, nofollow");
+          if (isMedia) {
+            const image = essays.flatMap((essay) => essay._assets).find((asset) => asset.url === pathname);
+            response.statusCode = image ? 200 : 404;
+            response.setHeader("Content-Type", image ? `image/${image.type}` : "text/plain");
+            response.end(image ? image.bytes : "Not found");
+            return;
+          }
           if (isIndex) {
             response.setHeader("Content-Type", "application/json; charset=utf-8");
-            response.end(JSON.stringify(essayIndex(essays)));
+            response.end(JSON.stringify(essayIndex(essays, { preview })));
             return;
           }
           const essay = essays.find((candidate) => candidate.slug === essayFile[1]);
@@ -258,6 +288,9 @@ export function essaysPlugin({ dir = ESSAYS_DIR } = {}) {
     generateBundle() {
       for (const essay of published) {
         this.emitFile({ type: "asset", fileName: `essays/${essay.slug}.md`, source: essay.body });
+        for (const image of essay._assets) {
+          this.emitFile({ type: "asset", fileName: image.url.slice(1), source: image.bytes });
+        }
       }
       this.emitFile({
         type: "asset",

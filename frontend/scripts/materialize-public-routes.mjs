@@ -510,6 +510,7 @@ function articleNode(essay) {
     "@id": `${url}#article`,
     headline: essay.title,
     description: essay.summary,
+    image: essay.cover ? `${SITE_URL}${essay.cover.src}` : undefined,
     url,
     mainEntityOfPage: url,
     author: personNode(),
@@ -529,15 +530,29 @@ function articleNode(essay) {
  * that never run the app. Math becomes MathML: no fonts, no script, and still
  * legible to a screen reader.
  */
-export function renderMarkdown(markdown) {
+export function renderMarkdown(markdown, { images = {}, post = false } = {}) {
   return renderToStaticMarkup(
     createElement(ReactMarkdown, {
       skipHtml: true,
       remarkPlugins: [remarkGfm, remarkMath, remarkDepthPassages],
       rehypePlugins: [[rehypeKatex, { output: "mathml" }]],
       children: markdown,
+      components: post ? {
+        img: ({ src, alt }) => createElement("img", { src, alt, ...images[src], loading: "lazy", decoding: "async" }),
+        p: ({ children, node }) => {
+          const child = node?.children.length === 1 ? node.children[0] : undefined;
+          return child?.type === "element" && child.tagName === "img"
+            ? createElement("figure", null, children, child.properties.title ? createElement("figcaption", null, String(child.properties.title)) : null)
+            : createElement("p", null, children);
+        },
+      } : undefined,
     }),
   );
+}
+
+const POST_FORMATS = { essay: "Essay", "case-study": "Case study", letter: "Letter" };
+function coverHtml(cover) {
+  return cover ? `<figure><img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="${cover.width}" height="${cover.height}" />${cover.caption ? `<figcaption>${escapeHtml(cover.caption)}</figcaption>` : ""}</figure>` : "";
 }
 
 const link = (href, label, downloadFilename) =>
@@ -881,6 +896,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         route,
         title: `${essay.title} — ${AUTHOR.name}`,
         description: essay.summary,
+        image: essay.cover?.src ?? "/og/henok-writing.png",
+        imageAlt: essay.cover?.alt ?? `${AUTHOR.name} — writing and ideas`,
+        imageWidth: essay.cover?.width,
+        imageHeight: essay.cover?.height,
         ogType: "article",
         lastmod: essay.updated ?? essay.published,
         structuredData: graph(
@@ -890,10 +909,11 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         prerender: page(
           [
             `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
-            `<header><p>Essay by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · Claim levels: ${essay.levels.join(", ")}</p>`,
+            `<header><p>${POST_FORMATS[essay.format ?? "essay"]}${essay.series ? ` · ${escapeHtml(essay.series)}` : ""} by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · ${essay.readingMinutes} min read · Claim levels: ${essay.levels.join(", ")}</p>`,
             `<h1>${escapeHtml(essay.title)}</h1><p>${escapeHtml(essay.summary)}</p></header>`,
-            renderMarkdown(essay.body),
-            "<p>End of essay</p>",
+            coverHtml(essay.cover),
+            renderMarkdown(essay.body, { images: essay.images, post: true }),
+            `<p>End of ${POST_FORMATS[essay.format ?? "essay"].toLowerCase()}</p>`,
             concepts ? `<h2>Builds on</h2><ul>${concepts}</ul>` : "",
             `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
           ].join(""),
@@ -955,7 +975,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   };
 
   const blogPosts = [
-    ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
+    ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, cover: essay.cover, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
     ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, href: writingPath(item) })),
   ].sort((first, second) => second.date.localeCompare(first.date));
   const blogRoute = {
@@ -985,7 +1005,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         "</section></div>",
         "<h2>Latest writing</h2><p>Newest first</p>",
         blogPosts.length > 0
-          ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
+          ? `<ol>${blogPosts.map((post) => `<li>${post.cover ? `<img src="${escapeHtml(post.cover.src)}" alt="" width="160" loading="lazy" />` : ""}${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
           : `<p>${escapeHtml(BLOG.emptyTitle)}</p><p>${escapeHtml(BLOG.emptyDescription)}</p>`,
         `<h2>Read at your pace.</h2><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
         `<p>AI &amp; digital products</p><h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-products`, "Explore the work")}</p>`,
@@ -1049,6 +1069,8 @@ export function renderRoute(shell, route, { headTags = [] } = {}) {
     [/<meta name="twitter:title" content="[^"]*"\s*\/>/, `<meta name="twitter:title" content="${title}" />`, "twitter:title"],
     [/<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${description}" />`, "twitter:description"],
     [/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${image}" />`, "og:image"],
+    [/<meta property="og:image:width" content="[^"]*"\s*\/>/, `<meta property="og:image:width" content="${route.imageWidth ?? 1200}" />`, "og:image:width"],
+    [/<meta property="og:image:height" content="[^"]*"\s*\/>/, `<meta property="og:image:height" content="${route.imageHeight ?? 630}" />`, "og:image:height"],
     [/<meta property="og:image:alt" content="[^"]*"\s*\/>/, `<meta property="og:image:alt" content="${imageAlt}" />`, "og:image:alt"],
     [/<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${image}" />`, "twitter:image"],
     [/<meta property="og:type" content="[^"]*"\s*\/>/, `<meta property="og:type" content="${route.ogType ?? "website"}" />`, "og:type"],
@@ -1137,7 +1159,7 @@ export function rssXml(essays) {
       `      <dc:creator>${escapeHtml(AUTHOR.name)}</dc:creator>`,
       `      <pubDate>${rfc822(essay.published)}</pubDate>`,
       `      <description>${escapeHtml(essay.summary)}</description>`,
-      `      <content:encoded><![CDATA[${cdata(absoluteLinks(renderMarkdown(essay.body)))}]]></content:encoded>`,
+      `      <content:encoded><![CDATA[${cdata(absoluteLinks(coverHtml(essay.cover) + renderMarkdown(essay.body, { images: essay.images, post: true })))}]]></content:encoded>`,
       "    </item>",
     ].join("\n"),
   );
@@ -1193,7 +1215,7 @@ async function main() {
           .catch(() => false)
       : true;
     const route = entry.image && !imageExists
-      ? { ...entry, image: undefined, imageAlt: undefined }
+      ? { ...entry, image: undefined, imageAlt: undefined, imageWidth: undefined, imageHeight: undefined }
       : entry;
     if (route !== entry) {
       console.warn(`No share card for ${route.route}; falling back to the site card.`);

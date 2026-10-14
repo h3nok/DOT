@@ -26,7 +26,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
 
   const links = (destinations: ReadonlyArray<readonly [string, string]>) => destinations.map(([to, label]) => {
     const current = pathname === to || (to !== "/" && pathname.startsWith(`${to}/`)) ||
-      (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname)));
+      (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname) || pathname.startsWith("/_preview/essays")));
     return (
       <li key={to}>
         <Link to={to} aria-current={current ? "page" : undefined} onClick={() => setOpen(false)}>

@@ -221,6 +221,10 @@ claimed here.
 
 ## Getting Started
 
+For post design, banner images, local draft previews, and the Markdown release
+workflow, see [Publishing a post](docs/PUBLISHING.md). Start in `frontend/` with
+`pnpm post:new my-post`, `pnpm post:preview`, and `pnpm post:check`.
+
 1. Clone the repository
 2. Bootstrap local development with `make setup`
 3. Start the development servers with `make start`

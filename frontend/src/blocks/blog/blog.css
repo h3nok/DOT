@@ -67,6 +67,7 @@
 .blog-posts > li:nth-child(3n+2) .blog-post-art { background: color-mix(in oklab, var(--background) 78%, var(--blog-sun-light)); }
 .blog-posts > li:nth-child(3n+3) .blog-post-art { background: color-mix(in oklab, var(--background) 84%, var(--blog-sage)); }
 .blog-post-art svg { display: block; width: 100%; }
+.blog-post-art img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
 .blog-post-meta { color: var(--muted-foreground); font-size: .75rem; line-height: 1.6; }
 
 .blog-page .blog-post-title {

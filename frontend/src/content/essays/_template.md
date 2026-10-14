@@ -8,6 +8,17 @@
 title: The essay's title
 summary: One or two sentences for the essay list, search results, and share cards.
 published: 2026-10-14
+format: essay
+
+# Formats: essay, case-study, letter. A series name is optional.
+# series: The American Millennial Manifesto
+
+# Optional banner. Replace my-post with this file's name (without .md).
+# Keep images beside this file in my-post/, never in public/.
+# Recommended: 1600 x 900, JPEG or WebP, under 750 KB.
+# cover: my-post/cover.webp
+# cover_alt: Describe what the image actually shows.
+# cover_caption: A short caption and image credit, if needed.
 
 # Optional. The date of the last substantive revision.
 # updated: 2026-10-20
@@ -31,3 +42,18 @@ it as a # heading here. Use ## for section headings.
 Mark claim levels the way Book One does. A paragraph that opens with one of
 these bold labels is set as that level: **Observation:**, **Model:**,
 **Hypothesis:**, **Speculation:**, **Practical model:**, or **DOT hypothesis:**.
+
+## A section heading
+
+Write the section here. Link to supporting sources in the text.
+
+Use standard Markdown for inline images. The optional image title becomes a
+visible caption. Replace the example path with your own file before using it:
+
+```markdown
+![Describe the image](my-post/detail.webp "Caption or image credit.")
+```
+
+## Sources
+
+Add the sources the piece actually uses. Remove unused example sections.
