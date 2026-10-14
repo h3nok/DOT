@@ -1095,7 +1095,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   const description = /<meta\s+name="description"\s+content="([^"]*)"/.exec(shell)?.[1] ?? "";
   const latest = essays.slice(0, 5);
   const body = [
-    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1><p>${escapeHtml(HOME.criticalLine)}</p>`,
+    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1><p>${escapeHtml(HOME.criticalLine)} <strong>${escapeHtml(HOME.emphasisLine)}</strong></p>`,
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,

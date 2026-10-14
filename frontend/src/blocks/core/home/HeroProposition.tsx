@@ -1,10 +1,9 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
-import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
 import { ArchitectureFocusContext, type ArchitectureFocus } from "./architectureFocus";
 import type { ArchitecturePartId } from "./heroData";
@@ -49,7 +48,8 @@ export function HeroProposition({
               <span>{HOME.title}</span>
             </h1>
             <p className="home-hero-subtitle">
-              {HOME.criticalLine}
+              <span>{HOME.criticalLine}</span>{" "}
+              <span><strong>{HOME.emphasisLine}</strong></span>
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export function HeroProposition({
             primary={{
               to: "/book/digital-organism-theory/preface?path=start-where-you-live",
               label: HOME.primaryAction,
-              icon: <NucleusMark size={24} reducedMotion />,
+              icon: <BookOpen strokeWidth={1.5} />,
             }}
             secondary={[{
               href: "#possibility-field",

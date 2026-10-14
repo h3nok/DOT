@@ -89,6 +89,27 @@ The runtime and script-free homepage carry the same wording and emphasis. This
 serves L7’s honest framing and L10’s concise reading invitation without violating
 any manifesto law or changing the book.
 
+## Opening refinement — 2026-10-12
+
+The subtitle now reads “Challenge any model that leaves you and your
+experience out.” followed by the founder’s emphasis: “Especially one that asks
+you to be someone else.” “One” refers back to any model, so the line holds in
+whatever culture a reader lives in; it names no culture, industry, or motive.
+The phrase returns to the founder’s earlier wording (“…or ask you to be someone
+else”). The single bold-copper emphasis moves to this sentence; high contrast
+still underlines it. The runtime and script-free homepage carry the same
+wording and emphasis. Serves L7 (honest framing); violates no law.
+
+## Opening refinement — 2026-10-13
+
+The founder clarifies that the challenge includes transcending inherited culture.
+The emphasized invitation now reads “Grow beyond the culture that tells you who
+to be.” Keep the first challenge sentence and the single copper emphasis. The
+Book One action retains the shared paper treatment and three progressing dots,
+with an open-book cue and consistent touch spacing in both desktop and phone
+layouts. Serves L1 (calm), L7 (faithful framing), and L10 (one clear reading
+action); violates no law.
+
 ## Alternatives considered
 
 | Option | Pros | Cons | Verdict |

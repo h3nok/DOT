@@ -80,11 +80,15 @@ describe("HeroProposition", () => {
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
     expect(document.querySelector(".home-hero-opening-copy")).toBeNull();
-    // One plain-language invitation before the model introduces its vocabulary.
+    // One plain-language invitation before the model introduces its vocabulary,
+    // with its single emphasis on growing beyond inherited cultural expectations.
     expect(document.querySelector(".home-hero-subtitle")).toHaveTextContent(
-      "Challenge any model that leaves your experience out.",
+      "Challenge any model that leaves you and your experience out. Grow beyond the culture that tells you who to be.",
     );
-    expect(document.querySelector(".home-hero-subtitle strong")).toBeNull();
+    expect(document.querySelectorAll(".home-hero-subtitle strong")).toHaveLength(1);
+    expect(document.querySelector(".home-hero-subtitle strong")).toHaveTextContent(
+      "Grow beyond the culture that tells you who to be.",
+    );
     // The opening is an invitation to examine beliefs, not an attributed quotation.
     expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
     expect(document.querySelector(".home-hero-masthead blockquote")).toBeNull();

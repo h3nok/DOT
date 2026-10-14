@@ -337,7 +337,7 @@ describe("page text for readers without JavaScript", () => {
 
   it("gives the home page the author, the book, and a way into every chapter", () => {
     const html = rootDocument(shell, manifest);
-    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Challenge any model that leaves your experience out.</p>');
+    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Challenge any model that leaves you and your experience out. <strong>Grow beyond the culture that tells you who to be.</strong></p>');
     for (const section of manifest.sections) {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }
