@@ -31,7 +31,10 @@ test("phone navigation opens deliberately, dismisses, routes, and yields to desk
   await panel.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page).toHaveURL("/contact");
   await expect(panel).toHaveCount(0);
+  await page.setViewportSize({ width: 640, height: 844 });
+  await expect(menu).toBeVisible();
   await menu.click();
+  await expect(panel.getByRole("link", { name: "Work with me", exact: true })).toHaveAttribute("href", "/about");
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(panel).toHaveCount(0);
   await expect(menu).toBeHidden();

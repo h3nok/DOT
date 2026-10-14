@@ -29,6 +29,22 @@
   "loveDefinition": "Love is the condition in which Fear no longer governs you.",
   "sourceLabel": "Book One, preface",
   "sourcePath": "/book/digital-organism-theory/preface",
+  "practice": {
+    "eyebrow": "Consciousness 101 · In everyday life",
+    "title": "What happens when you feel challenged?",
+    "situation": "A difficult message arrives. You feel a reaction, interpret what it means, and choose how to respond.",
+    "questions": [
+      { "label": "Notice", "question": "What am I feeling?" },
+      { "label": "Examine", "question": "What am I assuming?" },
+      { "label": "Choose", "question": "How can I respond honestly?" }
+    ],
+    "invitation": "Begin with what you can examine in your own experience.",
+    "loveIntro": "In DOT, Love describes a way of being.",
+    "relationships": "It becomes visible in how you listen, tell the truth, respect another person’s agency, and take responsibility for what follows.",
+    "boundaries": "Care can include boundaries, accountability, and repair. The work is to learn how to relate without letting Fear govern the encounter.",
+    "sourceLabel": "Book One · Love Must Become Operational",
+    "sourcePath": "/book/digital-organism-theory/the-painting#love-must-become-operational"
+  },
   "invitationTitle": "Read. Inquire. Open up.",
   "invitation": "Read the book. Examine your experience. Ask questions, and be willing to change what you hold to be true. This work can be long and difficult. Take your time; there is no timetable for it.",
   "boundary": "Henok’s account begins with lived experience. His explanations of a larger consciousness and a nonphysical substrate remain hypotheses, open to challenge and revision.",

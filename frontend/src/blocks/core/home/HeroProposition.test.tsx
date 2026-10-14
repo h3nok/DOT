@@ -96,15 +96,20 @@ describe("HeroProposition", () => {
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("lets the first concept carry DOT's proposal at its honest claim level", () => {
+  it("begins with inherited experience before introducing DOT's proposal", () => {
     renderProposition();
 
     expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
     const concepts = screen.getByRole("region", { name: "Key concepts and questions" });
-    expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
+    expect(within(concepts).getByRole("heading", { name: "What you inherited" })).toBeVisible();
     const first = within(concepts).getByRole("group", { name: /^1 of \d+$/ });
-    expect(first).toHaveTextContent(/You are not your body/);
-    expect(first).toHaveAttribute("data-epistemic-status", "hypothesis");
+    expect(first).toHaveTextContent(/Family, culture, and early experience/);
+    expect(first).toHaveAttribute("data-epistemic-status", "observation");
+    const next = within(concepts).getByRole("button", { name: "Next concept" });
+    for (let index = 0; index < 4; index++) fireEvent.click(next);
+    const proposal = within(concepts).getByRole("group", { name: /^5 of \d+$/ });
+    expect(proposal).toHaveTextContent(/In DOT, you are the conscious process/);
+    expect(proposal).toHaveAttribute("data-epistemic-status", "hypothesis");
     expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
   });
 

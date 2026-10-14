@@ -30,9 +30,33 @@ export interface Concept {
 
 export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
+    id: "home.concept.rest",
+    term: "What you inherited",
+    text: "Family, culture, and early experience shape how you see before you can examine it. What you inherit is a starting point, not a final verdict.",
+    level: "observation",
+  },
+  {
+    id: "home.concept.fear",
+    term: "Fear",
+    text: "When protecting your identity matters more than seeing clearly, Fear governs. Perception narrows around defence and control.",
+    level: "model",
+  },
+  {
+    id: "home.concept.love",
+    term: "Love",
+    text: "Love is the condition in which Fear no longer governs you. It takes form in truthful, caring relationships that respect agency and boundaries.",
+    level: "model",
+  },
+  {
+    id: "home.concept.intent",
+    term: "Intent",
+    text: "The direction you form before you act. It shapes your next choice within what the world allows; it is not a magical override of physical law.",
+    level: "model",
+  },
+  {
     id: "home.concept.organism",
     term: "The Digital Organism",
-    text: "You are not your body. You are the process that lives through it: carrying state, registering what matters, responding, and holding together across change. Digital here means informational, not electronic.",
+    text: "In DOT, you are the conscious process that lives through a body: carrying state, registering what matters, responding, and holding together across change. Digital here means informational, not electronic.",
     level: "hypothesis",
   },
   ...HOME.critiques.map((concept): Concept => ({ ...concept, level: "model", frame: "status-quo" })),
@@ -60,30 +84,6 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
     id: "home.concept.layers",
     term: "Canvas · Painting · Character",
     text: "Consequential experience is etched onto your Canvas. What accumulates there, your Painting, interprets what comes next. Character is that Painting made visible in how you act.",
-    level: "model",
-  },
-  {
-    id: "home.concept.rest",
-    term: "The First Painting",
-    text: "Family, culture, and early experience shape how you see before you can examine it. What you inherit is a starting point, not a final verdict.",
-    level: "observation",
-  },
-  {
-    id: "home.concept.fear",
-    term: "Fear",
-    text: "When protecting your identity matters more than seeing clearly, Fear governs. Perception narrows around defence and control.",
-    level: "model",
-  },
-  {
-    id: "home.concept.love",
-    term: "Love",
-    text: "Love is the condition in which Fear no longer governs you. It takes form in truthful, caring relationships that respect agency and boundaries.",
-    level: "model",
-  },
-  {
-    id: "home.concept.intent",
-    term: "Intent",
-    text: "The direction you form before you act. It shapes your next choice within what the world allows; it is not a magical override of physical law.",
     level: "model",
   },
   {

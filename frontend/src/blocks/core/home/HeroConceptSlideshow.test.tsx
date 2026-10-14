@@ -59,7 +59,7 @@ describe("HeroConceptSlideshow", () => {
     expect(within(region).getByRole("heading", { name: "The Limit of Knowledge" })).toBeVisible();
     for (let index = TOTAL - 1; index > 0; index--) fireEvent.click(previous);
     expect(previous).toBeDisabled();
-    expect(within(region).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
+    expect(within(region).getByRole("heading", { name: "What you inherited" })).toBeVisible();
   });
 
   it("keeps the status quo and DOT's reply in their own frames, cited and at honest levels", () => {
@@ -70,8 +70,8 @@ describe("HeroConceptSlideshow", () => {
     expect(eyebrow).not.toHaveAttribute("data-frame");
     expect(eyebrow).toHaveTextContent("DOT concept");
 
-    fireEvent.click(next);
-    const statusQuo = within(region).getByRole("group", slide(2));
+    for (let index = 0; index < 5; index++) fireEvent.click(next);
+    const statusQuo = within(region).getByRole("group", slide(6));
     expect(within(statusQuo).getByRole("heading", { name: "The Closed Question" })).toBeVisible();
     expect(statusQuo).toHaveAttribute("data-frame", "status-quo");
     expect(statusQuo).toHaveAttribute("data-epistemic-status", "model");
@@ -80,22 +80,22 @@ describe("HeroConceptSlideshow", () => {
     expect(eyebrow).toHaveTextContent("DOT rejects");
 
     fireEvent.click(next);
-    expect(within(region).getByRole("group", slide(3))).toHaveAttribute("data-frame", "status-quo");
+    expect(within(region).getByRole("group", slide(7))).toHaveAttribute("data-frame", "status-quo");
     expect(eyebrow).toHaveTextContent("Outside perspective");
     fireEvent.click(next);
-    const humanism = within(region).getByRole("group", slide(4));
+    const humanism = within(region).getByRole("group", slide(8));
     expect(within(humanism).getByRole("heading", { name: "Secular Humanism" })).toBeVisible();
     expect(humanism).toHaveAttribute("data-epistemic-status", "model");
     expect(within(humanism).getByRole("link", { name: "Humanist Manifesto III, 2003" }))
       .toHaveAttribute("href", "https://americanhumanist.org/humanism/humanist-manifesto-iii/");
     fireEvent.click(next);
-    const reply = within(region).getByRole("group", slide(5));
+    const reply = within(region).getByRole("group", slide(9));
     expect(within(reply).getByRole("heading", { name: "DOT Rejects the Closed Question" })).toBeVisible();
     expect(reply).toHaveAttribute("data-frame", "reply");
     expect(reply).toHaveAttribute("data-epistemic-status", "model");
     expect(eyebrow).toHaveTextContent("DOT’s response");
 
-    expect(region.querySelector(".home-concept-slideshow-count")).toHaveTextContent(`5 / ${TOTAL}`);
+    expect(region.querySelector(".home-concept-slideshow-count")).toHaveTextContent(`9 / ${TOTAL}`);
   });
 
   it("starts a finite sequence, allows reading time after typing, and never loops", () => {
@@ -143,12 +143,12 @@ describe("HeroConceptSlideshow", () => {
   it("pauses immediately, reveals the full title, and resumes only on Play", () => {
     vi.useFakeTimers();
     render(<HeroConceptSlideshow />);
-    const title = screen.getByRole("heading", { name: "The Digital Organism" });
+    const title = screen.getByRole("heading", { name: "What you inherited" });
     expect(title).toHaveTextContent("");
     act(() => vi.advanceTimersByTime(35));
-    expect(title).toHaveTextContent("T");
+    expect(title).toHaveTextContent("W");
     fireEvent.click(screen.getByRole("button", { name: "Pause concept introduction" }));
-    expect(title).toHaveTextContent("The Digital Organism");
+    expect(title).toHaveTextContent("What you inherited");
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(1))).toBeVisible();
@@ -166,8 +166,8 @@ describe("HeroConceptSlideshow", () => {
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(1))).toBeVisible();
     fireEvent.click(next);
-    expect(screen.getByRole("heading", { name: "The Closed Question" }))
-      .toHaveTextContent("The Closed Question");
+    expect(screen.getByRole("heading", { name: "Fear" }))
+      .toHaveTextContent("Fear");
     expect(screen.getByRole("group", slide(2))).toHaveAttribute("aria-live", "polite");
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(2))).toBeVisible();
@@ -215,8 +215,8 @@ describe("HeroConceptSlideshow", () => {
     vi.useFakeTimers();
     motion.reducedMotion = source === "system";
     render(<HeroConceptSlideshow reducedMotion={source === "appearance"} />);
-    expect(screen.getByRole("heading", { name: "The Digital Organism" }))
-      .toHaveTextContent("The Digital Organism");
+    expect(screen.getByRole("heading", { name: "What you inherited" }))
+      .toHaveTextContent("What you inherited");
     expect(screen.getByRole("button", { name: "Autoplay unavailable in stillness mode" })).toBeDisabled();
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(90_000));

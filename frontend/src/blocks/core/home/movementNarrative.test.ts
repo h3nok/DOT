@@ -156,12 +156,12 @@ describe("homepage inquiry narrative", () => {
     expect(home.toLowerCase()).not.toContain("believe");
   });
 
-  it("places the purpose card after Little c and before the final invitation", () => {
+  it("places everyday experience before the architecture and keeps the final invitation", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const navigation = readFileSync(join(HERE, "HomeJourneyNav.tsx"), "utf8");
-    expect(home.indexOf("<TheoryLayerJourney")).toBeLessThan(home.indexOf("<Consciousness101"));
+    expect(home.indexOf("<Consciousness101")).toBeLessThan(home.indexOf("<TheoryLayerJourney"));
     expect(home.indexOf("<Consciousness101")).toBeLessThan(home.indexOf('id="choose-path"'));
-    expect(navigation.indexOf('id: "little-c"')).toBeLessThan(navigation.indexOf('id: "consciousness-101"'));
+    expect(navigation.indexOf('id: "consciousness-101"')).toBeLessThan(navigation.indexOf('id: "possibility-field"'));
     expect(navigation.indexOf('id: "consciousness-101"')).toBeLessThan(navigation.indexOf('id: "choose-path"'));
   });
 });

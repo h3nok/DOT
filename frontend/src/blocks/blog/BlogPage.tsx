@@ -110,7 +110,7 @@ export default function BlogPage() {
         <div className="blog-hero">
           <PageIntro className="blog-hero-copy" titleClassName="blog-title" title={blog.heading.map((line) => <span key={line}>{line}</span>)}>
             <p className="blog-description">{blog.description}</p>
-            <a href="#latest-writing" className="blog-jump">Browse the writing <ArrowDown aria-hidden="true" /></a>
+            <a href="#start-reading" className="blog-jump">Start reading <ArrowDown aria-hidden="true" /></a>
           </PageIntro>
           <div className="blog-hero-art">
             <BlogCoverArtwork />
@@ -118,6 +118,19 @@ export default function BlogPage() {
           </div>
         </div>
       </header>
+
+      <Surface as="section" tone="forest" id="start-reading" aria-labelledby="blog-start-title" className="blog-starting-point">
+        <div>
+          <p className="dot-label">{blog.startingPoint.label}</p>
+          <h2 id="blog-start-title" className="dot-section-heading">{blog.startingPoint.title}</h2>
+          <p className="blog-start-description">{blog.startingPoint.description}</p>
+          <TextLink to={blog.startingPoint.to}>{blog.startingPoint.linkLabel}</TextLink>
+        </div>
+        <figure>
+          <blockquote><p>“{blog.startingPoint.quote}”</p></blockquote>
+          <figcaption>{blog.startingPoint.sourceLabel}</figcaption>
+        </figure>
+      </Surface>
 
       <section className="blog-paths" aria-label="Building and inquiry">
         {blog.paths.map((path) => (

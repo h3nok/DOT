@@ -573,7 +573,7 @@ function siteNav(essaysPublished) {
     [BLOG_ROUTE, "Blog"],
     [PUBLICATIONS_ROUTE, "Books"],
     ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
-    [ABOUT_ROUTE, "About"],
+    [ABOUT_ROUTE, "Work with me"],
     [CONTACT_ROUTE, "Contact"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
@@ -1000,6 +1000,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
       [
         `<p>${escapeHtml(BLOG.title)}</p><h1>${BLOG.heading.map(escapeHtml).join("<br />")}</h1>`,
         `<p>${escapeHtml(BLOG.description)}</p><p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p>`,
+        `<section id="start-reading"><p>${escapeHtml(BLOG.startingPoint.label)}</p><h2>${escapeHtml(BLOG.startingPoint.title)}</h2><p>${escapeHtml(BLOG.startingPoint.description)}</p><blockquote><p>${escapeHtml(BLOG.startingPoint.quote)}</p><cite>${escapeHtml(BLOG.startingPoint.sourceLabel)}</cite></blockquote><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></section>`,
         `<section aria-label="Building and inquiry">${BLOG.paths.map((entry) => `<p>${escapeHtml(entry.label)}</p><h2>${escapeHtml(entry.title)}</h2><p>${escapeHtml(entry.description)}</p><p>${link(entry.to, entry.linkLabel)}</p>`).join("")}</section>`,
         `<section><p>A series · Applied DOT</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(BLOG.seriesDescription)}</p><p>These letters are published on LinkedIn.</p>`,
         NEWSLETTER.editions.length > 0
@@ -1099,8 +1100,8 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
+    `<section id="consciousness-101"><p>${escapeHtml(HOME.practice.eyebrow)}</p><h2>${escapeHtml(HOME.practice.title)}</h2><p>${escapeHtml(HOME.practice.situation)}</p><ol>${HOME.practice.questions.map(item => `<li><strong>${escapeHtml(item.label)}</strong>: ${escapeHtml(item.question)}</li>`).join("")}</ol><p>${escapeHtml(HOME.practice.invitation)}</p><p>${escapeHtml(HOME.practice.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.practice.relationships)}</p><p>${escapeHtml(HOME.practice.boundaries)}</p><p>${link(HOME.practice.sourcePath, HOME.practice.sourceLabel)}</p></section>`,
     `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
-    `<h2>Consciousness 101</h2><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
     `<h2>${escapeHtml(HOME.invitationTitle)}</h2><p>${escapeHtml(HOME.invitation)}</p><p>${escapeHtml(HOME.boundary)}</p><p>${escapeHtml(HOME.edition)}</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0

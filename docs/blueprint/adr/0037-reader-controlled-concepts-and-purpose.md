@@ -136,6 +136,30 @@ UI, not a new Attention OS primitive. The manifesto quarantine is unchanged.
 
 ## Consequences
 
+### Amendment — 2026-10-13 (experience before architecture)
+
+The founder requested a first-time-reader pass after reviewing the gap between
+the human invitation and the model's unfamiliar vocabulary. The twenty-concept
+sequence now begins with inherited conditioning, Fear, Love, and Intent before
+the organism proposal and critiques. Its finite playback, claim levels,
+controls, and diagram connections remain intact. The organism explanation
+explicitly speaks within DOT.
+
+Consciousness 101 moves between the hero and the four architecture sections.
+An ordinary difficult-message example introduces three optional reflection
+questions; the existing definition of Love remains a state, with relationships,
+agency, boundaries, and accountability as its expression. The old section
+anchor remains valid. Its next link enters the architecture; Little c now
+leads directly to the final reading invitation. Page navigation follows this
+reading order. The causal architecture and emergence animation retain T × E,
+Big C, Reality Frames, and Little c in their existing order.
+
+Content-sized theory sections replace the viewport-height minimum and large
+vertical gaps. Evidence boundaries and optional reasoning remain visible and
+reader-controlled. Runtime and generated public HTML share the reflection copy.
+This is introductory UI, not a revision of the fixed manuscript or a claimed
+scientific intervention. Serves L1, L7, L8, L10, and L12; violates no law.
+
 Positive: concepts can be learned one at a time, colour clarifies the existing
 system, and the architecture leads into its human purpose without replacing
 the established page.

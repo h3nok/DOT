@@ -83,8 +83,8 @@ test("autoplay explains the concepts once, then stops without looping or announc
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   const first = concepts.getByRole("group", { name: `1 of ${TOTAL}` });
   await runUntil(page, async () => await first.locator(".home-concept-slideshow-untyped").count() === 0);
-  await expect(concepts.getByRole("heading", { name: "The Digital Organism" }))
-    .toHaveText("The Digital Organism");
+  await expect(concepts.getByRole("heading", { name: "What you inherited" }))
+    .toHaveText("What you inherited");
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toHaveAttribute("aria-live", "off");
   await page.clock.fastForward(7_900);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
@@ -162,21 +162,21 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
 });
 
-test("Consciousness 101 follows Little c and leads to inquiry or its book source", async ({ page }) => {
+test("everyday reflection precedes the architecture and leads to its explanation or book source", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const purpose = page.getByRole("region", { name: "Consciousness 101" });
+  const purpose = page.getByRole("region", { name: "What happens when you feel challenged?" });
   await expect(purpose).toBeVisible();
-  const order = await page.locator("#little-c, #consciousness-101, #choose-path")
+  const order = await page.locator("#consciousness-101, #possibility-field, #big-c, #reality-frame, #little-c, #choose-path")
     .evaluateAll(sections => sections.map(section => section.id));
-  expect(order).toEqual(["little-c", "consciousness-101", "choose-path"]);
-  await page.locator("#little-c").getByRole("link", { name: /Continue to Consciousness 101/ }).click();
-  await expect(page).toHaveURL(/#consciousness-101$/);
-  await expect(purpose.getByRole("heading", { name: "Consciousness 101", exact: true })).toBeVisible();
+  expect(order).toEqual(["consciousness-101", "possibility-field", "big-c", "reality-frame", "little-c", "choose-path"]);
+  await expect(purpose.getByRole("list", { name: "Questions for reflection" }).getByRole("listitem")).toHaveCount(3);
   await expect(purpose.getByText("Love and relationships", { exact: true })).toBeVisible();
-  await expect(purpose.getByText(/In DOT, the purpose of Little c/)).toBeVisible();
-  await expect(purpose.getByRole("link", { name: /Read and inquire/ }))
-    .toHaveAttribute("href", "#choose-path");
+  await expect(purpose.getByText("In DOT, Love describes a way of being.")).toBeVisible();
+  await purpose.getByRole("link", { name: "Explore the proposed architecture" }).click();
+  await expect(page).toHaveURL(/#possibility-field$/);
+  await page.locator("#little-c").getByRole("link", { name: /Read and inquire/ }).click();
+  await expect(page).toHaveURL(/#choose-path$/);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true })
     .getByRole("link", { name: "Consciousness 101: Love and relationships", includeHidden: true }))
     .toHaveAttribute("href", "#consciousness-101");

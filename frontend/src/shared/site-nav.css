@@ -27,7 +27,7 @@
   html:not([data-motion="still"]) .site-nav-panel[data-state="open"] { animation: site-nav-panel-in 180ms cubic-bezier(.22, 1, .36, 1); }
 }
 @keyframes site-nav-panel-in { from { opacity: 0; transform: translateY(-.25rem) scale(.98); } }
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .site-nav { margin-inline-start: auto; }
   .site-nav-desktop { display: none; }
   .site-nav-trigger { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-width: var(--touch-target); min-height: var(--touch-target); padding: .5rem .75rem; border: 1px solid var(--border); border-radius: var(--appearance-ui-control-radius, .75rem); background: var(--background); color: var(--foreground); font-size: .8125rem; }

@@ -295,10 +295,10 @@ export function TheoryLayerJourney({
                     </a>
                   )}
                   {item.layer === "little-c" && (
-                    <a href="#consciousness-101" className="home-theory-layer-next">
+                    <a href="#choose-path" className="home-theory-layer-next">
                       <span>
-                        <small>From local experience to purpose</small>
-                        <span className="home-theory-layer-next-title">Continue to <strong>Consciousness 101</strong></span>
+                        <small>From the model to inquiry</small>
+                        <span className="home-theory-layer-next-title">Read and inquire</span>
                       </span>
                       <ArrowDown aria-hidden="true" />
                     </a>

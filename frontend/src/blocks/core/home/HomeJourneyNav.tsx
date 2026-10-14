@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
-  { id: "threshold", label: "Love and an inquiry into consciousness" },
+  { id: "threshold", label: "An invitation to examine experience" },
+  { id: "consciousness-101", label: "Consciousness 101: Love and relationships" },
   { id: "possibility-field", label: "T × E: the source" },
   { id: "big-c", label: "Big C: primordial consciousness" },
   { id: "reality-frame", label: "RF₀: the physical universe" },
   { id: "little-c", label: "Little c: the local experiencer" },
-  { id: "consciousness-101", label: "Consciousness 101: Love and relationships" },
   { id: "choose-path", label: "Read and inquire" },
 ] as const;
 

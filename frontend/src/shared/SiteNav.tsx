@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import "./site-nav.css";
 
 const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
-  ["/about", "About"],
+  ["/about", "Work with me"],
   ["/blog", "Blog"],
   ["/book/digital-organism-theory", "Book One"],
   ["/academy", "Academy"],
@@ -18,7 +18,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 640px)");
+    const desktop = window.matchMedia("(min-width: 768px)");
     const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
     desktop.addEventListener("change", closeOnDesktop);
     return () => desktop.removeEventListener("change", closeOnDesktop);

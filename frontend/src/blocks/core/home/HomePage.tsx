@@ -157,9 +157,10 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* ── The theory, in the same outside-to-inside order as the hero ─ */}
-      <TheoryLayerJourney reducedMotion={reducedMotion} />
+      {/* Everyday experience gives readers a way into the proposed architecture. */}
       <Consciousness101 />
+      {/* The architecture keeps its outside-to-inside causal order. */}
+      <TheoryLayerJourney reducedMotion={reducedMotion} />
 
       {/* ── Final reading invitation ─────────────────────────────────── */}
       <motion.section

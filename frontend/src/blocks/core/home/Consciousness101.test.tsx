@@ -6,13 +6,14 @@ import { Consciousness101 } from "./Consciousness101";
 describe("Consciousness101", () => {
   it("presents Love and relationships as purpose within DOT, not another architecture layer", () => {
     render(<MemoryRouter><Consciousness101 /></MemoryRouter>);
-    const purpose = screen.getByRole("region", { name: "Consciousness 101" });
+    const purpose = screen.getByRole("region", { name: "What happens when you feel challenged?" });
     expect(within(purpose).getByText("Love and relationships")).toBeVisible();
-    expect(within(purpose).getByText(/In DOT, the purpose of Little c is to develop toward Love/)).toBeVisible();
+    expect(within(purpose).getByText("In DOT, Love describes a way of being.")).toBeVisible();
+    expect(within(purpose).getByRole("list", { name: "Questions for reflection" }).children).toHaveLength(3);
     expect(within(purpose).getByText(/boundaries, accountability, and repair/)).toBeVisible();
     expect(purpose.querySelector("svg.home-concept-architecture")).toBeNull();
-    expect(within(purpose).getByRole("link", { name: /Read and inquire/ }))
-      .toHaveAttribute("href", "#choose-path");
+    expect(within(purpose).getByRole("link", { name: "Explore the proposed architecture" }))
+      .toHaveAttribute("href", "#possibility-field");
     expect(within(purpose).getByRole("link", { name: "Book One · Love Must Become Operational" }))
       .toHaveAttribute("href", "/book/digital-organism-theory/the-painting#love-must-become-operational");
   });

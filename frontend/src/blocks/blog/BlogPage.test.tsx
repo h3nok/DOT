@@ -45,6 +45,10 @@ describe("BlogPage", () => {
     vi.mocked(fetchReleasedWriting).mockResolvedValue([]);
     open();
     expect(await screen.findByText("The archive starts here.")).toBeInTheDocument();
+    const startingPoint = within(screen.getByRole("region", { name: "Learning to See from Between Paintings" }));
+    expect(startingPoint.getByText("Start here · From Book One")).toBeVisible();
+    expect(startingPoint.getByRole("link", { name: "Read the passage" })).toHaveAttribute("href", "/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings");
+    expect(startingPoint.getByText(/The experience did not place me outside culture/)).toBeVisible();
     const paths = within(screen.getByRole("region", { name: "Building and inquiry" }));
     expect(paths.getAllByRole("heading", { level: 2 })).toHaveLength(2);
     expect(paths.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/about#about-products");

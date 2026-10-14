@@ -430,6 +430,8 @@ describe("essays", () => {
     expect(blog.prerender).toContain(`href="${SITE_URL}/feed.xml">Follow with RSS</a>`);
     expect(blog.prerender).toContain('href="/readers">Open the reader list</a>');
     expect(blog.prerender).toContain("Discuss a project");
+    expect(blog.prerender).toContain("Start here · From Book One");
+    expect(blog.prerender).toContain('href="/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings">Read the passage</a>');
     expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
     expect(blog.prerender).toContain("Read on LinkedIn");
     expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
