@@ -115,7 +115,7 @@ test("the author publishes here and prepares full-text copies even when LinkedIn
   let releases = 0;
   const fixtureBody = "Complete author-supplied fixture manuscript.";
   await page.route("**/v1/**", async (route) => {
-    const path = new URL(route.request().url()).pathname;
+    const path = new URL(route.request().url()).pathname.replace(/^\/__dot-api/, "");
     if (path === "/v1/auth/session") return route.fulfill({ json: { user: { id: "author", is_owner: true, role: "owner", display_name: "Test author" } } });
     if (path === "/v1/academy/workspace") return route.fulfill({ json: { id: "space", slug: "dot-academy", title: "Test workspace" } });
     if (path === "/v1/academy/spaces/space/works") return route.fulfill({ json: route.request().method() === "POST" ? { id: "launch-letter", canonical_slug: "fixture-letter", kind: "essay" } : [] });

@@ -5,6 +5,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import { essaysPlugin } from "./scripts/essays.mjs";
 import { contactPreviewPlugin } from "./scripts/contact-preview.mjs";
+import { localOrchestratorPlugin } from "./scripts/local-orchestrator.mjs";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -21,6 +22,7 @@ export default defineConfig({
     // Publishes src/content/essays as /essays/index.json + /essays/<slug>.md
     // and refuses to build if an essay's front matter is incomplete (ADR-0033).
     essaysPlugin(),
+    localOrchestratorPlugin(),
     contactPreviewPlugin(),
     // A bundle map is useful locally and is also a 1 MB implementation map we
     // have no reason to publish beside the book. Generate it only for the
@@ -108,8 +110,8 @@ export default defineConfig({
     headers: {
       "Service-Worker-Allowed": "/",
     },
-    // The frontend calls VITE_ORCHESTRATOR_URL. The optional contact-preview
-    // plugin proxies only public intake to an explicitly configured live API.
+    // Local API calls share this origin so development session cookies work.
+    // The separate contact-preview plugin opts only public intake into a live API.
   },
   // Ensure manifest.json and service worker are copied
   publicDir: "public",

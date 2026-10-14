@@ -176,6 +176,7 @@ const deliveryUrl = (ownerId: string, slug: string, version?: number) => {
     orchestratorUrl(
       `/v1/publications/delivery/${encodeURIComponent(ownerId)}/${encodeURIComponent(slug)}/manifest`,
     ),
+    window.location.origin,
   );
   if (version) {
     url.searchParams.set("version", String(version));

@@ -169,7 +169,7 @@ test("reader signup requires a correct code and never requests membership", asyn
   const sent: Array<{ path: string; body: unknown }> = [];
   page.on("request", (request) => {
     if (request.method() === "POST" && request.url().includes("/v1/")) {
-      sent.push({ path: new URL(request.url()).pathname, body: request.postDataJSON() });
+      sent.push({ path: new URL(request.url()).pathname.replace(/^\/__dot-api/, ""), body: request.postDataJSON() });
     }
   });
   await page.route("**/v1/readers/status", (route) => route.fulfill({
