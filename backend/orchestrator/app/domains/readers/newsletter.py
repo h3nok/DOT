@@ -300,6 +300,7 @@ def message(campaign: models.NewsletterCampaign, subscriber: db.ReaderSubscripti
         "subject": envelope["subject"],
         "html": envelope["html"] + footer_html,
         "text": envelope["text"] + "\n\n" + footer,
+        "tags": [{"name": "publication", "value": "amm"}],
         "headers": {
             "List-Unsubscribe": f"<{one_click}>",
             "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
@@ -437,6 +438,11 @@ async def callback(session: AsyncSession, identity: str, event: dict) -> None:
         .with_for_update()
     )
     if row is None:
+        # The provider account also handles OTP and contact mail. Acknowledge
+        # those events without storing their recipients or repeatedly retrying.
+        tags = data.get("tags")
+        if not isinstance(tags, dict) or tags.get("publication") != "amm":
+            return
         # May precede persistence of the send response. Ask the provider to
         # retry, so a fast bounce cannot disappear before suppression is saved.
         raise fastapi.HTTPException(503, "Delivery receipt not available yet.")

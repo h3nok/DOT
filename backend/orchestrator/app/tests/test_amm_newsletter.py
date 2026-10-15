@@ -224,6 +224,7 @@ async def test_approval_freezes_audience_dispatch_rechecks_consent_and_dedupes(
     assert len(sent) == 1
     payload = sent[0][0]
     assert payload["to"] == ["eligible@example.com"]
+    assert payload["tags"] == [{"name": "publication", "value": "amm"}]
     assert payload["headers"]["List-Unsubscribe-Post"] == "List-Unsubscribe=One-Click"
     assert "Unsubscribe from AMM" in payload["html"]
     assert "Leave all writing lists" in payload["text"]
@@ -296,6 +297,35 @@ async def test_signed_callbacks_dedupe_suppress_and_do_not_store_recipient_paylo
     assert (
         client.post("/v1/newsletters/webhook", content=payload, headers=headers).status_code == 400
     )
+
+
+async def test_unrelated_mail_callbacks_are_ignored_but_early_amm_receipts_retry(
+    client, session_factory, monkeypatch
+):
+    secret = b"synthetic-account-wide-webhook-secret"
+    monkeypatch.setenv("NEWSLETTER_WEBHOOK_SECRET", "whsec_" + base64.b64encode(secret).decode())
+    for tags, expected in [
+        (None, 200),
+        ({"category": "sign_in"}, 200),
+        ({"publication": "amm"}, 503),
+    ]:
+        payload = json.dumps(
+            {"type": "email.delivered", "data": {"email_id": "not-yet-recorded", "tags": tags}}
+        ).encode()
+        timestamp = str(int(time.time()))
+        identity = "evt_" + uuid.uuid4().hex
+        signed = identity.encode() + b"." + timestamp.encode() + b"." + payload
+        headers = {
+            "svix-id": identity,
+            "svix-timestamp": timestamp,
+            "svix-signature": "v1,"
+            + base64.b64encode(hmac.new(secret, signed, hashlib.sha256).digest()).decode(),
+        }
+        response = client.post("/v1/newsletters/webhook", content=payload, headers=headers)
+        assert response.status_code == expected, response.text
+    async with session_factory() as session:
+        assert not list(await session.scalars(sa.select(models.NewsletterEvent)))
+        assert not list(await session.scalars(sa.select(models.NewsletterDelivery)))
 
 
 async def test_transport_uses_stable_idempotency_and_holds_timeouts(monkeypatch):

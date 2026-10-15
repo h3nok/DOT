@@ -89,6 +89,9 @@ timestamp-checked operational callbacks are deduplicated. Bounces, complaints
 and suppression stop later newsletter mail; they do not disable sign-in codes.
 Provider acceptance and delivery are distinct states. No real edition or test
 email is sent by the implementation task.
+Outgoing editions carry a publication tag. Account-wide callbacks for unrelated
+sign-in or contact mail are acknowledged without retaining their payloads; an
+AMM receipt that precedes its send-response record still asks the provider to retry.
 Email identifies the publication as its sender display name while keeping the
 existing verified sender address. It carries the full released text and the
 publication's typographic identity without loading a remote logo or tracking pixel.
