@@ -47,6 +47,12 @@ def _as_utc(value: datetime.datetime) -> datetime.datetime:
     return value if value.tzinfo else value.replace(tzinfo=datetime.UTC)
 
 
+def _purpose(publication: str, include_all: bool) -> str:
+    # The OTP is bound to the consent shown before sending it. It cannot be
+    # replayed to broaden a subscription, sign in, or request membership.
+    return "reader" if publication == "all" else "reader_amm_all" if include_all else "reader_amm"
+
+
 def readers_available() -> bool:
     """Only open when addresses can be sealed and confirmation can be delivered."""
     api_key = os.environ.get("RESEND_API_KEY", "").strip()
@@ -62,6 +68,9 @@ async def subscribe(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
     source: str,
+    *,
+    publication: str = "all",
+    include_all: bool = False,
 ) -> dict:
     """Record the address unconfirmed and send a code that proves it."""
     if not readers_available():
@@ -70,13 +79,14 @@ async def subscribe(
 
     email_hash = app.core.contact.blind_index(email)
     now = _now()
+    purpose = _purpose(publication, include_all)
 
     recent = await session.scalar(
         sqlalchemy.select(app.db.models.OtpCode)
         .where(
             app.db.models.OtpCode.email_hash == email_hash,
             app.db.models.OtpCode.used_at.is_(None),
-            app.db.models.OtpCode.purpose == "reader",
+            app.db.models.OtpCode.purpose.in_(["reader", "reader_amm", "reader_amm_all"]),
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
@@ -93,7 +103,8 @@ async def subscribe(
 
     existing = await session.scalar(
         sqlalchemy.select(app.db.models.ReaderSubscription).where(
-            app.db.models.ReaderSubscription.email_hash == email_hash
+            app.db.models.ReaderSubscription.email_hash == email_hash,
+            app.db.models.ReaderSubscription.publication == publication,
         )
     )
     if existing:
@@ -113,6 +124,7 @@ async def subscribe(
                 email_sealed=app.core.contact.seal(email),
                 unsubscribe_token_hash=app.core.contact.token_fingerprint(token),
                 source=source,
+                publication=publication,
             )
         )
 
@@ -121,7 +133,7 @@ async def subscribe(
         .where(
             app.db.models.OtpCode.email_hash == email_hash,
             app.db.models.OtpCode.used_at.is_(None),
-            app.db.models.OtpCode.purpose == "reader",
+            app.db.models.OtpCode.purpose.in_(["reader", "reader_amm", "reader_amm_all"]),
         )
         .values(used_at=now)
     )
@@ -131,18 +143,18 @@ async def subscribe(
         app.db.models.OtpCode(
             email_hash=email_hash,
             code_hash=bcrypt.hashpw(code.encode(), bcrypt.gensalt()).decode(),
-            purpose="reader",
+            purpose=purpose,
             expires_at=now + datetime.timedelta(seconds=_CODE_TTL_SECONDS),
         )
     )
     await session.commit()
 
-    sent = await app.domains.auth.service.send_code_email(email, code, purpose="reader")
+    sent = await app.domains.auth.service.send_code_email(email, code, purpose=purpose)
     if not sent:
         return {"ok": False, "error": "Could not send the code. Try again.", "status": 502}
 
     result: dict = {"ok": True, "expires_in": _CODE_TTL_SECONDS}
-    if not os.environ.get("RESEND_API_KEY"):
+    if os.environ.get("RESEND_API_KEY", "").strip() in {"", "disabled"}:
         result["dev_code"] = code
     return result
 
@@ -151,6 +163,9 @@ async def confirm(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
     code: str,
+    *,
+    publication: str = "all",
+    include_all: bool = False,
 ) -> dict:
     """Complete the double opt-in. Never mints a session — this is not a sign-in."""
     email_hash = app.core.contact.blind_index(email)
@@ -162,7 +177,7 @@ async def confirm(
             app.db.models.OtpCode.email_hash == email_hash,
             app.db.models.OtpCode.used_at.is_(None),
             app.db.models.OtpCode.expires_at > now,
-            app.db.models.OtpCode.purpose == "reader",
+            app.db.models.OtpCode.purpose == _purpose(publication, include_all),
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
@@ -184,7 +199,8 @@ async def confirm(
     record.used_at = now
     row = await session.scalar(
         sqlalchemy.select(app.db.models.ReaderSubscription).where(
-            app.db.models.ReaderSubscription.email_hash == email_hash
+            app.db.models.ReaderSubscription.email_hash == email_hash,
+            app.db.models.ReaderSubscription.publication == publication,
         )
     )
     if not row:
@@ -194,6 +210,31 @@ async def confirm(
     # Someone who left and came back is subscribed again, not permanently barred
     # by their own earlier decision.
     row.unsubscribed_at = None
+    row.unsubscribe_token_hash = app.core.contact.token_fingerprint(
+        app.core.contact.derive_unsubscribe_token(row.id)
+    )
+    if publication == "amm" and include_all:
+        general = await session.scalar(
+            sqlalchemy.select(app.db.models.ReaderSubscription).where(
+                app.db.models.ReaderSubscription.email_hash == email_hash,
+                app.db.models.ReaderSubscription.publication == "all",
+            )
+        )
+        if general is None:
+            identity = app.db.models.make_id("reader")
+            general = app.db.models.ReaderSubscription(
+                id=identity,
+                email_hash=email_hash,
+                email_sealed=app.core.contact.seal(email),
+                publication="all",
+                source="amm",
+                unsubscribe_token_hash=app.core.contact.token_fingerprint(
+                    app.core.contact.derive_unsubscribe_token(identity)
+                ),
+            )
+            session.add(general)
+        general.confirmed_at = general.confirmed_at or now
+        general.unsubscribed_at = None
     await session.commit()
 
     return {"ok": True, "unsubscribe_token": app.core.contact.derive_unsubscribe_token(row.id)}
@@ -202,6 +243,8 @@ async def confirm(
 async def unsubscribe(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     token: str,
+    *,
+    all_publications: bool = False,
 ) -> dict:
     """Leave the list. No session, no reason, no confirmation step.
 
@@ -215,8 +258,15 @@ async def unsubscribe(
             == app.core.contact.token_fingerprint(token)
         )
     )
-    if row and row.unsubscribed_at is None:
-        row.unsubscribed_at = _now()
+    if row:
+        if all_publications:
+            await session.execute(
+                sqlalchemy.update(app.db.models.ReaderSubscription)
+                .where(app.db.models.ReaderSubscription.email_hash == row.email_hash)
+                .values(unsubscribed_at=_now())
+            )
+        elif row.unsubscribed_at is None:
+            row.unsubscribed_at = _now()
         await session.commit()
     return {"ok": True}
 
@@ -247,6 +297,7 @@ async def list_readers(
             # be visible to the steward, not silently shrink the list.
             "email": app.core.contact.open_sealed(row.email_sealed),
             "source": row.source,
+            "publication": row.publication,
             "confirmed_at": row.confirmed_at,
             "created_at": row.created_at,
             "unsubscribe_token": app.core.contact.derive_unsubscribe_token(row.id),

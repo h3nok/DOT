@@ -1,0 +1,19 @@
+.book-prose .evidence-chart { margin: 3rem 0; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--border); background: var(--background); font: .875rem/1.65 var(--font-sans); }
+.book-prose .evidence-chart h3 { font: 500 1.7rem/1.2 var(--font-serif); margin: .5rem 0 1rem; }
+.book-prose .evidence-chart p { font-size: .85rem; line-height: 1.65; margin: .7rem 0; }
+.book-prose .evidence-chart-period { font: .65rem/1.5 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
+.evidence-chart-bars { display: grid; gap: .6rem; margin-top: 1.6rem; }
+.evidence-chart-bars button { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 3.5rem; gap: .7rem; align-items: center; width: 100%; min-height: 48px; padding: .5rem; text-align: left; border: 1px solid transparent; font-size: .8rem; }
+.evidence-chart-bars button[aria-pressed="true"] { border-color: var(--organism-accent-strong); background: color-mix(in srgb, var(--organism-accent-strong) 6%, transparent); }
+.evidence-chart-bars button:focus-visible { outline: 2px solid var(--organism-accent-strong); outline-offset: 3px; }
+.evidence-chart-bars strong { text-align: right; font-variant-numeric: tabular-nums; }
+.evidence-chart-track { display: block; height: 1.25rem; background: color-mix(in srgb, var(--foreground) 7%, transparent); }
+.evidence-chart-track i { display: block; height: 100%; background: var(--organism-accent-strong); opacity: .65; }
+.evidence-chart-bars [aria-pressed="true"] i { opacity: 1; }
+.evidence-chart-source { padding-block: 1rem; margin-top: 1rem; border-block: 1px solid var(--border); }
+.evidence-chart-limits, .evidence-chart-scale { color: var(--muted-foreground); }
+.evidence-chart summary { cursor: pointer; min-height: 44px; padding-top: .75rem; font-weight: 600; }
+.evidence-chart-table { overflow-x: auto; }
+.evidence-chart-error { border: 1px solid var(--border); padding: 1rem; }
+@media (max-width: 420px) { .evidence-chart-bars button { grid-template-columns: minmax(0, 1fr) 3.5rem; } .evidence-chart-track { grid-row: 2; grid-column: 1 / -1; height: .75rem; } .evidence-chart-bars strong { grid-row: 1; grid-column: 2; } }
+@media (forced-colors: active) { .evidence-chart-track i { background: Highlight; } }

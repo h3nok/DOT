@@ -1,5 +1,146 @@
 # Publishing a post
 
+## The American Millennial Manifesto
+
+AMM's public home is `/amm`; its own feed is `/amm/feed.xml`. Open
+`/studio/newsletter` for the owner publication desk, or choose **AMM newsletter**
+in Writing Studio. The landing page contains the publication premise and links;
+it does not contain invented editions.
+
+AMM has its own mark, navigation, color system and reading shell, including
+file-backed introductions and native Studio editions. Its analytical spine
+follows **conditions → interpretation → conduct → feedback**, with passage links
+into the introduction and an optional explanation of the connection to DOT.
+Landing content lives in `frontend/src/content/amm.json`. The vector mark is
+`frontend/public/amm/mark.svg`; regenerate the social card with
+`node scripts/generate-amm-share.mjs <local-preview-origin>` from `frontend/`.
+
+The opening piece, **The Anatomy of the Host**, remains the short introduction.
+The AMM library also presents the two chapters and two letters supplied by the
+author, with locally stored artwork. The linked LinkedIn versions (rather than
+the different PDF text) are the initial chapter editions. Their publication dates
+and original links are retained. Chapter One is explicitly an earlier edition
+under revision, not a claim that its original framing is the author's final view.
+
+In **AMM newsletter → Edit an existing manuscript**, open any of these five
+pieces. Studio first opens an existing saved work by its permanent identifier.
+Otherwise it imports the current public manuscript and exact image bytes into
+an unsaved private draft. Save, preview, and approve a release as usual. A native
+release takes over the existing `/essays/<slug>` reading address; the archive,
+static HTML and feeds omit the superseded file copy. Immutable native version
+links remain available. Withdrawing the latest release shows a withdrawal notice;
+it never restores an older file edition or the previous native version. On API
+failure a managed reader offers retry rather than silently presenting old text.
+
+Chapter One has an **editorial revision** panel. Applying its proposed framing
+changes two identified passages in the private draft only. It refuses to replace
+already edited passages. The rest of the chapter and material claim declarations
+still require author review before publication. The landing's revision notice
+refers to the earlier source edition.
+
+The erosion study is a reader-operated visual metaphor, not a measured trend or
+forecast. The original illustration remains intact. 4Us links to the actual
+movement at `https://sullix.com/venture`, described as in development.
+
+### Editable figures
+
+The four Chapter Two plots and the AI letter's electricity comparison are
+`evidence-chart` fenced JSON blocks inside the Markdown. Change their numbers,
+period, units, source links, status and limitations in Studio's manuscript editor;
+preview uses the same accessible, interactive bars and full data table as the
+public reader. Source numbers were transcribed from the author's published
+figures and prose, **not independently verified**. Government and company figures
+are attributed rather than endorsed; estimates and projections are distinguished.
+
+Each figure requires a title, period, unit, status, limits, positive `maximum`,
+and 2–24 `rows` with `label`, finite nonnegative `value`, `source` and HTTPS `url`.
+The scale must contain every value and begins at zero. Native release validates
+this server-side. Static HTML and RSS preserve a full table with sources and
+limitations; email renders an untracked table and plain-text values. No external
+chart service, data query, or executable expression is embedded.
+
+```evidence-chart
+{"title":"Your comparison","period":"State the period","unit":"State the unit","maximum":100,"status":"State verification status","limits":"Explain what this comparison cannot establish.","rows":[{"label":"First category","value":0,"source":"Name the source","url":"https://example.org/first"},{"label":"Second category","value":0,"source":"Name the source","url":"https://example.org/second"}]}
+```
+
+### New editions
+
+1. Download the **AMM Markdown template**, write your edition, and import it in
+   Writing Studio. Set `series: "The American Millennial Manifesto"` and
+   `format: letter`. The **Write an AMM edition** link starts with these selected.
+2. Add your images, source links and claim notes. Save privately, preview, and
+   publish the complete edition. It appears in the AMM archive and general blog.
+   Site builds refresh its static HTML and AMM RSS. Your original Markdown and
+   released versions stay exportable through the existing writing workflow.
+3. Return to the newsletter desk, choose the published edition and prepare its
+   email preview. Email uses the exact released text; images stay in the linked
+   web edition. Previewing sends nothing. Email length is bounded so the footer
+   is not hidden by an oversized manuscript.
+4. Review the subject, reply address, rendered email and audience. Explicitly
+   approve the email. The audience is frozen at approval; later signups do not
+   get an old edition accidentally. Each pending recipient is checked again
+   before sending for unsubscribe or suppression.
+5. Keep the desk open while sending. It processes bounded batches, with saved
+   delivery records. **Pause after this batch**, close the page, or cancel the
+   remainder. Reopen a mailing and **Resume remaining deliveries** to continue.
+   Closing a tab cannot recall its current batch. Native publication is never
+   rolled back because email fails.
+
+Only readers who explicitly confirmed AMM are included. Other writing is an
+unchecked signup option. Existing general readers were not migrated into AMM.
+AMM signup is enabled only when the API advertises scoped publication support,
+so a rolling deployment cannot accidentally subscribe someone to the general list.
+The public flow is **Subscribe by email → confirm the emailed code → receive
+future editions**. Confirmation does not automatically mail the existing archive.
+Every mail includes leave-AMM and leave-all links. No subscriber list is sent
+to LinkedIn or Substack; those platforms remain optional external distribution.
+
+Provider **accepted** is distinct from **delivered to mail server**, and neither
+promises a particular inbox folder. Definite rejections can be prepared for an
+explicit retry. Uncertain or interrupted attempts are held for review in Resend
+and never blindly retried. A signed callback updates operational delivery state;
+bounces, complaints and provider suppression stop later newsletters to that
+address. There are no open/click statistics.
+
+### Sender setup before the first AMM email
+
+Web publishing, signup and email previews do not activate newsletter delivery.
+Set these runtime environment values through the existing deployment's Secret
+Manager integration (the deployment preserves these optional names):
+
+- `NEWSLETTER_POSTAL_ADDRESS`: the sender's public business/postal address.
+- `NEWSLETTER_PUBLIC_API_URL`: the public HTTPS API origin.
+- `NEWSLETTER_RESEND_DOMAIN_ID`: the verified Resend domain matching `EMAIL_FROM`.
+- `NEWSLETTER_WEBHOOK_SECRET`: signing secret for `/v1/newsletters/webhook`.
+- `NEWSLETTER_REPLY_TO`: monitored reply inbox; defaults to `henok@sullix.com`.
+- `NEWSLETTER_ENABLED=true`: enable only after the sender setup is reviewed.
+
+The existing `RESEND_API_KEY`, `EMAIL_FROM` and `JOIN_CONTACT_KEY` are reused.
+The provider key needs permission to read that domain's configuration as well as
+send. The desk checks verified domain status and requires **open tracking off**
+and **click tracking off** before approval and each batch. Keep
+`NEWSLETTER_SITE_URL` at its default `https://dotheory.org` in production.
+Use a monitored sender with appropriate SPF/DKIM/DMARC configuration. Subscribe
+the webhook to `email.delivered`, `email.bounced`, `email.complained`,
+`email.suppressed`, and `email.failed`; no open/click events. Verify the webhook
+and one-click unsubscribe endpoint in the deployed environment. Restrict ingress
+log access: RFC 8058 provider links carry an unsubscribe capability in the URL;
+human-facing links keep it in the browser fragment.
+
+A ZIP code is not a complete sender address. Until the author supplies a public
+mailing address, previews show an explicit placeholder and delivery stays disabled.
+Never put the placeholder into production sender configuration.
+
+No real mailing is created by setup. Publish the first email edition in Studio
+and approve a test send explicitly before mailing readers.
+Local tests use synthetic recipients and stubbed delivery. Apply migration 0022
+before running the new reader and newsletter APIs locally.
+
+Provider contracts checked October 15, 2026:
+[idempotency window](https://resend.com/docs/dashboard/emails/idempotency-keys),
+[domain/tracking status](https://resend.com/docs/api-reference/domains/get-domain),
+[signed callbacks](https://resend.com/docs/webhooks/verify-webhooks-requests).
+
 ## Publish in Writing Studio
 
 Open `/studio/writing` and sign in with the founder account. This is the browser

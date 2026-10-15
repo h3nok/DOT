@@ -320,9 +320,12 @@ async def withdraw_release(
 async def delivery_catalog(
     request: fastapi.Request,
     space: str = "dot-academy",
+    include_withdrawn: bool = False,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> list[schemas.DeliveryItem]:
-    rows = await service.delivery_catalog(session, space_slug=space)
+    rows = await service.delivery_catalog(
+        session, space_slug=space, include_withdrawn=include_withdrawn
+    )
     return [_delivery_item(row) for row in rows]
 
 

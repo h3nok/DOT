@@ -1,0 +1,130 @@
+{
+  "title": "The American Millennial Manifesto",
+  "shortTitle": "AMM",
+  "route": "/amm",
+  "series": "The American Millennial Manifesto",
+  "feed": "/amm/feed.xml",
+  "eyebrow": "An independent publication by Henok Ghebrechristos",
+  "headline": [
+    "A country is more",
+    "than a market."
+  ],
+  "description": "The American Millennial Manifesto examines organized extraction and the erosion of public judgment—and argues for a public life grounded in dignity, accountability, and the freedom to refuse.",
+  "deck": "A manifesto against the erosion of public life—and for institutions people can govern.",
+  "statement": "The public is more than a resource.",
+  "approach": "AMM follows the relationship between concentrated power, inherited culture, and everyday conduct. Its model asks how extraction becomes normal, who has room to refuse, and what makes correction possible.",
+  "analysis": {
+    "title": "How a system gets inside us.",
+    "description": "Follow the relationship between institutions, inherited beliefs, and the decisions that keep an arrangement in place—or change it.",
+    "lineage": "Inspired by DOT’s account of experience, interpretation, action, and consequence. AMM carries that process-oriented lens into public life.",
+    "lineageRoute": "/doctrine/experience-loop",
+    "evidence": "The diagram organizes AMM’s argument. Particular claims still need evidence about authority, contribution, dependence, and transferred costs. An official source does not settle a claim by its status; a statistic needs its method, context, and limitations.",
+    "steps": [
+      {
+        "id": "conditions",
+        "label": "Conditions",
+        "title": "Who sets the terms?",
+        "description": "Ownership, contracts, infrastructure, and law shape what people can access and what refusing will cost.",
+        "question": "Identify who controls the arrangement, who depends on it, and where its costs fall.",
+        "quote": "Institutions establish conditions.",
+        "anchor": "the-leech-and-the-logic-it-carries",
+        "diagram": [
+          "Ownership",
+          "Institutions",
+          "Dependence"
+        ],
+        "connection": "Terms become lived conditions"
+      },
+      {
+        "id": "interpretation",
+        "label": "Interpretation",
+        "title": "What starts to feel natural?",
+        "description": "Culture can teach people to treat an arrangement as necessary or deserved. Inherited expectations shape what they notice and accept.",
+        "question": "Separate the condition from the story that makes it seem inevitable.",
+        "quote": "A cultural lesson becomes an expectation; the expectation guides a decision; the decision helps teach the next person what to expect.",
+        "anchor": "the-leech-and-the-logic-it-carries",
+        "diagram": [
+          "Culture",
+          "Expectation",
+          "Acceptance"
+        ],
+        "connection": "An arrangement becomes an assumption"
+      },
+      {
+        "id": "conduct",
+        "label": "Conduct",
+        "title": "Who has room to refuse?",
+        "description": "Authority and dependence create different possibilities for action. Accountability follows what someone knows, controls, and can realistically change.",
+        "question": "Examine a decision and its consequences, without assigning a fixed moral character to a class or group.",
+        "quote": "This is why the anatomy must record conduct as well as rank.",
+        "anchor": "authority-and-responsibility-within-the-model",
+        "diagram": [
+          "Authority",
+          "Decision",
+          "Consequence"
+        ],
+        "connection": "Different positions carry different choices"
+      },
+      {
+        "id": "feedback",
+        "label": "Feedback",
+        "title": "What gets reproduced—or corrected?",
+        "description": "Decisions can defend the existing terms or make correction possible. Their effects become part of the conditions others encounter.",
+        "question": "Look for whether harm can be named, challenged, and repaired—and who can prevent that correction.",
+        "quote": "Our conduct then helps reproduce or change the arrangements shaping us.",
+        "anchor": "race-division-and-responsibility",
+        "diagram": [
+          "Consequence",
+          "Correction",
+          "Conditions"
+        ],
+        "connection": "What follows changes the next encounter"
+      }
+    ]
+  },
+  "themes": [
+    {
+      "id": "leech",
+      "label": "The Leech",
+      "title": "Organized extraction.",
+      "question": "AMM’s name for the ownership, institutions, and claims that turn dependence into power over others. The model examines conduct and control.",
+      "icon": "landmark"
+    },
+    {
+      "id": "host",
+      "label": "The Host",
+      "title": "A public with unequal power.",
+      "question": "People differ in resources, authority, and room to refuse. Responsibility follows what they can know, change, and choose to defend.",
+      "icon": "layers"
+    },
+    {
+      "id": "recovery",
+      "label": "The recovery",
+      "title": "Room to live differently.",
+      "question": "Independent judgment, accountability, rehabilitation, and parallel systems that people can inspect and correct.",
+      "icon": "home"
+    }
+  ],
+  "signupTitle": "Subscribe to AMM.",
+  "signupDescription": "Receive complete editions by email. Confirm your address with a one-time code; future letters will arrive in your inbox. Every edition is also free to read here.",
+  "emptyTitle": "The next chapter starts here.",
+  "emptyDescription": "New AMM editions will be collected here as they are published. Subscribe to receive the next one.",
+  "introduction": {
+    "title": "The Anatomy of the Host",
+    "route": "/essays/the-anatomy-of-the-host",
+    "label": "Start with the introduction",
+    "description": "The people, the organization of extraction, and the logic that makes it acceptable. A guide to AMM’s terms and its account of responsibility."
+  },
+  "artwork": {
+    "src": "/amm/the-slow-erosion-of-the-public.webp",
+    "title": "The slow erosion of the public",
+    "alt": "AMM illustration: a two-headed leech feeds on a cow representing the public, while a community builds parallel systems beside it.",
+    "caption": "A visual argument from The American Millennial Manifesto.",
+    "description": "The Host is the people, pictured as a cow divided into labor, time, attention, data, savings, taxes, and debt. A government collar attaches the Leech, labeled organized extraction. Its old security-industrial head is labeled war, industry, and energy; its new technological-platform head is labeled finance, platforms, and AI. The feeding trough is labeled status, fear, and addiction. Beside it, people build parallel systems around tools, skills, food, energy, and community. The image states, “Parallel systems are the only way out,” and points to 4Us, Economy for Us.",
+    "movementUrl": "https://sullix.com/venture"
+  },
+  "principle": {
+    "quote": "Human worth is unconditional; authority and conduct remain answerable.",
+    "attribution": "From the working manuscript · The Host and the Infection"
+  }
+}

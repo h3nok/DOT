@@ -19,6 +19,7 @@ import {
   editorialFormFromText,
 } from "./editorialGrammar";
 import { headingSlug } from "./headingSlug";
+import { EvidenceChart } from "./EvidenceChart";
 import { remarkStichicRuns } from "./remarkStichicRuns";
 import { remarkDepthPassages } from "./remarkDepthPassages";
 import { DepthPassage, DepthSummary } from "./DepthPassage";
@@ -358,6 +359,14 @@ export function BookMarkdown({
           remarkPlugins={[remarkGfm, remarkMath, remarkStichicRuns, remarkDepthPassages]}
           rehypePlugins={[rehypeKatex]}
           components={{
+            pre: ({ children, node }) => {
+              const code = node?.children[0];
+              if (code?.type === "element" && code.tagName === "code" && Array.isArray(code.properties.className) && code.properties.className.includes("language-evidence-chart")) {
+                const source = code.children.map(child => child.type === "text" ? child.value : "").join("");
+                return <EvidenceChart source={source} />;
+              }
+              return <pre>{children}</pre>;
+            },
             details: ({ children }) => (
               <DepthPassage completeEditionHref={completeEditionHref}>
                 {children}

@@ -23,7 +23,7 @@ export function StudioAuthGate({ children, ownerOnly = false, title = "Publicati
   if (user) return (
     <main className="dot-page-container py-24">
       <h1 className="dot-page-heading">Owner workspace</h1>
-      <p className="dot-lede mt-4">This inbox belongs to the site owner.</p>
+      <p className="dot-lede mt-4">This workspace belongs to the site owner.</p>
       <Link to="/" className="dot-reading-action mt-6 inline-flex min-h-12 items-center rounded-full px-6">Return home</Link>
     </main>
   );

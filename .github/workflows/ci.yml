@@ -287,6 +287,13 @@ jobs:
             echo "::notice::LinkedIn application settings are incomplete; native publishing and full-text distribution remain available."
           fi
           # Keep one instance warm at the service level without warming old revisions.
+          # AMM mail is opt-in. Preserve optional sender settings across deploys;
+          # absence keeps delivery disabled while web publication stays usable.
+          for name in NEWSLETTER_POSTAL_ADDRESS NEWSLETTER_PUBLIC_API_URL NEWSLETTER_RESEND_DOMAIN_ID NEWSLETTER_WEBHOOK_SECRET NEWSLETTER_REPLY_TO NEWSLETTER_ENABLED; do
+            if gcloud secrets describe "$name" --project ${{ env.GCP_PROJECT_ID }} >/dev/null 2>&1; then
+              SECRETS="$SECRETS,$name=$name:latest"
+            fi
+          done
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
             --region ${{ env.GCP_REGION }} \

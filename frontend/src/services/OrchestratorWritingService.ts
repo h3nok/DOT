@@ -109,9 +109,9 @@ export async function releaseSavedWriting(workId: string, revisionId: string): P
   return release;
 }
 
-export async function fetchReleasedWriting(signal?: AbortSignal): Promise<ReleasedWriting[]> {
-  const entries = await json<ReleasedWriting[]>(await fetch(`${base}/delivery/catalog?space=${encodeURIComponent(space)}`, { signal, cache: "no-store" }));
-  return entries.filter((entry) => entry.kind === "essay" && !entry.withdrawn_at).map(entry => ({
+export async function fetchReleasedWriting(signal?: AbortSignal, includeWithdrawn = false): Promise<ReleasedWriting[]> {
+  const entries = await json<ReleasedWriting[]>(await fetch(`${base}/delivery/catalog?space=${encodeURIComponent(space)}${includeWithdrawn ? "&include_withdrawn=true" : ""}`, { signal, cache: "no-store" }));
+  return entries.filter((entry) => entry.kind === "essay" && (includeWithdrawn || !entry.withdrawn_at)).map(entry => ({
     ...entry, cover: entry.cover ? { ...entry.cover, src: writingMediaUrl(entry.cover.src) } : null,
   }));
 }

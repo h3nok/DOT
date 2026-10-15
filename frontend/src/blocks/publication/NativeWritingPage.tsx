@@ -7,11 +7,14 @@ import { fetchWritingDelivery, writingRoute } from "../../services/OrchestratorW
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { PublicationSharing } from "./components/PublicationSharing";
+import AMM from "../../content/amm.json";
+import { AmmShell } from "../amm/AmmIdentity";
 
-export default function NativeWritingPage() {
-  const { workId = "", releaseNumber } = useParams();
+export default function NativeWritingPage({ sourceWorkId, sourcePath }: { sourceWorkId?: string; sourcePath?: string } = {}) {
+  const { workId: routeWorkId = "", releaseNumber } = useParams();
+  const workId = sourceWorkId ?? routeWorkId;
   const [search] = useSearchParams();
-  const requested = releaseNumber || search.get("version");
+  const requested = releaseNumber || (!sourcePath ? search.get("version") : null);
   const version = requested && /^[1-9]\d*$/.test(requested) ? Number(requested) : undefined;
   const [content, setContent] = useState<Awaited<ReturnType<typeof fetchWritingDelivery>> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,12 +32,11 @@ export default function NativeWritingPage() {
     return () => abort.abort();
   }, [workId, version, requested, attempt]);
   const manifest = content?.delivery.manifest;
+  const isAmm = !!sourcePath || manifest?.presentation?.series === AMM.series;
   const cover = manifest?.assets?.find(asset => asset.path === manifest.presentation?.cover?.path);
-  const canonical = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${writingRoute(workId, version)}`;
-  return (
-    <PageShell header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon />}>
+  const body = (
       <div className="book-surface mx-auto max-w-6xl">
-        <Helmet><title>{manifest?.title || content?.delivery.title || "Writing"} — {author.name}</title><link rel="canonical" href={canonical} />{manifest?.summary && <meta name="description" content={manifest.summary} />}{cover && <meta property="og:image" content={new URL(cover.src, window.location.origin).href} />}{cover && <meta property="og:image:alt" content={manifest?.presentation?.cover?.alt ?? ""} />}<meta name="twitter:card" content={cover ? "summary_large_image" : "summary"} /></Helmet>
+        <Helmet><title>{`${manifest?.title || content?.delivery.title || "Writing"} — ${isAmm ? AMM.title : author.name}`}</title>{manifest?.summary && <meta name="description" content={manifest.summary} />}{cover && <meta property="og:image" content={new URL(cover.src, window.location.origin).href} />}{cover && <meta property="og:image:alt" content={manifest?.presentation?.cover?.alt ?? ""} />}<meta name="twitter:card" content={cover ? "summary_large_image" : "summary"} /></Helmet>
         {error ? <>
             <h1 className="font-serif text-3xl">This piece could not be opened</h1>
             <p role="alert" className="mt-5 text-base text-muted-foreground">
@@ -57,8 +59,9 @@ export default function NativeWritingPage() {
             {!!manifest.sources?.length && <section aria-label="Sources" className="border-t border-border py-6"><h2 className="text-lg font-semibold">Sources</h2><ul className="mt-3 space-y-3 text-sm">{manifest.sources.map((source, index) => <li key={index} className="break-words">{/^https?:\/\//i.test(source.external_uri) ? <a href={source.external_uri} rel="noreferrer" className="underline">{source.external_uri}</a> : source.external_uri}{source.locator && <p className="mt-1 text-xs text-muted-foreground">{source.locator}</p>}</li>)}</ul></section>}
             <PublicationSharing title={manifest.title} path={writingRoute(workId, manifest.release.number)} />
           </WritingPost>}
-        <Link to="/blog" className="mt-8 inline-block text-sm underline underline-offset-4">All writing</Link>
+        <Link to={isAmm ? "/amm#amm-editions" : "/blog"} className="mt-8 inline-block text-sm underline underline-offset-4">{isAmm ? "All AMM editions" : "All writing"}</Link>
+        {isAmm && <p className="mt-6 text-sm"><Link to="/amm#amm-subscribe" className="underline underline-offset-4">Receive the next AMM edition</Link></p>}
       </div>
-    </PageShell>
   );
+  return isAmm ? <AmmShell reading>{body}</AmmShell> : <PageShell header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon variant="personal" />}>{body}</PageShell>;
 }

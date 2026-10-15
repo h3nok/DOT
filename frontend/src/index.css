@@ -3037,6 +3037,7 @@ html[data-motion="still"] .dot-emergence-signal {
 }
 
 .book-prose a {
+  overflow-wrap: anywhere;
   color: color-mix(in oklch, var(--book-cinnabar) 58%, var(--book-ink));
   text-decoration-line: underline;
   text-decoration-color: color-mix(in oklch, var(--book-cinnabar) 42%, transparent);

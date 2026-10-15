@@ -79,3 +79,9 @@
 @media (min-width: 640px) { .writing-field-row, .writing-artwork-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .writing-step-icon { display: block; } }
 @media (min-width: 1024px) { .writing-desk-layout { grid-template-columns: 13rem minmax(0, 1fr); gap: 2rem; } .writing-library ul { max-height: 65vh; } }
 @media (prefers-reduced-motion: reduce) { .writing-desk * { scroll-behavior: auto; } }
+
+.writing-source-library { border-top: 1px solid var(--border); margin-top: 1.5rem; padding-top: 1rem; }
+.writing-revision-brief { border: 1px solid var(--border); padding: 1.2rem; margin-bottom: 1.5rem; font-size: .85rem; line-height: 1.7; }
+.writing-revision-brief summary { cursor: pointer; min-height: 44px; font-weight: 600; }
+.writing-revision-brief p { margin-block: 1rem; color: var(--muted-foreground); }
+.writing-revision-brief blockquote { padding-left: 1rem; border-left: 2px solid var(--organism-accent-strong); }

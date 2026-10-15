@@ -1,7 +1,10 @@
 import { Download, Eye, FilePenLine, Plus, Save, Upload, ArrowRight, Check, Bold, Italic, Heading2, Link2 } from "lucide-react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import AMM from "../../content/amm.json";
+import ammLibrary from "../../content/amm-library.json";
+import { importPublishedEssay, proposeChapterOneRevision, CHAPTER_ONE_PROPOSAL } from "./writing/importPublishedEssay";
 import {
   createWritingWork, emptyClaim, emptyPresentation, fetchWritingDelivery, fetchWritingDraft, fetchWritingWorkspace, fetchWritingWorks, releaseSavedWriting, saveWritingSnapshot, writingRoute,
   type WritingClaim, type WritingDraft, type WritingWork, type WritingWorkspace,
@@ -22,12 +25,14 @@ const steps = [{ label: "Import", icon: Upload }, { label: "Edit", icon: FilePen
 const signature = (draft: WritingDraft, claims: WritingClaim[]) => JSON.stringify({ draft, claims });
 
 export default function WritingStudioPage() {
+  const [search] = useSearchParams();
+  const initialDraft = (): WritingDraft => ({ ...emptyDraft(), presentation: { ...emptyPresentation(), ...(search.get("series") === "amm" ? { series: AMM.series, format: "letter" as const } : {}) } });
   const [workspace, setWorkspace] = useState<WritingWorkspace | null>(null);
   const [works, setWorks] = useState<WritingWork[]>([]);
   const [workId, setWorkId] = useState<string | null>(null);
   const [slug, setSlug] = useState("");
-  const [draft, setDraft] = useState<WritingDraft>(emptyDraft);
-  const [saved, setSaved] = useState<WritingDraft>(emptyDraft);
+  const [draft, setDraft] = useState<WritingDraft>(initialDraft);
+  const [saved, setSaved] = useState<WritingDraft>(initialDraft);
   const [claims, setClaims] = useState<WritingClaim[]>([emptyClaim()]);
   const [savedClaims, setSavedClaims] = useState<WritingClaim[]>([emptyClaim()]);
   const [step, setStep] = useState(0);
@@ -41,6 +46,7 @@ export default function WritingStudioPage() {
   const editor = useRef<MarkdownManuscriptEditorHandle>(null);
   const blobUrls = useRef(new Set<string>());
   const saveAttempt = useRef<{ signature: string; id: string } | null>(null);
+  const sourceOpened = useRef(false);
   const currentSignature = signature(draft, claims);
   const dirty = currentSignature !== signature(saved, savedClaims);
   const issues = writingReadiness(draft, claims);
@@ -56,6 +62,14 @@ export default function WritingStudioPage() {
     }).catch((reason: unknown) => { if (!abort.signal.aborted) setError(reason instanceof Error ? reason.message : "The writing workspace is unavailable."); });
     return () => abort.abort();
   }, []);
+  const openSourceRef = useRef<(slug: string) => Promise<void>>(async () => {});
+  useEffect(() => {
+    const source = search.get("source");
+    if (workspace && source && !sourceOpened.current && ammLibrary.some(item => item.slug === source)) {
+      sourceOpened.current = true;
+      void openSourceRef.current(source);
+    }
+  }, [workspace, search]);
   useEffect(() => {
     const urls = blobUrls.current;
     return () => urls.forEach(url => URL.revokeObjectURL(url));
@@ -82,7 +96,7 @@ export default function WritingStudioPage() {
     try {
       const content = work ? await fetchWritingDraft(work.id) : null;
       const published = work ? await fetchWritingDelivery(work.id).catch(() => null) : null;
-      const { claims: declared, ...text } = content ?? emptyDraft();
+      const { claims: declared, ...text } = content ?? initialDraft();
       const next = { ...emptyDraft(), ...text };
       const nextClaims = declared?.length ? declared : [emptyClaim()];
       setDraft(next); setSaved(next); setClaims(nextClaims); setSavedClaims(nextClaims);
@@ -112,6 +126,20 @@ export default function WritingStudioPage() {
     } catch (reason) { setError(reason instanceof Error ? reason.message : "The draft could not be saved. Your changes remain here."); }
     finally { setBusy(false); }
   }
+  async function openSource(source: string) {
+    const existing = works.find(work => work.canonical_slug === source);
+    setBusy(true); setError(null);
+    try {
+      if (existing && await fetchWritingDraft(existing.id)) { await open(existing); return; }
+      const next = await importPublishedEssay(source);
+      setDraft(next); setSaved(emptyDraft()); setClaims([emptyClaim()]); setSavedClaims([emptyClaim()]);
+      setWorkId(existing?.id ?? null); setSlug(source); setReleaseNumber(null); setApproved(false); setReviewed(""); setStep(1);
+      setMessage("Original text and artwork opened. Save privately to begin editing; publishing will update the existing reading address.");
+      saveAttempt.current = null;
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "The source could not be opened."); }
+    finally { setBusy(false); }
+  }
+  openSourceRef.current = openSource;
   const saveRef = useRef(save); saveRef.current = save;
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") { event.preventDefault(); void saveRef.current(); } };
@@ -150,21 +178,22 @@ export default function WritingStudioPage() {
 
   return <PageShell wide header={<PageHeader />}>
     <div className="writing-desk">
-      <header className="writing-desk-header"><div><p className="dot-label">Private workspace</p><h1>Writing studio</h1><p>Your manuscript. Your images. A considered publication.</p></div><div className="writing-actions"><Link to="/blog">Public blog</Link><Link to="/studio">Book projects</Link></div></header>
+      <header className="writing-desk-header"><div><p className="dot-label">Private workspace</p><h1>Writing studio</h1><p>Your manuscript. Your images. A considered publication.</p></div><div className="writing-actions"><Link to="/blog">Public blog</Link><Link to="/studio/newsletter">AMM newsletter</Link><Link to="/studio">Book projects</Link></div></header>
       {import.meta.env.DEV && <p className="writing-environment">Development preview · drafts and publication use the API configured for this preview.</p>}
       {error && <p role="alert" className="writing-error">{error}</p>}
       {!workspace ? <p role="status">{error ? "The workspace could not be opened. Reload after signing in to retry." : "Opening your workspace…"}</p> : <div className="writing-desk-layout">
         <aside className="writing-library"><details open><summary>Your writing</summary><button type="button" className="dot-pill" disabled={busy} onClick={() => guard(() => void open(null))}><Plus aria-hidden="true" />New writing</button>
           {!works.length && <p className="writing-hint">Your saved drafts will appear here.</p>}
           <ul>{works.map(work => <li key={work.id}><button type="button" disabled={busy} aria-current={workId === work.id ? "page" : undefined} onClick={() => guard(() => void open(work))}>{work.canonical_slug.replaceAll("-", " ")}<span>{work.lifecycle_state === "released" ? "Published" : "Saved work"}</span></button></li>)}</ul>
-        </details></aside>
+        </details><details className="writing-source-library" open={search.get("series") === "amm" || !!search.get("source")}><summary>AMM manuscripts</summary><p className="writing-hint">Open the existing work to revise it. Published versions stay intact.</p><ul>{ammLibrary.map(item => <li key={item.slug}><button type="button" disabled={busy} onClick={() => guard(() => void openSource(item.slug))}>{item.title}<span>{works.some(work => work.canonical_slug === item.slug) ? "Open saved work" : item.revision ? "Original · revision requested" : "Open source manuscript"}</span></button></li>)}</ul></details></aside>
         <div className="writing-workbench" aria-busy={busy}>
           <nav className="writing-pipeline" aria-label="Publishing steps">{steps.map(({ label, icon: Icon }, index) => <button type="button" key={label} disabled={busy} aria-label={`${index + 1}. ${label}`} aria-current={step === index ? "step" : undefined} onClick={() => go(index)}><span className="writing-step-icon"><Icon aria-hidden="true" /></span><span><small>0{index + 1}</small>{label}</span></button>)}</nav>
           <div className="writing-step-content">
-            {step === 0 && <section className="writing-import"><Upload aria-hidden="true" /><h2>{workId ? "Bring in a revised manuscript." : "Start with your Markdown."}</h2><p>{workId ? `Replace the text and settings for “${saved.title}”. Its attached images and published versions are kept. Choose New writing to start a separate post.` : "Bring a .md file, add its images, and keep editing here. Title and settings in the file become editable fields."}</p><div className="writing-actions"><label className="dot-reading-action writing-primary">Import manuscript<input aria-label="Import manuscript" type="file" accept=".md,.markdown,.txt,.json" disabled={busy} className="sr-only" onChange={event => { void importFile(event.target.files?.[0]); event.target.value = ""; }} /></label><button type="button" className="dot-pill" onClick={() => go(1)}>Write a blank draft</button></div><button type="button" className="writing-text-button" onClick={() => downloadText(exportManuscript(emptyDraft(), [emptyClaim()]), "writing-template.md")}>Download Markdown template</button><p className="writing-hint">Imported files stay private until you save, review and approve a release. Add image files separately in Edit.</p></section>}
+            {step === 0 && <section className="writing-import"><Upload aria-hidden="true" /><h2>{workId ? "Bring in a revised manuscript." : "Start with your Markdown."}</h2><p>{workId ? `Replace the text and settings for “${saved.title}”. Its attached images and published versions are kept. Choose New writing to start a separate post.` : "Bring a .md file, add its images, and keep editing here. Title and settings in the file become editable fields."}</p><div className="writing-actions"><label className="dot-reading-action writing-primary">Import manuscript<input aria-label="Import manuscript" type="file" accept=".md,.markdown,.txt,.json" disabled={busy} className="sr-only" onChange={event => { void importFile(event.target.files?.[0]); event.target.value = ""; }} /></label><button type="button" className="dot-pill" onClick={() => go(1)}>Write a blank draft</button></div><button type="button" className="writing-text-button" onClick={() => downloadText(exportManuscript(initialDraft(), [emptyClaim()]), "writing-template.md")}>Download Markdown template</button><p className="writing-hint">Imported files stay private until you save, review and approve a release. Add image files separately in Edit.</p></section>}
             {step === 1 && <div>
+              {slug === "amm-chapter-one-the-leech" && <details className="writing-revision-brief"><summary>Chapter One · editorial revision</summary><p>Your direction: examine Western imperial history, white supremacy as an institutional ideology, and private power operating beyond the state. Preserve the original as an earlier edition.</p><blockquote>{CHAPTER_ONE_PROPOSAL}</blockquote><p>This proposed replacement changes two framing passages only. Review the rest of the chapter and its historical claims before releasing a new version.</p><button type="button" className="dot-pill" disabled={busy} onClick={() => { try { change({ body: proposeChapterOneRevision(draft.body) }); setMessage("Two framing passages revised in this private draft. Review the full chapter and claim notes before publication."); } catch (reason) { setError(reason instanceof Error ? reason.message : "Edit the current text directly."); } }}>Apply proposed framing to this draft</button></details>}
               <fieldset disabled={busy} className="writing-fields"><label>Title<input value={draft.title} maxLength={256} onChange={event => change({ title: event.target.value })} /></label><label>Summary <span>(optional · 280 characters)</span><textarea value={draft.summary} maxLength={280} rows={3} onChange={event => change({ summary: event.target.value })} /></label>
-                <div className="writing-field-row"><label>Format<select value={presentation.format} onChange={event => change({ presentation: { ...presentation, format: event.target.value as typeof presentation.format } })}><option value="essay">Essay</option><option value="case-study">Case study</option><option value="letter">Letter</option></select></label><label>Series <span>(optional)</span><input value={presentation.series} maxLength={100} onChange={event => change({ presentation: { ...presentation, series: event.target.value } })} /></label></div>
+                <div className="writing-field-row"><label>Format<select value={presentation.format} onChange={event => change({ presentation: { ...presentation, format: event.target.value as typeof presentation.format } })}><option value="essay">Essay</option><option value="case-study">Case study</option><option value="letter">Letter</option></select></label><label>Series <span>(optional)</span><input list="writing-series" value={presentation.series} maxLength={100} onChange={event => change({ presentation: { ...presentation, series: event.target.value } })} /><datalist id="writing-series"><option value={AMM.series} /></datalist></label></div>
                 {!workId && <label>Draft identifier<input value={slug} placeholder={writingSlug(draft.title) || "my-new-piece"} maxLength={150} onChange={event => setSlug(writingSlug(event.target.value))} /><span>Used to find this piece in your workspace.</span></label>}
               </fieldset>
               <div className="writing-manuscript" inert={busy || undefined}><div className="writing-format-tools" role="group" aria-label="Manuscript formatting">

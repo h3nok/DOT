@@ -42,6 +42,7 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
+          <Link to="/amm" className={LINK}>AMM</Link>
           <Link to="/contact" className={LINK}>Contact</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
@@ -69,7 +70,7 @@ export function SiteColophon({
             </a>
           ))}
           <a href={newsletter.url} className={LINK} rel="noreferrer">
-            {newsletter.title}
+            AMM on LinkedIn
           </a>
         </nav>
       </div>

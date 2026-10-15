@@ -1,0 +1,45 @@
+[
+  {
+    "slug": "the-anatomy-of-the-host",
+    "title": "The Anatomy of the Host",
+    "kind": "introduction",
+    "source": null,
+    "revision": false
+  },
+  {
+    "slug": "amm-chapter-one-the-leech",
+    "title": "Chapter One: The Leech",
+    "kind": "essay",
+    "source": "https://www.linkedin.com/pulse/chapter-one-leech-henok-ghebrechristos-phd-kceqc",
+    "published": "2026-04-18",
+    "revised": "2026-06-07",
+    "revision": true
+  },
+  {
+    "slug": "amm-chapter-two-the-leechs-anatomy",
+    "title": "Chapter Two: The Leech’s Anatomy",
+    "kind": "essay",
+    "source": "https://www.linkedin.com/pulse/chapter-2-leechs-anatomy-henok-ghebrechristos-phd-l1tbf",
+    "published": "2026-07-29",
+    "revised": "2026-07-29",
+    "revision": false
+  },
+  {
+    "slug": "amm-ai-will-not-kill-you",
+    "title": "AI will not kill you. The one saying that it will, will",
+    "kind": "letter",
+    "source": "https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c",
+    "published": "2026-09-20",
+    "revised": "2026-09-20",
+    "revision": false
+  },
+  {
+    "slug": "amm-letter-to-an-american-adult",
+    "title": "A Letter to an American Adult: White Pillage",
+    "kind": "letter",
+    "source": "https://www.linkedin.com/pulse/letter-american-adult-white-pillage-lead-west-golden-henok-mtjic",
+    "published": "2026-09-15",
+    "revised": "2026-09-18",
+    "revision": false
+  }
+]

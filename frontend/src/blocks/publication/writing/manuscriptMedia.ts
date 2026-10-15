@@ -1,6 +1,7 @@
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
+import { parseEvidenceChart } from "../../../attention-os/reader/evidenceChart";
 import type { WritingAsset, WritingClaim, WritingDraft } from "../../../services/OrchestratorWritingService";
 
 export const IMAGE_PATH = /^(?:[a-z0-9][a-z0-9_-]*\/)*[a-z0-9][a-z0-9_-]*\.(?:png|jpg|jpeg|webp)$/;
@@ -23,6 +24,10 @@ export function writingReadiness(draft: WritingDraft, claims: WritingClaim[]): s
   const issues: string[] = [];
   if (!draft.title.trim()) issues.push("Add a title.");
   if (!draft.body.trim()) issues.push("Add your manuscript.");
+  const tree = unified().use(remarkParse).parse(draft.body);
+  for (const node of tree.children) {
+    if (node.type === "code" && node.lang === "evidence-chart" && !parseEvidenceChart(node.value)) issues.push("Complete each figure’s title, period, units, values, cited sources, and limits.");
+  }
   const material = claims.filter(claim => claim.statement || claim.level || claim.source);
   if (!material.length) issues.push("Declare the material claims in this piece.");
   for (const [index, claim] of material.entries()) {

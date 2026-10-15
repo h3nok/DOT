@@ -672,7 +672,6 @@ function PublicationReaderPage() {
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={description} />
-        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:type" content="book" />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={description} />

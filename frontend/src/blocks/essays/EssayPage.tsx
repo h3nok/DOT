@@ -18,6 +18,11 @@ import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { ClaimLevels } from "./ClaimLevels";
 import { PublicationSharing } from "../publication/components/PublicationSharing";
+import AMM from "../../content/amm.json";
+import { AmmShell } from "../amm/AmmIdentity";
+import { fetchReleasedWriting } from "../../services/OrchestratorWritingService";
+import { managedEssay, replacesEssay } from "../publication/writing/publicationBridge";
+import NativeWritingPage from "../publication/NativeWritingPage";
 import "./essay.css";
 
 const LINK =
@@ -30,6 +35,7 @@ type EssayState =
   | { status: "loading" }
   | { status: "missing" }
   | { status: "failed" }
+  | { status: "native"; workId: string }
   | { status: "ready"; essay: EssaySummary; text: string };
 
 /**
@@ -47,9 +53,11 @@ export default function EssayPage({ preview = false }: { preview?: boolean }) {
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: "loading" });
-    Promise.all([fetchEssayIndex(controller.signal, preview), fetchEssayText(slug, controller.signal, preview)])
-      .then(([essays, text]) => {
+    Promise.all([fetchEssayIndex(controller.signal, preview), fetchEssayText(slug, controller.signal, preview), !preview && managedEssay(slug) ? fetchReleasedWriting(controller.signal, true) : Promise.resolve([])])
+      .then(([essays, text, writing]) => {
         if (controller.signal.aborted) return;
+        const native = writing.find(entry => replacesEssay(entry, slug));
+        if (native) { setState({ status: "native", workId: native.work_id }); return; }
         const essay = essays.find((candidate) => candidate.slug === slug);
         setState(essay && text !== null ? { status: "ready", essay, text } : { status: "missing" });
       })
@@ -69,17 +77,15 @@ export default function EssayPage({ preview = false }: { preview?: boolean }) {
   }, [preview]);
 
   const title = state.status === "ready" ? state.essay.title : null;
+  const isAmm = state.status === "ready" ? state.essay.series === AMM.series : !!managedEssay(slug);
   useEffect(() => {
-    document.title = title ? `${title} — ${author.name}` : `Essays — ${author.name}`;
-  }, [title]);
+    document.title = title ? `${title} — ${isAmm ? AMM.title : author.name}` : `Essays — ${author.name}`;
+  }, [title, isAmm]);
+
+  if (state.status === "native") return <NativeWritingPage sourceWorkId={state.workId} sourcePath={`/essays/${slug}`} />;
 
   return (
-    <PageShell
-      wide
-      className="essay-page"
-      header={<PageHeader backTo="/blog" backLabel="Blog" />}
-      footer={<SiteColophon />}
-    >
+    <EssayShell amm={isAmm}>
       {preview && <aside className="post-preview-note"><strong>Local preview</strong><span>Changes here do not publish the post.</span><Link to="/_preview/essays" className={LINK}>All local posts</Link></aside>}
       {state.status === "loading" && (
         <p className="mx-auto text-sm text-muted-foreground" style={COLUMN} role="status">
@@ -103,8 +109,12 @@ export default function EssayPage({ preview = false }: { preview?: boolean }) {
         </Notice>
       )}
       {state.status === "ready" && <Essay essay={state.essay} text={state.text} preview={preview} />}
-    </PageShell>
+    </EssayShell>
   );
+}
+
+function EssayShell({ amm, children }: { amm: boolean; children: ReactNode }) {
+  return amm ? <AmmShell reading>{children}</AmmShell> : <PageShell wide className="essay-page" header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon />}>{children}</PageShell>;
 }
 
 function Notice({ title, children }: { title: string; children: ReactNode }) {
@@ -191,18 +201,19 @@ function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; pr
           aria-label="After this essay"
           className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
         >
-          <Link to="/blog" className={`inline-flex items-center gap-2 ${LINK}`}>
+          <Link to={essay.series === AMM.series ? "/amm#amm-editions" : "/blog"} className={`inline-flex items-center gap-2 ${LINK}`}>
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            All writing
+            {essay.series === AMM.series ? "All AMM editions" : "All writing"}
           </Link>
-          <Link to={DOT_BOOK_ONE_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
+          {essay.series !== AMM.series && <Link to={DOT_BOOK_ONE_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
             <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
             Book One
-          </Link>
+          </Link>}
         </nav>
         {!preview && <div className="mt-8">
           <PublicationSharing title={essay.title} path={`/essays/${essay.slug}`} />
         </div>}
+        {!preview && essay.series === AMM.series && <p className="mt-8 text-sm"><Link to="/amm#amm-subscribe" className={LINK}>Receive the next AMM edition</Link></p>}
       </footer>
       </div>
     </article>

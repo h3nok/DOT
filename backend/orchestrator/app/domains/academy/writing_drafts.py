@@ -10,6 +10,7 @@ import pydantic
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
+import app.domains.academy.evidence_charts as charts
 import app.domains.academy.models as models
 import app.domains.academy.policy as policy
 import app.domains.academy.schemas as schemas
@@ -33,6 +34,11 @@ def claim_ready(claim: dict) -> bool:
 
 
 def validate_release(body: str, metadata: dict) -> None:
+    for token in charts.chart_tokens(body):
+        try:
+            charts.parse_chart(token.content)
+        except ValueError as exc:
+            raise fastapi.HTTPException(409, str(exc)) from exc
     if not metadata:
         return  # Older revisions use the existing kernel's claim validation.
     claims = [

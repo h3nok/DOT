@@ -24,6 +24,7 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["AMM", "/amm"],
       ["Contact", "/contact"],
       ["Books", "/publications"],
       ["Reader list", "/readers"],
@@ -40,7 +41,7 @@ describe("SiteColophon", () => {
     const elsewhere = within(screen.getByRole("navigation", { name: "Elsewhere" }));
     expect(elsewhere.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("rel", "noreferrer me");
     expect(elsewhere.queryByRole("link", { name: "YouTube" })).toBeNull();
-    expect(elsewhere.getByRole("link", { name: "The American Millennial Manifesto" })).toBeInTheDocument();
+    expect(elsewhere.getByRole("link", { name: "AMM on LinkedIn" })).toBeInTheDocument();
   });
 
   it("sends readers to the reader list, never the invitation queue (ADR-0025)", () => {
@@ -57,6 +58,7 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["AMM", "/amm"],
       ["Contact", "/contact"],
       ["Books", "/publications"],
       ["RSS", "/feed.xml"],

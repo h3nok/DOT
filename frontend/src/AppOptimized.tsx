@@ -17,6 +17,21 @@ import { SiteContentProvider } from "./content/editable";
 import { RouteLoadingBoundary } from "./shared/RouteLoadingBoundary";
 import { ViewportObserver } from "./shared/ViewportObserver";
 
+function RouteCanonical() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    // React 19 hoists Helmet's links but does not merge them with static HTML.
+    // Update the build's canonical in place so there is one owner and one URL.
+    const version = new URLSearchParams(search).get("version");
+    const path = /^\/writing\/[^/]+$/.test(pathname) && version && /^[1-9]\d*$/.test(version)
+      ? `${pathname}/releases/${version}` : pathname;
+    let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) { link = document.createElement("link"); link.rel = "canonical"; document.head.append(link); }
+    link.href = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${path === "/" ? "" : path}`;
+  }, [pathname, search]);
+  return null;
+}
+
 // Lazy load surfaces for code splitting.
 const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
 const DoctrinePage = React.lazy(
@@ -54,6 +69,8 @@ const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
 const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
+const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
+const AmmStudioPage = React.lazy(() => import("./blocks/amm/AmmStudioPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
 const EssayDraftsPage = import.meta.env.DEV ? React.lazy(() => import("./blocks/essays/EssayDraftsPage")) : null;
 const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
@@ -170,6 +187,7 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <Router basename={import.meta.env.BASE_URL}>
+        <RouteCanonical />
         {/* Published copy overrides, resolved once for the whole app. Every
             failure here falls back to the released wording (ADR-0021). */}
         <SiteContentProvider>
@@ -198,6 +216,7 @@ const App: React.FC = () => {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/amm" element={<AmmPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
                 {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}
@@ -222,6 +241,7 @@ const App: React.FC = () => {
                   element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
                 />
                 <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly title="Contact inbox"><ContactInboxPage /></StudioAuthGate>} />
+                <Route path="/studio/newsletter" element={<StudioAuthGate ownerOnly title="AMM newsletter"><AmmStudioPage /></StudioAuthGate>} />
                 <Route
                   path="/studio/:projectId"
                   element={

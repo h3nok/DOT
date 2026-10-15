@@ -104,8 +104,9 @@ test("a closed reader list does not ask for an address", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
   await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.getByRole("main").getByRole("link", { name: "Book One", exact: true }))
-    .toHaveAttribute("href", "/book/digital-organism-theory");
+  // A published introduction now makes RSS the signup-free alternative.
+  await expect(page.getByRole("main").getByRole("link", { name: "RSS feed", exact: true }))
+    .toHaveAttribute("href", "/feed.xml");
   await expectNoHorizontalOverflow(page);
 });
 

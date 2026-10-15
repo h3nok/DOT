@@ -52,7 +52,7 @@ describe("BlogPage", () => {
     expect(startingPoint.getByRole("link", { name: "Read the passage" })).toHaveAttribute("href", "/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings");
     expect(screen.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/about#about-products");
     const series = within(screen.getByRole("region", { name: "The American Millennial Manifesto" }));
-    expect(series.getByRole("link", { name: "Explore the series on LinkedIn" })).toHaveAttribute("href", expect.stringMatching(/^https:\/\/www.linkedin.com\/newsletters\//));
+    expect(series.getByRole("link", { name: "Explore AMM" })).toHaveAttribute("href", "/amm");
     fireEvent.click(series.getByText("Read a letter"));
     expect(series.getByRole("link", { name: "AI will not kill you. The one saying that it will, will" })).toHaveAttribute("href", expect.stringMatching(/^https:\/\/www.linkedin.com\/pulse\//));
     expect(screen.getByRole("link", { name: "Discuss a project" })).toHaveAttribute("href", "/contact?purpose=project");

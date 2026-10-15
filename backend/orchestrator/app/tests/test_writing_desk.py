@@ -63,6 +63,32 @@ async def work(client, session_factory):
     return response.json()["id"]
 
 
+async def test_withdrawal_does_not_resurrect_an_older_catalog_edition(client, session_factory):
+    identity = await work(client, session_factory)
+    payload = draft_payload()
+    payload.update(body="First public text.", assets=[], presentation={"format": "essay"})
+    path = f"/v1/academy/works/{identity}"
+    saved = client.post(f"{path}/drafts", headers=_headers(), json=payload).json()
+    first = client.post(f"{path}/releases", headers=_headers(), json={"revision_id": saved["id"]})
+    assert first.status_code == 201
+    payload.update(request_id=str(uuid.uuid4()), base_revision_id=saved["id"], body="Second text.")
+    saved = client.post(f"{path}/drafts", headers=_headers(), json=payload).json()
+    second = client.post(f"{path}/releases", headers=_headers(), json={"revision_id": saved["id"]})
+    assert second.status_code == 201
+    withdrawn = client.post(
+        f"/v1/academy/releases/{second.json()['id']}/withdraw",
+        headers=_headers(),
+        json={"reason": "Synthetic correction"},
+    )
+    assert withdrawn.status_code == 200
+    assert client.get("/v1/academy/delivery/catalog").json() == []
+    tombstones = client.get("/v1/academy/delivery/catalog?include_withdrawn=true").json()
+    assert len(tombstones) == 1
+    assert tombstones[0]["release_number"] == 2
+    assert tombstones[0]["withdrawn_at"]
+    assert client.get(f"/v1/academy/delivery/works/{identity}").json()["withdrawn"]
+
+
 async def test_private_then_only_referenced_artwork_is_published(client, session_factory):
     work_id = await work(client, session_factory)
     payload = draft_payload()

@@ -5,6 +5,8 @@ import WritingStudioPage from "./WritingStudioPage";
 import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import * as writing from "../../services/OrchestratorWritingService";
 import * as distribution from "../../services/OrchestratorDistributionService";
+import * as adoption from "./writing/importPublishedEssay";
+vi.mock("./writing/importPublishedEssay", async original => ({ ...await original<typeof adoption>(), importPublishedEssay: vi.fn() }));
 vi.mock("./components/MarkdownManuscriptEditor", () => ({ MarkdownManuscriptEditor: ({ value, onChange, ariaLabel }: { value: string; onChange: (value: string) => void; ariaLabel: string }) => <textarea aria-label={ariaLabel} value={value} onChange={event => onChange(event.target.value)} /> }));
 vi.mock("../../services/OrchestratorDistributionService", () => ({ fetchLinkedInConnection: vi.fn(), fetchDistributionCopies: vi.fn(), shareReleasedWritingOnLinkedIn: vi.fn() }));
 vi.mock("../../services/OrchestratorWritingService", async original => ({ ...await original<typeof writing>(), fetchWritingWorkspace: vi.fn(), fetchWritingWorks: vi.fn(), createWritingWork: vi.fn(), fetchWritingDraft: vi.fn(), saveWritingSnapshot: vi.fn(), releaseSavedWriting: vi.fn(), fetchWritingDelivery: vi.fn() }));
@@ -32,6 +34,25 @@ function declare() {
 async function save() { fireEvent.click(screen.getByRole("button", { name: "Save private revision" })); await screen.findByText("Revision 1 saved privately. Text, settings, images and claim notes are together."); }
 function review() { fireEvent.click(screen.getByRole("button", { name: "3. Preview" })); fireEvent.click(screen.getByRole("button", { name: "4. Publish" })); }
 describe("the publishing desk", () => {
+  it("opens an existing AMM manuscript privately and preserves its identifier on save", async () => {
+    vi.mocked(adoption.importPublishedEssay).mockResolvedValue({ title: "Source manuscript", summary: "Original summary", body: "Exact author text.", presentation: { ...writing.emptyPresentation(), series: "The American Millennial Manifesto" }, assets: [] });
+    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=the-anatomy-of-the-host"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    await screen.findByDisplayValue("Exact author text.");
+    expect(writing.createWritingWork).not.toHaveBeenCalled();
+    expect(writing.releaseSavedWriting).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Save private revision" }));
+    await screen.findByText("Revision 1 saved privately. Text, settings, images and claim notes are together.");
+    expect(writing.createWritingWork).toHaveBeenCalledWith("space-1", "the-anatomy-of-the-host");
+    expect(writing.releaseSavedWriting).not.toHaveBeenCalled();
+  });
+  it("reopens saved edits instead of importing a second copy of the source", async () => {
+    vi.mocked(writing.fetchWritingWorks).mockResolvedValue([{ id: "managed", kind: "essay", canonical_slug: "the-anatomy-of-the-host", lifecycle_state: "released" }]);
+    vi.mocked(writing.fetchWritingDraft).mockResolvedValue({ title: "Saved revision", summary: "", body: "My saved changes.", revisionId: "r2", revisionNumber: 2 });
+    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=the-anatomy-of-the-host"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    await screen.findByDisplayValue("My saved changes.");
+    expect(adoption.importPublishedEssay).not.toHaveBeenCalled();
+    expect(writing.createWritingWork).not.toHaveBeenCalled();
+  });
   it("saves unfinished claims privately without publication or external sharing", async () => {
     await write(); await save();
     expect(writing.saveWritingSnapshot).toHaveBeenCalledTimes(1);

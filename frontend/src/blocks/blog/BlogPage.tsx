@@ -6,7 +6,8 @@ import { author } from "../../content/author";
 import blog from "../../content/blog.json";
 import newsletter from "../../content/newsletter.json";
 import { essayRoute, fetchEssayIndex, formatEssayDate, ESSAY_FORMAT_LABELS, type EssayCover } from "../../content/essays/essays";
-import { fetchReleasedWriting, writingRoute } from "../../services/OrchestratorWritingService";
+import { fetchReleasedWriting } from "../../services/OrchestratorWritingService";
+import { publicationRoute, replacesEssay } from "../publication/writing/publicationBridge";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { PageIntro, Surface, TextLink } from "../../shared/design-system/Editorial";
@@ -64,13 +65,13 @@ export default function BlogPage() {
     setState({ status: "loading" });
     void Promise.allSettled([
       fetchEssayIndex(controller.signal),
-      fetchReleasedWriting(controller.signal),
+      fetchReleasedWriting(controller.signal, true),
     ]).then(([essays, writing]) => {
       if (controller.signal.aborted) return;
       const posts: Post[] = [];
       const unavailable: string[] = [];
       if (essays.status === "fulfilled") {
-        posts.push(...essays.value.map((essay) => ({
+        posts.push(...essays.value.filter(essay => writing.status !== "fulfilled" || !writing.value.some(entry => replacesEssay(entry, essay.slug))).map((essay) => ({
           key: `essay:${essay.slug}`,
           title: essay.title,
           summary: essay.summary,
@@ -82,12 +83,12 @@ export default function BlogPage() {
         })));
       } else unavailable.push("essays");
       if (writing.status === "fulfilled") {
-        posts.push(...writing.value.map((entry) => ({
+        posts.push(...writing.value.filter(entry => !entry.withdrawn_at).map((entry) => ({
           key: `writing:${entry.work_id}`,
           title: entry.title,
           summary: entry.summary ?? "",
           date: entry.released_at.slice(0, 10),
-          href: writingRoute(entry.work_id),
+          href: publicationRoute(entry),
           cover: entry.cover ?? undefined,
           label: entry.presentation?.series || ESSAY_FORMAT_LABELS[entry.presentation?.format ?? "essay"],
           note: entry.release_number > 1 ? `Version ${entry.release_number}` : null,
@@ -142,17 +143,17 @@ export default function BlogPage() {
           </div>
         </Surface>
         <Surface as="section" tone="copper" aria-labelledby="manifesto-title" className="blog-feature blog-series">
-          <a href={newsletter.url} className="blog-feature-art blog-series-art" aria-label={`Open ${newsletter.title} on LinkedIn`}>
+          <Link to="/amm" className="blog-feature-art blog-series-art" aria-label={`Open ${newsletter.title}`}>
             <div className="blog-series-cover" aria-hidden="true">
               <span className="blog-cover-kicker">Applied DOT</span>
               <BlogSeriesArtwork />
               <span className="blog-cover-name"><span>The American</span>Millennial<span>Manifesto</span></span>
             </div>
-          </a>
+          </Link>
           <div className="blog-feature-copy">
-            <p className="dot-label">A series · On LinkedIn</p>
+            <p className="dot-label">An independent publication</p>
             <h2 id="manifesto-title" className="dot-section-heading">{newsletter.title}</h2>
-            <TextLink href={newsletter.url}>Explore the series on LinkedIn</TextLink>
+            <TextLink to="/amm">Explore AMM</TextLink>
             {newsletter.editions.length > 0 && <details className="blog-feature-details">
               <summary>Read a letter</summary>
               <ul aria-label="Letters on LinkedIn" className="blog-series-letters">

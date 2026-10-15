@@ -97,6 +97,14 @@ async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> 
             f"Confirm your reader list subscription: {code}",
             "Confirm your address for new writing from Henok Ghebrechristos",
         ),
+        "reader_amm": (
+            f"Confirm your AMM subscription: {code}",
+            "Confirm your address for The American Millennial Manifesto",
+        ),
+        "reader_amm_all": (
+            f"Confirm your AMM and writing subscriptions: {code}",
+            "Confirm your address for The American Millennial Manifesto and Henok’s other writing",
+        ),
     }
     subject, lead = copy.get(purpose, (f"Your DOT code: {code}", "Your sign-in code for DOT"))
     api_key: str = os.environ.get("RESEND_API_KEY", "").strip()

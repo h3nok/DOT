@@ -1033,7 +1033,10 @@ async def withdraw_release(
 
 
 async def delivery_catalog(
-    session: sqlalchemy.ext.asyncio.AsyncSession, *, space_slug: str
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    *,
+    space_slug: str,
+    include_withdrawn: bool = False,
 ) -> list[models.AcademyReleaseProjection]:
     subquery = (
         sqlalchemy.select(
@@ -1042,7 +1045,6 @@ async def delivery_catalog(
         )
         .where(
             models.AcademyReleaseProjection.space_slug == space_slug,
-            models.AcademyReleaseProjection.withdrawn_at.is_(None),
         )
         .group_by(models.AcademyReleaseProjection.work_id)
         .subquery()
@@ -1060,7 +1062,9 @@ async def delivery_catalog(
             .order_by(models.AcademyReleaseProjection.released_at)
         )
     ).scalars()
-    return list(rows)
+    # Select the latest release before filtering. Withdrawing v2 must never
+    # silently restore v1 in an archive or a migrated manuscript alias.
+    return [row for row in rows if include_withdrawn or row.withdrawn_at is None]
 
 
 async def delivery_latest(

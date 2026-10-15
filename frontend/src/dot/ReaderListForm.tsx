@@ -2,7 +2,8 @@ import { Check, Loader2, Mail } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 
 import READERS from "../content/readers.json";
-import { useReaderList, type ReaderSource } from "./useReaderList";
+import AMM from "../content/amm.json";
+import { useReaderList, type ReaderSource, type ReaderPublication } from "./useReaderList";
 
 /**
  * ReaderListForm — "tell me when there is more", at the end of the reading path.
@@ -26,6 +27,7 @@ import { useReaderList, type ReaderSource } from "./useReaderList";
 interface ReaderListFormProps {
   /** Where the address was offered, for the steward's coarse sense of reach. */
   source?: ReaderSource;
+  publication?: ReaderPublication;
   /**
    * Shown instead of the form once the list is known to be closed. Defaults to
    * nothing, which suits the end of a book; a page that exists only for the
@@ -45,17 +47,21 @@ const ACTION =
 
 export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   source = "book",
+  publication = "all",
   fallback = null,
   unavailableFallback = null,
   loadingFallback = null,
 }) => {
-  const { available, availabilityError, subscribe, confirm } = useReaderList();
+  const { available, availabilityError, subscribe, confirm } = useReaderList(publication);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [stage, setStage] = useState<"form" | "confirm" | "done">("form");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [devCode, setDevCode] = useState<string | null>(null);
+  const [includeAll, setIncludeAll] = useState(false);
+  const [leaveToken, setLeaveToken] = useState<string | null>(null);
+  const choice = publication === "amm" ? { publication, include_all: includeAll } : undefined;
   const emailId = useId();
   const codeId = useId();
   const emailInput = useRef<HTMLInputElement>(null);
@@ -76,7 +82,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
     event.preventDefault();
     setError(null);
     setBusy(true);
-    const { accepted, error: failed } = await subscribe(email.trim(), source);
+    const { accepted, error: failed } = await (choice ? subscribe(email.trim(), source, choice) : subscribe(email.trim(), source));
     setBusy(false);
     if (failed || !accepted) {
       setError(failed ?? "That did not go through. Try again.");
@@ -90,13 +96,14 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
     event.preventDefault();
     setError(null);
     setBusy(true);
-    const { error: failed } = await confirm(email.trim(), code.trim());
+    const { error: failed, token } = await (choice ? confirm(email.trim(), code.trim(), choice) : confirm(email.trim(), code.trim()));
     setBusy(false);
     if (failed) {
       setError(failed);
       return;
     }
     setStage("done");
+    setLeaveToken(token ?? null);
   };
 
   return (
@@ -108,22 +115,24 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
           </span>
           <div>
             <h2 className="font-serif text-xl text-foreground">
-              You’re on the reader list.
+              {publication === "amm" ? "You’re subscribed to AMM." : "You’re on the reader list."}
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              You’ll receive occasional emails about new writing. Every message carries a link that
+              {publication === "amm" ? `You’ll receive AMM editions${includeAll ? " and Henok’s other writing" : ""}.` : "You’ll receive occasional emails about new writing."} Every message carries a link that
               removes you in one click, with no account and no questions.
             </p>
+            {leaveToken && <a className="mt-3 inline-flex min-h-11 items-center text-xs underline" href={`/readers/leave${publication === "amm" ? "?publication=amm" : ""}#${leaveToken}`}>Unsubscribe</a>}
           </div>
         </div>
       ) : (
         <>
           <h2 className="font-serif text-xl text-foreground">
-            {stage === "confirm" ? "Check your email." : READERS.formTitle}
+            {stage === "confirm" ? "Check your email." : publication === "amm" ? AMM.signupTitle : READERS.formTitle}
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            {stage === "confirm" ? `Enter the six-digit code sent to ${email}.` : READERS.formDescription}
+            {stage === "confirm" ? `Enter the six-digit code sent to ${email}.` : publication === "amm" ? AMM.signupDescription : READERS.formDescription}
           </p>
+          {publication === "amm" && stage === "form" && <label className="mt-4 flex min-h-11 items-center gap-3 text-xs leading-relaxed"><input type="checkbox" checked={includeAll} disabled={busy} onChange={event => setIncludeAll(event.target.checked)} />Also send me Henok’s other writing (optional).</label>}
 
           {stage === "form" ? (
             <form onSubmit={submitEmail} className="mt-4 flex flex-col gap-3 sm:flex-row">
@@ -148,7 +157,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
-                Send me a code
+                {publication === "amm" ? "Subscribe by email" : "Send me a code"}
               </button>
             </form>
           ) : (

@@ -19,6 +19,9 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { prepareEssayMedia } from "./essay-media.mjs";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import { parseEvidenceChart } from "../src/attention-os/reader/evidenceChart.js";
 
 // Relative to the frontend package, like every path the build scripts use:
 // under Vitest's DOM environment `import.meta.url` is not a file URL.
@@ -175,6 +178,11 @@ export function parseEssay(source, slug, file = `${slug}.md`) {
   }
 
   if (!body) fail(file, "has no text after its front matter.");
+  const checkChart = (node) => {
+    if (node.type === "code" && node.lang === "evidence-chart" && !parseEvidenceChart(node.value)) fail(file, "a figure needs valid values, scale, period, units, cited sources and limits.");
+    node.children?.forEach(checkChart);
+  };
+  checkChart(unified().use(remarkParse).parse(body));
   if (/^#\s/.test(body)) {
     fail(file, "starts with a # heading. The page already shows the title; begin with the text, or with ## for a section.");
   }

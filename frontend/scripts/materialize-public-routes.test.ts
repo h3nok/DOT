@@ -24,6 +24,7 @@ import { parseEssay } from "./essays.mjs";
 import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
+import AMM from "../src/content/amm.json";
 
 interface PublicRoute {
   route: string;
@@ -45,6 +46,52 @@ const nodeOfType = (route: PublicRoute, type: string) =>
   route.structuredData["@graph"].find((node) => node["@type"] === type);
 
 describe("public route metadata", () => {
+  it("replaces a managed file edition once, and renders a tombstone after withdrawal", async () => {
+    const slug = "the-anatomy-of-the-host";
+    const essay = parseEssay('---\ntitle: Original host\nsummary: Original summary\npublished: 2026-10-15\nlevels: [model]\n---\nOriginal body.', slug);
+    const item = { id: "managed-host", slug, title: "Revised host", summary: "Revised summary", published: "2026-10-16", releases: [{ number: 1, manifest: { title: "Revised host", summary: "Revised summary", presentation: { series: AMM.series }, claims: [] }, body: "Revised body." }] };
+    const revised: PublicRoute[] = await publicRoutes(manifest, { essays: [essay], writing: [item] });
+    const aliases = revised.filter(route => route.route === `/essays/${slug}`);
+    expect(aliases).toHaveLength(1);
+    expect(aliases[0].prerender).toContain("Revised body.");
+    expect(aliases[0].prerender).not.toContain("Original body.");
+    const withdrawn: PublicRoute[] = await publicRoutes(manifest, { essays: [essay], writing: [{ ...item, withdrawn: true, releaseNumber: 1, releases: [] }] });
+    const notice = withdrawn.find(route => route.route === `/essays/${slug}`)!;
+    expect(renderRoute(shell, notice)).toContain("This release has been withdrawn.");
+    expect(notice.prerender).not.toContain("Original body.");
+    expect(withdrawn.find(route => route.route === "/blog")?.prerender).not.toContain("Original host");
+  });
+  it("keeps explorable figures as source-attributed tables without JavaScript", () => {
+    const chapter = routes.find(route => route.route === "/essays/amm-chapter-two-the-leechs-anatomy")!;
+    expect(chapter.prerender).toContain("Revenue collected at digital interfaces");
+    expect(chapter.prerender).toContain('<th scope="row">Apple Services</th><td>109.2</td>');
+    expect(chapter.prerender).toContain("not independently verified");
+    expect(chapter.prerender).not.toContain('language-evidence-chart');
+  });
+  it("materializes AMM as a public publication and keeps its newsletter desk private", () => {
+    const publicPage = routes.find(route => route.route === "/amm")!;
+    expect(publicPage.title).toBe(AMM.title);
+    expect(publicPage.prerender).toContain(AMM.headline.join(" "));
+    expect(publicPage.prerender).toContain("/amm/feed.xml");
+    expect(publicPage.prerender).toContain('src="/amm/mark.svg"');
+    expect(publicPage.prerender).not.toContain('aria-label="Site"');
+    for (const step of AMM.analysis.steps) {
+      expect(publicPage.prerender).toContain(step.title);
+      expect(publicPage.prerender).toContain(step.description);
+      expect(publicPage.prerender).toContain(AMM.introduction.route + "#" + step.anchor);
+    }
+    const introduction = routes.find(route => route.route === AMM.introduction.route)!;
+    for (const step of AMM.analysis.steps) {
+      expect(introduction.prerender).toContain(`id="${step.anchor}"`);
+    }
+    const desk = routes.find(route => route.route === "/studio/newsletter")!;
+    expect(desk.noindex).toBe(true);
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/studio/newsletter");
+    const feed = rssXml([], AMM);
+    expect(feed).toContain(`<title>${AMM.title}</title>`);
+    expect(feed).toContain('href="https://dotheory.org/amm/feed.xml"');
+    expect(feed).not.toContain("<item>");
+  });
   it("carries the concept map's real names, not a copy that has drifted", () => {
     // The script cannot import TypeScript, so it restates the concept map. If
     // a concept is renamed or reworded in the book's data and not here, every
@@ -431,7 +478,7 @@ describe("essays", () => {
     const alias = routes.find((route) => route.route === "/essays")!;
     expect(alias.canonicalRoute).toBe("/blog");
     expect(alias.prerender).toContain('href="/blog">All writing</a>');
-    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" />');
+    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" data-rh="true" />');
     expect(renderRoute(shell, alias)).not.toContain('name="robots" content="noindex"');
     const sitemap = sitemapXml(routes, "2026-10-06");
     expect(sitemap).toContain("<loc>https://dotheory.org/blog</loc>");
@@ -447,8 +494,10 @@ describe("essays", () => {
     expect(blog.prerender).toContain("Start here · From Book One");
     expect(blog.prerender).toContain('href="/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings">Read the passage</a>');
     expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
-    expect(blog.prerender).toContain("A series · On LinkedIn");
-    expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
+    expect(blog.prerender).toContain('href="/amm"');
+    expect(blog.prerender).toContain("An independent publication");
+    expect(routes.filter((route) => route.route.startsWith("/essays/")).map(route => route.route))
+      .toEqual(expect.arrayContaining([AMM.introduction.route, "/essays/amm-chapter-one-the-leech", "/essays/amm-chapter-two-the-leechs-anatomy"]));
     const home = rootDocument(shell, manifest);
     expect(home).toContain('href="/blog"');
     expect(home).not.toContain('href="/essays"');
@@ -537,7 +586,7 @@ describe("native writing", () => {
     sources: [{ external_uri: "https://example.org/report", locator: null, relation: "cites" }],
   });
   const responses: Record<string, unknown> = {
-    "/v1/academy/delivery/catalog?space=dot-academy": [
+    "/v1/academy/delivery/catalog?space=dot-academy&include_withdrawn=true": [
       { work_id: "awork_abc123", work_slug: "ai", title: "AI letter", summary: "An analysis.", kind: "essay", release_number: 2, released_at: "2026-10-05T12:00:00Z", withdrawn_at: null },
       { work_id: "awork_gone", work_slug: "gone", title: "Gone", summary: null, kind: "essay", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: "2026-10-02T00:00:00Z" },
       { work_id: "awork_def", work_slug: "def", title: "A definition", summary: null, kind: "definition", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: null },
@@ -560,7 +609,7 @@ describe("native writing", () => {
 
   it("gives every live release its own shareable page with whole text, claims and sources", async () => {
     const writing = await fetchNativeWriting(api, { fetchImpl });
-    expect(writing.map((item: { id: string }) => item.id)).toEqual(["awork_abc123"]);
+    expect(writing.map((item: { id: string }) => item.id)).toEqual(["awork_gone", "awork_abc123"]);
     const withWriting: PublicRoute[] = await publicRoutes(manifest, { essays: [], writing });
     const paths = withWriting.map((route) => route.route);
     expect(paths).toContain("/writing/awork_abc123");
@@ -581,7 +630,7 @@ describe("native writing", () => {
     expect(html).toContain('<meta property="og:title" content="AI letter — ');
 
     const publications = withWriting.find((route) => route.route === "/publications")!;
-    expect(publications.prerender).toContain('href="/blog">Letters and essays</a>');
+    expect(publications.prerender).toContain('href="/amm">Explore the AMM publication</a>');
   });
 
   it("carries released artwork into reading HTML, sharing metadata and RSS", async () => {
@@ -601,7 +650,7 @@ describe("native writing", () => {
     expect(page.prerender).toContain('alt="Banner description"');
     expect(page.prerender).toContain('alt="Inline description"');
     expect(renderRoute(shell, page)).toContain(`<meta property="og:image" content="${api}${src}"`);
-    const item = writing[0];
+    const item = writing.find((item: { id: string }) => item.id === "awork_abc123");
     expect(rssXml([{ ...item, ...item.releases.at(-1), url: `${SITE_URL}/writing/awork_abc123` }])).toContain(`${api}${src}`);
   });
 

@@ -35,6 +35,21 @@ afterEach(() => {
 });
 
 describe("ReaderListForm", () => {
+  it("binds AMM consent through confirmation and leaves other writing unchecked", async () => {
+    server.available = true;
+    server.subscribe.mockResolvedValue({ accepted: { status: "ok", expires_in: 900 } });
+    server.confirm.mockResolvedValue({ token: "a".repeat(64) });
+    render(<ReaderListForm source="amm" publication="amm" />);
+    expect(screen.getByRole("checkbox", { name: /other writing/ })).not.toBeChecked();
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "reader@example.com" } });
+    fireEvent.click(screen.getByRole("button", { name: "Subscribe by email" }));
+    fireEvent.change(await screen.findByLabelText("Confirmation code"), { target: { value: "123456" } });
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    expect(await screen.findByText("You’re subscribed to AMM.")).toBeVisible();
+    expect(server.subscribe).toHaveBeenCalledWith("reader@example.com", "amm", { publication: "amm", include_all: false });
+    expect(server.confirm).toHaveBeenCalledWith("reader@example.com", "123456", { publication: "amm", include_all: false });
+    expect(screen.getByRole("link", { name: "Unsubscribe" })).toHaveAttribute("href", `/readers/leave?publication=amm#${"a".repeat(64)}`);
+  });
   it("lets the dedicated list page show a loading state without offering a dead form", () => {
     render(<ReaderListForm loadingFallback={<p role="status">Checking availability…</p>} />);
     expect(screen.getByRole("status")).toHaveTextContent("Checking availability…");
