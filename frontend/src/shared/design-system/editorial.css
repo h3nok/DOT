@@ -10,6 +10,7 @@
 .public-text-link:hover { text-decoration-color: currentColor; }
 .public-text-link:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; border-radius: 2px; }
 html[data-contrast="high"] .public-surface { border-color: var(--foreground); background: var(--background); }
+.public-surface[data-surface="open"] { border: 0; border-radius: 0; background: transparent; }
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .public-text-link { transition: text-decoration-color 180ms ease; }
 }

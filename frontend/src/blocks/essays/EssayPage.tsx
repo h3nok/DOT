@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { ArrowLeft, BookOpen } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 
 import { BookMarkdown } from "../../attention-os/reader";
 import { author, authorContact } from "../../content/author";
@@ -20,9 +20,12 @@ import { ClaimLevels } from "./ClaimLevels";
 import { PublicationSharing } from "../publication/components/PublicationSharing";
 import AMM from "../../content/amm.json";
 import { AmmShell } from "../amm/AmmIdentity";
+import { AmmEditionEnd, AmmReadingBar } from "../amm/AmmEditionFrame";
 import { fetchReleasedWriting } from "../../services/OrchestratorWritingService";
 import { managedEssay, replacesEssay } from "../publication/writing/publicationBridge";
 import NativeWritingPage from "../publication/NativeWritingPage";
+import MOVES from "../../content/essays/moves.json";
+import { OwnerEditLink } from "../publication/components/OwnerEditLink";
 import "./essay.css";
 
 const LINK =
@@ -43,10 +46,20 @@ type EssayState =
  * concept definitions.
  *
  * It ends where the text ends: the concepts it builds on, a way to object, and
- * the way back. No "read next", no related rail (L2, L3).
+ * the way back. No recommended "read next", no related rail (L2, L3). An AMM
+ * part names the next part of its manuscript, in the author's fixed order.
  */
 export default function EssayPage({ preview = false }: { preview?: boolean }) {
   const { slug = "" } = useParams();
+  const { hash } = useLocation();
+  // A piece that became part of a chapter keeps its address: it opens at that
+  // section, and a deep link to one of its headings keeps its anchor.
+  const moved = (MOVES as Record<string, { route: string; anchor: string }>)[slug];
+  if (moved) return <Navigate replace to={`${moved.route}${hash || `#${moved.anchor}`}`} />;
+  return <EssayContent slug={slug} preview={preview} />;
+}
+
+function EssayContent({ slug, preview }: { slug: string; preview: boolean }) {
   const [state, setState] = useState<EssayState>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
 
@@ -86,6 +99,7 @@ export default function EssayPage({ preview = false }: { preview?: boolean }) {
 
   return (
     <EssayShell amm={isAmm}>
+      {!preview && managedEssay(slug) && <OwnerEditLink to={`/studio/writing?series=amm&source=${encodeURIComponent(slug)}`} label={slug.startsWith("amm-chapter-") ? "Edit this chapter" : "Edit this piece"} />}
       {preview && <aside className="post-preview-note"><strong>Local preview</strong><span>Changes here do not publish the post.</span><Link to="/_preview/essays" className={LINK}>All local posts</Link></aside>}
       {state.status === "loading" && (
         <p className="mx-auto text-sm text-muted-foreground" style={COLUMN} role="status">
@@ -129,6 +143,7 @@ function Notice({ title, children }: { title: string; children: ReactNode }) {
 
 function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; preview: boolean }) {
   const contact = authorContact();
+  const isAmm = essay.series === AMM.series;
   const concepts = essay.concepts.flatMap((id) => {
     const node = doctrineNodes.find((candidate) => candidate.id === id);
     return node ? [node] : [];
@@ -136,6 +151,7 @@ function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; pr
 
   return (
     <article className="book-surface post-article">
+      {isAmm && <AmmReadingBar slug={essay.slug} />}
       <header className="post-heading">
         <p className="dot-label post-kicker">
           {ESSAY_FORMAT_LABELS[essay.format ?? "essay"]}
@@ -165,6 +181,8 @@ function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; pr
 
       <footer className="border-t border-border/60 pt-10">
         <p className="dot-label">End of {ESSAY_FORMAT_LABELS[essay.format ?? "essay"].toLowerCase()}</p>
+
+        {isAmm && !preview && <AmmEditionEnd slug={essay.slug} />}
 
         {concepts.length > 0 && (
           <section aria-labelledby="essay-concepts" className="mt-8">
@@ -201,11 +219,11 @@ function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; pr
           aria-label="After this essay"
           className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
         >
-          <Link to={essay.series === AMM.series ? "/amm#amm-editions" : "/blog"} className={`inline-flex items-center gap-2 ${LINK}`}>
+          <Link to={isAmm ? "/amm/editions" : "/blog"} className={`inline-flex items-center gap-2 ${LINK}`}>
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            {essay.series === AMM.series ? "All AMM editions" : "All writing"}
+            {isAmm ? "All AMM editions" : "All writing"}
           </Link>
-          {essay.series !== AMM.series && <Link to={DOT_BOOK_ONE_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
+          {!isAmm && <Link to={DOT_BOOK_ONE_ROUTE} className={`inline-flex items-center gap-2 ${LINK}`}>
             <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
             Book One
           </Link>}
@@ -213,7 +231,6 @@ function Essay({ essay, text, preview }: { essay: EssaySummary; text: string; pr
         {!preview && <div className="mt-8">
           <PublicationSharing title={essay.title} path={`/essays/${essay.slug}`} />
         </div>}
-        {!preview && essay.series === AMM.series && <p className="mt-8 text-sm"><Link to="/amm#amm-subscribe" className={LINK}>Receive the next AMM edition</Link></p>}
       </footer>
       </div>
     </article>

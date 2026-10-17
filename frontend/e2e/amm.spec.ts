@@ -2,17 +2,21 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
 
 const TITLE = "The American Millennial Manifesto";
-test("chapters, reader-operated erosion and portable figures work on a narrow screen", async ({ page }) => {
+// Copy assertions read the repository text, never a local editor's published overrides.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/v1/site-content", route => route.fulfill({ json: { blocks: {} } }));
+});
+test("the hidden power page, chapters and portable figures work on a narrow screen", async ({ page }) => {
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: false } }));
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/amm");
-  await expect(page.getByRole("heading", { name: "Read the manifesto." })).toBeVisible();
-  await page.getByRole("button", { name: "03 Parallel systems" }).click();
-  await expect(page.getByRole("heading", { name: "Can the terms be changed?" })).toBeVisible();
-  await expect(page.getByText("A visual argument · no quantities or forecast implied")).toBeVisible();
+  // How power works is hidden for now, but still opens at its own address.
+  await page.goto("/amm/power");
+  await expect(page.getByRole("heading", { level: 1, name: "The new power is economic." })).toBeVisible();
+  await expect(page.locator("#holders .evidence-chart")).toHaveCount(3);
   await expectNoHorizontalOverflow(page);
-  await page.getByRole("link", { name: "The Leech’s Anatomy", exact: true }).click();
+  await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
+  await page.getByRole("heading", { level: 3, name: "The Leech’s Anatomy" }).getByRole("link").click();
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Two: The Leech’s Anatomy" })).toBeVisible();
   await expect(page.locator(".evidence-chart")).toHaveCount(4);
   const chart = page.locator(".evidence-chart").first();
@@ -25,7 +29,7 @@ test("chapters, reader-operated erosion and portable figures work on a narrow sc
 });
 
 test("an adopted manuscript retains its address and never falls back after withdrawal", async ({ page }) => {
-  const slug = "the-anatomy-of-the-host";
+  const slug = "amm-chapter-three-the-host-and-the-infection";
   let withdrawn = false;
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [{ work_id: "adopted", work_slug: slug, title: "Revised host", summary: "Revised framing.", kind: "essay", release_number: 2, released_at: "2026-10-15T12:00:00Z", withdrawn_at: withdrawn ? "2026-10-15T13:00:00Z" : null, presentation: { series: TITLE } }] }));
   await page.route("**/v1/academy/delivery/works/adopted", route => route.fulfill({ json: withdrawn ? { withdrawn: true, title: "Revised host", reason: "Synthetic withdrawal" } : { manifest: { title: "Revised host", summary: "Revised framing.", release: { number: 2 }, revision: { content_hash: "fixture" }, claims: [], presentation: { series: TITLE, format: "essay" } }, body_ref: "academy/adopted.md" } }));
@@ -53,9 +57,9 @@ test("a Studio edition retains AMM's identity, title, and return path", async ({
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
   await page.goto("/writing/amm-fixture/releases/1");
   await expect(page).toHaveTitle(`AMM reader fixture — ${TITLE}`);
-  await expect(page.getByRole("navigation", { name: "AMM", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
   await expect(page.locator('link[rel="icon"][href="/amm/mark.svg"]')).toHaveCount(1);
-  await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm#amm-editions");
+  await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm/editions");
   await expectNoHorizontalOverflow(page);
   await page.getByRole("link", { name: "All AMM editions", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Letters from the present." })).toBeInViewport();
@@ -64,56 +68,71 @@ test("a Studio edition retains AMM's identity, title, and return path", async ({
   await expect(page.locator('link[rel="icon"][href="/amm/mark.svg"]')).toHaveCount(0);
 });
 
-test("the author's introduction opens from AMM and the illustration has a readable description", async ({ page }) => {
+test("Chapter Three opens from the archive and the illustration has a readable description", async ({ page }) => {
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: false } }));
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
   await page.goto("/amm");
   await expect(page.getByRole("link", { name: `${TITLE} — Home`, exact: true })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "AMM", exact: true })).toBeVisible();
+  await expect(page.getByRole("banner").getByRole("link")).toHaveCount(1);
   await expect(page.getByRole("link", { name: "DOT — Home", exact: true })).toHaveCount(0);
-  const illustration = page.getByRole("img", { name: /two-headed leech/ });
+  const illustration = page.getByRole("img", { name: /emaciated cow patterned with the American flag/ });
   await expect(illustration).toBeVisible();
-  await expect.poll(() => illustration.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBe(1536);
-  await page.getByText("Read the illustration", { exact: true }).click();
-  await expect(page.getByText(/The Host is the people, pictured as a cow/)).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open full-size illustration" })).toHaveAttribute("href", "/amm/the-slow-erosion-of-the-public.webp");
+  // The artwork retains its uncropped composition at the size the screen needs;
+  // the full-size view below keeps the original 1536 × 1024.
+  // srcset density-corrected natural sizes round to CSS pixels on phones.
+  // Inspect the selected asset itself to check that its full frame is retained.
+  await expect.poll(() => illustration.evaluate(async (node: HTMLImageElement) => {
+    const original = new Image();
+    original.src = node.currentSrc;
+    // A busy dev server can fail a second decode of a large image; poll again rather than fail.
+    try { await original.decode(); } catch { return 0; }
+    return original.naturalWidth / original.naturalHeight;
+  })).toBeCloseTo(1536 / 1024, 2);
+  // The picture speaks through its description to assistive technology; no visible key or disclosure.
+  await expect(illustration).toHaveAttribute("alt", /.+/);
+  await expect(page.getByText("Read the illustration", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Inspect The Host", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Go to the source." })).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
-  await page.getByRole("link", { name: "Start with the introduction" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "The Anatomy of the Host" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "AMM", exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm#amm-editions");
+  await page.getByRole("link", { name: "Editions", exact: true }).click();
+  await page.getByRole("heading", { level: 3, name: "The Host and the Infection" }).getByRole("link").click();
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm/editions");
   await expect(page.getByText(/AMM applies my systemic understanding of society/)).toBeVisible();
   await expect(page.getByRole("table")).toBeVisible();
   await expect(page.getByText(/The standard remains specific enough to investigate/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 
-test("AMM's analytical spine is reader-controlled and leads to the supporting passage", async ({ page }) => {
+test("the landing has one reading action and keeps chapter and archive bookmarks usable", async ({ page }) => {
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: false } }));
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/amm#amm-analysis");
-  const conditions = page.getByRole("tab", { name: "01 Conditions" });
-  await expect(conditions).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel")).toHaveCount(1);
-  await expect(page.getByRole("tabpanel")).toContainText("Who sets the terms?");
-  await conditions.focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("tab", { name: "02 Interpretation" })).toBeFocused();
-  await expect(page.getByRole("tabpanel")).toContainText("What starts to feel natural?");
-  await page.keyboard.press("End");
-  await expect(page.getByRole("tabpanel")).toContainText("What gets reproduced—or corrected?");
-  await page.keyboard.press("Home");
-  await expect(conditions).toBeFocused();
-  await page.getByRole("tab", { name: "03 Conduct" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("Who has room to refuse?");
+  await page.goto("/amm");
+  await expect(page.locator(".amm-hero-actions .amm-button")).toHaveCount(1);
+  await expect(page.locator(".amm-chapters")).toHaveCount(0);
+  await expect(page.locator(".amm-analysis, .amm-principle, .amm-editions, .amm-movement, .amm-subscribe, .amm-end-support")).toHaveCount(0);
+  // The front page is finite: the manifesto in order, then the footer. No asks here.
+  const path = page.getByRole("list", { name: "The manifesto, in reading order" });
+  // Three chapters, each its title and one line: no labels, contents or second links.
+  await expect(path.getByRole("heading", { level: 3 })).toHaveCount(3);
+  await expect(path.getByRole("navigation")).toHaveCount(0);
+  await expect(path.locator(".amm-eyebrow")).toHaveCount(0);
+  await expect(page.locator(".amm-footer")).toBeVisible();
+  await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
+  await expect(page).toHaveURL(/\/amm\/editions$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Letters from the present." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "The Host and the Infection", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
-  await page.getByRole("link", { name: "Examine it in the introduction", exact: true }).click();
-  const target = page.locator("#authority-and-responsibility-within-the-model");
-  await expect(target).toBeVisible();
-  await expect.poll(() => target.evaluate(node => Math.abs(node.getBoundingClientRect().top))).toBeLessThan(150);
-  await expect(page.getByRole("navigation", { name: "AMM", exact: true })).toBeVisible();
+  await page.goto("/amm#amm-chapters");
+  await expect(page).toHaveURL(/\/amm\/editions#amm-chapters$/);
+  await expect(page.getByRole("heading", { name: "Read the manifesto." })).toBeInViewport();
+  // Previously shared newsletter and archive addresses remain usable.
+  await page.goto("/amm#amm-subscribe");
+  await expect(page).toHaveURL(/\/amm\/editions#amm-subscribe$/);
+  await expect(page.getByRole("region", { name: "Subscribe to AMM", exact: true })).toBeInViewport();
+  await page.goto("/amm?page=2#amm-editions");
+  await expect(page).toHaveURL(/\/amm\/editions\?page=2#amm-editions$/);
 });
 
 test("AMM has its own landing, scoped signup and mobile layout", async ({ page }) => {
@@ -124,10 +143,10 @@ test("AMM has its own landing, scoped signup and mobile layout", async ({ page }
   await page.route("**/v1/readers/subscribe", route => { selected = route.request().postDataJSON(); return route.fulfill({ status: 202, json: { status: "awaiting_confirmation", expires_in: 900 } }); });
   await page.route("**/v1/readers/confirm", route => { expect(route.request().postDataJSON()).toEqual({ email: "fixture@example.com", code: "123456", publication: "amm", include_all: false }); return route.fulfill({ json: { status: "subscribed", unsubscribe_token: "a".repeat(64) } }); });
   await page.goto("/amm");
-  await expect(page.getByRole("heading", { name: "A country is more than a market." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "The next chapter starts here." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "When harm becomes normal." })).toBeVisible();
   await expectNoHorizontalOverflow(page);
-  await page.getByRole("link", { name: "Subscribe", exact: true }).click();
+  await page.goto("/amm/editions#amm-subscribe");
+  await expect(page.getByRole("heading", { name: "The next chapter starts here." })).toBeVisible();
   await expect(page.getByRole("checkbox", { name: /other writing/ })).not.toBeChecked();
   await page.getByLabel("Email address").fill("fixture@example.com");
   await page.getByRole("button", { name: "Subscribe by email" }).click();
@@ -143,8 +162,27 @@ test("AMM has its own landing, scoped signup and mobile layout", async ({ page }
   });
   await page.getByRole("link", { name: "Unsubscribe", exact: true }).click();
   await expect(page.getByRole("heading", { name: "You have unsubscribed from AMM." })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "AMM", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
   await expect(page).not.toHaveURL(/#a{64}/);
+});
+
+test("the AI letter presents an inspectable plot with a distinct projection", async ({ page }) => {
+  await page.goto("/essays/amm-ai-will-not-kill-you");
+  const chart = page.getByRole("figure", { name: "Electricity behind the interface" });
+  await expect(chart).toBeVisible();
+  const forecast = chart.getByRole("button", { name: "Inspect 2030 · projected: 950 TWh per year" });
+  await forecast.click();
+  await expect(forecast).toHaveAttribute("aria-pressed", "true");
+  await expect(forecast).toHaveAttribute("data-kind", "projection");
+  const plotSize = await forecast.locator("svg").boundingBox();
+  expect(plotSize!.width).toBeGreaterThan(200);
+  expect(plotSize!.height).toBe(48);
+  await expect(chart.getByText("Hatched bar: projection")).toBeVisible();
+  await expect(chart.locator(".evidence-chart-source a")).toHaveAttribute("href", "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary");
+  await chart.getByText("All values and sources").click();
+  await expect(chart.getByRole("table")).toContainText("2025 · estimated485");
+  await expect(chart.getByRole("table")).toContainText("2030 · projected950");
+  await expectNoHorizontalOverflow(page);
 });
 
 test("newsletter delivery requires a separate review and explicit approval", async ({ page }) => {
@@ -170,4 +208,32 @@ test("newsletter delivery requires a separate review and explicit approval", asy
   await expect(page.getByRole("status")).toContainText("Accepted by email provider: 1");
   expect(approvals).toBe(1); expect(sends).toBe(1);
   await expectNoHorizontalOverflow(page);
+});
+
+test("each part names its place, opens the contents, and ends with the next part and the two asks", async ({ page }) => {
+  await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: true, publications: ["all", "amm"] } }));
+  await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
+  await page.goto("/essays/amm-chapter-one-the-leech");
+  const order = page.getByRole("navigation", { name: "Reading order" });
+  await expect(order).toContainText("Part 1 of 3 published");
+  await order.getByText("Contents", { exact: true }).click();
+  await expect(order.getByRole("link", { name: /Chapter One · The Leech/ })).toHaveAttribute("aria-current", "page");
+  const next = page.getByRole("navigation", { name: "Continue reading" }).getByRole("link", { name: "Next in the manifesto: The Leech’s Anatomy" });
+  await expect(page.getByRole("region", { name: "Subscribe to AMM by email" }).getByRole("button", { name: "Subscribe by email" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Contribute once" })).toHaveAttribute("href", "/support?purpose=author&from=amm");
+  await expectNoHorizontalOverflow(page);
+  await next.click();
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Two: The Leech’s Anatomy" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("Part 2 of 3 published");
+  await page.goto("/essays/amm-chapter-three-the-host-and-the-infection");
+  await expect(page.getByText("This is the latest published chapter.", { exact: false })).toBeVisible();
+  // The former standalone section opens at its place in Chapter Three, keeping a deep link's anchor.
+  await page.goto("/essays/the-anatomy-of-the-host");
+  await expect(page).toHaveURL(/\/essays\/amm-chapter-three-the-host-and-the-infection#the-anatomy-of-the-host$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
+  await page.goto("/essays/the-anatomy-of-the-host#class-and-the-head-of-the-host");
+  await expect(page).toHaveURL(/\/essays\/amm-chapter-three-the-host-and-the-infection#class-and-the-head-of-the-host$/);
+  await page.goto("/essays/amm-ai-will-not-kill-you");
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("A letter alongside the manifesto");
+  await expect(page.getByRole("link", { name: "Begin the manifesto: The Leech" })).toHaveAttribute("href", "/essays/amm-chapter-one-the-leech");
 });

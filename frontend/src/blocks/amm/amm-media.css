@@ -1,0 +1,3 @@
+/* Preserve the supplied alpha channel: no mat, panel, crop, or overlay. */
+.amm-feature { margin: 0; }
+.amm-feature .explainer-artwork-hint { justify-content: end; }

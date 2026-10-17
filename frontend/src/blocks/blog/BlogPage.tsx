@@ -5,6 +5,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { author } from "../../content/author";
 import blog from "../../content/blog.json";
 import newsletter from "../../content/newsletter.json";
+import amm from "../../content/amm.json";
+import ammMedia from "../../content/amm-media.json";
 import { essayRoute, fetchEssayIndex, formatEssayDate, ESSAY_FORMAT_LABELS, type EssayCover } from "../../content/essays/essays";
 import { fetchReleasedWriting } from "../../services/OrchestratorWritingService";
 import { publicationRoute, replacesEssay } from "../publication/writing/publicationBridge";
@@ -15,7 +17,8 @@ import { AppearanceControl } from "../../organism/AppearanceControl";
 import { DOT_BOOK_ONE_ROUTE } from "../../content/publications/dotBookOne";
 import BookOneCover from "../publication/BookOneCover";
 import { BlogReadingLinks } from "./BlogReadingLinks";
-import { BlogPostArtwork, BlogSeriesArtwork } from "./BlogArtwork";
+import { BlogPostArtwork } from "./BlogArtwork";
+import { AmmMark } from "../amm/AmmMark";
 import "./blog.css";
 
 const PAGE_SIZE = 10;
@@ -126,7 +129,7 @@ export default function BlogPage() {
       </header>
 
       <div id="start-reading" className="blog-bookshelf">
-        <Surface as="section" tone="forest" aria-labelledby="blog-book-title" className="blog-feature blog-book">
+        <Surface as="section" variant="open" tone="forest" aria-labelledby="blog-book-title" className="blog-feature blog-book">
           <Link to={DOT_BOOK_ONE_ROUTE} className="blog-feature-art blog-book-art" aria-label="Open Book One: Consciousness, A Digital Organism">
             <BookOneCover />
           </Link>
@@ -142,16 +145,15 @@ export default function BlogPage() {
             </details>
           </div>
         </Surface>
-        <Surface as="section" tone="copper" aria-labelledby="manifesto-title" className="blog-feature blog-series">
+        <Surface as="section" variant="open" tone="copper" aria-labelledby="manifesto-title" className="blog-feature blog-series">
           <Link to="/amm" className="blog-feature-art blog-series-art" aria-label={`Open ${newsletter.title}`}>
-            <div className="blog-series-cover" aria-hidden="true">
-              <span className="blog-cover-kicker">Applied DOT</span>
-              <BlogSeriesArtwork />
-              <span className="blog-cover-name"><span>The American</span>Millennial<span>Manifesto</span></span>
-            </div>
+            <picture>
+              {ammMedia.illustration.sources.map(source => <source key={source.type} type={source.type} srcSet={source.srcset} sizes="(min-width: 1200px) 600px, (min-width: 640px) 50vw, 100vw" />)}
+              <img src={ammMedia.illustration.fallback} alt={amm.artwork.alt} width={ammMedia.illustration.width} height={ammMedia.illustration.height} decoding="async" />
+            </picture>
           </Link>
           <div className="blog-feature-copy">
-            <p className="dot-label">An independent publication</p>
+            <p className="dot-label blog-publication-brand"><AmmMark /> AMM · An independent publication</p>
             <h2 id="manifesto-title" className="dot-section-heading">{newsletter.title}</h2>
             <TextLink to="/amm">Explore AMM</TextLink>
             {newsletter.editions.length > 0 && <details className="blog-feature-details">
@@ -206,22 +208,24 @@ export default function BlogPage() {
               <ol aria-label="Posts, newest first" className="blog-posts">
                 {shown.map((post, index) => (
                   <li key={post.key}>
-                    <article className="blog-post">
-                      <div className="blog-post-art">{post.cover ? <img src={post.cover.src} alt="" width={post.cover.width} height={post.cover.height} loading="lazy" decoding="async" /> : <BlogPostArtwork variant={index % 3} />}</div>
-                      <div className="blog-post-copy">
-                        <p className="blog-post-meta">
-                          {post.label && <><span>{post.label}</span><span aria-hidden="true"> · </span></>}
-                          <time dateTime={post.date}>{formatEssayDate(post.date)}</time>
-                          {post.note && <><span aria-hidden="true"> · </span><span>{post.note}</span></>}
-                        </p>
-                        <h3 className="dot-section-heading blog-post-title">
-                          <Link to={post.href}>
-                            <span>{post.title}</span>
-                            <ArrowRight className="blog-post-arrow" aria-hidden="true" />
-                          </Link>
-                        </h3>
-                        {post.summary && <p className="blog-post-summary">{post.summary}</p>}
-                      </div>
+                    <article>
+                      <Link to={post.href} className="blog-post" aria-labelledby={`blog-${post.key}`}>
+                        <div className="blog-post-art" data-illustrated={Boolean(post.cover)}>{post.cover ? <img src={post.cover.src} alt="" width={post.cover.width} height={post.cover.height} loading="lazy" decoding="async" /> : <BlogPostArtwork variant={index % 3} />}</div>
+                        <div className="blog-post-copy">
+                          <p className="blog-post-meta">
+                            {post.label && <><span>{post.label}</span><span aria-hidden="true"> · </span></>}
+                            <time dateTime={post.date}>{formatEssayDate(post.date)}</time>
+                            {post.note && <><span aria-hidden="true"> · </span><span>{post.note}</span></>}
+                          </p>
+                          <h3 id={`blog-${post.key}`} className="dot-section-heading blog-post-title">
+                            <span className="blog-post-title-line">
+                              <span>{post.title}</span>
+                              <ArrowRight className="blog-post-arrow" aria-hidden="true" />
+                            </span>
+                          </h3>
+                          {post.summary && <p className="blog-post-summary">{post.summary}</p>}
+                        </div>
+                      </Link>
                     </article>
                   </li>
                 ))}

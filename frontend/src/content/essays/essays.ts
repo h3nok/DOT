@@ -34,6 +34,8 @@ export interface EssaySummary {
   format?: EssayFormat;
   series?: string;
   cover?: EssayCover;
+  /** The essay's ## sections, with the anchor the reader gives each heading. */
+  sections?: { id: string; title: string }[];
   images?: Record<string, { width: number; height: number }>;
   /** Included only by the development preview endpoint. */
   draft?: boolean;

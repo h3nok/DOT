@@ -107,6 +107,14 @@ describe("a released essay", () => {
     expect(parsed.words).toBe(660);
     expect(parsed.readingMinutes).toBe(3); // 660 / 220, Book One's rate
   });
+
+  it("lists its ## sections with the anchors the reader gives their headings", () => {
+    const parsed = parseEssay(essay(VALID, "Opening.\n\n## What the Leech Means\n\nText.\n\n### A detail\n\n## The Leech’s *Anatomy*\n\nText."), "on-machines") as Essay & { sections: { id: string; title: string }[] };
+    expect(parsed.sections).toEqual([
+      { id: "what-the-leech-means", title: "What the Leech Means" },
+      { id: "the-leechs-anatomy", title: "The Leech’s Anatomy" },
+    ]);
+  });
 });
 
 describe("the essays folder", () => {

@@ -8,11 +8,11 @@ series: "The American Millennial Manifesto"
 levels: ["model", "hypothesis"]
 draft: false
 cover: "amm-ai-will-not-kill-you/cover.webp"
-cover_alt: "AI Is Energy: a data-center illustration compares a 2025 electricity estimate with a 2030 projection; the values are reproduced in the article’s interactive figure."
-cover_caption: "Artwork from the author’s original LinkedIn edition."
+cover_alt: "A close view of the flag-patterned Host at a feeding trough, with government and financial buildings behind it."
+cover_caption: "AI-generated illustration, directed by the author. A visual metaphor."
 ---
 
-> **Earlier published edition.** Originally published on LinkedIn on 2026-09-20. [Original publication](https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c).
+> First published on [LinkedIn](https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c).
 
 Remember the nation hosts a Leech. The Leech is a system that feeds on your well being, hides through Inversion, and survives by teaching you to admire the feeding.
 
@@ -152,18 +152,20 @@ The International Energy Agency estimates that the world's data centers consumed
   "period": "2025 estimate · 2030 projection",
   "unit": "TWh per year",
   "maximum": 1000,
-  "status": "Values transcribed from the author’s letter and cover illustration. Estimate and projection are distinguished; independent verification is pending.",
-  "limits": "Figures attributed to the IEA in the original letter, not independently verified here. This is all data-center electricity use, not AI alone. The 2030 value is a projection, not an observed outcome; do not infer a measured trend from these two points.",
+  "status": "IEA figures, checked against the cited 2026 report. The 2030 value is a projection.",
+  "limits": "These figures cover all data centers worldwide, not AI alone. Matching the report does not independently verify its estimates or forecast. Future demand depends on uptake, efficiency, financing, and infrastructure constraints. These two values do not establish who owns the infrastructure, who pays, or what harm follows.",
   "rows": [
     {
       "label": "2025 · estimated",
       "value": 485,
+      "kind": "estimate",
       "source": "IEA, Key Questions on Energy and AI (2026)",
       "url": "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary"
     },
     {
       "label": "2030 · projected",
       "value": 950,
+      "kind": "projection",
       "source": "IEA, Key Questions on Energy and AI (2026)",
       "url": "https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary"
     }

@@ -64,6 +64,10 @@ test("the site signature stays consistent across public pages and studio sign-in
     "/privacy", "/terms", "/book/digital-organism-theory", "/studio",
   ]) {
     await page.goto(route);
+    // The signature mounts before Vite's lazy page modules finish loading.
+    // Settle those requests before the next hard navigation, rather than
+    // accumulating aborted module loads across this ten-page journey.
+    await page.waitForLoadState("networkidle");
     const home = page.getByRole("link", { name: "DOT — Home", exact: true });
     await expect(home.getByRole("img", { name: "DOT", exact: true }), route).toBeVisible();
     expect((await home.boundingBox())?.height, route).toBeGreaterThanOrEqual(44);

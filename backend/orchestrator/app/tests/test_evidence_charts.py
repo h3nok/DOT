@@ -57,3 +57,13 @@ def test_invalid_chart_cannot_be_released_even_by_bypassing_the_editor():
     data["rows"][0]["url"] = "javascript:alert(1)"
     with pytest.raises(ValueError):
         charts.parse_chart(json.dumps(data))
+
+
+def test_projection_kind_is_preserved_and_invalid_kinds_cannot_be_released():
+    data = figure()
+    data["rows"][1]["kind"] = "projection"
+    assert charts.parse_chart(json.dumps(data))["rows"][1]["kind"] == "projection"
+    data["rows"][1]["kind"] = "certain"
+    with pytest.raises(fastapi.HTTPException) as rejected:
+        validate_release(f"```evidence-chart\n{json.dumps(data)}\n```", {})
+    assert rejected.value.status_code == 409

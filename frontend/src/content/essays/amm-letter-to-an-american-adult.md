@@ -8,11 +8,11 @@ series: "The American Millennial Manifesto"
 levels: ["model", "hypothesis"]
 draft: false
 cover: "amm-letter-to-an-american-adult/cover.webp"
-cover_alt: "A political illustration depicts corporate power as a many-headed creature extracting public resources while a politician amplifies cultural conflict."
-cover_caption: "Artwork from the author’s original LinkedIn edition."
+cover_alt: "A flag-patterned cow in a heavy collar faces a mirror that shows a healthier version of itself in a green landscape."
+cover_caption: "AI-generated illustration, directed by the author. A visual metaphor."
 ---
 
-> **Earlier published edition.** Originally published on LinkedIn on 2026-09-15. [Original publication](https://www.linkedin.com/pulse/letter-american-adult-white-pillage-lead-west-golden-henok-mtjic).
+> First published on [LinkedIn](https://www.linkedin.com/pulse/letter-american-adult-white-pillage-lead-west-golden-henok-mtjic).
 
 You have always been a rich man among beggars in the American empire. Even when you felt poor. Even when you felt ordinary.
 

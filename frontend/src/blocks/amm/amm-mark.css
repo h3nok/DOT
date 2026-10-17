@@ -1,0 +1,56 @@
+.amm-mark { overflow: visible; color: var(--foreground, #232525); }
+.amm-mark-fire, .amm-mark-flame, .amm-mark-heart, .amm-mark-core { transform-origin: 32px 49px; }
+.amm-mark-fire { filter: drop-shadow(0 0 2px #D875321A); }
+.amm-mark-ember { opacity: 0; }
+.amm-brand:is(:hover, :focus-visible) .amm-mark-fire { filter: drop-shadow(0 0 4px #D8753259); }
+
+/* Finite ignition and a deliberate response; the flame never loops in chrome. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-flame { animation: amm-flame-kindle 3.6s ease-in-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-heart { animation: amm-flame-heart 3.6s ease-in-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-core { animation: amm-flame-core 3.6s ease-in-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-ember--one { animation: amm-ember-rise 1.8s .35s ease-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-ember--two { animation: amm-ember-rise 1.6s 1.15s ease-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:focus-visible .amm-mark-fire { animation: amm-flame-answer 1.4s ease-in-out 1 both; }
+  @media (hover: hover) and (pointer: fine) {
+    html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:hover .amm-mark-fire { animation: amm-flame-answer 1.4s ease-in-out 1 both; }
+  }
+}
+@keyframes amm-flame-kindle {
+  0% { transform: scale(.91, .82) rotate(-3deg); }
+  17% { transform: scale(.98, 1.04) skewX(3deg); }
+  36% { transform: scale(1.025, .95) skewX(-3deg); }
+  55% { transform: scale(.98, 1.03) skewX(2deg); }
+  76% { transform: scale(1.01, .98) skewX(-1deg); }
+  100% { transform: none; }
+}
+@keyframes amm-flame-heart {
+  0% { transform: scale(.85, .78); }
+  23% { transform: scale(1.06, 1.15) rotate(-3deg); }
+  44% { transform: scale(.94, .95) rotate(3deg); }
+  64% { transform: scale(1.03, 1.08) rotate(-2deg); }
+  100% { transform: none; }
+}
+@keyframes amm-flame-core {
+  0% { transform: scale(.7, .8); opacity: .75; }
+  28% { transform: scale(1, 1.2); opacity: 1; }
+  57% { transform: scale(.95, .9); }
+  78% { transform: scale(1.02, 1.1); }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes amm-ember-rise {
+  0% { opacity: 0; transform: translate(0, 0); }
+  24% { opacity: .65; }
+  100% { opacity: 0; transform: translate(3px, -10px); }
+}
+@keyframes amm-flame-answer {
+  0%, 100% { transform: none; }
+  35% { transform: scale(.98, 1.055) skewX(-2deg); }
+  68% { transform: scale(1.025, .98) skewX(1deg); }
+}
+@media (forced-colors: active) {
+  .amm-mark-flame { fill: CanvasText; }
+  .amm-mark-heart { fill: Canvas; }
+  .amm-mark-core { fill: CanvasText; }
+  .amm-mark-fire { filter: none; }
+}

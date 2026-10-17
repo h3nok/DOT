@@ -1,7 +1,9 @@
 import { Download, Eye, FilePenLine, Plus, Save, Upload, ArrowRight, Check, Bold, Italic, Heading2, Link2 } from "lucide-react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { AmmShell } from "../amm/AmmIdentity";
+import { AmmButton } from "../amm/AmmControls";
 import AMM from "../../content/amm.json";
 import ammLibrary from "../../content/amm-library.json";
 import { importPublishedEssay, proposeChapterOneRevision, CHAPTER_ONE_PROPOSAL } from "./writing/importPublishedEssay";
@@ -51,6 +53,7 @@ export default function WritingStudioPage() {
   const dirty = currentSignature !== signature(saved, savedClaims);
   const issues = writingReadiness(draft, claims);
   const presentation = draft.presentation ?? emptyPresentation();
+  const isAmm = search.get("series") === "amm" || ammLibrary.some(item => item.slug === search.get("source")) || presentation.series === AMM.series;
   const canSave = !!workspace && !busy && !!draft.title.trim() && !!draft.body.trim() && (dirty || !saved.revisionId);
   const canPublish = !busy && !dirty && !!saved.revisionId && !issues.length && approved && reviewed === currentSignature;
 
@@ -63,13 +66,23 @@ export default function WritingStudioPage() {
     return () => abort.abort();
   }, []);
   const openSourceRef = useRef<(slug: string) => Promise<void>>(async () => {});
+  const openWorkRef = useRef<(work: WritingWork) => Promise<void>>(async () => {});
   useEffect(() => {
+    if (!workspace || sourceOpened.current) return;
+    const requestedWork = search.get("work");
+    if (requestedWork) {
+      sourceOpened.current = true;
+      const work = works.find(entry => entry.id === requestedWork);
+      if (work) void openWorkRef.current(work);
+      else setError("This manuscript is not available in your writing workspace.");
+      return;
+    }
     const source = search.get("source");
-    if (workspace && source && !sourceOpened.current && ammLibrary.some(item => item.slug === source)) {
+    if (source && ammLibrary.some(item => item.slug === source)) {
       sourceOpened.current = true;
       void openSourceRef.current(source);
     }
-  }, [workspace, search]);
+  }, [workspace, search, works]);
   useEffect(() => {
     const urls = blobUrls.current;
     return () => urls.forEach(url => URL.revokeObjectURL(url));
@@ -105,6 +118,7 @@ export default function WritingStudioPage() {
     } catch (reason) { setError(reason instanceof Error ? reason.message : "The saved text could not be opened."); }
     finally { setBusy(false); }
   }
+  openWorkRef.current = open;
   async function save() {
     if (!canSave) return;
     setBusy(true); setError(null); setMessage(null);
@@ -176,9 +190,9 @@ export default function WritingStudioPage() {
   }
   function insert(markdown: string) { edit((start, end) => insertMarkdownBlock(draft.body, start, end, markdown)); }
 
-  return <PageShell wide header={<PageHeader />}>
+  return <WritingShell amm={isAmm}>
     <div className="writing-desk">
-      <header className="writing-desk-header"><div><p className="dot-label">Private workspace</p><h1>Writing studio</h1><p>Your manuscript. Your images. A considered publication.</p></div><div className="writing-actions"><Link to="/blog">Public blog</Link><Link to="/studio/newsletter">AMM newsletter</Link><Link to="/studio">Book projects</Link></div></header>
+      <header className="writing-desk-header"><div><p className="dot-label">Private workspace</p><h1>{isAmm ? "AMM writing studio" : "Writing studio"}</h1><p>Your manuscript. Your images. A considered publication.</p></div><div className="writing-actions"><Link to={isAmm ? "/amm" : "/blog"}>{isAmm ? "AMM" : "Public blog"}</Link><Link to="/studio/newsletter">AMM newsletter</Link><Link to="/studio">Book projects</Link></div></header>
       {import.meta.env.DEV && <p className="writing-environment">Development preview · drafts and publication use the API configured for this preview.</p>}
       {error && <p role="alert" className="writing-error">{error}</p>}
       {!workspace ? <p role="status">{error ? "The workspace could not be opened. Reload after signing in to retry." : "Opening your workspace…"}</p> : <div className="writing-desk-layout">
@@ -208,11 +222,11 @@ export default function WritingStudioPage() {
               <ul className="writing-checklist"><li><Check aria-hidden="true" />{saved.revisionId && !dirty ? `Revision ${saved.revisionNumber} saved privately` : "Save your current changes before publishing"}</li><li><Eye aria-hidden="true" />{reviewed === currentSignature ? "Current version opened in Preview" : "Open Preview to review this version"}</li></ul>
               {issues.length > 0 && <div className="writing-readiness"><h3>Before publication</h3><ul>{issues.map(issue => <li key={issue}>{issue}</li>)}</ul><button type="button" className="writing-text-button" onClick={() => go(1)}>Return to Edit</button></div>}
               <label className="writing-approval"><input type="checkbox" checked={approved} disabled={busy || dirty || !saved.revisionId || !!issues.length || reviewed !== currentSignature} onChange={event => setApproved(event.target.checked)} />I have reviewed this saved version and its material claims, and approve public release.</label>
-              <button type="button" className="dot-reading-action writing-primary" disabled={!canPublish} onClick={() => void publish()}><Upload aria-hidden="true" />Publish on this website</button>
+              {isAmm ? <AmmButton variant="primary" disabled={!canPublish} onClick={() => void publish()} icon={<Upload />} label="Publish on this website" /> : <button type="button" className="dot-reading-action writing-primary" disabled={!canPublish} onClick={() => void publish()}><Upload aria-hidden="true" />Publish on this website</button>}
               <p className="writing-hint">The blog and reader update immediately. Search previews, RSS and the sitemap refresh with the next site build. Publishing here sends no email or social post.</p>
             </section>}
           </div>
-          <div className="writing-save-bar"><div className="writing-save-state"><span className="writing-state-dot" data-dirty={dirty || undefined} /><span>{busy ? "Working…" : dirty ? "Unsaved changes" : saved.revisionId ? `Saved · revision ${saved.revisionNumber}` : "Private draft"}</span></div><div className="writing-actions"><button type="button" className="dot-pill" disabled={busy} onClick={exportDraft}><Download aria-hidden="true" />Download .md</button><button type="button" className="dot-reading-action writing-primary" disabled={!canSave} onClick={() => void save()}><Save aria-hidden="true" />Save private revision</button>{step > 0 && step < 3 && <button type="button" className="dot-pill" disabled={busy} onClick={() => go(step + 1)}>{steps[step + 1].label}<ArrowRight aria-hidden="true" /></button>}</div></div>
+          <div className="writing-save-bar"><div className="writing-save-state"><span className="writing-state-dot" data-dirty={dirty || undefined} /><span>{busy ? "Working…" : dirty ? "Unsaved changes" : saved.revisionId ? `Saved · revision ${saved.revisionNumber}` : "Private draft"}</span></div><div className="writing-actions">{isAmm ? <AmmButton disabled={busy} onClick={exportDraft} icon={<Download />} label="Download .md" /> : <button type="button" className="dot-pill" disabled={busy} onClick={exportDraft}><Download aria-hidden="true" />Download .md</button>}{isAmm ? <AmmButton variant="primary" disabled={!canSave} onClick={() => void save()} icon={<Save />} label="Save private revision" /> : <button type="button" className="dot-reading-action writing-primary" disabled={!canSave} onClick={() => void save()}><Save aria-hidden="true" />Save private revision</button>}{step > 0 && step < 3 && <button type="button" className="dot-pill" disabled={busy} onClick={() => go(step + 1)}>{steps[step + 1].label}<ArrowRight aria-hidden="true" /></button>}</div></div>
           {dirty && <button type="button" disabled={busy} className="writing-text-button mt-4" onClick={() => setPending(() => () => { setDraft(saved); setClaims(savedClaims); setApproved(false); setMessage(null); })}>Discard unsaved changes</button>}
           {message && <p role="status" className="writing-message">{message}</p>}
           {workId && releaseNumber && <section className="writing-release"><Link to={writingRoute(workId, releaseNumber)} target="_blank" rel="noreferrer">Read released version {releaseNumber} ↗</Link><WritingDistribution workId={workId} number={releaseNumber} automaticResult={null} /></section>}
@@ -220,5 +234,9 @@ export default function WritingStudioPage() {
       </div>}
       <AlertDialog.Root open={!!pending} onOpenChange={open => { if (!open) setPending(null); }}><AlertDialog.Portal><AlertDialog.Overlay className="fixed inset-0 z-[80] bg-background/80" /><AlertDialog.Content className="appearance-ui-panel fixed left-1/2 top-1/2 z-[81] w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded border border-border p-6"><AlertDialog.Title className="font-serif text-xl">Leave these unsaved changes?</AlertDialog.Title><AlertDialog.Description className="mt-3 text-sm">Save privately or download your Markdown before replacing this draft. Download attached images separately if you need a local copy.</AlertDialog.Description><div className="writing-actions mt-5"><AlertDialog.Cancel className="dot-pill">Keep editing</AlertDialog.Cancel><button type="button" className="dot-pill" onClick={exportDraft}>Download .md</button><AlertDialog.Action className="dot-pill" onClick={() => { pending?.(); setPending(null); }}>Discard and continue</AlertDialog.Action></div></AlertDialog.Content></AlertDialog.Portal></AlertDialog.Root>
     </div>
-  </PageShell>;
+  </WritingShell>;
+}
+
+function WritingShell({ amm, children }: { amm: boolean; children: ReactNode }) {
+  return amm ? <AmmShell>{children}</AmmShell> : <PageShell wide header={<PageHeader />}>{children}</PageShell>;
 }

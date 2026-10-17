@@ -2,7 +2,8 @@ import { Check, Loader2, Mail } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 
 import READERS from "../content/readers.json";
-import AMM from "../content/amm.json";
+import { AmmButton } from "../blocks/amm/AmmControls";
+import { useAmmContent } from "../content/editable/useAmmContent";
 import { useReaderList, type ReaderSource, type ReaderPublication } from "./useReaderList";
 
 /**
@@ -52,6 +53,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   unavailableFallback = null,
   loadingFallback = null,
 }) => {
+  const AMM = useAmmContent();
   const { available, availabilityError, subscribe, confirm } = useReaderList(publication);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -151,14 +153,14 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
                 placeholder="you@example.com"
                 className={`reader-list-field ${FIELD}`}
               />
-              <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
+              {publication === "amm" ? <AmmButton variant="primary" type="submit" disabled={busy} label="Subscribe by email" icon={busy ? <Loader2 className="animate-spin" /> : <Mail />} /> : <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
                 {busy ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
-                {publication === "amm" ? "Subscribe by email" : "Send me a code"}
-              </button>
+                Send me a code
+              </button>}
             </form>
           ) : (
             <form onSubmit={submitCode} className="mt-4 flex flex-col gap-3 sm:flex-row">
@@ -179,10 +181,10 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
                 placeholder="6-digit code"
                 className={`reader-list-field ${FIELD}`}
               />
-              <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
+              {publication === "amm" ? <AmmButton variant="primary" type="submit" disabled={busy} label="Confirm" icon={busy ? <Loader2 className="animate-spin" /> : undefined} /> : <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Confirm
-              </button>
+              </button>}
             </form>
           )}
 

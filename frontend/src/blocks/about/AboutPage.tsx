@@ -20,6 +20,7 @@ import {
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
 import { DotButton } from "../../shared/DotButton";
+import { AppearanceControl } from "../../organism/AppearanceControl";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { ProseMarkdown } from "../../shared/ProseMarkdown";
 import { SiteColophon } from "../../shared/SiteColophon";
@@ -54,7 +55,7 @@ export default function AboutPage() {
   return (
     <PageShell
       wide
-      header={<PageHeader />}
+      header={<PageHeader controls={<AppearanceControl placement="inline" />} />}
       footer={<SiteColophon variant="personal" />}
       className="about-page"
     >
@@ -107,7 +108,7 @@ export default function AboutPage() {
               </div>
             );
             const card = (
-              <Surface as={project.movement ? "article" : "li"} key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
+              <Surface as={project.movement ? "article" : "li"} variant="open" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
                 <div className="about-project-visual">{project.showcase ? <ProjectShowcase showcase={project.showcase} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
                   {identity}
@@ -132,7 +133,7 @@ export default function AboutPage() {
               </Surface>
             );
             return project.movement ? (
-              <Surface as="li" key={project.slug} className="about-project-family" tone="forest">
+              <Surface as="li" variant="open" key={project.slug} className="about-project-family" tone="forest">
                 <MovementShowcase movement={project.movement} />
                 {card}
               </Surface>
@@ -155,7 +156,7 @@ export default function AboutPage() {
         <SectionHeading id="about-services" eyebrow="Independent contracts" title="Project work" />
         <div className="about-services">
           {builder.services.map((service, index) => (
-            <Surface key={service.title} tone={serviceVisuals[index % serviceVisuals.length].tone}>
+            <Surface variant="open" key={service.title} tone={serviceVisuals[index % serviceVisuals.length].tone}>
               <span className="about-service-symbol" aria-hidden="true">{serviceVisuals[index % serviceVisuals.length].icon}</span>
               <h3>{service.title}</h3>
               <p>{service.description}</p>

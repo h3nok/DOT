@@ -61,7 +61,7 @@ export default function ReaderLeavePage() {
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
               {allPublications ? "No new editions will be sent from these lists." : "No new editions will be sent from this list. Your other subscriptions are unchanged."} If this was a mistake,
               you can{" "}
-              <Link to={publication === "amm" ? "/amm#amm-subscribe" : "/readers"} className={LINK}>
+              <Link to={publication === "amm" ? "/amm/editions#amm-subscribe" : "/readers"} className={LINK}>
                 join again
               </Link>
               .

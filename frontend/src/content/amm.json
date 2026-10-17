@@ -6,11 +6,84 @@
   "feed": "/amm/feed.xml",
   "eyebrow": "An independent publication by Henok Ghebrechristos",
   "headline": [
-    "A country is more",
-    "than a market."
+    "When harm becomes",
+    "normal."
   ],
-  "description": "The American Millennial Manifesto examines organized extraction and the erosion of public judgment—and argues for a public life grounded in dignity, accountability, and the freedom to refuse.",
-  "deck": "A manifesto against the erosion of public life—and for institutions people can govern.",
+  "heroAction": "Understand the Leech",
+  "description": "The American Millennial Manifesto examines moral erosion: how power, conditioning, and fear can normalize extraction—and what honesty and accountability demand of us.",
+  "home": {
+    "overviewEyebrow": "Before you read",
+    "overviewTitle": "What AMM is trying to address.",
+    "overviewIntro": "Begin with the concepts. Examine how these patterns enter everyday conduct—and what honesty and accountability ask of us.",
+    "overviewAction": "Go to the chapters",
+    "eyebrow": "Why this manifesto · Moral erosion",
+    "premise": "AMM examines an inversion of priorities: life serves accumulation, while power escapes accountability.",
+    "reasons": [
+      { "id": "worth", "title": "Worth reduced to status.", "text": "Money, position, and approval become measures of a person’s value.", "reflections": ["worth", "honesty"] },
+      { "id": "harm", "title": "Harm excused for gain.", "text": "Dishonesty, indifference, and exploitation become acceptable ways to get ahead.", "reflections": ["indifference", "exploitation"] },
+      { "id": "power", "title": "Power without responsibility.", "text": "Those who set the terms pass the costs to others—and resist being held to account.", "reflections": ["judgment", "repair"] }
+    ],
+    "conceptsLabel": "The concepts behind the critique",
+    "questionLabel": "Ask of your own experience",
+    "concepts": [
+      {
+        "id": "conditioning",
+        "label": "Conditioning",
+        "hint": "What becomes normal",
+        "title": "An arrangement becomes an assumption.",
+        "text": "Rewards, punishments, and repeated examples can teach us what to accept. AMM asks when those lessons serve concentrated power at the expense of life.",
+        "question": "What is rewarded around me—and what does it cost to refuse?"
+      },
+      {
+        "id": "fear",
+        "label": "Fear",
+        "hint": "What feels at stake",
+        "title": "What feels unsafe to question?",
+        "text": "Losing income, belonging, status, or certainty can feel threatening. Fear may signal real danger; the inquiry is how it shapes what we accept and defend.",
+        "question": "Am I responding to a present danger, an inherited expectation, or both?"
+      },
+      {
+        "id": "protection",
+        "label": "Self-protection",
+        "hint": "What we defend",
+        "title": "Protection can become permission.",
+        "text": "Seeking safety is understandable. The moral question begins when protecting our position becomes a reason to deceive, control, or pass harm to someone else.",
+        "question": "What am I protecting—and who bears the cost?"
+      },
+      {
+        "id": "erosion",
+        "label": "Moral erosion",
+        "hint": "What we excuse",
+        "title": "Harm becomes ordinary.",
+        "text": "AMM calls it moral erosion when dishonesty, exploitation, and indifference become acceptable ways to get ahead—and responsibility becomes optional.",
+        "question": "What have I learned to excuse because it is normal, legal, or profitable?"
+      },
+      {
+        "id": "accountability",
+        "label": "Accountability",
+        "hint": "What we answer for",
+        "title": "Honesty must reach our conduct.",
+        "text": "Acknowledge the harm, examine your part in it, and make changes or repairs. Responsibility follows what someone knows, controls, and can realistically change.",
+        "question": "What is mine to answer for—and what can I change?"
+      }
+    ],
+    "reflectionEyebrow": "The culture we carry",
+    "reflectionTitle": "Where does this show up in us?",
+    "reflectionIntro": "AMM’s argument is an inversion of priorities: life serves accumulation, while power escapes accountability. It examines the role of Western imperial and economic elites in shaping that culture—and the everyday conduct that can sustain it.",
+    "reflectionLabel": "Questions about conduct",
+    "reflections": [
+      { "id": "honesty", "title": "Honesty", "text": "Where do I distort the truth to protect my comfort, advantage, or reputation?" },
+      { "id": "worth", "title": "Worth & status", "text": "Do I measure my own worth—or someone else’s—by money, position, or approval?" },
+      { "id": "indifference", "title": "Indifference", "text": "Whose suffering have I learned to accept because it benefits me or feels distant?" },
+      { "id": "exploitation", "title": "Exploitation", "text": "Do I use someone’s dependence or vulnerability to obtain more from them?" },
+      { "id": "judgment", "title": "Moral judgment", "text": "Do I let authority, legality, or profit settle whether my conduct is right?" },
+      { "id": "repair", "title": "Accountability & repair", "text": "When harm is pointed out, do I examine it—or protect myself from having to change?" }
+    ],
+    "limitsTitle": "Conditioning, character, and responsibility",
+    "limits": "Temperament, basic protective responses, personal history, and present circumstances also matter. Fear can signal real danger. These questions examine conduct; they do not diagnose people or assign an unchanging character. Someone facing coercion and someone setting the terms do not carry the same responsibility. The questions apply to the author, the reader, and those who hold power.",
+    "method": "Keep three things distinct: what happened, what you felt, and how you explain it. Examine the explanation—including AMM’s."
+  },
+  "deck": "You keep the economy running. Who does it leave in control?",
   "statement": "The public is more than a resource.",
   "approach": "AMM follows the relationship between concentrated power, inherited culture, and everyday conduct. Its model asks how extraction becomes normal, who has room to refuse, and what makes correction possible.",
   "analysis": {
@@ -72,7 +145,7 @@
         "description": "Decisions can defend the existing terms or make correction possible. Their effects become part of the conditions others encounter.",
         "question": "Look for whether harm can be named, challenged, and repaired—and who can prevent that correction.",
         "quote": "Our conduct then helps reproduce or change the arrangements shaping us.",
-        "anchor": "race-division-and-responsibility",
+        "anchor": "authority-and-responsibility-within-the-model",
         "diagram": [
           "Consequence",
           "Correction",
@@ -106,25 +179,539 @@
     }
   ],
   "signupTitle": "Subscribe to AMM.",
-  "signupDescription": "Receive complete editions by email. Confirm your address with a one-time code; future letters will arrive in your inbox. Every edition is also free to read here.",
+  "signupDescription": "Receive AMM’s complete chapters and letters on money, power, culture, and the alternatives people can build. Confirm your address with a one-time code. Every edition is also free to read here.",
   "emptyTitle": "The next chapter starts here.",
   "emptyDescription": "New AMM editions will be collected here as they are published. Subscribe to receive the next one.",
   "introduction": {
-    "title": "The Anatomy of the Host",
-    "route": "/essays/the-anatomy-of-the-host",
-    "label": "Start with the introduction",
-    "description": "The people, the organization of extraction, and the logic that makes it acceptable. A guide to AMM’s terms and its account of responsibility."
+    "title": "Chapter One: The Leech",
+    "route": "/essays/amm-chapter-one-the-leech",
+    "label": "Start with Chapter One",
+    "description": "The opening chapter: what the Leech is, where it comes from, and how to trace it."
   },
   "artwork": {
-    "src": "/amm/the-slow-erosion-of-the-public.webp",
-    "title": "The slow erosion of the public",
-    "alt": "AMM illustration: a two-headed leech feeds on a cow representing the public, while a community builds parallel systems beside it.",
-    "caption": "A visual argument from The American Millennial Manifesto.",
-    "description": "The Host is the people, pictured as a cow divided into labor, time, attention, data, savings, taxes, and debt. A government collar attaches the Leech, labeled organized extraction. Its old security-industrial head is labeled war, industry, and energy; its new technological-platform head is labeled finance, platforms, and AI. The feeding trough is labeled status, fear, and addiction. Beside it, people build parallel systems around tools, skills, food, energy, and community. The image states, “Parallel systems are the only way out,” and points to 4Us, Economy for Us.",
+    "src": "/amm/media/host2-1536.webp",
+    "title": "The Host",
+    "key": [
+      {
+        "id": "host",
+        "label": "The Host",
+        "meaning": "The public"
+      },
+      {
+        "id": "leech",
+        "label": "The Leech",
+        "meaning": "Organized extraction"
+      }
+    ],
+    "alt": "An emaciated cow patterned with the American flag carries a two-headed leech and faces a phone-shaped mirror showing its healthy reflection in a green landscape.",
+    "caption": "AI-generated illustration, directed by the author. A visual metaphor.",
+    "description": "The Host is the people, pictured as a cow patterned with the American flag. Its exhausted body carries a two-headed leech while facing a phone-shaped mirror that shows a healthy reflection in a green landscape. The contrast is a visual metaphor for extraction and the distance between public life and its reassuring image.",
     "movementUrl": "https://sullix.com/venture"
   },
   "principle": {
     "quote": "Human worth is unconditional; authority and conduct remain answerable.",
     "attribution": "From the working manuscript · The Host and the Infection"
+  },
+  "chapterSection": {
+    "title": "Read the manifesto.",
+    "description": "Three parts, in the order they were written to be read. Each one builds on the terms the previous part defines."
+  },
+  "reading": {
+    "pathEyebrow": "Start here",
+    "orderLabel": "The manifesto",
+    "contentsLabel": "Contents",
+    "letterLabel": "A letter alongside the manifesto",
+    "lettersEyebrow": "Alongside the manifesto",
+    "lettersTitle": "Letters",
+    "lettersDescription": "Shorter pieces that apply the manifesto’s terms to a current question. Each one can be read on its own.",
+    "nextLabel": "Next in the manifesto",
+    "beginLabel": "Begin the manifesto",
+    "latestNote": "This is the latest published chapter.",
+    "signupTitle": "Receive the next part.",
+    "signupDescription": "New chapters and letters arrive by email when they are ready. No schedule, no tracking pixels. Leave in one click.",
+    "supportTitle": "Support this writing.",
+    "supportDescription": "Every edition stays free to read. If this one was worth your time, a one-time contribution supports the author’s independent writing and research.",
+    "supportAction": "Contribute once",
+    "supportNote": "Stripe hosts the checkout. No recurring charge, and a contribution buys no access.",
+    "companionLink": "See the framework",
+    "prereqEyebrow": "Read first",
+    "prereqTitle": "How power works",
+    "prereqText": "Why AMM argues that private capital is the new power, and how its pressure lands on the citizen. The chapters build on it.",
+    "prereqAction": "Read first: How power works",
+    "prereqThen": "Then begin Chapter One"
+  },
+  "movement": {
+    "title": "Build the alternative.",
+    "description": "4Us is an economic sovereignty movement developing practical alternatives through cooperation. Sullix is its first platform test: useful technology, shared capacity, and communities with a say in the systems they depend on.",
+    "stage": "In development · Start small. Test with real people."
+  },
+  "archiveTitle": "Letters from the present.",
+  "archiveDescription": "One argument, examined from different angles: how dependence becomes income, how income becomes power, and how that power is made to seem normal.",
+  "money": {
+    "definitionTitle": "What is capital, in everyday language?",
+    "definitions": [
+      {
+        "id": "money",
+        "term": "Money",
+        "text": "What you use to make a payment. A bank balance lets you buy something; by itself it does not tell you who owns the shop, the building, or the company."
+      },
+      {
+        "id": "income",
+        "term": "Income",
+        "text": "What comes in over time: wages from work, interest from lending, or income from an asset. Your income pays today’s expenses. It is different from the wealth you already hold."
+      },
+      {
+        "id": "capital",
+        "term": "Capital",
+        "text": "Here, money committed to an enterprise and assets used to generate income: equipment, buildings, software, or financial claims such as shares. Capital can expand what people can produce. Ownership also helps determine who controls it and receives the returns."
+      },
+      {
+        "id": "wealth",
+        "term": "Wealth",
+        "text": "What you own minus what you owe. Two people with the same paycheck can have very different freedom to refuse a bad deal if one has savings and assets and the other has debt."
+      }
+    ],
+    "examples": [
+      {
+        "id": "housing",
+        "title": "The rent payment",
+        "icon": "home",
+        "path": "Tenant → property operator → costs, lender, owner",
+        "mechanic": "Rent is paid for access to a home. The recipient may pay for repairs, staff, taxes, insurance, and financing. What remains can benefit the owner. Paying rent ordinarily gives the tenant no ownership stake in the property.",
+        "pressure": "AMM’s concern is the leverage created when moving is costly and realistic alternatives are scarce. A person can keep paying for access while the asset—and the power to set future terms—remains someone else’s.",
+        "question": "Does the payment improve housing, or chiefly strengthen control over access to it?",
+        "anchor": "the-asset-hoarders-and-financial-gatekeepers"
+      },
+      {
+        "id": "borrowing",
+        "title": "The debt payment",
+        "icon": "landmark",
+        "path": "Borrower → lender or loan owner → funding costs, losses, income",
+        "mechanic": "A loan lets you spend now against a promise to pay later. Principal repays the amount borrowed; interest is a separate charge. A lender also faces funding costs, administration, and the risk of nonpayment. The whole installment is not profit.",
+        "pressure": "When borrowing is needed for necessities, future income is already committed before it arrives. AMM focuses on terms that keep a person paying while leaving little room to reduce the debt or leave the arrangement.",
+        "question": "Does credit expand your choices—or keep your next paycheck spoken for?",
+        "anchor": "the-asset-hoarders-and-financial-gatekeepers"
+      },
+      {
+        "id": "platforms",
+        "title": "The platform fee",
+        "icon": "store",
+        "path": "Customer → seller → platform fees and operating costs",
+        "mechanic": "A seller may pay a platform for access to customers, payment processing, advertising, or delivery. These can be useful services. The platform’s receipts also pay its own costs before becoming profit.",
+        "pressure": "The leverage changes when sellers cannot readily reach buyers elsewhere and the platform controls visibility as well as price. AMM asks who does the work, who carries the risk, and who can change the fee or rules.",
+        "question": "Are you paying for a service—or for permission to reach the market?",
+        "anchor": "the-digital-toll-collectors"
+      },
+      {
+        "id": "public",
+        "title": "The public contract",
+        "icon": "building",
+        "path": "Public funds → contractor → delivery costs and profit",
+        "mechanic": "Governments buy goods and services from firms. A contract can fund useful work, wages, suppliers, and a return to the contractor. Public spending and private revenue are therefore connected.",
+        "pressure": "AMM examines arrangements in which necessity or emergency protects the contractor from effective challenge while the public bears costs and risk. A large contract alone does not establish that this happened.",
+        "question": "Who can inspect the cost, challenge the terms, and demand repair?",
+        "anchor": "the-old-head-the-security-industrial-oligarchy"
+      },
+      {
+        "id": "knowledge",
+        "title": "The medicine price",
+        "icon": "pill",
+        "path": "Patient → insurer → patent holder",
+        "mechanic": "A patent grants a period of exclusive sale to reward invention and risk. Public money often pays for part of the research: BARDA reimbursed 100 percent of Moderna’s allowable development costs for its COVID-19 vaccine.",
+        "pressure": "In Chapter Two’s words: “The problem is not the existence of intellectual property. It is the use of legal exclusivity to convert captive human need into pricing power.”",
+        "question": "Illness creates captivity. Who can refuse the price?",
+        "anchor": "the-innovation-hoarders"
+      }
+    ],
+    "cycle": [
+      {
+        "id": "need",
+        "title": "Control a necessity",
+        "text": "Own or control housing, credit, infrastructure, or a route to customers."
+      },
+      {
+        "id": "claim",
+        "title": "Collect repeatedly",
+        "text": "Charge for continued access, with terms that the dependent person struggles to refuse."
+      },
+      {
+        "id": "accumulate",
+        "title": "Expand the claim",
+        "text": "Use returns, financing, or acquisitions to gain more assets and market power."
+      },
+      {
+        "id": "protect",
+        "title": "Protect the arrangement",
+        "text": "Use contracts, influence, or rules to preserve the advantage. Test for this in each case."
+      }
+    ],
+    "testTitle": "Make the accusation specific.",
+    "testIntro": "A strong critique follows the contract, the accounts, and the choices available. Use these questions on a company, a public institution, or an alternative that promises to replace them.",
+    "tests": [
+      {
+        "id": "contribution",
+        "title": "What is actually being provided?",
+        "text": "Identify the work, investment, maintenance, and risk. Compare the charge with the service and its costs."
+      },
+      {
+        "id": "exit",
+        "title": "What happens if someone says no?",
+        "text": "Look at switching costs, debt, scarcity, employment dependence, and available alternatives."
+      },
+      {
+        "id": "benefit",
+        "title": "Who receives the benefit and bears the loss?",
+        "text": "Trace ownership and the actual payments. Revenue, profit, wealth, and assets under management answer different questions."
+      },
+      {
+        "id": "correction",
+        "title": "Who can change the terms?",
+        "text": "Find the decision-maker, the appeal route, and any evidence of retaliation, concealment, or blocked correction."
+      }
+    ],
+    "alternativeTitle": "Build a different destination for the surplus.",
+    "alternativeDetail": "Shared ownership can give the people using or operating an enterprise a say in its decisions. In a cooperative, members can direct surplus toward reserves, better services, member benefits, or agreed community purposes. It still has to cover costs, manage risk, and be answerable for its conduct.",
+    "movementDetail": "4Us is the founder’s movement toward economic sovereignty through cooperation; Sullix is its first platform test. The standard for that work should be concrete: clear ownership, visible costs, usable services, and an effective way to challenge decisions. These are goals to demonstrate as the work develops.",
+    "sourcesTitle": "Definitions, references, and limits",
+    "sourcesIntro": "The explanations are complete on this page. The references below make the underlying definitions inspectable. AMM’s extraction model is an interpretation to examine; these sources do not establish its claims about any particular institution. The ownership figures carry their own sources and limits.",
+    "sources": [
+      {
+        "id": "firms",
+        "title": "CORE Econ · Owners, managers, and employees",
+        "url": "https://books.core-econ.org/the-economy-v1/book/text/06.html",
+        "note": "Wages, ownership, profit, and authority inside firms."
+      },
+      {
+        "id": "power",
+        "title": "CORE Econ · Property and power",
+        "url": "https://books.core-econ.org/the-economy-v1/book/text/05.html",
+        "note": "Bargaining, outside options, and how gains are divided."
+      },
+      {
+        "id": "credit",
+        "title": "CORE Econ · Banks, money, and credit",
+        "url": "https://books.core-econ.org/the-economy-v1/book/text/10.html",
+        "note": "Borrowing, lending, interest, and money creation."
+      },
+      {
+        "id": "cooperation",
+        "title": "International Cooperative Alliance · Cooperative principles",
+        "url": "https://www.ica.coop/en/cooperatives/cooperative-identity/",
+        "note": "Member control and the allocation of cooperative surplus."
+      }
+    ],
+    "creditNote": "This follows payments and ownership; it is not a model of the entire money supply. Bank lending can create deposits, and repaying bank-loan principal can reduce them. “Money moves” does not mean a fixed pile of cash simply passes from poor people to rich people.",
+    "companions": [
+      {
+        "id": "amm-chapter-three-the-host-and-the-infection",
+        "title": "Who pays, who owns, who decides?",
+        "text": "Chapter Three’s anatomy of the Host distinguishes ordinary participation from the power to set the terms. Trace that difference through a rent payment, a loan, or a platform fee.",
+        "anchor": "interfaces",
+        "summary": "Who belongs to the Host, who controls its terms, and how the Leech’s logic enters judgment and character."
+      },
+      {
+        "id": "amm-chapter-one-the-leech",
+        "title": "How does dependence become common sense?",
+        "text": "Chapter One examines the culture that makes power look legitimate. The money guide connects that argument to the recurring payments and ownership behind it.",
+        "anchor": "structure",
+        "summary": "How culture, institutions, and public narratives can teach people to accept the terms imposed on them."
+      },
+      {
+        "id": "amm-chapter-two-the-leechs-anatomy",
+        "title": "Put the anatomy next to an ordinary bill.",
+        "text": "Rent, interest, platform fees, and public contracts make the chapter’s “feeding interfaces” concrete. Follow the receipt, the costs, and the claim on what remains.",
+        "anchor": "interfaces",
+        "summary": "Follow rent, debt, platform fees, and public contracts into the institutions that collect them."
+      },
+      {
+        "id": "amm-ai-will-not-kill-you",
+        "title": "Who owns the tools—and sets the price of using them?",
+        "text": "Read the letter alongside the platform example: technology can be useful while control over access gives its owners power over everyone who depends on it.",
+        "anchor": "platforms",
+        "summary": "AI, ownership, and the people deciding who gains from the tools that others come to depend on."
+      },
+      {
+        "id": "amm-letter-to-an-american-adult",
+        "title": "How does accumulated wealth become lasting authority?",
+        "text": "The ownership loop gives the letter’s critique a practical question: which claims on income and access are being carried forward, and who can challenge them?",
+        "anchor": "chain",
+        "summary": "A letter connecting the West’s history of domination to the ownership, dependency, and private power of the present."
+      }
+    ]
+  },
+  "capital": {
+    "eyebrow": "Read this first · The framework",
+    "title": "The new power is economic.",
+    "intro": "Who owns what you need? Who receives what you pay? AMM follows how ordinary payments can become concentrated private power—and how that power protects its position.",
+    "contentsLabel": "The framework at a glance",
+    "glance": [
+      "Power has moved",
+      "The assault is economic",
+      "How a claim becomes power",
+      "Where it is collected",
+      "Who holds it",
+      "Capital leaves, obligation stays"
+    ],
+    "mapTitle": "Power has moved.",
+    "mapIntro": "Follow one ordinary payment, from the person who makes it to the power that collects it.",
+    "mapLabel": "The power map: concentrated private capital above the state, the guards and the story beneath it, and the citizen paying straight up.",
+    "tiers": [
+      {
+        "id": "capital",
+        "tone": "strong",
+        "label": "Concentrated private capital",
+        "detail": "Two heads, one body",
+        "chips": [
+          "Security–Industrial",
+          "Technological–Platform",
+          "Ownership and finance"
+        ]
+      },
+      {
+        "id": "state",
+        "tone": "plain",
+        "label": "The state",
+        "detail": "Customer, financier, regulator, protector",
+        "chips": [
+          "Writes the terms",
+          "Enforces them",
+          "Pays the contracts"
+        ]
+      },
+      {
+        "id": "guards",
+        "tone": "dashed",
+        "label": "The guards and the story",
+        "detail": "Professionals who keep the arrangement beyond correction, and a culture that makes it seem natural"
+      },
+      {
+        "id": "citizen",
+        "tone": "accent",
+        "label": "The citizen",
+        "detail": "Worker, tenant, borrower, user, taxpayer"
+      }
+    ],
+    "flows": [
+      {
+        "id": "capital-state",
+        "after": "capital",
+        "items": [
+          {
+            "direction": "down",
+            "label": "Lobbying, personnel, the systems it depends on"
+          },
+          {
+            "direction": "up",
+            "label": "Contracts, subsidies, protection"
+          }
+        ]
+      },
+      {
+        "id": "state-citizen",
+        "after": "state",
+        "items": [
+          {
+            "direction": "down",
+            "label": "Law, enforcement, taxes"
+          }
+        ]
+      }
+    ],
+    "rail": {
+      "id": "rail",
+      "label": "Rent, interest, fees, data, attention",
+      "note": "Paid straight up, around the state"
+    },
+    "story": [
+      {
+        "id": "pay",
+        "lit": [
+          "citizen"
+        ],
+        "title": "You pay.",
+        "text": "Rent, a loan installment, a platform fee, a prescription. Each arrives as a separate bill, and each looks like a private problem.",
+        "quote": "Each wound is returned to you as a separate personal deficiency while the environment producing the wounds remains unnamed.",
+        "source": "Chapter Two · Follow the Money"
+      },
+      {
+        "id": "up",
+        "lit": [
+          "citizen",
+          "rail"
+        ],
+        "title": "The payment goes up.",
+        "text": "Much of it never passes through the state. It runs straight to whoever owns the home, the debt, the platform, or the patent.",
+        "quote": "A house cannot leave Denver, but the claim upon its rent can sit inside a national portfolio.",
+        "source": "Chapter Two · The Bigger Danger"
+      },
+      {
+        "id": "collect",
+        "lit": [
+          "capital",
+          "rail"
+        ],
+        "title": "Capital collects.",
+        "text": "At the top sits concentrated private capital. Chapter Two gives it two heads, security–industrial and technological–platform, and four mouths that feed them.",
+        "quote": "The Leech appears where concentrated private power and captured public authority converge around something people cannot reasonably avoid, then convert that dependence into a recurring claim upon their labor, savings, attention, data, health, or future.",
+        "source": "Chapter Two · Follow the Money"
+      },
+      {
+        "id": "protect",
+        "lit": [
+          "capital",
+          "capital-state",
+          "state"
+        ],
+        "title": "The state protects it.",
+        "text": "The state still writes and enforces the rules. It is also a buyer: Lockheed Martin reported that 72 percent of its sales came from the U.S. government.",
+        "quote": "The state is simultaneously its customer, financier, regulator, and protector.",
+        "source": "Chapter Two · The Old Head"
+      },
+      {
+        "id": "guard",
+        "lit": [
+          "state-citizen",
+          "guards"
+        ],
+        "title": "The guards keep it beyond correction.",
+        "text": "Between the rules and the person stand managers, lawyers, appraisers, and officials. Chapter Three does not fault the professions. It names a function.",
+        "quote": "The guarding function appears when they use their discretion to keep an extractive arrangement beyond effective correction: concealing a known cost, discrediting a substantiated complaint, punishing an objection, or describing an avoidable injury as the necessary price of order.",
+        "source": "Chapter Three · Class and the head of the Host"
+      },
+      {
+        "id": "story",
+        "lit": [],
+        "title": "The story makes it feel natural.",
+        "text": "In Chapter Two, what keeps the map from being questioned is not secrecy but the story told around it.",
+        "quote": "Culture is not a fifth mouth. It is the tissue surrounding the entire organism. It teaches the host what to admire, what to tolerate, what to pursue, and what to consider inevitable.",
+        "source": "Chapter Two · The Leech’s Anatomy"
+      }
+    ],
+    "assaultTitle": "The assault is economic.",
+    "assaultIntro": "Chapter Two names what the powers above command: organized force, computation, accumulated savings, and knowledge. Then it turns to the reader.",
+    "assaultLine": "You supply everything else.",
+    "ledger": [
+      {
+        "id": "labor",
+        "term": "Your labor",
+        "becomes": "keeps the system productive"
+      },
+      {
+        "id": "taxes",
+        "term": "Your taxes",
+        "becomes": "finance its contracts"
+      },
+      {
+        "id": "savings",
+        "term": "Your savings",
+        "becomes": "provide its capital"
+      },
+      {
+        "id": "purchases",
+        "term": "Your purchases",
+        "becomes": "sustain its platforms"
+      },
+      {
+        "id": "debt",
+        "term": "Your debt",
+        "becomes": "becomes its asset"
+      },
+      {
+        "id": "land",
+        "term": "Your land, water, and electricity",
+        "becomes": "support its infrastructure"
+      },
+      {
+        "id": "attention",
+        "term": "Your attention",
+        "becomes": "trains its machinery"
+      },
+      {
+        "id": "data",
+        "term": "Your data",
+        "becomes": "improves its ability to understand, predict, and influence you"
+      }
+    ],
+    "assaultClose": "The Leech extracts structurally and returns the consequence personally.",
+    "assaultSource": "Chapter Two · The Host",
+    "chainTitle": "How a claim becomes power.",
+    "chainIntro": "It converts dependence into extraction, extraction into power, and power into protection from accountability.",
+    "chainSource": "Chapter One · What the Leech Means",
+    "chainLabel": "The chain",
+    "chainCentre": "A recurring claim",
+    "links": [
+      "Dependence",
+      "Extraction",
+      "Power",
+      "Protection"
+    ],
+    "chainReturn": "Protection deepens the dependence the chain began with.",
+    "termsLabel": "Four terms, in plain language",
+    "interfacesTitle": "Where it is collected.",
+    "interfacesIntro": "Five ordinary payments, at Chapter Two’s four feeding interfaces.",
+    "interfaceLabels": {
+      "platforms": "Digital access",
+      "housing": "Asset ownership",
+      "borrowing": "Financial administration",
+      "knowledge": "Legal control of knowledge",
+      "public": "Private claims on public necessity"
+    },
+    "interfaceMore": "How it works",
+    "leverageLabel": "Where AMM sees the leverage",
+    "holdersTitle": "Who holds it.",
+    "holdersIntro": "Owning the shares and administering the savings are different kinds of power. Chapter Two keeps them apart, and so do these figures.",
+    "equityTop": "of corporate equity is held by the top 1%",
+    "equityBottom": "of corporate equity is held by the bottom half",
+    "managersTitle": "Three firms administer",
+    "managersNote": "Client capital they manage, not wealth they own; figures rounded, Vanguard’s approximate. Their power is in how they vote, route, and engage.",
+    "holdersQuote": "This is how rising market values can produce great national wealth without producing comparable economic sovereignty for most households.",
+    "holdersSource": "Chapter Two · Where the Capital Lives",
+    "figuresLabel": "See the figures and their sources",
+    "detachmentTitle": "Capital leaves. Obligation stays.",
+    "wealthLine": "Wealth moves upward into claims that are",
+    "wealthWords": [
+      "liquid",
+      "diversified",
+      "globally mobile"
+    ],
+    "obligationLine": "Obligation moves downward into lives that remain",
+    "obligationWords": [
+      "embodied",
+      "indebted",
+      "taxable",
+      "geographically fixed"
+    ],
+    "detachmentQuote": "The deeper flight is from reciprocal obligation.",
+    "detachmentSource": "Chapter Two · The Bigger Danger",
+    "detachmentExample": "In 2024, BlackRock, Microsoft, Global Infrastructure Partners, and Abu Dhabi’s MGX created an AI-infrastructure partnership intended to mobilize $30 billion in equity and as much as $100 billion after debt financing.",
+    "detachmentExampleLabel": "BlackRock",
+    "detachmentExampleUrl": "https://www.blackrock.com/corporate/newsroom/press-releases/article/corporate-one/press-releases/blackrock-global-infrastructure-partners-microsoft-and-mgx-launch-new-ai",
+    "questionsTitle": "Read the chapters with four questions.",
+    "alternativeLabel": "What comes next",
+    "alternativeLine": "What can change it: shared ownership, and a voice in the systems people depend on.",
+    "movementLabel": "4Us · Economy for Us",
+    "imageKeyLabel": "Read the metaphor",
+    "erosionCaption": "AMM’s visual metaphor · The public sustains the arrangement that feeds on it.",
+    "anatomyCaption": "The Host is the public. The image connects what people contribute with the claims placed on their lives.",
+    "imageKey": [
+      {
+        "id": "host",
+        "label": "The Host",
+        "meaning": "The public that supplies it.",
+        "href": "#assault"
+      },
+      {
+        "id": "leech",
+        "label": "The Leech",
+        "meaning": "Power built on recurring claims.",
+        "href": "#chain"
+      },
+      {
+        "id": "trough",
+        "label": "The trough",
+        "meaning": "What keeps the arrangement normal.",
+        "href": "#power"
+      }
+    ]
   }
 }

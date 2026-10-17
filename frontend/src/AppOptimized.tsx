@@ -16,6 +16,7 @@ import {
 import { SiteContentProvider } from "./content/editable";
 import { RouteLoadingBoundary } from "./shared/RouteLoadingBoundary";
 import { ViewportObserver } from "./shared/ViewportObserver";
+import AmmMovedGuide from "./blocks/amm/AmmMovedGuide";
 
 function RouteCanonical() {
   const { pathname, search } = useLocation();
@@ -31,6 +32,8 @@ function RouteCanonical() {
   }, [pathname, search]);
   return null;
 }
+
+const PageCopyStudio = React.lazy(() => import("./blocks/publication/PageCopyStudio"));
 
 // Lazy load surfaces for code splitting.
 const HomePage = React.lazy(() => import("./blocks/core/home/HomePage"));
@@ -69,7 +72,9 @@ const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
 const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
+const AmmPublicationPage = React.lazy(() => import("./blocks/amm/AmmPublicationPage"));
 const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
+const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
 const AmmStudioPage = React.lazy(() => import("./blocks/amm/AmmStudioPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
 const EssayDraftsPage = import.meta.env.DEV ? React.lazy(() => import("./blocks/essays/EssayDraftsPage")) : null;
@@ -217,6 +222,10 @@ const App: React.FC = () => {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/amm" element={<AmmPage />} />
+                <Route path="/amm/power" element={<AmmPowerPage />} />
+                <Route path="/amm/capital" element={<AmmMovedGuide />} />
+                <Route path="/amm/money/*" element={<AmmMovedGuide />} />
+                <Route path="/amm/editions" element={<AmmPublicationPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
                 {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}
@@ -241,6 +250,7 @@ const App: React.FC = () => {
                   element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
                 />
                 <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly title="Contact inbox"><ContactInboxPage /></StudioAuthGate>} />
+                <Route path="/studio/pages/amm" element={<StudioAuthGate ownerOnly title="Edit AMM’s pages"><PageCopyStudio /></StudioAuthGate>} />
                 <Route path="/studio/newsletter" element={<StudioAuthGate ownerOnly title="AMM newsletter"><AmmStudioPage /></StudioAuthGate>} />
                 <Route
                   path="/studio/:projectId"

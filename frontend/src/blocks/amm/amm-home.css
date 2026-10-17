@@ -1,0 +1,65 @@
+/* Home composition. One overview, followed by a deliberate reading path. */
+.amm-hero--inquiry .amm-hero-grid { min-height: auto; grid-template-rows: 1fr auto; column-gap: clamp(1.5rem, 3vw, 3rem); padding-block: clamp(1.5rem, 3vw, 2.5rem) 1.5rem; }
+.amm-hero--inquiry .amm-hero-copy { align-self: center; }
+.amm-hero--inquiry .amm-hero-copy > .amm-eyebrow { margin-bottom: 1.1rem; }
+.amm-hero--inquiry h1 { font-size: clamp(2.75rem, 4.6vw, 4.75rem); margin-bottom: 1.1rem; }
+.amm-home-premise { max-width: 37ch; font: clamp(1.125rem, 1.45vw, 1.3rem)/1.7 var(--font-sans); color: var(--muted-foreground); text-wrap: pretty; }
+.amm-hero--inquiry .amm-hero-actions { margin-top: 1.35rem; align-self: end; padding-bottom: 1rem; }
+
+/* A readable pre-read. The larger surface is divided into short, bounded measures. */
+.amm-home-overview { margin-top: 1rem; padding-block: clamp(2.5rem, 5vw, 4.5rem); border-top: 1px solid var(--border); scroll-margin-top: 1.5rem; }
+.amm-overview-heading { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem 4rem; align-items: end; margin-bottom: 2.5rem; }
+.amm-overview-heading .amm-eyebrow { color: var(--amm-rust); font-size: .75rem; }
+.amm-overview-heading h2 { max-width: 19ch; margin-top: .8rem; font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: -.04em; text-wrap: balance; }
+.amm-overview-intro { max-width: 48ch; font-size: clamp(1.125rem, 1.45vw, 1.3rem); line-height: 1.7; color: var(--muted-foreground); }
+.amm-overview-heading .public-text-link { margin-top: .75rem; font-size: .95rem; }
+.amm-home-concepts { padding-bottom: 1rem; }
+.amm-home-overview .concept-explorer-tabs strong { font-size: 1rem; }
+.amm-home-overview .concept-explorer-hint { font-size: .85rem; }
+.amm-home-overview .concept-explorer-tabs button { min-height: 96px; padding: 1rem; }
+.amm-home-overview .concept-explorer-panel { padding: clamp(1.25rem, 2.5vw, 2.5rem); gap: clamp(1.5rem, 4vw, 4rem); }
+.amm-home-overview .concept-explorer-explanation h3 { font-size: clamp(1.65rem, 2.4vw, 2.4rem); }
+.amm-home-overview .concept-explorer-explanation p { font-size: clamp(1.0625rem, 1.4vw, 1.2rem); line-height: 1.8; }
+.amm-home-overview .concept-explorer-question > span { font-size: .75rem; }
+.amm-home-overview .concept-explorer-question p { font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.4; }
+.amm-home-reflection { max-width: 48rem; margin-inline: auto; padding-block: clamp(2.5rem, 5vw, 4rem); }
+.amm-home-reflection .amm-section-heading { display: block; margin-bottom: 0; }
+.amm-home-reflection .amm-section-heading h2 { max-width: 21ch; margin-top: .7rem; font: 500 clamp(2rem, 3vw, 3rem)/1.15 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
+.amm-home-reflection .amm-section-heading > p { max-width: 56ch; margin-top: 1.25rem; font-size: 1.125rem; line-height: 1.8; }
+.amm-home-concern { padding-block: clamp(3.5rem, 7vw, 5.5rem) 1rem; }
+.amm-home-concern .amm-concern-icon { width: 2rem; height: 2rem; color: var(--amm-rust); stroke-width: 1.25; margin-bottom: 1.25rem; }
+.amm-home-concern h3 { font: 500 clamp(1.9rem, 3vw, 2.7rem)/1.15 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
+.amm-concern-intro { max-width: 50ch; margin-block: 1rem 2rem; color: var(--muted-foreground); font-size: 1.125rem; line-height: 1.8; }
+.amm-home-concern .explainer-questions { grid-template-columns: 1fr; gap: 1.75rem; }
+.amm-home-concern .explainer-questions li { border: 0; padding: 0; grid-template-columns: 1fr; }
+.amm-home-concern .explainer-questions-number { display: none; }
+.amm-home-concern .explainer-questions h4 { font: 600 1rem/1.5 var(--font-sans); }
+.amm-home-concern .explainer-questions p { max-width: 54ch; font-size: 1.125rem; line-height: 1.8; }
+.amm-home-method { margin-top: 2.5rem; font-size: 1rem; line-height: 1.8; color: var(--muted-foreground); }
+.amm-home-method summary { display: list-item; cursor: pointer; min-height: 48px; padding-block: .8rem; color: var(--foreground); }
+.amm-home-method p { max-width: 78ch; margin-block: 1rem; }
+.amm-shell--home .amm-part-summary, .amm-shell--home .amm-edition-copy > p:not(.amm-eyebrow) { font-size: 1.125rem; }
+.amm-shell--home .amm-path-credit { font-size: .75rem; }
+@media (max-width: 900px) {
+  .amm-hero--inquiry .amm-hero-grid { grid-template-rows: auto; gap: 1.1rem; padding-top: 2rem; }
+  .amm-hero--inquiry h1 { max-width: 17ch; font-size: clamp(2.8rem, 7vw, 4rem); }
+  .amm-home-premise { max-width: 42ch; }
+  .amm-hero--inquiry .amm-hero-visual { width: min(100%, 38rem); justify-self: center; }
+  .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; }
+  .amm-overview-heading { grid-template-columns: 1fr; gap: 1rem; }
+  .amm-home-reflection .amm-section-heading { align-items: start; }
+}
+@media (max-width: 700px) {
+  .amm-home-overview .concept-explorer-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .amm-home-overview .concept-explorer-tabs button { grid-template-columns: 1fr; min-height: 102px; padding: .75rem; }
+  .amm-home-overview .concept-explorer-icon { grid-row: auto; }
+  .amm-home-overview .concept-explorer-tabs button:last-child { grid-column: 1 / -1; }
+  .amm-home-overview .concept-explorer-panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .amm-hero--inquiry .amm-hero-copy > .amm-eyebrow { margin-bottom: .8rem; }
+  .amm-hero--inquiry h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
+  .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; }
+  .amm-home-overview { margin-top: 2rem; }
+  .amm-home-reflection .explainer-questions { gap: 1.5rem; }
+}

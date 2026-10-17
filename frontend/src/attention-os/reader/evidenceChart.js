@@ -8,7 +8,8 @@ export function parseEvidenceChart(source) {
       || !text(value.status) || !text(value.limits) || !Array.isArray(value.rows)
       || value.rows.length < 2 || value.rows.length > 24) return null;
     if (!value.rows.every(row => text(row.label, 140) && Number.isFinite(row.value) && row.value >= 0
-      && text(row.source, 400) && text(row.url, 2048) && /^https:\/\//i.test(row.url))) return null;
+      && text(row.source, 400) && text(row.url, 2048) && /^https:\/\//i.test(row.url)
+      && (row.kind === undefined || ['estimate', 'projection', 'observed'].includes(row.kind)))) return null;
     const maximum = Math.max(...value.rows.map(row => row.value));
     if (!Number.isFinite(value.maximum) || value.maximum < maximum || value.maximum <= 0) return null;
     return value;

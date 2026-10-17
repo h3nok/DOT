@@ -22,6 +22,7 @@ import { prepareEssayMedia } from "./essay-media.mjs";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import { parseEvidenceChart } from "../src/attention-os/reader/evidenceChart.js";
+import { headingSlug } from "../src/attention-os/reader/headingSlug.js";
 
 // Relative to the frontend package, like every path the build scripts use:
 // under Vitest's DOM environment `import.meta.url` is not a file URL.
@@ -182,7 +183,15 @@ export function parseEssay(source, slug, file = `${slug}.md`) {
     if (node.type === "code" && node.lang === "evidence-chart" && !parseEvidenceChart(node.value)) fail(file, "a figure needs valid values, scale, period, units, cited sources and limits.");
     node.children?.forEach(checkChart);
   };
-  checkChart(unified().use(remarkParse).parse(body));
+  const tree = unified().use(remarkParse).parse(body);
+  checkChart(tree);
+  // The essay's own contents: each ## section, with the anchor the reader gives its heading.
+  const text = (node) => node.value ?? node.children?.map(text).join("") ?? "";
+  const sections = tree.children
+    .filter((node) => node.type === "heading" && node.depth === 2)
+    .map((node) => text(node).trim())
+    .filter(Boolean)
+    .map((title) => ({ id: headingSlug(title), title }));
   if (/^#\s/.test(body)) {
     fail(file, "starts with a # heading. The page already shows the title; begin with the text, or with ## for a section.");
   }
@@ -200,6 +209,7 @@ export function parseEssay(source, slug, file = `${slug}.md`) {
     format,
     series,
     cover,
+    sections,
     words,
     readingMinutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
     body,

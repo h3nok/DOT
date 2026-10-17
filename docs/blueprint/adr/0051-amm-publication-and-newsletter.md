@@ -23,9 +23,11 @@ Existing external letters retain their original location and provenance. The
 author selected The Anatomy of the Host as the introductory reading; its supplied
 Markdown is prepared in the file-backed publication pipeline without rewriting
 its prose. The larger PDF and Word files remain working manuscripts. The landing
-uses their terms and a short attributed excerpt. The supplied illustration keeps
-its full framing and dimensions in a lighter web encoding, with a text description
-and a full-size view. There is no government-source shelf; individual pieces
+uses their terms and a short attributed excerpt. The author’s supplied pictures replace the earlier poster covers. The landing
+uses `host2.png`, the cow, Leech and mirror, preserving its supplied transparency; the
+chapters use the Leech and labeled Host. Images sit directly on the page without
+frames or dark panels. Responsive web encodings retain the complete artwork.
+The source images are not repainted. The author chose pictures only; no motion-study player or video load. There is no government-source shelf; individual pieces
 carry their own evidence and distinguish it from interpretation. An official
 source does not settle a claim by virtue of its institutional status.
 The separate in-development book remains a book, with no automatic manuscript
@@ -43,14 +45,43 @@ ambient field and duplicate floating control are hidden while AMM is mounted.
 Shared reader preferences remain available. This is public editorial UI, not a
 claim to have implemented the absent P1/P4/P5 primitives.
 
-The landing's analytical spine follows the supplied introduction: conditions →
-interpretation → conduct → feedback. Its connection to DOT's Experience Loop is
-explicit and expandable. A keyboard-operable tab sequence reveals one mechanism
-and a supporting manuscript passage at a time, without timers or automatic
-advancement. The static HTML contains every explanation. The authored prose is
-unchanged. The metaphor and process lens organize inquiry, rather than certifying
-particular empirical claims. Numbers and institutional sources require methods,
-context, and limitations.
+The landing opens with moral erosion, the supplied frameless
+Host artwork, and one action into Chapter One. A named “Before you read” overview
+then introduces conditioning, fear, self-protection, moral erosion, and
+accountability. A keyboard-operable concept explorer shows one explanation and
+question at a time. Three separate scrolling sections then examine status,
+harm, and accountability, each with its related questions about conduct. The distinction
+between conditioning, temperament, coercion, and responsibility remains
+reader-opened. Overview copy uses the same named override registry as the owner
+editor and static build. Static HTML includes every explanation.
+
+The home retains the publication's original width, with bounded reading measures
+and larger body type. The artwork opens the shared inspection primitive: readers can zoom, close
+it, and return focus to their place. No media plays automatically. The open flame
+mark has no surrounding tile; its initial kindling ends within four seconds.
+Reduced motion, saved stillness, and a disabled environment keep it still.
+Footer marks and the transparent favicon are static.
+
+The manuscript path presents three chapters in reading order, with each chapter's
+own artwork, followed by the latest letter. The finite archive and scoped email
+signup live at `/amm/editions`. Previously shared chapter, archive, and signup
+fragments redirect there without changing consent. Manuscript reading pages show
+their contents, current position, and a next part without automatic advancement.
+Owner editing stays separate from immutable published editions.
+
+The power explainer is retained at `/amm/power` for development, with no incoming
+public links and no search or sitemap inclusion. Earlier money and capital guide
+routes redirect to `/amm`. The explainer's shared primitives, named copy fields,
+and static rendering remain available for further author revision. Figures
+organize AMM's argument rather than certify empirical claims; amounts require
+sources, methods, and limitations.
+
+The personal Blog uses the same Host illustration and AMM mark alongside Book
+One, then a chronological image-led archive with finite pages. About presents
+4Us, Sullix, and the supplied career through shared editorial primitives. Open
+surfaces retain theme tokens without enclosing artwork in panels. These changes
+serve L1, L2, L3, L7, L9, and L10: deliberate reading, clear completion, recoverable
+editing, local media, and focused navigation. No manifesto law is violated.
 
 Subscriptions are unique by address fingerprint and publication (`all` or `amm`).
 Existing rows retain `all`; no existing reader acquires AMM consent by migration.
@@ -142,6 +173,40 @@ it is labeled as a visual metaphor. The same data becomes a table in static HTML
 RSS and email. Server release validation rejects invalid scales and missing
 provenance. This serves L2, L3 and L9 without trackers or engagement mechanics.
 
+The figure supports optional observed, estimate and projection kinds, validated
+by both the editor and the release boundary. Projections use hatching and a
+dashed outline on the same zero-based scale. Sources and limitations remain
+visible, with the complete data available as a table. The AI letter's two energy
+values match the cited report; matching a citation does not independently
+validate its forecast or establish the manuscript's account of power.
+
 AMM signup requires an advertised publication capability from the API to avoid
 consent drift during frontend/backend rolling deployment. Postal placeholders
 are preview text only; real sending remains disabled without complete setup.
+
+## Contextual owner editing
+
+Each AMM reading page offers its signed-in owner a direct editing entry. Original
+file manuscripts open through the existing private import path; adopted manuscripts
+open their latest private revision. Published versions remain immutable. The AMM
+desk lists the public page editor, introduction, both chapters and letters explicitly.
+
+Landing, archive and signup copy use ADR-0021’s plain-text overrides, with stable named fields grouped
+by section at `/studio/pages/amm`. Routing, layout, consent rules and publication
+identity are not arbitrary editable JSON. Draft loading fails visibly before
+editing is possible. Writes from this editor check the prior update timestamp;
+a stale tab cannot overwrite or publish a newer edit. A failed save retains its
+text. Drafts and publication remain separate actions. Both the live page and the
+static build resolve the same field registry; static search previews refresh on
+the next build. The editor states this boundary. Private calls use the signed
+session in development too. Server-side steward authority remains mandatory.
+
+Controls compose the existing DotButton with AMM variants and a reusable labeled
+field. Styles live in dedicated CSS files, preserving shared appearance and touch targets.
+Chapter and edition artwork and copy share one native reading link and keyboard
+stop. A shared finite-choice control supports pointer, arrow-key and Home/End
+navigation. Interaction feedback follows hover, focus and press; movement respects
+both system reduced motion and the reader's saved stillness preference. These
+controls preserve deliberate navigation and finite reading (L1, L2 and L3).
+This serves L1 (explicit actions), L7 (private drafts and recoverable failures),
+L9 (no remote embeds) and L12 (complete the publishing task), violating none.

@@ -1,0 +1,11 @@
+/* How power works: AMM's palette for the explainer primitives. The layout belongs to the primitives. */
+.amm-shell {
+  --explainer-accent: var(--amm-rust);
+  --explainer-strong: var(--amm-night);
+  --explainer-on-strong: var(--amm-paper);
+}
+.dark .amm-shell {
+  --explainer-strong: #0f1010;
+  --explainer-on-strong: var(--foreground);
+}
+.amm-power-sources { max-width: 72ch; padding-block: 1rem 3rem; }

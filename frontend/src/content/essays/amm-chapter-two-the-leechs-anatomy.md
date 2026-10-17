@@ -2,27 +2,27 @@
 title: "Chapter Two: The Leech’s Anatomy"
 summary: "Two strategic heads, four feeding interfaces, and the public that sustains them."
 published: "2026-07-29"
-updated: "2026-07-29"
+updated: "2026-10-16"
 format: "essay"
 series: "The American Millennial Manifesto"
 levels: ["model", "hypothesis"]
 draft: false
 cover: "amm-chapter-two-the-leechs-anatomy/cover.webp"
-cover_alt: "An industrial fortress grows from colonial walls into a digital surveillance complex above a crowded public."
-cover_caption: "Artwork from the author’s original LinkedIn edition."
+cover_alt: "The Leech’s anatomy: a two-headed leech. The old head is labeled Security–Industrial (war, energy, industry, procurement); the new head, Technological–Platform (platforms, data, cloud, AI); the body joining them, Private-Sector Oligarchy (ownership, finance, organized extraction)."
+cover_caption: "AI-generated illustration, directed by the author. A visual metaphor."
 ---
 
-> **Earlier published edition.** Originally published on LinkedIn on 2026-07-29. [Original publication](https://www.linkedin.com/pulse/chapter-2-leechs-anatomy-henok-ghebrechristos-phd-l1tbf).
+> First published on [LinkedIn](https://www.linkedin.com/pulse/chapter-2-leechs-anatomy-henok-ghebrechristos-phd-l1tbf).
 
 ## Introduction
 
 ### Follow the Money and You Will Find Your Misery
 
-Something has attached itself to your life. You may not know the pathogen, but you recognize the symptoms: your loss of confidence in the country, the exhaustion that rest does not cure, the insecurity that follows you even when you are working, the sense that every necessity now has a gatekeeper standing between you and relief.
+Something has attached itself to your life. You may not know its name, but you recognize the symptoms: your loss of confidence in the country, the exhaustion that rest does not cure, the insecurity that follows you even when you are working, the sense that every necessity now has a gatekeeper standing between you and relief.
 
 *You are encouraged to interpret these pressures one at a time.* The rent increase is a private housing problem. The medical bill is a private health problem. The student loan is a private educational decision. The disappearing job is a private failure to adapt. The compulsive screen is a private failure of discipline. Each wound is returned to you as a separate personal deficiency while the environment producing the wounds remains unnamed.
 
-*Distress is individualized while the architecture producing it is preserved. As I have discussed in Chapter one, this is characterized as inversion. Inversion of reality.*
+*Distress is individualized while the architecture producing it is preserved. As I discussed in Chapter One, this is a form of inversion.*
 
 I call that architecture the Leech. The Leech is not the private sector, and it is not every wealthy person, corporation, public official, or intermediary. Productive enterprise builds, invents, coordinates, repairs, and takes legitimate risk.
 
@@ -38,11 +38,11 @@ This chapter labels that mechanism the Leech’s Anatomy and cuts it open. It id
 
 ## The Leech’s Anatomy
 
-The Leech has *two* *strategic heads*, an institutional body organized around *four feeding tubes*, one principal *point of attachment*, and one *host*. The old head grew through war, energy, heavy industry, national borders, public procurement, and the geopolitical machinery of the American state.
+The Leech has *two* *strategic heads*, an institutional body organized around *four feeding interfaces*, one principal *point of attachment*, and one *host*. The old head grew through war, energy, heavy industry, national borders, public procurement, and the geopolitical machinery of the American state.
 
-The newer head grew through financialization, computation, digital platforms, artificial intelligence, and the conversion of attention into and asset. The previous head depends upon the state’s organized force. *This one increasingly governs the interfaces through which ordinary life is perceived, coordinated, and exchanged.*
+The newer head grew through financialization, computation, digital platforms, artificial intelligence, and the conversion of attention into an asset. The old head depends upon the state’s organized force. *This one increasingly governs the interfaces through which ordinary life is perceived, coordinated, and exchanged.*
 
-This head is particularly effective at eroding you by placing you inside a continuous moral conundrum. To participate in modern life, you must increasingly depend upon systems whose conduct you may oppose. To communicate, you submit to surveillance. To obtain convenience, you enter supply chains built upon distant exploitation. To secure retirement, you place your savings inside institutions that may profit from housing scarcity, war, ecological destruction, or the privatization of public necessity. To remain employed, visible, connected, and socially functional, you are repeatedly asked to cooperate with what you would not consciously choose.
+This head is particularly effective at wearing you down by placing you inside a continuous moral conundrum. To participate in modern life, you must increasingly depend upon systems whose conduct you may oppose. To communicate, you submit to surveillance. To obtain convenience, you enter supply chains built upon distant exploitation. To secure retirement, you place your savings inside institutions that may profit from housing scarcity, war, ecological destruction, or the privatization of public necessity. To remain employed, visible, connected, and socially functional, you are repeatedly asked to cooperate with what you would not consciously choose.
 
 > The compromise becomes ordinary. Then it becomes invisible.
 
@@ -50,7 +50,7 @@ This is how the newer head weakens moral agency. It does not always command you 
 
 > But neither head could feed at this scale without a culture prepared to accommodate it.
 
-Culture is not a fifth feeding tube. It is the tissue surrounding the entire organism. It teaches the host what to admire, what to tolerate, what to pursue, and what to consider inevitable. It presents accumulation as merit, domination as strength, convenience as progress, and dependence as freedom. It trains people to measure success by proximity to the machinery extracting from them. Eventually, extraction no longer appears as an invasion of public life. It appears like public life itself.
+Culture is not a fifth mouth. It is the tissue surrounding the entire organism. It teaches the host what to admire, what to tolerate, what to pursue, and what to consider inevitable. It presents accumulation as merit, domination as strength, convenience as progress, and dependence as freedom. It trains people to measure success by proximity to the machinery extracting from them. Eventually, extraction no longer appears as an invasion of public life. It appears like public life itself.
 
 The Leech survives because the culture has made its appetite seem natural.
 
@@ -80,17 +80,17 @@ The newer head is the Technological-Platform Oligarchy, or TPO. It controls incr
 
 The old head requires a functioning state. The new head requires a connected user. *That user does not have to be secure, informed, prosperous, or psychologically healthy.* An anxious person still scrolls. An isolated person still generates data. An exhausted household still pays subscriptions. A frightened public remains commercially valuable. The new head does not require the host to flourish. It requires the host to remain connected, measurable, dependent, and available for transaction.
 
-> *The two heads are now joining and that is the source of your headache and depression.*
+> *The two heads are now joining.*
 
 In July 2025, the Department of Defense announced awards to Anthropic, Google, OpenAI, and xAI, each with a ceiling of \$200 million, for frontier-AI work across national-security mission areas.[6] The Defense Innovation Unit’s Thunderforge program is integrating commercial AI, simulation, and agent-assisted planning into operational and theater-level military decision-making.[7] The old head is acquiring a digital nervous system. *The new head is acquiring the resources, protection, and authority of the state.*
 
-Their convergence requires no secret council. It happens openly through contracts, infrastructure, lobbying, personnel, investment, procurement, and mutual dependence. One head expands what the country can do. The other increasingly shapes what the population can see. *Together they form an architecture of control over both your action and perception.*
+Their convergence happens openly, through contracts, infrastructure, lobbying, personnel, investment, procurement, and mutual dependence. One head expands what the country can do. The other increasingly shapes what the population can see. *Together they form an architecture of control over both your action and perception.*
 
 ## The Four Mouths
 
 ### 1. The Digital Toll Collectors
 
-Apple, Amazon, Alphabet, and Meta create real products and useful services with public labor. That achievement is not an accusation. My concern begins where innovation becomes private control over a route that others must use to participate. The developer writes the application, the merchant owns the inventory, the journalist reports the story, the artist creates the work, and the public supplies the attention. The platform controls admission, ranking, payment, visibility, and access. This is an architecture of control.
+Apple, Amazon, Alphabet, and Meta create real products and useful services with public labor. That achievement is not an accusation. My concern begins where innovation becomes private control over a route that others must use to participate. The developer writes the application, the merchant owns the inventory, the journalist reports the story, the artist creates the work, and the public supplies the attention. The platform controls admission, ranking, payment, visibility, and access.
 
 Apple’s Services segment generated \$109.2 billion in fiscal 2025 at a gross margin of 75.4 percent.[8] The category includes more than the App Store, so it should not be misrepresented as pure app tolls. The relevant fact is architectural: Apple governs a principal path to hundreds of millions of devices and can write the technical and commercial rules governing that path.
 
@@ -139,7 +139,7 @@ Figure 1. Selected 2025 revenue collected through digital interfaces. These cate
 
 > You encounter this architecture as convenience. The small business encounters it as dependence. The citizen encounters it as a privately ordered information environment. Once an interface becomes socially necessary, its fee ceases to look like an ordinary price. It begins to resemble a privately imposed tax on participation.
 
-The new head’s greatest advantage is that it can participate in your perception of the feeding. This is malicious to your soul. A platform can study what frightens you, what angers you, what interrupts judgment, and what returns you to the screen. The consequences arise as distraction, agitation, compulsive comparison, or the persistent sense that reality is collapsing faster than it can be understood. *The suffering feels intimate. The revenue remains institutional. This is the Leech defining characteristics.*
+The new head’s greatest advantage is that it can participate in your perception of the feeding. A platform can study what frightens you, what angers you, what interrupts judgment, and what returns you to the screen. The consequences arise as distraction, agitation, compulsive comparison, or the persistent sense that reality is collapsing faster than it can be understood. *The suffering feels intimate. The revenue remains institutional. This is the Leech’s defining characteristic.*
 
 ### 2. The Asset Hoarders and Financial Gatekeepers
 
@@ -180,13 +180,13 @@ The power is subtler. At the end of 2025, BlackRock reported \$14 trillion in as
 
 Figure 2. Assets under management at year-end 2025. AUM measures client capital administered, not wealth owned by the firms.[12]–[14]
 
-Your retirement account may hold the shares, but you rarely exercise meaningful authority over the corporate power attached to them. *This is the central inversion: millions of workers collectively supply capital while its practical administration concentrates inside a small number of institutions.* The host supplies the blood. The financial interface helps determine where it flows. This is its feeding tube.
+Your retirement account may hold the shares, but you rarely exercise meaningful authority over the corporate power attached to them. *This is the central contradiction: millions of workers collectively supply capital while its practical administration concentrates inside a small number of institutions.* The host supplies the blood. The financial interface helps determine where it flows. This is where it feeds.
 
 Housing exposes a more direct form of financialization. In 2024, Blackstone completed a \$3.5 billion acquisition of Tricon Residential, a company with a large single-family rental platform.[15] The Federal Trade Commission estimated in 2025 that mega-investors collectively owned and operated roughly 446,000 single-family homes nationwide.[16] A 2026 GAO analysis found that institutional ownership increased from 2018 through 2024 across six selected metropolitan areas; in 2024, qualifying investors held 22 percent of single-family rentals in Jacksonville, 13 percent in Phoenix, and 9 percent in Dallas, while remaining a much smaller share of all single-family homes.[17]
 
 This requires precision. Institutional investors do not own most American homes, and the evidence on their national effect on homeownership is not conclusive. Their power is geographically concentrated. That local concentration is exactly the point. A national percentage can look modest while a neighborhood, price band, or metropolitan rental market becomes subject to portfolio-scale acquisition and management.
 
-A home remains shelter to the person inside it. To a financial model it becomes a yield stream composed of rent, fees, appreciation, maintenance cost, vacancy, and eviction probability. The neighborhood becomes a portfolio. The tenant receives recurring payment. The abstraction belongs to the owner. The insecurity belongs to the host. This is the Leech – extractive by instinct and architecture.
+A home remains shelter to the person inside it. To a financial model it becomes a yield stream composed of rent, fees, appreciation, maintenance cost, vacancy, and eviction probability. The neighborhood becomes a portfolio. The tenant receives recurring payment. The abstraction belongs to the owner. The insecurity belongs to the host. This is the Leech—extractive by instinct and architecture.
 
 ### 3. The Innovation Hoarders
 
@@ -196,7 +196,7 @@ Moderna’s COVID-19 vaccine demonstrates the mixed architecture. The federal go
 
 Humira shows how valuable exclusivity can become. AbbVie reported that the drug accounted for approximately 37 percent of its total net revenue in 2022, immediately before U.S. biosimilar competition began.[19] The medicine answered real human need. The surrounding exclusivity also sustained an enormous revenue stream. In healthcare, the user is not negotiating over an optional luxury. Illness creates captivity.
 
-> Human vulnerability becomes pricing power. This is the first bite felt when the Leech attaches itself to you.
+> Human vulnerability becomes pricing power. This is the bite felt when the Leech attaches itself to you.
 
 ### When the University Forgets the Public
 
@@ -298,11 +298,11 @@ Figure 4. Share of U.S. corporate equities and mutual-fund shares held by the to
 
 The middle 40 percent is not empty-handed. It held about \$51.5 trillion in net worth in early 2026.[1] But much of middle-class security is tied to homes and retirement assets that are difficult to access without selling, borrowing, paying penalties, or waiting for old age. Ownership exists, yet immediate agency remains constrained. Meanwhile, the institutions administering credit, housing, platforms, and retirement flows collect fees continuously.
 
-> DO NOT COMBINE UNLIKE QUANTITIES: Household net worth, corporate market capitalization, company revenue, and assets under management measure different things. They may be compared only with explicit caveats; they must never be added together and called 'capital controlled.
+> A note on the numbers: household net worth, corporate market capitalization, company revenue, and assets under management measure different things. This chapter compares them only with caveats and never adds them together.
 
-## The Bigger Danger - The Leech is Abandoning America
+## The Bigger Danger: The Leech Is Abandoning America
 
-And it’s taking all the capital with it. The original temptation is to describe this as *capital flight*: the wealthy abandon the physical ship and upload their wealth into a digital and financial cloud. The image captures something real, but the literal claim is too simple. Much of the capital remains invested in American companies, homes, infrastructure, debt, and government securities. BlackRock and Vanguard do not remove every managed dollar from the nation. Technology companies remain intensely dependent on American law, energy, research, labor, land, and military protection.
+And it seems to be taking the capital with it. The original temptation is to describe this as *capital flight*: the wealthy abandon the physical ship and upload their wealth into a digital and financial cloud. The image captures something real, but the literal claim is too simple. Much of the capital remains invested in American companies, homes, infrastructure, debt, and government securities. BlackRock and Vanguard do not remove every managed dollar from the nation. Technology companies remain intensely dependent on American law, energy, research, labor, land, and military protection.
 
 *The deeper flight is from reciprocal obligation.*
 
@@ -330,13 +330,13 @@ American government is helping construct this bridge. Its AI-export policy calls
 
 > This is the transition the American Millennial Manifesto is warning you about.
 
-Read the spectacle of the present administration through this lens. War, alleged drug boats, foreign enemies, border emergencies, and permanent national danger are not real danger. They however concentrate attention, enlarge executive authority, and keep the older head of the Leech at the center of public consciousness while the newer head acquires the infrastructure of the future.
+Read the spectacle of the present administration through this lens. Whatever their reality, war, alleged drug boats, foreign enemies, border emergencies, and permanent national danger concentrate attention, enlarge executive authority, and keep the older head of the Leech at the center of public consciousness while the newer head acquires the infrastructure of the future.
 
 I cannot prove that every crisis was manufactured to conceal this transition. That claim is unnecessary. A crisis becomes a smokescreen whenever it consumes the citizen’s entire field of vision while more durable transfers of ownership and authority proceed without comparable scrutiny.
 
 Do not watch only the explosion. Watch the contract signed while you were watching it.
 
-> Meanwhile bottom half is drained because nearly all income must circulate immediately through housing, healthcare, debt service, food, transportation, utilities, and digital tolls.
+> Meanwhile the bottom half is drained, because nearly all its income must circulate immediately through housing, healthcare, debt service, food, transportation, utilities, and digital tolls.
 
 The middle class appears secure in aggregate but carries wealth inside assets it cannot easily command. The top of the distribution owns the largest share of liquid and appreciating financial claims, allowing it to benefit when platform and asset values rise even as the physical quality of community life declines.
 
@@ -350,11 +350,11 @@ Wealth moves upward into claims that are liquid, diversified, and globally mobil
 
 When the host dies, will you die with it?
 
-The American Millennial Manifesto diagnoses your condition as belonging to a society on its deathbed. A society infected with a degenerate extractive order – the Leech.
+The American Millennial Manifesto diagnoses your condition as belonging to a society on its deathbed, sustaining a degenerate extractive order: the Leech.
 
 This does not mean the United States will disappear tomorrow. A civilization approaches death *when the harms accumulated by its power exceed its willingness to account for them.* Work without security, wealth without public well-being, knowledge without wisdom, and technology without freedom are not the original diseases. They are symptoms of power released from accountability.
 
-The rest of the world knows this. *America did not recently acquire this sickness*. The Leech came with the country. It grew beside the republic, feeding through the contradictions the nation repeatedly refused to resolve. You have not been suddenly defeated. You have been morally stunted by centuries of lack of accountability and miseducation.
+Much of the world has long known this. *America did not recently acquire this sickness*. The Leech came with the country. It grew beside the republic, feeding through the contradictions the nation repeatedly refused to resolve. You have not been suddenly defeated. You have been morally stunted by centuries without accountability, and by miseducation.
 
 The host is not dying because it lacks resources. It is dying because those resources are *increasingly organized against its own healing.* Communities lose the time, trust, and shared reality required to remain communities.
 
@@ -398,9 +398,9 @@ The Leech has spent generations organizing our dependence. We must now organize 
 
 ## Conclusion
 
-Be aware. Pain of this scale does not sit quietly; it demands a face to blame. The Leech knows this [— it has known it since 1676](https://virginiahistory.org/learn/bacons-rebellion-virginia-years-1675-1676) — and so it does what it has always done: it hands the hurting a target. The migrant. The neighbor of another color. The other party's voter. The Muslim. The newly arrived, the differently worshipping, the visibly struggling. This is the Offsprings' (chapter 1) daily assignment: the Smile dramatizes the decoy, the Mask individualizes it, the Suit legislates against it, the Shield polices it — and the Two Heads, unmentioned, continue to feed.
+Be aware. Pain of this scale does not sit quietly; it demands a face to blame. The Leech knows this [— it has known it since 1676](https://virginiahistory.org/learn/bacons-rebellion-virginia-years-1675-1676) — and so it does what it has always done: it hands the hurting a target. The migrant. The neighbor of another color. The other party's voter. The Muslim. The newly arrived, the differently worshipping, the visibly struggling. This is the daily assignment of the offspring (Chapter One): the Smile dramatizes the decoy, the Mask individualizes it, the Suit legislates against it, the Shield polices it — and the Two Heads, unmentioned, continue to feed.
 
-Resist the destructions, find an anchor. This is Millennial Manifesto’s recommended dose of your illness for the short term.
+Resist the distractions; find an anchor. This is the Millennial Manifesto’s prescription for the short term.
 
 ## References
 

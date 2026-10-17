@@ -1,19 +1,26 @@
-.book-prose .evidence-chart { margin: 3rem 0; padding: clamp(1rem, 3vw, 2rem); border: 1px solid var(--border); background: var(--background); font: .875rem/1.65 var(--font-sans); }
-.book-prose .evidence-chart h3 { font: 500 1.7rem/1.2 var(--font-serif); margin: .5rem 0 1rem; }
-.book-prose .evidence-chart p { font-size: .85rem; line-height: 1.65; margin: .7rem 0; }
-.book-prose .evidence-chart-period { font: .65rem/1.5 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
-.evidence-chart-bars { display: grid; gap: .6rem; margin-top: 1.6rem; }
-.evidence-chart-bars button { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 3.5rem; gap: .7rem; align-items: center; width: 100%; min-height: 48px; padding: .5rem; text-align: left; border: 1px solid transparent; font-size: .8rem; }
-.evidence-chart-bars button[aria-pressed="true"] { border-color: var(--organism-accent-strong); background: color-mix(in srgb, var(--organism-accent-strong) 6%, transparent); }
-.evidence-chart-bars button:focus-visible { outline: 2px solid var(--organism-accent-strong); outline-offset: 3px; }
-.evidence-chart-bars strong { text-align: right; font-variant-numeric: tabular-nums; }
-.evidence-chart-track { display: block; height: 1.25rem; background: color-mix(in srgb, var(--foreground) 7%, transparent); }
-.evidence-chart-track i { display: block; height: 100%; background: var(--organism-accent-strong); opacity: .65; }
-.evidence-chart-bars [aria-pressed="true"] i { opacity: 1; }
-.evidence-chart-source { padding-block: 1rem; margin-top: 1rem; border-block: 1px solid var(--border); }
+.book-prose .evidence-chart { --chart-accent: var(--amm-rust, var(--organism-accent-strong)); margin: 3rem 0; padding-block: 2rem; border-block: 1px solid var(--border); font: 1rem/1.65 var(--font-sans); }
+.book-prose .evidence-chart h3 { font: 500 clamp(1.7rem, 4vw, 2.35rem)/1.2 var(--font-serif); margin: .5rem 0 1rem; text-wrap: balance; }
+.book-prose .evidence-chart p { font-size: 1rem; line-height: 1.7; margin: .7rem 0; }
+.book-prose .evidence-chart .evidence-chart-period { font: .75rem/1.7 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+.book-prose .evidence-chart .evidence-chart-instruction { margin-top: 1.5rem; color: var(--muted-foreground); font-size: .875rem; }
+.evidence-chart-bars { display: grid; gap: 1rem; margin-top: 1rem; }
+.evidence-chart-bars button { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem 1rem; align-items: center; width: 100%; min-height: 88px; padding: .75rem; text-align: left; font-size: 1rem; border-radius: .35rem; cursor: pointer; }
+.evidence-chart-bars button:is(:hover, [aria-pressed="true"]) { background: color-mix(in srgb, var(--chart-accent) 7%, transparent); }
+.evidence-chart-bars button[aria-pressed="true"] > span { text-decoration: underline; text-underline-offset: .25em; text-decoration-color: var(--chart-accent); }
+.evidence-chart-bars button:focus-visible { outline: 2px solid var(--chart-accent); outline-offset: 3px; }
+.evidence-chart-bars strong { text-align: right; font: 600 1.35rem/1.2 var(--font-sans); font-variant-numeric: tabular-nums; }
+.evidence-chart .evidence-chart-plot { display: block; width: 100%; height: 48px; grid-column: 1 / -1; overflow: visible; }
+.evidence-chart-gridline { stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.evidence-chart-bar { fill: var(--chart-accent); }
+.evidence-chart-bars [data-kind="projection"] .evidence-chart-bar { fill: color-mix(in srgb, var(--chart-accent) 8%, transparent); stroke: var(--chart-accent); stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.evidence-chart-hatch { fill: none; stroke: var(--chart-accent); stroke-width: 1; }
+.evidence-chart-axis { display: flex; justify-content: space-between; margin-inline: .75rem; font: .75rem/1.5 var(--font-mono); color: var(--muted-foreground); }
+.book-prose .evidence-chart .evidence-chart-key { display: flex; align-items: center; gap: .65rem; font-size: .875rem; }
+.evidence-chart-key > span { width: 1.25rem; height: .8rem; border: 1px dashed var(--chart-accent); background: repeating-linear-gradient(135deg, transparent 0 4px, var(--chart-accent) 4px 5px); }
+.evidence-chart-source { padding-block: 1rem; margin-top: 1rem; border-top: 1px solid var(--border); }
 .evidence-chart-limits, .evidence-chart-scale { color: var(--muted-foreground); }
-.evidence-chart summary { cursor: pointer; min-height: 44px; padding-top: .75rem; font-weight: 600; }
+.book-prose .evidence-chart .evidence-chart-scale { font-size: .75rem; }
+.evidence-chart summary { cursor: pointer; min-height: 48px; padding-block: .75rem; font-weight: 600; }
 .evidence-chart-table { overflow-x: auto; }
 .evidence-chart-error { border: 1px solid var(--border); padding: 1rem; }
-@media (max-width: 420px) { .evidence-chart-bars button { grid-template-columns: minmax(0, 1fr) 3.5rem; } .evidence-chart-track { grid-row: 2; grid-column: 1 / -1; height: .75rem; } .evidence-chart-bars strong { grid-row: 1; grid-column: 2; } }
-@media (forced-colors: active) { .evidence-chart-track i { background: Highlight; } }
+@media (forced-colors: active) { .evidence-chart-bar { fill: Highlight; } .evidence-chart-hatch, .evidence-chart-gridline { stroke: CanvasText; } .evidence-chart-bars [data-kind="projection"] .evidence-chart-bar { fill: Canvas; stroke: Highlight; } }

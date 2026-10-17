@@ -4,7 +4,7 @@ import { importPublishedEssay, proposeChapterOneRevision } from "./importPublish
 afterEach(() => vi.unstubAllGlobals());
 describe("AMM source adoption", () => {
   it("imports exact published text and banner bytes using portable paths", async () => {
-    const slug = "the-anatomy-of-the-host";
+    const slug = "amm-chapter-three-the-host-and-the-infection";
     const src = `/essay-media/${slug}/hash-cover.webp`;
     const fetcher = vi.fn(async (url: string) => {
       if (url.endsWith("index.json")) return Response.json({ essays: [{ slug, title: "Original", summary: "Summary", published: "2026-10-15", updated: null, series: "The American Millennial Manifesto", levels: ["model"], concepts: [], cover: { src, alt: "Supplied artwork" }, images: { [src]: { width: 1600, height: 900 } } }] });

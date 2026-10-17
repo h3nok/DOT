@@ -22,4 +22,15 @@ describe("inspectable figures", () => {
     expect(screen.getByText(/data needs correction/)).toBeVisible();
     expect(screen.queryByRole("group", { name: "Inspect a value" })).not.toBeInTheDocument();
   });
+  it("distinguishes a projection without changing the zero-based scale", () => {
+    const projected = { ...figure, rows: [figure.rows[0], { ...figure.rows[1], kind: "projection" }] };
+    render(<EvidenceChart source={JSON.stringify(projected)} />);
+    const bar = screen.getByRole("button", { name: "Inspect Second: 90 units" });
+    expect(bar).toHaveAttribute("data-kind", "projection");
+    expect(bar.querySelector(".evidence-chart-bar")).toHaveAttribute("width", "900");
+    expect(bar.querySelector('rect[fill^="url"]')).not.toBeNull();
+    expect(screen.getByText("Hatched bar: projection")).toBeVisible();
+    expect(screen.getByText("Scale begins at 0 · ends at 100 units")).toBeVisible();
+    expect(parseEvidenceChart(JSON.stringify({ ...figure, rows: [{ ...figure.rows[0], kind: "certain" }, figure.rows[1]] }))).toBeNull();
+  });
 });

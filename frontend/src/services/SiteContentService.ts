@@ -29,6 +29,11 @@ export interface SiteContentDraft {
   published_at: string | null;
 }
 
+export interface SaveCopyOptions {
+  publish?: boolean;
+  expectedUpdatedAt?: string | null;
+}
+
 /**
  * Published overrides only. Returns `{}` on any failure — a reader must never
  * see an error because the copy service is unreachable.
@@ -52,15 +57,20 @@ export async function fetchPublishedContent(
   }
 }
 
-export async function fetchDrafts(signal?: AbortSignal): Promise<SiteContentDraft[]> {
-  if (!siteContentAvailable()) return [];
+export async function fetchDrafts(signal?: AbortSignal, strict = false): Promise<SiteContentDraft[]> {
+  if (!siteContentAvailable()) {
+    if (strict) throw new Error("No orchestrator is configured for this build.");
+    return [];
+  }
 
   try {
-    const response = await authedFetch(url("/v1/site-content/drafts"), { signal });
-    if (!response.ok) return [];
+    const response = await authedFetch(url("/v1/site-content/drafts"), { signal, sessionOnly: true });
+    if (!response.ok) throw new Error(await detailOf(response));
     const payload = (await response.json()) as { blocks?: SiteContentDraft[] };
+    if (!Array.isArray(payload.blocks)) throw new Error("The saved page copy could not be read.");
     return payload?.blocks ?? [];
-  } catch {
+  } catch (error) {
+    if (strict) throw error;
     return [];
   }
 }
@@ -78,17 +88,19 @@ async function detailOf(response: Response): Promise<string> {
 export async function saveBlock(
   key: string,
   value: string,
-  options: { publish?: boolean } = {},
-): Promise<void> {
+  options: SaveCopyOptions = {},
+): Promise<SiteContentDraft> {
   if (!siteContentAvailable()) {
     throw new Error("No orchestrator is configured for this build.");
   }
 
   const response = await authedFetch(url(`/v1/site-content/${encodeURIComponent(key)}`), {
     method: "PUT",
-    json: { value, publish: options.publish ?? false },
+    sessionOnly: true,
+    json: { value, publish: options.publish ?? false, ...("expectedUpdatedAt" in options ? { expected_updated_at: options.expectedUpdatedAt } : {}) },
   });
   if (!response.ok) throw new Error(await detailOf(response));
+  return response.json() as Promise<SiteContentDraft>;
 }
 
 /** Drop the override so the released wording takes over again. */
@@ -97,6 +109,7 @@ export async function revertBlock(key: string): Promise<void> {
 
   const response = await authedFetch(url(`/v1/site-content/${encodeURIComponent(key)}`), {
     method: "DELETE",
+    sessionOnly: true,
   });
   if (!response.ok && response.status !== 404) throw new Error(await detailOf(response));
 }

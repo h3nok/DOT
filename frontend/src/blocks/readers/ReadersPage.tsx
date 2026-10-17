@@ -60,7 +60,7 @@ export default function ReadersPage() {
           </div>
         </div>
       </div>
-      <p className="readers-browse">Looking for The American Millennial Manifesto? <TextLink to="/amm#amm-subscribe">Subscribe to AMM separately</TextLink></p>
+      <p className="readers-browse">Looking for The American Millennial Manifesto? <TextLink to="/amm/editions#amm-subscribe">Subscribe to AMM separately</TextLink></p>
       <p className="readers-browse">Prefer to read here? <TextLink to="/blog">Browse the writing</TextLink></p>
     </PageShell>
   );

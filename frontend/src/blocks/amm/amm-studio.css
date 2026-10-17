@@ -9,3 +9,5 @@
 .amm-source-library li a { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--border); font-size: .9rem; }
 .amm-source-library li span { font-size: .7rem; color: var(--muted-foreground); }
 .amm-source-library svg { display: inline-block; }
+.amm-source-library > p { font-size: .9rem; line-height: 1.6; margin-bottom: 1rem; color: var(--muted-foreground); }
+@media (max-width: 639px) { .amm-source-library li a { flex-direction: column; gap: .4rem; } }

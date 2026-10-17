@@ -1,19 +1,17 @@
 [
   {
-    "slug": "the-anatomy-of-the-host",
-    "title": "The Anatomy of the Host",
-    "kind": "introduction",
-    "source": null,
-    "revision": false
-  },
-  {
     "slug": "amm-chapter-one-the-leech",
     "title": "Chapter One: The Leech",
     "kind": "essay",
     "source": "https://www.linkedin.com/pulse/chapter-one-leech-henok-ghebrechristos-phd-kceqc",
     "published": "2026-04-18",
-    "revised": "2026-06-07",
-    "revision": true
+    "revised": "2026-10-15",
+    "revision": false,
+    "part": 1,
+    "partLabel": "Chapter One",
+    "partTitle": "The Leech",
+    "partNote": "Revised edition, October 15, 2026",
+    "partAction": "Read Chapter One"
   },
   {
     "slug": "amm-chapter-two-the-leechs-anatomy",
@@ -21,8 +19,27 @@
     "kind": "essay",
     "source": "https://www.linkedin.com/pulse/chapter-2-leechs-anatomy-henok-ghebrechristos-phd-l1tbf",
     "published": "2026-07-29",
-    "revised": "2026-07-29",
-    "revision": false
+    "revised": "2026-10-16",
+    "revision": false,
+    "part": 2,
+    "partLabel": "Chapter Two",
+    "partTitle": "The Leech’s Anatomy",
+    "partNote": "First published July 29, 2026; edited October 16, 2026",
+    "partAction": "Read Chapter Two"
+  },
+  {
+    "slug": "amm-chapter-three-the-host-and-the-infection",
+    "title": "Chapter Three: The Host and the Infection",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-10-15",
+    "revised": "2026-10-15",
+    "revision": false,
+    "part": 3,
+    "partLabel": "Chapter Three",
+    "partTitle": "The Host and the Infection",
+    "partNote": "Working draft, October 15, 2026",
+    "partAction": "Read Chapter Three"
   },
   {
     "slug": "amm-ai-will-not-kill-you",

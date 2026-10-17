@@ -1,0 +1,52 @@
+/* Capital and power (and the reading companion): readable copy using publication tokens. */
+.amm-money-opening { padding-block: clamp(2rem, 4vw, 3.5rem) 1rem; max-width: 53rem; }
+.amm-money-opening h1 { font: 500 clamp(3rem, 5.5vw, 4.5rem)/1.08 var(--font-serif); letter-spacing: -.045em; margin-block: 1.25rem 1.5rem; text-wrap: balance; }
+.amm-money-opening > p:not(.amm-eyebrow) { max-width: 65ch; line-height: 1.85; color: var(--muted-foreground); }
+.amm-money-opening nav { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin-top: 1.5rem; font-size: .8rem; }
+.amm-money-opening nav a { display: inline-flex; min-height: 44px; align-items: center; text-decoration: underline; }
+.amm-money-opening ~ section { scroll-margin-top: 2rem; }
+.amm-money-definitions, .amm-money-examples, .amm-money-tests, .amm-money-alternative { padding-block: clamp(2.5rem, 5vw, 4.5rem); }
+:is(.amm-money-definitions, .amm-money-section-intro, .amm-money-alternative) > h2 { font: 500 clamp(2rem, 4vw, 3.25rem)/1.08 var(--font-serif); letter-spacing: -.04em; max-width: 25ch; margin-block: .9rem 1.5rem; text-wrap: balance; }
+.amm-money-definitions dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; margin-top: 2rem; }
+.amm-money-definitions dt { color: var(--amm-rust); font: 500 1.4rem var(--font-serif); margin-bottom: .75rem; }
+.amm-money-definitions dd, .amm-money-example-grid article > p:not(.amm-money-payment-path), .amm-money-details p, .amm-money-tests p { color: var(--muted-foreground); font-size: .85rem; line-height: 1.85; }
+.amm-money-section-intro > p:last-child { max-width: 68ch; line-height: 1.85; color: var(--muted-foreground); }
+.amm-money-example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); margin-top: 3rem; }
+.amm-money-example-grid article { scroll-margin-top: 2rem; }
+.amm-shell .amm-money-example-icon { width: 2rem; height: 2rem; stroke-width: 1.25; color: var(--amm-rust); margin-bottom: 1.5rem; }
+.amm-money-example-grid h3 { font: 500 1.75rem var(--font-serif); margin-bottom: 1rem; }
+.amm-money-payment-path { font: .7rem/1.8 var(--font-mono); color: var(--amm-rust); margin-bottom: 1rem; }
+.amm-payment-critique { margin-top: 1.5rem; }
+.amm-payment-critique > .amm-eyebrow { color: var(--amm-rust); }
+.amm-payment-critique > p:not(.amm-eyebrow) { font-size: .85rem; line-height: 1.85; margin-block: .75rem 1rem; }
+.amm-payment-critique > strong { display: block; font: 500 1.1rem/1.5 var(--font-serif); color: var(--amm-rust); }
+.amm-money-details { margin-top: 1.5rem; }
+.amm-money-details summary { display: flex; align-items: center; gap: .75rem; min-height: 44px; cursor: pointer; list-style: none; font-size: .8rem; }
+.amm-money-details summary::-webkit-details-marker { display: none; }
+.amm-money-details summary::before { content: ''; width: .4rem; height: .4rem; flex-shrink: 0; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); }
+.amm-money-details[open] summary { color: var(--amm-rust); }
+.amm-money-details[open] summary::before { transform: rotate(45deg); }
+.amm-money-details p { margin-block: 1rem; }
+.amm-money-details strong { font: 500 1.1rem/1.6 var(--font-serif); }
+.amm-money-tests > div { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 4rem; margin-top: 2rem; }
+.amm-money-tests h3 { font: 500 1.35rem/1.4 var(--font-serif); margin-bottom: .75rem; }
+.amm-money-sources { max-width: 72ch; padding-block: 1rem 3rem; }
+.amm-money-sources ul { list-style: none; display: grid; gap: 1rem; }
+.amm-money-sources li a { display: inline-flex; gap: .5rem; align-items: center; min-height: 44px; font-size: .8rem; text-decoration: underline; }
+.amm-money-sources li p { margin: 0; }
+.amm-reading-companion { margin-block: 2rem 3rem; max-width: 70ch; }
+.amm-reading-companion h2 { font: 500 1.45rem/1.3 var(--font-serif); margin-block: .8rem; }
+.amm-reading-companion > p:not(.amm-eyebrow) { font-size: .85rem; line-height: 1.8; color: var(--muted-foreground); margin-bottom: 1rem; }
+.amm-archive-intro { max-width: 66ch; margin-bottom: 2.5rem; }
+.amm-archive-intro > p { line-height: 1.8; font-size: .9rem; color: var(--muted-foreground); margin-bottom: 1rem; }
+.amm-guide-turn { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem 2rem; padding-block: 1rem 3rem; }
+@media (hover: hover) and (pointer: fine) { .amm-money-opening a:hover, .amm-money-details summary:hover, .amm-money-sources a:hover { color: var(--amm-rust); } }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .amm-money-details summary::before { transition: transform 160ms ease; }
+}
+@media (max-width: 900px) { .amm-money-definitions dl { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .amm-money-example-grid, .amm-money-tests > div { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .amm-money-definitions dl { grid-template-columns: 1fr; gap: 1.75rem; } }
+.amm-money-poster { margin-block: .5rem 2rem; }
+.amm-money-poster img { width: 100%; height: auto; }
+.amm-money-poster figcaption { margin-top: .75rem; font: .62rem/1.7 var(--font-mono, monospace); color: var(--muted-foreground); }

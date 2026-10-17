@@ -34,21 +34,35 @@ function declare() {
 async function save() { fireEvent.click(screen.getByRole("button", { name: "Save private revision" })); await screen.findByText("Revision 1 saved privately. Text, settings, images and claim notes are together."); }
 function review() { fireEvent.click(screen.getByRole("button", { name: "3. Preview" })); fireEvent.click(screen.getByRole("button", { name: "4. Publish" })); }
 describe("the publishing desk", () => {
+  it("opens a direct edit link at the latest private revision without publishing", async () => {
+    vi.mocked(writing.fetchWritingWorks).mockResolvedValue([{ id: "selected-work", kind: "essay", canonical_slug: "my-amm-letter", lifecycle_state: "released" }]);
+    vi.mocked(writing.fetchWritingDraft).mockResolvedValue({ title: "My next revision", summary: "", body: "Unpublished changes.", revisionId: "latest", revisionNumber: 4 });
+    render(<MemoryRouter initialEntries={["/studio/writing?work=selected-work"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    await screen.findByDisplayValue("Unpublished changes.");
+    expect(writing.fetchWritingDraft).toHaveBeenCalledWith("selected-work");
+    expect(writing.releaseSavedWriting).not.toHaveBeenCalled();
+    expect(adoption.importPublishedEssay).not.toHaveBeenCalled();
+  });
+  it("does not fetch an arbitrary work outside the authenticated workspace", async () => {
+    render(<MemoryRouter initialEntries={["/studio/writing?work=foreign-work"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    expect(await screen.findByRole("alert")).toHaveTextContent("not available in your writing workspace");
+    expect(writing.fetchWritingDraft).not.toHaveBeenCalled();
+  });
   it("opens an existing AMM manuscript privately and preserves its identifier on save", async () => {
     vi.mocked(adoption.importPublishedEssay).mockResolvedValue({ title: "Source manuscript", summary: "Original summary", body: "Exact author text.", presentation: { ...writing.emptyPresentation(), series: "The American Millennial Manifesto" }, assets: [] });
-    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=the-anatomy-of-the-host"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=amm-chapter-three-the-host-and-the-infection"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
     await screen.findByDisplayValue("Exact author text.");
     expect(writing.createWritingWork).not.toHaveBeenCalled();
     expect(writing.releaseSavedWriting).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Save private revision" }));
     await screen.findByText("Revision 1 saved privately. Text, settings, images and claim notes are together.");
-    expect(writing.createWritingWork).toHaveBeenCalledWith("space-1", "the-anatomy-of-the-host");
+    expect(writing.createWritingWork).toHaveBeenCalledWith("space-1", "amm-chapter-three-the-host-and-the-infection");
     expect(writing.releaseSavedWriting).not.toHaveBeenCalled();
   });
   it("reopens saved edits instead of importing a second copy of the source", async () => {
-    vi.mocked(writing.fetchWritingWorks).mockResolvedValue([{ id: "managed", kind: "essay", canonical_slug: "the-anatomy-of-the-host", lifecycle_state: "released" }]);
+    vi.mocked(writing.fetchWritingWorks).mockResolvedValue([{ id: "managed", kind: "essay", canonical_slug: "amm-chapter-three-the-host-and-the-infection", lifecycle_state: "released" }]);
     vi.mocked(writing.fetchWritingDraft).mockResolvedValue({ title: "Saved revision", summary: "", body: "My saved changes.", revisionId: "r2", revisionNumber: 2 });
-    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=the-anatomy-of-the-host"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
+    render(<MemoryRouter initialEntries={["/studio/writing?series=amm&source=amm-chapter-three-the-host-and-the-infection"]}><WritingStudioPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
     await screen.findByDisplayValue("My saved changes.");
     expect(adoption.importPublishedEssay).not.toHaveBeenCalled();
     expect(writing.createWritingWork).not.toHaveBeenCalled();

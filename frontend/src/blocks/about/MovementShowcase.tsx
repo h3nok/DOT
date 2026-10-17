@@ -10,7 +10,6 @@ export function MovementShowcase({ movement }: { movement: NonNullable<Project["
       className="about-movement"
     >
       <div className="about-movement-artwork">
-        <span className="about-movement-orbit" aria-hidden="true" />
         <img src={movement.artwork} alt={movement.artworkAlt} width={1024} height={1536} loading="lazy" decoding="async" />
         <p>{movement.subtitle}</p>
       </div>

@@ -41,6 +41,7 @@ def parse_chart(source: str) -> dict:
                 and text(row["source"], 400)
                 and text(row["url"], 2048)
                 and row["url"].lower().startswith("https://")
+                and ("kind" not in row or row["kind"] in ("estimate", "projection", "observed"))
             ):
                 raise ValueError
         return value

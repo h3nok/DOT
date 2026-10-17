@@ -1,0 +1,84 @@
+{
+  "illustration": {
+    "title": "The Host",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/host2-1280.webp",
+    "sizes": "(min-width: 1440px) 690px, (min-width: 901px) 55vw, 100vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/host2-640.webp 640w, /amm/media/host2-1024.webp 1024w, /amm/media/host2-1280.webp 1280w, /amm/media/host2-1536.webp 1536w"
+      }
+    ]
+  },
+  "parts": {
+    "amm-chapter-one-the-leech": {
+      "src": "/amm/media/leech-1024.webp",
+      "srcset": "/amm/media/leech-640.webp 640w, /amm/media/leech-1024.webp 1024w",
+      "width": 1024,
+      "height": 435
+    },
+    "amm-chapter-two-the-leechs-anatomy": {
+      "src": "/amm/media/leech-anatomy-1024.webp",
+      "srcset": "/amm/media/leech-anatomy-640.webp 640w, /amm/media/leech-anatomy-1024.webp 1024w",
+      "width": 1024,
+      "height": 683
+    },
+    "amm-chapter-three-the-host-and-the-infection": {
+      "src": "/amm/media/host-anatomy-v2-1024.webp",
+      "srcset": "/amm/media/host-anatomy-v2-640.webp 640w, /amm/media/host-anatomy-v2-1024.webp 1024w, /amm/media/host-anatomy-v2-1536.webp 1536w",
+      "width": 1024,
+      "height": 683
+    }
+  },
+  "partSizes": "(min-width: 901px) 30vw, 100vw",
+  "poster": {
+    "title": "The Slow Erosion of the Public",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/slow-erosion-1024.webp",
+    "sizes": "(min-width: 1440px) 1200px, 100vw",
+    "sources": [
+      {
+        "type": "image/avif",
+        "srcset": "/amm/media/slow-erosion-640.avif 640w, /amm/media/slow-erosion-1024.avif 1024w, /amm/media/slow-erosion-1536.avif 1536w"
+      },
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/slow-erosion-640.webp 640w, /amm/media/slow-erosion-1024.webp 1024w, /amm/media/slow-erosion-1536.webp 1536w"
+      }
+    ],
+    "alt": "Poster, The Slow Erosion of the Public. The flag-patterned Host, collared by government, feeds from a trough labeled status, fear, addiction, while a two-headed leech draws on labor, time, attention, data, savings, taxes, and debt. Its old head is labeled Security–Industrial and its new head Technological–Platform. To the right, people work together under a sign reading Parallel Systems. The poster reads: Parallel systems are the only way out. 4Us, Economy for Us. Join the movement."
+  },
+  "erosion": {
+    "title": "The erosion of the public",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/erosion-1024.webp",
+    "full": "/amm/media/erosion-1536.webp",
+    "sizes": "(min-width: 1440px) 650px, (min-width: 901px) 50vw, 100vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/erosion-640.webp 640w, /amm/media/erosion-1024.webp 1024w, /amm/media/erosion-1536.webp 1536w"
+      }
+    ],
+    "alt": "The erosion of the public: a flag-patterned Host feeds at a trough marked Moral Erosion while a two-headed mechanical Leech draws from its back."
+  },
+  "anatomy": {
+    "title": "The anatomy of the Host",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/host-anatomy-v2-1024.webp",
+    "full": "/amm/media/host-anatomy-v2-1536.webp",
+    "sizes": "(min-width: 1440px) 650px, (min-width: 901px) 50vw, 100vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/host-anatomy-v2-640.webp 640w, /amm/media/host-anatomy-v2-1024.webp 1024w, /amm/media/host-anatomy-v2-1536.webp 1536w"
+      }
+    ],
+    "alt": "The anatomy of the Host: the public depicted as a flag-patterned body, labeled labor and time, attention and data, savings and taxes, and debt. A government collar surrounds its neck. Above its head, a brain is labeled beliefs, identity, and perception."
+  }
+}

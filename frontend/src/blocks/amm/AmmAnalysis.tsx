@@ -1,10 +1,11 @@
 import { useRef, useState, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowRight, CornerDownLeft } from "lucide-react";
-import AMM from "../../content/amm.json";
+import { useAmmContent } from "../../content/editable/useAmmContent";
 
 /** A finite, reader-controlled explanation of the manuscript's process lens. */
 export function AmmAnalysis() {
+  const AMM = useAmmContent();
   const [selected, setSelected] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const { steps } = AMM.analysis;
