@@ -22,6 +22,14 @@ class InvalidContentKeyError(ValueError):
     """The requested block key is not a well-formed content address."""
 
 
+class ContentConflictError(ValueError):
+    """A newer saved edit must not be overwritten by a stale editor."""
+
+
+def _timestamp(value: datetime.datetime | None) -> datetime.datetime | None:
+    return value.replace(tzinfo=datetime.UTC) if value and value.tzinfo is None else value
+
+
 def validate_key(key: str) -> str:
     normalized: str = (key or "").strip().lower()
     if not normalized or len(normalized) > models.MAX_KEY_LENGTH:
@@ -65,7 +73,9 @@ async def _get_row(
     session: sqlalchemy.ext.asyncio.AsyncSession, key: str
 ) -> models.SiteContentBlock | None:
     result = await session.execute(
-        sqlalchemy.select(models.SiteContentBlock).where(models.SiteContentBlock.key == key)
+        sqlalchemy.select(models.SiteContentBlock)
+        .where(models.SiteContentBlock.key == key)
+        .with_for_update()
     )
     return result.scalar_one_or_none()
 
@@ -77,6 +87,8 @@ async def write_block(
     value: str,
     publish: bool,
     actor_id: str,
+    check_version: bool = False,
+    expected_updated_at: datetime.datetime | None = None,
 ) -> schemas.SiteContentValue:
     """Save a draft, optionally publishing it in the same call.
 
@@ -90,6 +102,12 @@ async def write_block(
     cleared: bool = value == ""
 
     row: models.SiteContentBlock | None = await _get_row(session, validated)
+    if check_version and _timestamp(row.updated_at if row else None) != _timestamp(
+        expected_updated_at
+    ):
+        raise ContentConflictError(
+            "This field has a newer saved edit. Copy your text, then reload to compare it."
+        )
     if row is None:
         row = models.SiteContentBlock(key=validated)
         session.add(row)
@@ -101,7 +119,13 @@ async def write_block(
         row.published_value = None if cleared else value
         row.published_at = now
 
-    await session.commit()
+    try:
+        await session.commit()
+    except sqlalchemy.exc.IntegrityError as exc:
+        await session.rollback()
+        raise ContentConflictError(
+            "This field was saved in another session. Copy your text, then reload to compare it."
+        ) from exc
     return schemas.SiteContentValue(
         key=row.key,
         published_value=row.published_value,
@@ -121,6 +145,7 @@ async def publish_block(
 
     row.published_value = row.draft_value
     row.published_at = datetime.datetime.now(datetime.UTC)
+    row.updated_at = row.published_at
     row.updated_by = actor_id
     await session.commit()
     return schemas.SiteContentValue(

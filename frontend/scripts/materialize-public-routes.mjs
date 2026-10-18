@@ -10,7 +10,10 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 
 import { remarkDepthPassages } from "../src/attention-os/reader/remarkDepthPassages.js";
+import { headingSlug } from "../src/attention-os/reader/headingSlug.js";
+import { parseEvidenceChart } from "../src/attention-os/reader/evidenceChart.js";
 import { ESSAYS_ROUTE, readEssays } from "./essays.mjs";
+import { resolveAmmCopy } from "../src/content/editable/ammCopy.js";
 
 const SITE_URL = "https://dotheory.org";
 const BOOK_ROUTE = "/book/digital-organism-theory";
@@ -30,6 +33,8 @@ const CONTENT_DIR = path.join("src", "content");
 // The record the About page and siteConfig read too (src/content/author.ts).
 const AUTHOR = JSON.parse(readFileSync(path.join(CONTENT_DIR, "author.json"), "utf8"));
 const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"));
+const BOOK_LANDING = JSON.parse(readFileSync(path.join(CONTENT_DIR, "publications", "bookLanding.json"), "utf8"));
+const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
 const CAREER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "career.json"), "utf8"));
@@ -46,6 +51,12 @@ const OTHER_BUILDER_PROJECTS = BUILDER.otherProjects.map((slug) => {
 });
 const NEWSLETTER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "newsletter.json"), "utf8"));
 const BLOG = JSON.parse(readFileSync(path.join(CONTENT_DIR, "blog.json"), "utf8"));
+const AMM = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm.json"), "utf8"));
+const AMM_MEDIA = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-media.json"), "utf8"));
+const AMM_CAPITAL = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-capital.json"), "utf8"));
+const CAPITAL_ROUTE = "/amm/power";
+const AMM_LIBRARY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-library.json"), "utf8"));
+const ESSAY_MOVES = JSON.parse(readFileSync(path.join(CONTENT_DIR, "essays", "moves.json"), "utf8"));
 // Search engines resolve an author entity through profiles they already know,
 // so every work's structured data names them.
 const AUTHOR_PROFILE = AUTHOR.links.linkedin;
@@ -60,14 +71,14 @@ const RELEASE_MANIFEST = path.join(
   "manifest.json",
 );
 
-const BOOK_DESCRIPTION =
-  "Examine experience, inherited conditioning, meaningful choice, and development toward Love. Book One also develops DOT’s proposed wider architecture of consciousness and the physical universe, with its evidence boundaries in view.";
+const BOOK_DESCRIPTION = BOOK_LANDING.description;
 
 const STATIC_ROUTES = [
   {
     route: ACADEMY_ROUTE,
-    title: "DOT Academy — Digital Organism Theory",
-    description: "Study and challenge Digital Organism Theory through its concept map and open questions. The Academy is in development; Book One remains a fixed edition.",
+    title: "Book One — Digital Organism Theory",
+    description: BOOK_DESCRIPTION,
+    canonicalRoute: BOOK_ROUTE,
   },
   {
     route: "/applied",
@@ -219,7 +230,6 @@ export const DOCTRINE_CONCEPTS = [
 const routePattern = /^\/[a-z0-9]+(?:\/[a-z0-9_-]+)*$/;
 
 const BOOK_ID = `${SITE_URL}${BOOK_ROUTE}#book`;
-const ACADEMY_ID = `${SITE_URL}${ACADEMY_ROUTE}#academy`;
 const CONCEPT_SET_ID = `${SITE_URL}/doctrine#concepts`;
 
 function escapeHtml(value) {
@@ -399,23 +409,6 @@ function conceptSetNode() {
   };
 }
 
-function academyNode() {
-  return {
-    "@type": "CollectionPage",
-    "@id": ACADEMY_ID,
-    name: "DOT Academy",
-    description:
-      "The living intellectual home of Digital Organism Theory: theory, critical inquiry, writing, and distinct fixed publications.",
-    url: `${SITE_URL}${ACADEMY_ROUTE}`,
-    inLanguage: "en",
-    about: { "@type": "Thing", name: "Digital Organism Theory" },
-    hasPart: [
-      { "@id": CONCEPT_SET_ID, "@type": "DefinedTermSet" },
-      { "@id": `${SITE_URL}/applied#page`, "@type": "WebPage" },
-    ],
-  };
-}
-
 const graph = (...nodes) => ({ "@context": "https://schema.org", "@graph": nodes });
 
 /** What the site is, for a crawler that only ever sees the root document. */
@@ -431,11 +424,9 @@ function siteStructuredData(manifest) {
       author: personNode(),
       about: [{ "@type": "Thing", name: "AI and product architecture" }, { "@type": "Thing", name: "Digital Organism Theory" }],
       hasPart: [
-        { "@id": ACADEMY_ID, "@type": "CollectionPage" },
         { "@id": BOOK_ID, "@type": "Book" },
       ],
     },
-    academyNode(),
     bookNode(manifest),
   );
 }
@@ -471,6 +462,11 @@ const FEED_TITLE = `Writing by ${AUTHOR.name}`;
 
 const essayUrl = (essay) => essay.url ?? `${SITE_URL}${ESSAYS_ROUTE}/${essay.slug}`;
 const writingPath = (item, release) => `${WRITING_ROUTE}/${item.id}${release ? `/releases/${release}` : ""}`;
+const managedWriting = (item) => AMM_LIBRARY.some(source => source.slug === item.slug);
+const writingPublicPath = (item) => managedWriting(item) ? `${ESSAYS_ROUTE}/${item.slug}` : writingPath(item);
+export function visibleFileEssays(essays, writing) {
+  return essays.filter(essay => !writing.some(item => managedWriting(item) && item.slug === essay.slug));
+}
 
 /**
  * Every released version of native writing, read from the public delivery API at
@@ -485,27 +481,35 @@ export async function fetchNativeWriting(apiUrl, { fetchImpl = fetch, space = "d
     if (!response.ok) throw new Error(`Released writing could not be read (${response.status}): ${requestPath}`);
     return asText ? response.text() : response.json();
   };
-  const catalog = await get(`/delivery/catalog?space=${encodeURIComponent(space)}`);
-  const latest = catalog.filter((entry) => entry.kind === "essay" && !entry.withdrawn_at);
+  const catalog = await get(`/delivery/catalog?space=${encodeURIComponent(space)}&include_withdrawn=true`);
+  const latest = catalog.filter((entry) => entry.kind === "essay");
   return Promise.all(
     latest.map(async (entry) => {
+      if (entry.withdrawn_at) return { id: entry.work_id, slug: entry.work_slug, title: entry.title, published: entry.released_at.slice(0, 10), withdrawn: true, releases: [], releaseNumber: entry.release_number };
       const releases = [];
       for (let number = 1; number <= entry.release_number; number += 1) {
         const delivery = await get(`/delivery/works/${encodeURIComponent(entry.work_id)}/releases/${number}`);
         if (delivery.withdrawn) continue;
         if (!delivery.manifest || !delivery.body_ref) throw new Error(`Release ${number} of ${entry.work_id} is incomplete.`);
         const body = await get(`/delivery/body/${delivery.body_ref.split("/").map(encodeURIComponent).join("/")}`, true);
-        releases.push({ number, manifest: delivery.manifest, body });
+        const images = Object.fromEntries((delivery.manifest.assets ?? []).flatMap(asset =>
+          [asset.path, `./${asset.path}`].map(name => [name, { src: new URL(asset.src, apiUrl).href, width: asset.width, height: asset.height }]),
+        ));
+        const banner = delivery.manifest.presentation?.cover;
+        const cover = banner && images[banner.path] ? { ...images[banner.path], alt: banner.alt, caption: banner.caption } : undefined;
+        releases.push({ number, manifest: delivery.manifest, body, images, cover });
       }
       return {
         id: entry.work_id,
+        slug: entry.work_slug,
         title: entry.title,
         summary: entry.summary ?? "",
         published: entry.released_at.slice(0, 10),
         releases,
+        cover: releases.at(-1)?.cover,
       };
     }),
-  ).then((items) => items.filter((item) => item.releases.length > 0).reverse());
+  ).then((items) => items.filter((item) => item.withdrawn || item.releases.length > 0).reverse());
 }
 
 function conceptTerms(ids) {
@@ -528,6 +532,7 @@ function articleNode(essay) {
     "@id": `${url}#article`,
     headline: essay.title,
     description: essay.summary,
+    image: essay.cover ? new URL(essay.cover.src, SITE_URL).href : undefined,
     url,
     mainEntityOfPage: url,
     author: personNode(),
@@ -547,15 +552,49 @@ function articleNode(essay) {
  * that never run the app. Math becomes MathML: no fonts, no script, and still
  * legible to a screen reader.
  */
-export function renderMarkdown(markdown) {
+function headingText(node) {
+  return node.type === "text" ? node.value : (node.children ?? []).map(headingText).join("");
+}
+
+export function renderMarkdown(markdown, { images = {}, post = false, restrictImages = false } = {}) {
   return renderToStaticMarkup(
     createElement(ReactMarkdown, {
       skipHtml: true,
       remarkPlugins: [remarkGfm, remarkMath, remarkDepthPassages],
       rehypePlugins: [[rehypeKatex, { output: "mathml" }]],
       children: markdown,
+      components: post ? {
+        pre: ({ children, node }) => {
+          const code = node?.children[0];
+          if (code?.properties?.className?.includes("language-evidence-chart")) {
+            const data = parseEvidenceChart(headingText(code));
+            if (!data) return createElement("p", null, "This figure’s data needs correction before it can be displayed.");
+            return createElement("figure", null,
+              createElement("figcaption", null, `${data.title} · ${data.period} · ${data.unit}`),
+              createElement("p", null, data.status),
+              createElement("table", null,
+                createElement("thead", null, createElement("tr", null, ...["Category", "Value", "Cited source"].map(label => createElement("th", { key: label, scope: "col" }, label)))),
+                createElement("tbody", null, ...data.rows.map((row, index) => createElement("tr", { key: index }, createElement("th", { scope: "row" }, row.label), createElement("td", null, row.value), createElement("td", null, createElement("a", { href: row.url }, row.source)))))),
+              createElement("p", null, data.limits));
+          }
+          return createElement("pre", null, children);
+        },
+        ...Object.fromEntries([1, 2, 3, 4, 5, 6].map(level => [`h${level}`, ({ children, node }) => createElement(`h${level}`, { id: headingSlug(headingText(node)) }, children)])),
+        img: ({ src, alt }) => restrictImages && !images[src] ? createElement("span", null, `Image not attached: ${alt || src}`) : createElement("img", { src, alt, ...images[src], loading: "lazy", decoding: "async" }),
+        p: ({ children, node }) => {
+          const child = node?.children.length === 1 ? node.children[0] : undefined;
+          return child?.type === "element" && child.tagName === "img"
+            ? createElement("figure", null, children, child.properties.title ? createElement("figcaption", null, String(child.properties.title)) : null)
+            : createElement("p", null, children);
+        },
+      } : undefined,
     }),
   );
+}
+
+const POST_FORMATS = { essay: "Essay", "case-study": "Case study", letter: "Letter" };
+function coverHtml(cover) {
+  return cover ? `<figure><img src="${escapeHtml(cover.src)}" alt="${escapeHtml(cover.alt)}" width="${cover.width}" height="${cover.height}" />${cover.caption ? `<figcaption>${escapeHtml(cover.caption)}</figcaption>` : ""}</figure>` : "";
 }
 
 const link = (href, label, downloadFilename) =>
@@ -568,7 +607,6 @@ function siteNav(essaysPublished) {
     [BOOK_ROUTE, "Book One"],
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
-    [ACADEMY_ROUTE, "DOT Academy"],
     [BLOG_ROUTE, "Blog"],
     [PUBLICATIONS_ROUTE, "Books"],
     ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
@@ -593,6 +631,84 @@ function prerenderArticle(body, essaysPublished) {
   return `<article data-prerender>${body}${siteNav(essaysPublished)}</article>`;
 }
 
+function prerenderAmm(body, { footer = true } = {}) {
+  const closing = footer ? `<footer><p>Manifesto and writing by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
+  return `<article data-prerender><header><a href="/amm"><img src="/amm/mark.svg" width="48" height="48" alt="" /> ${escapeHtml(AMM.title)}</a> ${link(AMM.dot.route, "Digital Organism Theory")}</header>${body}${closing}</article>`;
+}
+
+const AMM_PARTS = AMM_LIBRARY.filter(item => typeof item.part === "number").sort((a, b) => a.part - b.part);
+const ammPartLink = (part) => link(`${ESSAYS_ROUTE}/${part.slug}`, `${part.partLabel} · ${part.partTitle}`);
+
+/** Where AMM comes from: three ideas in DOT's own words, each beside where it applies, and the way back to DOT. */
+function ammDotHtml({ dot }) {
+  return `<section id="amm-dot" aria-labelledby="amm-dot-title"><h2 id="amm-dot-title">${escapeHtml(dot.title)}</h2><p>${escapeHtml(dot.intro)}</p><p>${link(dot.route, dot.action)}</p><ol aria-label="From Digital Organism Theory to AMM and 4Us">${dot.links.map(item => `<li><h3>${link(`/doctrine/${item.id}`, item.title)}</h3><blockquote><p>${escapeHtml(item.quote)}</p></blockquote><p>${escapeHtml(item.applies)}</p></li>`).join("")}</ol></section>`;
+}
+
+/** The movement AMM sponsors. */
+function ammSponsorHtml({ movement }) {
+  return `<section id="amm-sponsor" aria-labelledby="amm-sponsor-title"><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy" /><p>${escapeHtml(movement.sponsor)}</p><p>${escapeHtml(movement.name)}</p><h2 id="amm-sponsor-title">${escapeHtml(movement.title)}</h2><p>${escapeHtml(movement.description)}</p><p>${escapeHtml(movement.stage)}</p><p>${link(movement.href, movement.action)}</p></section>`;
+}
+
+/** The manifesto as a book (front page and archive): each chapter's full title, its own line, reading time and one way in. */
+function ammPathHtml(content, id, essays = []) {
+  return `<section id="${id}"><h2>${escapeHtml(content.chapterSection.title)}</h2><p>${escapeHtml(content.chapterSection.description)}</p><ol aria-label="The manifesto, in reading order">${AMM_PARTS.map((part, index) => {
+    const line = content.chapterSection.chapters.find(chapter => chapter.id === part.slug)?.line;
+    const minutes = essays.find(essay => essay.slug === part.slug)?.readingMinutes;
+    return `<li><h3>${escapeHtml(part.partLabel)}: ${escapeHtml(part.partTitle)}</h3>${line ? `<p>${escapeHtml(line)}</p>` : ""}<p>${link(`${ESSAYS_ROUTE}/${part.slug}`, index === 0 ? content.introduction.label : part.partAction)}${minutes ? ` · ${minutes} min read` : ""}</p></li>`;
+  }).join("")}</ol><p>${escapeHtml(content.artwork.caption)}</p></section>`;
+}
+
+/** The complete guided home remains readable without JavaScript. */
+function ammHomeSceneHtml(group, id, home) {
+  const scene = AMM_MEDIA.homeScenes[group][id];
+  const art = AMM_MEDIA[scene];
+  const alt = scene === "everyday" ? home.sceneAlt : art.alt;
+  return `<img src="${escapeHtml(art.fallback)}" alt="${escapeHtml(alt)}" width="${art.width}" height="${art.height}" loading="lazy" />`;
+}
+
+function ammReadingBarHtml(content, slug) {
+  const part = AMM_PARTS.find(item => item.slug === slug);
+  return `<nav aria-label="Reading order"><p>${escapeHtml(part ? content.reading.orderLabel : content.reading.letterLabel)}${part ? ` · Part ${part.part} of ${AMM_PARTS.length} published` : ""}</p><ol>${AMM_PARTS.map(item => `<li>${item.slug === slug ? `<a href="${ESSAYS_ROUTE}/${item.slug}" aria-current="page">${escapeHtml(`${item.partLabel} · ${item.partTitle}`)}</a>` : ammPartLink(item)}</li>`).join("")}</ol></nav>`;
+}
+
+/** What follows the text: the next part in the author's order, then the two asks. */
+function ammEditionEndHtml(content, slug) {
+  const index = AMM_PARTS.findIndex(item => item.slug === slug);
+  const next = index === -1 ? AMM_PARTS[0] : AMM_PARTS[index + 1];
+  const previous = index > 0 ? AMM_PARTS[index - 1] : undefined;
+  return [
+    `<nav aria-label="Continue reading">${next ? `<p>${escapeHtml(index === -1 ? content.reading.beginLabel : content.reading.nextLabel)}: ${ammPartLink(next)}</p>` : `<p>${escapeHtml(content.reading.latestNote)}</p>`}${previous ? `<p>Previous: ${ammPartLink(previous)}</p>` : ""}</nav>`,
+    `<section aria-label="Subscribe to AMM by email"><h2>${escapeHtml(content.signupTitle)}</h2><p>${escapeHtml(content.signupDescription)}</p><p>Email signup requires JavaScript. ${link(content.feed, "Follow AMM with RSS")} without an account.</p></section>`,
+    `<section><h2>${escapeHtml(content.reading.supportTitle)}</h2><p>${escapeHtml(content.reading.supportDescription)}</p><p>${link("/support?purpose=author&from=amm", content.reading.supportAction)}</p><p>${escapeHtml(content.reading.supportNote)}</p></section>`,
+  ].join("");
+}
+
+/** How power works: the framework the chapters assume, in six scenes (the first follows one payment up the power map), then four questions and the next step. */
+function ammCapitalHtml(content) {
+  const m = content.money, c = content.capital;
+  const paragraph = text => `<p>${escapeHtml(text)}</p>`;
+  const quote = (text, source) => `<blockquote><p>${escapeHtml(text)}</p>${source ? `<cite>${escapeHtml(source)}</cite>` : ""}</blockquote>`;
+  const order = ["platforms", "housing", "borrowing", "knowledge", "public"];
+  const examples = order.flatMap(id => m.examples.filter(item => item.id === id));
+  const ids = ["power", "assault", "chain", "interfaces", "holders", "detachment"];
+  const equity = AMM_CAPITAL.charts.find(chart => chart.title === "Ownership of corporate equity");
+  const value = label => equity.rows.find(row => row.label === label).value;
+  const figure = chart => `<figure><figcaption>${escapeHtml(chart.title)} · ${escapeHtml(chart.period)} · ${escapeHtml(chart.unit)}. ${escapeHtml(chart.status)}</figcaption><table><tbody>${chart.rows.map(row => `<tr><th scope="row">${escapeHtml(row.label)}</th><td>${row.value}</td><td>${link(row.url, row.source)}</td></tr>`).join("")}</tbody></table><p>${escapeHtml(chart.limits)}</p></figure>`;
+  return [
+    `<header><p>${escapeHtml(c.eyebrow)}</p><h1>${escapeHtml(c.title)}</h1>${paragraph(c.intro)}<figure><img src="${escapeHtml(AMM_MEDIA.erosion.fallback)}" alt="${escapeHtml(AMM_MEDIA.erosion.alt)}" width="${AMM_MEDIA.erosion.width}" height="${AMM_MEDIA.erosion.height}" /><figcaption>${escapeHtml(c.erosionCaption)}</figcaption></figure><dl aria-label="${escapeHtml(c.imageKeyLabel)}">${c.imageKey.map(item => `<dt>${link(item.href, item.label)}</dt><dd>${escapeHtml(item.meaning)}</dd>`).join("")}</dl><nav aria-label="${escapeHtml(c.contentsLabel)}"><ol>${c.glance.map((label, index) => `<li><a href="#${ids[index]}">${escapeHtml(label)}</a></li>`).join("")}</ol></nav></header>`,
+    `<section id="power"><h2>${escapeHtml(c.mapTitle)}</h2>${paragraph(c.mapIntro)}<figure><figcaption>${escapeHtml(c.mapLabel)}</figcaption><ol>${c.tiers.map(tier => `<li><strong>${escapeHtml(tier.label)}</strong>${tier.detail ? `: ${escapeHtml(tier.detail)}` : ""}${tier.chips ? ` (${tier.chips.map(escapeHtml).join(", ")})` : ""}${c.flows.filter(flow => flow.after === tier.id).map(flow => `<p>${flow.items.map(item => `${item.direction === "up" ? "Up" : "Down"}: ${escapeHtml(item.label)}`).join(" · ")}</p>`).join("")}</li>`).join("")}</ol><p>${escapeHtml(c.rail.label)}: ${escapeHtml(c.rail.note)}.</p></figure><ol>${c.story.map(step => `<li><h3>${escapeHtml(step.title)}</h3>${paragraph(step.text)}${step.quote ? quote(step.quote, step.source) : ""}</li>`).join("")}</ol></section>`,
+    `<section id="assault"><h2>${escapeHtml(c.assaultTitle)}</h2>${paragraph(c.assaultIntro)}<figure><img src="${escapeHtml(AMM_MEDIA.anatomy.fallback)}" alt="${escapeHtml(AMM_MEDIA.anatomy.alt)}" width="${AMM_MEDIA.anatomy.width}" height="${AMM_MEDIA.anatomy.height}" loading="lazy" /><figcaption>${escapeHtml(c.anatomyCaption)}</figcaption></figure><p><strong>${escapeHtml(c.assaultLine)}</strong></p><ol>${c.ledger.map(item => `<li><strong>${escapeHtml(item.term)}</strong> ${escapeHtml(item.becomes)}</li>`).join("")}</ol>${quote(c.assaultClose, c.assaultSource)}</section>`,
+    `<section id="chain"><h2>${escapeHtml(c.chainTitle)}</h2>${quote(c.chainIntro, c.chainSource)}<ol aria-label="${escapeHtml(c.chainLabel)}">${m.cycle.map((item, index) => `<li><p>${escapeHtml(c.links[index])}</p><h3>${escapeHtml(item.title)}</h3>${paragraph(item.text)}</li>`).join("")}</ol>${paragraph(c.chainReturn)}<details><summary>${escapeHtml(c.termsLabel)}</summary><dl>${m.definitions.map(item => `<dt>${escapeHtml(item.term)}</dt><dd>${escapeHtml(item.text)}</dd>`).join("")}</dl></details></section>`,
+    `<section id="interfaces"><h2>${escapeHtml(c.interfacesTitle)}</h2>${paragraph(c.interfacesIntro)}${examples.map(item => `<article id="${item.id}"><p>${escapeHtml(c.interfaceLabels[item.id])}</p><h3>${escapeHtml(item.title)}</h3>${paragraph(item.path)}<strong>${escapeHtml(item.question)}</strong>${paragraph(item.mechanic)}<p>${escapeHtml(c.leverageLabel)}: ${escapeHtml(item.pressure)}</p></article>`).join("")}</section>`,
+    `<section id="holders"><h2>${escapeHtml(c.holdersTitle)}</h2>${paragraph(c.holdersIntro)}<p><strong>${value("Top 1%")}%</strong> ${escapeHtml(c.equityTop)}; <strong>${value("Bottom 50%")}%</strong> ${escapeHtml(c.equityBottom)}.</p><p>${escapeHtml(c.managersTitle)}: ${AMM_CAPITAL.administration.rows.map(row => `${escapeHtml(row.label)} $${row.value} trillion`).join(", ")}. ${escapeHtml(c.managersNote)}</p>${quote(c.holdersQuote, c.holdersSource)}${[...AMM_CAPITAL.charts, AMM_CAPITAL.administration].map(figure).join("")}</section>`,
+    `<section id="detachment"><h2>${escapeHtml(c.detachmentTitle)}</h2><p>${escapeHtml(c.wealthLine)} ${c.wealthWords.map(escapeHtml).join(", ")}.</p><p>${escapeHtml(c.obligationLine)} ${c.obligationWords.map(escapeHtml).join(", ")}.</p><p>${escapeHtml(c.detachmentSource)}</p>${quote(c.detachmentQuote)}<p>${escapeHtml(c.detachmentExample)} ${link(c.detachmentExampleUrl, c.detachmentExampleLabel)}</p></section>`,
+    `<section id="tests"><h2>${escapeHtml(c.questionsTitle)}</h2>${paragraph(m.testIntro)}${m.tests.map(item => `<h3>${escapeHtml(item.title)}</h3>${paragraph(item.text)}`).join("")}</section>`,
+    `<section id="alternatives" aria-label="${escapeHtml(c.alternativeLabel)}"><p>${escapeHtml(c.alternativeLine)} ${link(content.artwork.movementUrl, c.movementLabel)}</p><p>${link(content.introduction.route, content.reading.prereqThen)}</p></section>`,
+    `<details id="sources"><summary>${escapeHtml(m.sourcesTitle)}</summary>${paragraph(m.sourcesIntro)}${paragraph(m.creditNote)}<ul>${m.sources.map(item => `<li>${link(item.url, item.title)}${paragraph(item.note)}</li>`).join("")}</ul></details>`,
+    `<nav aria-label="Continue reading">${link("/amm", "AMM home")} ${link(content.introduction.route, content.reading.prereqThen)}</nav>`,
+  ].join("");
+}
+
 function contentsList(manifest) {
   return `<ol>${manifest.sections
     .map((section) => `<li>${link(`${BOOK_ROUTE}/${section.slug}`, section.title)}</li>`)
@@ -604,7 +720,11 @@ function authorContactLink() {
   return email ? link(`mailto:${email}`, email) : link(AUTHOR.links.linkedin, "LinkedIn");
 }
 
-async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = {}) {
+async function publicRoutes(manifest, { essays = readEssays(), writing = [], siteContent = {} } = {}) {
+  const AMM = resolveAmmCopy(JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm.json"), "utf8")), (key, text) => typeof siteContent[key] === "string" && siteContent[key].trim() ? siteContent[key] : text);
+  const withdrawn = writing.filter(item => item.withdrawn);
+  essays = visibleFileEssays(essays, writing);
+  writing = writing.filter(item => !item.withdrawn);
   const home = { name: "DOT", route: "/" };
   const book = { name: manifest.project.title, route: BOOK_ROUTE };
   const essaysPublished = essays.length > 0;
@@ -687,7 +807,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
         ogType: "book",
         structuredData: graph(bookNode(manifest), breadcrumb([home, book])),
         prerender: page(
-          `<h1>${escapeHtml(manifest.project.title)}</h1><p>${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><h2>Contents</h2>${contentsList(manifest)}`,
+          `<h1>${escapeHtml(BOOK_LANDING.heading)}</h1><p>${escapeHtml(manifest.project.title)} · ${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><aside><h2>${escapeHtml(BOOK_LANDING.positionLabel)}</h2><p>${escapeHtml(BOOK_LANDING.position)}</p></aside><h2>Contents</h2>${contentsList(manifest)}`,
         ),
       };
     }
@@ -728,13 +848,8 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     if (route.route === ACADEMY_ROUTE) {
       return {
         ...route,
-        structuredData: graph(
-          academyNode(),
-          breadcrumb([home, { name: "DOT Academy", route: ACADEMY_ROUTE }]),
-        ),
-        prerender: page(
-          `${heading}<p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")}</p><h2>Book One remains a book.</h2><p>${link(BOOK_ROUTE, "Read the fixed edition")}</p>`,
-        ),
+        structuredData: graph(webPageNode(route), breadcrumb([home, book])),
+        prerender: page(`<h1>Book One</h1><p>${link(BOOK_ROUTE, "Read Book One")}</p>`),
       };
     }
     return {
@@ -762,6 +877,21 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     imageAlt: `${AUTHOR.name} — work, writing and conversation`,
   };
   const authorRoutes = [
+    { route: "/studio/pages/amm", title: "Edit AMM’s pages", description: "Private page editor.", noindex: true, prerender: page("<h1>Edit AMM’s pages</h1><p>Sign in to open your saved page copy.</p>") },
+    { route: "/studio/newsletter", title: "AMM newsletter — Private workspace", description: "Private newsletter desk.", noindex: true, prerender: page("<h1>AMM newsletter</h1><p>Sign in to open the private workspace.</p>") },
+    {
+      route: "/studio/writing",
+      title: `Writing studio — ${AUTHOR.name}`,
+      description: "Sign in to import, edit and publish your writing.",
+      noindex: true,
+      structuredData: graph({
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/studio/writing#page`,
+        url: `${SITE_URL}/studio/writing`,
+        name: "Writing studio",
+      }),
+      prerender: page('<p>Private workspace</p><h1>Writing studio</h1><p>Sign in to import Markdown, add images, edit and publish your writing. This workspace requires JavaScript.</p>'),
+    },
     {
       route: INBOX_ROUTE,
       title: `Contact inbox — ${AUTHOR.name}`,
@@ -788,23 +918,28 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
           `<p>${escapeHtml(BUILDER.title)}</p>`,
           `<p>${escapeHtml(AUTHOR.role)}</p>`,
           `<p>${escapeHtml(BUILDER.headline)}</p>`,
-          `<p>${escapeHtml(BUILDER.summary)}</p>`,
           `<p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p>`,
-          `<p>${link("#about-resume", "Explore the background")}</p>`,
-          `<aside><p>Research depth. Product experience.</p><dl><dt>Applied AI research</dt><dd>${escapeHtml(CAREER.experience[0].company)} — ${escapeHtml(CAREER.experience[0].role)}</dd><dt>Product co-founding</dt><dd>Sullix — Hands-on architecture and engineering</dd>${AUTHOR.credentials[0] ? `<dt>Research foundation</dt><dd>${escapeHtml(AUTHOR.credentials[0].degree)} — ${escapeHtml(AUTHOR.credentials[0].institution)}</dd>` : ""}</dl><p>Based in ${escapeHtml(CAREER.location)}</p></aside>`,
-          `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Ways to work together")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
+          `<p>${link("#about-resume", "View résumé")}</p>`,
+          `<nav aria-label="On this page">${link("#about-products", "Selected work")} · ${link("#about-services", "Project work")} · ${link("#about-resume", "Career & résumé")} · ${link("#about-contact", "Contact")}</nav>`,
           '<h2 id="about-products">Selected work</h2>',
           `<ul>${BUILDER_PROJECTS.map((project) => {
             const href = project.links.live || project.links.website || project.links.repo;
             const label = project.links.live ? "Explore project" : project.links.website ? "Visit website" : "View source";
-            const showcase = project.showcase ? `<figure><img src="${escapeHtml(project.showcase.mark)}" alt="" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p><img src="${escapeHtml(project.showcase.source)}" alt="${escapeHtml(project.showcase.alt)}" width="${project.showcase.width}" height="${project.showcase.height}" loading="lazy"><figcaption>${escapeHtml(project.showcase.caption)}</figcaption></figure>` : "";
-            return `<li id="project-${escapeHtml(project.slug)}"><h3>${escapeHtml(project.name)}</h3>${showcase}<p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p><p>${escapeHtml(project.description)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}</li>`;
+            const showcase = project.showcase ? `<div><img src="${escapeHtml(project.showcase.brandMark)}" alt="Sullix mark" width="200" height="200"><img src="${escapeHtml(project.showcase.mark)}" alt="Faro mark" width="160" height="160"><p>${escapeHtml(project.showcase.agentName)} — ${escapeHtml(project.showcase.agentRole)}</p></div>` : "";
+            const movement = project.movement;
+            const heading = movement ? "h4" : "h3";
+            const body = `<${heading}>${escapeHtml(project.name)}</${heading}>${showcase}<p>${escapeHtml(project.status)}</p><p>${escapeHtml(project.role)}</p><p>${escapeHtml(project.period)}</p><p>${escapeHtml(project.tagline)}</p>${href ? link(href, `${label}: ${project.name}`) : ""}<details><summary>Project details</summary><p>${escapeHtml(project.description)}</p><ul>${project.stack.map((technology) => `<li>${escapeHtml(technology)}</li>`).join("")}</ul></details>`;
+            if (!movement) return `<li id="project-${escapeHtml(project.slug)}">${body}</li>`;
+            return `<li><section id="project-${escapeHtml(movement.slug)}"><p>${escapeHtml(movement.category)}</p><h3>${escapeHtml(movement.name)}</h3><p>${escapeHtml(movement.subtitle)}</p><p>${escapeHtml(movement.role)}</p><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy"><p>${escapeHtml(movement.tagline)}</p><details><summary>About the movement</summary><p>${escapeHtml(movement.description)}</p></details><p>${escapeHtml(movement.status)}</p><p>${link(movement.href, `Explore ${movement.name}`)}</p><p>${escapeHtml(movement.relationship)}</p></section><article id="project-${escapeHtml(project.slug)}">${body}</article></li>`;
           }).join("")}</ul>`,
-          OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
-          '<h2 id="about-services">Ways to work together</h2>',
-          BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p><p>${escapeHtml(service.deliverable)}</p>`).join(""),
-          '<h2 id="about-resume">Career & résumé</h2>',
-          `<ol>${CAREER.experience.map((job) => `<li><p>${escapeHtml(job.period)}</p><h3>${escapeHtml(job.company)}</h3><p>${escapeHtml(job.role)}</p><p>${escapeHtml(job.summary)}</p></li>`).join("")}</ol>`,
+          // The live page's rule (projectDestination): only work with a public destination is named.
+          OTHER_BUILDER_PROJECTS.map((project) => ({ project, href: project.links.live || project.links.website || project.links.repo }))
+            .filter(({ href }) => href)
+            .map(({ project, href }) => `<p>Also in open source: ${link(href, project.name)}. Isolation for AI agent tools.</p>`).join(""),
+          '<h2 id="about-services">Project work</h2>',
+          BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p>`).join(""),
+          `<p>${escapeHtml(CAREER.background)}</p><h2 id="about-resume">Career & résumé</h2>`,
+          `<ol>${CAREER.experience.map((job) => `<li><p>${escapeHtml(job.period)}</p><h3>${escapeHtml(job.company)}</h3><p>${escapeHtml(job.role)}</p></li>`).join("")}</ol>`,
           AUTHOR.credentials.length > 0
             ? `<h3>Education</h3><ul>${AUTHOR.credentials
                 .map(
@@ -845,28 +980,28 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     },
     {
       route: READERS_ROUTE,
-      title: "The reader list — Digital Organism Theory",
-      description:
-        "Hear when there is more to read: double opt-in, a one-click way out, no tracking, and no count of readers.",
+      title: `${READERS.title} — ${AUTHOR.name}`,
+      description: READERS.description,
+      body: `<p>${escapeHtml(READERS.title)}</p><h1>${escapeHtml(READERS.heading)}</h1><p>${escapeHtml(READERS.description)}</p><ul>${READERS.topics.map(topic => `<li><h2>${escapeHtml(topic.label)}</h2><p>${escapeHtml(topic.description)}</p></li>`).join("")}</ul><h2>${escapeHtml(READERS.formTitle)}</h2><p>${escapeHtml(READERS.formDescription)}</p><p>The signup form needs JavaScript. Everything published remains available without joining.</p><ul>${READERS.commitments.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul><p>${link(PRIVACY_ROUTE, "How addresses are kept")} · ${link(BLOG_ROUTE, "Browse the writing")} · ${link(AMM.route + "/editions#amm-subscribe", "Subscribe to AMM separately")}</p>`,
     },
     {
       route: `${READERS_ROUTE}/leave`,
-      title: "Leave the reader list — Digital Organism Theory",
-      description: "Remove an address from the Digital Organism Theory reader list.",
+      title: `Leave the reader list — ${AUTHOR.name}`,
+      description: `Remove an address from ${AUTHOR.name}’s reader list.`,
       // Where a message's leave link lands. There is nothing here to find.
       noindex: true,
       body: `<h1>Leave the reader list</h1><p>Opened from the link in a message, this page removes you at once, which needs JavaScript. Without it, reach the author via ${authorContactLink()} and you will be removed by hand.</p>`,
     },
     {
       route: PRIVACY_ROUTE,
-      title: "Privacy — Digital Organism Theory",
+      title: `Privacy — ${AUTHOR.name}`,
       description:
         "What this site keeps, what it never collects, and which services handle what.",
       body: renderMarkdown(privacyText),
     },
     {
       route: TERMS_ROUTE,
-      title: "Terms and refunds — Digital Organism Theory",
+      title: `Terms and refunds — ${AUTHOR.name}`,
       description:
         "Who runs this site, what an optional payment to the author is, and how to get a refund.",
       body: renderMarkdown(termsText),
@@ -895,29 +1030,38 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
     },
     ...essays.map((essay) => {
       const route = `${ESSAYS_ROUTE}/${essay.slug}`;
+      const isAmm = essay.series === AMM.series;
       const concepts = essay.concepts
         .map((id) => DOCTRINE_CONCEPTS.find((concept) => concept.id === id))
         .map((concept) => `<li>${link(`/doctrine/${concept.id}`, concept.name)}</li>`)
         .join("");
       return {
         route,
-        title: `${essay.title} — ${AUTHOR.name}`,
+        title: `${essay.title} — ${isAmm ? AMM.title : AUTHOR.name}`,
+        publication: isAmm ? "amm" : undefined,
         description: essay.summary,
+        image: essay.cover?.src ?? "/og/henok-writing.png",
+        imageAlt: essay.cover?.alt ?? `${AUTHOR.name} — writing and ideas`,
+        imageWidth: essay.cover?.width,
+        imageHeight: essay.cover?.height,
         ogType: "article",
         lastmod: essay.updated ?? essay.published,
         structuredData: graph(
           articleNode(essay),
-          breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }, { name: essay.title, route }]),
+          breadcrumb([home, { name: isAmm ? AMM.title : "Blog", route: isAmm ? AMM.route : BLOG_ROUTE }, { name: essay.title, route }]),
         ),
-        prerender: page(
+        prerender: (isAmm ? prerenderAmm : page)(
           [
-            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
-            `<header><p>Essay by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · Claim levels: ${essay.levels.join(", ")}</p>`,
+            `<p>${link(isAmm ? "/amm/editions" : BLOG_ROUTE, isAmm ? "All AMM editions" : "All writing")}</p>`,
+            isAmm ? ammReadingBarHtml(AMM, essay.slug) : "",
+            `<header><p>${POST_FORMATS[essay.format ?? "essay"]}${essay.series ? ` · ${escapeHtml(essay.series)}` : ""} by ${link(ABOUT_ROUTE, AUTHOR.name)} · <time datetime="${essay.published}">${essay.published}</time> · ${essay.readingMinutes} min read · Claim levels: ${essay.levels.join(", ")}</p>`,
             `<h1>${escapeHtml(essay.title)}</h1><p>${escapeHtml(essay.summary)}</p></header>`,
-            renderMarkdown(essay.body),
-            "<p>End of essay</p>",
+            coverHtml(essay.cover),
+            renderMarkdown(essay.body, { images: essay.images, post: true }),
+            `<p>End of ${POST_FORMATS[essay.format ?? "essay"].toLowerCase()}</p>`,
+            isAmm ? ammEditionEndHtml(AMM, essay.slug) : "",
             concepts ? `<h2>Builds on</h2><ul>${concepts}</ul>` : "",
-            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
+            `<p>${link(isAmm ? "/amm/editions" : BLOG_ROUTE, isAmm ? "All AMM editions" : "All writing")}</p>`,
           ].join(""),
         ),
       };
@@ -927,31 +1071,39 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
   const writingRoutes = writing.flatMap((item) => {
     const pages = item.releases.map((release) => ({ path: writingPath(item, release.number), release }));
     pages.push({ path: writingPath(item), release: item.releases.at(-1) });
+    if (managedWriting(item)) pages.push({ path: writingPublicPath(item), release: item.releases.at(-1) });
     return pages.map(({ path: route, release }) => {
-      const { manifest: delivered, body } = release;
+      const { manifest: delivered, body, cover, images } = release;
+      const isAmm = delivered.presentation?.series === AMM.series;
       const sources = delivered.sources ?? [];
       return {
         route,
-        title: `${delivered.title} — ${AUTHOR.name}`,
+        canonicalRoute: route === writingPath(item) && managedWriting(item) ? writingPublicPath(item) : undefined,
+        title: `${delivered.title} — ${isAmm ? AMM.title : AUTHOR.name}`,
+        publication: isAmm ? "amm" : undefined,
         description: delivered.summary || `${delivered.title}, by ${AUTHOR.name}.`,
         ogType: "article",
+        image: cover?.src, imageAlt: cover?.alt, imageWidth: cover?.width, imageHeight: cover?.height,
         lastmod: item.published,
         structuredData: graph(
-          articleNode({ ...item, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
-          breadcrumb([home, { name: "Blog", route: BLOG_ROUTE }, { name: delivered.title, route }]),
+          articleNode({ ...item, cover, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
+          breadcrumb([home, { name: isAmm ? AMM.title : "Blog", route: isAmm ? AMM.route : BLOG_ROUTE }, { name: delivered.title, route }]),
         ),
-        prerender: page(
+        prerender: (isAmm ? prerenderAmm : page)(
           [
-            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
+            `<p>${link(isAmm ? "/amm/editions" : BLOG_ROUTE, isAmm ? "All AMM editions" : "All writing")}</p>`,
+            isAmm ? ammReadingBarHtml(AMM, item.slug) : "",
             `<header><p>By ${link(ABOUT_ROUTE, AUTHOR.name)} · Version ${release.number}</p>`,
             `<h1>${escapeHtml(delivered.title)}</h1>${delivered.summary ? `<p>${escapeHtml(delivered.summary)}</p>` : ""}</header>`,
-            renderMarkdown(body),
+            coverHtml(cover),
+            renderMarkdown(body, { images, post: true, restrictImages: true }),
             "<p>End of piece</p>",
             `<h2>Claims</h2><ul>${delivered.claims.map((claim) => `<li>${escapeHtml(claim.statement)} (${escapeHtml(claim.epistemic_level)})</li>`).join("")}</ul>`,
             sources.length > 0
               ? `<h2>Sources</h2><ul>${sources.map((source) => `<li>${/^https?:\/\//i.test(source.external_uri) ? link(source.external_uri, source.external_uri) : escapeHtml(source.external_uri)}</li>`).join("")}</ul>`
               : "",
-            `<p>${link(BLOG_ROUTE, "All writing")}</p>`,
+            isAmm ? ammEditionEndHtml(AMM, item.slug) : "",
+            `<p>${link(isAmm ? "/amm/editions" : BLOG_ROUTE, isAmm ? "All AMM editions" : "All writing")}</p>`,
           ].join(""),
         ),
       };
@@ -971,14 +1123,14 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
       [
         `<h1>Books</h1><p>Books by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p>`,
         `<ul><li>${link(BOOK_ROUTE, manifest.project.title)}</li><li>${escapeHtml(NEWSLETTER.title)} (${escapeHtml(NEWSLETTER.status)})</li></ul>`,
-        `<p>${link(BLOG_ROUTE, "Letters and essays")}</p>`,
+        `<p>${link(AMM.route, "Explore the AMM publication")}</p>`,
       ].join(""),
     ),
   };
 
   const blogPosts = [
-    ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
-    ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, href: writingPath(item) })),
+    ...essays.map((essay) => ({ title: essay.title, summary: essay.summary, date: essay.published, cover: essay.cover, href: `${ESSAYS_ROUTE}/${essay.slug}` })),
+    ...writing.map((item) => ({ title: item.title, summary: item.summary, date: item.published, cover: item.cover, href: writingPublicPath(item) })),
   ].sort((first, second) => second.date.localeCompare(first.date));
   const blogRoute = {
     route: BLOG_ROUTE,
@@ -999,23 +1151,82 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [] } = 
       [
         `<p>${escapeHtml(BLOG.title)}</p><h1>${BLOG.heading.map(escapeHtml).join("<br />")}</h1>`,
         `<p>${escapeHtml(BLOG.description)}</p><p>By ${link(ABOUT_ROUTE, AUTHOR.name)}</p>`,
-        `<section aria-label="Building and inquiry">${BLOG.paths.map((entry) => `<p>${escapeHtml(entry.label)}</p><h2>${escapeHtml(entry.title)}</h2><p>${escapeHtml(entry.description)}</p><p>${link(entry.to, entry.linkLabel)}</p>`).join("")}</section>`,
-        `<section><p>A series · Applied DOT</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${escapeHtml(BLOG.seriesDescription)}</p><p>These letters are published on LinkedIn.</p>`,
+        `<div id="start-reading"><section><p>Book One · Free to read</p><h2>${escapeHtml(manifest.project.title)}</h2><p>${link(BOOK_ROUTE, "Read Book One")}</p><details><summary>Start with a passage</summary><p>${escapeHtml(BLOG.startingPoint.label)}</p><p>${escapeHtml(BLOG.startingPoint.title)}</p><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></details></section>`,
+        `<section><a href="${escapeHtml(AMM.route)}"><img src="${escapeHtml(AMM_MEDIA.illustration.fallback)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a><p>AMM · An independent publication</p><h2>${escapeHtml(NEWSLETTER.title)}</h2><p>${link(AMM.route, "Explore AMM")}</p>`,
         NEWSLETTER.editions.length > 0
-          ? `<ul aria-label="Letters on LinkedIn">${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}<p>Read on LinkedIn</p></li>`).join("")}</ul>`
+          ? `<details><summary>Read a letter</summary><ul aria-label="Letters on LinkedIn">${NEWSLETTER.editions.map((edition) => `<li>${link(edition.url, edition.title)}</li>`).join("")}</ul></details>`
           : "",
-        `<p>${link(NEWSLETTER.url, "Explore the series on LinkedIn")}</p></section>`,
+        "</section></div>",
         "<h2>Latest writing</h2><p>Newest first</p>",
         blogPosts.length > 0
-          ? `<ol>${blogPosts.map((post) => `<li>${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
+          ? `<ol>${blogPosts.map((post) => `<li>${post.cover ? `<img src="${escapeHtml(post.cover.src)}" alt="" width="160" loading="lazy" />` : ""}${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
           : `<p>${escapeHtml(BLOG.emptyTitle)}</p><p>${escapeHtml(BLOG.emptyDescription)}</p>`,
-        `<h2>Read at your pace.</h2><p>${escapeHtml(BLOG.followDescription)}</p><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
-        `<h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${escapeHtml(BLOG.contactDescription)}</p><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
+        `<h2>Read at your pace.</h2><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
+        `<p>AI &amp; digital products</p><h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-products`, "Explore the work")}</p>`,
       ].join(""),
     ),
   };
 
-  return [...staticRoutes, blogRoute, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...sectionRoutes, ...conceptRoutes];
+  const ammPosts = [
+    ...essays.filter(item => item.series === AMM.series).map(item => ({ title: item.title, summary: AMM.money.companions.find(note => note.id === item.slug)?.summary ?? item.summary, date: item.published, href: `${ESSAYS_ROUTE}/${item.slug}` })),
+    ...writing.filter(item => item.releases.at(-1)?.manifest?.presentation?.series === AMM.series).map(item => ({ title: item.title, summary: item.summary, date: item.published, href: writingPublicPath(item) })),
+  ].sort((a, b) => b.date.localeCompare(a.date));
+  const ammLetters = ammPosts.filter(post => !AMM_PARTS.some(part => post.href === `${ESSAYS_ROUTE}/${part.slug}`));
+  const overviewSourceChapter = AMM_PARTS.find(part => AMM.home.overviewSource.startsWith(`${part.partLabel} ·`));
+  const overviewCitation = overviewSourceChapter ? link(`${ESSAYS_ROUTE}/${overviewSourceChapter.slug}`, AMM.home.overviewSource) : escapeHtml(AMM.home.overviewSource);
+  const ammRoute = {
+    route: AMM.route, title: AMM.title, description: AMM.description, publication: "amm",
+    image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
+    structuredData: graph({ ...webPageNode({ route: AMM.route, title: AMM.title, description: AMM.description }), "@type": "Blog", author: { "@id": PERSON_ID } }, breadcrumb([home, { name: AMM.title, route: AMM.route }])),
+    prerender: prerenderAmm([
+      `<h1>${AMM.headline.map(escapeHtml).join(" ")}</h1>`,
+      `<p>${escapeHtml(AMM.home.premise)}</p>`,
+      `<figure><a href="${escapeHtml(AMM.artwork.src)}" aria-label="Open full-size illustration"><img src="${escapeHtml(AMM.artwork.src)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a></figure>`,
+      `<p>${link("#amm-overview", AMM.heroAction)}</p>`,
+      `<section id="amm-overview" aria-labelledby="amm-overview-title"><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewClaim)}</p><p>${escapeHtml(AMM.home.overviewIntro)}</p><blockquote><p>${escapeHtml(AMM.home.overviewArgument)}</p><cite>${overviewCitation}</cite></blockquote><ol aria-label="${escapeHtml(AMM.home.conceptsLabel)}">${AMM.home.concepts.map((item, index) => `<li>${index === 0 || AMM_MEDIA.homeScenes.concepts[item.id] !== AMM_MEDIA.homeScenes.concepts[AMM.home.concepts[index - 1].id] ? ammHomeSceneHtml("concepts", item.id, AMM.home) : ""}<p>${escapeHtml(item.label)}</p><h3>“${escapeHtml(item.script)}”</h3><p>${escapeHtml(item.text)}</p><blockquote><p>${escapeHtml(item.argument)}</p><cite>${escapeHtml(item.source)}</cite></blockquote></li>`).join("")}</ol></section>`,
+      ammDotHtml(AMM),
+      ammPathHtml(AMM, "amm-start", essays),
+      ammSponsorHtml(AMM),
+    ].join("")),
+  };
+  const ammCapitalRoute = {
+    // Hidden for now: built for its address, kept out of search and the sitemap, and linked from nowhere.
+    route: CAPITAL_ROUTE, title: `${AMM.capital.title} — ${AMM.title}`, description: AMM.capital.intro, publication: "amm", noindex: true,
+    image: AMM_MEDIA.erosion.full, imageAlt: AMM_MEDIA.erosion.alt,
+    imageWidth: AMM_MEDIA.erosion.width, imageHeight: AMM_MEDIA.erosion.height,
+    structuredData: graph(webPageNode({ route: CAPITAL_ROUTE, title: AMM.capital.title, description: AMM.capital.intro }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: AMM.capital.title, route: CAPITAL_ROUTE }])),
+    prerender: prerenderAmm(ammCapitalHtml(AMM)),
+  };
+  // The former money guide's addresses open the AMM home while How power works is hidden.
+  const ammMovedGuideRoutes = ["/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"].map(route => ({
+    route, title: AMM.title, description: AMM.description,
+    canonicalRoute: AMM.route, noindex: true, publication: "amm",
+    structuredData: graph(webPageNode({ route, title: AMM.title, description: AMM.description })),
+    prerender: prerenderAmm(`<h1>${escapeHtml(AMM.title)}</h1><p>${link(AMM.route, "Open the manifesto")}</p>`),
+  }));
+  const ammEditionsRoute = {
+    route: "/amm/editions", title: `${AMM.archiveTitle} — ${AMM.title}`, description: AMM.description, publication: "amm",
+    image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
+    structuredData: graph(webPageNode({ route: "/amm/editions", title: AMM.archiveTitle, description: AMM.description }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: "Editions", route: "/amm/editions" }])),
+    prerender: prerenderAmm([
+      `<section id="amm-editions"><h1>${escapeHtml(AMM.archiveTitle)}</h1><p>${escapeHtml(AMM.archiveDescription)}</p></section>`,
+      ammPathHtml(AMM, "amm-chapters", essays),
+      `<section id="amm-letters"><p>${escapeHtml(AMM.reading.lettersEyebrow)}</p><h2>${escapeHtml(AMM.reading.lettersTitle)}</h2><p>${escapeHtml(AMM.reading.lettersDescription)}</p>${ammLetters.length ? `<ol>${ammLetters.map(post => `<li>${link(post.href, post.title)} <time datetime="${post.date}">${post.date}</time><p>${escapeHtml(post.summary)}</p></li>`).join("")}</ol>` : `<h3>${escapeHtml(AMM.emptyTitle)}</h3><p>${escapeHtml(AMM.emptyDescription)}</p>`}</section>`,
+      `<section id="amm-subscribe"><h2>${escapeHtml(AMM.signupTitle)}</h2><p>${escapeHtml(AMM.signupDescription)}</p><p>Email signup requires JavaScript. ${link(AMM.feed, "Follow AMM with RSS")} without an account.</p></section>`,
+    ].join("")),
+  };
+  const withdrawnRoutes = withdrawn.flatMap(item => [writingPath(item), writingPath(item, item.releaseNumber), ...(managedWriting(item) ? [writingPublicPath(item)] : [])].map(route => ({
+    route, title: `${item.title} — Withdrawn`, description: "This release has been withdrawn.", structuredData: graph(webPageNode({ route, title: item.title, description: "This release has been withdrawn." })), publication: managedWriting(item) ? "amm" : undefined,
+    prerender: (managedWriting(item) ? prerenderAmm : page)(`<h1>${escapeHtml(item.title)}</h1><p>This release has been withdrawn.</p><p>${link(managedWriting(item) ? "/amm/editions" : BLOG_ROUTE, "Return to the archive")}</p>`),
+  })));
+  // A piece folded into a chapter keeps a page at its old address that points to its new place.
+  const movedRoutes = Object.entries(ESSAY_MOVES).map(([slug, move]) => ({
+    route: `${ESSAYS_ROUTE}/${slug}`, title: `${move.title} — ${AMM.title}`, description: `${move.title} is now a section of a chapter.`,
+    canonicalRoute: move.route, noindex: true, publication: "amm",
+    structuredData: graph(webPageNode({ route: `${ESSAYS_ROUTE}/${slug}`, title: move.title, description: `${move.title} is now a section of a chapter.` })),
+    prerender: prerenderAmm(`<h1>${escapeHtml(move.title)}</h1><p>This section now appears in ${link(`${move.route}#${move.anchor}`, essays.find(essay => `${ESSAYS_ROUTE}/${essay.slug}` === move.route)?.title ?? "its chapter")}.</p>`),
+  }));
+  return [...staticRoutes, blogRoute, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */
@@ -1057,26 +1268,33 @@ export function renderRoute(shell, route, { headTags = [] } = {}) {
   const url = `${SITE_URL}${route.canonicalRoute ?? route.route}`;
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
-  const image = `${SITE_URL}${route.image ?? "/og-image.png"}`;
+  const image = new URL(route.image ?? "/og-image.png", SITE_URL).href;
   const imageAlt = escapeHtml(
     route.imageAlt ?? "DOT — Consciousness: A Digital Organism, Book One",
   );
   const tags = [
     [/<title>.*?<\/title>/, `<title>${title}</title>`, "title"],
     [/<meta\s+name="description"\s+content="[^"]*"\s*\/>/, `<meta name="description" content="${description}" />`, "description"],
-    [/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${url}" />`, "canonical"],
+    [/<link rel="canonical" href="[^"]*"(?: data-rh="true")?\s*\/>/, `<link rel="canonical" href="${url}" data-rh="true" />`, "canonical"],
     [/<meta property="og:url" content="[^"]*"\s*\/>/, `<meta property="og:url" content="${url}" />`, "og:url"],
     [/<meta property="og:title" content="[^"]*"\s*\/>/, `<meta property="og:title" content="${title}" />`, "og:title"],
     [/<meta\s+property="og:description"\s+content="[^"]*"\s*\/>/, `<meta property="og:description" content="${description}" />`, "og:description"],
     [/<meta name="twitter:title" content="[^"]*"\s*\/>/, `<meta name="twitter:title" content="${title}" />`, "twitter:title"],
     [/<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${description}" />`, "twitter:description"],
     [/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${image}" />`, "og:image"],
+    [/<meta property="og:image:width" content="[^"]*"\s*\/>/, `<meta property="og:image:width" content="${route.imageWidth ?? 1200}" />`, "og:image:width"],
+    [/<meta property="og:image:height" content="[^"]*"\s*\/>/, `<meta property="og:image:height" content="${route.imageHeight ?? 630}" />`, "og:image:height"],
     [/<meta property="og:image:alt" content="[^"]*"\s*\/>/, `<meta property="og:image:alt" content="${imageAlt}" />`, "og:image:alt"],
     [/<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${image}" />`, "twitter:image"],
     [/<meta property="og:type" content="[^"]*"\s*\/>/, `<meta property="og:type" content="${route.ogType ?? "website"}" />`, "og:type"],
   ];
 
   let html = shell;
+  if (route.publication === "amm") {
+    // Helmet takes ownership on boot and removes this override when leaving AMM.
+    // Keep the base site's icons so client-side navigation restores its identity.
+    headTags = [...headTags, '<link data-rh="true" rel="icon" type="image/svg+xml" href="/amm/mark.svg" />'];
+  }
   for (const [pattern, replacement, what] of tags) {
     html = replaceOnce(html, pattern, replacement, `${what} for ${route.route}`);
   }
@@ -1094,13 +1312,12 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   const description = /<meta\s+name="description"\s+content="([^"]*)"/.exec(shell)?.[1] ?? "";
   const latest = essays.slice(0, 5);
   const body = [
-    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1>`,
+    `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1><p>${escapeHtml(HOME.criticalLine)}</p>`,
     `<p>${description}</p>`,
-    `<blockquote><p>${escapeHtml(HOME.loveDefinition)}</p><cite>${link(HOME.sourcePath, HOME.sourceLabel)}</cite></blockquote>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
-    `<h2>Things built. Ideas explored.</h2><p>${link(`${ABOUT_ROUTE}#about-products`, "Build something useful.")} · ${link(BLOG_ROUTE, "Follow an idea.")} · ${link(`${CONTACT_ROUTE}?purpose=project`, "Start a conversation.")}</p>`,
-    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, "Read Book One")} — ${escapeHtml(manifest.project.title)}, complete and free.</p>`,
-    `<h2>${escapeHtml(HOME.invitationTitle)}</h2><p>${escapeHtml(HOME.invitation)}</p><p>${escapeHtml(HOME.boundary)}</p><p>${escapeHtml(HOME.edition)}</p>`,
+    `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
+    `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.sourcePath, HOME.culture.sourceLabel)}</p></section>`,
+    `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0
       ? `<h2>Essays</h2><ol>${latest.map((essay) => `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)}</li>`).join("")}</ol>`
@@ -1150,7 +1367,7 @@ const cdata = (html) => html.replaceAll("]]>", "]]]]><![CDATA[>");
  * The essays as RSS 2.0: pulled by a reader's own software, newest first,
  * whole text included (L3, L4). Nothing in it tracks who reads.
  */
-export function rssXml(essays) {
+export function rssXml(essays, publication = null) {
   const items = essays.map((essay) =>
     [
       "    <item>",
@@ -1160,7 +1377,7 @@ export function rssXml(essays) {
       `      <dc:creator>${escapeHtml(AUTHOR.name)}</dc:creator>`,
       `      <pubDate>${rfc822(essay.published)}</pubDate>`,
       `      <description>${escapeHtml(essay.summary)}</description>`,
-      `      <content:encoded><![CDATA[${cdata(absoluteLinks(renderMarkdown(essay.body)))}]]></content:encoded>`,
+      `      <content:encoded><![CDATA[${cdata(absoluteLinks(coverHtml(essay.cover) + renderMarkdown(essay.body, { images: essay.images, post: true, restrictImages: essay.restrictImages })))}]]></content:encoded>`,
       "    </item>",
     ].join("\n"),
   );
@@ -1172,10 +1389,10 @@ export function rssXml(essays) {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
     "  <channel>",
-    `    <title>${escapeHtml(FEED_TITLE)}</title>`,
-    `    <link>${SITE_URL}${BLOG_ROUTE}</link>`,
-    `    <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml" />`,
-    `    <description>${escapeHtml(BLOG.description)}</description>`,
+    `    <title>${escapeHtml(publication?.title ?? FEED_TITLE)}</title>`,
+    `    <link>${SITE_URL}${publication?.route ?? BLOG_ROUTE}</link>`,
+    `    <atom:link href="${publication ? SITE_URL + publication.feed : FEED_URL}" rel="self" type="application/rss+xml" />`,
+    `    <description>${escapeHtml(publication?.description ?? BLOG.description)}</description>`,
     "    <language>en</language>",
     ...(newest ? [`    <lastBuildDate>${rfc822(newest)}</lastBuildDate>`] : []),
     ...items,
@@ -1185,6 +1402,15 @@ export function rssXml(essays) {
   ].join("\n");
 }
 
+export async function fetchPublishedSiteCopy(apiUrl, { fetchImpl = fetch } = {}) {
+  if (!apiUrl) return {};
+  const response = await fetchImpl(`${apiUrl.replace(/\/$/, "")}/v1/site-content`, { signal: AbortSignal.timeout(15000) });
+  if (!response.ok) throw new Error(`Cannot materialize published page copy (${response.status}).`);
+  const { blocks } = await response.json();
+  if (!blocks || typeof blocks !== "object" || Array.isArray(blocks)) throw new Error("Invalid published page copy.");
+  return blocks;
+}
+
 async function main() {
   const manifest = JSON.parse(await readFile(RELEASE_MANIFEST, "utf8"));
   const shell = await readFile(path.join("dist", "index.html"), "utf8");
@@ -1192,15 +1418,20 @@ async function main() {
   const writing = await fetchNativeWriting(process.env.VITE_ORCHESTRATOR_URL, {
     space: process.env.VITE_ACADEMY_SPACE_SLUG || "dot-academy",
   });
-  const routes = await publicRoutes(manifest, { essays, writing });
+  const siteContent = await fetchPublishedSiteCopy(process.env.VITE_ORCHESTRATOR_URL);
+  const routes = await publicRoutes(manifest, { essays, writing, siteContent });
   const feed = [
-    ...essays,
-    ...writing.map((item) => ({
+    ...visibleFileEssays(essays, writing),
+    ...writing.filter(item => !item.withdrawn).map((item) => ({
       title: item.title,
       summary: item.summary,
+      series: item.releases.at(-1)?.manifest?.presentation?.series,
       published: item.published,
       body: item.releases.at(-1).body,
-      url: `${SITE_URL}${writingPath(item)}`,
+      images: item.releases.at(-1).images,
+      cover: item.cover,
+      restrictImages: true,
+      url: `${SITE_URL}${writingPublicPath(item)}`,
     })),
   ].sort((first, second) => second.published.localeCompare(first.published));
   const headTags = [feedLinkTag()];
@@ -1210,13 +1441,13 @@ async function main() {
     // A route whose card was never generated shares the site card rather than
     // a URL that resolves to nothing. Resolve the full path: Book One's own
     // card lives beside, not inside, the chapter-card directory.
-    const imageExists = entry.image
+    const imageExists = entry.image?.startsWith("https://") ? true : entry.image
       ? await access(path.join("dist", ...entry.image.slice(1).split("/")))
           .then(() => true)
           .catch(() => false)
       : true;
     const route = entry.image && !imageExists
-      ? { ...entry, image: undefined, imageAlt: undefined }
+      ? { ...entry, image: undefined, imageAlt: undefined, imageWidth: undefined, imageHeight: undefined }
       : entry;
     if (route !== entry) {
       console.warn(`No share card for ${route.route}; falling back to the site card.`);
@@ -1226,12 +1457,13 @@ async function main() {
     }
     const directory = path.join("dist", ...route.route.slice(1).split("/"));
     await mkdir(directory, { recursive: true });
-    await writeFile(path.join(directory, "index.html"), renderRoute(shell, route, { headTags }), "utf8");
+    const routeHeadTags = route.route === AMM.route ? [...headTags, `<link rel="alternate" type="application/rss+xml" title="${escapeHtml(AMM.title)}" href="${SITE_URL}${AMM.feed}" />`] : headTags;
+    await writeFile(path.join(directory, "index.html"), renderRoute(shell, route, { headTags: routeHeadTags }), "utf8");
   }
 
   await writeFile(
     path.join("dist", "index.html"),
-    rootDocument(shell, manifest, { essays, headTags }),
+    rootDocument(shell, manifest, { essays: visibleFileEssays(essays, writing), headTags }),
     "utf8",
   );
   await writeFile(
@@ -1243,6 +1475,8 @@ async function main() {
   // Readers can subscribe before the first piece is released. The blog's RSS
   // link must resolve even when its channel has no items yet.
   await writeFile(path.join("dist", "feed.xml"), rssXml(feed), "utf8");
+  await mkdir(path.join("dist", "amm"), { recursive: true });
+  await writeFile(path.join("dist", "amm", "feed.xml"), rssXml(feed.filter(item => item.series === AMM.series), AMM), "utf8");
 
   const indexed = routes.filter((route) => !route.noindex).length;
   console.log(

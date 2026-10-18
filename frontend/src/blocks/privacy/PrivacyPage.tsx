@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { author } from "../../content/author";
 import privacyText from "../../content/pages/privacy.md?raw";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { ProseMarkdown } from "../../shared/ProseMarkdown";
@@ -14,7 +15,7 @@ import { SiteColophon } from "../../shared/SiteColophon";
  */
 export default function PrivacyPage() {
   useEffect(() => {
-    document.title = "Privacy — Digital Organism Theory";
+    document.title = `Privacy — ${author.name}`;
   }, []);
 
   return (

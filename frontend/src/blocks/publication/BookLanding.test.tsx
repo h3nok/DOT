@@ -65,8 +65,8 @@ describe("BookLanding", () => {
 
     // The cover and proposition share one composition; the reader gets one
     // primary way into the complete edition rather than a second CTA section.
-    expect(screen.getByText(/Every downstream layer must be/)).toHaveTextContent(
-      "Every downstream layer must be derived and tested.",
+    expect(screen.getByText(/Personal experience is the starting point/)).toHaveTextContent(
+      "The model remains open to evidence, challenge, and revision.",
     );
     expect(screen.getByRole("link", { name: /Begin with lived experience/ }))
       .toHaveAttribute(
@@ -81,13 +81,13 @@ describe("BookLanding", () => {
     expect(screen.getByRole("link", { name: /PDF/ })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "A proposed architecture of consciousness.",
+        name: "A proposed model of reality.",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Examine experience, inherited conditioning, meaningful choice/))
-      .toHaveTextContent(/development toward Love/);
-    expect(screen.getByText(/Examine experience, inherited conditioning, meaningful choice/))
-      .toHaveTextContent(/proposed wider architecture/);
+    expect(screen.getByText(/DOT grew from nearly two decades/))
+      .toHaveTextContent(/develop toward Love/);
+    expect(screen.getByText(/DOT grew from nearly two decades/))
+      .toHaveTextContent(/consciousness and the physical world/);
     expect(
       screen.queryByText("A life is shaped, acts, and is shaped again."),
     ).not.toBeInTheDocument();

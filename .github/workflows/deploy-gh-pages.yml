@@ -130,6 +130,10 @@ jobs:
         test -f frontend/dist/blog/index.html
         test -f frontend/dist/contact/index.html
         test -f frontend/dist/studio/inbox/index.html
+        test -f frontend/dist/studio/writing/index.html
+        test -f frontend/dist/studio/newsletter/index.html
+        test -f frontend/dist/amm/index.html
+        test -f frontend/dist/amm/feed.xml
         test -f frontend/dist/readers/index.html
         test -f frontend/dist/privacy/index.html
         test -f frontend/dist/feed.xml
@@ -138,6 +142,8 @@ jobs:
         grep -q '<article data-prerender>' frontend/dist/about/index.html
         grep -q 'henok@sullix.com' frontend/dist/contact/index.html
         grep -q 'name="robots" content="noindex"' frontend/dist/studio/inbox/index.html
+        grep -q 'name="robots" content="noindex"' frontend/dist/studio/writing/index.html
+        grep -q 'name="robots" content="noindex"' frontend/dist/studio/newsletter/index.html
         grep -q '<article data-prerender>' frontend/dist/book/digital-organism-theory/preface/index.html
       
     - name: Upload artifact

@@ -1,4 +1,5 @@
 .intention-picker { min-width: 0; }
+.intention-picker-native { display: none; }
 .intention-picker legend { margin-bottom: 1rem; }
 .intention-picker-options { display: grid; gap: .75rem; }
 .intention-option { position: relative; display: flex; align-items: start; gap: .8rem; min-height: 5rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--public-radius); background: var(--background); cursor: pointer; }
@@ -12,3 +13,10 @@
 .intention-option-copy > span { color: var(--muted-foreground); font-size: .75rem; line-height: 1.6; }
 html[data-contrast="high"] .intention-option:has(input:checked) { border: 2px solid var(--foreground); background: var(--background); }
 @media (min-width: 640px) { .intention-picker-options { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 639px) {
+  .intention-picker-options { display: none; }
+  .intention-picker-native { display: grid; gap: .625rem; }
+  .intention-picker-native select { width: 100%; min-height: 3rem; padding: .75rem; border: 1px solid var(--border); border-inline-start: 3px solid var(--intent-tone); border-radius: .65rem; background: var(--background); color: var(--foreground); font-size: 1rem; }
+  .intention-picker-native select:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+  .intention-picker-native p { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.6; }
+}

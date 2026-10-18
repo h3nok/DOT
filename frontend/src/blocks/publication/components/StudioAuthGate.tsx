@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { SignIn } from "../../../dot/SignIn";
 import { useAuth } from "../../../dot/useAuth";
-import { DotWordmark } from "../../../shared/DotWordmark";
+import { DoWordmark } from "../../../shared/DoWordmark";
 
 export function StudioAuthGate({ children, ownerOnly = false, title = "Publication Studio" }: { children: ReactNode; ownerOnly?: boolean; title?: string }) {
   const { user, loading } = useAuth();
@@ -23,7 +23,7 @@ export function StudioAuthGate({ children, ownerOnly = false, title = "Publicati
   if (user) return (
     <main className="dot-page-container py-24">
       <h1 className="dot-page-heading">Owner workspace</h1>
-      <p className="dot-lede mt-4">This inbox belongs to the site owner.</p>
+      <p className="dot-lede mt-4">This workspace belongs to the site owner.</p>
       <Link to="/" className="dot-reading-action mt-6 inline-flex min-h-12 items-center rounded-full px-6">Return home</Link>
     </main>
   );
@@ -31,8 +31,8 @@ export function StudioAuthGate({ children, ownerOnly = false, title = "Publicati
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
       <section className="w-full max-w-md border-block border-border/60 py-10 text-center">
-        <Link to="/" className="font-mono text-xs uppercase text-muted-foreground">
-          <DotWordmark />
+        <Link to="/" aria-label="DOT — Home" className="do-wordmark-link inline-flex min-h-11 items-center">
+          <DoWordmark emerge />
         </Link>
         <p className="mt-8 font-mono dot-micro uppercase text-[color:var(--organism-accent-strong)]">
           Private workspace

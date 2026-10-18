@@ -1,0 +1,16 @@
+.page-copy-studio { max-width: 56rem; margin-inline: auto; }
+.page-copy-studio header { margin-block: 1.5rem 2rem; }
+.page-copy-studio h1 { font-family: var(--font-serif, Georgia, serif); font-size: clamp(2rem, 5vw, 3.3rem); line-height: 1.1; margin-block: .75rem 1rem; }
+.page-copy-studio p { line-height: 1.65; overflow-wrap: anywhere; }
+.page-copy-back { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; }
+.page-copy-back svg, .page-copy-actions svg { width: 1rem; height: 1rem; }
+.page-copy-hint { font-size: .8rem; color: var(--muted-foreground); }
+.page-copy-sections > details { border-block-start: 1px solid var(--border); }
+.page-copy-sections > details > summary { padding-block: 1.1rem; cursor: pointer; font-weight: 600; }
+.page-copy-field { padding-block: .75rem 1.25rem; }
+.page-copy-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: .5rem; font-size: .8rem; }
+.page-copy-current { font-size: .85rem; margin-top: .75rem; }
+.page-copy-current summary { min-height: 44px; align-content: center; cursor: pointer; }
+.page-copy-field [role=status] { font-size: .85rem; }
+.page-copy-field [role=alert] { color: var(--destructive); }
+.page-copy-studio :is(button, a, textarea, summary):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }

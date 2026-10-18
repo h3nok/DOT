@@ -12,10 +12,10 @@ describe("CreateBookProject", () => {
   it("creates a private manuscript and opens its editor", async () => {
     vi.mocked(createPublicationProject).mockResolvedValue({ id: "project-1" } as Awaited<ReturnType<typeof createPublicationProject>>);
     render(<MemoryRouter><Routes><Route path="/" element={<CreateBookProject />} /><Route path="/studio/project-1" element={<p>Manuscript editor</p>} /></Routes></MemoryRouter>);
-    fireEvent.change(screen.getByLabelText("New book project"), { target: { value: "The Millennial Manifesto" } });
+    fireEvent.change(screen.getByLabelText("New book project"), { target: { value: "The American Millennial Manifesto" } });
     fireEvent.click(screen.getByRole("button", { name: "Create private manuscript" }));
     expect(await screen.findByText("Manuscript editor")).toBeInTheDocument();
-    expect(createPublicationProject).toHaveBeenCalledWith({ title: "The Millennial Manifesto", type: "book", visibility: "private" });
+    expect(createPublicationProject).toHaveBeenCalledWith({ title: "The American Millennial Manifesto", type: "book", visibility: "private" });
   });
 
   it("keeps the title after a failed save", async () => {

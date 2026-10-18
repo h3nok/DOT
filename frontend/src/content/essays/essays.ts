@@ -8,6 +8,15 @@
  */
 
 export type EssayClaimLevel = "observation" | "model" | "hypothesis" | "speculation";
+export type EssayFormat = "essay" | "case-study" | "letter";
+export const ESSAY_FORMAT_LABELS: Record<EssayFormat, string> = { essay: "Essay", "case-study": "Case study", letter: "Letter" };
+export interface EssayCover {
+  src: string;
+  alt: string;
+  caption?: string;
+  width: number;
+  height: number;
+}
 
 export interface EssaySummary {
   slug: string;
@@ -22,6 +31,14 @@ export interface EssaySummary {
   concepts: string[];
   words: number;
   readingMinutes: number;
+  format?: EssayFormat;
+  series?: string;
+  cover?: EssayCover;
+  /** The essay's ## sections, with the anchor the reader gives each heading. */
+  sections?: { id: string; title: string }[];
+  images?: Record<string, { width: number; height: number }>;
+  /** Included only by the development preview endpoint. */
+  draft?: boolean;
 }
 
 interface EssayIndex {
@@ -43,16 +60,16 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const essayRoute = (slug: string) => `${ESSAYS_ROUTE}/${slug}`;
 
-function essayAsset(name: string): string {
+function essayAsset(name: string, preview = false): string {
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
-  return `${base}essays/${name}`.replace(/\/{2,}/g, "/");
+  return `${base}${import.meta.env.DEV && preview ? "__essay-preview" : "essays"}/${name}`.replace(/\/{2,}/g, "/");
 }
 
 /** Every released essay, newest first. An absent index means none yet. */
-export async function fetchEssayIndex(signal?: AbortSignal): Promise<EssaySummary[]> {
-  const response = await fetch(essayAsset("index.json"), { cache: "no-cache", signal });
+export async function fetchEssayIndex(signal?: AbortSignal, preview = false): Promise<EssaySummary[]> {
+  const response = await fetch(essayAsset("index.json", preview), { cache: "no-cache", signal });
   if (response.status === 404) return [];
   if (!response.ok) throw new Error(`Essay index request failed: ${response.status}`);
   const index = (await response.json()) as EssayIndex;
@@ -63,9 +80,10 @@ export async function fetchEssayIndex(signal?: AbortSignal): Promise<EssaySummar
 export async function fetchEssayText(
   slug: string,
   signal?: AbortSignal,
+  preview = false,
 ): Promise<string | null> {
   if (!SLUG_PATTERN.test(slug)) return null;
-  const response = await fetch(essayAsset(`${slug}.md`), { cache: "no-cache", signal });
+  const response = await fetch(essayAsset(`${slug}.md`, preview), { cache: "no-cache", signal });
   if (response.status === 404) return null;
   if (!response.ok) throw new Error(`Essay request failed: ${response.status}`);
   return response.text();

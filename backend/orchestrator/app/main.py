@@ -16,6 +16,7 @@ import app.api.v1.distribution as _distribution_router
 import app.api.v1.graph as _graph_router
 import app.api.v1.health as _health_router
 import app.api.v1.join as _join_router
+import app.api.v1.newsletters as _newsletters_router
 import app.api.v1.publications as _publications_router
 import app.api.v1.readers as _readers_router
 import app.api.v1.runs as _runs_router
@@ -23,6 +24,7 @@ import app.api.v1.sitecontent as _sitecontent_router
 import app.api.v1.support as _support_router
 import app.api.v1.twin as _twin_router
 import app.api.v1.vault as _vault_router
+import app.api.v1.writing as _writing_router
 import app.core.errors as _errors
 import app.core.logging as _logging
 import app.core.middleware as _middleware
@@ -57,6 +59,8 @@ async def lifespan(app: fastapi.FastAPI) -> collections.abc.AsyncGenerator[None,
 def create_app() -> fastapi.FastAPI:
     settings: _settings.Settings = _settings.get_settings()
     limiter = _security.make_limiter(settings.REDIS_URL)
+    # The schema maps every route; public deployments serve the API, not its map.
+    public_deployment = settings.ENVIRONMENT in {"production", "staging"}
     fapp = fastapi.FastAPI(
         title=settings.SERVICE_NAME,
         summary="Knowledge and Publication OS orchestrator",
@@ -65,8 +69,9 @@ def create_app() -> fastapi.FastAPI:
             "exports, deletions, and durable workflow state for DOT/Stay."
         ),
         version="0.1.0",
-        docs_url="/docs",
-        redoc_url="/redoc",
+        docs_url=None if public_deployment else "/docs",
+        redoc_url=None if public_deployment else "/redoc",
+        openapi_url=None if public_deployment else "/openapi.json",
         lifespan=lifespan,
         openapi_tags=[
             {"name": "health", "description": "Liveness and readiness probes."},
@@ -134,6 +139,7 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_health_router.router)
     fapp.include_router(_academy_router.public_router)
     fapp.include_router(_academy_router.router)
+    fapp.include_router(_writing_router.router)
     fapp.include_router(_auth_router.router)
     fapp.include_router(_graph_router.public_router)
     fapp.include_router(_graph_router.router)
@@ -149,6 +155,7 @@ def create_app() -> fastapi.FastAPI:
     fapp.include_router(_distribution_router.router)
     fapp.include_router(_join_router.router)
     fapp.include_router(_readers_router.router)
+    fapp.include_router(_newsletters_router.router)
     fapp.include_router(_twin_router.public_router)
     fapp.include_router(_twin_router.router)
     fapp.include_router(_vault_router.router)

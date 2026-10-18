@@ -218,3 +218,5 @@ class DeliveryItem(pydantic.BaseModel):
     released_at: datetime.datetime
     withdrawn_at: datetime.datetime | None
     withdrawal_reason: str | None
+    presentation: dict = pydantic.Field(default_factory=dict)
+    cover: dict | None = None

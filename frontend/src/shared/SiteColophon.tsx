@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { authorByline, authorProfiles } from "../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
-import { DotWordmark } from "./DotWordmark";
+import { DoWordmark } from "./DoWordmark";
 
 // Quiet, but legible: full muted text clears WCAG AA contrast in both themes,
 // and a 24px row keeps wrapped links from crowding each other on a phone.
@@ -25,9 +25,9 @@ export function SiteColophon({
   variant?: "publication" | "personal";
 }) {
   return (
-    <footer className="dot-page-container py-12">
+    <footer className="site-colophon dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-        <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
+        <DoWordmark compact />
         <p className="text-xs leading-relaxed text-muted-foreground">
           {variant === "personal" ? (
             <>{authorByline} · Independent builder.</>
@@ -44,6 +44,7 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
+          <Link to="/amm" className={LINK}>AMM</Link>
           <Link to="/contact" className={LINK}>Contact</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
@@ -71,7 +72,7 @@ export function SiteColophon({
             </a>
           ))}
           <a href={newsletter.url} className={LINK} rel="noreferrer">
-            {newsletter.title}
+            AMM on LinkedIn
           </a>
         </nav>
       </div>

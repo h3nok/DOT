@@ -1,0 +1,27 @@
+/* The illustration is the surface. The viewer stays in the publication's theme. */
+.explainer-artwork { margin: 0; min-width: 0; }
+.explainer-artwork-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: var(--ex-muted); cursor: zoom-in; text-align: left; }
+.explainer-artwork picture, .explainer-artwork img { display: block; width: 100%; height: auto; }
+.explainer-artwork-hint { display: flex; align-items: center; gap: .5rem; min-height: 44px; font: .7rem/1.5 var(--ex-mono); }
+.explainer-artwork-hint svg { width: .85rem; height: .85rem; }
+.explainer-artwork figcaption { font: .65rem/1.7 var(--ex-mono); color: var(--ex-muted); max-width: 70ch; }
+.explainer-artwork :is(button, [tabindex]):focus-visible { outline: 2px solid var(--ex-accent); outline-offset: 4px; }
+.explainer-art-dialog { position: fixed; inset: 0; margin: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: clamp(.75rem, 2vw, 1.5rem); border: 0; background: var(--ex-paper); color: var(--ex-ink); overflow: hidden; }
+.explainer-art-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 1rem; }
+.explainer-art-dialog::backdrop { background: var(--ex-paper); }
+html:has(.explainer-art-dialog[open]) { overflow: hidden; }
+.explainer-art-toolbar { display: flex; align-items: center; gap: .5rem 1rem; }
+.explainer-art-toolbar h2 { flex: 1; margin: 0; font: 500 clamp(1rem, 2.5vw, 1.4rem)/1.25 var(--ex-serif); }
+.explainer-art-toolbar button { display: flex; justify-content: center; align-items: center; gap: .5rem; padding: .6rem; min-width: 44px; min-height: 44px; flex-shrink: 0; font-size: .8rem; cursor: pointer; border-radius: .25rem; }
+.explainer-art-toolbar button[aria-pressed="true"] { background: color-mix(in srgb, var(--ex-accent) 10%, transparent); color: var(--ex-accent); }
+.explainer-art-viewport { position: relative; display: grid; place-items: center; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.explainer-art-status { position: absolute; inset: 0; display: flex; flex-wrap: wrap; gap: .5rem; align-content: center; justify-content: center; padding: 1rem; font-size: .85rem; line-height: 1.6; color: var(--ex-muted); }
+.explainer-art-status a { text-decoration: underline; text-underline-offset: .25em; }
+.explainer-art-viewport img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.explainer-art-viewport[data-expanded] { display: block; }
+.explainer-art-viewport[data-expanded] img { margin-inline: auto; max-width: none; max-height: none; }
+.explainer-art-caption { margin: 0; max-width: 80ch; font-size: .75rem; line-height: 1.6; color: var(--ex-muted); }
+@media (hover: hover) and (pointer: fine) {
+  .explainer-artwork-open:hover .explainer-artwork-hint, .explainer-art-toolbar button:hover { color: var(--ex-accent); }
+  .explainer-artwork-open:hover .explainer-artwork-hint { text-decoration: underline; text-underline-offset: .25em; }
+}

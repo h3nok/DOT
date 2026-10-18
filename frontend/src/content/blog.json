@@ -1,7 +1,16 @@
 {
   "title": "Writing & ideas",
-  "heading": ["On building.", "On being human."],
+  "heading": ["On struggle.", "On being human."],
   "description": "Essays and letters on AI, digital products, consciousness, and the systems we live in.",
+  "startingPoint": {
+    "label": "Start here · From Book One",
+    "title": "Learning to See from Between Paintings",
+    "description": "Henok on migration, inherited assumptions, and learning to recognize the culture shaping his own perceptions.",
+    "quote": "The experience did not place me outside culture. No one stands outside the Painting. It gave me contrast.",
+    "sourceLabel": "Henok Ghebrechristos · Chapter 6, The Painting",
+    "to": "/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings",
+    "linkLabel": "Read the passage"
+  },
   "paths": [
     {
       "id": "building",
@@ -25,5 +34,5 @@
   "contactTitle": "Have something to build?",
   "contactDescription": "Independent project work in AI, web and mobile applications, and systems architecture.",
   "emptyTitle": "The archive starts here.",
-  "emptyDescription": "New writing will appear here as it is published. For now, explore Book One and the letters in The Millennial Manifesto."
+  "emptyDescription": "New writing will appear here as it is published. For now, explore Book One and the letters in The American Millennial Manifesto."
 }

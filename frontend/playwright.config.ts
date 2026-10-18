@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 // Its own strict port, so a dev server already running on 5173/5174 can never
 // be mistaken for the server under test.
-const PORT = 5199;
+const PORT = Number(process.env.DOT_E2E_PORT || 5199);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
@@ -36,7 +36,7 @@ export default defineConfig({
     // dependencies when a lockfile update causes Vite to refresh its cache.
     env: { DOT_VITE_CACHE_DIR: ".vite-cache/playwright" },
     url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
     stdout: "ignore",
     stderr: "pipe",

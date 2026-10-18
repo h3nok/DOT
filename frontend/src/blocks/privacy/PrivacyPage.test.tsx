@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { describe, expect, it } from "vitest";
 
 import PrivacyPage from "./PrivacyPage";
@@ -8,7 +9,7 @@ const renderPage = () =>
   render(
     <MemoryRouter>
       <PrivacyPage />
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("PrivacyPage", () => {

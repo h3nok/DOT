@@ -2,12 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
-import { PageHeader, PageShell } from "./PageShell";
+import { PageShell } from "./PageShell";
 
 const renderShell = (props: { skipLink?: boolean; header?: boolean } = {}) =>
   render(
     <MemoryRouter>
-      <PageShell header={props.header === false ? undefined : <PageHeader />} skipLink={props.skipLink}>
+      <PageShell header={props.header === false ? undefined : <header><a href="/">Home</a></header>} skipLink={props.skipLink}>
         <h1>Page</h1>
       </PageShell>
     </MemoryRouter>,

@@ -35,6 +35,51 @@ afterEach(() => {
 });
 
 describe("ReaderListForm", () => {
+  it("binds AMM consent through confirmation and leaves other writing unchecked", async () => {
+    server.available = true;
+    server.subscribe.mockResolvedValue({ accepted: { status: "ok", expires_in: 900 } });
+    server.confirm.mockResolvedValue({ token: "a".repeat(64) });
+    render(<ReaderListForm source="amm" publication="amm" />);
+    expect(screen.getByRole("checkbox", { name: /other writing/ })).not.toBeChecked();
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "reader@example.com" } });
+    fireEvent.click(screen.getByRole("button", { name: "Subscribe by email" }));
+    fireEvent.change(await screen.findByLabelText("Confirmation code"), { target: { value: "123456" } });
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    expect(await screen.findByText("You’re subscribed to AMM.")).toBeVisible();
+    expect(server.subscribe).toHaveBeenCalledWith("reader@example.com", "amm", { publication: "amm", include_all: false });
+    expect(server.confirm).toHaveBeenCalledWith("reader@example.com", "123456", { publication: "amm", include_all: false });
+    expect(screen.getByRole("link", { name: "Unsubscribe" })).toHaveAttribute("href", `/readers/leave?publication=amm#${"a".repeat(64)}`);
+  });
+  it("lets the dedicated list page show a loading state without offering a dead form", () => {
+    render(<ReaderListForm loadingFallback={<p role="status">Checking availability…</p>} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Checking availability…");
+    expect(screen.queryByRole("textbox")).toBeNull();
+  });
+
+  it("allows a corrected address to receive a new code and clears the old challenge", async () => {
+    server.available = true;
+    server.subscribe.mockResolvedValue({ accepted: { status: "ok", expires_in: 900 } });
+    server.confirm.mockResolvedValue({ error: "Incorrect code." });
+    render(<ReaderListForm source="front" />);
+    fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "wrong@example.com" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send me a code" }));
+    const code = await screen.findByLabelText("Confirmation code");
+    // Focus moves in an effect after the field appears; wait for it rather
+    // than racing the commit on a loaded machine.
+    await waitFor(() => expect(code).toHaveFocus());
+    fireEvent.change(code, { target: { value: "000000" } });
+    fireEvent.click(screen.getByRole("button", { name: "Confirm" }));
+    await screen.findByRole("alert");
+    fireEvent.click(screen.getByRole("button", { name: "Change address or request a new code" }));
+    const address = screen.getByLabelText("Email address");
+    await waitFor(() => expect(address).toHaveFocus());
+    expect(screen.queryByRole("alert")).toBeNull();
+    fireEvent.change(address, { target: { value: "correct@example.com" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send me a code" }));
+    expect(await screen.findByLabelText("Confirmation code")).toHaveValue("");
+    expect(server.subscribe).toHaveBeenLastCalledWith("correct@example.com", "front");
+  });
+
   it("renders nothing while the list's availability is unknown", () => {
     server.available = null;
     const { container } = render(<ReaderListForm />);
@@ -123,7 +168,7 @@ describe("ReaderListForm", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /^confirm$/i }));
 
-    expect(await screen.findByText(/you will hear when there is more/i)).toBeInTheDocument();
+    expect(await screen.findByRole("status")).toHaveTextContent("You’re on the reader list.");
     expect(screen.getByText(/removes you in one click/i)).toBeInTheDocument();
   });
 
@@ -145,7 +190,7 @@ describe("ReaderListForm", () => {
     fireEvent.click(screen.getByRole("button", { name: /^confirm$/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/incorrect code/i);
-    expect(screen.queryByText(/you will hear when there is more/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("You’re on the reader list.")).not.toBeInTheDocument();
   });
 
   it("shows no subscriber count anywhere (ADR-0004 L5)", async () => {

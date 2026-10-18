@@ -94,8 +94,16 @@ async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> 
             "Confirm the address for your request to join DOT",
         ),
         "reader": (
-            f"Confirm your DOT reader list subscription: {code}",
-            "Confirm your address to hear when there is more DOT to read",
+            f"Confirm your reader list subscription: {code}",
+            "Confirm your address for new writing from Henok Ghebrechristos",
+        ),
+        "reader_amm": (
+            f"Confirm your AMM subscription: {code}",
+            "Confirm your address for The American Millennial Manifesto",
+        ),
+        "reader_amm_all": (
+            f"Confirm your AMM and writing subscriptions: {code}",
+            "Confirm your address for The American Millennial Manifesto and Henok’s other writing",
         ),
     }
     subject, lead = copy.get(purpose, (f"Your DOT code: {code}", "Your sign-in code for DOT"))

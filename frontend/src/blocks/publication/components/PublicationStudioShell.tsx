@@ -5,7 +5,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Link } from "react-router-dom";
 import { ArrowLeft, BookOpenText, ExternalLink, ShieldCheck, X } from "lucide-react";
 import { type PublicationProjectRead, type PublicationSectionRead } from "../../../services/OrchestratorPublicationService";
-import { DotWordmark } from "../../../shared/DotWordmark";
+import { DoWordmark } from "../../../shared/DoWordmark";
 import { AppearanceControl } from "../../../organism";
 import { ProjectOutline } from "./ProjectOutline";
 import { SectionEditor } from "./SectionEditor";
@@ -59,7 +59,7 @@ export function PublicationStudioShell({ project, sections, onRefreshSections }:
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </Link>
-          <DotWordmark className="hidden font-mono dot-micro uppercase sm:inline" />
+          <span className="hidden sm:inline-flex"><DoWordmark compact /></span>
           <span className="hidden text-muted-foreground sm:inline">/</span>
           <span className="truncate font-serif text-sm font-semibold">{project.title}</span>
         </div>

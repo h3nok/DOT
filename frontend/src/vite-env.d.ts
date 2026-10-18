@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly VITE_PROFILE_OWNER_ID?: string;
   readonly VITE_OWNER_TOKEN?: string;
   readonly VITE_ORCHESTRATOR_URL?: string;
+  /** Set by the opt-in development proxy; production builds always disable it. */
+  readonly VITE_CONTACT_PREVIEW?: string;
   readonly VITE_ORCHESTRATOR_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_OWNER_ID?: string;
   readonly VITE_PROFILE_DELIVERY_SLUG?: string;

@@ -54,6 +54,62 @@ for developing definitions and questions; Book One stays a fixed edition.
 Future experience or evidence may revise the framing without rewriting the
 released book.
 
+## Amendment — 2026-10-10
+
+At the founder’s request, the homepage now opens with “Love is the answer.”
+and the primary reading action is “Read Book One.” The opening has no supporting paragraph or action subtitle.
+Critiques of mainstream science, physicalism, and secular humanism appear
+within the concept introduction, labeled “Outside perspective” or “DOT rejects” at Model
+level. Primary sources are linked where available; references support the
+underlying position or problem, not an endorsement of DOT. The criticism
+targets exclusion in advance; it does not claim that all humanists or all
+scientific research exclude subjective experience. Love
+is defined within the theory as the condition in which Fear no longer governs;
+the opening states the founder’s proposition, not a settled scientific result. The released manuscript is unchanged.
+
+Remove the “Things built. Ideas explored.” section and its three cards from the
+homepage, generated HTML, and page map. Work, writing, and contact remain available
+through the site navigation. This amendment serves L7 (clear and honest framing)
+and L10 (a focused reading invitation) without violating any manifesto law.
+
+## Opening refinement — 2026-10-10
+
+The founder’s current heading is “Trust your experience.” The requested two-line
+subtitle treats feelings as data and invites readers to “Tune your interpretation
+toward coherence.” Tuning here means development toward a coherent, low-entropy
+attitude in DOT’s vocabulary, including less inner conflict. Only this tuning
+clause takes bold copper; the invitation to challenge models that exclude the
+reader or ask them to be someone else uses neutral body text. There is one
+emphasis rather than competing colored statements. High contrast preserves
+that emphasis with an underline. This is an
+editorial invitation to inquiry, not a claim that interoception research proves
+DOT’s proposed architecture. Research distinguishes sensing bodily signals
+from interpreting them ([Khalsa et al., 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6054486/)).
+The runtime and script-free homepage carry the same wording and emphasis. This
+serves L7’s honest framing and L10’s concise reading invitation without violating
+any manifesto law or changing the book.
+
+## Opening refinement — 2026-10-12
+
+The subtitle now reads “Challenge any model that leaves you and your
+experience out.” followed by the founder’s emphasis: “Especially one that asks
+you to be someone else.” “One” refers back to any model, so the line holds in
+whatever culture a reader lives in; it names no culture, industry, or motive.
+The phrase returns to the founder’s earlier wording (“…or ask you to be someone
+else”). The single bold-copper emphasis moves to this sentence; high contrast
+still underlines it. The runtime and script-free homepage carry the same
+wording and emphasis. Serves L7 (honest framing); violates no law.
+
+## Opening refinement — 2026-10-13
+
+The founder clarifies that the challenge includes transcending inherited culture.
+The emphasized invitation now reads “Grow beyond the culture that tells you who
+to be.” Keep the first challenge sentence and the single copper emphasis. The
+Book One action retains the shared paper treatment and three progressing dots,
+with an open-book cue and consistent touch spacing in both desktop and phone
+layouts. Serves L1 (calm), L7 (faithful framing), and L10 (one clear reading
+action); violates no law.
+
 ## Alternatives considered
 
 | Option | Pros | Cons | Verdict |

@@ -35,6 +35,19 @@ Serves L2 (finite sections), L7 (honest destinations and résumé availability),
 L9 (no tracking or inquiry collection), L10 (one prominent project action),
 and L12 (supports a visitor seeking a builder). Violates no manifesto laws.
 
+## Founder showcase — 2026-10-14
+
+The founder identified 4Us as the larger economic movement containing Sullix,
+and supplied [the venture page](https://sullix.com/venture) as its public source.
+The portfolio groups the movement and product in one visual family: Founder of
+4Us, Co-Founder & Principal Engineer of Sullix. Shared project data supplies
+both runtime and generated HTML. The Mesob artwork is a locally served copy of
+the venture page's existing image, loaded lazily without external embeds.
+4Us remains a working proposal and Sullix is identified as in private testing;
+no membership, financial participation, or community benefits are offered here.
+The Sullix/Faro marks and direct product link remain. Serves L1, L7, L9, L10,
+and L12; violates no law.
+
 ## Consequences
 
 - Visitors can assess work and start a contract conversation from one page.

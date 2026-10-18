@@ -50,6 +50,7 @@ export default function PublicationStudioIndexPage() {
         primary={{ to: "/studio/writing", label: "Write an essay or letter", icon: <FileText /> }}
       />
       {isOwner && <Link to="/studio/inbox" className="mt-5 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Open your contact inbox <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>}
+      {isOwner && <p><Link to="/studio/newsletter" className="mt-2 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Open the AMM newsletter desk <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></p>}
 
       <details className="mt-10 border-t border-border/60">
         <summary className="min-h-12 cursor-pointer py-4 text-sm font-semibold">Book projects</summary>

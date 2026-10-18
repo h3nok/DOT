@@ -16,6 +16,7 @@ import app.db.session
 import app.domains.academy.models
 import app.domains.academy.schemas as schemas
 import app.domains.academy.service as service
+import app.domains.academy.writing_media as writing_media
 import app.integrations.object_store
 
 router = fastapi.APIRouter(prefix="/v1/academy", tags=["academy"])
@@ -87,6 +88,8 @@ def _delivery_item(
         released_at=row.released_at,
         withdrawn_at=row.withdrawn_at,
         withdrawal_reason=row.withdrawal_reason,
+        presentation=row.manifest.get("presentation", {}),
+        cover=writing_media.public_artwork(row.manifest)["cover"],
     )
 
 
@@ -317,9 +320,12 @@ async def withdraw_release(
 async def delivery_catalog(
     request: fastapi.Request,
     space: str = "dot-academy",
+    include_withdrawn: bool = False,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> list[schemas.DeliveryItem]:
-    rows = await service.delivery_catalog(session, space_slug=space)
+    rows = await service.delivery_catalog(
+        session, space_slug=space, include_withdrawn=include_withdrawn
+    )
     return [_delivery_item(row) for row in rows]
 
 

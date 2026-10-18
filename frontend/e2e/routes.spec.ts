@@ -28,7 +28,7 @@ test.describe("hero", () => {
 
     const hero = page.locator("#threshold");
     await expect(
-      hero.getByRole("heading", { name: "Love." }),
+      hero.getByRole("heading", { name: "Trust your experience." }),
     ).toBeVisible();
     await expect(hero.locator(".home-hero-proposition ul")).toHaveCount(0);
     const inquiry = hero.getByRole("textbox", {
@@ -55,6 +55,7 @@ test.describe("hero", () => {
     await page.goto("/");
 
     await expect(page.locator(".home-concept-slideshow")).toBeVisible();
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
@@ -83,7 +84,7 @@ test.describe("hero", () => {
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);
 
     const presentation = await labels.evaluateAll((items) => {
-      const boxes = items.map((item) => (item as SVGGraphicsElement).getBBox());
+      const boxes = items.map((item) => item.getBoundingClientRect());
       const overlap = boxes.some((box, index) =>
         boxes.slice(index + 1).some(
           (other) =>
@@ -100,8 +101,6 @@ test.describe("hero", () => {
           color: style?.fill ?? "",
           family: style?.fontFamily ?? "",
           transform: style?.textTransform ?? "",
-          stroke: style?.stroke ?? "",
-          strokeWidth: Number.parseFloat(style?.strokeWidth ?? "0"),
         };
       });
 
@@ -110,7 +109,6 @@ test.describe("hero", () => {
         distinctColors: new Set(styles.map(({ color }) => color)).size,
         families: styles.map(({ family }) => family),
         transforms: styles.map(({ transform }) => transform),
-        knockouts: styles.map(({ stroke, strokeWidth }) => ({ stroke, strokeWidth })),
       };
     });
 
@@ -120,11 +118,6 @@ test.describe("hero", () => {
       true,
     );
     expect(presentation.transforms.every((transform) => transform === "none")).toBe(true);
-    expect(
-      presentation.knockouts.every(
-        ({ stroke, strokeWidth }) => stroke !== "none" && strokeWidth >= 4,
-      ),
-    ).toBe(true);
   });
 
   test("theory panels guide the reader from known ground to an explicit boundary", async ({
@@ -210,28 +203,11 @@ test.describe("hero", () => {
   });
 });
 
-test.describe("academy", () => {
-  test("keeps living inquiry and the fixed publication visibly separate", async ({
-    page,
-  }) => {
-    await page.goto("/academy");
-
-    await expect(
-      page.getByRole("heading", { name: "Study the theory. Question its claims." }),
-    ).toBeVisible();
-    await expect(page.getByText(/DOT Academy · In development/)).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Book One remains a book." })).toBeVisible();
-
-    const disclosure = page.locator("details").filter({ hasText: "About the Academy: principles, programs, and editorial standards" });
-    await expect(disclosure).not.toHaveAttribute("open");
-    await expect(page.getByText(/No experiment is recorded yet/)).not.toBeVisible();
-    await disclosure.locator("summary").click();
-    const programs = page.locator("#academy-programs");
-    await expect(programs.locator(".academy-program-card")).toHaveCount(3);
-    await expect(programs.locator(".academy-program-card__area-item")).toHaveCount(8);
-    await expect(programs.getByText("Experiments", { exact: true })).toBeVisible();
-    await expect(programs.getByText(/No experiment is recorded yet/)).toBeVisible();
-  });
+test("the hidden Academy address opens Book One", async ({ page }) => {
+  await page.goto("/academy");
+  await expect(page).toHaveURL("/book/digital-organism-theory");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.locator('a[href="/academy"]')).toHaveCount(0);
 });
 
 test.describe("book reader", () => {
