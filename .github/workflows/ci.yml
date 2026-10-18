@@ -62,6 +62,54 @@ jobs:
       - name: Build
         run: pnpm build
 
+  # The browser journeys: the attention laws as a reader meets them, sign-in,
+  # contact, writing, and every public route on desktop and phone widths.
+  # Journeys that depend on the API intercept it with fictional responses; the
+  # rest run the frontend alone, where API calls go to an absent local server
+  # and fail by design (e2e/helpers.ts). No orchestrator URL is configured
+  # here, so nothing reaches production.
+  e2e:
+    name: Browser journeys (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      DOT_E2E_WORKERS: "3"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser journeys
+        run: pnpm exec playwright test
+
+      - name: Keep traces from a failed run
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: frontend/test-results/
+          retention-days: 7
+
   orchestrator:
     name: FastAPI orchestrator quality gates
     runs-on: ubuntu-latest

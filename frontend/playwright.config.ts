@@ -31,7 +31,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm exec vite --port ${PORT} --strictPort`,
+    // Bind the address baseURL names. Left to "localhost", Vite can listen on
+    // IPv6 ::1 (as on GitHub's runners) while Playwright waits on 127.0.0.1.
+    command: `pnpm exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
     // The preview and test server must never rewrite each other's optimized
     // dependencies when a lockfile update causes Vite to refresh its cache.
     env: { DOT_VITE_CACHE_DIR: ".vite-cache/playwright" },
