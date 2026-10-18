@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { author } from "../../content/author";
 import termsText from "../../content/pages/terms.md?raw";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { ProseMarkdown } from "../../shared/ProseMarkdown";
@@ -14,7 +15,7 @@ import { SiteColophon } from "../../shared/SiteColophon";
  */
 export default function TermsPage() {
   useEffect(() => {
-    document.title = "Terms and refunds — Digital Organism Theory";
+    document.title = `Terms and refunds — ${author.name}`;
   }, []);
 
   return (

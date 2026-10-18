@@ -994,14 +994,14 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     },
     {
       route: PRIVACY_ROUTE,
-      title: "Privacy — Digital Organism Theory",
+      title: `Privacy — ${AUTHOR.name}`,
       description:
         "What this site keeps, what it never collects, and which services handle what.",
       body: renderMarkdown(privacyText),
     },
     {
       route: TERMS_ROUTE,
-      title: "Terms and refunds — Digital Organism Theory",
+      title: `Terms and refunds — ${AUTHOR.name}`,
       description:
         "Who runs this site, what an optional payment to the author is, and how to get a refund.",
       body: renderMarkdown(termsText),
