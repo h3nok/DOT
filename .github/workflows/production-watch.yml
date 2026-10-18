@@ -39,8 +39,12 @@ jobs:
             echo "ok $path"
           done
           # About's own script-free text, not merely some prerendered page (ADR-0033).
-          fetch "$SITE/about/" | grep -q 'id="about-products"' || { echo "::error::/about lost its prerendered text"; exit 1; }
-          fetch "$SITE/feed.xml" | grep -q '<rss' || { echo "::error::the RSS feed is not served"; exit 1; }
+          # Read each page whole before searching it: grep -q stops at its first match, and under
+          # pipefail the writer it cut off (curl exit 23) would fail a healthy check.
+          about=$(fetch "$SITE/about/") || { echo "::error::/about did not answer"; exit 1; }
+          grep -q 'id="about-products"' <<<"$about" || { echo "::error::/about lost its prerendered text"; exit 1; }
+          feed=$(fetch "$SITE/feed.xml") || { echo "::error::the RSS feed did not answer"; exit 1; }
+          grep -q '<rss' <<<"$feed" || { echo "::error::the RSS feed is not served"; exit 1; }
 
       - name: API is healthy and its public doors are open
         run: |
