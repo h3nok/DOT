@@ -1,37 +1,24 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { authedFetch } from "./orchestratorHttp";
-import { releaseWriting, type WritingClaim } from "./OrchestratorWritingService";
-
+import { emptyPresentation, releaseSavedWriting, saveWritingSnapshot } from "./OrchestratorWritingService";
 vi.mock("./orchestratorHttp", () => ({ authedFetch: vi.fn() }));
 afterEach(() => vi.resetAllMocks());
-
-const draft = { title: "Author-supplied text", summary: "", body: "The manuscript." };
-const claim: WritingClaim = { statement: "A sourced claim", level: "Observation", origin: "sourced", source: "https://example.org/source" };
-
-describe("releaseWriting", () => {
-  it("freezes text, annotates the author-declared claim and source, then explicitly releases", async () => {
-    vi.mocked(authedFetch)
-      .mockResolvedValueOnce(Response.json({ id: "revision-1" }))
-      .mockResolvedValueOnce(Response.json({ id: "claim-1" }))
-      .mockResolvedValueOnce(Response.json({ id: "source-1" }))
-      .mockResolvedValueOnce(Response.json({ release_number: 1, release_status: "released" }));
-    expect(await releaseWriting("work-1", draft, [claim])).toEqual({ release_number: 1, release_status: "released" });
-    const calls = vi.mocked(authedFetch).mock.calls;
-    expect(calls.map(([url]) => String(url).split("/v1/academy")[1])).toEqual([
-      "/works/work-1/revisions", "/revisions/revision-1/claims", "/revisions/revision-1/sources", "/works/work-1/releases",
-    ]);
-    expect(calls[3][1]?.json).toEqual({ revision_id: "revision-1", visibility: "public" });
+const draft = { title: "Supplied text", summary: "", body: "Manuscript.", presentation: emptyPresentation(), assets: [{ path: "figure.png", src: "blob:private-preview", width: 1600, height: 900, bytes: 120, data_base64: "uploaded-bytes" }] };
+describe("atomic publication requests", () => {
+  it("saves one private snapshot using the signed session and retry identity", async () => {
+    vi.mocked(authedFetch).mockResolvedValueOnce(Response.json({ id: "revision-2", revision_number: 2 }));
+    await saveWritingSnapshot("work-1", draft, [], "request-id", "revision-1");
+    expect(authedFetch).toHaveBeenCalledTimes(1);
+    expect(authedFetch).toHaveBeenCalledWith(expect.stringContaining("/works/work-1/drafts"), expect.objectContaining({ sessionOnly: true, json: expect.objectContaining({ request_id: "request-id", base_revision_id: "revision-1", assets: [{ path: "figure.png", data_base64: "uploaded-bytes" }] }) }));
   });
-
-  it("does not publish when source attachment fails", async () => {
-    vi.mocked(authedFetch).mockResolvedValueOnce(Response.json({ id: "revision-1" })).mockResolvedValueOnce(Response.json({ id: "claim-1" })).mockResolvedValueOnce(new Response("Source rejected", { status: 422 }));
-    await expect(releaseWriting("work-1", draft, [claim])).rejects.toThrow("Source rejected");
-    expect(authedFetch).toHaveBeenCalledTimes(3);
+  it("publishes exactly the reviewed revision without saving a new one", async () => {
+    vi.mocked(authedFetch).mockResolvedValueOnce(Response.json({ release_number: 2, release_status: "released" }));
+    expect(await releaseSavedWriting("work-1", "revision-2")).toMatchObject({ release_number: 2 });
+    expect(authedFetch).toHaveBeenCalledTimes(1);
+    expect(authedFetch).toHaveBeenCalledWith(expect.stringContaining("/works/work-1/releases"), expect.objectContaining({ sessionOnly: true, json: { revision_id: "revision-2", visibility: "public" } }));
   });
-
-  it("refuses unclassified or unsourced input before making requests", async () => {
-    await expect(releaseWriting("work-1", draft, [])).rejects.toThrow("Every material claim");
-    await expect(releaseWriting("work-1", draft, [{ ...claim, source: "" }])).rejects.toThrow("Every material claim");
-    expect(authedFetch).not.toHaveBeenCalled();
+  it("preserves actionable conflict messages", async () => {
+    vi.mocked(authedFetch).mockResolvedValueOnce(Response.json({ detail: "A newer draft has been saved." }, { status: 409 }));
+    await expect(saveWritingSnapshot("work-1", draft, [], "request", null)).rejects.toThrow("A newer draft");
   });
 });

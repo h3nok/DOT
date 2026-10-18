@@ -225,12 +225,19 @@ html:has(.home-journey) {
   --architecture-line: color-mix(in oklch, var(--foreground) 68%, transparent);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 38%, transparent);
   --architecture-label: color-mix(in oklch, var(--foreground) 94%, transparent);
+  /* Labels sit on tinted rings, not the page: a translucent halo still lifts
+     them off crossing lines without glowing against the tint. */
+  --architecture-label-halo: color-mix(in oklch, var(--background) 40%, transparent);
   --architecture-origin: var(--theory-origin);
   --architecture-big-c: var(--theory-big-c);
   --architecture-rf: var(--theory-rf);
   /* Reality Frames are built, not grown: a fixed bronze, apart from any theme accent. */
   --architecture-rf-ring: oklch(0.56 0.095 62);
   --architecture-local: var(--theory-local);
+  /* The two process loops take hues no ring uses: plum for Big C's outer loop,
+     amber for Little c's inner loop, so direction of travel reads at a glance. */
+  --architecture-loop-outer: oklch(0.55 0.17 350);
+  --architecture-loop-inner: oklch(0.64 0.17 48);
   --architecture-live: color-mix(
     in oklch,
     var(--organism-accent-strong) 28%,
@@ -302,6 +309,8 @@ html:has(.home-journey) {
   max-width: 86rem;
 }
 
+.home-architecture-touch-nav { display: none; }
+
 .home-hero-layout {
   display: block;
   width: 100%;
@@ -321,36 +330,64 @@ html:has(.home-journey) {
 }
 
 .home-hero-margin {
+  /* One measure for every block under the headline, so the column keeps a
+     single right edge. The headline alone may run to the full column. */
+  --home-hero-measure: 34rem;
+  position: relative;
+  isolation: isolate;
   width: 100%;
   max-width: 36rem;
   min-width: 0;
   margin-inline: auto;
 }
 
-.home-hero-masthead {
-  position: relative;
-  isolation: isolate;
-  text-align: left;
-}
-
-.home-hero-masthead::before {
+/* Quiet the chosen field behind the words, as reading mode does. Eased ramps
+   on every side let the edge dissolve instead of reading as a panel. */
+.home-hero-margin::before {
+  --home-hero-fade:
+    transparent,
+    rgb(0 0 0 / 0.3) 1.5rem,
+    rgb(0 0 0 / 0.75) 3.5rem,
+    #000 5.5rem,
+    #000 calc(100% - 5.5rem),
+    rgb(0 0 0 / 0.75) calc(100% - 3.5rem),
+    rgb(0 0 0 / 0.3) calc(100% - 1.5rem),
+    transparent;
   position: absolute;
   z-index: -1;
-  inset: -1.5rem -1rem 0;
-  background: radial-gradient(
-    ellipse,
-    color-mix(in oklab, var(--appearance-page-tone, var(--background)) 92%, transparent),
-    transparent 78%
-  );
+  inset: -4.5rem -5.5rem;
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 80%, transparent);
   content: "";
+  -webkit-mask-image:
+    linear-gradient(to right, var(--home-hero-fade)),
+    linear-gradient(to bottom, var(--home-hero-fade));
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, var(--home-hero-fade)),
+    linear-gradient(to bottom, var(--home-hero-fade));
+  mask-composite: intersect;
   pointer-events: none;
 }
 
+.home-hero-masthead {
+  position: relative;
+  text-align: left;
+}
+
+/* Actions size to their words; they are objects in the column, not bands
+   across it. */
 .home-hero-entry {
   display: grid;
+  justify-items: start;
   gap: 0.25rem;
-  max-width: 28rem;
-  margin: 2.25rem 0 0;
+  max-width: var(--home-hero-measure);
+  margin: 1.75rem 0 0;
+}
+
+/* The secondary path starts on the column's left edge, like everything above it. */
+.home-hero-entry .dot-focus-nav__secondary {
+  justify-self: start;
+  padding-inline: 0 0.25rem;
 }
 
 .home-hero-entry > a {
@@ -358,36 +395,29 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
-/* The primary invitation reads like a chapter opener: a quiet note, then the
-   line itself, underlined by a seed of ink that grows when it is chosen. */
+/* The primary invitation uses the shared paper button, with three dots that
+   appear from left to right when the reader hovers or focuses it. */
 .home-hero-entry .dot-focus-nav__primary.dot-button {
-  gap: 1rem;
-  padding: 1.125rem 1rem 1.125rem 1.125rem;
-  background:
-    radial-gradient(
-      ellipse at 0% 0%,
-      color-mix(in oklab, var(--organism-accent-strong) 12%, transparent),
-      transparent 65%
-    ),
-    color-mix(in oklab, var(--background) 95%, var(--foreground));
-  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--foreground) 7%, transparent);
+  min-height: 3.75rem;
+  gap: 0.875rem;
+  padding: 0.75rem 0.875rem 0.75rem 1rem;
 }
 
 .home-hero-entry .dot-button__icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--organism-accent-strong) 20%, transparent),
-    transparent 70%
-  );
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.home-hero-entry .dot-button__icon > svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .home-hero-entry .dot-button__copy {
   display: grid;
   justify-items: start;
   gap: 0.375rem;
+  margin-right: 0.5rem;
 }
 
 .home-hero-entry .dot-button__copy > span {
@@ -402,26 +432,34 @@ html:has(.home-journey) {
 }
 
 .home-hero-entry .dot-button__copy strong {
+  position: relative;
   padding-bottom: 0.3rem;
-  background: linear-gradient(
-      90deg,
-      var(--organism-accent-strong),
-      color-mix(in oklab, var(--organism-accent-strong) 35%, transparent)
-    )
-    no-repeat 0 100% / 1.75rem 1.5px;
-  font-size: clamp(1.25rem, 1.6vw, 1.375rem);
+  font-size: 1.125rem;
   letter-spacing: -0.02em;
   line-height: 1.2;
   text-decoration: none;
   text-wrap: balance;
 }
 
+.home-hero-entry .dot-button__copy strong::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 4px;
+  background: radial-gradient(circle, currentColor 1.75px, transparent 2px)
+    0 0 / 10px 4px repeat-x;
+  clip-path: inset(0 100% 0 0);
+  content: "";
+  pointer-events: none;
+}
+
 .home-hero-entry .dot-button__end-icon {
   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 16%, transparent);
 }
 
-.home-hero-entry .dot-focus-nav__primary:focus-visible .dot-button__copy strong {
-  background-size: 100% 1.5px;
+.home-hero-entry .dot-focus-nav__primary:focus-visible .dot-button__copy strong::after {
+  clip-path: inset(0);
 }
 
 .home-hero-entry .dot-focus-nav__primary:not(:disabled):focus-visible .dot-button__end-icon {
@@ -431,8 +469,8 @@ html:has(.home-journey) {
 }
 
 @media (hover: hover) {
-  .home-hero-entry .dot-focus-nav__primary:hover .dot-button__copy strong {
-    background-size: 100% 1.5px;
+  .home-hero-entry .dot-focus-nav__primary:hover .dot-button__copy strong::after {
+    clip-path: inset(0);
   }
 
   .home-hero-entry .dot-focus-nav__primary:not(:disabled):hover .dot-button__end-icon {
@@ -443,8 +481,8 @@ html:has(.home-journey) {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]) .home-hero-entry .dot-button__copy strong {
-    transition: background-size 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  html:not([data-motion="still"]) .home-hero-entry .dot-button__copy strong::after {
+    transition: clip-path 480ms steps(3, end);
   }
 
   html:not([data-motion="still"]) .home-hero-entry .dot-button__end-icon {
@@ -466,7 +504,6 @@ html:has(.home-journey) {
     var(--foreground)
   );
   font-family: var(--home-public-display-font);
-  margin-bottom: 1.5rem;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.015em;
@@ -491,106 +528,118 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
+/* One wide line on desktop: the sentence is about 10.3 × its size wide, so
+   4vw keeps it clear of the architecture figure at every desktop width. */
 .home-hero-masthead .home-hero-title {
-  font-size: clamp(4.5rem, 8vw, 7rem);
-  line-height: 1;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.08;
 }
 
-/* Ink spreads around the word; the letters retain the theme's readable ink. */
-.home-love-ink {
-  color: color-mix(in oklab, var(--foreground) 62%, #b87992);
-  position: relative;
-  display: inline-block;
-  isolation: isolate;
+@media (min-width: 1024px) {
+  .home-hero-masthead .home-hero-title > span {
+    white-space: nowrap;
+  }
 }
 
-.home-love-ink::before {
-  position: absolute;
-  z-index: -1;
-  inset: -0.45em -0.6em -0.5em -0.4em;
-  background:
-    radial-gradient(ellipse at 36% 58%, color-mix(in oklab, var(--organism-accent-strong) 28%, transparent), transparent 68%),
-    radial-gradient(ellipse at 72% 35%, color-mix(in oklab, var(--organism-accent) 18%, transparent), transparent 65%);
-  mask-image: radial-gradient(ellipse, black 20%, transparent 70%);
-  content: "";
-  pointer-events: none;
+.home-hero-proposition,
+.home-concept-slideshow {
+  --home-critical-ink: color-mix(in oklab, var(--public-copper) 75%, var(--foreground));
 }
 
-.home-hero-love-quote {
-  max-width: 28rem;
+.dark .home-hero-proposition,
+.dark .home-concept-slideshow {
+  --home-critical-ink: var(--public-sand);
+}
+
+html[data-contrast="high"] .home-hero-proposition,
+html[data-contrast="high"] .home-concept-slideshow {
+  --home-critical-ink: var(--foreground);
+}
+
+.home-hero-subtitle {
+  max-width: var(--home-hero-measure);
   margin: 1rem 0 0;
-}
-
-.home-hero-love-quote p {
-  margin: 0;
-  color: var(--foreground);
+  color: color-mix(in oklab, var(--foreground) 88%, var(--background));
   font-family: var(--home-public-reading-font);
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  line-height: 1.45;
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.6;
   text-wrap: pretty;
 }
 
-.home-hero-love-quote cite {
+/* Light paper takes near-full ink; dark keeps its softer step. */
+html:not(.dark) .home-hero-subtitle {
+  color: color-mix(in oklab, var(--foreground) 95%, var(--background));
+}
+
+.home-hero-subtitle > span {
   display: block;
-  margin-top: 0.75rem;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.75rem;
-  font-style: normal;
-  line-height: 1.5;
 }
 
-.home-hero-love-quote a {
+.home-hero-subtitle > span + span {
+  margin-top: .375rem;
+  text-wrap: balance;
+}
+
+.home-hero-subtitle strong {
+  color: var(--home-critical-ink);
+  font-weight: 600;
+}
+
+html[data-contrast="high"] .home-hero-subtitle strong {
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-underline-offset: .2em;
 }
 
-html[data-contrast="high"] .home-love-ink::before,
-html[data-field="off"] .home-love-ink::before {
-  content: none;
+.home-hero-opening-copy {
+  max-width: 30rem;
+  margin: 1rem 0 0;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.65;
+  text-wrap: pretty;
 }
 
 .home-hero-ask {
   width: 100%;
   max-width: none;
-  margin-top: 0.85rem;
+  margin-top: 0.75rem;
   opacity: 0.94;
   transition: opacity 180ms ease;
 }
 
+/* An aside to the invitation, set off by a hairline rather than a box. */
 .home-concept-slideshow {
-  max-width: 32rem;
-  margin-top: 1.75rem;
+  max-width: var(--home-hero-measure, 34rem);
+  margin-top: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
   text-align: left;
 }
 
 .home-concept-slideshow-eyebrow {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin: 0 0 0.625rem;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
   color: var(--muted-foreground);
   font-family: var(--home-public-display-font);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
 .home-concept-slideshow-eyebrow > span + span {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
   color: color-mix(in oklab, var(--organism-accent-strong) 70%, var(--foreground));
 }
 
 .home-concept-slideshow-eyebrow > span + span::before {
-  width: 1.25rem;
-  height: 1px;
-  background: currentColor;
-  content: "";
-  opacity: 0.5;
+  color: var(--muted-foreground);
+  content: "·";
 }
 
 .home-concept-slideshow-body {
@@ -601,6 +650,17 @@ html[data-field="off"] .home-love-ink::before {
 .home-concept-slideshow-content {
   grid-area: 1 / 1;
   min-width: 0;
+}
+
+/* The sizing copies draw their text from data-ghost, and the visual label is
+   repeated for screen readers inside the slide; neither enters a selection, so
+   copied text reads once, in order. */
+.home-concept-slideshow-size [data-ghost]::before {
+  content: attr(data-ghost);
+}
+
+.home-concept-slideshow-eyebrow {
+  user-select: none;
 }
 
 .home-concept-slideshow-size {
@@ -635,13 +695,14 @@ html[data-field="off"] .home-love-ink::before {
   margin-left: 0.05em;
 }
 
+/* Reading prose takes the reading face and ink, like the subtitle above it. */
 .home-concept-slideshow-explanation {
-  max-width: 48ch;
+  max-width: 31rem;
   margin: 0.375rem 0 0;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.9375rem;
-  line-height: 1.55;
+  color: color-mix(in oklab, var(--foreground) 80%, var(--background));
+  font-family: var(--home-public-reading-font);
+  font-size: 1rem;
+  line-height: 1.6;
   text-wrap: pretty;
 }
 
@@ -653,58 +714,97 @@ html[data-field="off"] .home-love-ink::before {
   margin-top: 0.5rem;
 }
 
-/* Position in a finite sequence; the current mark fills while it waits to turn. */
-.home-concept-slideshow-rail {
-  display: flex;
-  gap: 0.25rem;
+/* ── Frames ──────────────────────────────────────────────────────────────
+   Outside perspectives and rejected assumptions take copper; DOT's response
+   takes the organism's accent. Explicit labels carry the distinction in
+   high contrast too. DOT concepts keep the page's own ink. */
+.home-concept-slideshow {
+  --home-frame-status-quo: var(--home-critical-ink);
+  --home-frame-status-quo-rule: color-mix(in oklab, var(--home-frame-status-quo) 70%, transparent);
+  --home-frame-reply: color-mix(in oklab, var(--foreground) 28%, var(--organism-accent-strong));
+  --home-frame-reply-rule: color-mix(in oklab, var(--organism-accent-strong) 70%, transparent);
+}
+
+.home-concept-slideshow [data-frame="status-quo"] {
+  --home-frame-ink: var(--home-frame-status-quo);
+  --home-frame-rule: var(--home-frame-status-quo-rule);
+}
+
+.home-concept-slideshow [data-frame="reply"] {
+  --home-frame-ink: var(--home-frame-reply);
+  --home-frame-rule: var(--home-frame-reply-rule);
+}
+
+.home-concept-slideshow-size[data-frame],
+.home-concept-slideshow-content[data-frame] {
+  padding-left: 0.875rem;
+  border-left: 2px solid var(--home-frame-rule);
+}
+
+.home-concept-slideshow-eyebrow[data-frame] > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.5rem 0.25rem;
+  border: 1px solid color-mix(in oklab, var(--home-frame-ink) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--home-frame-ink) 9%, transparent);
+  color: var(--home-frame-ink);
+}
+
+.home-concept-slideshow-content[data-frame] .home-concept-slideshow-term {
+  color: var(--home-frame-ink);
+}
+
+.home-concept-slideshow-source {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.6875rem;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.home-concept-slideshow-source a {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.home-concept-slideshow-source a:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+html[data-contrast="high"] .home-concept-slideshow {
+  --home-frame-status-quo: var(--foreground);
+  --home-frame-status-quo-rule: var(--foreground);
+  --home-frame-reply: var(--foreground);
+  --home-frame-reply-rule: var(--foreground);
+}
+
+html[data-contrast="high"] .home-concept-slideshow-content[data-frame="reply"] {
+  border-left-style: double;
+  border-left-width: 4px;
+}
+
+html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:first-child {
+  background: var(--background);
+  border-color: var(--foreground);
+}
+
+/* Position in a finite sequence, as a quiet count rather than a moving bar. */
+.home-concept-slideshow-count {
   margin: 0;
-  padding: 0;
-  list-style: none;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
-.home-concept-slideshow-rail > li {
-  position: relative;
-  flex: 1;
-  height: 2px;
-  overflow: hidden;
-  border-radius: 1px;
-  background: color-mix(in oklab, var(--foreground) 14%, transparent);
-}
-
-.home-concept-slideshow-rail > li[data-state="read"] {
-  background: color-mix(in oklab, var(--foreground) 42%, transparent);
-}
-
-.home-concept-slideshow-rail > li[data-state="current"] {
-  background: var(--organism-accent-strong);
-}
-
-.home-concept-slideshow-rail > li[data-state="current"]:has(> span) {
-  background: color-mix(in oklab, var(--organism-accent-strong) 24%, transparent);
-}
-
-.home-concept-slideshow-rail > li > span {
-  position: absolute;
-  inset: 0;
-  background: var(--organism-accent-strong);
-  transform-origin: left center;
-  animation: home-concept-rail-fill linear both;
-}
-
-@keyframes home-concept-rail-fill {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-concept-slideshow-rail > li > span {
-    animation: none;
-  }
+.home-concept-slideshow-count > span {
+  color: var(--foreground);
 }
 
 .home-concept-slideshow-controls {
@@ -854,13 +954,13 @@ html[data-field="off"] .home-love-ink::before {
   opacity: 1;
 }
 
-/* The loops exist only while Process is the concept in view. */
+/* Process loops follow their owning process's entrance; Process Rules brings
+   them fully forward. Their existing dash flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
-  opacity: 0;
+  opacity: 0.62;
   pointer-events: none;
   stroke-linecap: round;
-  stroke-width: 1.4;
   transition: opacity 360ms ease;
 }
 
@@ -868,26 +968,53 @@ html[data-field="off"] .home-love-ink::before {
   opacity: 1;
 }
 
+.home-architecture-process-loop {
+  stroke: var(--loop-ink);
+  stroke-width: 2.2;
+  stroke-dasharray: 7 7;
+}
+
+.home-architecture-process-loop-halo {
+  stroke: var(--background);
+  stroke-width: 6.5;
+  opacity: 0.85;
+}
+
 .home-architecture-process-loop--outer {
-  stroke: var(--architecture-big-c);
+  --loop-ink: var(--architecture-loop-outer);
 }
 
 .home-architecture-process-loop--inner {
-  stroke: var(--architecture-local);
+  --loop-ink: var(--architecture-loop-inner);
 }
 
 .home-architecture-loop-arrow--outer {
-  fill: var(--architecture-big-c);
+  fill: var(--architecture-loop-outer);
 }
 
 .home-architecture-loop-arrow--inner {
-  fill: var(--architecture-local);
+  fill: var(--architecture-loop-inner);
+}
+
+/* Dashes travel clockwise, the way the arcs are drawn; one period per cycle keeps it seamless. */
+@keyframes home-architecture-loop-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+html:not([data-motion="still"]) .home-architecture-process-loop {
+  animation: home-architecture-loop-flow 1.8s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .home-hero-architecture__svg [data-part],
   .home-architecture-process-loops {
     transition: none;
+  }
+
+  .home-architecture-process-loop {
+    animation: none !important;
   }
 }
 
@@ -1406,9 +1533,9 @@ html[data-field="off"] .home-love-ink::before {
   font-style: italic;
   font-weight: 500;
   paint-order: stroke fill;
-  stroke: var(--background);
+  stroke: var(--architecture-label-halo, var(--background));
   stroke-linejoin: round;
-  stroke-width: 4px;
+  stroke-width: 3.5px;
 }
 
 /* Beyond c₁'s current awareness: present in RF₀, not yet coupled. */
@@ -1580,9 +1707,9 @@ html[data-field="off"] .home-love-ink::before {
   font-weight: 600;
   letter-spacing: -0.1px;
   paint-order: stroke fill;
-  stroke: var(--background);
+  stroke: var(--architecture-label-halo, var(--background));
   stroke-linejoin: round;
-  stroke-width: 5px;
+  stroke-width: 3px;
 }
 
 .home-architecture-label-leader {
@@ -1611,6 +1738,8 @@ html[data-field="off"] .home-love-ink::before {
   --architecture-rf: color-mix(in oklab, var(--theory-rf) 68%, var(--foreground));
   --architecture-rf-ring: oklch(0.76 0.09 68);
   --architecture-local: color-mix(in oklab, var(--theory-local) 68%, var(--foreground));
+  --architecture-loop-outer: oklch(0.76 0.15 350);
+  --architecture-loop-inner: oklch(0.8 0.15 60);
 }
 
 .dark .home-hero-architecture .home-architecture-ring-label text {
@@ -1646,6 +1775,8 @@ html[data-contrast="high"] .home-hero-environment {
   --architecture-rf: var(--foreground);
   --architecture-rf-ring: var(--foreground);
   --architecture-local: var(--foreground);
+  --architecture-loop-outer: oklch(0.45 0.2 350);
+  --architecture-loop-inner: oklch(0.55 0.19 48);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 34%, transparent);
   --architecture-live: var(--foreground);
   --architecture-thread-from: var(--foreground);
@@ -1723,125 +1854,153 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-hero-copy-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) 1.3s both;
   }
 
-  /* ─ Emergence choreography: the diagram assembles in the theory's own
-     causal order. T·E field first; Big C expands from a single dot within
-     it; RF₀ resolves inside Big C; Little c emerges within RF₀; relations
-     and options arrive; intent reaches out; the names come last. ─ */
+  /* The source is context. Big C emerges first; every Frame resolves next;
+     only then do local experiencers, their relations, and Intent appear.
+     The figure starts once when it enters view, rather than offscreen. */
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="waiting"] .home-hero-architecture__svg {
+    opacity: 0;
+    visibility: hidden;
+  }
 
-  /* 1 · T·E: the field of continuity and possibility. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-field-wash {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-field-wash {
     animation: home-field-reveal 650ms ease-out 100ms both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-origin-boundary {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-origin-boundary,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-field-contours {
     animation: home-architecture-emerge 650ms ease-out 150ms both;
   }
 
-  /* 2 · Big C: one dot of consciousness, expanding to hold everything. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c-zone,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c circle {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c-zone,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle {
     transform-box: fill-box;
     transform-origin: center;
     animation: home-big-c-emerge 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-big-c-zone {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c-zone {
     animation-delay: 350ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c circle[data-contour="1"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle[data-contour="1"] {
     animation-delay: 420ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"]
-    .home-architecture-big-c circle[data-contour="2"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-big-c circle[data-contour="2"] {
     animation-delay: 560ms;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-organism-membrane {
-    animation: home-architecture-emerge 500ms ease-out 1.3s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-organism-membrane {
+    animation: home-architecture-emerge 280ms ease-out 1.5s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-measure-marks {
-    animation: home-architecture-emerge 520ms ease-out 1.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-process-loop-stage[data-loop="outer"] {
+    animation: home-architecture-emerge 300ms ease-out 1.8s both;
   }
 
-  /* 3 · RF₀: a generated Reality Frame resolving inside Big C. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-process-loop-stage[data-loop="inner"] {
+    animation: home-architecture-emerge 300ms ease-out 3.6s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="origin"] {
+    animation: home-architecture-emerge 300ms ease-out 400ms both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="big-c"] {
+    animation: home-architecture-emerge 300ms ease-out 1.15s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame {
     transform-box: fill-box;
     transform-origin: center;
-    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
+    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-polar-scale {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame-body {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: home-frame-resolve 650ms cubic-bezier(0.22, 1, 0.36, 1) 1.95s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(2) .home-architecture-other-frame-body {
+    animation-delay: 2.15s;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(3) .home-architecture-other-frame-body {
+    animation-delay: 2.35s;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-polar-scale {
     transform-box: view-box;
     transform-origin: 348px 352px;
-    animation: home-polar-calibrate 860ms cubic-bezier(0.22, 1, 0.36, 1) 1.7s both;
+    animation: home-polar-calibrate 600ms cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-coordinate-axis {
-    animation: home-architecture-emerge 520ms ease-out 1.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-coordinate-axis,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-measure-marks {
+    animation: home-architecture-emerge 350ms ease-out 2.3s both;
   }
 
-  /* 4 · Little c: a local experiencer condensing within the Frame. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-little-c {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="reality-frame"] {
+    animation: home-architecture-emerge 300ms ease-out 2.4s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-experiencer-stage {
+    animation: home-architecture-layer-available 1ms linear 3.15s both;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-little-c {
     transform-box: fill-box;
     transform-origin: center;
-    animation: home-local-resolve 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: home-local-resolve 400ms cubic-bezier(0.22, 1, 0.36, 1) 3.15s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-ring-label[data-layer="little-c"] {
-    animation: home-architecture-emerge 400ms ease-out both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-peer-centres {
+    animation: home-architecture-emerge 400ms ease-out 3.35s both;
   }
 
-  /* 5 · Relations: awareness boundary, offered options, other centres. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-awareness-radius {
-    animation: home-architecture-emerge 480ms ease-out 2.2s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"] {
+    animation: home-architecture-emerge 300ms ease-out 3.4s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame-options,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-frame-constraint,
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-social-field {
-    animation: home-architecture-emerge 520ms ease-out 2.3s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-awareness-radius {
+    animation: home-architecture-emerge 450ms ease-out 3.7s both;
   }
 
-  /* 6 · Intent: the chosen line draws solid, its potential continues dotted. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-awareness-trace {
-    animation: home-awareness-trace-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) 2.5s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="awareness-radius"] {
+    animation: home-architecture-emerge 300ms ease-out 3.95s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-potential-trace {
-    animation: home-potential-trace-emerge 450ms ease-out 2.85s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame-options,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame-constraint {
+    animation: home-architecture-emerge 400ms ease-out 4.1s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-causal-trace circle {
-    animation: home-architecture-emerge 260ms ease-out 3.2s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-social-relations {
+    animation: home-architecture-emerge 400ms ease-out 4.3s both;
   }
 
-  /* 7 · The names arrive only after the things they name. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-ring-label:not([data-layer="little-c"]) {
-    animation: home-architecture-emerge 480ms ease-out 2.9s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-awareness-trace,
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-thread-glow {
+    animation: home-awareness-trace-draw 450ms cubic-bezier(0.22, 1, 0.36, 1) 4.55s both;
   }
 
-  /* 8 · Big C's further Reality Frames resolve last, one after another. */
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame-body {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: home-frame-resolve 700ms cubic-bezier(0.22, 1, 0.36, 1) 3.5s both;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-potential-trace {
+    animation: home-potential-trace-emerge 450ms ease-out 4.95s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame:nth-child(2) .home-architecture-other-frame-body {
-    animation-delay: 3.85s;
-  }
-
-  .home-hero-environment[data-hero-motion="full"] .home-architecture-other-frame:nth-child(3) .home-architecture-other-frame-body {
-    animation-delay: 4.2s;
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-causal-trace circle {
+    animation: home-architecture-emerge 260ms ease-out 5.45s both;
   }
 
   .home-scroll-cue svg {
     animation: home-cue-breathe 2.4s ease-in-out 3;
   }
+}
+
+@keyframes home-architecture-layer-available {
+  from { opacity: 0; visibility: hidden; }
+  to { opacity: 1; visibility: visible; }
 }
 
 @keyframes home-hero-copy-arrive {
@@ -1964,6 +2123,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 }
 
+
 @keyframes home-cue-breathe {
   0%,
   100% {
@@ -1993,6 +2153,23 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 }
 
+/* The "On this page" rail appears at 1280px; until the layout is wide enough
+   to clear it, give the diagram's column room on the right. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .home-hero-opening {
+    padding-right: 2.5rem;
+  }
+}
+
+/* Short laptop screens: start the column nearer the header so the concept
+   aside clears the fold instead of being cut by it. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .home-hero-layout {
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+  }
+}
+
 @media (max-width: 1023px) {
   .home-hero-environment {
     min-height: auto;
@@ -2018,12 +2195,16 @@ html[data-contrast="high"] .home-hero-kicker {
 }
 
 @media (max-width: 639px) {
+  .home-architecture-touch-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .375rem; margin-bottom: 1rem; }
+  .home-architecture-touch-nav a { display: flex; align-items: center; justify-content: center; min-height: var(--touch-target); border: 1px solid var(--border); border-radius: .5rem; font-size: .8125rem; color: var(--foreground); }
+  .home-architecture-touch-nav a:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+
   .home-hero-environment {
     min-height: auto;
   }
 
   .home-hero-layout {
-    padding-top: 7rem;
+    padding-top: 1.25rem;
     padding-bottom: 3rem;
   }
 
@@ -2060,32 +2241,19 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-entry {
-    margin-top: 1.5rem;
-  }
-
-  .home-hero-entry .dot-focus-nav__primary.dot-button {
-    gap: 0.75rem;
-    padding: 0.875rem 0.75rem 0.875rem 0.875rem;
-  }
-
-  .home-hero-entry .dot-button__icon {
-    display: none;
+    margin-top: 1.25rem;
   }
 
   .home-hero-entry .dot-button__copy > span {
     letter-spacing: 0.1em;
   }
 
-  .home-hero-entry .dot-button__copy strong {
-    font-size: 1.1875rem;
-  }
-
   .home-concept-slideshow {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
   }
 
   .home-concept-slideshow-explanation {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 
   /* Keep the complete concentric model large enough to read without letting
@@ -2145,9 +2313,9 @@ html[data-contrast="high"] .home-hero-kicker {
   position: relative;
   display: grid;
   align-items: center;
-  min-height: calc(100svh - 4.5rem);
+  min-height: 0;
   overflow: clip;
-  padding: clamp(4rem, 9vw, 8rem) 0;
+  padding: clamp(1.5rem, 3vw, 3rem) 0;
   border: 0;
   background: transparent;
 }
@@ -2194,7 +2362,7 @@ html[data-contrast="high"] .home-hero-kicker {
   width: 100%;
   max-width: 76rem;
   margin: 0 auto;
-  padding: clamp(3rem, 5vw, 5rem) clamp(1.5rem, 3.5vw, 3rem);
+  padding: clamp(1.75rem, 3vw, 3rem) clamp(1.25rem, 3vw, 2.5rem);
   border: 0;
   border-radius: var(--appearance-ui-panel-radius, 1.5rem);
   background:
@@ -2730,7 +2898,7 @@ html[data-contrast="high"] .home-hero-kicker {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
   padding: 1rem 0;
   border: 0;
   color: var(--foreground);
@@ -2856,7 +3024,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
 /* Surfaces carry the hierarchy; typography and spacing replace dividing rules. */
 .home-theory-layers {
-  padding-block: 3rem 6rem;
+  padding-block: 1rem 2rem;
 }
 .home-theory-layer-next-title {
   font-family: var(--home-theory-interface-font);
@@ -2916,7 +3084,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 }
 .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-copy {
   max-width: 52rem;
-  margin: 3rem auto 0;
+  margin: 1.5rem auto 0;
 }
 .home-theory-layer-environment[data-layer="little-c"] .dot-page-heading,
 .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-lede {
@@ -2989,7 +3157,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 }
 @media (max-width: 639px) {
   .home-theory-layer-environment {
-    padding: 3.5rem 0;
+    padding: 1.25rem 0;
   }
 
   .home-theory-layer-card {
@@ -3006,11 +3174,11 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
     padding-inline: 0.5rem;
   }
   .home-theory-layer-card {
-    padding: 2.5rem 1.5rem;
+    padding: 1.75rem 1.25rem;
   }
   .home-theory-layer-identity {
     grid-template-columns: 7rem minmax(0, 1fr);
-    padding-block: 0 2.5rem;
+    padding-block: 0 1.25rem;
     gap: 0.5rem 1rem;
   }
   .home-theory-layer-status {
@@ -3034,7 +3202,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
     align-self: start;
   }
   .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-copy {
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
   }
   .home-theory-layer-environment[data-layer="little-c"] .dot-page-heading,
   .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-lede {
@@ -3047,22 +3215,70 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
 
 
-.home-consciousness-101 .home-theory-layer-copy {
-  margin-top: 0;
+/* Cultural conditioning introduces the inquiry before its architecture. */
+.home-culture-environment {
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 96%, var(--foreground));
 }
 
-.home-consciousness-101 .dot-page-heading {
+.home-culture-layout {
+  display: grid;
+  gap: 2rem;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.home-culture-critique,
+.home-culture-love { min-width: 0; }
+
+.home-culture-critique h2 {
+  max-width: 23ch;
   margin-top: 1rem;
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.home-culture-body {
+  max-width: 48ch;
+  margin-top: 1rem;
+  font-family: var(--home-public-reading-font);
+  font-size: 1.125rem;
+  line-height: 1.65;
+}
+
+.home-culture-challenge {
+  margin-top: 1.5rem;
+  color: var(--organism-accent-strong, var(--foreground));
+  font-family: var(--home-public-reading-font);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.home-culture-love {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+
+.home-culture-source { margin-top: 1.25rem; font-size: .8125rem; }
+.home-culture-next { justify-self: start; font-size: .875rem; }
+
+@media (min-width: 900px) {
+  .home-culture-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem clamp(3rem, 6vw, 6rem); }
+  .home-culture-love { padding: 0 0 0 clamp(2rem, 3vw, 3rem); border-top: 0; border-left: 1px solid var(--border); }
+  .home-culture-next { grid-column: 1 / -1; }
 }
 
 .home-love-statement {
   position: relative;
   isolation: isolate;
-  margin: 2rem 0;
-  padding: 1.5rem 0;
+  margin: 1.25rem 0;
+  padding: .5rem 0;
   color: var(--foreground);
   font-family: var(--home-public-reading-font);
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
   font-weight: 600;
   line-height: 1.3;
   text-wrap: balance;
@@ -3087,7 +3303,6 @@ html[data-field="off"] .home-love-statement::before {
 }
 
 @media print {
-  .home-love-ink::before,
   .home-love-statement::before {
     content: none;
   }
@@ -4097,23 +4312,10 @@ html[data-contrast="high"] .arch-mobile-detail {
   }
 }
 
-/* Entrances: one primary route and one quiet reference path. */
-.home-entrances-environment {
-  position: relative;
-  padding: 7.5rem 0;
-  background: var(--home-ground-entrances);
-}
-
-.home-journey > #choose-path.home-entrances-environment { box-shadow: none; }
-.home-entrances-environment .dot-page-heading { font-family: var(--home-public-display-font); }
-.home-entrances-environment .dot-lede { font-size: clamp(1.125rem, 1.5vw, 1.3rem); line-height: 1.65; }
-
-.home-ending-label {
-  font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  letter-spacing: 0.035em;
-  text-transform: none;
+/* A compact reading exit, without another full-height invitation. */
+.home-reading-links {
+  padding-block: clamp(2rem, 5vw, 4rem);
+  scroll-margin-top: 6rem;
 }
 
 .home-path-actions {
@@ -4257,7 +4459,6 @@ html[data-field="off"] .home-hero-stage::before {
 @media (max-width: 639px) {
   .home-reflection-environment,
   .home-architecture-environment,
-  .home-entrances-environment,
   .home-invitation-environment {
     padding-top: 5rem;
     padding-bottom: 5rem;
@@ -4783,16 +4984,16 @@ html[data-field="off"] .home-hero-stage::before {
     display: none !important;
   }
 }
-.home-author-line { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: 1.5rem; min-height: 2.75rem; font-size: .875rem; font-weight: 600; color: var(--foreground); }
-.home-author-line span { font-weight: 400; font-size: .75rem; color: var(--muted-foreground); }
+/* One quiet byline: what this is, then who wrote it, in the eyebrow's own face. */
+.home-hero-byline { display: flex; flex-wrap: wrap; align-items: center; gap: .375rem 0; margin-bottom: .875rem; }
+.home-author-line { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 .5rem; color: var(--foreground); font-family: var(--home-public-display-font); font-size: .875rem; font-weight: 500; line-height: 1.4; transition: color 160ms ease; }
+.home-author-line span { color: var(--muted-foreground); font-size: .75rem; font-weight: 400; }
+.home-author-line::before { align-self: center; width: 1px; height: .875rem; margin-inline: .75rem .25rem; background: color-mix(in oklab, var(--foreground) 22%, transparent); content: ""; }
+/* A thumb-sized target without the empty band a min-height would leave. */
+.home-author-line::after { position: absolute; inset: -.75rem -.5rem; content: ""; }
+.home-author-line:hover { color: var(--organism-accent-strong); }
 .home-author-line:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
-.home-personal-section { position: relative; padding: clamp(3rem, 7vw, 6rem) 0; border-block: 1px solid var(--border); background: color-mix(in oklab, var(--background) 95%, #d3c5ad); scroll-margin-top: 7rem; }
-.home-personal-heading { display: grid; gap: 1.5rem; margin-bottom: 2rem; }
-.home-personal-heading h2 { margin-top: .75rem; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.08; }
-.home-personal-heading > p { align-self: end; max-width: 27rem; color: var(--muted-foreground); font-size: .9375rem; line-height: 1.85; }
-.home-personal-doors { display: grid; gap: 1rem; }
-@media (min-width: 760px) {
-  .home-personal-heading { grid-template-columns: 1fr 1fr; gap: 3rem; }
-  .home-personal-doors { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 639px) {
+  .home-hero-byline { flex-direction: column; align-items: flex-start; }
+  .home-author-line::before { display: none; }
 }
-html[data-contrast="high"] .home-personal-section { background: var(--background); }

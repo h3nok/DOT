@@ -33,11 +33,12 @@ export function SectionHeading({ id, eyebrow, title, className = "", children }:
 }
 
 /** A visual surface; it adds no click handler, focus target, or implied action. */
-export function Surface({ as: Tag = "div", tone = "forest", className = "", children, ...props }: HTMLAttributes<HTMLElement> & {
+export function Surface({ as: Tag = "div", tone = "forest", variant = "panel", className = "", children, ...props }: HTMLAttributes<HTMLElement> & {
   as?: "div" | "article" | "aside" | "section" | "li";
   tone?: IntentTone;
+  variant?: "panel" | "open";
 }) {
-  return <Tag {...props} className={`public-surface ${className}`.trim()} data-tone={tone}>{children}</Tag>;
+  return <Tag {...props} className={`public-surface ${className}`.trim()} data-tone={tone} data-surface={variant}>{children}</Tag>;
 }
 
 type TextLinkProps = { children: ReactNode; icon?: ReactNode } & (

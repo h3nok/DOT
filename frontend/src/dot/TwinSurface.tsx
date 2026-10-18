@@ -377,7 +377,7 @@ const AnswerMarkdown: React.FC<{ children: string; streaming?: boolean }> = ({
 }) => (
   <div
     // Type lives in `.minty-answer` now. The Tailwind utilities here asked for
-    // `font-serif` — which is Playfair in this project — and pinned the size
+    // `font-serif` — which was Playfair in this project then — and pinned the size
     // with literals, so neither the Type nor the Size control could reach it.
     className={`minty-answer text-foreground${
       streaming ? " minty-answer--streaming" : ""

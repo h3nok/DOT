@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import datetime
+from typing import Literal
 
 import pydantic
 
 #: Coarse labels for where someone subscribed. A closed set, because a free-text
 #: field here would become a per-person trail through the site (ADR-0025).
-SOURCES = frozenset({"book", "front", "talk", "concept", "unknown"})
+SOURCES = frozenset({"book", "front", "talk", "concept", "amm", "unknown"})
 
 
 class ReaderSubscribeIn(pydantic.BaseModel):
@@ -18,6 +19,8 @@ class ReaderSubscribeIn(pydantic.BaseModel):
 
     email: pydantic.EmailStr
     source: str = pydantic.Field(default="unknown", max_length=32)
+    publication: Literal["all", "amm"] = "all"
+    include_all: bool = False
 
     @pydantic.field_validator("source")
     @classmethod
@@ -28,6 +31,8 @@ class ReaderSubscribeIn(pydantic.BaseModel):
 class ReaderConfirmIn(pydantic.BaseModel):
     email: pydantic.EmailStr
     code: str = pydantic.Field(min_length=4, max_length=12)
+    publication: Literal["all", "amm"] = "all"
+    include_all: bool = False
 
 
 class ReaderSubscribeAccepted(pydantic.BaseModel):
@@ -67,6 +72,7 @@ class ReaderOut(pydantic.BaseModel):
     id: str
     email: str | None
     source: str | None
+    publication: str = "all"
     confirmed_at: datetime.datetime | None
     created_at: datetime.datetime
     #: Rebuilt per read so every message can carry a working link (ADR-0025).

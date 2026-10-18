@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { authorByline, authorProfiles } from "../content/author";
 import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
-import { DotWordmark } from "./DotWordmark";
+import { DoWordmark } from "./DoWordmark";
 
 const LINK =
-  "text-muted-foreground/60 underline-offset-4 transition-colors hover:text-foreground hover:underline";
+  "text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
 /**
  * The closing line of every public page that ends (ADR-0033): who wrote it, and
@@ -23,10 +23,10 @@ export function SiteColophon({
   variant?: "publication" | "personal";
 }) {
   return (
-    <footer className="dot-page-container py-12">
+    <footer className="site-colophon dot-page-container py-12">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-        <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
-        <p className="text-xs leading-relaxed text-muted-foreground/50">
+        <DoWordmark compact />
+        <p className="text-xs leading-relaxed text-muted-foreground">
           {variant === "personal" ? (
             <>{authorByline} · Independent builder.</>
           ) : (
@@ -42,6 +42,7 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
+          <Link to="/amm" className={LINK}>AMM</Link>
           <Link to="/contact" className={LINK}>Contact</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
@@ -69,7 +70,7 @@ export function SiteColophon({
             </a>
           ))}
           <a href={newsletter.url} className={LINK} rel="noreferrer">
-            {newsletter.title}
+            AMM on LinkedIn
           </a>
         </nav>
       </div>

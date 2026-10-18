@@ -1,10 +1,8 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ArrowDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowDown, BookOpen } from "lucide-react";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
-import { NucleusMark } from "../../../dot";
 import { Disclosure } from "../../../shared/Disclosure";
 import { ArchitectureFocusContext, type ArchitectureFocus } from "./architectureFocus";
 import type { ArchitecturePartId } from "./heroData";
@@ -36,20 +34,20 @@ export function HeroProposition({
     <div className="home-hero-proposition">
       <div className="home-hero-opening">
         <div className="home-hero-margin">
-          <Link to="/about" className="home-author-line">Henok Ghebrechristos <span>Builder · Author · PhD</span></Link>
-          <div className="home-hero-kicker">
-            <span className="dot-mark" aria-hidden="true" />
-            <span>Digital Organism Theory</span>
+          <div className="home-hero-byline">
+            <div className="home-hero-kicker">
+              <span className="dot-mark" aria-hidden="true" />
+              <span>Digital Organism Theory</span>
+            </div>
           </div>
 
           <div className="home-hero-masthead">
             <h1 className="dot-page-heading home-hero-title">
-              <span><span className="home-love-ink">{HOME.title}</span></span>
+              <span>{HOME.title}</span>
             </h1>
-            <blockquote className="home-hero-love-quote">
-              <p>{HOME.loveDefinition}</p>
-              <cite><Link to={HOME.sourcePath}>{HOME.sourceLabel}</Link></cite>
-            </blockquote>
+            <p className="home-hero-subtitle">
+              {HOME.criticalLine}
+            </p>
           </div>
 
           <FocusNav
@@ -57,9 +55,8 @@ export function HeroProposition({
             label="Begin exploring DOT"
             primary={{
               to: "/book/digital-organism-theory/preface?path=start-where-you-live",
-              label: "Read Book One",
-              description: "The preface · Free to read",
-              icon: <NucleusMark size={24} reducedMotion />,
+              label: HOME.primaryAction,
+              icon: <BookOpen strokeWidth={1.5} />,
             }}
             secondary={[{
               href: "#possibility-field",

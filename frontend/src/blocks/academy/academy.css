@@ -87,7 +87,7 @@
 
 .academy-title {
   margin-top: 1.5rem;
-  font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--book-reading-heading-font, "Source Serif 4", Charter, Georgia, serif);
   font-size: clamp(2.8rem, 5vw, 4.5rem);
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -178,6 +178,8 @@
 
 .academy-manifesto-card__foot {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   align-items: center;
   justify-content: space-between;
   margin-top: 1.75rem;
@@ -213,7 +215,7 @@
 .academy-section-heading h2 {
   max-width: 22ch;
   margin-top: 0.75rem;
-  font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--book-reading-heading-font, "Source Serif 4", Charter, Georgia, serif);
   font-size: clamp(2.2rem, 4.2vw, 3.6rem);
   font-weight: 600;
   letter-spacing: -0.035em;
@@ -459,7 +461,7 @@
 
 .academy-book__copy h2 {
   margin-top: 0.8rem;
-  font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--book-reading-heading-font, "Source Serif 4", Charter, Georgia, serif);
   font-size: clamp(2.2rem, 4.2vw, 3.4rem);
   font-weight: 600;
   letter-spacing: -0.035em;
@@ -510,7 +512,7 @@
 
 .academy-end h2 {
   margin-top: 0.8rem;
-  font-family: var(--book-reading-heading-font, "Playfair Display", Georgia, serif);
+  font-family: var(--book-reading-heading-font, "Source Serif 4", Charter, Georgia, serif);
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -527,6 +529,34 @@
 }
 
 /* ── Media Queries ──────────────────────────────────────────────────────── */
+
+@media (max-width: 639px) {
+  .academy-hero {
+    min-height: auto;
+  }
+
+  .academy-hero__inner {
+    gap: 2rem;
+    padding-block: 2.5rem;
+  }
+
+  .academy-title {
+    margin-top: 1.25rem;
+    font-size: clamp(2.25rem, 9vw, 2.8rem);
+  }
+
+  .academy-hero__lede {
+    margin-top: 1.25rem;
+  }
+
+  .academy-hero__actions {
+    margin-top: 1.5rem;
+  }
+
+  .academy-manifesto-card {
+    padding: 1.5rem;
+  }
+}
 
 @media (min-width: 768px) {
   .academy-hero__inner {

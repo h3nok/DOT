@@ -11,7 +11,8 @@ async function mockCrossSiteAuth(page: Page, keepSession: boolean) {
     window.fetch = (input, init) => {
       if (typeof input === "string") {
         const url = new URL(input, location.href);
-        if (url.pathname.startsWith("/v1/")) return original(`${api}${url.pathname}${url.search}`, init);
+        const path = url.pathname.replace(/^\/__dot-api/, "");
+        if (path.startsWith("/v1/")) return original(`${api}${path}${url.search}`, init);
       }
       return original(input, init);
     };
@@ -46,8 +47,8 @@ async function mockCrossSiteAuth(page: Page, keepSession: boolean) {
   });
 }
 
-async function enterCode(page: Page) {
-  await page.goto("/studio/inbox");
+async function enterCode(page: Page, address = "/studio/inbox") {
+  await page.goto(address);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page.getByRole("textbox", { name: "Email address" }).fill("owner@example.test");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
@@ -69,6 +70,39 @@ test("a cross-site cookie keeps the owner signed in after verification and reloa
   await page.reload();
   await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeVisible();
 });
+
+for (const hostname of ["localhost", "127.0.0.1"]) {
+  test(`local sign-in keeps its Lax cookie through reload and logout on ${hostname}`, async ({ page, baseURL }) => {
+    const origin = new URL(baseURL!);
+    origin.hostname = hostname;
+    const api = `${origin.origin}/__dot-api`;
+    await page.route(`${api}/v1/**`, async route => {
+      const headers = await route.request().allHeaders();
+      const signedIn = (headers.cookie || "").includes("dot_session=local-browser-fixture");
+      const path = new URL(route.request().url()).pathname;
+      if (path.endsWith("/otp/request")) return route.fulfill({ json: { expires_in: 600 } });
+      if (path.endsWith("/otp/verify")) return route.fulfill({
+        headers: { "Set-Cookie": "dot_session=local-browser-fixture; Path=/; HttpOnly; SameSite=Lax" },
+        json: { user: member },
+      });
+      if (path.endsWith("/session")) return route.fulfill({ json: { user: signedIn ? member : null } });
+      if (path.endsWith("/logout")) return route.fulfill({
+        headers: { "Set-Cookie": "dot_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0" }, json: { ok: true },
+      });
+      return route.fulfill({ status: signedIn ? 200 : 401, json: { messages: [], page: 1, has_more: false } });
+    });
+    await enterCode(page, `${origin.origin}/studio/inbox`);
+    await expect(page.getByRole("combobox", { name: "Show conversations" })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole("combobox", { name: "Show conversations" })).toBeVisible();
+    expect(await page.evaluate(() => document.cookie)).not.toContain("dot_session");
+    await page.evaluate(async base => {
+      await fetch(`${base}/v1/auth/logout`, { method: "POST", credentials: "include" });
+    }, api);
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeVisible();
+  });
+}
 
 test("a rejected cookie shows a recoverable error instead of reloading to sign-in", async ({ page }) => {
   await mockCrossSiteAuth(page, false);

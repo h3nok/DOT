@@ -30,6 +30,7 @@ import {
   siteContentAvailable,
   type SiteContentBlocks,
   type SiteContentDraft,
+  type SaveCopyOptions,
 } from "../../services/SiteContentService";
 
 interface SiteContentContextValue {
@@ -41,11 +42,22 @@ interface SiteContentContextValue {
   canEdit: boolean;
   editMode: boolean;
   setEditMode: (on: boolean) => void;
-  save: (key: string, value: string, options?: { publish?: boolean }) => Promise<void>;
+  save: (key: string, value: string, options?: SaveCopyOptions) => Promise<SiteContentDraft | undefined>;
   revert: (key: string) => Promise<void>;
 }
 
 const SiteContentContext = createContext<SiteContentContextValue | null>(null);
+// Keep resolver identity stable for isolated readers and their data effects.
+const RELEASED_CONTENT: SiteContentContextValue = {
+  resolve: (_key, released) => released,
+  hasDraft: () => false,
+  draftValue: () => null,
+  canEdit: false,
+  editMode: false,
+  setEditMode: () => undefined,
+  save: async () => undefined,
+  revert: async () => undefined,
+};
 
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const { isOwner } = useAuth();
@@ -105,8 +117,8 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
   );
 
   const save = useCallback(
-    async (key: string, value: string, options: { publish?: boolean } = {}) => {
-      await saveBlock(key, value, options);
+    async (key: string, value: string, options: SaveCopyOptions = {}) => {
+      const row = await saveBlock(key, value, options);
       if (options.publish) {
         const trimmed = value.trim();
         setPublished((current) => {
@@ -116,7 +128,9 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
           return next;
         });
       }
-      await loadDrafts();
+      if (row) setDrafts(current => ({ ...current, [key]: row }));
+      else await loadDrafts();
+      return row;
     },
     [loadDrafts],
   );
@@ -162,17 +176,5 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
  * test, a storybook, a lazily-mounted route) still shows its released copy.
  */
 export function useSiteContent(): SiteContentContextValue {
-  const context = useContext(SiteContentContext);
-  if (context) return context;
-
-  return {
-    resolve: (_key, released) => released,
-    hasDraft: () => false,
-    draftValue: () => null,
-    canEdit: false,
-    editMode: false,
-    setEditMode: () => undefined,
-    save: async () => undefined,
-    revert: async () => undefined,
-  };
+  return useContext(SiteContentContext) ?? RELEASED_CONTENT;
 }

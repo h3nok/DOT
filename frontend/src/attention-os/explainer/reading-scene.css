@@ -1,0 +1,6 @@
+/* One reading focus at a time: each scene is as tall as what it holds, with the same breathing room
+   between scenes. Scrolling stays native; no scene pads itself out to fill a screen. */
+.reading-scene {
+  padding-block: clamp(3.5rem, 9svh, 7rem);
+  scroll-margin-block-start: var(--reading-guide-height, 0px);
+}

@@ -117,7 +117,7 @@ export async function fetchFootprintGraphSnapshot(
     signal?: AbortSignal;
   } = {},
 ): Promise<FootprintGraphSnapshot> {
-  const url = new URL(orchestratorUrl("/v1/graph/snapshot"));
+  const url = new URL(orchestratorUrl("/v1/graph/snapshot"), window.location.origin);
   if (options.platform) url.searchParams.set("platform", options.platform);
   if (options.kind) url.searchParams.set("kind", options.kind);
   if (options.relation) url.searchParams.set("relation", options.relation);
@@ -152,7 +152,7 @@ export async function fetchFootprintImports(
     signal?: AbortSignal;
   } = {},
 ): Promise<FootprintImportRead[]> {
-  const url = new URL(orchestratorUrl("/v1/graph/imports"));
+  const url = new URL(orchestratorUrl("/v1/graph/imports"), window.location.origin);
   if (options.connector) url.searchParams.set("connector", options.connector);
   if (options.status) url.searchParams.set("status", options.status);
   if (options.limit) url.searchParams.set("limit", String(options.limit));

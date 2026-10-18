@@ -1,0 +1,89 @@
+/* One continuous scroll, one concept per viewport. Images sit directly on the page. */
+.amm-hero--inquiry.reading-scene { min-block-size: calc(100svh - 5rem); display: grid; align-content: center; }
+.amm-hero--inquiry .amm-hero-grid { min-height: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); grid-template-rows: auto auto; align-content: center; column-gap: clamp(2rem, 4vw, 4rem); padding-block: 0; }
+.amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); max-width: none; }
+.amm-hero--inquiry .amm-hero-copy { align-self: center; }
+.amm-hero--inquiry h1 { font-size: clamp(2.75rem, 4.6vw, 4.75rem); margin-bottom: 1.1rem; }
+.amm-home-premise { max-width: 37ch; font: clamp(1.125rem, 1.45vw, 1.3rem)/1.7 var(--font-sans); color: var(--muted-foreground); text-wrap: pretty; }
+.amm-hero--inquiry .amm-hero-actions { margin-top: 1.35rem; align-self: end; padding-bottom: 1rem; }
+.amm-hero--inquiry .amm-hero-actions > .amm-button { width: min(100%, 21rem); justify-content: space-between; }
+.amm-home-sections { --explainer-sticky-top: 0px; }
+
+/* The publication's flame marks the current thought; scrolling is its only trigger. */
+.amm-shell .amm-story-flame { width: 2.25rem; height: 2.25rem; }
+.amm-home-sections li:not([data-active]) .amm-story-flame { filter: grayscale(1); opacity: .38; }
+.amm-home-sections li[data-active] .amm-story-flame .amm-mark-heat { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-sections li[data-active] .amm-story-flame .amm-mark-fire { animation: amm-flame-answer 1s ease-out 1; }
+}
+@media (forced-colors: active) {
+  .amm-home-sections li:not([data-active]) .amm-story-flame { filter: none; opacity: 1; }
+}
+
+/* The introduction connects the economic claim to its source before the six scenes begin. */
+.amm-home-overview.reading-scene { padding-block: 0; }
+.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .85fr); gap: 2.5rem clamp(3rem, 6vw, 6rem); align-items: center; margin: 0; padding-block: clamp(3.5rem, 8svh, 6rem); border-block-start: 1px solid var(--border); }
+.amm-overview-heading h2 { margin: 0; font: 600 1rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-argument { display: grid; gap: 1.5rem; }
+.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--foreground); font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
+.amm-overview-intro { max-width: 52ch; margin: 0; font: clamp(1.075rem, 1.35vw, 1.2rem)/1.7 var(--font-sans); color: var(--muted-foreground); }
+.amm-overview-source { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem 1rem; }
+.amm-overview-source .amm-mark.amm-overview-flame { flex: 0 0 2.25rem; width: 2.25rem; height: 2.25rem; margin-top: .1rem; }
+.amm-overview-source .explainer-quote--quiet { flex: 1 1 13rem; min-width: 0; max-width: 100%; border: 0; padding: 0; }
+.amm-overview-source .explainer-quote--quiet p { font: 400 clamp(1.2rem, 1.8vw, 1.65rem)/1.5 var(--font-serif); letter-spacing: -.01em; text-wrap: pretty; }
+.amm-overview-source .explainer-quote cite { margin-top: .75rem; font: 500 .875rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-source .amm-text-link { font: inherit; }
+
+/* Each concept leads with the line the reader was sold, at the size of a headline. */
+.amm-home-overview .explainer-story { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: 100svh; justify-content: center; gap: 1.25rem; padding-block: var(--public-space-xl); }
+.amm-home-overview .explainer-story-steps h3 { max-width: 15ch; font-size: clamp(2.5rem, 4.4vw, 4.5rem); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+.amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { max-width: 40ch; font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.65; }
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker { color: var(--amm-rust); font-size: 1rem; }
+/* AMM's own argument closes each concept: the author's sentence, larger than the explanation, with its chapter. */
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet { max-width: 32rem; margin-top: .25rem; padding-left: 1.25rem; }
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.38 var(--font-serif); letter-spacing: -.015em; color: var(--foreground); text-wrap: pretty; }
+.amm-home-overview .explainer-story .explainer-quote cite { font: 600 .8rem/1.5 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
+
+/* Attentive scenes: the concept being read is fully present; the next waits a step back and settles in,
+   in reading order, when the reader reaches it. The reader's scroll is the only trigger. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li > :not(.explainer-visually-hidden) { transition: opacity .6s cubic-bezier(.2, .7, .2, 1), translate .6s cubic-bezier(.2, .7, .2, 1), color .3s ease; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li:not([data-active]) > :not(.explainer-visually-hidden) { opacity: .3; translate: 0 .9rem; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > h3 { transition-delay: 80ms; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > p:not(.explainer-story-kicker, .explainer-visually-hidden) { transition-delay: 170ms; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > .explainer-quote { transition-delay: 280ms; }
+  /* When the scene changes, the Host dissolves into the next picture rather than cutting to it. */
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .amm-everyday-art { animation: amm-scene-in .8s cubic-bezier(.2, .7, .2, 1) both; }
+}
+@keyframes amm-scene-in { from { opacity: 0; scale: .985; } to { opacity: 1; scale: 1; } }
+
+/* The Host fills the other half of the screen and holds still while its concepts pass. */
+.amm-home-overview .explainer-story-figure { top: 0; height: 100svh; display: grid; align-content: center; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.amm-everyday-art .explainer-artwork-open picture { display: block; position: relative; width: 100%; aspect-ratio: 3 / 2; max-height: 78svh; }
+.amm-everyday-art .explainer-artwork-open img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+@media (max-width: 900px) {
+  .amm-hero--inquiry .amm-hero-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 1.75rem; }
+  .amm-hero--inquiry h1 { max-width: 17ch; font-size: clamp(2.8rem, 7vw, 4rem); }
+  .amm-home-premise { max-width: 42ch; }
+  .amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); justify-self: center; }
+  .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; }
+  .amm-overview-heading { grid-template-columns: 1fr; gap: 2rem; padding-block: clamp(2.5rem, 7svh, 4rem); }
+  .amm-overview-argument { gap: 1.25rem; }
+  .amm-overview-claim { font-size: clamp(2rem, 7vw, 3rem); }
+  /* The picture stays pinned at the top; the rest of the screen holds exactly one concept. */
+  .amm-home-overview .explainer-story { grid-template-columns: 1fr; }
+  .amm-home-overview .explainer-story-figure { height: auto; padding-block: .5rem 0; background: var(--background); border-bottom: 1px solid var(--border); }
+  .amm-everyday-art .explainer-artwork-open picture { max-height: 30svh; }
+  /* The picture itself opens the viewer; its caption would cost the concept a line. */
+  .amm-everyday-art .explainer-artwork-hint { display: none; }
+  .amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: calc(70svh - .5rem - 1px); padding-block: 1.25rem; gap: 1rem; }
+  .amm-home-overview .explainer-story-steps h3 { font-size: clamp(2rem, 8.5vw, 2.6rem); }
+  .amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font-size: 1.15rem; }
+  .amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { font-size: 1.05rem; line-height: 1.6; }
+}
+@media (max-width: 600px) {
+  .amm-hero--inquiry h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
+  .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; }
+}

@@ -25,7 +25,7 @@ export function WritingClaimsEditor({ claims, onChange, disabled }: { claims: Wr
             </label>
             <label className="text-xs">Provenance
               <select value={claim.origin} onChange={(event) => change(index, { origin: event.target.value as WritingClaim["origin"] })} className={`${field} mt-2`}>
-                <option value="author_originated">Author-originated</option><option value="sourced">Sourced</option>
+                <option value="author_originated">Author-originated</option><option value="sourced">Sourced</option><option value="no_external_source">No external source</option>
               </select>
             </label>
           </div>

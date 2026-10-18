@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "amm-chapter-one-the-leech",
+    "title": "Chapter One: The Leech",
+    "kind": "essay",
+    "source": "https://www.linkedin.com/pulse/chapter-one-leech-henok-ghebrechristos-phd-kceqc",
+    "published": "2026-04-18",
+    "revised": "2026-10-15",
+    "revision": false,
+    "part": 1,
+    "partLabel": "Chapter One",
+    "partTitle": "The Leech",
+    "partNote": "Revised edition, October 15, 2026",
+    "partAction": "Read Chapter One"
+  },
+  {
+    "slug": "amm-chapter-two-the-leechs-anatomy",
+    "title": "Chapter Two: The Leech’s Anatomy",
+    "kind": "essay",
+    "source": "https://www.linkedin.com/pulse/chapter-2-leechs-anatomy-henok-ghebrechristos-phd-l1tbf",
+    "published": "2026-07-29",
+    "revised": "2026-10-16",
+    "revision": false,
+    "part": 2,
+    "partLabel": "Chapter Two",
+    "partTitle": "The Leech’s Anatomy",
+    "partNote": "First published July 29, 2026; edited October 16, 2026",
+    "partAction": "Read Chapter Two"
+  },
+  {
+    "slug": "amm-chapter-three-the-host-and-the-infection",
+    "title": "Chapter Three: The Host and the Infection",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-10-15",
+    "revised": "2026-10-15",
+    "revision": false,
+    "part": 3,
+    "partLabel": "Chapter Three",
+    "partTitle": "The Host and the Infection",
+    "partNote": "Working draft, October 15, 2026",
+    "partAction": "Read Chapter Three"
+  },
+  {
+    "slug": "amm-ai-will-not-kill-you",
+    "title": "AI will not kill you. The one saying that it will, will",
+    "kind": "letter",
+    "source": "https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c",
+    "published": "2026-09-20",
+    "revised": "2026-09-20",
+    "revision": false
+  },
+  {
+    "slug": "amm-letter-to-an-american-adult",
+    "title": "A Letter to an American Adult: White Pillage",
+    "kind": "letter",
+    "source": "https://www.linkedin.com/pulse/letter-american-adult-white-pillage-lead-west-golden-henok-mtjic",
+    "published": "2026-09-15",
+    "revised": "2026-09-18",
+    "revision": false
+  }
+]

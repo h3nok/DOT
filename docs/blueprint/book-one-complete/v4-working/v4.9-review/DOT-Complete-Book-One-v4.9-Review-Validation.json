@@ -1,0 +1,56 @@
+{
+  "source_sha256": "96510297619e109186a72a938b559a30b79452aefbdbf67c86a777adbeaa0460",
+  "editorial_operations": 273,
+  "paragraphs_removed": 91,
+  "words_removed_net": 3028,
+  "native_equations_preserved": 101,
+  "equation_fields_preserved": 71,
+  "depth_passages": 26,
+  "protected_structure_unchanged": true,
+  "edits_preserve_existing_runs": true,
+  "changed_package_parts": [
+    "word/document.xml",
+    "docProps/core.xml"
+  ],
+  "author_review_questions": [
+    {
+      "section": "Chapter 3 · The Foundational Architecture",
+      "question": "The author’s recent account allows Big C to emerge in a pre-existing environment. v4.8 instead postulates Big C as fundamental and T/E as capacities within it. This revision preserves the manuscript’s position pending the author’s decision. An emergence revision would require coordinated changes to the postulates, notation, glossary, and diagrams."
+    }
+  ],
+  "manifesto": "Serves L7 (reversible and traceable revision), L8 (useful reading), and L10 (one focus); violates no law.",
+  "contents_pages": {
+    "the_observer_belongs_in_the_inquiry": "v",
+    "the_digital_organism": "1",
+    "the_decoupling_principle": "25",
+    "architecture_of_continuity": "41",
+    "reality_frames": "57",
+    "the_canvas": "75",
+    "the_painting": "93",
+    "the_research_program": "121",
+    "the_theory_returns_to_one_life": "137",
+    "equation_and_notation_guide": "143",
+    "core_terms": "147",
+    "references": "153"
+  },
+  "pages": 174,
+  "references_preserved": 51,
+  "depth_bookmarks": 52,
+  "tagged_pdf": true,
+  "fonts": [
+    "DejaVuMathTeXGyre-Regular",
+    "DejaVuSerif-Italic",
+    "LiberationSerif",
+    "LiberationSerif-Italic",
+    "NimbusRoman-Italic",
+    "NotoSerif-Italic",
+    "OpenSymbol",
+    "SourceSerif4Display-Semibold",
+    "SourceSerif4SmText-Bold",
+    "SourceSerif4SmText-It",
+    "SourceSerif4SmText-Regular",
+    "SourceSerif4SmText-Semibold",
+    "SpaceGroteskLight-Medium"
+  ],
+  "output_sha256": "099f68b40d72d01580d3d718a9e623c7d72ef4a0471fb021a970f3043eda8947"
+}

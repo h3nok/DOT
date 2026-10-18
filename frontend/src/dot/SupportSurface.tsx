@@ -11,6 +11,8 @@ interface SupportSurfaceProps {
   reducedMotion?: boolean;
   titleAs?: "h1" | "h2";
   initialPurpose?: "author" | "lumen";
+  /** Where the reader came from, so author support names what stays free. */
+  context?: "amm";
   onClose: () => void;
 }
 
@@ -31,6 +33,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
   reducedMotion = false,
   titleAs,
   initialPurpose = "lumen",
+  context,
   onClose,
 }) => {
   const {
@@ -38,6 +41,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
     createCheckout, getCheckoutStatus,
   } = useSupport();
   const authorSupport = initialPurpose === "author";
+  const stillFree = context === "amm" ? "Every AMM edition stays free to read" : "The complete book and PDF remain free";
   const available = configured && (!authorSupport || options?.purposes.some((purpose) => purpose.id === "author"));
   const checkoutReturn = useMemo(readCheckoutReturn, []);
   const [returnState, setReturnState] = useState<ReturnState>(checkoutReturn.state);
@@ -126,7 +130,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
           {returnState === "paid" && <Check className="h-7 w-7 text-[color:var(--organism-accent-strong)]" aria-hidden="true" />}
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
             Support never changes access, visibility, or standing inside DOT.
-            The complete book and PDF remain free.
+            {" "}{stillFree}.
           </p>
           {error && <p role="alert" className="text-xs text-destructive">{error}</p>}
         </div>
@@ -175,7 +179,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
     <BloomSurface {...common} kicker="independent work"
       title={authorSupport ? "Support the author" : "Support the work"}
       description={authorSupport
-        ? "A voluntary contribution supports independent writing and research. The complete book and PDF remain free, with no account required."
+        ? `A voluntary contribution supports independent writing and research. ${stillFree}, with no account required.`
         : "A voluntary, one-time payment to the author. It pays for making Minty reliable, deepening the Book One reader, and keeping DOT running. It is not a charitable donation."}
       size="md"
       footer={

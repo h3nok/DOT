@@ -20,13 +20,16 @@ import {
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
 import { DotButton } from "../../shared/DotButton";
+import { AppearanceControl } from "../../organism/AppearanceControl";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { ProseMarkdown } from "../../shared/ProseMarkdown";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { PageIntro, SectionHeading, Surface, TextLink } from "../../shared/design-system/Editorial";
 import type { IntentTone } from "../../attention-os/focus-nav/IntentCard";
-import { BuilderArtwork, ProductArtwork } from "./AboutArtwork";
+import BookOneCover from "../publication/BookOneCover";
+import { ProductArtwork } from "./AboutArtwork";
 import { ProjectShowcase } from "./ProjectShowcase";
+import { MovementShowcase } from "./MovementShowcase";
 import "./about.css";
 
 const projectTones: Record<string, IntentTone> = { sullix: "copper", medroute: "blue", stay: "forest" };
@@ -52,7 +55,7 @@ export default function AboutPage() {
   return (
     <PageShell
       wide
-      header={<PageHeader />}
+      header={<PageHeader controls={<AppearanceControl placement="inline" />} />}
       footer={<SiteColophon variant="personal" />}
       className="about-page"
     >
@@ -63,48 +66,40 @@ export default function AboutPage() {
           )}
           <PageIntro eyebrow={builder.title} title={<>{author.name}{author.suffix && <span className="about-suffix">, {author.suffix}</span>}</>} titleClassName="about-name">
             <p className="about-role">{author.role}</p>
-            <p className="about-headline">{builder.headline}</p>
-            <p className="about-intro">{builder.summary}</p>
-            <div className="about-actions">
-              <DotButton
-                to={projectInquiryHref()}
-                label="Discuss a project"
-                endIcon={<ArrowUpRight />}
-                className="about-primary"
-              />
-              <TextLink href="#about-resume" icon={<ArrowRight />}>Explore the background</TextLink>
-            </div>
           </PageIntro>
         </div>
-        <Surface as="aside" className="about-background" aria-label="Career at a glance">
-          <BuilderArtwork />
-          <p className="dot-label">Research depth. Product experience.</p>
-          <dl>
-            <div><dt>Applied AI research</dt><dd>{career.experience[0].role}<span>{career.experience[0].company}</span></dd></div>
-            <div><dt>Product co-founding</dt><dd>Sullix<span>Hands-on architecture and engineering</span></dd></div>
-            {author.credentials[0] && <div><dt>Research foundation</dt><dd>{author.credentials[0].degree}<span>{author.credentials[0].institution}</span></dd></div>}
-          </dl>
-          <p className="about-location">Based in {career.location}</p>
-        </Surface>
+        <div className="about-hero-invitation">
+          <p className="about-headline">{builder.headline}</p>
+          <div className="about-actions">
+            <DotButton
+              to={projectInquiryHref()}
+              label="Discuss a project"
+              endIcon={<ArrowUpRight />}
+              className="about-primary"
+            />
+            <TextLink href="#about-resume" icon={<ArrowRight />}>View résumé</TextLink>
+          </div>
+        </div>
       </div>
 
       <nav aria-label="On this page" className="about-section-nav">
         <a href="#about-products">Selected work</a>
-        <a href="#about-services">Ways to work together</a>
+        <a href="#about-services">Project work</a>
         <a href="#about-resume">Career & résumé</a>
         <a href="#about-contact">Contact</a>
       </nav>
 
       <section aria-labelledby="about-products" className="about-section">
-        <SectionHeading id="about-products" eyebrow="Products & projects" title="Selected work" />
+        <SectionHeading id="about-products" eyebrow="Ventures & products" title="Selected work" />
         <ul className="about-projects">
           {builderProjects.map((project) => {
             const destination = projectDestination(project);
+            const ProjectHeading = project.movement ? "h4" : "h3";
             const identity = (
               <div className="about-project-identity">
                 <div className="about-project-name">
                   <p className="dot-label">{project.status}</p>
-                  <h3>{project.name}</h3>
+                  <ProjectHeading>{project.name}</ProjectHeading>
                 </div>
                 <div className="about-project-byline">
                   <p className="about-project-role">{project.role}</p>
@@ -112,29 +107,37 @@ export default function AboutPage() {
                 </div>
               </div>
             );
-            return (
-              <Surface as="li" key={project.slug} id={`project-${project.slug}`} className={`about-project${project.showcase ? " about-project-with-showcase" : ""}`} tone={projectTones[project.slug] ?? "forest"}>
-                {project.showcase && identity}
+            const card = (
+              <Surface as={project.movement ? "article" : "li"} variant="open" key={project.slug} id={`project-${project.slug}`} className="about-project" tone={projectTones[project.slug] ?? "forest"}>
                 <div className="about-project-visual">{project.showcase ? <ProjectShowcase showcase={project.showcase} /> : <ProductArtwork kind={project.slug} />}</div>
                 <div className="about-project-copy">
-                  {!project.showcase && identity}
+                  {identity}
                   <div className="about-project-detail">
                     <div className="about-project-description">
                       <p className="about-project-tagline">{project.tagline}</p>
-                      <p>{project.description}</p>
                     </div>
                     <div className="about-project-links">
-                      <ul className="about-project-stack" aria-label={`Technologies for ${project.name}`}>
-                        {project.stack.map(technology => <li key={technology}>{technology}</li>)}
-                      </ul>
                       {destination && (
                         <TextLink href={destination.href} aria-label={`${destination.label}: ${project.name}`}>{destination.label}</TextLink>
                       )}
+                      <details className="about-disclosure about-project-notes">
+                        <summary>Project details</summary>
+                        <p>{project.description}</p>
+                        <ul className="about-project-stack" aria-label={`Technologies for ${project.name}`}>
+                          {project.stack.map(technology => <li key={technology}>{technology}</li>)}
+                        </ul>
+                      </details>
                     </div>
                   </div>
                 </div>
               </Surface>
             );
+            return project.movement ? (
+              <Surface as="li" variant="open" key={project.slug} className="about-project-family" tone="forest">
+                <MovementShowcase movement={project.movement} />
+                {card}
+              </Surface>
+            ) : card;
           })}
         </ul>
         {otherBuilderProjects.map((project) => {
@@ -150,21 +153,20 @@ export default function AboutPage() {
       </section>
 
       <section aria-labelledby="about-services" className="about-section">
-        <SectionHeading id="about-services" eyebrow="Independent contract work" title="Ways to work together" />
+        <SectionHeading id="about-services" eyebrow="Independent contracts" title="Project work" />
         <div className="about-services">
           {builder.services.map((service, index) => (
-            <Surface key={service.title} tone={serviceVisuals[index % serviceVisuals.length].tone}>
+            <Surface variant="open" key={service.title} tone={serviceVisuals[index % serviceVisuals.length].tone}>
               <span className="about-service-symbol" aria-hidden="true">{serviceVisuals[index % serviceVisuals.length].icon}</span>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
-              <p className="about-service-deliverable">{service.deliverable}</p>
             </Surface>
           ))}
         </div>
       </section>
 
       <section aria-labelledby="about-resume" className="about-section">
-        <SectionHeading id="about-resume" eyebrow="Enterprise research to product co-founding" title="Career & résumé" />
+        <SectionHeading id="about-resume" eyebrow={career.background} title="Career & résumé" />
         <div className="about-career-grid">
           <ol className="about-experience">
             {career.experience.map((job) => (
@@ -172,7 +174,6 @@ export default function AboutPage() {
                 <p className="about-period">{job.period}</p>
                 <h3>{job.company}</h3>
                 <p className="about-job-role">{job.role}</p>
-                <p className="about-job-summary">{job.summary}</p>
               </li>
             ))}
           </ol>
@@ -218,8 +219,13 @@ export default function AboutPage() {
       </section>
 
       <section aria-labelledby="about-writing" className="about-section about-writing">
-        <SectionHeading id="about-writing" eyebrow="Alongside the engineering" title="Writing & research" />
+        <div className="about-writing-jacket">
+          <Link to={DOT_BOOK_ONE_ROUTE} aria-label="Open Book One: Consciousness, A Digital Organism">
+            <BookOneCover manifest={manifest ?? undefined} />
+          </Link>
+        </div>
         <div>
+          <SectionHeading id="about-writing" eyebrow="Alongside the engineering" title="Writing & research" />
           <p className="about-writing-intro">{author.summary}</p>
           <div className="about-writing-links">
             <TextLink to={DOT_BOOK_ONE_ROUTE}>Read Book One</TextLink>

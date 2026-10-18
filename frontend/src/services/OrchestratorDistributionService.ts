@@ -17,7 +17,7 @@ export interface DistributionCopy {
 
 const base = `${ORCHESTRATOR_URL.replace(/\/$/, "")}/v1/distribution`;
 async function request<T>(path: string, json?: unknown, signal?: AbortSignal): Promise<T> {
-  const response = await authedFetch(`${base}${path}`, { method: json === undefined ? "GET" : "POST", json, signal });
+  const response = await authedFetch(`${base}${path}`, { sessionOnly: true, method: json === undefined ? "GET" : "POST", json, signal });
   if (!response.ok) {
     const payload = await response.json().catch(() => null) as { detail?: unknown; error?: { message?: unknown } } | null;
     const message = payload?.detail ?? payload?.error?.message;
@@ -33,6 +33,6 @@ export const fetchDistributionCopies = (workId: string, number: number, signal?:
 export const shareReleasedWritingOnLinkedIn = (workId: string, number: number) => request<DistributionCopy>(`${releasePath(workId, number)}/linkedin`, { approved: true });
 export const recordDistributionCopy = (workId: string, number: number, platform: DistributionPlatform, url: string) => request<DistributionCopy>(`${releasePath(workId, number)}/copies`, { platform, url });
 export async function disconnectLinkedIn() {
-  const response = await authedFetch(`${base}/linkedin`, { method: "DELETE" });
+  const response = await authedFetch(`${base}/linkedin`, { sessionOnly: true, method: "DELETE" });
   if (!response.ok) throw new Error("The connection could not be removed. Please try again.");
 }

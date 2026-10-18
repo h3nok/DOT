@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { author, authorContact } from "../../content/author";
 import { leaveReaderList } from "../../dot/useReaderList";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { AmmShell } from "../amm/AmmIdentity";
 
 const LINK =
   "text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]";
@@ -29,6 +30,8 @@ function readToken(): string | null {
 type LeaveState = "leaving" | "left" | "failed" | "no-token";
 
 export default function ReaderLeavePage() {
+  const [publication] = useState(() => new URLSearchParams(window.location.search).get("publication"));
+  const [allPublications] = useState(() => new URLSearchParams(window.location.search).get("scope") === "all");
   const contact = authorContact();
   const [state, setState] = useState<LeaveState>(() => (readToken() ? "leaving" : "no-token"));
   const sent = useRef(false);
@@ -44,21 +47,21 @@ export default function ReaderLeavePage() {
     sent.current = true;
     // The token has done its job; keep it out of history and screenshots.
     window.history.replaceState(null, "", window.location.pathname);
-    void leaveReaderList(token).then((ok) => setState(ok ? "left" : "failed"));
-  }, []);
+    void (allPublications ? leaveReaderList(token, true) : leaveReaderList(token))
+      .then((ok) => setState(ok ? "left" : "failed"));
+  }, [allPublications]);
 
-  return (
-    <PageShell header={<PageHeader />}>
+  const body = (
       <div className="mx-auto max-w-xl" role="status" aria-live="polite">
         <p className="dot-label">Reader list</p>
         {state === "leaving" && <h1 className="dot-page-heading mt-4">Removing you from the list…</h1>}
         {state === "left" && (
           <>
-            <h1 className="dot-page-heading mt-4">You have left the reader list.</h1>
+            <h1 className="dot-page-heading mt-4">{allPublications ? "You have left all writing lists." : publication === "amm" ? "You have unsubscribed from AMM." : "You have left the reader list."}</h1>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-              Nothing more will be sent to that address. If this was a mistake,
+              {allPublications ? "No new editions will be sent from these lists." : "No new editions will be sent from this list. Your other subscriptions are unchanged."} If this was a mistake,
               you can{" "}
-              <Link to="/readers" className={LINK}>
+              <Link to={publication === "amm" ? "/amm/editions#amm-subscribe" : "/readers"} className={LINK}>
                 join again
               </Link>
               .
@@ -92,6 +95,6 @@ export default function ReaderLeavePage() {
           </>
         )}
       </div>
-    </PageShell>
   );
+  return publication === "amm" ? <AmmShell reading>{body}</AmmShell> : <PageShell header={<PageHeader />}>{body}</PageShell>;
 }

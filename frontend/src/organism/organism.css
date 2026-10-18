@@ -284,6 +284,13 @@ html[data-organism-reading="true"] .organism-membrane {
   }
 }
 
+/* On light paper the field's fine lines compete with diagrams and small type,
+   so it settles a step by default. The reader's Presence dial still rides on
+   top, and high contrast below keeps its own setting. */
+html:not(.dark) {
+  --appearance-field-opacity: 0.65;
+}
+
 html[data-contrast="high"] {
   --appearance-field-opacity: 0.62;
 }

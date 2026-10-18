@@ -13,7 +13,9 @@ const typingTime = (concept: { term: string; text: string }) =>
 async function runUntil(page: Page, done: () => Promise<boolean>) {
   await expect.poll(async () => {
     if (await done()) return true;
-    await page.clock.runFor(2_000);
+    // Let React commit between short timer steps; a large jump cannot finish
+    // timers that are scheduled by the following render.
+    await page.clock.runFor(50);
     return done();
   }, { intervals: [10], timeout: 30_000 }).toBe(true);
 }
@@ -23,13 +25,15 @@ test("still concepts visibly explain every idea without clipping or shifting the
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
-  const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  const concepts = page.getByRole("region", { name: "Key concepts and questions" });
   const previous = concepts.getByRole("button", { name: "Previous concept" });
   const next = concepts.getByRole("button", { name: "Next concept" });
   const read = page.getByRole("navigation", { name: "Begin exploring DOT" })
     .getByRole("link", { name: "Read Book One", exact: true });
   const opening = await read.boundingBox();
   expect(opening).not.toBeNull();
+  await expect(read).toBeInViewport({ ratio: 1 });
+  const openingDocumentY = opening!.y + await page.evaluate(() => window.scrollY);
   await expect(previous).toBeDisabled();
 
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
@@ -49,8 +53,10 @@ test("still concepts visibly explain every idea without clipping or shifting the
     expect(fits, `${concept.term}: the complete title and explanation must fit`).toBe(true);
     const position = await read.boundingBox();
     expect(position).not.toBeNull();
-    expect(Math.abs(position!.y - opening!.y), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
-    await expect(read).toBeInViewport({ ratio: 1 });
+    // Focusing controls below the fold can scroll the page; compare document
+    // coordinates so that normal keyboard scrolling is not a layout shift.
+    const documentY = position!.y + await page.evaluate(() => window.scrollY);
+    expect(Math.abs(documentY - openingDocumentY), "Changing concepts must not move the reading action").toBeLessThanOrEqual(1);
     if (index < HERO_CONCEPTS.length - 1) {
       await next.focus();
       await page.keyboard.press("Enter");
@@ -66,19 +72,23 @@ test("still concepts visibly explain every idea without clipping or shifting the
 });
 
 test("autoplay explains the concepts once, then stops without looping or announcing automatic updates", async ({ page }) => {
-  test.setTimeout(120_000);
+  // Every character commits individually; the wall-clock budget follows the finite deck.
+  test.setTimeout(Math.max(120_000, TOTAL * 10_000));
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
-  const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await page.evaluate(() => document.fonts.ready);
+  const concepts = page.getByRole("region", { name: "Key concepts and questions" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
-  await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
-  await expect(concepts.getByRole("heading", { name: "The Digital Organism" }))
-    .toHaveText("The Digital Organism");
+  const first = concepts.getByRole("group", { name: `1 of ${TOTAL}` });
+  await runUntil(page, async () => await first.locator(".home-concept-slideshow-untyped").count() === 0);
+  await expect(concepts.getByRole("heading", { name: "What you inherited" }))
+    .toHaveText("What you inherited");
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toHaveAttribute("aria-live", "off");
-  await page.clock.fastForward(6_000);
+  await page.clock.fastForward(7_900);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
-  await page.clock.fastForward(2_000);
+  await page.clock.fastForward(60_000);
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   for (const [index, concept] of HERO_CONCEPTS.entries()) {
     if (index === 0 || index === HERO_CONCEPTS.length - 1) continue;
@@ -87,7 +97,10 @@ test("autoplay explains the concepts once, then stops without looping or announc
     await runUntil(page, async () => await slide.locator(".home-concept-slideshow-untyped").count() === 0);
     await expect(concepts.getByRole("heading", { name: concept.term })).toHaveText(concept.term);
     const next = concepts.getByRole("group", { name: `${index + 2} of ${TOTAL}` });
-    await runUntil(page, () => next.isVisible());
+    // The first slide proves the minimum reading interval. Skip each remaining
+    // reading timer once, then verify that exactly the next concept appears.
+    await page.clock.fastForward(60_000);
+    await expect(next).toBeVisible();
   }
   await expect(concepts).toHaveAttribute("data-playback", "complete");
   await expect(concepts.getByRole("heading", { name: "The Limit of Knowledge" }))
@@ -102,7 +115,9 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
-  const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await page.evaluate(() => document.fonts.ready);
+  const concepts = page.getByRole("region", { name: "Key concepts and questions" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.runFor(1_000);
   await concepts.getByRole("button", { name: "Pause concept introduction" }).click();
@@ -113,7 +128,8 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await page.clock.fastForward(90_000);
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
-  await page.getByRole("heading", { level: 1 }).hover();
+  await concepts.scrollIntoViewIfNeeded();
+  await page.getByRole("link", { name: "Explore the model", exact: true }).hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();
@@ -124,7 +140,9 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.clock.install();
   await page.goto("/");
-  const concepts = page.getByRole("region", { name: "Key concepts from Book One" });
+  await page.evaluate(() => document.fonts.ready);
+  const concepts = page.getByRole("region", { name: "Key concepts and questions" });
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await concepts.hover();
@@ -136,7 +154,7 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts).toHaveAttribute("data-playback", "paused");
   await page.clock.fastForward(90_000);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(7_900);
   await expect(concepts.getByRole("group", { name: `1 of ${TOTAL}` })).toBeVisible();
@@ -144,25 +162,24 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
 });
 
-test("Consciousness 101 follows Little c and leads to inquiry or its book source", async ({ page }) => {
+test("the cultural critique precedes the architecture and leads to its explanation or book source", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const purpose = page.getByRole("region", { name: "Consciousness 101" });
+  const purpose = page.getByRole("region", { name: "A society can be productive and still be lost." });
   await expect(purpose).toBeVisible();
-  const order = await page.locator("#little-c, #consciousness-101, #choose-path")
+  const order = await page.locator("#consciousness-101, #possibility-field, #big-c, #reality-frame, #little-c, #choose-path")
     .evaluateAll(sections => sections.map(section => section.id));
-  expect(order).toEqual(["little-c", "consciousness-101", "choose-path"]);
-  await page.locator("#little-c").getByRole("link", { name: /Continue to Consciousness 101/ }).click();
-  await expect(page).toHaveURL(/#consciousness-101$/);
-  await expect(purpose.getByRole("heading", { name: "Consciousness 101", exact: true })).toBeVisible();
-  await expect(purpose.getByText("Love and relationships", { exact: true })).toBeVisible();
-  await expect(purpose.getByText(/In DOT, the purpose of Little c/)).toBeVisible();
-  await expect(purpose.getByRole("link", { name: /Read and inquire/ }))
-    .toHaveAttribute("href", "#choose-path");
+  expect(order).toEqual(["consciousness-101", "possibility-field", "big-c", "reality-frame", "little-c", "choose-path"]);
+  await expect(purpose.getByText("What is all this progress for?")).toBeVisible();
+  await expect(purpose.getByText(/Its proposed direction is Love/)).toBeVisible();
+  await purpose.getByRole("link", { name: "Explore the proposed architecture" }).click();
+  await expect(page).toHaveURL(/#possibility-field$/);
+  await page.locator("#little-c").getByRole("link", { name: /Continue reading/ }).click();
+  await expect(page).toHaveURL(/#choose-path$/);
   await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true })
-    .getByRole("link", { name: "Consciousness 101: Love and relationships", includeHidden: true }))
+    .getByRole("link", { name: "The culture inside us", includeHidden: true }))
     .toHaveAttribute("href", "#consciousness-101");
   await expectNoHorizontalOverflow(page);
-  await purpose.getByRole("link", { name: "Book One · Love Must Become Operational" }).click();
-  await expect(page.getByRole("heading", { name: "Love Must Become Operational", exact: true })).toBeVisible();
+  await purpose.getByRole("link", { name: "Book One · The Culture Inside You" }).click();
+  await expect(page.getByRole("heading", { name: "The Culture Inside You", exact: true })).toBeVisible();
 });

@@ -1,6 +1,5 @@
-import { ArrowUpRight, Rss, Send } from "lucide-react";
+import { Rss } from "lucide-react";
 
-import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import blog from "../../content/blog.json";
 import { projectInquiryHref } from "../../content/builder";
 import { FEED_URL } from "../../content/essays/essays";
@@ -9,30 +8,23 @@ import { TextLink } from "../../shared/design-system/Editorial";
 /** Reading stays first; these quiet alternatives follow the archive on mobile. */
 export function BlogReadingLinks() {
   return (
-    <aside className="blog-reading-links" aria-label="Follow the writing and work together">
+    <aside className="blog-reading-links" aria-label="Follow and connect">
       <section className="blog-follow" aria-labelledby="blog-follow-title">
-        <div className="blog-follow-art" aria-hidden="true"><span /><span /><Send /></div>
-        <p className="dot-label">Stay in touch</p>
+        <Rss className="blog-support-icon" aria-hidden="true" />
         <h2 id="blog-follow-title" className="dot-section-heading">Read at your pace.</h2>
-        <p className="blog-support-copy">{blog.followDescription}</p>
-        <FocusNav
-          label="Ways to follow the writing"
-          primary={{ href: FEED_URL, label: "Follow with RSS", icon: <Rss /> }}
-          secondary={[
-            { to: "/readers", label: "Open the reader list" },
-          ]}
-        />
+        <div className="blog-support-links">
+          <TextLink href={FEED_URL}>Follow with RSS</TextLink>
+          <TextLink to="/readers">Open the reader list</TextLink>
+        </div>
       </section>
 
       <section className="blog-contact" aria-labelledby="blog-contact-title">
-        <p className="dot-label">Work together</p>
+        <p className="dot-label">AI & digital products</p>
         <h2 id="blog-contact-title" className="dot-section-heading">{blog.contactTitle}</h2>
-        <p className="blog-support-copy">{blog.contactDescription}</p>
-        <FocusNav
-          label="Discuss a build"
-          primary={{ to: projectInquiryHref(), label: "Discuss a project", endIcon: <ArrowUpRight /> }}
-        />
-        <TextLink to="/about#about-resume" className="blog-profile-link">Background &amp; résumé</TextLink>
+        <div className="blog-support-links">
+          <TextLink to={projectInquiryHref()}>Discuss a project</TextLink>
+          <TextLink to="/about#about-products">Explore the work</TextLink>
+        </div>
       </section>
     </aside>
   );

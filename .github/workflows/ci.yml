@@ -190,9 +190,28 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
+      # Use the canonical upstream with a cache and automatic Docker Hub fallback.
+      # https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images
+      - name: Configure Docker Hub cache
+        run: |
+          sudo python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("/etc/docker/daemon.json")
+          config = json.loads(path.read_text()) if path.exists() else {}
+          mirrors = config.get("registry-mirrors", [])
+          cache = "https://mirror.gcr.io"
+          config["registry-mirrors"] = [cache, *(mirror for mirror in mirrors if mirror != cache)]
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(json.dumps(config))
+          PY
+          sudo systemctl restart docker
+
       - name: Build and push image
         run: |
           IMAGE=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/orchestrator:${{ github.sha }}
+          docker pull python:3.12-slim
           docker build -f Dockerfile -t "$IMAGE" ../..
           docker push "$IMAGE"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
@@ -287,6 +306,13 @@ jobs:
             echo "::notice::LinkedIn application settings are incomplete; native publishing and full-text distribution remain available."
           fi
           # Keep one instance warm at the service level without warming old revisions.
+          # AMM mail is opt-in. Preserve optional sender settings across deploys;
+          # absence keeps delivery disabled while web publication stays usable.
+          for name in NEWSLETTER_POSTAL_ADDRESS NEWSLETTER_PUBLIC_API_URL NEWSLETTER_RESEND_DOMAIN_ID NEWSLETTER_WEBHOOK_SECRET NEWSLETTER_REPLY_TO NEWSLETTER_ENABLED; do
+            if gcloud secrets describe "$name" --project ${{ env.GCP_PROJECT_ID }} >/dev/null 2>&1; then
+              SECRETS="$SECRETS,$name=$name:latest"
+            fi
+          done
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
             --region ${{ env.GCP_REGION }} \

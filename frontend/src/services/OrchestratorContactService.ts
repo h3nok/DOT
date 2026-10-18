@@ -23,6 +23,9 @@ export interface ContactReply { id: string; status: string; created_at: string; 
 export interface ContactConversation extends ContactMessage { replies: ContactReply[] }
 
 const base = `${ORCHESTRATOR_URL.replace(/\/$/, "")}/v1/contact`;
+const publicBase = import.meta.env.DEV && import.meta.env.VITE_CONTACT_PREVIEW === "true"
+  ? "/__dot-contact/v1/contact"
+  : base;
 
 async function read<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -35,9 +38,9 @@ async function read<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export const fetchContactStatus = (signal?: AbortSignal) => fetch(`${base}/status`, { signal, cache: "no-store" }).then(read<{ available: boolean }>);
-export const sendContactMessage = (draft: ContactDraft, key: string) => fetch(`${base}/messages`, {
-  method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": key }, body: JSON.stringify(draft),
+export const fetchContactStatus = (signal?: AbortSignal) => fetch(`${publicBase}/status`, { signal, cache: "no-store", credentials: "omit" }).then(read<{ available: boolean }>);
+export const sendContactMessage = (draft: ContactDraft, key: string) => fetch(`${publicBase}/messages`, {
+  method: "POST", credentials: "omit", headers: { "Content-Type": "application/json", "Idempotency-Key": key }, body: JSON.stringify(draft),
 }).then(read<{ status: "received"; reference: string }>);
 
 export const fetchContactInbox = (page: number, status: string, signal?: AbortSignal) => authedFetch(`${base}/inbox?page=${page}${status ? `&status=${encodeURIComponent(status)}` : ""}`, { sessionOnly: true, signal }).then(read<{ messages: ContactMessage[]; has_more: boolean; page: number }>);
