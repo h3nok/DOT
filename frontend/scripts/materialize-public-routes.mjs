@@ -932,7 +932,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
             if (!movement) return `<li id="project-${escapeHtml(project.slug)}">${body}</li>`;
             return `<li><section id="project-${escapeHtml(movement.slug)}"><p>${escapeHtml(movement.category)}</p><h3>${escapeHtml(movement.name)}</h3><p>${escapeHtml(movement.subtitle)}</p><p>${escapeHtml(movement.role)}</p><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy"><p>${escapeHtml(movement.tagline)}</p><details><summary>About the movement</summary><p>${escapeHtml(movement.description)}</p></details><p>${escapeHtml(movement.status)}</p><p>${link(movement.href, `Explore ${movement.name}`)}</p><p>${escapeHtml(movement.relationship)}</p></section><article id="project-${escapeHtml(project.slug)}">${body}</article></li>`;
           }).join("")}</ul>`,
-          OTHER_BUILDER_PROJECTS.map((project) => `<p>Also in open source: ${link(project.links.repo, project.name)}. Isolation for AI agent tools.</p>`).join(""),
+          // The live page's rule (projectDestination): only work with a public destination is named.
+          OTHER_BUILDER_PROJECTS.map((project) => ({ project, href: project.links.live || project.links.website || project.links.repo }))
+            .filter(({ href }) => href)
+            .map(({ project, href }) => `<p>Also in open source: ${link(href, project.name)}. Isolation for AI agent tools.</p>`).join(""),
           '<h2 id="about-services">Project work</h2>',
           BUILDER.services.map((service) => `<h3>${escapeHtml(service.title)}</h3><p>${escapeHtml(service.description)}</p>`).join(""),
           `<p>${escapeHtml(CAREER.background)}</p><h2 id="about-resume">Career & résumé</h2>`,
