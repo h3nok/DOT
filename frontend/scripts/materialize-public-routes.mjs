@@ -16,6 +16,13 @@ import { ESSAYS_ROUTE, readEssays } from "./essays.mjs";
 import { resolveAmmCopy } from "../src/content/editable/ammCopy.js";
 
 const SITE_URL = "https://dotheory.org";
+
+/**
+ * A page's public address. Every route is written as <route>/index.html, and
+ * GitHub Pages answers the address without the trailing slash with a 301, so
+ * canonical, sitemap, feed and structured-data URLs carry the slash.
+ */
+export const pageUrl = (route) => `${SITE_URL}${route === "/" ? "/" : `${route.replace(/\/$/, "")}/`}`;
 const BOOK_ROUTE = "/book/digital-organism-theory";
 const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
@@ -245,8 +252,11 @@ function serializeStructuredData(data) {
   return JSON.stringify(data, null, 2).replaceAll("<", "\\u003c");
 }
 
-const sectionUrl = (section) => `${SITE_URL}${BOOK_ROUTE}/${section.slug}`;
-const conceptUrl = (concept) => `${SITE_URL}/doctrine/${concept.id}`;
+const sectionUrl = (section) => pageUrl(`${BOOK_ROUTE}/${section.slug}`);
+const conceptUrl = (concept) => pageUrl(`/doctrine/${concept.id}`);
+// Structured-data identifiers are names, not fetched: they keep their original form.
+const sectionId = (section) => `${SITE_URL}${BOOK_ROUTE}/${section.slug}#chapter`;
+const conceptId = (concept) => `${SITE_URL}/doctrine/${concept.id}#concept`;
 
 /** The author: one entity with one @id, however many works name it. */
 function personNode() {
@@ -255,7 +265,7 @@ function personNode() {
     "@id": PERSON_ID,
     name: AUTHOR.name,
     honorificSuffix: AUTHOR.suffix || undefined,
-    url: `${SITE_URL}${ABOUT_ROUTE}`,
+    url: pageUrl(ABOUT_ROUTE),
     jobTitle: AUTHOR.role,
     description: AUTHOR.summary,
     image: AUTHOR.photo ? `${SITE_URL}${AUTHOR.photo}` : undefined,
@@ -292,7 +302,7 @@ function breadcrumb(trail) {
       "@type": "ListItem",
       position: index + 1,
       name: entry.name,
-      item: `${SITE_URL}${entry.route}`,
+      item: pageUrl(entry.route),
     })),
   };
 }
@@ -307,7 +317,7 @@ function bookNode(manifest) {
     name: project.title,
     alternativeHeadline: project.subtitle,
     description: BOOK_DESCRIPTION,
-    url: `${SITE_URL}${BOOK_ROUTE}`,
+    url: pageUrl(BOOK_ROUTE),
     author: personNode(),
     inLanguage: "en",
     isPartOf: { "@type": "BookSeries", name: project.series_title },
@@ -317,7 +327,7 @@ function bookNode(manifest) {
     isAccessibleForFree: true,
     hasPart: manifest.sections.map((section) => ({
       "@type": "Chapter",
-      "@id": `${sectionUrl(section)}#chapter`,
+      "@id": sectionId(section),
       name: section.title,
       url: sectionUrl(section),
       position: section.order + 1,
@@ -331,7 +341,7 @@ function bookNode(manifest) {
         bookEdition: edition,
         bookFormat: "https://schema.org/EBook",
         encodingFormat: "application/pdf",
-        url: `${SITE_URL}${BOOK_ROUTE}/copy`,
+        url: pageUrl(`${BOOK_ROUTE}/copy`),
         inLanguage: "en",
         isAccessibleForFree: true,
         offers: {
@@ -339,7 +349,7 @@ function bookNode(manifest) {
           price: "0.00",
           priceCurrency: "USD",
           availability: "https://schema.org/InStock",
-          url: `${SITE_URL}${BOOK_ROUTE}/copy`,
+          url: pageUrl(`${BOOK_ROUTE}/copy`),
         },
       },
     ],
@@ -352,14 +362,14 @@ function chapterNode(manifest, section) {
     .filter(Boolean)
     .map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     }));
 
   return {
     "@type": "Chapter",
-    "@id": `${sectionUrl(section)}#chapter`,
+    "@id": sectionId(section),
     name: section.title,
     alternativeHeadline: section.subtitle ?? undefined,
     url: sectionUrl(section),
@@ -368,7 +378,7 @@ function chapterNode(manifest, section) {
       "@id": BOOK_ID,
       "@type": "Book",
       name: manifest.project.title,
-      url: `${SITE_URL}${BOOK_ROUTE}`,
+      url: pageUrl(BOOK_ROUTE),
     },
     author: personNode(),
     inLanguage: "en",
@@ -383,7 +393,7 @@ function chapterNode(manifest, section) {
 function conceptNode(concept) {
   return {
     "@type": "DefinedTerm",
-    "@id": `${conceptUrl(concept)}#concept`,
+    "@id": conceptId(concept),
     name: concept.name,
     description: concept.oneLine,
     url: conceptUrl(concept),
@@ -399,10 +409,10 @@ function conceptSetNode() {
     name: "Digital Organism Theory concept map",
     description:
       "The concepts of DOT Book One, each resolving to the passage that defines it.",
-    url: `${SITE_URL}/doctrine`,
+    url: pageUrl("/doctrine"),
     hasDefinedTerm: DOCTRINE_CONCEPTS.map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     })),
@@ -437,7 +447,7 @@ function webPageNode(route) {
     "@id": `${SITE_URL}${route.route}#page`,
     name: route.title,
     description: route.description,
-    url: `${SITE_URL}${route.route}`,
+    url: pageUrl(route.route),
     inLanguage: "en",
     isPartOf: { "@id": `${SITE_URL}#website` },
   };
@@ -449,7 +459,7 @@ function profilePageNode(route) {
     "@type": "ProfilePage",
     "@id": `${SITE_URL}${ABOUT_ROUTE}#page`,
     name: route.title,
-    url: `${SITE_URL}${ABOUT_ROUTE}`,
+    url: pageUrl(ABOUT_ROUTE),
     inLanguage: "en",
     isPartOf: { "@id": `${SITE_URL}#website` },
     mainEntity: personNode(),
@@ -460,7 +470,7 @@ const ESSAYS_DESCRIPTION = `Essays by ${AUTHOR.name} that develop Digital Organi
 const FEED_URL = `${SITE_URL}/feed.xml`;
 const FEED_TITLE = `Writing by ${AUTHOR.name}`;
 
-const essayUrl = (essay) => essay.url ?? `${SITE_URL}${ESSAYS_ROUTE}/${essay.slug}`;
+const essayUrl = (essay) => essay.url ?? pageUrl(`${ESSAYS_ROUTE}/${essay.slug}`);
 const writingPath = (item, release) => `${WRITING_ROUTE}/${item.id}${release ? `/releases/${release}` : ""}`;
 const managedWriting = (item) => AMM_LIBRARY.some(source => source.slug === item.slug);
 const writingPublicPath = (item) => managedWriting(item) ? `${ESSAYS_ROUTE}/${item.slug}` : writingPath(item);
@@ -518,7 +528,7 @@ function conceptTerms(ids) {
     .filter(Boolean)
     .map((concept) => ({
       "@type": "DefinedTerm",
-      "@id": `${conceptUrl(concept)}#concept`,
+      "@id": conceptId(concept),
       name: concept.name,
       url: conceptUrl(concept),
     }));
@@ -900,7 +910,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
       structuredData: graph({
         "@type": "WebPage",
         "@id": `${SITE_URL}${INBOX_ROUTE}#page`,
-        url: `${SITE_URL}${INBOX_ROUTE}`,
+        url: pageUrl(INBOX_ROUTE),
         name: "Contact inbox",
       }),
       prerender: page('<p>Private workspace</p><h1>Contact inbox</h1><p>Sign in with the site owner’s account to review and reply to private inquiries. This workspace requires JavaScript.</p>'),
@@ -1086,7 +1096,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         image: cover?.src, imageAlt: cover?.alt, imageWidth: cover?.width, imageHeight: cover?.height,
         lastmod: item.published,
         structuredData: graph(
-          articleNode({ ...item, cover, title: delivered.title, summary: delivered.summary ?? "", url: `${SITE_URL}${route}`, concepts: [] }),
+          articleNode({ ...item, cover, title: delivered.title, summary: delivered.summary ?? "", url: pageUrl(route), concepts: [] }),
           breadcrumb([home, { name: isAmm ? AMM.title : "Blog", route: isAmm ? AMM.route : BLOG_ROUTE }, { name: delivered.title, route }]),
         ),
         prerender: (isAmm ? prerenderAmm : page)(
@@ -1265,7 +1275,7 @@ function feedLinkTag() {
 
 /** One route's document: its metadata, its structured data, and its own text. */
 export function renderRoute(shell, route, { headTags = [] } = {}) {
-  const url = `${SITE_URL}${route.canonicalRoute ?? route.route}`;
+  const url = pageUrl(route.canonicalRoute ?? route.route);
   const title = escapeHtml(route.title);
   const description = escapeHtml(route.description);
   const image = new URL(route.image ?? "/og-image.png", SITE_URL).href;
@@ -1336,7 +1346,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
 export function sitemapXml(routes, lastmod) {
   const urls = [{ route: "/" }, ...routes.filter((route) => !route.noindex && !route.canonicalRoute)].map(
     (entry) =>
-      `  <url>\n    <loc>${SITE_URL}${entry.route === "/" ? "/" : entry.route}</loc>\n    <lastmod>${entry.lastmod ?? lastmod}</lastmod>\n  </url>`,
+      `  <url>\n    <loc>${pageUrl(entry.route)}</loc>\n    <lastmod>${entry.lastmod ?? lastmod}</lastmod>\n  </url>`,
   );
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
 }
@@ -1390,7 +1400,7 @@ export function rssXml(essays, publication = null) {
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
     "  <channel>",
     `    <title>${escapeHtml(publication?.title ?? FEED_TITLE)}</title>`,
-    `    <link>${SITE_URL}${publication?.route ?? BLOG_ROUTE}</link>`,
+    `    <link>${pageUrl(publication?.route ?? BLOG_ROUTE)}</link>`,
     `    <atom:link href="${publication ? SITE_URL + publication.feed : FEED_URL}" rel="self" type="application/rss+xml" />`,
     `    <description>${escapeHtml(publication?.description ?? BLOG.description)}</description>`,
     "    <language>en</language>",
@@ -1431,7 +1441,7 @@ async function main() {
       images: item.releases.at(-1).images,
       cover: item.cover,
       restrictImages: true,
-      url: `${SITE_URL}${writingPublicPath(item)}`,
+      url: pageUrl(writingPublicPath(item)),
     })),
   ].sort((first, second) => second.published.localeCompare(first.published));
   const headTags = [feedLinkTag()];

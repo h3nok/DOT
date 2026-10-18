@@ -1,7 +1,8 @@
 import { Copy, Download, ExternalLink, Share2 } from "lucide-react";
 import { useState } from "react";
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "https://dotheory.org";
+import { pageUrl } from "../../../content/pageUrl";
+
 
 export function PublicationSharing({ title, path, distributionTools = false }: {
   title: string;
@@ -9,7 +10,7 @@ export function PublicationSharing({ title, path, distributionTools = false }: {
   distributionTools?: boolean;
 }) {
   const [message, setMessage] = useState<string | null>(null);
-  const url = new URL(path, SITE_URL).href;
+  const url = pageUrl(path);
   const packageText = `${title}\n\n${url}\n`;
 
   async function copy(value: string) {

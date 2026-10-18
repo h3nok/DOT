@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { author } from "../../../content/author";
+import { pageUrl } from "../../../content/pageUrl";
 import { writingRoute, type WritingDelivery } from "../../../services/OrchestratorWritingService";
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || "https://dotheory.org";
@@ -10,7 +11,7 @@ const SITE_URL = import.meta.env.VITE_SITE_URL || "https://dotheory.org";
 export function writingExport(workId: string, number: number, source: { delivery: WritingDelivery; body: string }) {
   const manifest = source.delivery.manifest;
   if (!manifest || source.delivery.withdrawn || manifest.release.number !== number) throw new Error("Only the selected public release can be exported.");
-  const url = new URL(writingRoute(workId, number), SITE_URL).href;
+  const url = pageUrl(writingRoute(workId, number));
   const claims = manifest.claims.map((claim) => `- ${claim.statement} (${claim.epistemic_level}; ${claim.origin === "sourced" ? "Sourced" : claim.origin === "no_external_source" ? "No external source" : "Author-originated"})`).join("\n");
   const sources = manifest.sources?.map((source) => `- ${source.external_uri}${source.locator ? ` — ${source.locator}` : ""}`).join("\n");
   const banner = manifest.presentation?.cover;
