@@ -5,8 +5,10 @@ import { ESSAYS_PUBLISHED, FEED_URL } from "../content/essays/essays";
 import newsletter from "../content/newsletter.json";
 import { DoWordmark } from "./DoWordmark";
 
+// Quiet, but legible: full muted text clears WCAG AA contrast in both themes,
+// and a 24px row keeps wrapped links from crowding each other on a phone.
 const LINK =
-  "text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline";
+  "inline-flex min-h-6 items-center text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
 /**
  * The closing line of every public page that ends (ADR-0033): who wrote it, and

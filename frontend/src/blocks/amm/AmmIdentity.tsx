@@ -61,7 +61,7 @@ export function AmmShell({ children, reading = false, footer = true }: { childre
   return (
     <div className={`amm-shell${reading ? " amm-shell--reading" : ""}${pathname.replace(/\/+$/, "") === "/amm" ? " amm-shell--home" : ""}`}>
       <a className="amm-skip" href="#amm-main">Skip to content</a>
-      <PageShell wide className={reading ? "amm-reader" : "amm-page"} header={<AmmHeader />} footer={footer ? <AmmFooter /> : undefined}>
+      <PageShell wide skipLink={false} className={reading ? "amm-reader" : "amm-page"} header={<AmmHeader />} footer={footer ? <AmmFooter /> : undefined}>
         <div id="amm-main" tabIndex={-1}>{["/amm", "/amm/editions", "/amm/power"].includes(pathname.replace(/\/+$/, "")) && <OwnerEditLink to="/studio/pages/amm" label="Edit this page" />}{children}</div>
       </PageShell>
     </div>
