@@ -1,0 +1,88 @@
+{
+  "charts": [
+    {
+      "title": "Household wealth is unevenly distributed",
+      "period": "Q1 2026",
+      "unit": "percent of net worth",
+      "maximum": 100,
+      "status": "Values reproduced from the author’s published chapter; not independently verified. A cited institution’s status does not establish accuracy.",
+      "limits": "Government-source estimates as cited in the chapter, pending independent verification. These rounded, mutually exclusive percentile groups sum to 100. Wealth shares do not measure the number of households or explain the causes of inequality.",
+      "rows": [
+        {
+          "label": "Top 1%",
+          "value": 31.6,
+          "source": "Federal Reserve, Distributional Financial Accounts",
+          "url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/distribute/table/"
+        },
+        {
+          "label": "Next 9%",
+          "value": 36.3,
+          "source": "Federal Reserve, Distributional Financial Accounts",
+          "url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/distribute/table/"
+        },
+        {
+          "label": "Middle 40%",
+          "value": 29.6,
+          "source": "Federal Reserve, Distributional Financial Accounts",
+          "url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/distribute/table/"
+        },
+        {
+          "label": "Bottom 50%",
+          "value": 2.5,
+          "source": "Federal Reserve, Distributional Financial Accounts",
+          "url": "https://www.federalreserve.gov/releases/z1/dataviz/dfa/distribute/table/"
+        }
+      ]
+    },
+    {
+      "title": "Ownership of corporate equity",
+      "period": "Q1 2026",
+      "unit": "percent of equity holdings",
+      "maximum": 100,
+      "status": "Values reproduced from the author’s published chapter; not independently verified. A cited institution’s status does not establish accuracy.",
+      "limits": "Government-source estimates as cited in the chapter, pending independent verification. Only two groups are shown; they do not sum to 100. This measures corporate equities and mutual-fund shares, not all household wealth.",
+      "rows": [
+        {
+          "label": "Top 1%",
+          "value": 50.2,
+          "source": "FRED, WFRBST01122",
+          "url": "https://fred.stlouisfed.org/series/WFRBST01122"
+        },
+        {
+          "label": "Bottom 50%",
+          "value": 1.1,
+          "source": "FRED, WFRBSB50203",
+          "url": "https://fred.stlouisfed.org/series/WFRBSB50203"
+        }
+      ]
+    }
+  ],
+  "administration": {
+    "title": "The scale of the financial interface",
+    "period": "Year-end 2025",
+    "unit": "USD trillions",
+    "maximum": 15,
+    "status": "Values reproduced from the author’s published chapter; not independently verified. A cited institution’s status does not establish accuracy.",
+    "limits": "Assets under management are client capital administered by a firm, not the firm’s own wealth. Values are rounded. This comparison does not quantify common ownership, voting control, or extraction.",
+    "rows": [
+      {
+        "label": "BlackRock",
+        "value": 14,
+        "source": "BlackRock, full-year 2025 results",
+        "url": "https://www.sec.gov/Archives/edgar/data/2012383/000119312526013503/blk-ex99_1.htm"
+      },
+      {
+        "label": "Vanguard",
+        "value": 12,
+        "source": "Vanguard in a Nutshell, December 2025",
+        "url": "https://www.ch.vanguard/content/dam/intl/europe/documents/en/vanguard-in-a-nutshell-eu-en.pdf"
+      },
+      {
+        "label": "State Street",
+        "value": 5.67,
+        "source": "State Street, 2025 Form 10-K",
+        "url": "https://s203.q4cdn.com/888565246/files/doc_financials/2025/q4/STT-2025-12-31-10-K-final-with-exhibits.pdf"
+      }
+    ]
+  }
+}

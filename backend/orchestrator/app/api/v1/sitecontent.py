@@ -68,7 +68,11 @@ async def put_block(
             value=payload.value,
             publish=payload.publish,
             actor_id=steward.actor_id,
+            check_version="expected_updated_at" in payload.model_fields_set,
+            expected_updated_at=payload.expected_updated_at,
         )
+    except sitecontent_service.ContentConflictError as exc:
+        raise fastapi.HTTPException(status_code=409, detail=str(exc)) from exc
     except sitecontent_service.InvalidContentKeyError as exc:
         raise fastapi.HTTPException(status_code=400, detail=str(exc)) from exc
 

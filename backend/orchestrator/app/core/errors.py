@@ -121,7 +121,14 @@ def install_error_handlers(app: FastAPI) -> None:
     ) -> JSONResponse:
         logger.warning(
             "Validation error",
-            extra={"path": request.url.path, "errors": str(exc.errors()[:3])},
+            # Uploaded bytes and private manuscripts must never reach logs.
+            # Formatting a large invalid input also makes redaction expensive.
+            extra={
+                "path": request.url.path,
+                "errors": [
+                    {"type": error["type"], "loc": error["loc"]} for error in exc.errors()[:3]
+                ],
+            },
         )
         return _error_json(
             status.HTTP_422_UNPROCESSABLE_ENTITY,

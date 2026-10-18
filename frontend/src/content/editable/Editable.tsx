@@ -55,7 +55,7 @@ export function Editable({
     setOpen(true);
   };
 
-  const run = async (action: () => Promise<void>) => {
+  const run = async (action: () => Promise<unknown>) => {
     setBusy(true);
     setError(null);
     try {

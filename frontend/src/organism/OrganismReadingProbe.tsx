@@ -27,6 +27,7 @@ const READING_ROUTES = [
   "/applied",
   "/blog",
   "/essays",
+  "/_preview/essays",
   "/writing",
   "/publications",
   "/about",

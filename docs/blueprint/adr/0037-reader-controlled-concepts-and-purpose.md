@@ -73,6 +73,44 @@ developmental purpose remain hypotheses, not conclusions derived from physics.
 
 ## Enforcement
 
+### Amendment — 2026-10-10
+
+The concept sequence now includes the founder’s critical questions alongside
+the model definitions. Its region is named “Key concepts and questions” so new
+editorial questions are not represented as quotations from the fixed book.
+The current sequence contains twenty entries and retains the same finite
+endpoint, accessible manual controls, suspension rules, and stillness behavior.
+Critiques carry Model status and sources where available. Reading stays first
+and immediately available. This extends the public explanation, not the scoped
+autoplay exception or any member-facing primitive.
+
+Outside perspectives and rejected assumptions use copper headers, with
+“Outside perspective” and “DOT rejects” labels respectively. DOT’s response
+uses its existing accent and a separate label. Only the closed-question
+assumption is marked rejected; questioning a worldview does not label every
+part of it rejected. Labels and border patterns preserve the distinction
+in high contrast. This serves L7’s honest framing and L10’s clear presentation.
+
+The figure’s entrance now follows the founder’s explicit causal order:
+Big C completes its emergence before any Reality Frame begins resolving;
+RF₀ and the other Frames all resolve before Little c appears. Awareness,
+relations, and Intent follow the local experiencers. Labels accompany their
+layers. The single entrance starts when the figure enters view; stillness and
+reduced motion show the complete figure immediately. Animation represents the
+proposed model, not observed cosmological history. Geometry and click-through
+reading remain unchanged.
+
+### Amendment — 2026-10-10 (position without a countdown)
+
+The founder kept the finite autoplay with its manual controls and asked that
+the progress line go: a bar that fills toward the next turn read as a
+countdown and drew the eye away from the words. Position is now a static
+count (“3 / 20”) beside Pause/Play and Previous/Next. Nothing moves while a
+concept waits; the reading interval and every suspension rule are unchanged.
+The sizing copies that reserve the longest slide draw their text with CSS, so
+copied hero text contains each concept once and no blank lines. Serves L1
+(calm) and L3 (no pressure toward the next item); violates no law.
+
 Component tests require all ten visible explanations and claim levels, the
 full post-typing reading interval, a finite autoplay endpoint, disabled endpoints,
 Pause/Play, suspension and timer cleanup, and no timers under either stillness
@@ -97,6 +135,36 @@ member-interior or Reader autoplay is permitted. This is public explanatory
 UI, not a new Attention OS primitive. The manifesto quarantine is unchanged.
 
 ## Consequences
+
+### Amendment — 2026-10-13 (experience before architecture)
+
+The founder requested a first-time-reader pass after reviewing the gap between
+the human invitation and the model's unfamiliar vocabulary. The twenty-concept
+sequence now begins with inherited conditioning, Fear, Love, and Intent before
+the organism proposal and critiques. Its finite playback, claim levels,
+controls, and diagram connections remain intact. The organism explanation
+explicitly speaks within DOT.
+
+Consciousness 101 moves between the hero and the four architecture sections.
+Following the founder's review, this introduction critiques inherited cultural
+assumptions, short-term incentives, and the substitution of output for meaning.
+It replaces the difficult-message exercise and behavioral checklist, which
+read as moral instruction. The critique includes the conditioning inside the
+questioner; Love remains DOT's proposed direction and a state of being.
+The section links to “The Culture Inside You” in the fixed book. The old section
+anchor remains valid. Its next link enters the architecture; Little c now
+leads directly to compact book and Academy links. The founder removed the final
+invitation heading and explanatory paragraphs; these are also absent from the
+generated public HTML. Related-work attribution remains below the links.
+Page navigation follows this
+reading order. The causal architecture and emergence animation retain T × E,
+Big C, Reality Frames, and Little c in their existing order.
+
+Content-sized theory sections replace the viewport-height minimum and large
+vertical gaps. Evidence boundaries and optional reasoning remain visible and
+reader-controlled. Runtime and generated public HTML share the cultural critique.
+This is introductory UI, not a revision of the fixed manuscript or a claimed
+scientific intervention. Serves L1, L7, L8, L10, and L12; violates no law.
 
 Positive: concepts can be learned one at a time, colour clarifies the existing
 system, and the architecture leads into its human purpose without replacing

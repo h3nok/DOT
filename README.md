@@ -221,10 +221,26 @@ claimed here.
 
 ## Getting Started
 
+For post design, banner images, local draft previews, and the Markdown release
+workflow, see [Publishing a post](docs/PUBLISHING.md). Start in `frontend/` with
+`pnpm post:new my-post`, `pnpm post:preview`, and `pnpm post:check`.
+
 1. Clone the repository
 2. Bootstrap local development with `make setup`
 3. Start the development servers with `make start`
 4. Open your browser to explore Digital Organism Theory
+
+Development sign-in uses the local API through Vite's `/__dot-api/v1/` proxy.
+With `VITE_ORCHESTRATOR_URL=http://127.0.0.1:8000` (the default), both
+`localhost` and `127.0.0.1` previews retain the HttpOnly session cookie. Run
+the local orchestrator too; this does not sign you into the live website.
+After updating Vite configuration, reload the page and request a fresh code
+if a previous attempt already consumed it. Remote API URLs and production
+builds keep their configured URL and cookie policy.
+
+Browser tests start their own server. If port 5199 is occupied, use
+`DOT_E2E_PORT=5208 DOT_E2E_WORKERS=2 make verify`; tests never reuse an unrelated
+server already listening on that port.
 
 `make setup` supports macOS and Linux. It checks or installs the local toolchain
 (Python 3.12+, Node 20+, pnpm, Docker, Docker Compose), creates the Python

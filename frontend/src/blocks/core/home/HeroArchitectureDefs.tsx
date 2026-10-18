@@ -92,8 +92,8 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         [outerLoopArrowId, "home-architecture-loop-arrow--outer"],
         [innerLoopArrowId, "home-architecture-loop-arrow--inner"],
       ].map(([id, className]) => (
-        <marker key={id} id={id} markerWidth="7" markerHeight="7" refX="4.8" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path className={className} d="M0.6 0.6L5.4 3L0.6 5.4Z" />
+        <marker key={id} id={id} markerWidth="8" markerHeight="8" refX="5.4" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <path className={className} d="M0.5 0.5L6.5 3.5L0.5 6.5Z" />
         </marker>
       ))}
       <radialGradient id={fieldWashId} cx="50%" cy="48%" r="52%">

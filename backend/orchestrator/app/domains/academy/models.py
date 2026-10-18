@@ -307,6 +307,9 @@ class AcademyRevision(app.db.models.Base):
         sqlalchemy.String(256), nullable=False
     )
     summary: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(sqlalchemy.Text())
+    editor_metadata: sqlalchemy.orm.Mapped[dict] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.JSON(), nullable=False, default=dict, server_default="{}"
+    )
     body_ref: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(512), nullable=False
     )

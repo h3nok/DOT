@@ -134,3 +134,8 @@ frontend/test-results/
 frontend/playwright-report/
 frontend/blob-report/
 frontend/.playwright/
+
+# The author's private AMM manuscript sources (drafts, PDF, source art) stay local: this repository
+# is public. Published chapters live in frontend/src/content/essays/. The hero source video is already tracked.
+docs/blueprint/amm/*
+!docs/blueprint/amm/amm-hero-source.mp4

@@ -1,21 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-test("home attributes Love and invites inquiry with an honest boundary and reader-owned pace", async ({ page }) => {
+test("home keeps direct reading routes without the closing invitation copy", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "Love." })).toBeVisible();
-  await expect(opening.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
-    .toHaveAttribute("href", "/book/digital-organism-theory/preface");
-  const invitation = page.getByRole("region", { name: "An invitation to inquire" });
-  await expect(invitation.getByText(/remain hypotheses, open to challenge and revision/)).toBeVisible();
-  await expect(invitation.getByText(/there is no timetable for it/)).toBeVisible();
-  await expect(invitation.locator(".dot-focus-nav__primary"))
+  await expect(opening.getByRole("heading", { level: 1, name: "Trust your experience." })).toBeVisible();
+  await expect(opening.getByRole("link", { name: "Read Book One", exact: true }))
+    .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
+  await expect(page.locator("#personal-platform")).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "On this page", includeHidden: true }).locator('a[href="#personal-platform"]')).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "An invitation to inquire" })).toHaveCount(0);
+  await expect(page.getByText("Read. Inquire. Open up.")).toHaveCount(0);
+  const reading = page.getByRole("region", { name: "Further reading" });
+  await expect(reading.locator(".dot-focus-nav__primary"))
     .toHaveAttribute("href", "/book/digital-organism-theory");
-  await expect(invitation.getByRole("link", { name: "Read Book One", exact: true }))
+  await expect(reading.getByRole("link", { name: "Read Book One", exact: true }))
     .toHaveAccessibleDescription("Complete and free · Fixed edition");
-  await expect(invitation.getByRole("link", { name: "Explore DOT Academy" }))
-    .toHaveAttribute("href", "/academy");
+  await expect(page.locator('a[href="/academy"]')).toHaveCount(0);
 });
 
 test("home offers a reading path and readable theory comparisons", async ({ page }, testInfo) => {

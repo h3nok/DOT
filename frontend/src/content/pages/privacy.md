@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated October 9, 2026.
+Last updated October 15, 2026.
 
 This site does not sell attention or data. There are no ads, no cross-site trackers, and no behavioural profiles. This page lists everything the site does handle, so that the promise can be checked.
 
@@ -29,6 +29,8 @@ You give an address only if you choose to: to send a contact message, join the r
 - **Delivery.** Codes and messages are sent through [Resend](https://resend.com/legal/privacy-policy).
 - **Storage.** An address is encrypted before it is stored, with a key the database does not hold. A one-way fingerprint sits beside it so that duplicates can be found without decrypting anything. Signing in keeps only the fingerprint.
 - **The reader list** sends nothing until you confirm your address with a code. Messages are rare and only about the work, with no tracking pixels and no rewritten links. Every message has a link that removes you in one click, without an account. Leaving marks you as unsubscribed so that nothing is sent to you again; the encrypted address stays so that an old copy of the list cannot add you back. Ask, and it is deleted outright.
+- **AMM** is a separate, optional subscription to The American Millennial Manifesto. Joining the general reader list does not automatically subscribe you to AMM. AMM signup offers an unchecked option for other writing. Each email has separate links to leave AMM or all writing lists. A message already accepted by the email provider cannot be recalled.
+- **Newsletter delivery records** hold the edition, subscription identifier, attempt time, and operational status (accepted, delivered, bounced, or complained). Resend necessarily receives the delivery address and message. There are no open or click events in these records. A bounce, suppression, or complaint stops later newsletter delivery to that address. Operational records remain while needed to prevent duplicate mail; callback identifiers are removed after 30 days. You may request a copy or deletion through the contact page.
 - **A request to join** keeps your encrypted address and the reason you gave, so that a person can answer you.
 - **Signing in** uses a one-time code. The site keeps your address's fingerprint, when you last signed in, and a session cookie that lasts seven days or until you sign out. Conversations with Minty while signed in are saved to your account until you delete them.
 

@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import BookMarkdown from "../../attention-os/reader/BookMarkdown";
+import { WritingPost } from "./writing/WritingPost";
 import { author } from "../../content/author";
 import { fetchWritingDelivery, writingRoute } from "../../services/OrchestratorWritingService";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
 import { PublicationSharing } from "./components/PublicationSharing";
+import { OwnerEditLink } from "./components/OwnerEditLink";
+import AMM from "../../content/amm.json";
+import { AmmShell } from "../amm/AmmIdentity";
+import { AmmEditionEnd, AmmReadingBar } from "../amm/AmmEditionFrame";
 
-export default function NativeWritingPage() {
-  const { workId = "", releaseNumber } = useParams();
+export default function NativeWritingPage({ sourceWorkId, sourcePath }: { sourceWorkId?: string; sourcePath?: string } = {}) {
+  const { workId: routeWorkId = "", releaseNumber } = useParams();
+  const workId = sourceWorkId ?? routeWorkId;
   const [search] = useSearchParams();
-  const requested = releaseNumber || search.get("version");
+  const requested = releaseNumber || (!sourcePath ? search.get("version") : null);
   const version = requested && /^[1-9]\d*$/.test(requested) ? Number(requested) : undefined;
   const [content, setContent] = useState<Awaited<ReturnType<typeof fetchWritingDelivery>> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,11 +34,13 @@ export default function NativeWritingPage() {
     return () => abort.abort();
   }, [workId, version, requested, attempt]);
   const manifest = content?.delivery.manifest;
-  const canonical = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${writingRoute(workId, version)}`;
-  return (
-    <PageShell header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon />}>
-      <div className="book-surface mx-auto" style={{ maxWidth: "var(--reading-measure)" }}>
-        <Helmet><title>{manifest?.title || content?.delivery.title || "Writing"} — {author.name}</title><link rel="canonical" href={canonical} />{manifest?.summary && <meta name="description" content={manifest.summary} />}</Helmet>
+  const isAmm = !!sourcePath || manifest?.presentation?.series === AMM.series;
+  const cover = manifest?.assets?.find(asset => asset.path === manifest.presentation?.cover?.path);
+  const ammSlug = sourcePath?.split('/').pop();
+  const body = (
+      <div className="book-surface mx-auto max-w-6xl">
+        {isAmm && content && <OwnerEditLink to={`/studio/writing?series=amm&work=${encodeURIComponent(workId)}`} label={sourcePath?.includes("amm-chapter-") ? "Edit this chapter" : "Edit this piece"} />}
+        <Helmet><title>{`${manifest?.title || content?.delivery.title || "Writing"} — ${isAmm ? AMM.title : author.name}`}</title>{manifest?.summary && <meta name="description" content={manifest.summary} />}{cover && <meta property="og:image" content={new URL(cover.src, window.location.origin).href} />}{cover && <meta property="og:image:alt" content={manifest?.presentation?.cover?.alt ?? ""} />}<meta name="twitter:card" content={cover ? "summary_large_image" : "summary"} /></Helmet>
         {error ? <>
             <h1 className="font-serif text-3xl">This piece could not be opened</h1>
             <p role="alert" className="mt-5 text-base text-muted-foreground">
@@ -47,21 +54,18 @@ export default function NativeWritingPage() {
           </>
           : !content ? <p role="status">Loading the publication…</p>
           : content.delivery.withdrawn ? <><h1 className="font-serif text-3xl">{content.delivery.title}</h1><p className="mt-5">This release has been withdrawn.</p><p className="mt-3">{content.delivery.reason}</p></>
-          : manifest && <article>
-            <p className="dot-label">Writing · Version {manifest.release.number} · {author.name}</p>
-            <h1 className="dot-page-heading mt-4 break-words">{manifest.title}</h1>
-            {manifest.summary && <p className="mt-5 text-base text-muted-foreground">{manifest.summary}</p>}
-            <div className="book-prose mt-10"><BookMarkdown content={content.body} /></div>
+          : manifest && <>{isAmm && <AmmReadingBar slug={ammSlug} />}<WritingPost draft={{ title: manifest.title, summary: manifest.summary ?? "", body: content.body, presentation: manifest.presentation, assets: manifest.assets }} edition={`Version ${manifest.release.number}`}>
             <p className="dot-label mt-10">End of piece</p>
             <section className="mt-10 border-t border-border py-6" aria-label="Claim ledger">
               <h2 className="text-lg font-semibold">Claim ledger</h2>
-              <ul className="mt-4 space-y-4">{manifest.claims.map((claim, index) => <li key={index}><p className="text-sm">{claim.statement}</p><p className="mt-1 text-xs text-muted-foreground">{claim.epistemic_level} · {claim.origin === "sourced" ? "Sourced" : "Author-originated"}</p></li>)}</ul>
+              <ul className="mt-4 space-y-4">{manifest.claims.map((claim, index) => <li key={index}><p className="text-sm">{claim.statement}</p><p className="mt-1 text-xs text-muted-foreground">{claim.epistemic_level} · {claim.origin === "sourced" ? "Sourced" : claim.origin === "no_external_source" ? "No external source" : "Author-originated"}</p></li>)}</ul>
             </section>
             {!!manifest.sources?.length && <section aria-label="Sources" className="border-t border-border py-6"><h2 className="text-lg font-semibold">Sources</h2><ul className="mt-3 space-y-3 text-sm">{manifest.sources.map((source, index) => <li key={index} className="break-words">{/^https?:\/\//i.test(source.external_uri) ? <a href={source.external_uri} rel="noreferrer" className="underline">{source.external_uri}</a> : source.external_uri}{source.locator && <p className="mt-1 text-xs text-muted-foreground">{source.locator}</p>}</li>)}</ul></section>}
+            {isAmm && <AmmEditionEnd slug={ammSlug} />}
             <PublicationSharing title={manifest.title} path={writingRoute(workId, manifest.release.number)} />
-          </article>}
-        <Link to="/blog" className="mt-8 inline-block text-sm underline underline-offset-4">All writing</Link>
+          </WritingPost></>}
+        <Link to={isAmm ? "/amm/editions" : "/blog"} className="mt-8 inline-block text-sm underline underline-offset-4">{isAmm ? "All AMM editions" : "All writing"}</Link>
       </div>
-    </PageShell>
   );
+  return isAmm ? <AmmShell reading>{body}</AmmShell> : <PageShell header={<PageHeader backTo="/blog" backLabel="Blog" />} footer={<SiteColophon variant="personal" />}>{body}</PageShell>;
 }

@@ -6,7 +6,7 @@ import { WritingDistribution } from "./WritingDistribution";
 import { writingExport } from "./writingExport";
 
 vi.mock("../../../services/OrchestratorWritingService", async (original) => ({ ...await original<typeof writing>(), fetchWritingDelivery: vi.fn() }));
-vi.mock("../../../services/OrchestratorDistributionService", () => ({ fetchDistributionCopies: vi.fn(), shareReleasedWritingOnLinkedIn: vi.fn(), recordDistributionCopy: vi.fn() }));
+vi.mock("../../../services/OrchestratorDistributionService", () => ({ fetchLinkedInConnection: vi.fn().mockResolvedValue({ configured: false, connected: false }), fetchDistributionCopies: vi.fn(), shareReleasedWritingOnLinkedIn: vi.fn(), recordDistributionCopy: vi.fn() }));
 
 const source = { delivery: { manifest: { title: "Released title <unsafe>", summary: "Released summary", release: { number: 1 }, revision: { content_hash: "hash" }, claims: [{ statement: "Declared claim", epistemic_level: "Hypothesis", origin: "author_originated" }], sources: [{ external_uri: "https://example.org/source", locator: null, relation: "supports" }] } }, body: "Complete **released** body.\n\n[Local page](/blog)\n\n<script>alert('unsafe')</script>\n\n[Unsafe](javascript:alert)" };
 beforeEach(() => {

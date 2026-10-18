@@ -1,0 +1,86 @@
+/* Shared feedback for AMM. Movement only follows an intentional interaction. */
+.amm-shell {
+  --amm-feedback-fast: 160ms;
+  --amm-feedback-slow: 280ms;
+  --amm-feedback-ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+.amm-feature .explainer-artwork-open { cursor: zoom-in; }
+
+.amm-reading-link:focus-visible .amm-reading-title,
+.amm-reading-link:active .amm-reading-title { color: var(--amm-rust); }
+.amm-reading-link:focus-visible .amm-reading-title > span,
+.amm-reading-link:active .amm-reading-title > span { text-decoration-color: currentColor; }
+.amm-reading-link:focus-visible .amm-reading-arrow,
+.amm-reading-link:active .amm-reading-arrow { opacity: 1; }
+.amm-choice-group button:focus-visible,
+.amm-choice-group button:active { color: var(--amm-rust); background: color-mix(in srgb, var(--amm-rust) 7%, transparent); }
+
+.page-copy-sections > details > summary,
+.page-copy-current > summary {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  list-style: none;
+}
+.page-copy-sections > details > summary::-webkit-details-marker,
+.page-copy-current > summary::-webkit-details-marker { display: none; }
+.page-copy-sections > details > summary::before,
+.page-copy-current > summary::before {
+  content: "";
+  flex: 0 0 .4rem;
+  height: .4rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+}
+.page-copy-sections > details[open] > summary,
+.page-copy-current[open] > summary { color: var(--amm-rust); }
+.page-copy-sections > details[open] > summary::before,
+.page-copy-current[open] > summary::before { transform: rotate(45deg); }
+
+@media (hover: hover) and (pointer: fine) {
+  .amm-reading-link:hover .amm-reading-title { color: var(--amm-rust); }
+  .amm-reading-link:hover .amm-reading-title > span { text-decoration-color: currentColor; }
+  .amm-reading-link:hover .amm-reading-arrow { opacity: 1; }
+  .amm-shell :is(.amm-brand, .amm-text-link, .amm-footer a, .amm-pagination a, .amm-source-library a, .page-copy-back):hover { color: var(--amm-rust); }
+  .amm-shell summary:hover { color: var(--amm-rust); }
+  .amm-choice-group button:hover { color: var(--amm-rust); background: color-mix(in srgb, var(--amm-rust) 5%, transparent); }
+  .amm-text-field textarea:hover:not(:disabled),
+  .amm-shell .reader-list-field:hover { border-color: var(--amm-rust); }
+  .amm-studio-select li button:hover { background: var(--muted); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .amm-shell :is(.amm-reading-title, .amm-brand, .amm-text-link, summary, .amm-source-library a, .amm-pagination a, .amm-choice-group button) {
+    transition: color var(--amm-feedback-fast) ease, background-color var(--amm-feedback-fast) ease;
+  }
+  html:not([data-motion="still"]) .amm-reading-title > span { transition: text-decoration-color var(--amm-feedback-fast) ease; }
+  html:not([data-motion="still"]) .amm-shell :is(.amm-reading-arrow, .amm-text-link svg, .amm-source-library svg) { transition: transform var(--amm-feedback-fast) var(--amm-feedback-ease), opacity var(--amm-feedback-fast) ease; }
+  html:not([data-motion="still"]) .amm-shell :is(.amm-reading-art img, .amm-feature .explainer-artwork-open img) { transition: transform var(--amm-feedback-slow) var(--amm-feedback-ease); }
+  html:not([data-motion="still"]) .amm-choice-group button::after { transition: transform var(--amm-feedback-slow) var(--amm-feedback-ease); }
+  html:not([data-motion="still"]) .page-copy-sections > details > summary::before,
+  html:not([data-motion="still"]) .page-copy-current > summary::before { transition: transform var(--amm-feedback-fast) ease; }
+  html:not([data-motion="still"]) .amm-button { transition: transform var(--amm-feedback-fast) ease, background-color var(--amm-feedback-fast) ease, box-shadow var(--amm-feedback-fast) ease; }
+
+  html:not([data-motion="still"]) .amm-reading-link:focus-visible .amm-reading-arrow,
+  html:not([data-motion="still"]) .amm-text-link:focus-visible svg { transform: translateX(4px); }
+
+  @media (hover: hover) and (pointer: fine) {
+    html:not([data-motion="still"]) .amm-reading-link:hover .amm-reading-art img { transform: translateY(-5px); }
+    html:not([data-motion="still"]) .amm-feature .explainer-artwork-open:hover img { transform: translateY(-3px) scale(1.012); }
+    html:not([data-motion="still"]) .amm-reading-link:hover .amm-reading-arrow,
+    html:not([data-motion="still"]) .amm-text-link:hover svg,
+    html:not([data-motion="still"]) .amm-source-library a:hover svg { transform: translateX(4px); }
+    html:not([data-motion="still"]) .amm-button:not(:disabled):hover { transform: translateY(-2px); }
+  }
+
+  html:not([data-motion="still"]) .amm-reading-link:active .amm-reading-art img,
+  html:not([data-motion="still"]) .amm-feature .explainer-artwork-open:active img { transform: scale(.995); }
+  html:not([data-motion="still"]) .amm-button:not(:disabled):active { transform: translateY(1px); }
+}
+
+@media (forced-colors: active) {
+  .amm-choice-group button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -3px; }
+  .amm-reading-link:is(:hover, :focus-visible) .amm-reading-title > span { text-decoration-color: LinkText; }
+}

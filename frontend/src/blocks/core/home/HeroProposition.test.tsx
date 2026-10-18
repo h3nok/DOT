@@ -11,7 +11,7 @@ describe("the concept slideshow and the architecture stay one explanation", () =
       <HeroProposition reducedMotion stage={<HeroArchitecture />} />
     </MemoryRouter>,
   );
-  const concepts = () => screen.getByRole("region", { name: "Key concepts from Book One" });
+  const concepts = () => screen.getByRole("region", { name: "Key concepts and questions" });
   const focus = () => document.querySelector(".home-hero-architecture__svg")?.getAttribute("data-focus");
 
   it("brings forward the part each architecture concept explains, and only then", () => {
@@ -59,43 +59,52 @@ describe("HeroProposition", () => {
       </MemoryRouter>,
     );
 
-  it("keeps Love still while concepts have their own controls", () => {
+  it("keeps the opening question still while concepts have their own controls", () => {
     renderProposition();
 
     expect(
       screen.getByRole("heading", {
-        name: "Love.",
+        name: "Trust your experience.",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
     expect(document.querySelector(".home-hero-statement")).toBeNull();
   });
 
-  it("attributes the opening definition to the book before introducing model terms", () => {
+  it("keeps the opening concise with one reading path into the book", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "Love.",
+      name: "Trust your experience.",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
-    expect(screen.getByText("Love is the condition in which Fear no longer governs you."))
-      .toBeVisible();
-    expect(screen.getByRole("link", { name: "Henok Ghebrechristos · Book One, preface" }))
-      .toHaveAttribute("href", "/book/digital-organism-theory/preface");
+    expect(document.querySelector(".home-hero-opening-copy")).toBeNull();
+    expect(document.querySelector(".home-hero-subtitle")).toHaveTextContent(
+      "Understand what shapes you. Choose how you live.",
+    );
+    expect(document.querySelector(".home-author-line")).toBeNull();
+    // The opening is an invitation to examine beliefs, not an attributed quotation.
+    expect(screen.queryByRole("link", { name: /preface/i })).not.toBeInTheDocument();
+    expect(document.querySelector(".home-hero-masthead blockquote")).toBeNull();
     expect(document.querySelector(".home-hero-lede")).toBeNull();
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("lets the first concept carry DOT's proposal at its honest claim level", () => {
+  it("begins with inherited experience before introducing DOT's proposal", () => {
     renderProposition();
 
     expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
-    const concepts = screen.getByRole("region", { name: "Key concepts from Book One" });
-    expect(within(concepts).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
+    const concepts = screen.getByRole("region", { name: "Key concepts and questions" });
+    expect(within(concepts).getByRole("heading", { name: "What you inherited" })).toBeVisible();
     const first = within(concepts).getByRole("group", { name: /^1 of \d+$/ });
-    expect(first).toHaveTextContent(/you are not physical/);
-    expect(first).toHaveAttribute("data-epistemic-status", "hypothesis");
+    expect(first).toHaveTextContent(/Family, culture, and early experience/);
+    expect(first).toHaveAttribute("data-epistemic-status", "observation");
+    const next = within(concepts).getByRole("button", { name: "Next concept" });
+    for (let index = 0; index < 4; index++) fireEvent.click(next);
+    const proposal = within(concepts).getByRole("group", { name: /^5 of \d+$/ });
+    expect(proposal).toHaveTextContent(/In DOT, you are the conscious process/);
+    expect(proposal).toHaveAttribute("data-epistemic-status", "hypothesis");
     expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
   });
 
@@ -112,7 +121,8 @@ describe("HeroProposition", () => {
     );
     expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(2);
     expect(screen.getByRole("link", { name: "Read Book One" }))
-      .toHaveAccessibleDescription("The preface · Free to read");
+      .not.toHaveAccessibleDescription();
+    expect(screen.queryByText("Book One’s preface · Free to read")).not.toBeInTheDocument();
   });
 
   it("lets readers begin before the concepts or diagram", () => {
@@ -123,9 +133,9 @@ describe("HeroProposition", () => {
     );
 
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "Love." });
+    const heading = screen.getByRole("heading", { name: "Trust your experience." });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
-    const explanation = screen.getByRole("region", { name: "Key concepts from Book One" });
+    const explanation = screen.getByRole("region", { name: "Key concepts and questions" });
     expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

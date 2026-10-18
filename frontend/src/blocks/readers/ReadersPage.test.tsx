@@ -5,6 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import ReaderLeavePage from "./ReaderLeavePage";
 import ReadersPage from "./ReadersPage";
+import READERS from "../../content/readers.json";
+import { OrganismProvider } from "../../organism/OrganismContext";
+import { ThemeProvider } from "../../shared/contexts/SimpleThemeContext";
 
 const server = vi.hoisted(() => ({
   available: null as boolean | null,
@@ -30,15 +33,19 @@ afterEach(() => {
   window.history.replaceState(null, "", "/");
 });
 
-const inRouter = (element: ReactElement) => render(<MemoryRouter>{element}</MemoryRouter>);
+const inRouter = (element: ReactElement) => render(
+  <ThemeProvider><OrganismProvider><MemoryRouter>{element}</MemoryRouter></OrganismProvider></ThemeProvider>,
+);
 const TOKEN = "a".repeat(64);
 
 describe("ReadersPage", () => {
-  it("states its commitments before asking for anything", () => {
+  it("explains the full writing scope and its commitments before asking for an address", () => {
     server.available = true;
     inRouter(<ReadersPage />);
 
-    expect(screen.getByRole("heading", { level: 1, name: "The reader list" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: READERS.heading })).toBeInTheDocument();
+    for (const topic of READERS.topics) expect(screen.getByRole("heading", { name: topic.label })).toBeInTheDocument();
+    expect(screen.queryByText(/Book Two is being written/)).not.toBeInTheDocument();
     expect(screen.getByText(/Nothing is sent until you confirm/)).toBeInTheDocument();
     expect(screen.getByText(/removes you in one click/)).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Email address" })).toBeInTheDocument();

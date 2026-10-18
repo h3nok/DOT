@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import AboutPage from "./AboutPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import { author, authorByline } from "../../content/author";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../../content/builder";
 
@@ -24,7 +25,7 @@ const renderPage = () =>
   render(
     <MemoryRouter>
       <AboutPage />
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("AboutPage", () => {
@@ -119,6 +120,13 @@ describe("AboutPage", () => {
     expect(products.queryByText(/Also in open source/)).toBeNull();
     expect(products.getByRole("link", { name: "Visit website: Sullix" }))
       .toHaveAttribute("href", "https://sullix.com/");
+    const movement = within(products.getByRole("region", { name: "4Us" }));
+    expect(movement.getByText("Founder", { exact: true })).toBeVisible();
+    expect(movement.getByText("Working proposal")).toBeVisible();
+    expect(movement.getByText("Sullix · The first product within 4Us")).toBeVisible();
+    expect(movement.getByRole("link", { name: "Explore 4Us" }))
+      .toHaveAttribute("href", "https://sullix.com/venture");
+    expect(products.getByRole("heading", { level: 4, name: "Sullix" })).toBeVisible();
     expect(screen.queryByText(/Avia/)).toBeNull();
   });
 
@@ -126,6 +134,7 @@ describe("AboutPage", () => {
     renderPage();
 
     const resume = within(screen.getByRole("region", { name: "Career & résumé" }));
+    expect(resume.getByText("Enterprise IT since 2012")).toBeVisible();
     const download = resume.getByRole("link", { name: "Download résumé" });
     expect(download).toHaveAttribute("href", author.resumeUrl);
     expect(download).toHaveAttribute("download");
@@ -136,6 +145,8 @@ describe("AboutPage", () => {
     const online = readFileSync(`public${author.resumeOnlineUrl}`, "utf8");
     expect(online).toContain("Research Scientist");
     expect(online).toContain("Enterprise applied research");
+    expect(online).toContain("Enterprise IT since 2012");
+    expect(online).toContain("Selected recent experience");
     expect(online).not.toMatch(/Costco|AI Principal|Avia Solutions LLC|<h3>Sullix<\/h3>/i);
     expect(screen.queryByText(/Costco Wholesale/)).toBeNull();
     expect(online).toContain(author.credentials[0].dissertation!.title);

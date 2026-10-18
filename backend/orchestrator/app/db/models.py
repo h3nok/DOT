@@ -917,7 +917,9 @@ class ReaderSubscription(Base, TimestampMixin):
 
     __tablename__ = "reader_subscriptions"
     __table_args__ = (
-        sqlalchemy.UniqueConstraint("email_hash", name="uq_reader_subscriptions_email_hash"),
+        sqlalchemy.UniqueConstraint(
+            "email_hash", "publication", name="uq_reader_subscriptions_publication"
+        ),
     )
 
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
@@ -948,3 +950,9 @@ class ReaderSubscription(Base, TimestampMixin):
     #: Where they subscribed from — "book", "talk", "front" — so the steward can
     #: tell which surfaces reach people. A coarse label, never a per-person trail.
     source: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(sqlalchemy.String(32))
+    publication: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.String(32), nullable=False, default="all", server_default="all"
+    )
+    suppressed_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.DateTime(timezone=True)
+    )

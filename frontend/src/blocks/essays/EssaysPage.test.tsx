@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import EssayPage from "./EssayPage";
+import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import EssaysPage from "./EssaysPage";
 import type { EssaySummary } from "../../content/essays/essays";
 
@@ -52,7 +53,7 @@ const openAt = (path: string) =>
         <Route path="/blog" element={<h1>Writing archive</h1>} />
         <Route path="/essays/:slug" element={<EssayPage />} />
       </Routes>
-    </MemoryRouter>,
+    </MemoryRouter>, { wrapper: PublicPageTestProvider },
   );
 
 describe("EssaysPage", () => {
@@ -63,6 +64,17 @@ describe("EssaysPage", () => {
 });
 
 describe("EssayPage", () => {
+  it("shows a post banner, credit, author, and named series without changing its text", async () => {
+    serve([{ ...FEAR, format: "letter", series: "The American Millennial Manifesto", cover: { src: "/essay-media/fear-narrows/cover.webp", alt: "A landscape", caption: "Image by its creator", width: 1600, height: 900 } }]);
+    openAt("/essays/fear-narrows");
+    const image = await screen.findByRole("img", { name: "A landscape" });
+    expect(image).toHaveAttribute("width", "1600");
+    expect(image).toHaveAttribute("fetchpriority", "high");
+    expect(screen.getByText("Image by its creator")).toBeVisible();
+    expect(within(screen.getByRole("article")).getByText("The American Millennial Manifesto")).toBeVisible();
+    expect(screen.getByText("End of letter")).toBeVisible();
+    expect(screen.getByText(/fewer responses feel available/)).toBeVisible();
+  });
   it("reads the essay, then stops at what it builds on and a way to answer it", async () => {
     serve([MACHINES, FEAR]);
     openAt("/essays/fear-narrows");

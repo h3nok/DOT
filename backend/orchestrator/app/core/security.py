@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ipaddress
+
 import slowapi
 import slowapi.util
 import starlette.middleware.base
@@ -13,6 +15,46 @@ import starlette.types
 
 
 _shared_limiter: slowapi.Limiter | None = None
+
+# Google's front-end and load-balancer source ranges. They can appear to the
+# right of the visitor in X-Forwarded-For, but are never the visitor.
+_GOOGLE_FRONT_END = (
+    ipaddress.ip_network("35.191.0.0/16"),
+    ipaddress.ip_network("130.211.0.0/22"),
+)
+
+
+def _is_infrastructure(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    return (
+        address.is_private
+        or address.is_loopback
+        or address.is_link_local
+        or any(address in network for network in _GOOGLE_FRONT_END)
+    )
+
+
+def client_address(request: starlette.requests.Request) -> str:
+    """The visitor a rate limit counts, as Google's front end recorded them.
+
+    Cloud Run proxies every request, so the socket peer is Google's proxy and
+    is shared by all visitors: keyed on it, five strangers would exhaust the
+    contact form for everyone. The front end appends the caller's address to
+    X-Forwarded-For. A client can put anything to the left of it, so read from
+    the right and skip infrastructure. IPv6 visitors count per /64, the block a
+    single subscriber is usually assigned.
+    """
+    forwarded = request.headers.get("x-forwarded-for", "")
+    for entry in reversed(forwarded.split(",")):
+        try:
+            address = ipaddress.ip_address(entry.strip())
+        except ValueError:
+            continue
+        if _is_infrastructure(address):
+            continue
+        if address.version == 6:
+            return str(ipaddress.ip_network(f"{address}/64", strict=False))
+        return str(address)
+    return slowapi.util.get_remote_address(request)
 
 
 def make_limiter(redis_url: str | None = None) -> slowapi.Limiter:
@@ -27,7 +69,7 @@ def make_limiter(redis_url: str | None = None) -> slowapi.Limiter:
     global _shared_limiter  # noqa: PLW0603
     if _shared_limiter is None:
         _shared_limiter = slowapi.Limiter(
-            key_func=slowapi.util.get_remote_address,
+            key_func=client_address,
             storage_uri=redis_url or "memory://",
         )
     return _shared_limiter

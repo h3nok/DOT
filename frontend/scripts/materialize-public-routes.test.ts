@@ -9,6 +9,7 @@ import {
   RELEASE_MANIFEST,
   SITE_URL,
   fetchNativeWriting,
+  fetchPublishedSiteCopy,
   publicRoutes,
   renderMarkdown,
   renderRoute,
@@ -24,6 +25,7 @@ import { parseEssay } from "./essays.mjs";
 import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
+import AMM from "../src/content/amm.json";
 
 interface PublicRoute {
   route: string;
@@ -45,6 +47,185 @@ const nodeOfType = (route: PublicRoute, type: string) =>
   route.structuredData["@graph"].find((node) => node["@type"] === type);
 
 describe("public route metadata", () => {
+  it("keeps how power works built for its address but hidden: out of search, unlinked, old addresses home", async () => {
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: {
+      "amm.money.examples.borrowing.mechanic": "<strong>Owner’s debt explanation</strong>",
+    } });
+    const capital = revised.find(route => route.route === "/amm/power")!;
+    expect(capital.noindex).toBe(true);
+    expect(capital.prerender).toContain("&lt;strong&gt;Owner’s debt explanation&lt;/strong&gt;");
+    expect(capital.prerender).not.toContain("<strong>Owner’s debt explanation</strong>");
+    for (const example of AMM.money.examples) expect(capital.prerender).toContain(`id="${example.id}"`);
+    for (const id of ["power", "assault", "chain", "interfaces", "holders", "detachment", "tests", "alternatives", "sources"]) expect(capital.prerender).toContain(`id="${id}"`);
+    for (const step of AMM.capital.story) expect(capital.prerender).toContain(`<h3>${step.title}</h3>`);
+    expect(capital.prerender).toContain(AMM.capital.rail.label);
+    expect(capital.prerender).toContain(AMM.capital.assaultClose);
+    expect(capital.prerender).toContain("not independently verified");
+    expect(capital.prerender).toContain('alt="The erosion of the public:');
+    expect(capital.prerender).toContain('/amm/media/host-anatomy-v2-1024.webp');
+    expect(capital.prerender).toContain(AMM.capital.anatomyCaption);
+    expect(capital.prerender).not.toContain('/amm/media/slow-erosion-');
+    expect(capital.prerender).toContain("https://books.core-econ.org/the-economy-v1/book/text/10.html");
+    const sitemap = sitemapXml(revised, manifest.release.updated_at);
+    expect(sitemap).not.toContain("/amm/power");
+    // No public AMM page links to it while it is hidden, chapters included.
+    for (const route of revised.filter(item => item.publication === "amm" && item.route !== "/amm/power")) expect(route.prerender).not.toContain('href="/amm/power');
+    // The former guide's addresses open the AMM home and stay out of the sitemap.
+    for (const path of ["/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"]) {
+      const moved = revised.find(route => route.route === path)!;
+      expect(moved.canonicalRoute).toBe("/amm");
+      expect(moved.prerender).toContain('href="/amm"');
+      expect(sitemap).not.toContain(`${path}</loc>`);
+    }
+  });
+  it("materializes only published AMM copy and keeps its editor out of search", async () => {
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.home.premise": "Published opening paragraph.", "amm.heroaction": "Published reading invitation", "amm.home.overviewsource": "Chapter Three · Updated source title", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.chaptersection.chapters.amm-chapter-two-the-leechs-anatomy.line": "An edited line for Chapter Two." } });
+    const amm = revised.find(route => route.route === "/amm")!;
+    expect(amm.prerender).toContain("Published opening");
+    expect(amm.prerender).toContain('<p>Published opening paragraph.</p>');
+    expect(amm.prerender).not.toContain(AMM.home.premise);
+    expect(amm.prerender).toContain(`href="#amm-overview">Published reading invitation`);
+    expect(amm.prerender).toContain('<cite><a href="/essays/amm-chapter-three-the-host-and-the-infection">Chapter Three · Updated source title</a></cite>');
+    // Published concepts and chapter lines share the owner editor's stable keys.
+    expect(amm.prerender).toContain("A published definition of fear.");
+    expect(amm.prerender).toContain("An edited line for Chapter Two.");
+    // One reading action; the hidden power guide stays separate.
+    expect(amm.prerender).not.toContain(AMM.reading.prereqTitle);
+    expect(amm.prerender).not.toContain(AMM.reading.pathEyebrow);
+    expect(amm.prerender).not.toContain("Published visual question");
+    expect(revised.find(route => route.route === "/amm/power")?.prerender).toContain("Published visual question");
+    expect(amm.prerender).toContain("&lt;script&gt;unsafe&lt;/script&gt;");
+    expect(amm.prerender).not.toContain("<script>unsafe</script>");
+    expect(revised.find(route => route.route === "/studio/pages/amm")?.noindex).toBe(true);
+  });
+  it("refuses to rebuild stale public copy if its configured API fails", async () => {
+    expect(await fetchPublishedSiteCopy(undefined)).toEqual({});
+    await expect(fetchPublishedSiteCopy("https://fixture.invalid", { fetchImpl: async () => new Response("", { status: 503 }) })).rejects.toThrow("Cannot materialize");
+  });
+  it("replaces a managed file edition once, and renders a tombstone after withdrawal", async () => {
+    const slug = "amm-chapter-three-the-host-and-the-infection";
+    const essay = parseEssay('---\ntitle: Original host\nsummary: Original summary\npublished: 2026-10-15\nlevels: [model]\n---\nOriginal body.', slug);
+    const item = { id: "managed-host", slug, title: "Revised host", summary: "Revised summary", published: "2026-10-16", releases: [{ number: 1, manifest: { title: "Revised host", summary: "Revised summary", presentation: { series: AMM.series }, claims: [] }, body: "Revised body." }] };
+    const revised: PublicRoute[] = await publicRoutes(manifest, { essays: [essay], writing: [item] });
+    const aliases = revised.filter(route => route.route === `/essays/${slug}`);
+    expect(aliases).toHaveLength(1);
+    expect(aliases[0].prerender).toContain("Revised body.");
+    expect(aliases[0].prerender).not.toContain("Original body.");
+    const withdrawn: PublicRoute[] = await publicRoutes(manifest, { essays: [essay], writing: [{ ...item, withdrawn: true, releaseNumber: 1, releases: [] }] });
+    const notice = withdrawn.find(route => route.route === `/essays/${slug}`)!;
+    expect(renderRoute(shell, notice)).toContain("This release has been withdrawn.");
+    expect(notice.prerender).not.toContain("Original body.");
+    expect(withdrawn.find(route => route.route === "/blog")?.prerender).not.toContain("Original host");
+  });
+  it("keeps explorable figures as source-attributed tables without JavaScript", () => {
+    const chapter = routes.find(route => route.route === "/essays/amm-chapter-two-the-leechs-anatomy")!;
+    expect(chapter.prerender).toContain("Revenue collected at digital interfaces");
+    expect(chapter.prerender).toContain('<th scope="row">Apple Services</th><td>109.2</td>');
+    expect(chapter.prerender).toContain("not independently verified");
+    expect(chapter.prerender).not.toContain('language-evidence-chart');
+  });
+  it("materializes AMM as a public publication and keeps its newsletter desk private", () => {
+    const publicPage = routes.find(route => route.route === "/amm")!;
+    expect(publicPage.title).toBe(AMM.title);
+    expect(publicPage.prerender).toContain(AMM.headline.join(" "));
+    expect(publicPage.prerender).toContain(`<h2 id="amm-overview-title">${AMM.home.overviewTitle}</h2>`);
+    expect(publicPage.prerender).not.toContain('<nav aria-label="On this page">');
+    // The reflection questions were removed; nothing on the home is hidden behind a disclosure.
+    expect(publicPage.prerender).not.toContain('id="amm-concerns"');
+    expect(publicPage.prerender).not.toContain("<details>");
+    for (const concept of AMM.home.concepts) {
+      expect(publicPage.prerender).toContain(concept.text);
+      expect(publicPage.prerender).toContain(concept.script);
+      // Each scene closes on AMM's own argument with its chapter, not on a question.
+      expect(publicPage.prerender).toContain(concept.argument);
+      expect(publicPage.prerender).toContain(concept.source);
+
+    }
+    expect(publicPage.prerender).not.toContain("Conditioning, character, and responsibility");
+    expect(publicPage.prerender).not.toContain("The cost of refusal");
+    expect(publicPage.prerender).toContain(AMM.home.sceneAlt);
+    // Each picture appears once: the mirror in the hero, two scenes, then each chapter's own artwork.
+    for (const scene of ['host-at-home-v1', 'erosion']) {
+      expect(publicPage.prerender.split(`/amm/media/${scene}-1024.webp`)).toHaveLength(2);
+    }
+    expect(publicPage.prerender).not.toContain('/amm/media/host-reflection-1024.webp');
+    expect(publicPage.prerender).toContain(AMM.artwork.caption);
+    expect(publicPage.prerender).toContain(AMM.artwork.alt);
+    expect(publicPage.prerender).toContain('src="/amm/mark.svg"');
+    expect(publicPage.prerender).not.toContain('aria-label="Site"');
+    expect(publicPage.prerender).not.toContain(AMM.analysis.title);
+    expect(publicPage.prerender).not.toContain(AMM.principle.quote);
+    expect(publicPage.prerender).not.toContain(AMM.archiveTitle);
+    expect(publicPage.prerender).not.toContain('id="amm-subscribe"');
+    expect(publicPage.prerender).toContain('<footer>');
+    // The home presents the argument, then the manifesto itself as a book, in the author's order.
+    expect(publicPage.prerender).toContain(AMM.home.overviewClaim);
+    expect(publicPage.prerender).toContain(AMM.home.overviewIntro);
+    expect(publicPage.prerender).toContain(`<cite><a href="/essays/amm-chapter-two-the-leechs-anatomy">${AMM.home.overviewSource}</a></cite>`);
+    expect(publicPage.prerender.indexOf('id="amm-overview"')).toBeLessThan(publicPage.prerender.indexOf('id="amm-start"'));
+    const book = publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-start"'));
+    for (const chapter of AMM.chapterSection.chapters) {
+      expect(book).toContain(chapter.line);
+      expect(book).toContain(`href="/essays/${chapter.id}"`);
+    }
+    expect(book.indexOf("Chapter One: The Leech")).toBeLessThan(book.indexOf("Chapter Two: The Leech’s Anatomy"));
+    expect(book.indexOf("Chapter Two: The Leech’s Anatomy")).toBeLessThan(book.indexOf("Chapter Three: The Host and the Infection"));
+    expect(book).toContain(`>${AMM.introduction.label}</a>`);
+    expect(book).toContain("min read");
+    expect(publicPage.prerender).not.toContain('class="amm-latest"');
+    // AMM reads as an application of DOT and a sponsor of 4Us: the theory before the book, the movement after it.
+    const order = ['id="amm-overview"', 'id="amm-dot"', 'id="amm-start"', 'id="amm-sponsor"'].map(id => publicPage.prerender.indexOf(id));
+    expect(order.every(index => index > 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    for (const item of AMM.dot.links) expect(publicPage.prerender).toContain(`href="/doctrine/${item.id}"`);
+    expect(publicPage.prerender).toContain(AMM.movement.sponsor);
+    expect(publicPage.prerender).toContain(`href="${AMM.movement.href}"`);
+    expect(publicPage.prerender).not.toContain('href="/essays/amm-chapter-four');
+    expect(publicPage.prerender).not.toContain(AMM.reading.supportAction);
+    const editions = routes.find(route => route.route === "/amm/editions")!;
+    // Every AMM page leads back to DOT and names the movement it sponsors.
+    for (const page of [publicPage, editions]) {
+      expect(page.prerender).toContain(AMM.dot.footer);
+      expect(page.prerender).toContain(AMM.movement.footer);
+    }
+    expect(editions.prerender).toContain(`<h1>${AMM.archiveTitle}</h1>`);
+    expect(editions.prerender).toContain('id="amm-chapters"');
+    expect(editions.prerender).toContain('id="amm-letters"');
+    // Each manuscript part appears once in the reading path, title and line only, and not again among the letters.
+    const letters = editions.prerender.slice(editions.prerender.indexOf('id="amm-letters"'));
+    expect(letters).not.toContain('href="/essays/amm-chapter-two-the-leechs-anatomy"');
+    expect(editions.prerender).not.toContain('href="/essays/amm-chapter-one-the-leech#what-the-leech-means"');
+    expect(editions.prerender).not.toContain("I Write Because I Care");
+    expect(editions.prerender).toContain(AMM.artwork.caption);
+    expect(editions.prerender).toContain('id="amm-subscribe"');
+    expect(editions.prerender).toContain("/amm/feed.xml");
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("/amm/editions");
+    const host = routes.find(route => route.route === "/essays/amm-chapter-three-the-host-and-the-infection")!;
+    // The former standalone section keeps its address and points into the chapter.
+    const moved = routes.find(route => route.route === "/essays/the-anatomy-of-the-host")!;
+    expect(moved.canonicalRoute).toBe("/essays/amm-chapter-three-the-host-and-the-infection");
+    expect(moved.noindex).toBe(true);
+    expect(moved.prerender).toContain('href="/essays/amm-chapter-three-the-host-and-the-infection#the-anatomy-of-the-host">Chapter Three: The Host and the Infection</a>');
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/essays/the-anatomy-of-the-host");
+    for (const step of AMM.analysis.steps) {
+      expect(host.prerender).toContain(`id="${step.anchor}"`);
+    }
+    // Every edition names its place in the order and ends with the next part and the two asks.
+    const first = routes.find(route => route.route === AMM.introduction.route)!;
+    expect(first.prerender).toContain("Part 1 of 3 published");
+    expect(first.prerender).toContain(`${AMM.reading.nextLabel}: <a href="/essays/amm-chapter-two-the-leechs-anatomy">`);
+    expect(first.prerender).toContain('href="/support?purpose=author&amp;from=amm"');
+    expect(host.prerender).toContain(AMM.reading.latestNote);
+    const letter = routes.find(route => route.route === "/essays/amm-ai-will-not-kill-you")!;
+    expect(letter.prerender).toContain(`${AMM.reading.beginLabel}: <a href="${AMM.introduction.route}">`);
+    const desk = routes.find(route => route.route === "/studio/newsletter")!;
+    expect(desk.noindex).toBe(true);
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/studio/newsletter");
+    const feed = rssXml([], AMM);
+    expect(feed).toContain(`<title>${AMM.title}</title>`);
+    expect(feed).toContain('href="https://dotheory.org/amm/feed.xml"');
+    expect(feed).not.toContain("<item>");
+  });
   it("carries the concept map's real names, not a copy that has drifted", () => {
     // The script cannot import TypeScript, so it restates the concept map. If
     // a concept is renamed or reworded in the book's data and not here, every
@@ -62,6 +243,18 @@ describe("public route metadata", () => {
 
   it("names the same author profile the site does", () => {
     expect(AUTHOR_PROFILE).toBe(siteConfig.social.linkedin);
+  });
+
+  it("names the home breadcrumb DOT on About and the other public pages", () => {
+    for (const route of routes) {
+      const breadcrumb = nodeOfType(route, "BreadcrumbList");
+      const trail = breadcrumb?.itemListElement as { name: string; item: string }[] | undefined;
+      const home = trail?.find((entry) => entry.item === `${SITE_URL}/`);
+      if (home) expect(home.name, route.route).toBe("DOT");
+    }
+    const about = routes.find((route) => route.route === "/about")!;
+    const trail = nodeOfType(about, "BreadcrumbList")?.itemListElement as { name: string }[];
+    expect(trail[0].name).toBe("DOT");
   });
 
   it("gives every concept its own title and description", () => {
@@ -82,14 +275,14 @@ describe("public route metadata", () => {
     }
   });
 
-  it("describes the Academy as a collection rather than as the book", () => {
-    const route = routes.find((candidate) => candidate.route === "/academy");
-    expect(route).toBeDefined();
-    const academy = nodeOfType(route!, "CollectionPage");
-    expect(academy?.name).toBe("DOT Academy");
-    expect(route?.structuredData["@graph"].some((node) => node["@type"] === "Book")).toBe(
-      false,
-    );
+  it("keeps the hidden Academy address as a book alias without advertising it", () => {
+    const route = routes.find((candidate) => candidate.route === "/academy")!;
+    expect(route.canonicalRoute).toBe("/book/digital-organism-theory");
+    expect(route.prerender).toContain('href="/book/digital-organism-theory">Read Book One</a>');
+    expect(route.prerender).not.toContain("DOT Academy");
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/academy");
+    expect(rootDocument(shell, manifest)).not.toContain('href="/academy"');
+    expect(rootDocument(shell, manifest)).not.toContain('"name":"DOT Academy"');
   });
 
   it("gives the Book One landing its own share image", () => {
@@ -252,6 +445,14 @@ describe("the author", () => {
       expect(entry.textContent).toContain(project.description);
       expect(document.body.textContent).toContain(project.role);
       expect(document.body.textContent).toContain(project.period);
+      if (project.movement) {
+        const movement = document.getElementById(`project-${project.movement.slug}`)!;
+        expect(movement.textContent).toContain(project.movement.description);
+        expect(movement.textContent).toContain(project.movement.role);
+        expect(movement.textContent).toContain(project.movement.relationship);
+        expect(movement.querySelector("a")?.getAttribute("href")).toBe(project.movement.href);
+        expect(movement.parentElement).toBe(entry.parentElement);
+      }
     }
     for (const job of career.experience) {
       expect(document.body.textContent).toContain(job.company);
@@ -267,6 +468,15 @@ describe("the author", () => {
 });
 
 describe("page text for readers without JavaScript", () => {
+  it("gives Writing Studio its own private entry so direct links do not use the 404 fallback", () => {
+    const studio = routeAt("/studio/writing");
+    expect(studio.noindex).toBe(true);
+    expect(studio.prerender).toContain("Sign in to import Markdown");
+    expect(renderRoute(readFileSync("index.html", "utf8"), studio))
+      .toContain('<meta name="robots" content="noindex" />');
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/studio/writing");
+  });
+
   it("gives the private inbox a non-indexed entry without exposing messages", () => {
     const inbox = routeAt("/studio/inbox");
     expect(inbox.noindex).toBe(true);
@@ -317,7 +527,7 @@ describe("page text for readers without JavaScript", () => {
 
   it("gives the home page the author, the book, and a way into every chapter", () => {
     const html = rootDocument(shell, manifest);
-    expect(html).toContain('<p>Digital Organism Theory</p><h1>Love.</h1>');
+    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Understand what shapes you. Choose how you live.</p>');
     for (const section of manifest.sections) {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }
@@ -329,9 +539,9 @@ describe("page text for readers without JavaScript", () => {
 
   it("carries the hero proposition into metadata and the script-free home", () => {
     const description = /name="description"\s+content="([^"]+)"/.exec(shell)?.[1];
-    expect(description).toContain("consciousness, Fear, and Love");
+    expect(description).toContain("consciousness, conditioning, and the beliefs we mistake for truth");
     expect(description).toContain("Henok Ghebrechristos");
-    expect(description).toContain("discuss a project");
+    expect(description).toContain("Question the claims");
     expect(description).not.toContain("greater awareness can support");
     for (const field of ["og:description", "twitter:description"]) {
       const content = new RegExp(`(?:name|property)="${field}"\\s+content="([^"]+)"`)
@@ -340,9 +550,19 @@ describe("page text for readers without JavaScript", () => {
     }
     expect(rootDocument(shell, manifest)).toContain(`<p>${description}</p>`);
     expect(rootDocument(shell, manifest)).toContain("Love is the condition in which Fear no longer governs you.");
-    expect(rootDocument(shell, manifest)).toContain("remain hypotheses, open to challenge and revision");
-    expect(rootDocument(shell, manifest)).toContain("there is no timetable for it");
-    expect(rootDocument(shell, manifest)).toContain('/contact?purpose=project');
+    expect(rootDocument(shell, manifest)).toContain("<h2>A society can be productive and still be lost.</h2>");
+    expect(rootDocument(shell, manifest)).toContain('href="/book/digital-organism-theory/the-painting#the-culture-inside-you"');
+    expect(rootDocument(shell, manifest)).not.toContain("What happens when you feel challenged?");
+    expect(rootDocument(shell, manifest)).not.toContain("Read. Inquire. Open up.");
+    expect(rootDocument(shell, manifest)).not.toContain("Henok’s account begins with lived experience.");
+    expect(rootDocument(shell, manifest)).not.toContain("there is no timetable for it");
+    expect(rootDocument(shell, manifest)).not.toContain("The Academy holds definitions and open questions as the inquiry develops.");
+    expect(rootDocument(shell, manifest)).not.toContain("Things built. Ideas explored.");
+    expect(rootDocument(shell, manifest)).not.toContain("Build something useful.");
+    expect(rootDocument(shell, manifest)).not.toContain("Follow an idea.");
+    expect(rootDocument(shell, manifest)).not.toContain("Book One’s preface · Free to read");
+    expect(rootDocument(shell, manifest)).toContain("<h2>Questions for inquiry</h2>");
+    expect(rootDocument(shell, manifest)).toContain("<h3>Secular Humanism</h3>");
   });
 
   it("keeps the leave page out of search engines", () => {
@@ -392,7 +612,7 @@ describe("essays", () => {
     const alias = routes.find((route) => route.route === "/essays")!;
     expect(alias.canonicalRoute).toBe("/blog");
     expect(alias.prerender).toContain('href="/blog">All writing</a>');
-    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" />');
+    expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/blog" data-rh="true" />');
     expect(renderRoute(shell, alias)).not.toContain('name="robots" content="noindex"');
     const sitemap = sitemapXml(routes, "2026-10-06");
     expect(sitemap).toContain("<loc>https://dotheory.org/blog</loc>");
@@ -405,9 +625,13 @@ describe("essays", () => {
     expect(blog.prerender).toContain(`href="${SITE_URL}/feed.xml">Follow with RSS</a>`);
     expect(blog.prerender).toContain('href="/readers">Open the reader list</a>');
     expect(blog.prerender).toContain("Discuss a project");
+    expect(blog.prerender).toContain("Start here · From Book One");
+    expect(blog.prerender).toContain('href="/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings">Read the passage</a>');
     expect(blog.prerender).toContain("AI will not kill you. The one saying that it will, will");
-    expect(blog.prerender).toContain("Read on LinkedIn");
-    expect(routes.some((route) => route.route.startsWith("/essays/"))).toBe(false);
+    expect(blog.prerender).toContain('href="/amm"');
+    expect(blog.prerender).toContain("An independent publication");
+    expect(routes.filter((route) => route.route.startsWith("/essays/")).map(route => route.route))
+      .toEqual(expect.arrayContaining([AMM.introduction.route, "/essays/amm-chapter-one-the-leech", "/essays/amm-chapter-two-the-leechs-anatomy"]));
     const home = rootDocument(shell, manifest);
     expect(home).toContain('href="/blog"');
     expect(home).not.toContain('href="/essays"');
@@ -433,6 +657,23 @@ describe("essays", () => {
   it("refuse to link a concept the map does not have", async () => {
     const stray = { ...older, concepts: ["not-a-concept"] };
     await expect(publicRoutes(manifest, { essays: [stray] })).rejects.toThrow(/not a concept/);
+  });
+
+  it("carries the same banner into HTML, Article metadata, link previews, the archive, and RSS", async () => {
+    const covered = { ...older, format: "case-study", series: "Architecture notes", cover: { src: "/essay-media/fear-narrows/abc-cover.webp", alt: 'A diagram with "connections"', caption: "Diagram & credit", width: 1600, height: 900 }, body: '![Detail](/essay-media/fear-narrows/detail.png "Figure & credit")' };
+    const entries: PublicRoute[] = await publicRoutes(manifest, { essays: [covered] });
+    const route = entries.find((item) => item.route === "/essays/fear-narrows")!;
+    expect(route.image).toBe(covered.cover.src);
+    expect(route.prerender).toContain("Case study · Architecture notes");
+    expect(route.prerender).toContain("End of case study");
+    expect(route.prerender).toContain("<figcaption>Diagram &amp; credit</figcaption>");
+    expect(route.prerender).toContain("<figcaption>Figure &amp; credit</figcaption>");
+    expect((nodeOfType(route, "Article") as Record<string, unknown>).image).toBe(`${SITE_URL}${covered.cover.src}`);
+    expect(renderRoute(shell, route)).toContain(`property="og:image" content="${SITE_URL}${covered.cover.src}"`);
+    expect(renderRoute(shell, route)).toContain('property="og:image:height" content="900"');
+    expect(entries.find((item) => item.route === "/blog")!.prerender).toContain(covered.cover.src);
+    expect(rssXml([covered])).toContain(`src="${SITE_URL}${covered.cover.src}"`);
+    expect(rssXml([covered])).toContain("<figcaption>Figure &amp; credit</figcaption>");
   });
 
   it("are carried whole by a feed a reader's own software can pull", () => {
@@ -479,7 +720,7 @@ describe("native writing", () => {
     sources: [{ external_uri: "https://example.org/report", locator: null, relation: "cites" }],
   });
   const responses: Record<string, unknown> = {
-    "/v1/academy/delivery/catalog?space=dot-academy": [
+    "/v1/academy/delivery/catalog?space=dot-academy&include_withdrawn=true": [
       { work_id: "awork_abc123", work_slug: "ai", title: "AI letter", summary: "An analysis.", kind: "essay", release_number: 2, released_at: "2026-10-05T12:00:00Z", withdrawn_at: null },
       { work_id: "awork_gone", work_slug: "gone", title: "Gone", summary: null, kind: "essay", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: "2026-10-02T00:00:00Z" },
       { work_id: "awork_def", work_slug: "def", title: "A definition", summary: null, kind: "definition", release_number: 1, released_at: "2026-10-01T12:00:00Z", withdrawn_at: null },
@@ -502,7 +743,7 @@ describe("native writing", () => {
 
   it("gives every live release its own shareable page with whole text, claims and sources", async () => {
     const writing = await fetchNativeWriting(api, { fetchImpl });
-    expect(writing.map((item: { id: string }) => item.id)).toEqual(["awork_abc123"]);
+    expect(writing.map((item: { id: string }) => item.id)).toEqual(["awork_gone", "awork_abc123"]);
     const withWriting: PublicRoute[] = await publicRoutes(manifest, { essays: [], writing });
     const paths = withWriting.map((route) => route.route);
     expect(paths).toContain("/writing/awork_abc123");
@@ -523,7 +764,28 @@ describe("native writing", () => {
     expect(html).toContain('<meta property="og:title" content="AI letter — ');
 
     const publications = withWriting.find((route) => route.route === "/publications")!;
-    expect(publications.prerender).toContain('href="/blog">Letters and essays</a>');
+    expect(publications.prerender).toContain('href="/amm">Explore the AMM publication</a>');
+  });
+
+  it("carries released artwork into reading HTML, sharing metadata and RSS", async () => {
+    const src = "/v1/academy/delivery/works/awork_abc123/releases/2/media/banner";
+    const enriched = async (url: string) => {
+      if (url.endsWith("/works/awork_abc123/releases/2")) return Response.json({
+        manifest: { ...manifestFor("AI letter"), presentation: { format: "letter", series: "Fixture", cover: { path: "post/banner.png", alt: "Banner description", caption: "Image credit" } }, assets: [{ path: "post/banner.png", src, width: 1600, height: 900 }] },
+        body_ref: "academy/space/releases/2.md",
+      });
+      if (url.includes("/delivery/body/")) return new Response("![Inline description][image]\n\n[image]: post/banner.png");
+      return fetchImpl(url);
+    };
+    const writing = await fetchNativeWriting(api, { fetchImpl: enriched });
+    const routes: PublicRoute[] = await publicRoutes(manifest, { essays: [], writing });
+    const page = routes.find(route => route.route === "/writing/awork_abc123")!;
+    expect(page.prerender).toContain(`src="${api}${src}"`);
+    expect(page.prerender).toContain('alt="Banner description"');
+    expect(page.prerender).toContain('alt="Inline description"');
+    expect(renderRoute(shell, page)).toContain(`<meta property="og:image" content="${api}${src}"`);
+    const item = writing.find((item: { id: string }) => item.id === "awork_abc123");
+    expect(rssXml([{ ...item, ...item.releases.at(-1), url: `${SITE_URL}/writing/awork_abc123` }])).toContain(`${api}${src}`);
   });
 
   it("fails the build rather than silently dropping published work", async () => {

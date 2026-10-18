@@ -11,6 +11,8 @@ vi.mock("framer-motion", () => ({
 
 const TOTAL = HERO_CONCEPTS.length;
 const slide = (position: number) => ({ name: `${position} of ${TOTAL}` });
+/** Mirrors the component: a floor of 8s, or 300ms a word for longer passages. */
+const readingTime = (concept: { text: string }) => Math.max(8_000, concept.text.split(/\s+/).length * 300);
 
 function finishTyping(concept: { term: string; text: string }) {
   for (let index = 0; index < concept.term.length; index++) {
@@ -36,10 +38,10 @@ afterEach(() => {
 describe("HeroConceptSlideshow", () => {
   it("offers every definition and claim level without wrapping", () => {
     render(<HeroConceptSlideshow reducedMotion />);
-    const region = screen.getByRole("region", { name: "Key concepts from Book One" });
+    const region = screen.getByRole("region", { name: "Key concepts and questions" });
     const previous = within(region).getByRole("button", { name: "Previous concept" });
     const next = within(region).getByRole("button", { name: "Next concept" });
-    expect(HERO_CONCEPTS).toHaveLength(15);
+    expect(HERO_CONCEPTS).toHaveLength(20);
     expect(previous).toBeDisabled();
 
     for (const [index, concept] of HERO_CONCEPTS.entries()) {
@@ -57,7 +59,43 @@ describe("HeroConceptSlideshow", () => {
     expect(within(region).getByRole("heading", { name: "The Limit of Knowledge" })).toBeVisible();
     for (let index = TOTAL - 1; index > 0; index--) fireEvent.click(previous);
     expect(previous).toBeDisabled();
-    expect(within(region).getByRole("heading", { name: "The Digital Organism" })).toBeVisible();
+    expect(within(region).getByRole("heading", { name: "What you inherited" })).toBeVisible();
+  });
+
+  it("keeps the status quo and DOT's reply in their own frames, cited and at honest levels", () => {
+    render(<HeroConceptSlideshow reducedMotion />);
+    const region = screen.getByRole("region", { name: "Key concepts and questions" });
+    const next = within(region).getByRole("button", { name: "Next concept" });
+    const eyebrow = region.querySelector(".home-concept-slideshow-eyebrow")!;
+    expect(eyebrow).not.toHaveAttribute("data-frame");
+    expect(eyebrow).toHaveTextContent("DOT concept");
+
+    for (let index = 0; index < 5; index++) fireEvent.click(next);
+    const statusQuo = within(region).getByRole("group", slide(6));
+    expect(within(statusQuo).getByRole("heading", { name: "The Closed Question" })).toBeVisible();
+    expect(statusQuo).toHaveAttribute("data-frame", "status-quo");
+    expect(statusQuo).toHaveAttribute("data-epistemic-status", "model");
+    expect(within(statusQuo).getByRole("link", { name: "Chalmers, 1995" })).toHaveAttribute("href", "https://consc.net/papers/facing.pdf");
+    expect(eyebrow).toHaveAttribute("data-frame", "status-quo");
+    expect(eyebrow).toHaveTextContent("DOT rejects");
+
+    fireEvent.click(next);
+    expect(within(region).getByRole("group", slide(7))).toHaveAttribute("data-frame", "status-quo");
+    expect(eyebrow).toHaveTextContent("Outside perspective");
+    fireEvent.click(next);
+    const humanism = within(region).getByRole("group", slide(8));
+    expect(within(humanism).getByRole("heading", { name: "Secular Humanism" })).toBeVisible();
+    expect(humanism).toHaveAttribute("data-epistemic-status", "model");
+    expect(within(humanism).getByRole("link", { name: "Humanist Manifesto III, 2003" }))
+      .toHaveAttribute("href", "https://americanhumanist.org/humanism/humanist-manifesto-iii/");
+    fireEvent.click(next);
+    const reply = within(region).getByRole("group", slide(9));
+    expect(within(reply).getByRole("heading", { name: "DOT Rejects the Closed Question" })).toBeVisible();
+    expect(reply).toHaveAttribute("data-frame", "reply");
+    expect(reply).toHaveAttribute("data-epistemic-status", "model");
+    expect(eyebrow).toHaveTextContent("DOT’s response");
+
+    expect(region.querySelector(".home-concept-slideshow-count")).toHaveTextContent(`9 / ${TOTAL}`);
   });
 
   it("starts a finite sequence, allows reading time after typing, and never loops", () => {
@@ -71,8 +109,7 @@ describe("HeroConceptSlideshow", () => {
       if (index === HERO_CONCEPTS.length - 1) break;
       finishTyping(concept);
       expect(within(current).getByRole("heading")).toHaveTextContent(concept.term);
-      const readingTime = Math.max(8_000, concept.text.split(/\s+/).length * 300);
-      act(() => vi.advanceTimersByTime(readingTime - 1));
+      act(() => vi.advanceTimersByTime(readingTime(concept) - 1));
       expect(current).toBeInTheDocument();
       act(() => vi.advanceTimersByTime(1));
     }
@@ -81,7 +118,8 @@ describe("HeroConceptSlideshow", () => {
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(120_000));
     expect(screen.getByRole("group", slide(TOTAL))).toBeVisible();
-  });
+  // Every character of every slide is typed one tick at a time; the budget scales with the deck.
+  }, 20_000);
 
   it("types the whole passage after the term while its full text holds its place", () => {
     vi.useFakeTimers();
@@ -105,17 +143,17 @@ describe("HeroConceptSlideshow", () => {
   it("pauses immediately, reveals the full title, and resumes only on Play", () => {
     vi.useFakeTimers();
     render(<HeroConceptSlideshow />);
-    const title = screen.getByRole("heading", { name: "The Digital Organism" });
+    const title = screen.getByRole("heading", { name: "What you inherited" });
     expect(title).toHaveTextContent("");
     act(() => vi.advanceTimersByTime(35));
-    expect(title).toHaveTextContent("T");
+    expect(title).toHaveTextContent("W");
     fireEvent.click(screen.getByRole("button", { name: "Pause concept introduction" }));
-    expect(title).toHaveTextContent("The Digital Organism");
+    expect(title).toHaveTextContent("What you inherited");
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(1))).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Play concept introduction" }));
-    act(() => vi.advanceTimersByTime(8_000));
+    act(() => vi.advanceTimersByTime(readingTime(HERO_CONCEPTS[0])));
     expect(screen.getByRole("group", slide(2))).toBeVisible();
   });
 
@@ -128,13 +166,13 @@ describe("HeroConceptSlideshow", () => {
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(1))).toBeVisible();
     fireEvent.click(next);
-    expect(screen.getByRole("heading", { name: "The Subjective Data Principle" }))
-      .toHaveTextContent("The Subjective Data Principle");
+    expect(screen.getByRole("heading", { name: "Fear" }))
+      .toHaveTextContent("Fear");
     expect(screen.getByRole("group", slide(2))).toHaveAttribute("aria-live", "polite");
     act(() => vi.advanceTimersByTime(90_000));
     expect(screen.getByRole("group", slide(2))).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Play concept introduction" }));
-    act(() => vi.advanceTimersByTime(8_000));
+    act(() => vi.advanceTimersByTime(readingTime(HERO_CONCEPTS[1])));
     expect(screen.getByRole("group", slide(3))).toBeVisible();
   });
 
@@ -149,7 +187,7 @@ describe("HeroConceptSlideshow", () => {
     act(() => vi.advanceTimersByTime(90_000));
     motion.inView = true;
     rerender(<HeroConceptSlideshow />);
-    act(() => vi.advanceTimersByTime(7_999));
+    act(() => vi.advanceTimersByTime(readingTime(HERO_CONCEPTS[0]) - 1));
     expect(screen.getByRole("group", slide(1))).toBeVisible();
     act(() => vi.advanceTimersByTime(1));
     expect(screen.getByRole("group", slide(2))).toBeVisible();
@@ -167,7 +205,7 @@ describe("HeroConceptSlideshow", () => {
     expect(screen.getByRole("group", slide(1))).toBeVisible();
     hidden.mockReturnValue(false);
     fireEvent(document, new Event("visibilitychange"));
-    act(() => vi.advanceTimersByTime(8_000));
+    act(() => vi.advanceTimersByTime(readingTime(HERO_CONCEPTS[0])));
     expect(screen.getByRole("group", slide(2))).toBeVisible();
     unmount();
     expect(vi.getTimerCount()).toBe(0);
@@ -177,8 +215,8 @@ describe("HeroConceptSlideshow", () => {
     vi.useFakeTimers();
     motion.reducedMotion = source === "system";
     render(<HeroConceptSlideshow reducedMotion={source === "appearance"} />);
-    expect(screen.getByRole("heading", { name: "The Digital Organism" }))
-      .toHaveTextContent("The Digital Organism");
+    expect(screen.getByRole("heading", { name: "What you inherited" }))
+      .toHaveTextContent("What you inherited");
     expect(screen.getByRole("button", { name: "Autoplay unavailable in stillness mode" })).toBeDisabled();
     expect(vi.getTimerCount()).toBe(0);
     act(() => vi.advanceTimersByTime(90_000));

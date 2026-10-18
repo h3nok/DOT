@@ -6,22 +6,28 @@ import { PUBLIC_ROUTES, htmlAttribute } from "./helpers";
  * what the built page actually loads or asks for at run time; these can.
  */
 test.describe("attention laws at runtime", () => {
-  test("no member surface talks to a third party (L9)", async ({ page }) => {
-    // This checks every route in one session, including each network-idle wait.
-    // Give the whole journey more time without relaxing the privacy assertion.
+  test("no member surface talks to a third party (L9)", async ({ context }) => {
+    // Keep one session and observe all its requests. Close each page before the
+    // next document: accumulating Vite module graphs in one tab can exhaust
+    // Chromium resources before the privacy assertion is reached.
     test.slow();
     const foreign = new Set<string>();
 
-    page.on("request", (request) => {
+    context.on("request", (request) => {
       const url = new URL(request.url());
       if (url.protocol === "data:" || url.protocol === "blob:") return;
       if (url.hostname === "localhost" || url.hostname === "127.0.0.1") return;
       foreign.add(url.hostname);
     });
 
-    for (const route of PUBLIC_ROUTES) {
-      await page.goto(route.path);
-      await page.waitForLoadState("networkidle");
+    for (const route of [...PUBLIC_ROUTES.map(route => route.path), "/amm"]) {
+      const page = await context.newPage();
+      try {
+        await page.goto(route);
+        await page.waitForLoadState("networkidle");
+      } finally {
+        await page.close();
+      }
     }
 
     expect(

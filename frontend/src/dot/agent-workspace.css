@@ -40,7 +40,7 @@
 
 .agent-workspace-header h2 {
   margin-top: 0.15rem;
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-serif, "Source Serif 4", Georgia, serif);
   font-size: 1.45rem;
   font-weight: 650;
   line-height: 1.1;

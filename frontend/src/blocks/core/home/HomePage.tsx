@@ -1,11 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
-  ArrowRight,
   BookOpen,
-  Blocks,
-  PenLine,
   Mail,
-  Network,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -16,12 +12,10 @@ import { useAuth } from "../../../dot/useAuth";
 import { useReaderList } from "../../../dot/useReaderList";
 import { AppearanceControl, useOrganism } from "../../../organism";
 import { EditModeToggle } from "../../../content/editable";
-import { DotWordmark } from "../../../shared/DotWordmark";
+import { DoWordmark } from "../../../shared/DoWordmark";
 import { SiteNav } from "../../../shared/SiteNav";
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
-import { IntentCard } from "../../../attention-os/focus-nav/IntentCard";
 import { author } from "../../../content/author";
-import HOME from "../../../content/home.json";
 import { HeroAsk } from "./HeroAsk";
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
@@ -72,23 +66,24 @@ export default function HomePage() {
       {/* ── Dynamic Scroll-Aware Header ───────────────────────────────────────── */}
       <header
         aria-label="Site Header"
-        className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        className={`home-site-header fixed top-0 left-0 right-0 z-30 transition-[background-color,border-color] duration-200 motion-reduce:transition-none ${
           scrolled
-            ? "bg-background/70 py-3.5 backdrop-blur-xl border-b border-border/30 shadow-sm"
+            ? "bg-background/75 py-3.5 backdrop-blur-xl border-b border-border/40"
             : "bg-transparent py-5"
         }`}
       >
         <div className="home-header-layout dot-page-container dot-page-wide flex flex-wrap items-center justify-between gap-y-1">
           <Link
             to="/"
+            aria-label="DOT — Home"
             // -my-2.5 keeps the header its original height while the link itself
             // reaches a thumb-sized target.
-            className="-my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
+            className="do-wordmark-link -my-2.5 flex min-h-11 items-center gap-2.5 py-2.5 text-xs font-medium tracking-wide text-foreground/80 transition-colors hover:text-foreground"
           >
-            <DotWordmark className="font-mono uppercase tracking-[0.14em]" />
+            <DoWordmark emerge={!reducedMotion} />
           </Link>
 
-          <SiteNav className="order-last w-full sm:order-none sm:w-auto" />
+          <SiteNav />
 
           <div className="flex items-center gap-3">
             <AppearanceControl placement="inline" />
@@ -119,7 +114,7 @@ export default function HomePage() {
                 title="Hear by email when there is more DOT to read"
               >
                 <Mail className="h-3 w-3" aria-hidden="true" />
-                <span>Readers’ list</span>
+                <span className="sr-only sm:not-sr-only">Readers’ list</span>
               </Link>
             ) : null}
           </div>
@@ -148,20 +143,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="personal-platform" className="home-personal-section" aria-labelledby="home-personal-title">
-        <div className="dot-page-container dot-page-wide">
-          <header className="home-personal-heading">
-            <div><p className="dot-label">Henok Ghebrechristos, PhD</p><h2 id="home-personal-title" className="dot-page-heading">Things built.<br />Ideas explored.</h2></div>
-            <p>AI and product architecture, independent building, and an open inquiry into consciousness. Choose what brings you here.</p>
-          </header>
-          <nav className="home-personal-doors" aria-label="Work, writing and conversation">
-            <IntentCard to="/about#about-products" title="Build something useful." label="Work · Digital assets" description="Products, AI systems, selected projects, and the experience behind them." icon={<Blocks />} tone="forest" />
-            <IntentCard to="/blog" title="Follow an idea." label="Writing · Open inquiry" description="Technical work, essays, and The Millennial Manifesto, together in one archive." icon={<PenLine />} tone="copper" />
-            <IntentCard to="/contact?purpose=project" title="Start a conversation." label="Contact · Work together" description="Discuss a project, explore a collaboration, or share a question." icon={<Mail />} tone="blue" />
-          </nav>
-        </div>
-      </section>
-
       <AnimatePresence>
         {heroCompanionOpen && (
           <TwinSurface
@@ -173,72 +154,45 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* ── The theory, in the same outside-to-inside order as the hero ─ */}
-      <TheoryLayerJourney reducedMotion={reducedMotion} />
+      {/* Cultural conditioning gives readers a way into the proposed architecture. */}
       <Consciousness101 />
+      {/* The architecture keeps its outside-to-inside causal order. */}
+      <TheoryLayerJourney reducedMotion={reducedMotion} />
 
-      {/* ── Final reading invitation ─────────────────────────────────── */}
-      <motion.section
+      {/* ── Further reading ──────────────────────────────────────────── */}
+      <section
         id="choose-path"
-        aria-label="An invitation to inquire"
-        initial={reducedMotion ? false : { y: 12 }}
-        whileInView={{ y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: reducedMotion ? 0 : 0.5 }}
-        className="home-environment home-entrances-environment scroll-mt-4"
+        aria-label="Further reading"
+        className="home-reading-links dot-page-container"
       >
-        <div className="dot-page-container">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="home-ending-label dot-label">An invitation to inquire</span>
-            <h2 className="dot-page-heading mt-2 text-balance">
-              {HOME.invitationTitle}
-            </h2>
-            <p className="dot-lede mx-auto mt-4 max-w-xl">
-              {HOME.invitation}
-            </p>
-            <p className="dot-lede mx-auto mt-4 max-w-xl">
-              {HOME.boundary}
-            </p>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-              {HOME.edition}
-            </p>
-            <p className="mx-auto mt-4 max-w-xl text-xs text-muted-foreground">
-              Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
-              Bernardo Kastrup’s analytic idealism, and Donald Hoffman’s theory
-              of conscious agents.{" "}
-              Naming these thinkers does not mean they endorse DOT.
-            </p>
-          </div>
-
-          <FocusNav
-            label="Continue the inquiry"
-            className="mx-auto mt-10 max-w-sm"
-            primary={{
-              to: "/book/digital-organism-theory",
-              label: "Read Book One",
-              description: "Complete and free · Fixed edition",
-              icon: <BookOpen />,
-            }}
-            secondary={[{
-              to: "/academy",
-              label: "Explore DOT Academy",
-              icon: <Network />,
-              endIcon: <ArrowRight />,
-            }]}
-          />
-        </div>
-      </motion.section>
+        <FocusNav
+          label="Further reading"
+          className="mx-auto max-w-sm"
+          primary={{
+            to: "/book/digital-organism-theory",
+            label: "Read Book One",
+            description: "Complete and free · Fixed edition",
+            icon: <BookOpen />,
+          }}
+        />
+        <p className="mx-auto mt-6 max-w-xl text-center text-xs text-muted-foreground">
+          Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
+          Bernardo Kastrup’s analytic idealism, and Donald Hoffman’s theory
+          of conscious agents.{" "}
+          Naming these thinkers does not mean they endorse DOT.
+        </p>
+      </section>
 
       {/* ── Colophon ─────────────────────────────────────────────────── */}
-      <footer className="py-12 dot-page-container">
+      <footer className="site-colophon py-12 dot-page-container">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-          <DotWordmark className="font-mono text-sm uppercase tracking-[0.14em] text-muted-foreground/40" />
+          <DoWordmark compact />
           <p className="text-xs leading-relaxed text-muted-foreground">
             Written by Henok Ghebrechristos · offered as a construction, not a revelation.
             No ads, no profiling, no data sales.
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
-          <nav aria-label="Quiet links" className="flex items-center gap-5 text-xs">
+          <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 text-xs">
             <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
             <Link
               to="/readers"
