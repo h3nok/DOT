@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { expectNoHorizontalOverflow } from './helpers';
+import AMM from '../src/content/amm.json' with { type: 'json' };
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/v1/academy/delivery/catalog*', route => route.fulfill({ json: [] }));
@@ -50,7 +51,7 @@ for (const from of ['/amm/capital', '/amm/capital#holders', '/amm/money', '/amm/
   test(`${from} opens the AMM home`, async ({ page }) => {
     await page.goto(from);
     await expect(page).toHaveURL(/\/amm$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'See the system. Take charge of your life.' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: AMM.headline.join(' ') })).toBeVisible();
   });
 }
 

@@ -79,12 +79,13 @@ describe("public route metadata", () => {
     }
   });
   it("materializes only published AMM copy and keeps its editor out of search", async () => {
-    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.home.premise": "Published opening paragraph.", "amm.heroaction": "Published reading invitation", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.chaptersection.chapters.amm-chapter-two-the-leechs-anatomy.line": "An edited line for Chapter Two." } });
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.home.premise": "Published opening paragraph.", "amm.heroaction": "Published reading invitation", "amm.home.overviewsource": "Chapter Three · Updated source title", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.chaptersection.chapters.amm-chapter-two-the-leechs-anatomy.line": "An edited line for Chapter Two." } });
     const amm = revised.find(route => route.route === "/amm")!;
     expect(amm.prerender).toContain("Published opening");
     expect(amm.prerender).toContain('<p>Published opening paragraph.</p>');
     expect(amm.prerender).not.toContain(AMM.home.premise);
     expect(amm.prerender).toContain(`href="#amm-overview">Published reading invitation`);
+    expect(amm.prerender).toContain('<cite><a href="/essays/amm-chapter-three-the-host-and-the-infection">Chapter Three · Updated source title</a></cite>');
     // Published concepts and chapter lines share the owner editor's stable keys.
     expect(amm.prerender).toContain("A published definition of fear.");
     expect(amm.prerender).toContain("An edited line for Chapter Two.");
@@ -160,6 +161,7 @@ describe("public route metadata", () => {
     // The home presents the argument, then the manifesto itself as a book, in the author's order.
     expect(publicPage.prerender).toContain(AMM.home.overviewClaim);
     expect(publicPage.prerender).toContain(AMM.home.overviewIntro);
+    expect(publicPage.prerender).toContain(`<cite><a href="/essays/amm-chapter-two-the-leechs-anatomy">${AMM.home.overviewSource}</a></cite>`);
     expect(publicPage.prerender.indexOf('id="amm-overview"')).toBeLessThan(publicPage.prerender.indexOf('id="amm-start"'));
     const book = publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-start"'));
     for (const chapter of AMM.chapterSection.chapters) {

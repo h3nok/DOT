@@ -632,7 +632,7 @@ function prerenderArticle(body, essaysPublished) {
 }
 
 function prerenderAmm(body, { footer = true } = {}) {
-  const closing = footer ? `<footer><p>An independent publication by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
+  const closing = footer ? `<footer><p>Manifesto and writing by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
   return `<article data-prerender><header><a href="/amm"><img src="/amm/mark.svg" width="48" height="48" alt="" /> ${escapeHtml(AMM.title)}</a> ${link(AMM.dot.route, "Digital Organism Theory")}</header>${body}${closing}</article>`;
 }
 
@@ -1169,6 +1169,8 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     ...writing.filter(item => item.releases.at(-1)?.manifest?.presentation?.series === AMM.series).map(item => ({ title: item.title, summary: item.summary, date: item.published, href: writingPublicPath(item) })),
   ].sort((a, b) => b.date.localeCompare(a.date));
   const ammLetters = ammPosts.filter(post => !AMM_PARTS.some(part => post.href === `${ESSAYS_ROUTE}/${part.slug}`));
+  const overviewSourceChapter = AMM_PARTS.find(part => AMM.home.overviewSource.startsWith(`${part.partLabel} ·`));
+  const overviewCitation = overviewSourceChapter ? link(`${ESSAYS_ROUTE}/${overviewSourceChapter.slug}`, AMM.home.overviewSource) : escapeHtml(AMM.home.overviewSource);
   const ammRoute = {
     route: AMM.route, title: AMM.title, description: AMM.description, publication: "amm",
     image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
@@ -1178,7 +1180,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
       `<p>${escapeHtml(AMM.home.premise)}</p>`,
       `<figure><a href="${escapeHtml(AMM.artwork.src)}" aria-label="Open full-size illustration"><img src="${escapeHtml(AMM.artwork.src)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a></figure>`,
       `<p>${link("#amm-overview", AMM.heroAction)}</p>`,
-      `<section id="amm-overview" aria-labelledby="amm-overview-title"><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewClaim)}</p><p>${escapeHtml(AMM.home.overviewIntro)}</p><blockquote><p>${escapeHtml(AMM.home.overviewArgument)}</p><cite>${escapeHtml(AMM.home.overviewSource)}</cite></blockquote><ol aria-label="${escapeHtml(AMM.home.conceptsLabel)}">${AMM.home.concepts.map((item, index) => `<li>${index === 0 || AMM_MEDIA.homeScenes.concepts[item.id] !== AMM_MEDIA.homeScenes.concepts[AMM.home.concepts[index - 1].id] ? ammHomeSceneHtml("concepts", item.id, AMM.home) : ""}<p>${escapeHtml(item.label)}</p><h3>“${escapeHtml(item.script)}”</h3><p>${escapeHtml(item.text)}</p><blockquote><p>${escapeHtml(item.argument)}</p><cite>${escapeHtml(item.source)}</cite></blockquote></li>`).join("")}</ol></section>`,
+      `<section id="amm-overview" aria-labelledby="amm-overview-title"><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewClaim)}</p><p>${escapeHtml(AMM.home.overviewIntro)}</p><blockquote><p>${escapeHtml(AMM.home.overviewArgument)}</p><cite>${overviewCitation}</cite></blockquote><ol aria-label="${escapeHtml(AMM.home.conceptsLabel)}">${AMM.home.concepts.map((item, index) => `<li>${index === 0 || AMM_MEDIA.homeScenes.concepts[item.id] !== AMM_MEDIA.homeScenes.concepts[AMM.home.concepts[index - 1].id] ? ammHomeSceneHtml("concepts", item.id, AMM.home) : ""}<p>${escapeHtml(item.label)}</p><h3>“${escapeHtml(item.script)}”</h3><p>${escapeHtml(item.text)}</p><blockquote><p>${escapeHtml(item.argument)}</p><cite>${escapeHtml(item.source)}</cite></blockquote></li>`).join("")}</ol></section>`,
       ammDotHtml(AMM),
       ammPathHtml(AMM, "amm-start", essays),
       ammSponsorHtml(AMM),

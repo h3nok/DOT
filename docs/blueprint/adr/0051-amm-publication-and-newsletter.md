@@ -241,19 +241,39 @@ the existing owner editor and is included in static HTML. The flame-guided
 reading, native scrolling and existing bookmarks are preserved. This serves
 L2 (a clear ending), L3 (deliberate reading) and L10 (one focus), violating none.
 
-## Release refinement — social conditions and personal responsibility
+## Release refinement — economic conditions and everyday conduct
 
-The home now opens with “See the system. Take charge of your life.” Its
-introduction joins AMM's critique of extractive arrangements to the reader's
-responsibility for their conduct and choices. Six finite concepts pair a
+The home now opens with “An extractive economy. The culture that sustains it.”
+The founder clarified that its purpose is a pragmatic diagnosis of the economic
+environment, cultural assumptions, and everyday conduct. Landing copy describes
+those relationships without giving personal advice, assuming the reader's
+emotional state, or asking them to join a movement. The promise of getting ahead
+is explicitly quoted as an object of analysis. Six finite concepts pair a
 cultural message with an exact, attributed sentence from the existing chapters.
 The illustration stays pinned while the reader scrolls; on phones it is bounded
 to leave room for the text. Reading remains native and has no automatic advance.
 
-The page explains its relationship to Digital Organism Theory, presents the
-three published chapters with reading times, and names its sponsorship of 4Us.
-The masthead and footer provide explicit paths back to DOT. The archive and
-subscription retain their own address and existing bookmarks. No manuscript
+The overview introduction gives its economic claim the main visual emphasis,
+with a quieter section label and a bounded explanatory measure. Its attributed
+quotation sits beside the argument on wide screens and follows it on phones.
+The introduction grows with its content instead of filling a viewport. A native
+chapter link makes its source inspectable; changing the cited chapter through
+the owner editor updates that destination in both React and static HTML.
+The founder requested the existing AMM flame in place of this quotation's
+vertical rule. The mark stays still and decorative, and wraps above the quote
+when large text needs its full width. The excerpt uses its complete first
+sentence, leaving the chapter's internal cross-reference in the linked source.
+The opening presents AMM as a diagnosis of the economic environment, with a
+direct critical voice and a consistent flame identity. 4Us remains the economic
+initiative it sponsors; newsletter consent remains a subscription to writing.
+
+The page identifies Digital Organism Theory as its theoretical framework,
+presents the three published chapters with reading times, and names its
+sponsorship of 4Us.
+The 4Us section describes the sponsored initiative and its development stage
+without a recruitment request. The masthead and footer provide explicit paths
+back to DOT. The archive and subscription retain their own address and existing
+bookmarks. No manuscript
 prose is rewritten, and no fourth chapter or delivery schedule is invented.
 
 Opening copy, chapter introductions, quotations, and lineage text share the
@@ -264,6 +284,6 @@ destinations on focus and honor system reduced motion and saved stillness.
 
 This serves L1 (predictable presentation), L2/L3 (finite, reader-directed
 reading), L7 (recoverable editing and visible keyboard destinations), and L10/L12
-(a clear reading action and responsibility for chosen conduct). The public hero
+(a clear reading action that serves the reader's intention). The public hero
 retains only the motion exception already recorded in ADR-0052. No other law is
 violated.

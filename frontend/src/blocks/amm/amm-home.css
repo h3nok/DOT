@@ -20,13 +20,19 @@
   .amm-home-sections li:not([data-active]) .amm-story-flame { filter: none; opacity: 1; }
 }
 
-/* One concept per viewport: each idea owns the screen, and its words and picture grow to fill it. */
+/* The introduction connects the economic claim to its source before the six scenes begin. */
 .amm-home-overview.reading-scene { padding-block: 0; }
-.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2rem 5rem; align-items: center; min-block-size: 100svh; margin: 0; padding-block: var(--public-space-xl); border: 0; }
-.amm-overview-heading h2 { max-width: 12ch; font: 500 clamp(2.75rem, 6vw, 6rem)/1.02 var(--font-serif); letter-spacing: -.045em; text-wrap: balance; }
-.amm-overview-argument { display: grid; gap: 1.75rem; }
-.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--amm-rust); font: 500 clamp(1.9rem, 3.2vw, 3.1rem)/1.12 var(--font-serif); letter-spacing: -.03em; text-wrap: balance; }
-.amm-overview-intro { max-width: 40ch; margin: 0; font-size: clamp(1.15rem, 1.6vw, 1.45rem); line-height: 1.65; color: var(--muted-foreground); }
+.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .85fr); gap: 2.5rem clamp(3rem, 6vw, 6rem); align-items: center; margin: 0; padding-block: clamp(3.5rem, 8svh, 6rem); border-block-start: 1px solid var(--border); }
+.amm-overview-heading h2 { margin: 0; font: 600 1rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-argument { display: grid; gap: 1.5rem; }
+.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--foreground); font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
+.amm-overview-intro { max-width: 52ch; margin: 0; font: clamp(1.075rem, 1.35vw, 1.2rem)/1.7 var(--font-sans); color: var(--muted-foreground); }
+.amm-overview-source { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem 1rem; }
+.amm-overview-source .amm-mark.amm-overview-flame { flex: 0 0 2.25rem; width: 2.25rem; height: 2.25rem; margin-top: .1rem; }
+.amm-overview-source .explainer-quote--quiet { flex: 1 1 13rem; min-width: 0; max-width: 100%; border: 0; padding: 0; }
+.amm-overview-source .explainer-quote--quiet p { font: 400 clamp(1.2rem, 1.8vw, 1.65rem)/1.5 var(--font-serif); letter-spacing: -.01em; text-wrap: pretty; }
+.amm-overview-source .explainer-quote cite { margin-top: .75rem; font: 500 .875rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-source .amm-text-link { font: inherit; }
 
 /* Each concept leads with the line the reader was sold, at the size of a headline. */
 .amm-home-overview .explainer-story { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
@@ -36,9 +42,8 @@
 .amm-home-overview .explainer-story-steps li > .explainer-story-kicker { color: var(--amm-rust); font-size: 1rem; }
 /* AMM's own argument closes each concept: the author's sentence, larger than the explanation, with its chapter. */
 .amm-home-overview .explainer-story-steps .explainer-quote--quiet { max-width: 32rem; margin-top: .25rem; padding-left: 1.25rem; }
-.amm-home-overview .explainer-story-steps .explainer-quote--quiet p, .amm-overview-argument .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.38 var(--font-serif); letter-spacing: -.015em; color: var(--foreground); text-wrap: pretty; }
-.amm-home-overview .explainer-quote cite { font: 600 .8rem/1.5 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
-.amm-overview-argument .explainer-quote--quiet { max-width: 32rem; padding-left: 1.25rem; }
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.38 var(--font-serif); letter-spacing: -.015em; color: var(--foreground); text-wrap: pretty; }
+.amm-home-overview .explainer-story .explainer-quote cite { font: 600 .8rem/1.5 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
 
 /* Attentive scenes: the concept being read is fully present; the next waits a step back and settles in,
    in reading order, when the reader reaches it. The reader's scroll is the only trigger. */
@@ -64,11 +69,9 @@
   .amm-home-premise { max-width: 42ch; }
   .amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); justify-self: center; }
   .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; }
-  .amm-overview-heading { grid-template-columns: 1fr; align-content: center; gap: 1.25rem; padding-block: var(--public-space-lg); }
-  .amm-overview-heading h2 { font-size: clamp(2.3rem, 10vw, 3rem); }
-  .amm-overview-argument { gap: 1.1rem; }
-  .amm-overview-claim { font-size: clamp(1.55rem, 6.5vw, 1.9rem); }
-  .amm-overview-intro { font-size: 1.05rem; line-height: 1.6; }
+  .amm-overview-heading { grid-template-columns: 1fr; gap: 2rem; padding-block: clamp(2.5rem, 7svh, 4rem); }
+  .amm-overview-argument { gap: 1.25rem; }
+  .amm-overview-claim { font-size: clamp(2rem, 7vw, 3rem); }
   /* The picture stays pinned at the top; the rest of the screen holds exactly one concept. */
   .amm-home-overview .explainer-story { grid-template-columns: 1fr; }
   .amm-home-overview .explainer-story-figure { height: auto; padding-block: .5rem 0; background: var(--background); border-bottom: 1px solid var(--border); }
@@ -77,7 +80,7 @@
   .amm-everyday-art .explainer-artwork-hint { display: none; }
   .amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: calc(70svh - .5rem - 1px); padding-block: 1.25rem; gap: 1rem; }
   .amm-home-overview .explainer-story-steps h3 { font-size: clamp(2rem, 8.5vw, 2.6rem); }
-  .amm-home-overview .explainer-story-steps .explainer-quote--quiet p, .amm-overview-argument .explainer-quote--quiet p { font-size: 1.15rem; }
+  .amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font-size: 1.15rem; }
   .amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { font-size: 1.05rem; line-height: 1.6; }
 }
 @media (max-width: 600px) {

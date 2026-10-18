@@ -17,6 +17,7 @@
   color: var(--foreground);
   min-height: 100vh;
   font-family: var(--font-sans);
+  overflow-wrap: anywhere;
   position: relative;
   z-index: 1;
 }

@@ -6,24 +6,24 @@
   "feed": "/amm/feed.xml",
   "eyebrow": "An independent publication by Henok Ghebrechristos",
   "headline": [
-    "See the system.",
-    "Take charge of your life."
+    "An extractive economy.",
+    "The culture that sustains it."
   ],
-  "heroAction": "Look beneath the surface",
-  "description": "The American Millennial Manifesto examines extractive social arrangements, the culture they teach us to accept, and responsibility for how we live.",
+  "heroAction": "Explore the analysis",
+  "description": "The American Millennial Manifesto examines economic extraction, concentrated power, and the cultural beliefs and everyday conduct that sustain them.",
   "home": {
-    "overviewTitle": "What is this doing to you?",
-    "overviewClaim": "You keep going. Something still feels wrong.",
-    "overviewIntro": "You work, you pay, you adapt, and you try to stay secure. Saying no feels dangerous. Rest feels undeserved. You may even be getting ahead—and still growing more exhausted, more guarded, and further from what matters to you.",
-    "overviewArgument": "Distress is individualized while the architecture producing it is preserved. As I discussed in Chapter One, this is a form of inversion.",
+    "overviewTitle": "The system in everyday life.",
+    "overviewClaim": "Economic dependence shapes more than a paycheck.",
+    "overviewIntro": "Income, rent, debt, and job security shape the choices available to a person. AMM follows six familiar cultural messages through these conditions: how economic pressure becomes an expectation, a habit, or a justification.",
+    "overviewArgument": "Distress is individualized while the architecture producing it is preserved.",
     "overviewSource": "Chapter Two · The Leech’s Anatomy",
-    "premise": "Work hard, play by the rules, and you will get ahead. You were raised on that story. It shapes what you pursue, fear, and accept. AMM examines the arrangement behind it—and asks you to take responsibility for how you live, what you defend, and what you choose to change.",
-    "conceptsLabel": "The concepts behind the critique",
+    "premise": "“Work hard, play by the rules, and you will get ahead.” AMM sets out to diagnose the economic system behind that promise—how wealth and power concentrate, how dependence shapes everyday life, and how people come to accept and defend the arrangements they live within.",
+    "conceptsLabel": "Economic conditions and everyday conduct",
     "concepts": [
       {
         "id": "conditioning",
         "label": "Conditioning",
-        "text": "Long before you could question it, you were rewarded for competing, collecting, and proving yourself. The pressure feels personal because the lesson now speaks in your own voice.",
+        "text": "Competition, income, and status can become measures of personal worth. AMM examines how these lessons are learned through family, school, work, and everyday rewards—and how they come to feel natural.",
         "script": "Your worth is what you earn.",
         "argument": "You, as a person belonging to this society, are taught to earn a dignity you already possess, and to defend the arrangements that steadily erode it.",
         "source": "Chapter Three · The Host and the Infection"
@@ -31,7 +31,7 @@
       {
         "id": "fear",
         "label": "Fear",
-        "text": "You are home. Another work message arrives. You want to say no, but rent is due, so you answer. When keeping your place means always being available, your freedom keeps getting smaller.",
+        "text": "Rent, debt, and job insecurity can make refusal costly. A work message at home can carry more than a request: it can bring the risk of lost income, standing, or employment. AMM examines how dependence narrows the choices that feel available.",
         "script": "Do not risk your place.",
         "argument": "Fear has begun governing the inquiry when protecting an identity or livelihood makes a conclusion unavailable for examination.",
         "source": "Chapter Three · The Host and the Infection"
@@ -39,7 +39,7 @@
       {
         "id": "delusion",
         "label": "Cultural delusion",
-        "text": "Profit gets sold as progress, buying as freedom, and status as worth. AMM calls this cultural delusion: mistaking what a society rewards for proof that its way of life is sound.",
+        "text": "Profit can stand in for progress, consumption for freedom, and status for worth. AMM uses cultural delusion to describe the gap between what an economy rewards and what those rewards are taken to prove.",
         "script": "If it pays, it must be progress.",
         "argument": "The Leech's signature method is inversion: an institution claims moral authority from the purpose its conduct is undermining.",
         "source": "Chapter One · The Leech"
@@ -47,7 +47,7 @@
       {
         "id": "protection",
         "label": "Self-protection",
-        "text": "You start defending the very story that is wearing you down. Your position, your comfort, and your reputation begin to matter more than what they cost someone else.",
+        "text": "Income, reputation, and belonging can become tied to an existing arrangement. AMM examines how that attachment can shape judgment, including the explanations people give for practices that benefit them while imposing costs on others.",
         "script": "Protect what is yours.",
         "argument": "A capable mind can produce an elaborate defense of a conclusion it has become afraid to lose.",
         "source": "Chapter Three · The Host and the Infection"
@@ -55,7 +55,7 @@
       {
         "id": "erosion",
         "label": "Moral erosion",
-        "text": "Harm rarely looks like moral collapse. It shows up as a reasonable compromise, a business decision, or just the way things work. Repeat it often enough and it stops bothering you.",
+        "text": "Harm can become routine through ordinary compromises, professional obligations, or accepted business practice. AMM traces how familiarity and justification can make the costs less visible, even while they continue to fall on other people.",
         "script": "Everyone does it.",
         "argument": "The compromise becomes ordinary. Then it becomes invisible.",
         "source": "Chapter Two · The Leech’s Anatomy"
@@ -63,13 +63,13 @@
       {
         "id": "accountability",
         "label": "Accountability",
-        "text": "You do have a choice, and the next one matters. Look at what you defend. Name the harm you take part in. Change what is within your control. Accountability starts where your explanation turns into an excuse.",
+        "text": "People occupy different positions within the same economy. AMM examines responsibility in relation to knowledge, authority, dependence, and the consequences of conduct—how a person can be constrained by an arrangement while also helping sustain it.",
         "script": "You have no choice.",
         "argument": "What you have learned to call normal becomes part of the world another person must live in.",
         "source": "Chapter Three · The Host and the Infection"
       }
     ],
-    "scriptLabel": "The story you are sold",
+    "scriptLabel": "A cultural message examined by AMM",
     "sceneAlt": "The flag-patterned Host rests its head beside a laptop at a kitchen table, carrying the two-headed Leech. An untouched meal, household envelopes, keys, and a picture of a cow family in a green meadow surround it.",
     "diagnosisTitle": "Who benefits when this feels normal?",
     "diagnosisClaim": "Your life serves accumulation. Power escapes accountability.",
@@ -199,7 +199,7 @@
         "meaning": "Organized extraction"
       }
     ],
-    "alt": "A flag-patterned Host carries a two-headed Leech while a phone-shaped mirror shows its healthy reflection—a visual metaphor for systemic extraction, manufactured illusion, and the gap between subjective perception and objective reality.",
+    "alt": "A flag-patterned Host carries a two-headed Leech beside a phone-shaped mirror showing a healthy cow in a green landscape. A visual metaphor for extraction and the image of prosperity.",
     "caption": "AI-generated illustration, directed by the author. A visual metaphor.",
     "description": "The Host is the public: exhausted by the Leech it carries, yet reassured by a mirror that shows prosperity. The image depicts systemic extraction, manufactured illusion, and the gap between subjective perception and objective reality.",
     "movementUrl": "https://sullix.com/venture"
@@ -209,8 +209,8 @@
     "attribution": "From the working manuscript · The Host and the Infection"
   },
   "chapterSection": {
-    "title": "Read the manifesto.",
-    "description": "Trace the system that claims your labor, shapes your judgment, and teaches you to call it normal.",
+    "title": "The manifesto.",
+    "description": "Three chapters examine organized extraction, the institutions it works through, and the beliefs and conduct that sustain it.",
     "chapters": [
       {
         "id": "amm-chapter-one-the-leech",
@@ -253,9 +253,9 @@
   "movement": {
     "sponsor": "The American Millennial Manifesto is a sponsor of 4Us.",
     "name": "4Us · Economy for Us",
-    "title": "Help build an economy for us.",
+    "title": "A cooperative economic initiative.",
     "description": "4Us is an economic sovereignty movement developing practical alternatives through cooperation. Sullix is its first platform test: useful technology, shared capacity, and communities with a say in the systems they depend on.",
-    "stage": "In development · Start small. Test with real people.",
+    "stage": "In development · Initial platform: Sullix.",
     "action": "Explore 4Us",
     "footer": "A sponsor of 4Us.",
     "href": "https://sullix.com/venture",
@@ -733,7 +733,7 @@
   },
   "dot": {
     "title": "AMM applies Digital Organism Theory to public life.",
-    "intro": "Digital Organism Theory (DOT) explains how experience shapes a person. AMM applies it to the story this country tells and to what that story does to the people inside it. 4Us is where the response gets built.",
+    "intro": "Digital Organism Theory (DOT) is the framework AMM uses to connect experience, interpretation, and conduct. AMM applies it to economic dependence, inherited beliefs, and the ways people sustain or challenge the conditions around them.",
     "action": "Go to Digital Organism Theory",
     "route": "/",
     "footer": "An application of Digital Organism Theory.",
@@ -742,13 +742,13 @@
         "id": "experience-loop",
         "title": "The Experience Loop",
         "quote": "Every loop begins from the state left by earlier loops. This is why conditioning matters, and also why repeated truthful action can make a different response increasingly available.",
-        "applies": "In AMM: “Your worth is what you earn.”"
+        "applies": "In AMM: the learned equation of earnings with worth."
       },
       {
         "id": "fear-gating",
         "title": "The Fear-Gating Principle",
         "quote": "When Fear governs, the set of responses that feels available becomes narrower.",
-        "applies": "In AMM: “You have no choice.”"
+        "applies": "In AMM: dependence and the perceived limits on refusal."
       },
       {
         "id": "love",

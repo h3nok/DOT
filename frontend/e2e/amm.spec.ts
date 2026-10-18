@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
+import AMM from '../src/content/amm.json' with { type: 'json' };
 
 const TITLE = "The American Millennial Manifesto";
 // Copy assertions read the repository text, never a local editor's published overrides.
@@ -124,7 +125,7 @@ test("the landing has one reading action and keeps chapter and archive bookmarks
   await expectNoHorizontalOverflow(page);
   await page.goto("/amm#amm-chapters");
   await expect(page).toHaveURL(/\/amm\/editions#amm-chapters$/);
-  await expect(page.getByRole("heading", { name: "Read the manifesto." })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: AMM.chapterSection.title })).toBeInViewport();
   // Previously shared newsletter and archive addresses remain usable.
   await page.goto("/amm#amm-subscribe");
   await expect(page).toHaveURL(/\/amm\/editions#amm-subscribe$/);
@@ -141,7 +142,7 @@ test("AMM has its own landing, scoped signup and mobile layout", async ({ page }
   await page.route("**/v1/readers/subscribe", route => { selected = route.request().postDataJSON(); return route.fulfill({ status: 202, json: { status: "awaiting_confirmation", expires_in: 900 } }); });
   await page.route("**/v1/readers/confirm", route => { expect(route.request().postDataJSON()).toEqual({ email: "fixture@example.com", code: "123456", publication: "amm", include_all: false }); return route.fulfill({ json: { status: "subscribed", unsubscribe_token: "a".repeat(64) } }); });
   await page.goto("/amm");
-  await expect(page.getByRole("heading", { name: "See the system. Take charge of your life." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: AMM.headline.join(' ') })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await page.goto("/amm/editions#amm-subscribe");
   await expect(page.getByRole("heading", { name: "The next chapter starts here." })).toBeVisible();

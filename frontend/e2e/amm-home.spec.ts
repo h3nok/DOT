@@ -80,6 +80,13 @@ test('the hero separates its artwork and copy and offers one wide reading action
   await expect(page).toHaveURL(/#amm-overview$/);
   await expect(page.getByRole('heading', { level: 2, name: AMM.home.overviewTitle })).toBeInViewport();
   await expect(page.locator('#amm-overview .amm-overview-claim')).toHaveText(AMM.home.overviewClaim);
+  const source = page.locator('.amm-overview-source').getByRole('link', { name: AMM.home.overviewSource, exact: true });
+  await expect(source).toHaveAttribute('href', '/essays/amm-chapter-two-the-leechs-anatomy');
+  await source.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { level: 1, name: 'Chapter Two: The Leech’s Anatomy' })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole('heading', { level: 2, name: AMM.home.overviewTitle })).toBeInViewport();
 });
 
 test('six concepts remain in reading order and the artwork follows the scene', async ({ page }) => {
@@ -133,6 +140,7 @@ test('published opening, concept and chapter wording reaches the public page', a
   await page.route('**/v1/site-content', route => route.fulfill({ json: { blocks: {
     'amm.home.premise': 'Published author introduction.',
     'amm.home.overviewclaim': 'Published author statement of the central argument.',
+    'amm.home.overviewsource': 'Chapter One · Published overview source.',
     'amm.home.concepts.fear.text': 'Published author revision of fear.',
     'amm.home.concepts.fear.script': 'An edited cultural message.',
     'amm.home.concepts.fear.argument': 'Published author argument about fear.',
@@ -143,6 +151,7 @@ test('published opening, concept and chapter wording reaches the public page', a
   await page.goto('/amm');
   await expect(page.locator('.amm-home-premise')).toHaveText('Published author introduction.');
   await expect(page.locator('#amm-overview .amm-overview-claim')).toHaveText('Published author statement of the central argument.');
+  await expect(page.locator('.amm-overview-source').getByRole('link', { name: 'Chapter One · Published overview source.', exact: true })).toHaveAttribute('href', '/essays/amm-chapter-one-the-leech');
   await expect(page.getByText('Published author revision of fear.')).toBeVisible();
   await expect(page.getByText('Published Chapter Two introduction.')).toBeVisible();
   const step = page.locator('#amm-overview .explainer-story-steps > li').nth(1);
@@ -160,7 +169,7 @@ test('the introduction leads into the three chapters with clear reading actions 
   await expect(page.getByRole('navigation', { name: 'On this page' })).toHaveCount(0);
   await expect(page.locator('#amm-concerns, #amm-diagnosis, #amm-cure, #amm-movement, .amm-latest')).toHaveCount(0);
   const book = page.locator('#amm-start');
-  await expect(book.getByRole('heading', { level: 2 })).toHaveText('Read the manifesto.');
+  await expect(book.getByRole('heading', { level: 2 })).toHaveText(AMM.chapterSection.title);
   const parts = book.locator('.amm-part');
   await expect(parts).toHaveCount(3);
   await expect(parts.locator('.amm-part-name')).toHaveText(['The Leech', 'The Leech’s Anatomy', 'The Host and the Infection']);
@@ -201,4 +210,9 @@ test('a narrow phone keeps the pinned scene compact and every concept readable b
     await expect(step.locator('blockquote')).toBeInViewport();
     await expectNoHorizontalOverflow(page);
   }
+  // Enlarged text must reflow, including the long hero and chapter headings.
+  await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+  await overview.locator('.amm-overview-source a').scrollIntoViewIfNeeded();
+  await expect(overview.locator('.amm-overview-source .amm-mark')).toBeVisible();
+  await expectNoHorizontalOverflow(page);
 });
