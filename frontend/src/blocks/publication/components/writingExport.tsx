@@ -1,3 +1,4 @@
+import { exportArtworkMarkdown } from "../writing/manuscriptMedia";
 import { renderToStaticMarkup } from "react-dom/server";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -11,9 +12,13 @@ export function writingExport(workId: string, number: number, source: { delivery
   const manifest = source.delivery.manifest;
   if (!manifest || source.delivery.withdrawn || manifest.release.number !== number) throw new Error("Only the selected public release can be exported.");
   const url = pageUrl(writingRoute(workId, number));
-  const claims = manifest.claims.map((claim) => `- ${claim.statement} (${claim.epistemic_level}; ${claim.origin === "sourced" ? "Sourced" : "Author-originated"})`).join("\n");
+  const claims = manifest.claims.map((claim) => `- ${claim.statement} (${claim.epistemic_level}; ${claim.origin === "sourced" ? "Sourced" : claim.origin === "no_external_source" ? "No external source" : "Author-originated"})`).join("\n");
   const sources = manifest.sources?.map((source) => `- ${source.external_uri}${source.locator ? ` — ${source.locator}` : ""}`).join("\n");
-  const markdown = [source.body, `Originally published by ${author.name}: ${url}`, `Published version ${number}.`, ...(claims ? ["## Claim ledger", claims] : []), ...(sources ? ["## Sources", sources] : [])].join("\n\n") + "\n";
+  const banner = manifest.presentation?.cover;
+  const cover = banner && manifest.assets?.find(asset => asset.path === banner.path);
+  const body = exportArtworkMarkdown(source.body, manifest.assets, window.location.origin);
+  const coverMarkdown = banner && cover ? `![${banner.alt.replace(/[[\]\\]/g, "\\$&")}](${new URL(cover.src, window.location.origin).href})${banner.caption ? `\n\n${banner.caption}` : ""}` : "";
+  const markdown = [coverMarkdown, body, `Originally published by ${author.name}: ${url}`, `Published version ${number}.`, ...(claims ? ["## Claim ledger", claims] : []), ...(sources ? ["## Sources", sources] : [])].join("\n\n") + "\n";
   const transformUrl = (value: string) => {
     const safe = defaultUrlTransform(value);
     return safe.startsWith("/") && !safe.startsWith("//") ? new URL(safe, SITE_URL).href : safe;

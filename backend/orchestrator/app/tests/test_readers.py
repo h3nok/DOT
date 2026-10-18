@@ -61,7 +61,10 @@ def test_refuses_subscriptions_when_no_sealing_key_is_configured(
 ) -> None:
     monkeypatch.delenv("JOIN_CONTACT_KEY", raising=False)
 
-    assert client.get("/v1/readers/status").json() == {"available": False}
+    assert client.get("/v1/readers/status").json() == {
+        "available": False,
+        "publications": ["all", "amm"],
+    }
 
     response = client.post("/v1/readers/subscribe", json={"email": "reader@example.com"})
 
@@ -76,7 +79,10 @@ def test_production_refuses_subscriptions_without_email_delivery(
     monkeypatch.setenv("ORCHESTRATOR_ENVIRONMENT", "production")
     monkeypatch.setenv("RESEND_API_KEY", "disabled")
 
-    assert client.get("/v1/readers/status").json() == {"available": False}
+    assert client.get("/v1/readers/status").json() == {
+        "available": False,
+        "publications": ["all", "amm"],
+    }
 
     response = client.post("/v1/readers/subscribe", json={"email": "reader@example.com"})
 

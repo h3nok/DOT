@@ -1,6 +1,11 @@
-/* A primary action with paper, ink and a soft field, without a drawn frame.
-   OKLab keeps low-chroma paper and ink from losing their hue in the blend. */
+/* A primary action on its own paper, with a hairline edge that keeps it crisp
+   on any ground, and a soft field when it is chosen. OKLab keeps low-chroma
+   paper and ink from losing their hue in the blend. */
 .dot-button {
+  --dot-button-paper: color-mix(in oklab, var(--background) 55%, white);
+  --dot-button-edge: color-mix(in oklab, var(--foreground) 10%, transparent);
+  --dot-button-edge-strong: color-mix(in oklab, var(--foreground) 16%, transparent);
+  --dot-button-lift: color-mix(in oklab, var(--foreground) 5%, transparent);
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -12,8 +17,10 @@
   padding: 0.75rem 1rem;
   border: 0;
   border-radius: min(var(--appearance-ui-control-radius, 0.75rem), 0.75rem);
-  background: color-mix(in oklab, var(--background) 96%, var(--foreground));
-  box-shadow: none;
+  background: var(--dot-button-paper);
+  box-shadow:
+    0 0 0 1px var(--dot-button-edge),
+    0 1px 2px var(--dot-button-lift);
   color: var(--foreground);
   font-family: var(--identity-display-font, var(--font-sans, sans-serif));
   text-align: left;
@@ -22,6 +29,18 @@
   letter-spacing: normal;
   white-space: normal;
   cursor: pointer;
+}
+
+.dark .dot-button {
+  --dot-button-paper: color-mix(in oklab, var(--background) 93%, var(--foreground));
+  --dot-button-edge: color-mix(in oklab, var(--foreground) 14%, transparent);
+  --dot-button-edge-strong: color-mix(in oklab, var(--foreground) 24%, transparent);
+  --dot-button-lift: transparent;
+}
+
+html[data-contrast="high"] .dot-button {
+  --dot-button-edge: var(--foreground);
+  --dot-button-edge-strong: var(--foreground);
 }
 
 .dot-button[data-description] {
@@ -62,7 +81,7 @@
 }
 
 .dot-button:not(:disabled):active {
-  background: color-mix(in oklab, var(--background) 91%, var(--foreground));
+  background: color-mix(in oklab, var(--dot-button-paper) 94%, var(--foreground));
 }
 
 .dot-button:disabled {
@@ -120,6 +139,12 @@
 }
 
 @media (hover: hover) {
+  .dot-button:not(:disabled):hover {
+    box-shadow:
+      0 0 0 1px var(--dot-button-edge-strong),
+      0 0.5rem 1.25rem -0.75rem color-mix(in oklab, var(--foreground) 28%, transparent);
+  }
+
   .dot-button:not(:disabled):hover::before {
     opacity: 1;
   }
@@ -136,7 +161,10 @@
 /* Feedback is finite and reader-initiated. Stillness leaves the arrow in place
    and makes all feedback immediate, including children and pseudo elements. */
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]) .dot-button,
+  html:not([data-motion="still"]) .dot-button {
+    transition: background-color 180ms ease, box-shadow 220ms ease;
+  }
+
   html:not([data-motion="still"]) .dot-button__end-icon {
     transition: background-color 180ms ease;
   }

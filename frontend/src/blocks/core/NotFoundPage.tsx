@@ -2,12 +2,13 @@ import { ArrowRight, BookOpen } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import { author } from "../../content/author";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 
 /** A finite dead end with two honest ways back into the public work. */
 export default function NotFoundPage() {
   useEffect(() => {
-    document.title = "Page not found — Digital Organism Theory";
+    document.title = `Page not found — ${author.name}`;
   }, []);
 
   return (

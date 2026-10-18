@@ -6,7 +6,8 @@
  * register — has to agree on this slug or the link lands nowhere, and a second
  * copy of the rules is how they quietly stop agreeing.
  */
-export function headingSlug(value: string): string {
+/** @param {string} value @returns {string} */
+export function headingSlug(value) {
   return value
     .trim()
     .toLowerCase()

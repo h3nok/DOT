@@ -28,7 +28,7 @@ def _fail(result: dict) -> None:
 async def get_status() -> dict:
     """Whether the list is open, so the UI can decline honestly rather than
     collect an address it cannot store safely."""
-    return {"available": readers_service.readers_available()}
+    return {"available": readers_service.readers_available(), "publications": ["all", "amm"]}
 
 
 @router.post("/subscribe", response_model=schemas.ReaderSubscribeAccepted, status_code=202)
@@ -38,7 +38,13 @@ async def subscribe(
     payload: schemas.ReaderSubscribeIn,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.ReaderSubscribeAccepted:
-    result = await readers_service.subscribe(session, payload.email, payload.source)
+    result = await readers_service.subscribe(
+        session,
+        payload.email,
+        payload.source,
+        publication=payload.publication,
+        include_all=payload.include_all,
+    )
     if not result.get("ok"):
         _fail(result)
     return schemas.ReaderSubscribeAccepted(
@@ -53,7 +59,13 @@ async def confirm(
     payload: schemas.ReaderConfirmIn,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.ReaderConfirmed:
-    result = await readers_service.confirm(session, payload.email, payload.code)
+    result = await readers_service.confirm(
+        session,
+        payload.email,
+        payload.code,
+        publication=payload.publication,
+        include_all=payload.include_all,
+    )
     if not result.get("ok"):
         _fail(result)
     return schemas.ReaderConfirmed(unsubscribe_token=result["unsubscribe_token"])
@@ -64,12 +76,13 @@ async def confirm(
 async def unsubscribe(
     request: fastapi.Request,
     token: str = fastapi.Body(..., embed=True, min_length=16, max_length=128),
+    all_publications: bool = fastapi.Body(default=False),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.ReaderUnsubscribed:
     """Leaving is a POST so that no mail scanner prefetching a link can remove a
     reader who never clicked. The link in a message points at a page that posts
     this on arrival — one click for the reader, and nothing for a crawler."""
-    await readers_service.unsubscribe(session, token)
+    await readers_service.unsubscribe(session, token, all_publications=all_publications)
     # Never _fail: the response is identical whether or not the token matched.
     return schemas.ReaderUnsubscribed()
 

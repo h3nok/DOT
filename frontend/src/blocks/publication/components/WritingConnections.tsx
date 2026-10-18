@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { authorizeLinkedIn, disconnectLinkedIn, fetchLinkedInConnection, type LinkedInConnection } from "../../../services/OrchestratorDistributionService";
 
-export function WritingConnections({ selected, onSelect }: { selected: boolean; onSelect: (value: boolean) => void }) {
+const ignoreSelection = () => {};
+
+export function WritingConnections({ selected = false, onSelect = ignoreSelection, connectionOnly = false }: { selected?: boolean; onSelect?: (value: boolean) => void; connectionOnly?: boolean }) {
   const [connection, setConnection] = useState<LinkedInConnection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const callbackFailed = new URLSearchParams(window.location.search).get("connected") === "failed";
@@ -51,10 +53,10 @@ export function WritingConnections({ selected, onSelect }: { selected: boolean; 
   return <section aria-label="Publishing destinations" className="my-6 border-y border-border py-5">
     <h2 className="text-sm font-semibold">Publish here, then distribute</h2>
     <p className="mt-2 text-sm text-muted-foreground">The complete piece lives on this website. Substack and Medium copies can be prepared from the published version.</p>
-    <label className="mt-4 flex min-h-11 items-start gap-3 text-sm">
+    {!connectionOnly && <label className="mt-4 flex min-h-11 items-start gap-3 text-sm">
       <input type="checkbox" checked={selected} disabled={busy || !connection?.connected} onChange={(event) => onSelect(event.target.checked)} className="mt-1" />
       <span>Also share a link on LinkedIn<span className="mt-1 block text-xs text-muted-foreground">Posts the released title, summary, and link. A LinkedIn newsletter issue is prepared separately below.</span></span>
-    </label>
+    </label>}
     {connection?.connected ? <div className="mt-3 flex flex-wrap items-center gap-4 text-sm"><p>Connected as {connection.display_name}. Return to your original writing tab if you connected in a new tab.</p><button type="button" disabled={busy} onClick={() => void disconnect()} className="min-h-11 underline underline-offset-4">Disconnect</button></div>
       : connection?.configured ? <button type="button" disabled={busy} onClick={() => void connect()} className="dot-pill mt-3">Connect LinkedIn in a new tab</button>
         : connection && <p className="mt-3 text-xs text-muted-foreground">Automatic LinkedIn sharing needs application setup. You can use the sharing and full-text tools after publishing.</p>}

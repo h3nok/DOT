@@ -54,6 +54,19 @@ Constraints on the reader list:
 
 ## Consequences
 
+### Amendment — 2026-10-10
+
+At the founder’s request, the list now covers all his writing: technical work,
+essays and letters, and books. The public page, shared signup form, confirmation
+email, and script-free HTML state this scope consistently. No scheduled cadence
+or unwritten publication is promised. Subscription still grants no membership;
+the existing double opt-in, sealing, untracked delivery, and one-click departure
+contracts remain binding. The signup allows correcting an address or requesting
+a fresh code without claiming success before confirmation.
+
+The page uses the existing public design foundations and respects the reader’s
+appearance choices. This serves L1, L7, L9, L10, and L12; violates none.
+
 - (+) A reader met at a talk can be reached again without being told they are in a queue.
 - (+) ADR-0001 keeps its meaning: membership stays scarce and issued, and is not
   accidentally widened by a book launch.

@@ -144,6 +144,19 @@ behavioral profiling to measure it.
 
 ## Consequences
 
+### Amendment — 2026-10-13 (a published starting point)
+
+The first-time-reader pass adds a clearly labeled Book One passage before the
+blog's two subject paths. “Learning to See from Between Paintings” links to the
+existing Chapter 6 heading and quotes the released account of cultural contrast.
+It is an excerpt with attribution, outside the chronological post archive;
+it creates no article, date, RSS item, or new first-person writing. The same
+source, quote, and destination appear in generated HTML. The shared primary
+navigation names the existing About destination “Work with me” so visitors can
+recognize the professional route. The compact menu remains available below
+768px to fit the longer label beside the reader-list control without wrapping
+the header. Serves L7, L8, L10, and L12; violates no law.
+
 The personal identity can carry client work and philosophical inquiry without
 making every technical article a DOT claim. Readers can find the owned archive
 even if a distribution platform changes. The series can develop its own voice

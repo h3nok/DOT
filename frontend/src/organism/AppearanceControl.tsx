@@ -242,6 +242,7 @@ export const AppearanceControl: React.FC<{
     <div
       ref={ref}
       data-appearance-control
+      data-inline={inline}
       className={
         inline
           ? "relative z-50 transition-opacity"

@@ -21,6 +21,7 @@ import {
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
 import { Editable } from "../../content/editable";
+import bookLanding from "../../content/publications/bookLanding.json";
 import BookCitation from "./BookCitation";
 import BookOneCover from "./BookOneCover";
 import BookSubstrate from "./BookSubstrate";
@@ -114,24 +115,20 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               id="book-landing-title"
               className="book-reading-heading mt-5 text-[clamp(2.7rem,5vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.035em] text-[var(--book-ink)]"
             >
-              A proposed architecture of consciousness.
+              {bookLanding.heading}
             </h1>
-            <p className="book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
-              Examine experience, inherited conditioning, meaningful choice, and
-              development toward Love. Book One also develops DOT’s proposed
-              wider architecture of consciousness and the physical universe,
-              with its evidence boundaries in view.
+            <p className="book-volume-description book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
+              {bookLanding.description}
             </p>
 
             <div className="book-volume-position mt-8 grid max-w-xl grid-cols-[auto_minmax(0,1fr)] gap-4 border-y border-[var(--book-hairline)] py-5">
-              <span className="dot-label pt-1 text-[var(--book-cinnabar)]">Position</span>
+              <span className="dot-label pt-1 text-[var(--book-cinnabar)]">{bookLanding.positionLabel}</span>
               <p className="book-reading-copy text-base italic leading-relaxed text-[var(--book-ink)]">
-                One proposed architecture. Every downstream layer must be
-                derived and tested.
+                {bookLanding.position}
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <div className="book-volume-actions mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
                 to={primaryHref}
                 className="book-frontispiece-action dot-reading-action group inline-flex min-h-12 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-7 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -155,7 +152,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               </Link>
             </div>
             {!savedPath && (
-              <p className="book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
+              <p className="book-volume-written-order book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
                 Prefer to build the theory from its foundations?{" "}
                 <Link
                   to={writtenOrderHref}

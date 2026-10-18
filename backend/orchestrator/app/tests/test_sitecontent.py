@@ -132,3 +132,30 @@ def test_oversized_values_are_refused(as_steward: fastapi.testclient.TestClient)
     response = as_steward.put("/v1/site-content/home.lede", json={"value": "x" * 5_000})
 
     assert response.status_code == 422
+
+
+def test_stale_page_editor_cannot_overwrite_or_publish_a_newer_draft(
+    as_steward: fastapi.testclient.TestClient,
+) -> None:
+    url = "/v1/site-content/amm.deck"
+    first = as_steward.put(url, json={"value": "First draft", "expected_updated_at": None})
+    assert first.status_code == 200
+    stamp = first.json()["updated_at"]
+    assert (
+        as_steward.put(url, json={"value": "Newer draft", "expected_updated_at": stamp}).status_code
+        == 200
+    )
+    stale = as_steward.put(
+        url, json={"value": "Stale edit", "publish": True, "expected_updated_at": stamp}
+    )
+    assert stale.status_code == 409
+    assert as_steward.get("/v1/site-content").json() == {"blocks": {}}
+    assert as_steward.get("/v1/site-content/drafts").json()["blocks"][0]["draft_value"] == (
+        "Newer draft"
+    )
+    assert (
+        as_steward.put(
+            url, json={"value": "Stale empty state", "expected_updated_at": None}
+        ).status_code
+        == 409
+    )

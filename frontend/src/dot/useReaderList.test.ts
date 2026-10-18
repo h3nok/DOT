@@ -8,6 +8,16 @@ afterEach(() => {
 });
 
 describe("reader-list availability", () => {
+  it("withholds AMM signup against an older API that cannot preserve its consent scope", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ available: true }));
+    const { result } = renderHook(() => useReaderList("amm"));
+    await waitFor(() => expect(result.current.available).toBe(false));
+  });
+  it("opens AMM signup when the server advertises its publication scope", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ available: true, publications: ["all", "amm"] }));
+    const { result } = renderHook(() => useReaderList("amm"));
+    await waitFor(() => expect(result.current.available).toBe(true));
+  });
   it.each([true, false])("preserves the server's explicit availability: %s", async (available) => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ available })),

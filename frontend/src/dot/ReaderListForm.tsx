@@ -1,7 +1,10 @@
 import { Check, Loader2, Mail } from "lucide-react";
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 
-import { useReaderList, type ReaderSource } from "./useReaderList";
+import READERS from "../content/readers.json";
+import { AmmButton } from "../blocks/amm/AmmControls";
+import { useAmmContent } from "../content/editable/useAmmContent";
+import { useReaderList, type ReaderSource, type ReaderPublication } from "./useReaderList";
 
 /**
  * ReaderListForm — "tell me when there is more", at the end of the reading path.
@@ -25,6 +28,7 @@ import { useReaderList, type ReaderSource } from "./useReaderList";
 interface ReaderListFormProps {
   /** Where the address was offered, for the steward's coarse sense of reach. */
   source?: ReaderSource;
+  publication?: ReaderPublication;
   /**
    * Shown instead of the form once the list is known to be closed. Defaults to
    * nothing, which suits the end of a book; a page that exists only for the
@@ -33,6 +37,8 @@ interface ReaderListFormProps {
   fallback?: React.ReactNode;
   /** A status failure is not evidence that the steward closed the list. */
   unavailableFallback?: React.ReactNode;
+  /** An explicit loading state for the dedicated list page; book endings stay quiet. */
+  loadingFallback?: React.ReactNode;
 }
 
 const FIELD =
@@ -42,28 +48,43 @@ const ACTION =
 
 export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   source = "book",
+  publication = "all",
   fallback = null,
   unavailableFallback = null,
+  loadingFallback = null,
 }) => {
-  const { available, availabilityError, subscribe, confirm } = useReaderList();
+  const AMM = useAmmContent();
+  const { available, availabilityError, subscribe, confirm } = useReaderList(publication);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [stage, setStage] = useState<"form" | "confirm" | "done">("form");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [devCode, setDevCode] = useState<string | null>(null);
+  const [includeAll, setIncludeAll] = useState(false);
+  const [leaveToken, setLeaveToken] = useState<string | null>(null);
+  const choice = publication === "amm" ? { publication, include_all: includeAll } : undefined;
   const emailId = useId();
   const codeId = useId();
+  const emailInput = useRef<HTMLInputElement>(null);
+  const codeInput = useRef<HTMLInputElement>(null);
+  const previousStage = useRef(stage);
+
+  useEffect(() => {
+    if (stage === "confirm") codeInput.current?.focus();
+    if (stage === "form" && previousStage.current === "confirm") emailInput.current?.focus();
+    previousStage.current = stage;
+  }, [stage]);
 
   if (availabilityError) return <>{unavailableFallback}</>;
   if (available === false) return <>{fallback}</>;
-  if (available !== true) return null;
+  if (available !== true) return <>{loadingFallback}</>;
 
   const submitEmail = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
     setBusy(true);
-    const { accepted, error: failed } = await subscribe(email.trim(), source);
+    const { accepted, error: failed } = await (choice ? subscribe(email.trim(), source, choice) : subscribe(email.trim(), source));
     setBusy(false);
     if (failed || !accepted) {
       setError(failed ?? "That did not go through. Try again.");
@@ -77,93 +98,105 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
     event.preventDefault();
     setError(null);
     setBusy(true);
-    const { error: failed } = await confirm(email.trim(), code.trim());
+    const { error: failed, token } = await (choice ? confirm(email.trim(), code.trim(), choice) : confirm(email.trim(), code.trim()));
     setBusy(false);
     if (failed) {
       setError(failed);
       return;
     }
     setStage("done");
+    setLeaveToken(token ?? null);
   };
 
   return (
-    <section className="mb-8 rounded-2xl border border-border/60 bg-foreground/[0.02] p-6">
+    <section className="reader-list-form mb-8 rounded-2xl border border-border/60 bg-foreground/[0.02] p-6" aria-busy={busy}>
       {stage === "done" ? (
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3" role="status">
           <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">
             <Check className="h-3.5 w-3.5" />
           </span>
           <div>
             <h2 className="font-serif text-xl text-foreground">
-              You will hear when there is more.
+              {publication === "amm" ? "You’re subscribed to AMM." : "You’re on the reader list."}
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Rarely, and only about the work. Every message carries a link that
+              {publication === "amm" ? `You’ll receive AMM editions${includeAll ? " and Henok’s other writing" : ""}.` : "You’ll receive occasional emails about new writing."} Every message carries a link that
               removes you in one click, with no account and no questions.
             </p>
+            {leaveToken && <a className="mt-3 inline-flex min-h-11 items-center text-xs underline" href={`/readers/leave${publication === "amm" ? "?publication=amm" : ""}#${leaveToken}`}>Unsubscribe</a>}
           </div>
         </div>
       ) : (
         <>
           <h2 className="font-serif text-xl text-foreground">
-            Hear when there is more to read.
+            {stage === "confirm" ? "Check your email." : publication === "amm" ? AMM.signupTitle : READERS.formTitle}
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Book Two is being written. This is not membership and not a queue —
-            an address, used rarely, and only for the work.
+            {stage === "confirm" ? `Enter the six-digit code sent to ${email}.` : publication === "amm" ? AMM.signupDescription : READERS.formDescription}
           </p>
+          {publication === "amm" && stage === "form" && <label className="mt-4 flex min-h-11 items-center gap-3 text-xs leading-relaxed"><input type="checkbox" checked={includeAll} disabled={busy} onChange={event => setIncludeAll(event.target.checked)} />Also send me Henok’s other writing (optional).</label>}
 
           {stage === "form" ? (
             <form onSubmit={submitEmail} className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <label htmlFor={emailId} className="sr-only">
+              <label htmlFor={emailId} className="text-xs font-medium text-foreground">
                 Email address
               </label>
               <input
                 id={emailId}
+                ref={emailInput}
                 type="email"
                 required
+                disabled={busy}
                 autoComplete="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className={FIELD}
+                className={`reader-list-field ${FIELD}`}
               />
-              <button type="submit" disabled={busy} className={`${ACTION} shrink-0`}>
+              {publication === "amm" ? <AmmButton variant="primary" type="submit" disabled={busy} label="Subscribe by email" icon={busy ? <Loader2 className="animate-spin" /> : <Mail />} /> : <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
                 {busy ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Mail className="h-4 w-4" />
                 )}
                 Send me a code
-              </button>
+              </button>}
             </form>
           ) : (
             <form onSubmit={submitCode} className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <label htmlFor={codeId} className="sr-only">
+              <label htmlFor={codeId} className="text-xs font-medium text-foreground">
                 Confirmation code
               </label>
               <input
                 id={codeId}
+                ref={codeInput}
                 inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxLength={6}
                 required
+                disabled={busy}
                 value={code}
                 onChange={(event) => setCode(event.target.value)}
                 placeholder="6-digit code"
-                className={FIELD}
+                className={`reader-list-field ${FIELD}`}
               />
-              <button type="submit" disabled={busy} className={`${ACTION} shrink-0`}>
+              {publication === "amm" ? <AmmButton variant="primary" type="submit" disabled={busy} label="Confirm" icon={busy ? <Loader2 className="animate-spin" /> : undefined} /> : <button type="submit" disabled={busy} className={`reader-list-submit ${ACTION} shrink-0`}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Confirm
-              </button>
+              </button>}
             </form>
           )}
 
           {stage === "confirm" && (
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              We sent a code to {email}. Confirming proves the address is yours —
-              without it, anyone could put you on this list.
-              {devCode ? ` Development code: ${devCode}.` : ""}
-            </p>
+            <div className="mt-3 text-xs leading-relaxed text-muted-foreground">
+              <p>Nothing is sent until you confirm. If the code has expired, request a fresh one.
+                {devCode ? ` Development code: ${devCode}.` : ""}
+              </p>
+              <button type="button" disabled={busy} className="reader-list-change mt-1 min-h-11 underline underline-offset-4 disabled:opacity-50" onClick={() => {
+                setStage("form"); setCode(""); setError(null); setDevCode(null);
+              }}>Change address or request a new code</button>
+            </div>
           )}
         </>
       )}

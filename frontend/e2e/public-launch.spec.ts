@@ -25,7 +25,7 @@ test("About offers products, résumé, project inquiries, and named book navigat
   const pageNav = page.getByRole("navigation", { name: "On this page" });
   await pageNav.getByRole("link", { name: "Selected work" }).click();
   await expect(page.getByRole("region", { name: "Selected work" })
-    .getByRole("heading", { name: "Sullix", exact: true })).toBeInViewport();
+    .getByRole("heading", { name: "4Us", exact: true })).toBeInViewport();
   await expect(page.getByRole("main")).not.toContainText("Avia");
   await expect(page.getByRole("link", { name: "Visit website: Sullix", exact: true }))
     .toHaveAttribute("href", "https://sullix.com/");
@@ -45,10 +45,6 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expect(resume.getByText("Doctoral research", { exact: true })).toBeVisible();
   await resume.getByText("Doctoral research", { exact: true }).click();
   await expect(resume.getByText(author.credentials[0].dissertation!.title)).toBeVisible();
-  const book = page.getByRole("navigation", { name: "Primary", exact: true })
-    .getByRole("link", { name: "Book One", exact: true });
-  await expect(book).toBeVisible();
-  await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(page.getByRole("region", { name: "Contact" })
     .getByRole("link", { name: CONTACT.label, exact: true }))
     .toHaveAttribute("href", CONTACT.href);
@@ -57,20 +53,39 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expectNoHorizontalOverflow(page);
   await pageNav.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeInViewport();
+  const menu = page.getByRole("button", { name: "Menu", exact: true });
+  if (await menu.isVisible()) await menu.click();
+  const book = page.getByRole("navigation", { name: "Primary", exact: true })
+    .getByRole("link", { name: "Book One", exact: true });
+  await expect(book).toBeVisible();
+  await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");
   await book.click();
   await expect(page).toHaveURL("/book/digital-organism-theory");
   await expect(page.locator("h1").first()).toBeVisible();
   expect(problems).toEqual([]);
 });
 
-test("Sullix showcases its interface with still images instead of video", async ({ page }) => {
+test("4Us introduces its first product Sullix with founder credit, artwork, and source links", async ({ page }) => {
   const problems = collectPageProblems(page);
   await page.goto("/about");
+  const movement = page.getByRole("region", { name: "4Us", exact: true });
+  await movement.scrollIntoViewIfNeeded();
+  await expect(movement.getByText("Founder", { exact: true })).toBeVisible();
+  await expect(movement.getByText("Working proposal")).toBeVisible();
+  await expect(movement.getByRole("link", { name: "Explore 4Us" })).toHaveAttribute("href", "https://sullix.com/venture");
+  const artwork = movement.getByRole("img", { name: "Woven Mesob artwork from 4Us" });
+  await expect.poll(() => artwork.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
+  const family = page.locator(".about-project-family");
+  await expect(family.locator("#project-4us, #project-sullix")).toHaveCount(2);
   const project = page.locator("#project-sullix");
   await project.scrollIntoViewIfNeeded();
+  await expect(project.getByText("Co-Founder & Principal Engineer", { exact: true })).toBeVisible();
+  await expect(project.getByText("Private testing", { exact: true })).toBeVisible();
   await expect(project.locator("video")).toHaveCount(0);
-  const screen = project.getByRole("img", { name: /Sullix project command center/ });
-  await expect(screen).toBeVisible();
+  await expect(project.getByRole("img", { name: "Sullix mark", exact: true })).toBeVisible();
+  await expect(project.getByRole("img", { name: "Faro mark", exact: true })).toBeVisible();
+  await expect(project.getByRole("link", { name: "Visit website: Sullix" })).toHaveAttribute("href", "https://sullix.com/");
+  await expect(project.locator('img[src*="project-command-center"]')).toHaveCount(0);
   for (const image of await project.locator("img").all()) {
     await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
       element.complete && element.naturalWidth > 0)).toBe(true);
@@ -89,8 +104,9 @@ test("a closed reader list does not ask for an address", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
   await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.getByRole("main").getByRole("link", { name: "Book One", exact: true }))
-    .toHaveAttribute("href", "/book/digital-organism-theory");
+  // A published introduction now makes RSS the signup-free alternative.
+  await expect(page.getByRole("main").getByRole("link", { name: "RSS feed", exact: true }))
+    .toHaveAttribute("href", "/feed.xml");
   await expectNoHorizontalOverflow(page);
 });
 
@@ -121,14 +137,17 @@ test("the header offers strangers the readers’ list; members sign in from the 
   await expect(page.getByRole("dialog", { name: "Sign in" })).toBeVisible();
 });
 
-test("while the list is closed, the header offers the book instead of a closed door", async ({ page }) => {
+test("while the list is closed, navigation offers the book and no header signup", async ({ page }) => {
   await page.route("**/v1/readers/status", (route) => route.fulfill({
     json: { available: false },
   }));
   await page.goto("/");
 
   const header = page.locator('header[aria-label="Site Header"]');
-  await expect(header.getByRole("link", { name: "Book One", exact: true }))
+  await expect(header).toBeVisible();
+  const menu = header.getByRole("button", { name: "Menu", exact: true });
+  if (await menu.isVisible()) await menu.click();
+  await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(header.getByRole("link", { name: "Readers’ list", exact: true })).toHaveCount(0);
   await expect(header.getByRole("button", { name: "Sign in" })).toHaveCount(0);
@@ -151,7 +170,7 @@ test("reader signup requires a correct code and never requests membership", asyn
   const sent: Array<{ path: string; body: unknown }> = [];
   page.on("request", (request) => {
     if (request.method() === "POST" && request.url().includes("/v1/")) {
-      sent.push({ path: new URL(request.url()).pathname, body: request.postDataJSON() });
+      sent.push({ path: new URL(request.url()).pathname.replace(/^\/__dot-api/, ""), body: request.postDataJSON() });
     }
   });
   await page.route("**/v1/readers/status", (route) => route.fulfill({
@@ -171,16 +190,16 @@ test("reader signup requires a correct code and never requests membership", asyn
 
   const code = page.getByRole("textbox", { name: "Confirmation code" });
   await expect(code).toBeVisible();
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toHaveCount(0);
-  await expect(page.getByText("This is not membership and not a queue", { exact: false })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toHaveCount(0);
+  await expect(page.getByRole("main")).toContainText("Technical work, essays, and books");
   await code.fill("000000");
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await expect(page.getByRole("alert")).toHaveText("Incorrect code. 4 attempts left.");
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toHaveCount(0);
 
   await code.fill("123456");
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "You will hear when there is more." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
   await expect(page.getByRole("main")).toContainText("removes you in one click");
   expect(sent).toEqual([

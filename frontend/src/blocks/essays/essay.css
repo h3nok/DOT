@@ -1,0 +1,23 @@
+.post-article { width: 100%; max-width: 66rem; margin-inline: auto; }
+.post-heading { max-width: 54rem; margin-inline: auto; }
+.post-kicker { color: var(--organism-accent-strong); }
+.post-title { max-width: 23ch; margin-block: 1.25rem; font-family: var(--font-serif); font-size: clamp(2.25rem, 5vw, 4.5rem); font-weight: 500; line-height: 1.08; letter-spacing: -.035em; text-wrap: balance; overflow-wrap: anywhere; }
+.post-summary { max-width: 58ch; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.6; color: var(--muted-foreground); }
+.post-byline { display: flex; flex-wrap: wrap; column-gap: 1.5rem; row-gap: .5rem; margin-top: 1.75rem; font-size: .875rem; line-height: 1.6; color: var(--muted-foreground); }
+.post-byline a { font-weight: 500; }
+.post-claims { margin-top: 1rem; }
+.post-cover { margin-top: clamp(2rem, 5vw, 3.5rem); }
+.post-cover img { display: block; width: 100%; height: auto; border-radius: var(--radius); background: var(--muted); }
+.post-cover figcaption, .post-inline-image figcaption { margin-top: .75rem; font-family: var(--font-sans); font-size: .8125rem; line-height: 1.6; color: var(--muted-foreground); }
+.post-reading-column { width: 100%; max-width: var(--reading-measure); margin-inline: auto; }
+.post-reading-column .book-prose--post { overflow-wrap: anywhere; }
+.book-prose--post .book-section-heading { display: block; max-width: none; margin: 2.75rem 0 1.25rem; font-family: var(--font-serif); text-align: left; }
+.book-prose--post .book-section-heading__title { border: 0; }
+.book-prose--post img { max-width: 100%; height: auto; }
+.book-prose--post .post-inline-image { margin-block: 2.5rem; }
+.post-inline-image img { display: block; border: 1px solid var(--border); border-radius: var(--radius); }
+.post-preview-note { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; max-width: 66rem; margin: 0 auto 2.5rem; padding: 1rem; border: 1px dashed var(--border); font-size: .875rem; line-height: 1.6; }
+@media (max-width: 480px) {
+  .post-byline { flex-direction: column; }
+  .post-title { font-size: 2.25rem; }
+}

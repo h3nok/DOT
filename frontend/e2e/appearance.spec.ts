@@ -166,6 +166,7 @@ test.describe("appearance controls change the rendered document", () => {
     await page.goto("/");
     // The loader also has an animated field. Measure only after the real
     // architecture mounts, so its handoff cannot invalidate the cached raster.
+    await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-architecture-origin-boundary")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     const canvas = page.locator(".organism-membrane canvas");
@@ -225,6 +226,9 @@ test.describe("appearance controls change the rendered document", () => {
   test("ui style changes controls while keeping one home diagram", async ({ page }) => {
     test.slow();
     await page.goto("/");
+    const figure = page.locator(".home-hero-architecture");
+    await figure.scrollIntoViewIfNeeded();
+    await expect(figure).toHaveAttribute("data-emergence", "ready");
     const panel = await openAppearancePanel(page);
     await openEnvironmentFineTune(panel);
 

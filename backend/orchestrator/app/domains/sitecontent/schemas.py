@@ -37,6 +37,7 @@ class SiteContentWrite(pydantic.BaseModel):
     value: str = pydantic.Field(max_length=models.MAX_VALUE_LENGTH)
     #: Publish in the same call. The inline editor uses this; the studio does not.
     publish: bool = False
+    expected_updated_at: datetime.datetime | None = None
 
     @pydantic.field_validator("value")
     @classmethod

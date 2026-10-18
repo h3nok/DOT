@@ -368,8 +368,8 @@ const DoctrinePage = () => {
       <Link
         to="/"
         className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-sm font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
-        aria-label="DOT home"
-        title="DOT home"
+        aria-label="DOT — Home"
+        title="DOT — Home"
       >
         <ArrowLeft className="h-4 w-4 shrink-0" />
         <span>Home</span>

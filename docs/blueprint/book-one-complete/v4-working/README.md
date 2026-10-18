@@ -1,7 +1,8 @@
-# Complete Book One — Complete Edition, author review v4.8
+# Complete Book One — Complete Edition, author review v4.9
 
-> Editorial working copy. Published on 2026-10-03 as the Complete Edition,
-> version 4 ([release files](../release-v4/)), and as the v4 digital edition.
+> Private editorial working copy. The preceding v4.8 text was published on
+> 2026-10-03 as the Complete Edition, version 4
+> ([release files](../release-v4/)), and as the v4 digital edition.
 
 *Consciousness: A Digital Organism — Foundations, Agency, and Research*
 
@@ -9,12 +10,21 @@ Henok Ghebrechristos · October 2026
 
 ## Current book
 
-- [Read the designed PDF](v4.8-review/DOT-Complete-Book-One-v4.8-Review.pdf).
-- [Edit the Word manuscript](v4.8-review/DOT-Complete-Book-One-v4.8-Review.docx).
-- [Review the line edit against v4.7](v4.8-review/DOT-Complete-Book-One-v4.8-Review-Redline.html).
-- [Inspect the validation record](v4.8-review/DOT-Complete-Book-One-v4.8-Review-Validation.json).
+- [Read the designed PDF](v4.9-review/DOT-Complete-Book-One-v4.9-Review.pdf).
+- [Edit the Word manuscript](v4.9-review/DOT-Complete-Book-One-v4.9-Review.docx).
+- [Review the line edit against v4.8](v4.9-review/DOT-Complete-Book-One-v4.9-Review-Redline.html).
+- [Inspect the validation record](v4.9-review/DOT-Complete-Book-One-v4.9-Review-Validation.json).
 
-The v4.8 DOCX is the current private editorial handoff. It applies a recorded
+The v4.9 DOCX is the current private editorial handoff. Its
+[273 recorded paragraph operations](editing/v4.9-edits.json) shorten repeated
+definitions and qualifications, improve transitions, and add personal texture
+from the author's supplied account. It removes about 3,000 words and preserves
+the print design, native equations, references, fields, links, and depth passages.
+The PDF proof has 174 pages. The current fundamental-Big-C position remains;
+the redline records an author question about the alternative emergence account.
+This revision is not a public release.
+
+The preceding v4.8 DOCX applies a recorded
 line edit to v4.7 ([128 paragraph edits](editing/v4.8-edits.json)), marks
 [26 depth passages](editing/v4.8-depth.json) for the digital edition
 (ADR-0036), and replaces the review layout with a print design. It preserves
@@ -86,6 +96,7 @@ book-design requirements in `.venv` (`scripts/requirements-book-design.txt`):
 ```bash
 make book-complete                       # build and render v4.8
 make preview-book-complete PANDOC=…      # derive digital reading units to /tmp
+.venv/bin/python scripts/edit_book_v49.py --render  # private v4.9 review
 ```
 
 `scripts/build_book_v48.py` takes the frozen v4.7 Word file, checked against
@@ -97,6 +108,12 @@ installed. Print typefaces are in `design/fonts/print/` (SIL Open Font License).
 Further manual Word changes should be saved as a new revision. Rebuilding v4.8
 reapplies its fixed manifests and would overwrite unrecorded changes in the
 v4.8 output directory. Use `--output /tmp/book-review` for an isolated proof.
+
+The v4.9 editor reads the exact v4.8 Word package and its recorded edit manifest.
+It preserves existing text runs and refuses changes to structured paragraphs,
+native math, links, fields, reference text, or paired depth bookmarks. Rebuilding
+v4.9 reapplies its manifest; save subsequent manual edits as another revision.
+The Makefile's publication targets still use v4.8 until a new release is approved.
 
 ## Release boundary
 

@@ -1,3 +1,4 @@
+import { WritingConnections } from "./WritingConnections";
 import { useEffect, useState } from "react";
 import { fetchWritingDelivery } from "../../../services/OrchestratorWritingService";
 import { fetchDistributionCopies, recordDistributionCopy, shareReleasedWritingOnLinkedIn, type DistributionCopy, type DistributionPlatform } from "../../../services/OrchestratorDistributionService";
@@ -81,6 +82,7 @@ export function WritingDistribution({ workId, number, automaticResult }: { workI
       {!piece ? !error && <p role="status" className="mt-4 text-sm">Preparing the published text…</p> : <>
         <nav aria-label="External publishing platforms" className="mt-5 flex flex-wrap gap-2">{platforms.map((entry) => <button key={entry.id} type="button" aria-pressed={platform === entry.id} aria-current={platform === entry.id ? "page" : undefined} onClick={() => { setPlatform(entry.id); setExternalUrl(""); setMessage(null); }} className={`dot-pill ${platform === entry.id ? "ring-2 ring-[color:var(--organism-accent-strong)] font-semibold" : ""}`}>{entry.label}</button>)}</nav>
         <p className="mt-4 text-sm text-muted-foreground">{selected.note}</p>
+        {platform === "linkedin" && <details><summary className="min-h-11 cursor-pointer py-3 text-sm">LinkedIn connection</summary><WritingConnections connectionOnly /></details>}
         <div className="mt-4 flex flex-wrap gap-3">
           <button type="button" onClick={() => void copy()} className="dot-pill">Copy complete piece</button>
           <a href={selected.editor} target="_blank" rel="noopener noreferrer" className="dot-pill">Open {selected.label} {platform === "substack" ? "dashboard" : "editor"}</a>
