@@ -57,24 +57,28 @@ test("disabling the environment also keeps the shared page signature still", asy
   await expect(mark.locator(".nucleus-mark-core")).toHaveCSS("opacity", "1");
 });
 
-test("the site signature stays consistent across public pages and studio sign-in", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("the site signature stays consistent across public pages and studio sign-in", async ({ context }) => {
   for (const route of [
     "/about", "/blog", "/contact", "/readers", "/academy", "/publications",
     "/privacy", "/terms", "/book/digital-organism-theory", "/studio",
   ]) {
-    await page.goto(route);
-    // The signature mounts before Vite's lazy page modules finish loading.
-    // Settle those requests before the next hard navigation, rather than
-    // accumulating aborted module loads across this ten-page journey.
-    await page.waitForLoadState("networkidle");
-    const home = page.getByRole("link", { name: "DOT — Home", exact: true });
-    await expect(home.getByRole("img", { name: "DOT", exact: true }), route).toBeVisible();
-    expect((await home.boundingBox())?.height, route).toBeGreaterThanOrEqual(44);
-    await expect(page.getByRole("link", { name: "DOT", exact: true }), route).toHaveCount(0);
-    const footer = page.locator("footer.site-colophon");
-    if (await footer.count()) {
-      await expect(footer.getByRole("img", { name: "DOT", exact: true }), route).toBeVisible();
+    // Release each page's Vite module graph before opening the next document,
+    // matching the runtime privacy suite and avoiding Chromium exhaustion.
+    const page = await context.newPage();
+    try {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(route);
+      await page.waitForLoadState("networkidle");
+      const home = page.getByRole("link", { name: "DOT — Home", exact: true });
+      await expect(home.getByRole("img", { name: "DOT", exact: true }), route).toBeVisible();
+      expect((await home.boundingBox())?.height, route).toBeGreaterThanOrEqual(44);
+      await expect(page.getByRole("link", { name: "DOT", exact: true }), route).toHaveCount(0);
+      const footer = page.locator("footer.site-colophon");
+      if (await footer.count()) {
+        await expect(footer.getByRole("img", { name: "DOT", exact: true }), route).toBeVisible();
+      }
+    } finally {
+      await page.close();
     }
   }
 });

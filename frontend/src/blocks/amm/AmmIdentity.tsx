@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { AppearanceControl } from "../../organism/AppearanceControl";
 import { PageShell } from "../../shared/PageShell";
 import AMM from "../../content/amm.json";
+import { useAmmContent } from "../../content/editable/useAmmContent";
 import { OwnerEditLink } from "../publication/components/OwnerEditLink";
 import { AmmMark } from "./AmmMark";
 import "./amm.css";
@@ -12,8 +13,9 @@ import "./amm-money.css";
 
 export { AmmMark } from "./AmmMark";
 
-/** The masthead: the publication's name and the reader's appearance control. Nothing to browse. */
+/** The masthead: the publication's name, the way back to Digital Organism Theory, and the reader's appearance control. */
 function AmmHeader() {
+  const { dot } = useAmmContent();
   return (
     <header className="amm-header">
       <div className="amm-container amm-header-inner">
@@ -21,6 +23,7 @@ function AmmHeader() {
           <AmmMark kindle />
           <span className="amm-brand-name"><span>American</span><strong>Millennial Manifesto</strong></span>
         </Link>
+        <Link to={dot.route} className="amm-header-dot" aria-label="Digital Organism Theory — Home"><span className="amm-header-dot-full">Digital Organism Theory</span><abbr className="amm-header-dot-short" title="Digital Organism Theory">DOT</abbr></Link>
         <div className="amm-appearance"><AppearanceControl placement="inline" /></div>
       </div>
     </header>
@@ -28,16 +31,18 @@ function AmmHeader() {
 }
 
 function AmmFooter() {
+  const { dot, movement } = useAmmContent();
   return (
     <footer className="amm-footer amm-container">
-      <div className="amm-footer-signature"><AmmMark /><div><strong>The American Millennial Manifesto</strong><p>An independent publication by <Link to="/about">Henok Ghebrechristos</Link>.</p></div></div>
+      <div className="amm-footer-signature"><AmmMark /><div><strong>The American Millennial Manifesto</strong><p>An independent publication by <Link to="/about">Henok Ghebrechristos</Link>.</p><p className="amm-footer-lineage"><Link to={dot.route}>{dot.footer}</Link> <a href={movement.href} rel="noopener">{movement.footer}</a></p></div></div>
       <nav aria-label="AMM footer">
         <Link to="/amm/editions">Editions</Link>
         <Link to="/contact?purpose=writing">Correspondence <ArrowUpRight aria-hidden="true" /></Link>
         <a href={AMM.feed}>RSS</a>
         <Link to="/privacy">Privacy</Link>
         <Link to="/terms">Terms</Link>
-        <Link to="/">Digital Organism Theory <ArrowUpRight aria-hidden="true" /></Link>
+        <Link to="/">Digital Organism Theory</Link>
+        <a href={movement.href} rel="noopener">4Us <ArrowUpRight aria-hidden="true" /></a>
       </nav>
     </footer>
   );

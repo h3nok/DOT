@@ -50,7 +50,7 @@ for (const from of ['/amm/capital', '/amm/capital#holders', '/amm/money', '/amm/
   test(`${from} opens the AMM home`, async ({ page }) => {
     await page.goto(from);
     await expect(page).toHaveURL(/\/amm$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'When harm becomes normal.' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'See the system. Take charge of your life.' })).toBeVisible();
   });
 }
 

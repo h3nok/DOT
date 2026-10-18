@@ -8,28 +8,30 @@ export function ammCopyFields(content) {
   };
   add('Opening', 'headline.0', 'Headline — first line');
   add('Opening', 'headline.1', 'Headline — emphasis');
+  add('Opening', 'home.premise', 'Opening paragraph');
   add('Opening', 'heroAction', 'Primary reading link');
   add('Opening', 'description', 'Search description');
   add('Opening', 'introduction.label', 'Introduction link label');
   for (const [field, value] of Object.entries(content.home)) {
-    if (typeof value === 'string') add('Home · Framing and reflection', `home.${field}`, words(field));
+    if (typeof value === 'string' && field !== 'premise') add('Home · Condition, diagnosis and response', `home.${field}`, words(field));
   }
-  content.home.reasons.forEach((item, index) => {
-    for (const field of ['title', 'text']) add('Home · Why this manifesto', `home.reasons.${index}.${field}`, `${item.title} — ${words(field)}`, `home.reasons.${item.id}.${field}`);
-  });
   content.home.concepts.forEach((concept, index) => {
-    for (const field of ['label', 'hint', 'title', 'text', 'question']) add(`Home · ${concept.label}`, `home.concepts.${index}.${field}`, words(field), `home.concepts.${concept.id}.${field}`);
+    for (const field of ['label', 'script', 'text', 'argument', 'source']) add(`Home · ${concept.label}`, `home.concepts.${index}.${field}`, words(field), `home.concepts.${concept.id}.${field}`);
   });
-  content.home.reflections.forEach((item, index) => {
-    for (const field of ['title', 'text']) add('Home · Questions about conduct', `home.reflections.${index}.${field}`, `${item.title} — ${words(field)}`, `home.reflections.${item.id}.${field}`);
+  for (const field of ['title', 'intro', 'action', 'footer']) add('Digital Organism Theory', `dot.${field}`, words(field));
+  content.dot.links.forEach((item, index) => {
+    for (const field of ['quote', 'applies']) add('Digital Organism Theory', `dot.links.${index}.${field}`, `${item.title} — ${field === 'quote' ? 'DOT’s words' : 'where it applies'}`, `dot.links.${item.id}.${field}`);
   });
+  for (const field of ['sponsor', 'name', 'title', 'description', 'stage', 'action', 'footer']) add('4Us', `movement.${field}`, words(field));
   add('Illustration', 'artwork.description', 'Illustration description');
+  add('Illustration', 'artwork.alt', 'Image description');
   content.artwork.key.forEach((item, index) => {
     add('Illustration', `artwork.key.${index}.label`, `${item.label} — label`, `artwork.key.${item.id}.label`);
     add('Illustration', `artwork.key.${index}.meaning`, `${item.label} — meaning`, `artwork.key.${item.id}.meaning`);
   });
   add('Chapters', 'chapterSection.title', 'Section heading');
   add('Chapters', 'chapterSection.description', 'Section introduction');
+  content.chapterSection.chapters.forEach((chapter, index) => add('Chapters', `chapterSection.chapters.${index}.line`, `Chapter ${index + 1} — one line`, `chapterSection.chapters.${chapter.id}.line`));
   for (const [field, label] of Object.entries({ pathEyebrow: 'Reading path label', orderLabel: 'Orientation label', contentsLabel: 'Contents label', letterLabel: 'Letter orientation label', lettersEyebrow: 'Letters label', lettersTitle: 'Letters heading', lettersDescription: 'Letters introduction', nextLabel: 'Next part label', beginLabel: 'Begin label', latestNote: 'Latest part note' })) {
     add('Reading order', `reading.${field}`, label);
   }

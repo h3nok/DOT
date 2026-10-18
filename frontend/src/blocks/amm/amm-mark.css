@@ -1,56 +1,99 @@
+/* A molten flame over an open manuscript. No backing plate or enclosing silhouette. */
 .amm-mark { overflow: visible; color: var(--foreground, #232525); }
-.amm-mark-fire, .amm-mark-flame, .amm-mark-heart, .amm-mark-core { transform-origin: 32px 49px; }
-.amm-mark-fire { filter: drop-shadow(0 0 2px #D875321A); }
+.amm-mark-fire, .amm-mark-flame, .amm-mark-heart, .amm-mark-core, .amm-mark-seam { transform-origin: 32px 51px; }
+.amm-mark-fire { filter: drop-shadow(0 0 1px #FFAB3D80) drop-shadow(0 0 3px #F575252E); }
+.amm-mark-heat { opacity: .65; transform-origin: 32px 38px; }
+.amm-mark-tongue--left { transform-origin: 15px 37px; }
+.amm-mark-tongue--right { transform-origin: 48px 27px; }
+.amm-mark-seam { opacity: .72; }
 .amm-mark-ember { opacity: 0; }
-.amm-brand:is(:hover, :focus-visible) .amm-mark-fire { filter: drop-shadow(0 0 4px #D8753259); }
+.amm-brand:is(:hover, :focus-visible) .amm-mark-fire { filter: drop-shadow(0 0 1px #FFD366CC) drop-shadow(0 0 5px #F5752570); }
+.amm-brand:is(:hover, :focus-visible) .amm-mark-heat { opacity: 1; }
 
-/* Finite ignition and a deliberate response; the flame never loops in chrome. */
+/* The first burn has an ending. Hover or focus rekindles it deliberately. */
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-flame { animation: amm-flame-kindle 3.6s ease-in-out 1 both; }
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-heart { animation: amm-flame-heart 3.6s ease-in-out 1 both; }
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-core { animation: amm-flame-core 3.6s ease-in-out 1 both; }
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-ember--one { animation: amm-ember-rise 1.8s .35s ease-out 1 both; }
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle .amm-mark-ember--two { animation: amm-ember-rise 1.6s 1.15s ease-out 1 both; }
-  html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:focus-visible .amm-mark-fire { animation: amm-flame-answer 1.4s ease-in-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-mark--kindle {
+    .amm-mark-flame, .amm-mark-seam { animation: amm-flame-kindle 4.4s ease-in-out 1 both; }
+    .amm-mark-heart { animation: amm-flame-heart 4.4s ease-in-out 1 both; }
+    .amm-mark-core { animation: amm-flame-core 4.4s ease-in-out 1 both; }
+    .amm-mark-tongue--left { animation: amm-flame-left 4.4s ease-in-out 1 both; }
+    .amm-mark-tongue--right { animation: amm-flame-right 4.4s ease-in-out 1 both; }
+    .amm-mark-heat { animation: amm-heat-rise 4.4s ease-in-out 1; }
+    .amm-mark-ember--one { animation: amm-ember-rise 1.8s .35s ease-out 1 both; }
+    .amm-mark-ember--two { animation: amm-ember-rise 1.6s 1.35s ease-out 1 both; }
+    .amm-mark-ember--three { animation: amm-ember-rise 1.8s 2.1s ease-out 1 both; }
+  }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:focus-visible .amm-mark-fire { animation: amm-flame-answer 2.4s ease-in-out 1 both; }
   @media (hover: hover) and (pointer: fine) {
-    html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:hover .amm-mark-fire { animation: amm-flame-answer 1.4s ease-in-out 1 both; }
+    html:not([data-motion="still"]):not([data-organism="off"]) .amm-brand:hover .amm-mark-fire { animation: amm-flame-answer 2.4s ease-in-out 1 both; }
   }
 }
 @keyframes amm-flame-kindle {
-  0% { transform: scale(.91, .82) rotate(-3deg); }
-  17% { transform: scale(.98, 1.04) skewX(3deg); }
-  36% { transform: scale(1.025, .95) skewX(-3deg); }
-  55% { transform: scale(.98, 1.03) skewX(2deg); }
-  76% { transform: scale(1.01, .98) skewX(-1deg); }
+  0% { transform: scale(.9, .8) skewX(-4deg); }
+  12% { transform: scale(.97, 1.06) skewX(3deg); }
+  25% { transform: scale(1.025, .96) skewX(-3deg); }
+  40% { transform: scale(.97, 1.04) skewX(2deg); }
+  55% { transform: scale(1.02, .98) skewX(-2deg); }
+  72% { transform: scale(.985, 1.025) skewX(1deg); }
+  88% { transform: scale(1.005, .99); }
   100% { transform: none; }
 }
 @keyframes amm-flame-heart {
-  0% { transform: scale(.85, .78); }
-  23% { transform: scale(1.06, 1.15) rotate(-3deg); }
-  44% { transform: scale(.94, .95) rotate(3deg); }
-  64% { transform: scale(1.03, 1.08) rotate(-2deg); }
+  0% { transform: scale(.8, .75) rotate(-4deg); }
+  16% { transform: scale(1.05, 1.12) rotate(3deg); }
+  31% { transform: scale(.95, .93) rotate(-4deg); }
+  47% { transform: scale(1.035, 1.08) rotate(2deg); }
+  63% { transform: scale(.98, .96) rotate(-2deg); }
+  81% { transform: scale(1.01, 1.04); }
   100% { transform: none; }
 }
 @keyframes amm-flame-core {
-  0% { transform: scale(.7, .8); opacity: .75; }
-  28% { transform: scale(1, 1.2); opacity: 1; }
-  57% { transform: scale(.95, .9); }
-  78% { transform: scale(1.02, 1.1); }
-  100% { transform: none; opacity: 1; }
+  0% { transform: scale(.8, .75); }
+  20% { transform: scale(1.05, 1.18) skewX(-3deg); }
+  38% { transform: scale(.94, .94) skewX(3deg); }
+  57% { transform: scale(1.035, 1.12) skewX(-2deg); }
+  76% { transform: scale(.98, 1.02); }
+  100% { transform: none; }
+}
+@keyframes amm-flame-left {
+  0% { transform: scaleY(.7) rotate(-9deg); }
+  18% { transform: scaleY(1.08) rotate(5deg); }
+  38% { transform: scaleY(.9) rotate(-6deg); }
+  60% { transform: scaleY(1.04) rotate(3deg); }
+  82% { transform: rotate(-2deg); }
+  100% { transform: none; }
+}
+@keyframes amm-flame-right {
+  0% { transform: scaleY(.8) rotate(7deg); }
+  23% { transform: scaleY(1.1) rotate(-6deg); }
+  42% { transform: scaleY(.92) rotate(4deg); }
+  64% { transform: scaleY(1.05) rotate(-3deg); }
+  86% { transform: rotate(1deg); }
+  100% { transform: none; }
+}
+@keyframes amm-heat-rise {
+  0% { opacity: .3; transform: scale(.85); }
+  30% { opacity: .9; transform: scale(1.07); }
+  58% { opacity: .55; transform: scale(.97); }
+  78% { opacity: .8; transform: scale(1.025); }
+  100% { opacity: .65; transform: none; }
 }
 @keyframes amm-ember-rise {
-  0% { opacity: 0; transform: translate(0, 0); }
-  24% { opacity: .65; }
-  100% { opacity: 0; transform: translate(3px, -10px); }
+  0% { opacity: 0; transform: translate(0, 3px) scale(.6); }
+  22% { opacity: .8; }
+  100% { opacity: 0; transform: translate(3px, -9px) scale(.3); }
 }
 @keyframes amm-flame-answer {
   0%, 100% { transform: none; }
-  35% { transform: scale(.98, 1.055) skewX(-2deg); }
-  68% { transform: scale(1.025, .98) skewX(1deg); }
+  22% { transform: scale(.97, 1.07) skewX(-3deg); }
+  43% { transform: scale(1.03, .98) skewX(2deg); }
+  64% { transform: scale(.99, 1.04) skewX(-1deg); }
+  83% { transform: scale(1.01, .995); }
 }
 @media (forced-colors: active) {
-  .amm-mark-flame { fill: CanvasText; }
+  .amm-mark-flame, .amm-mark-tongue, .amm-mark-core { fill: CanvasText; }
   .amm-mark-heart { fill: Canvas; }
-  .amm-mark-core { fill: CanvasText; }
-  .amm-mark-fire { filter: none; }
+  .amm-mark-page-edge { stroke: Canvas; }
+  .amm-mark-heat, .amm-mark-seam, .amm-mark-embers { display: none; }
+  .amm-mark-fire, .amm-brand:is(:hover, :focus-visible) .amm-mark-fire { filter: none; }
 }

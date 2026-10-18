@@ -6,82 +6,78 @@
   "feed": "/amm/feed.xml",
   "eyebrow": "An independent publication by Henok Ghebrechristos",
   "headline": [
-    "When harm becomes",
-    "normal."
+    "See the system.",
+    "Take charge of your life."
   ],
-  "heroAction": "Understand the Leech",
-  "description": "The American Millennial Manifesto examines moral erosion: how power, conditioning, and fear can normalize extraction—and what honesty and accountability demand of us.",
+  "heroAction": "Look beneath the surface",
+  "description": "The American Millennial Manifesto examines extractive social arrangements, the culture they teach us to accept, and responsibility for how we live.",
   "home": {
-    "overviewEyebrow": "Before you read",
-    "overviewTitle": "What AMM is trying to address.",
-    "overviewIntro": "Begin with the concepts. Examine how these patterns enter everyday conduct—and what honesty and accountability ask of us.",
-    "overviewAction": "Go to the chapters",
-    "eyebrow": "Why this manifesto · Moral erosion",
-    "premise": "AMM examines an inversion of priorities: life serves accumulation, while power escapes accountability.",
-    "reasons": [
-      { "id": "worth", "title": "Worth reduced to status.", "text": "Money, position, and approval become measures of a person’s value.", "reflections": ["worth", "honesty"] },
-      { "id": "harm", "title": "Harm excused for gain.", "text": "Dishonesty, indifference, and exploitation become acceptable ways to get ahead.", "reflections": ["indifference", "exploitation"] },
-      { "id": "power", "title": "Power without responsibility.", "text": "Those who set the terms pass the costs to others—and resist being held to account.", "reflections": ["judgment", "repair"] }
-    ],
+    "overviewTitle": "What is this doing to you?",
+    "overviewClaim": "You keep going. Something still feels wrong.",
+    "overviewIntro": "You work, you pay, you adapt, and you try to stay secure. Saying no feels dangerous. Rest feels undeserved. You may even be getting ahead—and still growing more exhausted, more guarded, and further from what matters to you.",
+    "overviewArgument": "Distress is individualized while the architecture producing it is preserved. As I discussed in Chapter One, this is a form of inversion.",
+    "overviewSource": "Chapter Two · The Leech’s Anatomy",
+    "premise": "Work hard, play by the rules, and you will get ahead. You were raised on that story. It shapes what you pursue, fear, and accept. AMM examines the arrangement behind it—and asks you to take responsibility for how you live, what you defend, and what you choose to change.",
     "conceptsLabel": "The concepts behind the critique",
-    "questionLabel": "Ask of your own experience",
     "concepts": [
       {
         "id": "conditioning",
         "label": "Conditioning",
-        "hint": "What becomes normal",
-        "title": "An arrangement becomes an assumption.",
-        "text": "Rewards, punishments, and repeated examples can teach us what to accept. AMM asks when those lessons serve concentrated power at the expense of life.",
-        "question": "What is rewarded around me—and what does it cost to refuse?"
+        "text": "Long before you could question it, you were rewarded for competing, collecting, and proving yourself. The pressure feels personal because the lesson now speaks in your own voice.",
+        "script": "Your worth is what you earn.",
+        "argument": "You, as a person belonging to this society, are taught to earn a dignity you already possess, and to defend the arrangements that steadily erode it.",
+        "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "fear",
         "label": "Fear",
-        "hint": "What feels at stake",
-        "title": "What feels unsafe to question?",
-        "text": "Losing income, belonging, status, or certainty can feel threatening. Fear may signal real danger; the inquiry is how it shapes what we accept and defend.",
-        "question": "Am I responding to a present danger, an inherited expectation, or both?"
+        "text": "You are home. Another work message arrives. You want to say no, but rent is due, so you answer. When keeping your place means always being available, your freedom keeps getting smaller.",
+        "script": "Do not risk your place.",
+        "argument": "Fear has begun governing the inquiry when protecting an identity or livelihood makes a conclusion unavailable for examination.",
+        "source": "Chapter Three · The Host and the Infection"
+      },
+      {
+        "id": "delusion",
+        "label": "Cultural delusion",
+        "text": "Profit gets sold as progress, buying as freedom, and status as worth. AMM calls this cultural delusion: mistaking what a society rewards for proof that its way of life is sound.",
+        "script": "If it pays, it must be progress.",
+        "argument": "The Leech's signature method is inversion: an institution claims moral authority from the purpose its conduct is undermining.",
+        "source": "Chapter One · The Leech"
       },
       {
         "id": "protection",
         "label": "Self-protection",
-        "hint": "What we defend",
-        "title": "Protection can become permission.",
-        "text": "Seeking safety is understandable. The moral question begins when protecting our position becomes a reason to deceive, control, or pass harm to someone else.",
-        "question": "What am I protecting—and who bears the cost?"
+        "text": "You start defending the very story that is wearing you down. Your position, your comfort, and your reputation begin to matter more than what they cost someone else.",
+        "script": "Protect what is yours.",
+        "argument": "A capable mind can produce an elaborate defense of a conclusion it has become afraid to lose.",
+        "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "erosion",
         "label": "Moral erosion",
-        "hint": "What we excuse",
-        "title": "Harm becomes ordinary.",
-        "text": "AMM calls it moral erosion when dishonesty, exploitation, and indifference become acceptable ways to get ahead—and responsibility becomes optional.",
-        "question": "What have I learned to excuse because it is normal, legal, or profitable?"
+        "text": "Harm rarely looks like moral collapse. It shows up as a reasonable compromise, a business decision, or just the way things work. Repeat it often enough and it stops bothering you.",
+        "script": "Everyone does it.",
+        "argument": "The compromise becomes ordinary. Then it becomes invisible.",
+        "source": "Chapter Two · The Leech’s Anatomy"
       },
       {
         "id": "accountability",
         "label": "Accountability",
-        "hint": "What we answer for",
-        "title": "Honesty must reach our conduct.",
-        "text": "Acknowledge the harm, examine your part in it, and make changes or repairs. Responsibility follows what someone knows, controls, and can realistically change.",
-        "question": "What is mine to answer for—and what can I change?"
+        "text": "You do have a choice, and the next one matters. Look at what you defend. Name the harm you take part in. Change what is within your control. Accountability starts where your explanation turns into an excuse.",
+        "script": "You have no choice.",
+        "argument": "What you have learned to call normal becomes part of the world another person must live in.",
+        "source": "Chapter Three · The Host and the Infection"
       }
     ],
-    "reflectionEyebrow": "The culture we carry",
-    "reflectionTitle": "Where does this show up in us?",
-    "reflectionIntro": "AMM’s argument is an inversion of priorities: life serves accumulation, while power escapes accountability. It examines the role of Western imperial and economic elites in shaping that culture—and the everyday conduct that can sustain it.",
-    "reflectionLabel": "Questions about conduct",
-    "reflections": [
-      { "id": "honesty", "title": "Honesty", "text": "Where do I distort the truth to protect my comfort, advantage, or reputation?" },
-      { "id": "worth", "title": "Worth & status", "text": "Do I measure my own worth—or someone else’s—by money, position, or approval?" },
-      { "id": "indifference", "title": "Indifference", "text": "Whose suffering have I learned to accept because it benefits me or feels distant?" },
-      { "id": "exploitation", "title": "Exploitation", "text": "Do I use someone’s dependence or vulnerability to obtain more from them?" },
-      { "id": "judgment", "title": "Moral judgment", "text": "Do I let authority, legality, or profit settle whether my conduct is right?" },
-      { "id": "repair", "title": "Accountability & repair", "text": "When harm is pointed out, do I examine it—or protect myself from having to change?" }
-    ],
-    "limitsTitle": "Conditioning, character, and responsibility",
-    "limits": "Temperament, basic protective responses, personal history, and present circumstances also matter. Fear can signal real danger. These questions examine conduct; they do not diagnose people or assign an unchanging character. Someone facing coercion and someone setting the terms do not carry the same responsibility. The questions apply to the author, the reader, and those who hold power.",
-    "method": "Keep three things distinct: what happened, what you felt, and how you explain it. Examine the explanation—including AMM’s."
+    "scriptLabel": "The story you are sold",
+    "sceneAlt": "The flag-patterned Host rests its head beside a laptop at a kitchen table, carrying the two-headed Leech. An untouched meal, household envelopes, keys, and a picture of a cow family in a green meadow surround it.",
+    "diagnosisTitle": "Who benefits when this feels normal?",
+    "diagnosisClaim": "Your life serves accumulation. Power escapes accountability.",
+    "diagnosisIntro": "AMM argues that Western civilization has inverted the relationship between life and wealth. Modern culture teaches you to call that inversion success. Modern oligarchy benefits when your dependence becomes its recurring income—and the costs feel like your personal failure. The Leech names this arrangement; conditioning helps it survive.",
+    "cureTitle": "What would it take to live differently?",
+    "cureIntro": "AMM’s proposed response has to reach both the culture we carry and the systems we depend on: honesty and accountability in how we live, cooperation and shared economic capacity in what we build.",
+    "cureChapterLabel": "Chapter Four · The Cure",
+    "cureStatus": "Not yet written. The next chapter will develop the proposed response; Chapters One–Three are available now."
   },
   "deck": "You keep the economy running. Who does it leave in control?",
   "statement": "The public is more than a resource.",
@@ -203,9 +199,9 @@
         "meaning": "Organized extraction"
       }
     ],
-    "alt": "An emaciated cow patterned with the American flag carries a two-headed leech and faces a phone-shaped mirror showing its healthy reflection in a green landscape.",
+    "alt": "A flag-patterned Host carries a two-headed Leech while a phone-shaped mirror shows its healthy reflection—a visual metaphor for systemic extraction, manufactured illusion, and the gap between subjective perception and objective reality.",
     "caption": "AI-generated illustration, directed by the author. A visual metaphor.",
-    "description": "The Host is the people, pictured as a cow patterned with the American flag. Its exhausted body carries a two-headed leech while facing a phone-shaped mirror that shows a healthy reflection in a green landscape. The contrast is a visual metaphor for extraction and the distance between public life and its reassuring image.",
+    "description": "The Host is the public: exhausted by the Leech it carries, yet reassured by a mirror that shows prosperity. The image depicts systemic extraction, manufactured illusion, and the gap between subjective perception and objective reality.",
     "movementUrl": "https://sullix.com/venture"
   },
   "principle": {
@@ -214,7 +210,21 @@
   },
   "chapterSection": {
     "title": "Read the manifesto.",
-    "description": "Three parts, in the order they were written to be read. Each one builds on the terms the previous part defines."
+    "description": "Trace the system that claims your labor, shapes your judgment, and teaches you to call it normal.",
+    "chapters": [
+      {
+        "id": "amm-chapter-one-the-leech",
+        "line": "In this manifesto, the Leech is a logic of domination made durable through ownership, institutions, and everyday behavior. It converts dependence into extraction, extraction into power, and power into protection from accountability."
+      },
+      {
+        "id": "amm-chapter-two-the-leechs-anatomy",
+        "line": "The Leech has two strategic heads, an institutional body organized around four feeding interfaces, one principal point of attachment, and one host."
+      },
+      {
+        "id": "amm-chapter-three-the-host-and-the-infection",
+        "line": "My concern in this chapter is the moral erosion of the person. I mean the weakening of your willingness to recognize harm, judge power honestly, and let another person’s humanity place a limit on what you will accept."
+      }
+    ]
   },
   "reading": {
     "pathEyebrow": "Start here",
@@ -241,9 +251,16 @@
     "prereqThen": "Then begin Chapter One"
   },
   "movement": {
-    "title": "Build the alternative.",
+    "sponsor": "The American Millennial Manifesto is a sponsor of 4Us.",
+    "name": "4Us · Economy for Us",
+    "title": "Help build an economy for us.",
     "description": "4Us is an economic sovereignty movement developing practical alternatives through cooperation. Sullix is its first platform test: useful technology, shared capacity, and communities with a say in the systems they depend on.",
-    "stage": "In development · Start small. Test with real people."
+    "stage": "In development · Start small. Test with real people.",
+    "action": "Explore 4Us",
+    "footer": "A sponsor of 4Us.",
+    "href": "https://sullix.com/venture",
+    "artwork": "/work/4us/mesob.webp",
+    "artworkAlt": "Woven Mesob artwork from 4Us"
   },
   "archiveTitle": "Letters from the present.",
   "archiveDescription": "One argument, examined from different angles: how dependence becomes income, how income becomes power, and how that power is made to seem normal.",
@@ -407,21 +424,21 @@
         "title": "Who pays, who owns, who decides?",
         "text": "Chapter Three’s anatomy of the Host distinguishes ordinary participation from the power to set the terms. Trace that difference through a rent payment, a loan, or a platform fee.",
         "anchor": "interfaces",
-        "summary": "Who belongs to the Host, who controls its terms, and how the Leech’s logic enters judgment and character."
+        "summary": "Examine how the logic of extraction can enter your judgment—and what you pass on to others."
       },
       {
         "id": "amm-chapter-one-the-leech",
         "title": "How does dependence become common sense?",
         "text": "Chapter One examines the culture that makes power look legitimate. The money guide connects that argument to the recurring payments and ownership behind it.",
         "anchor": "structure",
-        "summary": "How culture, institutions, and public narratives can teach people to accept the terms imposed on them."
+        "summary": "Recognize how culture and public narratives teach you to accept the terms imposed on you."
       },
       {
         "id": "amm-chapter-two-the-leechs-anatomy",
         "title": "Put the anatomy next to an ordinary bill.",
         "text": "Rent, interest, platform fees, and public contracts make the chapter’s “feeding interfaces” concrete. Follow the receipt, the costs, and the claim on what remains.",
         "anchor": "interfaces",
-        "summary": "Follow rent, debt, platform fees, and public contracts into the institutions that collect them."
+        "summary": "Follow your rent, debt, and platform fees into the institutions that collect them."
       },
       {
         "id": "amm-ai-will-not-kill-you",
@@ -711,6 +728,33 @@
         "label": "The trough",
         "meaning": "What keeps the arrangement normal.",
         "href": "#power"
+      }
+    ]
+  },
+  "dot": {
+    "title": "AMM applies Digital Organism Theory to public life.",
+    "intro": "Digital Organism Theory (DOT) explains how experience shapes a person. AMM applies it to the story this country tells and to what that story does to the people inside it. 4Us is where the response gets built.",
+    "action": "Go to Digital Organism Theory",
+    "route": "/",
+    "footer": "An application of Digital Organism Theory.",
+    "links": [
+      {
+        "id": "experience-loop",
+        "title": "The Experience Loop",
+        "quote": "Every loop begins from the state left by earlier loops. This is why conditioning matters, and also why repeated truthful action can make a different response increasingly available.",
+        "applies": "In AMM: “Your worth is what you earn.”"
+      },
+      {
+        "id": "fear-gating",
+        "title": "The Fear-Gating Principle",
+        "quote": "When Fear governs, the set of responses that feels available becomes narrower.",
+        "applies": "In AMM: “You have no choice.”"
+      },
+      {
+        "id": "love",
+        "title": "Love as an Epistemic Condition",
+        "quote": "Love is the condition in which Fear no longer governs you.",
+        "applies": "In 4Us: love and cooperation are the starting principles."
       }
     ]
   }

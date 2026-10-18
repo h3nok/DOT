@@ -6,22 +6,20 @@ test.beforeEach(async ({ page }) => {
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: false } }));
 });
 
-test("each part's artwork and copy share a clear hover, focus and reading action", async ({ page }) => {
+test("each part's artwork and reading button share a destination and clear interaction feedback", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/amm/editions#amm-chapters");
-  const chapter = page.getByRole("link", { name: "The Leech", exact: true });
+  const chapter = page.getByRole("link", { name: "Start with Chapter One", exact: true });
   const part = page.locator(".amm-part").filter({ has: chapter });
   const art = part.locator("img");
-  const title = part.locator(".amm-reading-title");
   await expect(chapter).toBeVisible();
-  const originalColor = await title.evaluate(node => getComputedStyle(node).color);
+  expect(await part.locator('.amm-part-art').getAttribute('href')).toBe(await chapter.getAttribute('href'));
   if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches)) {
     // A lazy image that loads late shifts the layout from under the pointer; hover once it has settled.
     await art.scrollIntoViewIfNeeded();
     await expect.poll(() => art.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
     await art.hover();
     await expect.poll(() => art.evaluate(node => new DOMMatrix(getComputedStyle(node).transform).m42)).toBeLessThan(-4);
-    await expect.poll(() => title.evaluate(node => getComputedStyle(node).color)).not.toBe(originalColor);
     await page.mouse.move(0, 0);
     await expect(art).toHaveCSS("transform", "none");
   }
@@ -29,12 +27,11 @@ test("each part's artwork and copy share a clear hover, focus and reading action
   await chapter.focus();
   await expect(chapter).toHaveCSS("outline-style", "solid");
   await expect(chapter).toHaveCSS("outline-width", "2px");
-  await expect.poll(() => title.evaluate(node => getComputedStyle(node).color)).not.toBe(originalColor);
   await expectNoHorizontalOverflow(page);
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { level: 1, name: "Chapter One: The Leech" })).toBeVisible();
   await page.goto("/amm/editions");
-  const edition = page.getByRole("heading", { level: 3, name: "The Host and the Infection" }).getByRole("link");
+  const edition = page.getByRole("link", { name: "Read Chapter Three", exact: true });
   await edition.click();
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
 });

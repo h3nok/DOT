@@ -81,7 +81,7 @@ describe("HeroProposition", () => {
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
     expect(document.querySelector(".home-hero-opening-copy")).toBeNull();
     expect(document.querySelector(".home-hero-subtitle")).toHaveTextContent(
-      "Challenge any model that leaves your experience out.",
+      "Understand what shapes you. Choose how you live.",
     );
     expect(document.querySelector(".home-author-line")).toBeNull();
     // The opening is an invitation to examine beliefs, not an attributed quotation.

@@ -1,4 +1,10 @@
 {
+  "heroMotion": {
+    "src": "/amm/media/host-hero-v1.webm",
+    "type": "video/webm; codecs=\"vp9\"",
+    "width": 1280,
+    "height": 720
+  },
   "illustration": {
     "title": "The Host",
     "width": 1536,
@@ -80,5 +86,44 @@
       }
     ],
     "alt": "The anatomy of the Host: the public depicted as a flag-patterned body, labeled labor and time, attention and data, savings and taxes, and debt. A government collar surrounds its neck. Above its head, a brain is labeled beliefs, identity, and perception."
+  },
+  "everyday": {
+    "title": "The Host at home",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/host-at-home-v1-1024.webp",
+    "full": "/amm/media/host-at-home-v1-1536.webp",
+    "sizes": "(min-width: 1440px) 620px, (min-width: 901px) 45vw, 32vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/host-at-home-v1-640.webp 640w, /amm/media/host-at-home-v1-1024.webp 1024w, /amm/media/host-at-home-v1-1536.webp 1536w"
+      }
+    ]
+  },
+  "reflection": {
+    "title": "The Host and its reflection",
+    "width": 1536,
+    "height": 1024,
+    "fallback": "/amm/media/host-reflection-1024.webp",
+    "full": "/amm/media/host-reflection-1536.webp",
+    "sizes": "(min-width: 901px) 45vw, 32vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/host-reflection-640.webp 640w, /amm/media/host-reflection-1024.webp 1024w, /amm/media/host-reflection-1536.webp 1536w"
+      }
+    ],
+    "alt": "A depleted, flag-patterned Host faces a phone-shaped mirror that shows a healthy cow in a green landscape. A visual metaphor for the distance between lived conditions and the image of success."
+  },
+  "homeScenes": {
+    "concepts": {
+      "conditioning": "everyday",
+      "fear": "everyday",
+      "delusion": "everyday",
+      "protection": "everyday",
+      "erosion": "erosion",
+      "accountability": "erosion"
+    }
   }
 }

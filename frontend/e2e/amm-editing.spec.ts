@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
+import AMM from '../src/content/amm.json' with { type: 'json' };
 
 test("the owner can edit AMM copy privately, reopen it, and publish deliberately", async ({ page }) => {
   let owner = true;
@@ -22,7 +23,8 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   });
   await page.goto("/amm/");
   await page.getByRole("link", { name: "Edit this page", exact: true }).click();
-  const field = page.getByRole("region", { name: "Headline — first line", exact: true });
+  const field = page.getByRole("region", { name: "Opening paragraph", exact: true });
+  await expect(field.getByRole('textbox')).toHaveValue(AMM.home.premise);
   await field.getByRole("textbox").fill("Synthetic private opening");
   await field.getByRole("button", { name: "Save draft", exact: true }).click();
   await expect(field.getByText("Draft saved privately.")).toBeVisible();
@@ -31,7 +33,7 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   await expect(field.getByRole("textbox")).toHaveValue("Synthetic private opening");
   await expectNoHorizontalOverflow(page);
   await page.getByRole("link", { name: "View the page", exact: true }).click();
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("When harm becomes");
+  await expect(page.locator('.amm-home-premise')).toHaveText(AMM.home.premise);
   await page.getByRole("link", { name: "Edit this page", exact: true }).click();
   await field.getByRole("button", { name: "Publish change", exact: true }).click();
   await expect(field.getByText("Published on the page.")).toBeVisible();
@@ -47,12 +49,20 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   const paymentField = debt.getByRole('region', { name: 'How the payment works', exact: true });
   await paymentField.getByRole('button', { name: 'Publish change', exact: true }).click();
   await expect(paymentField.getByText('Published on the page.')).toBeVisible();
+  const delusion = page.locator('.page-copy-sections > details').filter({ has: page.getByText('Home · Cultural delusion', { exact: true }) });
+  await delusion.locator(':scope > summary').click();
+  const script = delusion.getByRole('region', { name: 'Script', exact: true });
+  await script.getByRole('textbox').fill('Synthetic cultural message, edited by the owner.');
+  await script.getByRole('button', { name: 'Publish change', exact: true }).click();
+  await expect(script.getByText('Published on the page.')).toBeVisible();
   await page.getByRole('link', { name: 'View How power works', exact: true }).click();
   await expect(page.getByText('Synthetic owner revision of the debt explanation.')).toBeVisible();
   owner = false;
   await page.goto("/amm");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Synthetic private opening");
+  await expect(page.locator('.amm-home-premise')).toHaveText("Synthetic private opening");
   await expect(page.getByRole("link", { name: "Edit this page" })).toHaveCount(0);
+  await page.locator('#amm-overview .explainer-story-steps > li').nth(2).evaluate(node => node.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await expect(page.locator('#amm-overview .explainer-story-steps h3').nth(2)).toContainText('Synthetic cultural message, edited by the owner.');
   await page.goto("/studio/pages/amm");
   await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeVisible();
   await expect(page.getByRole("textbox")).toHaveCount(0);

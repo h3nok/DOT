@@ -7,9 +7,9 @@ format: "letter"
 series: "The American Millennial Manifesto"
 levels: ["model", "hypothesis"]
 draft: false
-cover: "amm-ai-will-not-kill-you/cover.webp"
-cover_alt: "A close view of the flag-patterned Host at a feeding trough, with government and financial buildings behind it."
-cover_caption: "AI-generated illustration, directed by the author. A visual metaphor."
+cover: "amm-ai-will-not-kill-you/electricity-plot.png"
+cover_alt: "Global data-center electricity use: 485 TWh estimated for 2025 and 950 TWh projected for 2030. The projection uses a hatched bar. Source: IEA, 2026. These figures include all data centers, not AI alone."
+cover_caption: "Source: IEA, Key Questions on Energy and AI (2026). All data centers, not AI alone. Estimates and projections remain uncertain; the source and limitations accompany the interactive plot below."
 ---
 
 > First published on [LinkedIn](https://www.linkedin.com/pulse/another-letter-american-adult-ai-kill-you-one-saying-henok-n8b0c).

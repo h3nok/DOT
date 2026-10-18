@@ -1,65 +1,86 @@
-/* Home composition. One overview, followed by a deliberate reading path. */
-.amm-hero--inquiry .amm-hero-grid { min-height: auto; grid-template-rows: 1fr auto; column-gap: clamp(1.5rem, 3vw, 3rem); padding-block: clamp(1.5rem, 3vw, 2.5rem) 1.5rem; }
+/* One continuous scroll, one concept per viewport. Images sit directly on the page. */
+.amm-hero--inquiry.reading-scene { min-block-size: calc(100svh - 5rem); display: grid; align-content: center; }
+.amm-hero--inquiry .amm-hero-grid { min-height: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); grid-template-rows: auto auto; align-content: center; column-gap: clamp(2rem, 4vw, 4rem); padding-block: 0; }
+.amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); max-width: none; }
 .amm-hero--inquiry .amm-hero-copy { align-self: center; }
-.amm-hero--inquiry .amm-hero-copy > .amm-eyebrow { margin-bottom: 1.1rem; }
 .amm-hero--inquiry h1 { font-size: clamp(2.75rem, 4.6vw, 4.75rem); margin-bottom: 1.1rem; }
 .amm-home-premise { max-width: 37ch; font: clamp(1.125rem, 1.45vw, 1.3rem)/1.7 var(--font-sans); color: var(--muted-foreground); text-wrap: pretty; }
 .amm-hero--inquiry .amm-hero-actions { margin-top: 1.35rem; align-self: end; padding-bottom: 1rem; }
+.amm-hero--inquiry .amm-hero-actions > .amm-button { width: min(100%, 21rem); justify-content: space-between; }
+.amm-home-sections { --explainer-sticky-top: 0px; }
 
-/* A readable pre-read. The larger surface is divided into short, bounded measures. */
-.amm-home-overview { margin-top: 1rem; padding-block: clamp(2.5rem, 5vw, 4.5rem); border-top: 1px solid var(--border); scroll-margin-top: 1.5rem; }
-.amm-overview-heading { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem 4rem; align-items: end; margin-bottom: 2.5rem; }
-.amm-overview-heading .amm-eyebrow { color: var(--amm-rust); font-size: .75rem; }
-.amm-overview-heading h2 { max-width: 19ch; margin-top: .8rem; font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: -.04em; text-wrap: balance; }
-.amm-overview-intro { max-width: 48ch; font-size: clamp(1.125rem, 1.45vw, 1.3rem); line-height: 1.7; color: var(--muted-foreground); }
-.amm-overview-heading .public-text-link { margin-top: .75rem; font-size: .95rem; }
-.amm-home-concepts { padding-bottom: 1rem; }
-.amm-home-overview .concept-explorer-tabs strong { font-size: 1rem; }
-.amm-home-overview .concept-explorer-hint { font-size: .85rem; }
-.amm-home-overview .concept-explorer-tabs button { min-height: 96px; padding: 1rem; }
-.amm-home-overview .concept-explorer-panel { padding: clamp(1.25rem, 2.5vw, 2.5rem); gap: clamp(1.5rem, 4vw, 4rem); }
-.amm-home-overview .concept-explorer-explanation h3 { font-size: clamp(1.65rem, 2.4vw, 2.4rem); }
-.amm-home-overview .concept-explorer-explanation p { font-size: clamp(1.0625rem, 1.4vw, 1.2rem); line-height: 1.8; }
-.amm-home-overview .concept-explorer-question > span { font-size: .75rem; }
-.amm-home-overview .concept-explorer-question p { font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.4; }
-.amm-home-reflection { max-width: 48rem; margin-inline: auto; padding-block: clamp(2.5rem, 5vw, 4rem); }
-.amm-home-reflection .amm-section-heading { display: block; margin-bottom: 0; }
-.amm-home-reflection .amm-section-heading h2 { max-width: 21ch; margin-top: .7rem; font: 500 clamp(2rem, 3vw, 3rem)/1.15 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
-.amm-home-reflection .amm-section-heading > p { max-width: 56ch; margin-top: 1.25rem; font-size: 1.125rem; line-height: 1.8; }
-.amm-home-concern { padding-block: clamp(3.5rem, 7vw, 5.5rem) 1rem; }
-.amm-home-concern .amm-concern-icon { width: 2rem; height: 2rem; color: var(--amm-rust); stroke-width: 1.25; margin-bottom: 1.25rem; }
-.amm-home-concern h3 { font: 500 clamp(1.9rem, 3vw, 2.7rem)/1.15 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
-.amm-concern-intro { max-width: 50ch; margin-block: 1rem 2rem; color: var(--muted-foreground); font-size: 1.125rem; line-height: 1.8; }
-.amm-home-concern .explainer-questions { grid-template-columns: 1fr; gap: 1.75rem; }
-.amm-home-concern .explainer-questions li { border: 0; padding: 0; grid-template-columns: 1fr; }
-.amm-home-concern .explainer-questions-number { display: none; }
-.amm-home-concern .explainer-questions h4 { font: 600 1rem/1.5 var(--font-sans); }
-.amm-home-concern .explainer-questions p { max-width: 54ch; font-size: 1.125rem; line-height: 1.8; }
-.amm-home-method { margin-top: 2.5rem; font-size: 1rem; line-height: 1.8; color: var(--muted-foreground); }
-.amm-home-method summary { display: list-item; cursor: pointer; min-height: 48px; padding-block: .8rem; color: var(--foreground); }
-.amm-home-method p { max-width: 78ch; margin-block: 1rem; }
-.amm-shell--home .amm-part-summary, .amm-shell--home .amm-edition-copy > p:not(.amm-eyebrow) { font-size: 1.125rem; }
-.amm-shell--home .amm-path-credit { font-size: .75rem; }
+/* The publication's flame marks the current thought; scrolling is its only trigger. */
+.amm-shell .amm-story-flame { width: 2.25rem; height: 2.25rem; }
+.amm-home-sections li:not([data-active]) .amm-story-flame { filter: grayscale(1); opacity: .38; }
+.amm-home-sections li[data-active] .amm-story-flame .amm-mark-heat { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-sections li[data-active] .amm-story-flame .amm-mark-fire { animation: amm-flame-answer 1s ease-out 1; }
+}
+@media (forced-colors: active) {
+  .amm-home-sections li:not([data-active]) .amm-story-flame { filter: none; opacity: 1; }
+}
+
+/* One concept per viewport: each idea owns the screen, and its words and picture grow to fill it. */
+.amm-home-overview.reading-scene { padding-block: 0; }
+.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2rem 5rem; align-items: center; min-block-size: 100svh; margin: 0; padding-block: var(--public-space-xl); border: 0; }
+.amm-overview-heading h2 { max-width: 12ch; font: 500 clamp(2.75rem, 6vw, 6rem)/1.02 var(--font-serif); letter-spacing: -.045em; text-wrap: balance; }
+.amm-overview-argument { display: grid; gap: 1.75rem; }
+.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--amm-rust); font: 500 clamp(1.9rem, 3.2vw, 3.1rem)/1.12 var(--font-serif); letter-spacing: -.03em; text-wrap: balance; }
+.amm-overview-intro { max-width: 40ch; margin: 0; font-size: clamp(1.15rem, 1.6vw, 1.45rem); line-height: 1.65; color: var(--muted-foreground); }
+
+/* Each concept leads with the line the reader was sold, at the size of a headline. */
+.amm-home-overview .explainer-story { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+.amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: 100svh; justify-content: center; gap: 1.25rem; padding-block: var(--public-space-xl); }
+.amm-home-overview .explainer-story-steps h3 { max-width: 15ch; font-size: clamp(2.5rem, 4.4vw, 4.5rem); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+.amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { max-width: 40ch; font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.65; }
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker { color: var(--amm-rust); font-size: 1rem; }
+/* AMM's own argument closes each concept: the author's sentence, larger than the explanation, with its chapter. */
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet { max-width: 32rem; margin-top: .25rem; padding-left: 1.25rem; }
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet p, .amm-overview-argument .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.38 var(--font-serif); letter-spacing: -.015em; color: var(--foreground); text-wrap: pretty; }
+.amm-home-overview .explainer-quote cite { font: 600 .8rem/1.5 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
+.amm-overview-argument .explainer-quote--quiet { max-width: 32rem; padding-left: 1.25rem; }
+
+/* Attentive scenes: the concept being read is fully present; the next waits a step back and settles in,
+   in reading order, when the reader reaches it. The reader's scroll is the only trigger. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li > :not(.explainer-visually-hidden) { transition: opacity .6s cubic-bezier(.2, .7, .2, 1), translate .6s cubic-bezier(.2, .7, .2, 1), color .3s ease; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li:not([data-active]) > :not(.explainer-visually-hidden) { opacity: .3; translate: 0 .9rem; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > h3 { transition-delay: 80ms; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > p:not(.explainer-story-kicker, .explainer-visually-hidden) { transition-delay: 170ms; }
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .explainer-story-steps > li[data-active] > .explainer-quote { transition-delay: 280ms; }
+  /* When the scene changes, the Host dissolves into the next picture rather than cutting to it. */
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-overview .amm-everyday-art { animation: amm-scene-in .8s cubic-bezier(.2, .7, .2, 1) both; }
+}
+@keyframes amm-scene-in { from { opacity: 0; scale: .985; } to { opacity: 1; scale: 1; } }
+
+/* The Host fills the other half of the screen and holds still while its concepts pass. */
+.amm-home-overview .explainer-story-figure { top: 0; height: 100svh; display: grid; align-content: center; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.amm-everyday-art .explainer-artwork-open picture { display: block; position: relative; width: 100%; aspect-ratio: 3 / 2; max-height: 78svh; }
+.amm-everyday-art .explainer-artwork-open img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
 @media (max-width: 900px) {
-  .amm-hero--inquiry .amm-hero-grid { grid-template-rows: auto; gap: 1.1rem; padding-top: 2rem; }
+  .amm-hero--inquiry .amm-hero-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 1.75rem; }
   .amm-hero--inquiry h1 { max-width: 17ch; font-size: clamp(2.8rem, 7vw, 4rem); }
   .amm-home-premise { max-width: 42ch; }
-  .amm-hero--inquiry .amm-hero-visual { width: min(100%, 38rem); justify-self: center; }
+  .amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); justify-self: center; }
   .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; }
-  .amm-overview-heading { grid-template-columns: 1fr; gap: 1rem; }
-  .amm-home-reflection .amm-section-heading { align-items: start; }
-}
-@media (max-width: 700px) {
-  .amm-home-overview .concept-explorer-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .amm-home-overview .concept-explorer-tabs button { grid-template-columns: 1fr; min-height: 102px; padding: .75rem; }
-  .amm-home-overview .concept-explorer-icon { grid-row: auto; }
-  .amm-home-overview .concept-explorer-tabs button:last-child { grid-column: 1 / -1; }
-  .amm-home-overview .concept-explorer-panel { grid-template-columns: 1fr; }
+  .amm-overview-heading { grid-template-columns: 1fr; align-content: center; gap: 1.25rem; padding-block: var(--public-space-lg); }
+  .amm-overview-heading h2 { font-size: clamp(2.3rem, 10vw, 3rem); }
+  .amm-overview-argument { gap: 1.1rem; }
+  .amm-overview-claim { font-size: clamp(1.55rem, 6.5vw, 1.9rem); }
+  .amm-overview-intro { font-size: 1.05rem; line-height: 1.6; }
+  /* The picture stays pinned at the top; the rest of the screen holds exactly one concept. */
+  .amm-home-overview .explainer-story { grid-template-columns: 1fr; }
+  .amm-home-overview .explainer-story-figure { height: auto; padding-block: .5rem 0; background: var(--background); border-bottom: 1px solid var(--border); }
+  .amm-everyday-art .explainer-artwork-open picture { max-height: 30svh; }
+  /* The picture itself opens the viewer; its caption would cost the concept a line. */
+  .amm-everyday-art .explainer-artwork-hint { display: none; }
+  .amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: calc(70svh - .5rem - 1px); padding-block: 1.25rem; gap: 1rem; }
+  .amm-home-overview .explainer-story-steps h3 { font-size: clamp(2rem, 8.5vw, 2.6rem); }
+  .amm-home-overview .explainer-story-steps .explainer-quote--quiet p, .amm-overview-argument .explainer-quote--quiet p { font-size: 1.15rem; }
+  .amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { font-size: 1.05rem; line-height: 1.6; }
 }
 @media (max-width: 600px) {
-  .amm-hero--inquiry .amm-hero-copy > .amm-eyebrow { margin-bottom: .8rem; }
   .amm-hero--inquiry h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
   .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; }
-  .amm-home-overview { margin-top: 2rem; }
-  .amm-home-reflection .explainer-questions { gap: 1.5rem; }
 }

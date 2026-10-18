@@ -53,7 +53,7 @@ describe("BlogPage", () => {
     expect(screen.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/about#about-products");
     const series = within(screen.getByRole("region", { name: "The American Millennial Manifesto" }));
     expect(series.getByRole("link", { name: "Explore AMM" })).toHaveAttribute("href", "/amm");
-    expect(series.getByRole("img", { name: /cow patterned with the American flag/ })).toHaveAttribute("src", "/amm/media/host2-1280.webp");
+    expect(series.getByRole("img", { name: /flag-patterned Host carries a two-headed Leech/ })).toHaveAttribute("src", "/amm/media/host2-1280.webp");
     fireEvent.click(series.getByText("Read a letter"));
     expect(series.getByRole("link", { name: "AI will not kill you. The one saying that it will, will" })).toHaveAttribute("href", expect.stringMatching(/^https:\/\/www.linkedin.com\/pulse\//));
     expect(screen.getByRole("link", { name: "Discuss a project" })).toHaveAttribute("href", "/contact?purpose=project");

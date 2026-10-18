@@ -1,9 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import MEDIA from "../../content/amm-media.json";
 import { AmmFeature } from "./AmmFeature";
 
-it("uses the supplied Host artwork responsively, with an inspection control and no video", () => {
+vi.mock("../../organism/OrganismContext", () => ({ useOrganism: () => ({ config: { enabled: true, stillness: false }, reducedMotion: true }) }));
+
+it("keeps the supplied Host artwork inspectable and requests no video in reduced motion", () => {
   const { container } = render(<AmmFeature />);
   expect(screen.getByRole("img")).toHaveAttribute("src", MEDIA.illustration.fallback);
   expect(container.querySelector("source")).toHaveAttribute("srcset", MEDIA.illustration.sources[0].srcset);

@@ -79,13 +79,15 @@ describe("public route metadata", () => {
     }
   });
   it("materializes only published AMM copy and keeps its editor out of search", async () => {
-    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.heroaction": "Published reading invitation", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.home.reflections.honesty.text": "An edited question about honesty." } });
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.home.premise": "Published opening paragraph.", "amm.heroaction": "Published reading invitation", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.chaptersection.chapters.amm-chapter-two-the-leechs-anatomy.line": "An edited line for Chapter Two." } });
     const amm = revised.find(route => route.route === "/amm")!;
     expect(amm.prerender).toContain("Published opening");
-    expect(amm.prerender).toContain(`href="${AMM.introduction.route}">Published reading invitation`);
-    // Published concepts and reflection questions share the owner editor's stable keys.
+    expect(amm.prerender).toContain('<p>Published opening paragraph.</p>');
+    expect(amm.prerender).not.toContain(AMM.home.premise);
+    expect(amm.prerender).toContain(`href="#amm-overview">Published reading invitation`);
+    // Published concepts and chapter lines share the owner editor's stable keys.
     expect(amm.prerender).toContain("A published definition of fear.");
-    expect(amm.prerender).toContain("An edited question about honesty.");
+    expect(amm.prerender).toContain("An edited line for Chapter Two.");
     // One reading action; the hidden power guide stays separate.
     expect(amm.prerender).not.toContain(AMM.reading.prereqTitle);
     expect(amm.prerender).not.toContain(AMM.reading.pathEyebrow);
@@ -126,29 +128,64 @@ describe("public route metadata", () => {
     expect(publicPage.title).toBe(AMM.title);
     expect(publicPage.prerender).toContain(AMM.headline.join(" "));
     expect(publicPage.prerender).toContain(`<h2 id="amm-overview-title">${AMM.home.overviewTitle}</h2>`);
-    expect(publicPage.prerender).toContain('href="#amm-start"');
-    for (const reason of AMM.home.reasons) expect(publicPage.prerender).toContain(reason.text);
+    expect(publicPage.prerender).not.toContain('<nav aria-label="On this page">');
+    // The reflection questions were removed; nothing on the home is hidden behind a disclosure.
+    expect(publicPage.prerender).not.toContain('id="amm-concerns"');
+    expect(publicPage.prerender).not.toContain("<details>");
     for (const concept of AMM.home.concepts) {
       expect(publicPage.prerender).toContain(concept.text);
-      expect(publicPage.prerender).toContain(concept.question);
+      expect(publicPage.prerender).toContain(concept.script);
+      // Each scene closes on AMM's own argument with its chapter, not on a question.
+      expect(publicPage.prerender).toContain(concept.argument);
+      expect(publicPage.prerender).toContain(concept.source);
+
     }
-    expect(publicPage.prerender).toContain(AMM.home.limits);
-    expect(publicPage.prerender).toContain("/amm/editions");
+    expect(publicPage.prerender).not.toContain("Conditioning, character, and responsibility");
+    expect(publicPage.prerender).not.toContain("The cost of refusal");
+    expect(publicPage.prerender).toContain(AMM.home.sceneAlt);
+    // Each picture appears once: the mirror in the hero, two scenes, then each chapter's own artwork.
+    for (const scene of ['host-at-home-v1', 'erosion']) {
+      expect(publicPage.prerender.split(`/amm/media/${scene}-1024.webp`)).toHaveLength(2);
+    }
+    expect(publicPage.prerender).not.toContain('/amm/media/host-reflection-1024.webp');
+    expect(publicPage.prerender).toContain(AMM.artwork.caption);
+    expect(publicPage.prerender).toContain(AMM.artwork.alt);
     expect(publicPage.prerender).toContain('src="/amm/mark.svg"');
     expect(publicPage.prerender).not.toContain('aria-label="Site"');
     expect(publicPage.prerender).not.toContain(AMM.analysis.title);
     expect(publicPage.prerender).not.toContain(AMM.principle.quote);
     expect(publicPage.prerender).not.toContain(AMM.archiveTitle);
-    expect(publicPage.prerender).not.toContain(AMM.movement.title);
     expect(publicPage.prerender).not.toContain('id="amm-subscribe"');
     expect(publicPage.prerender).toContain('<footer>');
-    // The front page names the manuscript in reading order, then the latest letter; no asks.
-    const parts = ["amm-chapter-one-the-leech", "amm-chapter-two-the-leechs-anatomy", "amm-chapter-three-the-host-and-the-infection"].map(slug => publicPage.prerender.indexOf(`href="/essays/${slug}"`, publicPage.prerender.indexOf('id="amm-start"')));
-    expect(parts.every(index => index > 0)).toBe(true);
-    expect([...parts].sort((a, b) => a - b)).toEqual(parts);
-    expect(publicPage.prerender).toContain("The latest letter");
+    // The home presents the argument, then the manifesto itself as a book, in the author's order.
+    expect(publicPage.prerender).toContain(AMM.home.overviewClaim);
+    expect(publicPage.prerender).toContain(AMM.home.overviewIntro);
+    expect(publicPage.prerender.indexOf('id="amm-overview"')).toBeLessThan(publicPage.prerender.indexOf('id="amm-start"'));
+    const book = publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-start"'));
+    for (const chapter of AMM.chapterSection.chapters) {
+      expect(book).toContain(chapter.line);
+      expect(book).toContain(`href="/essays/${chapter.id}"`);
+    }
+    expect(book.indexOf("Chapter One: The Leech")).toBeLessThan(book.indexOf("Chapter Two: The Leech’s Anatomy"));
+    expect(book.indexOf("Chapter Two: The Leech’s Anatomy")).toBeLessThan(book.indexOf("Chapter Three: The Host and the Infection"));
+    expect(book).toContain(`>${AMM.introduction.label}</a>`);
+    expect(book).toContain("min read");
+    expect(publicPage.prerender).not.toContain('class="amm-latest"');
+    // AMM reads as an application of DOT and a sponsor of 4Us: the theory before the book, the movement after it.
+    const order = ['id="amm-overview"', 'id="amm-dot"', 'id="amm-start"', 'id="amm-sponsor"'].map(id => publicPage.prerender.indexOf(id));
+    expect(order.every(index => index > 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    for (const item of AMM.dot.links) expect(publicPage.prerender).toContain(`href="/doctrine/${item.id}"`);
+    expect(publicPage.prerender).toContain(AMM.movement.sponsor);
+    expect(publicPage.prerender).toContain(`href="${AMM.movement.href}"`);
+    expect(publicPage.prerender).not.toContain('href="/essays/amm-chapter-four');
     expect(publicPage.prerender).not.toContain(AMM.reading.supportAction);
     const editions = routes.find(route => route.route === "/amm/editions")!;
+    // Every AMM page leads back to DOT and names the movement it sponsors.
+    for (const page of [publicPage, editions]) {
+      expect(page.prerender).toContain(AMM.dot.footer);
+      expect(page.prerender).toContain(AMM.movement.footer);
+    }
     expect(editions.prerender).toContain(`<h1>${AMM.archiveTitle}</h1>`);
     expect(editions.prerender).toContain('id="amm-chapters"');
     expect(editions.prerender).toContain('id="amm-letters"');
@@ -488,7 +525,7 @@ describe("page text for readers without JavaScript", () => {
 
   it("gives the home page the author, the book, and a way into every chapter", () => {
     const html = rootDocument(shell, manifest);
-    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Challenge any model that leaves your experience out.</p>');
+    expect(html).toContain('<p>Digital Organism Theory</p><h1>Trust your experience.</h1><p>Understand what shapes you. Choose how you live.</p>');
     for (const section of manifest.sections) {
       expect(html).toContain(`href="/book/digital-organism-theory/${section.slug}"`);
     }

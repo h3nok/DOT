@@ -9,6 +9,7 @@ export interface ExplainerConcept {
   text: string;
   question: string;
   icon?: ReactNode;
+  visual?: ReactNode;
 }
 
 /** A finite set of concepts. Selection is explicit; focus never leaves the reader. */
@@ -46,7 +47,8 @@ export function ConceptExplorer({ label, questionLabel, items }: {
       {items.map((item, index) => <div role="tabpanel" key={item.id}
         id={`${id}-panel-${item.id}`} aria-labelledby={`${id}-tab-${item.id}`}
         aria-hidden={selected !== index} inert={selected !== index}
-        tabIndex={selected === index ? 0 : -1} className="concept-explorer-panel">
+        tabIndex={selected === index ? 0 : -1} className="concept-explorer-panel" data-illustrated={Boolean(item.visual)}>
+        {item.visual && <div className="concept-explorer-visual">{item.visual}</div>}
         <div className="concept-explorer-explanation"><h3>{item.title}</h3><p>{item.text}</p></div>
         <div className="concept-explorer-question"><span>{questionLabel}</span><p>{item.question}</p></div>
       </div>)}

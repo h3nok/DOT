@@ -1,6 +1,6 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { BarList, CardGrid, CycleDiagram, FlowMap, Handoff, Ledger, ScrollStory, ShareGrid } from ".";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { BarList, CardGrid, CycleDiagram, FlowMap, Handoff, Ledger, ScrollStory, ShareGrid, StoryRail } from ".";
 
 const tiers = [{ id: "top", label: "Top", tone: "strong" as const }, { id: "bottom", label: "Bottom" }];
 const links = [{ id: "between", after: "top", items: [{ direction: "down" as const, label: "Rules" }, { direction: "up" as const, label: "Fees" }] }];
@@ -36,6 +36,28 @@ describe("explainer primitives", () => {
     expect(items[1]).not.toHaveAttribute("aria-current");
     expect(screen.getByRole("figure", { name: "The map" })).toHaveTextContent("Drawn for First");
     expect(within(items[0]).getByText("A line.").closest("blockquote")).toHaveTextContent("Chapter");
+  });
+
+  it("marks each step as read, being read or ahead, and hands the figure its progress", () => {
+    const steps = ["a", "b", "c"].map(id => ({ id, title: id.toUpperCase(), text: `${id} text` }));
+    const seen: number[] = [];
+    render(<ScrollStory steps={steps} label="The story" figure={(step, index, position) => { seen.push(position.progress); return <p>{step.title} at {index}</p>; }} />);
+    const items = within(screen.getAllByRole("list")[0]).getAllByRole("listitem");
+    expect(items.map(item => item.getAttribute("data-reading"))).toEqual(["current", "next", "next"]);
+    expect(seen.every(value => value >= 0 && value <= 1)).toBe(true);
+    // Steps take focus when a menu jumps to them, without joining the tab order.
+    expect(items[0]).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("lists a story's steps as a menu: done, current with its progress, ahead, and each one choosable", () => {
+    const onSelect = vi.fn();
+    const { container } = render(<StoryRail label="Go to a concept" items={[{ id: "a", label: "One" }, { id: "b", label: "Two" }, { id: "c", label: "Three" }]} active={1} progress={.4} onSelect={onSelect} />);
+    const nav = screen.getByRole("navigation", { name: "Go to a concept" });
+    expect([...nav.querySelectorAll("li")].map(item => item.getAttribute("data-state"))).toEqual(["past", "current", "next"]);
+    expect(within(nav).getByRole("button", { name: /Two/ })).toHaveAttribute("aria-current", "step");
+    expect([...container.querySelectorAll("i")].map(bar => (bar as HTMLElement).style.getPropertyValue("--story-rail-fill"))).toEqual(["1", "0.4", "0"]);
+    fireEvent.click(within(nav).getByRole("button", { name: /Three/ }));
+    expect(onSelect).toHaveBeenCalledWith(2);
   });
 
   it("names a cycle's order for assistive technology and keeps every word in the list beside it", () => {

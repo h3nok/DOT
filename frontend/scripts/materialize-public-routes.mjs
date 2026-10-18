@@ -632,19 +632,38 @@ function prerenderArticle(body, essaysPublished) {
 }
 
 function prerenderAmm(body, { footer = true } = {}) {
-  const closing = footer ? `<footer><p>An independent publication by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
-  return `<article data-prerender><header><a href="/amm"><img src="/amm/mark.svg" width="48" height="48" alt="" /> ${escapeHtml(AMM.title)}</a></header>${body}${closing}</article>`;
+  const closing = footer ? `<footer><p>An independent publication by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
+  return `<article data-prerender><header><a href="/amm"><img src="/amm/mark.svg" width="48" height="48" alt="" /> ${escapeHtml(AMM.title)}</a> ${link(AMM.dot.route, "Digital Organism Theory")}</header>${body}${closing}</article>`;
 }
 
 const AMM_PARTS = AMM_LIBRARY.filter(item => typeof item.part === "number").sort((a, b) => a.part - b.part);
 const ammPartLink = (part) => link(`${ESSAYS_ROUTE}/${part.slug}`, `${part.partLabel} · ${part.partTitle}`);
 
-/** The manuscript in the author's reading order (front page and archive): each part's title and one line. */
-function ammPathHtml(content, id) {
-  return `<section id="${id}"><h2>${escapeHtml(content.chapterSection.title)}</h2><ol>${AMM_PARTS.map(part => {
-    const summary = content.money.companions.find(note => note.id === part.slug)?.summary;
-    return `<li><h3>${link(`${ESSAYS_ROUTE}/${part.slug}`, part.partTitle)}</h3>${summary ? `<p>${escapeHtml(summary)}</p>` : ""}</li>`;
+/** Where AMM comes from: three ideas in DOT's own words, each beside where it applies, and the way back to DOT. */
+function ammDotHtml({ dot }) {
+  return `<section id="amm-dot" aria-labelledby="amm-dot-title"><h2 id="amm-dot-title">${escapeHtml(dot.title)}</h2><p>${escapeHtml(dot.intro)}</p><p>${link(dot.route, dot.action)}</p><ol aria-label="From Digital Organism Theory to AMM and 4Us">${dot.links.map(item => `<li><h3>${link(`/doctrine/${item.id}`, item.title)}</h3><blockquote><p>${escapeHtml(item.quote)}</p></blockquote><p>${escapeHtml(item.applies)}</p></li>`).join("")}</ol></section>`;
+}
+
+/** The movement AMM sponsors. */
+function ammSponsorHtml({ movement }) {
+  return `<section id="amm-sponsor" aria-labelledby="amm-sponsor-title"><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy" /><p>${escapeHtml(movement.sponsor)}</p><p>${escapeHtml(movement.name)}</p><h2 id="amm-sponsor-title">${escapeHtml(movement.title)}</h2><p>${escapeHtml(movement.description)}</p><p>${escapeHtml(movement.stage)}</p><p>${link(movement.href, movement.action)}</p></section>`;
+}
+
+/** The manifesto as a book (front page and archive): each chapter's full title, its own line, reading time and one way in. */
+function ammPathHtml(content, id, essays = []) {
+  return `<section id="${id}"><h2>${escapeHtml(content.chapterSection.title)}</h2><p>${escapeHtml(content.chapterSection.description)}</p><ol aria-label="The manifesto, in reading order">${AMM_PARTS.map((part, index) => {
+    const line = content.chapterSection.chapters.find(chapter => chapter.id === part.slug)?.line;
+    const minutes = essays.find(essay => essay.slug === part.slug)?.readingMinutes;
+    return `<li><h3>${escapeHtml(part.partLabel)}: ${escapeHtml(part.partTitle)}</h3>${line ? `<p>${escapeHtml(line)}</p>` : ""}<p>${link(`${ESSAYS_ROUTE}/${part.slug}`, index === 0 ? content.introduction.label : part.partAction)}${minutes ? ` · ${minutes} min read` : ""}</p></li>`;
   }).join("")}</ol><p>${escapeHtml(content.artwork.caption)}</p></section>`;
+}
+
+/** The complete guided home remains readable without JavaScript. */
+function ammHomeSceneHtml(group, id, home) {
+  const scene = AMM_MEDIA.homeScenes[group][id];
+  const art = AMM_MEDIA[scene];
+  const alt = scene === "everyday" ? home.sceneAlt : art.alt;
+  return `<img src="${escapeHtml(art.fallback)}" alt="${escapeHtml(alt)}" width="${art.width}" height="${art.height}" loading="lazy" />`;
 }
 
 function ammReadingBarHtml(content, slug) {
@@ -1155,16 +1174,14 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
     structuredData: graph({ ...webPageNode({ route: AMM.route, title: AMM.title, description: AMM.description }), "@type": "Blog", author: { "@id": PERSON_ID } }, breadcrumb([home, { name: AMM.title, route: AMM.route }])),
     prerender: prerenderAmm([
-      `<p>${escapeHtml(AMM.home.eyebrow)}</p>`,
       `<h1>${AMM.headline.map(escapeHtml).join(" ")}</h1>`,
       `<p>${escapeHtml(AMM.home.premise)}</p>`,
       `<figure><a href="${escapeHtml(AMM.artwork.src)}" aria-label="Open full-size illustration"><img src="${escapeHtml(AMM.artwork.src)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a></figure>`,
-      `<p>${link(AMM.introduction.route, AMM.heroAction)}</p>`,
-      `<section id="amm-overview" aria-labelledby="amm-overview-title"><p>${escapeHtml(AMM.home.overviewEyebrow)}</p><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewIntro)}</p><p>${link("#amm-start", AMM.home.overviewAction)}</p>`,
-      `<section aria-label="${escapeHtml(AMM.home.conceptsLabel)}"><p>${escapeHtml(AMM.home.conceptsLabel)}</p>${AMM.home.concepts.map(item => `<section><h3>${escapeHtml(item.label)}</h3><p>${escapeHtml(item.hint)}</p><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.text)}</p><p>${escapeHtml(AMM.home.questionLabel)}: ${escapeHtml(item.question)}</p></section>`).join("")}</section>`,
-      `</section><section><p>${escapeHtml(AMM.home.reflectionEyebrow)}</p><h2>${escapeHtml(AMM.home.reflectionTitle)}</h2><p>${escapeHtml(AMM.home.reflectionIntro)}</p>${AMM.home.reasons.map(reason => `<section><h3>${escapeHtml(reason.title)}</h3><p>${escapeHtml(reason.text)}</p><ol>${reason.reflections.flatMap(id => AMM.home.reflections.filter(item => item.id === id)).map(item => `<li><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.text)}</p></li>`).join("")}</ol></section>`).join("")}<details><summary>${escapeHtml(AMM.home.limitsTitle)}</summary><p>${escapeHtml(AMM.home.limits)}</p><p>${escapeHtml(AMM.home.method)}</p></details></section>`,
-      ammPathHtml(AMM, "amm-start"),
-      ammLetters.length ? `<section><h2>The latest letter</h2><p>${link(ammLetters[0].href, ammLetters[0].title)}</p><p>${escapeHtml(ammLetters[0].summary)}</p></section>` : "",
+      `<p>${link("#amm-overview", AMM.heroAction)}</p>`,
+      `<section id="amm-overview" aria-labelledby="amm-overview-title"><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewClaim)}</p><p>${escapeHtml(AMM.home.overviewIntro)}</p><blockquote><p>${escapeHtml(AMM.home.overviewArgument)}</p><cite>${escapeHtml(AMM.home.overviewSource)}</cite></blockquote><ol aria-label="${escapeHtml(AMM.home.conceptsLabel)}">${AMM.home.concepts.map((item, index) => `<li>${index === 0 || AMM_MEDIA.homeScenes.concepts[item.id] !== AMM_MEDIA.homeScenes.concepts[AMM.home.concepts[index - 1].id] ? ammHomeSceneHtml("concepts", item.id, AMM.home) : ""}<p>${escapeHtml(item.label)}</p><h3>“${escapeHtml(item.script)}”</h3><p>${escapeHtml(item.text)}</p><blockquote><p>${escapeHtml(item.argument)}</p><cite>${escapeHtml(item.source)}</cite></blockquote></li>`).join("")}</ol></section>`,
+      ammDotHtml(AMM),
+      ammPathHtml(AMM, "amm-start", essays),
+      ammSponsorHtml(AMM),
     ].join("")),
   };
   const ammCapitalRoute = {
@@ -1188,7 +1205,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     structuredData: graph(webPageNode({ route: "/amm/editions", title: AMM.archiveTitle, description: AMM.description }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: "Editions", route: "/amm/editions" }])),
     prerender: prerenderAmm([
       `<section id="amm-editions"><h1>${escapeHtml(AMM.archiveTitle)}</h1><p>${escapeHtml(AMM.archiveDescription)}</p></section>`,
-      ammPathHtml(AMM, "amm-chapters"),
+      ammPathHtml(AMM, "amm-chapters", essays),
       `<section id="amm-letters"><p>${escapeHtml(AMM.reading.lettersEyebrow)}</p><h2>${escapeHtml(AMM.reading.lettersTitle)}</h2><p>${escapeHtml(AMM.reading.lettersDescription)}</p>${ammLetters.length ? `<ol>${ammLetters.map(post => `<li>${link(post.href, post.title)} <time datetime="${post.date}">${post.date}</time><p>${escapeHtml(post.summary)}</p></li>`).join("")}</ol>` : `<h3>${escapeHtml(AMM.emptyTitle)}</h3><p>${escapeHtml(AMM.emptyDescription)}</p>`}</section>`,
       `<section id="amm-subscribe"><h2>${escapeHtml(AMM.signupTitle)}</h2><p>${escapeHtml(AMM.signupDescription)}</p><p>Email signup requires JavaScript. ${link(AMM.feed, "Follow AMM with RSS")} without an account.</p></section>`,
     ].join("")),

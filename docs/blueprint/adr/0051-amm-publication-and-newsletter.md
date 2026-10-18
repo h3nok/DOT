@@ -4,6 +4,7 @@
 - **Date:** 2026-10-15
 - **Deciders:** Founder, requesting AMM's own landing page, identity and complete newsletter
 - **Extends:** ADR-0025, ADR-0040, ADR-0050 and the newsletter portion of proposed ADR-0039
+- **Later amendment:** ADR-0052 replaces the pictures-only hero with the founder-requested transparent Host loop; other media remains still.
 
 ## Context
 
@@ -210,3 +211,59 @@ both system reduced motion and the reader's saved stillness preference. These
 controls preserve deliberate navigation and finite reading (L1, L2 and L3).
 This serves L1 (explicit actions), L7 (private drafts and recoverable failures),
 L9 (no remote embeds) and L12 (complete the publishing task), violating none.
+
+## Amendment — 2026-10-17: A flame through the reading
+
+The founder requested the AMM flame in place of the scrolling sections' plain
+vertical rule, and more imagery. The shared ScrollStory accepts an optional
+decorative marker beside each step label; its default rule remains available to
+other explainers. AMM composes that slot with its existing vector mark. The
+current step burns in color, with a single brief response when the reader reaches
+it. Other steps recede. System reduced motion, saved stillness and environment-off
+disable that response. Native scrolling, reading order and `aria-current` remain
+the source of position; no additional menu or automatic advancement is introduced.
+
+The pinned scene follows the concept: the Host's reflection, pressure at home,
+the anatomy of power, and erosion. Each concern also carries the corresponding
+scene. These are existing authored visual metaphors; the original `host.png` is
+served as responsive WebP derivatives. A shared media map drives the live page
+and static rendering. Only one scene is visible at a time, its dimensions stay
+stable, and the overview's full-size inspection remains available.
+
+Serves L1 (predictable response), L2 (finite reading), L9 (local images), and L10
+(one concept and scene at a time). No manifesto law is violated.
+
+The home now presents the central argument, its concepts and the reader's
+questions only. A single closing `Read the manifesto.` action opens the existing
+manuscript at `/amm/editions#amm-chapters`; chapter previews and the latest-letter
+card live on that publication page. The central claim is a plain-text field in
+the existing owner editor and is included in static HTML. The flame-guided
+reading, native scrolling and existing bookmarks are preserved. This serves
+L2 (a clear ending), L3 (deliberate reading) and L10 (one focus), violating none.
+
+## Release refinement — social conditions and personal responsibility
+
+The home now opens with “See the system. Take charge of your life.” Its
+introduction joins AMM's critique of extractive arrangements to the reader's
+responsibility for their conduct and choices. Six finite concepts pair a
+cultural message with an exact, attributed sentence from the existing chapters.
+The illustration stays pinned while the reader scrolls; on phones it is bounded
+to leave room for the text. Reading remains native and has no automatic advance.
+
+The page explains its relationship to Digital Organism Theory, presents the
+three published chapters with reading times, and names its sponsorship of 4Us.
+The masthead and footer provide explicit paths back to DOT. The archive and
+subscription retain their own address and existing bookmarks. No manuscript
+prose is rewritten, and no fourth chapter or delivery schedule is invented.
+
+Opening copy, chapter introductions, quotations, and lineage text share the
+existing owner-editor registry and static rendering. The opening paragraph is
+named in the editor's initially open section without changing its saved key.
+The reading action appears immediately. Optional entry effects reveal keyboard
+destinations on focus and honor system reduced motion and saved stillness.
+
+This serves L1 (predictable presentation), L2/L3 (finite, reader-directed
+reading), L7 (recoverable editing and visible keyboard destinations), and L10/L12
+(a clear reading action and responsibility for chosen conduct). The public hero
+retains only the motion exception already recorded in ADR-0052. No other law is
+violated.

@@ -62,11 +62,19 @@
 .explainer-story-steps > li:first-child { justify-content: flex-start; min-height: 52vh; }
 .explainer-story-steps > li:last-child { min-height: 52vh; }
 .explainer-story-steps > li[data-active] { border-left: 2px solid var(--ex-accent); padding-left: calc(1.4rem - 1px); }
+/* The step being read is in full ink; the others recede to the muted colour, which still meets AA contrast. */
+.explainer-story-steps > li:not([data-active]) :is(h3, .explainer-story-note) { color: var(--ex-muted); }
+.explainer-story-steps > li:focus { outline: none; }
+.explainer-story-steps li > p.explainer-story-kicker { margin-bottom: -.35rem; font: 600 .9rem/1.4 var(--font-sans, system-ui, sans-serif); color: var(--ex-muted); }
 .explainer-story-count { font: .62rem/1.6 var(--ex-mono); letter-spacing: .1em; color: var(--ex-muted); }
 .explainer-story-steps > li[data-active] .explainer-story-count { color: var(--ex-accent); }
 .explainer-story-steps h3 { font: 500 clamp(1.6rem, 2.8vw, 2.25rem)/1.12 var(--ex-serif); letter-spacing: -.035em; color: var(--ex-ink); }
 .explainer-story-steps li > p:not(.explainer-story-count) { font-size: .98rem; line-height: 1.75; color: var(--ex-muted); max-width: 44ch; }
 .explainer-story-steps .explainer-quote--quiet p { font-size: 1rem; }
+.explainer-story-steps li > p.explainer-story-note { margin-top: .25rem; padding-top: 1rem; border-top: 1px solid var(--ex-line); font: 400 clamp(1.15rem, 1.7vw, 1.4rem)/1.45 var(--ex-serif); color: var(--ex-ink); max-width: 36ch; }
+.explainer-story--marked .explainer-story-steps > li { border-inline-start: 0; padding-inline-start: 0; }
+.explainer-story--marked .explainer-story-kicker { display: flex; align-items: center; gap: .8rem; }
+.explainer-story-marker { display: inline-flex; flex-shrink: 0; }
 
 /* Flow map */
 .explainer-flowmap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
@@ -219,6 +227,7 @@
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) :is(.explainer-tier, .explainer-link, .explainer-rail) { transition: opacity .5s ease, box-shadow .5s ease, background-color .5s ease; }
   html:not([data-motion="still"]) .explainer-story-steps > li { transition: border-color .3s ease; }
+  html:not([data-motion="still"]) .explainer-story-steps > li :is(h3, .explainer-story-note) { transition: color .3s ease; }
   html:not([data-motion="still"]) .explainer-disclosure > summary::before { transition: transform .16s ease; }
 }
 
@@ -233,7 +242,8 @@
   .explainer-contents ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   /* The map rides at the top, reduced to its labels, while the steps scroll beneath it. */
   .explainer-story { grid-template-columns: 1fr; gap: 0; }
-  .explainer-story-figure { top: 0; z-index: 2; padding-block: .75rem; background: var(--ex-paper); border-bottom: 1px solid var(--ex-line); }
+  .explainer-story-figure::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 1.5rem; background: linear-gradient(var(--ex-paper), transparent); pointer-events: none; }
+  .explainer-story-figure { top: var(--explainer-sticky-top, 0); z-index: 2; padding-block: .75rem; background: var(--ex-paper); border-bottom: 1px solid var(--ex-line); }
   .explainer-story-figure .explainer-tier { padding: .4rem .7rem; }
   .explainer-story-figure :is(.explainer-tier-detail, .explainer-tier ul, .explainer-link) { display: none; }
   .explainer-story-figure .explainer-tier-label { font-size: .9rem; }

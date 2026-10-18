@@ -1,3 +1,12 @@
 /* Preserve the supplied alpha channel: no mat, panel, crop, or overlay. */
-.amm-feature { margin: 0; }
+.amm-feature { margin: 0; position: relative; }
 .amm-feature .explainer-artwork-hint { justify-content: end; }
+.amm-feature--motion .explainer-artwork-open picture { position: relative; aspect-ratio: 16 / 9; display: block; }
+.amm-feature--motion .explainer-artwork-open img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.amm-hero-motion { position: absolute; inset: 0 0 auto; width: 100%; height: auto; aspect-ratio: 16 / 9; pointer-events: none; opacity: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.amm-feature[data-motion-ready] .amm-hero-motion { opacity: 1; }
+.amm-feature[data-motion-ready] .explainer-artwork-open picture { opacity: 0; }
+.dot-button.amm-media-toggle { position: absolute; bottom: 0; left: 0; z-index: 1; min-width: 6rem; min-height: 44px; padding: .5rem; border: 0; background: transparent; box-shadow: none; color: var(--muted-foreground); }
+.dot-button.amm-media-toggle:hover { color: var(--amm-rust); background: transparent; box-shadow: none; }
+.dot-button.amm-media-toggle .dot-button__copy strong { font-size: .8rem; }
+.dot-button.amm-media-toggle .dot-button__icon { background: transparent; }

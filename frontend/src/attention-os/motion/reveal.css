@@ -1,0 +1,18 @@
+/* Attention OS · Reveal: content settles into view once, as the reader reaches it. Short, small,
+   and absent for anyone who prefers stillness. Only elements armed by useReveal are ever hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal] {
+    transition: opacity .75s cubic-bezier(.2, .7, .2, 1), translate .75s cubic-bezier(.2, .7, .2, 1);
+    transition-delay: calc(var(--reveal-order, 0) * 110ms);
+  }
+  /* Holding back is instant; only the arrival is animated. */
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-pending] { opacity: 0; translate: 0 1.25rem; transition: none; }
+}
+[data-reveal="1"] { --reveal-order: 1; }
+[data-reveal="2"] { --reveal-order: 2; }
+[data-reveal="3"] { --reveal-order: 3; }
+[data-reveal="4"] { --reveal-order: 4; }
+[data-reveal="5"] { --reveal-order: 5; }
+[data-reveal="6"] { --reveal-order: 6; }
+[data-reveal]:focus-within { opacity: 1; translate: none; transition: none !important; }
+@media print { [data-reveal-pending] { opacity: 1 !important; translate: none !important; } }

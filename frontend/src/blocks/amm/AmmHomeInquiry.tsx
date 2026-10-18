@@ -1,63 +1,37 @@
-import { Repeat2, Shield, ShieldAlert, Scale, RefreshCcw, BadgeDollarSign, EyeOff } from "lucide-react";
-import { ConceptExplorer } from "../../attention-os/explainer/ConceptExplorer";
-import { Questions } from "../../attention-os/explainer/Questions";
+import { Artwork } from "../../attention-os/explainer/Artwork";
+import type { ExplainerImage } from "../../attention-os/explainer/Artwork";
+import { PullQuote } from "../../attention-os/explainer/PullQuote";
+import { ScrollStory } from "../../attention-os/explainer/ScrollStory";
 import { useAmmContent } from "../../content/editable/useAmmContent";
-import { TextLink } from "../../shared/design-system/Editorial";
+import MEDIA from "../../content/amm-media.json";
+import { AmmMark } from "./AmmMark";
 import "./amm-home.css";
 
-const conceptIcons = {
-  conditioning: Repeat2,
-  fear: ShieldAlert,
-  protection: Shield,
-  erosion: Scale,
-  accountability: RefreshCcw,
-};
-const reasonIcons = { worth: BadgeDollarSign, harm: EyeOff, power: Scale };
+const sequence: Record<string, string> = MEDIA.homeScenes.concepts;
 
-/** The pre-read gives the inquiry a named beginning and a deliberate exit into the manuscript. */
+function sceneArt(home: { sceneAlt: string }, id: string): ExplainerImage {
+  const scenes: Record<string, ExplainerImage> = { everyday: { ...MEDIA.everyday, alt: home.sceneAlt }, anatomy: MEDIA.anatomy, erosion: MEDIA.erosion };
+  return scenes[sequence[id]] ?? scenes.everyday;
+}
+
+/**
+ * One concept per screen. Each scene leads with a line the reader has heard all their life,
+ * says what it does to them, and closes on AMM's own argument, quoted from the chapter it comes from.
+ * The picture holds for the scenes it belongs to.
+ */
 export function AmmHomeOverview() {
   const { home } = useAmmContent();
-  return <section id="amm-overview" className="amm-home-overview" aria-labelledby="amm-overview-title">
+  return <section id="amm-overview" tabIndex={-1} className="reading-scene amm-home-overview" aria-labelledby="amm-overview-title">
     <header className="amm-overview-heading">
-      <div><p className="amm-eyebrow">{home.overviewEyebrow}</p><h2 id="amm-overview-title">{home.overviewTitle}</h2></div>
-      <div><p className="amm-overview-intro">{home.overviewIntro}</p><TextLink href="#amm-start">{home.overviewAction}</TextLink></div>
+      <h2 id="amm-overview-title" data-reveal>{home.overviewTitle}</h2>
+      <div className="amm-overview-argument">
+        <p className="amm-overview-claim" data-reveal="1">{home.overviewClaim}</p>
+        <p className="amm-overview-intro" data-reveal="2">{home.overviewIntro}</p>
+        <div data-reveal="3"><PullQuote source={home.overviewSource}>{home.overviewArgument}</PullQuote></div>
+      </div>
     </header>
-    <AmmHomeConcepts />
-  </section>;
-}
-
-export function AmmHomeConcepts() {
-  const { home } = useAmmContent();
-  return <section className="amm-home-concepts" aria-label={home.conceptsLabel}>
-    <ConceptExplorer label={home.conceptsLabel} questionLabel={home.questionLabel} items={home.concepts.map(item => {
-      const Icon = conceptIcons[item.id as keyof typeof conceptIcons];
-      return { ...item, icon: Icon ? <Icon /> : undefined };
-    })} />
-  </section>;
-}
-
-export function AmmHomeReflection() {
-  const { home } = useAmmContent();
-  return <section className="amm-home-reflection" aria-labelledby="amm-reflection-title">
-    <header className="amm-section-heading">
-      <div><p className="amm-eyebrow">{home.reflectionEyebrow}</p><h2 id="amm-reflection-title">{home.reflectionTitle}</h2></div>
-      <p>{home.reflectionIntro}</p>
-    </header>
-    <div className="amm-home-concerns">
-      {home.reasons.map(reason => {
-        const Icon = reasonIcons[reason.id as keyof typeof reasonIcons];
-        const questions = reason.reflections.flatMap(id => home.reflections.filter(item => item.id === id));
-        return <section className="amm-home-concern" key={reason.id} aria-labelledby={`amm-concern-${reason.id}`}>
-          <Icon className="amm-concern-icon" aria-hidden="true" />
-          <h3 id={`amm-concern-${reason.id}`}>{reason.title}</h3>
-          <p className="amm-concern-intro">{reason.text}</p>
-          <Questions label={`${home.reflectionLabel}: ${reason.title}`} items={questions} headingLevel={4} />
-        </section>;
-      })}
-    </div>
-    <details className="amm-home-method">
-      <summary>{home.limitsTitle}</summary>
-      <p>{home.limits}</p><p>{home.method}</p>
-    </details>
+    <ScrollStory counted={false} label={home.conceptsLabel} marker={<AmmMark className="amm-story-flame" />}
+      steps={home.concepts.map(concept => ({ id: concept.id, kicker: concept.label, title: `“${concept.script}”`, text: concept.text, quote: concept.argument, source: concept.source, context: home.scriptLabel }))}
+      figure={step => <div key={sequence[step.id]} className="amm-everyday-art"><Artwork image={sceneArt(home, step.id)} /></div>} />
   </section>;
 }
