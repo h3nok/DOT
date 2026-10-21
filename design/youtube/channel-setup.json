@@ -1,0 +1,175 @@
+{
+  "status": "created",
+  "name": "Digital Organism Theory",
+  "author": "Henok Ghebrechristos",
+  "visual_reference": "Website opening splash: central dot, single ring, and curved radial field",
+  "brand": {
+    "name": "DOT Daylight",
+    "palette": {
+      "surface": "#f2f0e8",
+      "ink": "#142822",
+      "accent": "#285c4b",
+      "muted": "#41594f",
+      "border": "#d4ded4"
+    },
+    "fonts": {
+      "display": "Space Grotesk",
+      "reading": "Source Serif 4",
+      "annotation": "JetBrains Mono"
+    }
+  },
+  "proposed_handles": [
+    "@dotheory",
+    "@digitalorganismtheory",
+    "@dotheoryorg"
+  ],
+  "confirmed_handle": "@dotheory",
+  "confirmed_channel_url": "https://www.youtube.com/@dotheory",
+  "confirmed_channel_id": "UC4CHvpLItOyp7tdCdqI8ncg",
+  "confirmed_channel_id_url": "https://www.youtube.com/channel/UC4CHvpLItOyp7tdCdqI8ncg",
+  "description": "Why do we react before we choose—at home, at work, and in public life?\n\nDigital Organism Theory (DOT), developed by Henok Ghebrechristos, is a practical and moral framework—not an ideology. There is no side to join and no creed to adopt: only tools for seeing how conditioning, fear, and the systems around us shape what we do, and for choosing more deliberately with others.\n\n• Inner life — Book One, Consciousness: A Digital Organism: a proposed model of reality, and a practical account of how conditioning and fear-gating drive automatic reactions—and how seeing the pattern opens room for deliberate choice.\n• Public life — The American Millennial Manifesto (AMM): how economic dependence, cost of living, and attention capture get inside everyday decisions—and what people can practically do about it together.\n\nEvery argument is labeled: Observation, External model, DOT derivation, Speculative extension.\n\nRead free:\nhttps://dotheory.org/book/digital-organism-theory\nhttps://dotheory.org/amm",
+  "claim_levels": [
+    "Observation",
+    "External model",
+    "DOT derivation",
+    "Speculative extension"
+  ],
+  "links": [
+    {
+      "title": "Read Book One — free",
+      "url": "https://dotheory.org/book/digital-organism-theory"
+    },
+    {
+      "title": "The American Millennial Manifesto",
+      "url": "https://dotheory.org/amm"
+    },
+    {
+      "title": "Book One Concept Map",
+      "url": "https://dotheory.org/doctrine"
+    },
+    {
+      "title": "DOT website",
+      "url": "https://dotheory.org"
+    }
+  ],
+  "playlists": [
+    {
+      "title": "Book One — Consciousness: A Digital Organism",
+      "description": "Foundational concepts from Book One: the Digital Organism, Canvas/Painting/Character, the Decoupling Principle, the Experience Loop, and the Fear-Gating Principle."
+    },
+    {
+      "title": "The American Millennial Manifesto",
+      "description": "Applying Digital Organism Theory to public life: how economic dependence becomes extraction, how extraction becomes power, and how inherited culture makes it feel normal."
+    },
+    {
+      "title": "Epistemic Method & Open Questions",
+      "description": "How Digital Organism Theory separates Observation, External model, DOT derivation, Speculative extension—and where the inquiry remains open to falsification."
+    }
+  ],
+  "artwork": [
+    {
+      "file": "banner.png",
+      "width": 2560,
+      "height": 1440,
+      "purpose": "Channel banner",
+      "required": true
+    },
+    {
+      "file": "avatar.png",
+      "width": 800,
+      "height": 800,
+      "purpose": "Profile picture",
+      "required": true
+    },
+    {
+      "file": "watermark.png",
+      "width": 512,
+      "height": 512,
+      "purpose": "Video watermark (optional; for later)",
+      "required": false
+    },
+    {
+      "file": "end-card.png",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "Closing video colophon card (Book One + AMM + Claim levels)",
+      "required": false
+    }
+  ],
+  "sources": {
+    "create": "https://support.google.com/youtube/answer/1646861?hl=en",
+    "branding": "https://support.google.com/youtube/answer/10456525?hl=en",
+    "profile": "https://support.google.com/youtube/answer/2657964?hl=en",
+    "handles": "https://support.google.com/youtube/answer/11585688?hl=en"
+  },
+  "video": {
+    "file": "splash-intro.mp4",
+    "poster": "splash.png",
+    "storyboard": "splash-storyboard.png",
+    "width": 3840,
+    "height": 2160,
+    "fps": 30,
+    "duration_seconds": 14,
+    "frames": 420,
+    "audio": true,
+    "audio_codec": "AAC",
+    "audio_style": "quiet digital",
+    "animation_version": 11,
+    "sequence": [
+      "T × E",
+      "Big C",
+      "RF₁…RFₙ",
+      "RF₀",
+      "Little c",
+      "Rules of RF₀ & Others"
+    ],
+    "codec": "H.264",
+    "integrated_lufs": -29.9,
+    "true_peak_dbfs": -14.1,
+    "source_sha256": "0107ccab26d85d0e3fcca5cb46b87f513935d84b7cfa88abecc2d7b4d5ebd653",
+    "video_sha256": "0caffb4a8ef294eb62ce4a67410feba98df63658054ed9bdd85dab30b4ef5b9d"
+  },
+  "bumper": {
+    "file": "splash-bumper.mp4",
+    "poster": "splash.png",
+    "storyboard": "splash-bumper-storyboard.png",
+    "width": 3840,
+    "height": 2160,
+    "fps": 30,
+    "duration_seconds": 5,
+    "frames": 150,
+    "audio": true,
+    "audio_codec": "AAC",
+    "audio_style": "quiet digital",
+    "animation_version": 3,
+    "codec": "H.264",
+    "integrated_lufs": -26.5,
+    "true_peak_dbfs": -14,
+    "source_sha256": "9a2da66718e0827ed5f5aae879dbbaea3d160b7c3c0125a118798ce25a38e807",
+    "video_sha256": "fe3952a7fcd0a5d50d4757ca51d91bb0c17e80a8b67dcde27f6b81032887904f"
+  },
+  "trailer": {
+    "file": "channel-trailer.mp4",
+    "poster": "splash.png",
+    "storyboard": "channel-trailer-storyboard.png",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration_seconds": 40,
+    "frames": 1200,
+    "audio": true,
+    "audio_codec": "AAC",
+    "animation_version": 3,
+    "audio_style": "quiet digital",
+    "movements": [
+      "Why Habits, Headlines & Systems Feel Locked",
+      "Book One — A New Model of Reality (T × E → Big C → RF₀ → Little c)",
+      "Current Affairs & AMM — Dependence, Extraction, Power & Agency",
+      "Three Connected Streams & Four Claim Levels",
+      "Read Free at dotheory.org · @dotheory"
+    ],
+    "codec": "H.264",
+    "source_sha256": "815f06babcbfad4c187d2e7826d3c567d3eb2a46d18541020d42fe7b716c7f34",
+    "video_sha256": "c5722144842aea0120eceeb61118484486ce92d1e9425988b191fecf84a5bbda"
+  }
+}

@@ -122,15 +122,17 @@ preference. Old saved appearances retain their palette; Reset deliberately
 adopts the new pair. Source Serif 4 sets long-form reading, Space Grotesk is
 the branded display voice, and JetBrains Mono carries annotation.
 
-The off-site [channel kit](design/youtube/index.html) includes an upload-ready
-banner, circular-crop-safe avatar, three editable thumbnail examples, and a
-still splash/title card. It follows the existing DOT identity and reads the
-author credit from the same record as About. A proposed channel description
-and account-setup steps are in the kit; no channel or handle has been created,
-and no placeholder YouTube link is published on the site.
+The off-site channel kit in `design/youtube/` includes an upload-ready banner,
+circular-crop-safe avatar, thumbnails, end card, watermark, a still
+splash/title card, a 4K 14-second intro and 5-second opener, and a channel
+trailer. It follows the existing DOT identity and reads the author credit and
+the channel link (@dotheory) from the same record as About. The channel
+description and setup steps are in `START-HERE.txt`.
 
 Rebuild the SVG/PNG exports with the existing frontend fonts and Playwright
-Chromium installation:
+Chromium installation. Add `--video` (and `--trailer`) to render the videos;
+the MP4s and the `index.html` preview page are generated locally and are not
+committed:
 
 ```bash
 pnpm --dir frontend exec node scripts/render-channel-kit.mjs

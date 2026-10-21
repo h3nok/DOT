@@ -1,0 +1,24 @@
+{
+  "file": "channel-trailer.mp4",
+  "poster": "splash.png",
+  "storyboard": "channel-trailer-storyboard.png",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration_seconds": 40,
+  "frames": 1200,
+  "audio": true,
+  "audio_codec": "AAC",
+  "animation_version": 3,
+  "audio_style": "quiet digital",
+  "movements": [
+    "Why Habits, Headlines & Systems Feel Locked",
+    "Book One — A New Model of Reality (T × E → Big C → RF₀ → Little c)",
+    "Current Affairs & AMM — Dependence, Extraction, Power & Agency",
+    "Three Connected Streams & Four Claim Levels",
+    "Read Free at dotheory.org · @dotheory"
+  ],
+  "codec": "H.264",
+  "source_sha256": "815f06babcbfad4c187d2e7826d3c567d3eb2a46d18541020d42fe7b716c7f34",
+  "video_sha256": "c5722144842aea0120eceeb61118484486ce92d1e9425988b191fecf84a5bbda"
+}

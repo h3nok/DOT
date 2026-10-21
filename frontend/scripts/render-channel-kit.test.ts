@@ -1,18 +1,26 @@
 import { describe, expect, it } from "vitest";
 
 import author from "../src/content/author.json";
-import { BANNER_SAFE_AREA, buildChannelAssets } from "./render-channel-kit.mjs";
+import book from "../public/publications/henok/digital-organism-theory/v4/manifest.json";
+import { BANNER_SAFE_AREA, buildChannelAssets, buildChannelSetup } from "./render-channel-kit.mjs";
+import { buildSetupPage, buildSetupText } from "./channel-setup-page.mjs";
+import { bumperToSplash, SPLASH_BUMPER, SPLASH_CAPTIONS, SPLASH_VIDEO, splashToBumper } from "./channel-splash-video.mjs";
 
 describe("YouTube channel artwork", () => {
-  it("produces upload-sized banner, avatar, thumbnails, and a still title card", () => {
+  it("produces upload-sized banner, avatar, thumbnails, and title/end cards", () => {
     const assets = buildChannelAssets(author);
     expect(assets.map(({ name, width, height }) => [name, width, height])).toEqual([
       ["banner", 2560, 1440],
       ["avatar", 800, 800],
+      ["watermark", 512, 512],
       ["thumbnail-introduction", 1280, 720],
       ["thumbnail-concepts", 1280, 720],
+      ["thumbnail-agency", 1280, 720],
       ["thumbnail-open-questions", 1280, 720],
+      ["thumbnail-amm", 1280, 720],
+      ["thumbnail-amm-power", 1280, 720],
       ["splash", 1920, 1080],
+      ["end-card", 1920, 1080],
       ["book-background", 1400, 2000],
     ]);
     expect(assets[0].maxBytes).toBe(6_000_000);
@@ -37,16 +45,23 @@ describe("YouTube channel artwork", () => {
       expect(document.querySelector("[data-essential]")).not.toBeNull();
       expect(document.querySelector("script, foreignObject, animate, animateTransform, image")).toBeNull();
       for (const reference of document.querySelectorAll("[href]")) {
-        expect(reference.getAttribute("href")).toBe("#nucleus");
+        const id = reference.getAttribute("href");
+        expect(id?.startsWith("#")).toBe(true);
+        expect(document.getElementById(id!.slice(1))).not.toBeNull();
       }
     }
   });
 
-  it("takes the author credit from the same record as the About page", () => {
+  it("takes the author credit from the same record as the About page while keeping splash free of author text", () => {
     const assets = buildChannelAssets(author);
     const credit = `${author.name}, ${author.suffix}`;
     expect(assets.find((asset) => asset.name === "banner")?.svg).toContain(credit);
-    expect(assets.find((asset) => asset.name === "splash")?.svg).toContain(credit);
+    const splashSvg = assets.find((asset) => asset.name === "splash")?.svg;
+    expect(splashSvg).not.toContain(author.name);
+    expect(splashSvg).toContain("Big C");
+    expect(splashSvg).toContain("Little c");
+    expect(splashSvg).toContain("A PROPOSED MODEL OF REALITY");
+    expect(splashSvg).toContain("living by the rules of RF₀");
     const replacement = buildChannelAssets({ name: "Example Author", suffix: "" });
     expect(replacement[0].svg).toContain("Example Author");
     expect(replacement[0].svg).not.toContain(author.name);
@@ -69,5 +84,96 @@ describe("YouTube channel artwork", () => {
     expect(assets.find((asset) => asset.name === "thumbnail-introduction")?.svg).toContain("not a measured physical structure");
     expect(assets.find((asset) => asset.name === "thumbnail-open-questions")?.svg).toContain("inquiry, not certainty");
     expect(assets.some((asset) => /youtube\.com|youtu\.be|subscribe now|scientifically proven/i.test(asset.svg))).toBe(false);
+  });
+
+  it("provides an optional watermark with no full-canvas background", () => {
+    const watermark = buildChannelAssets(author).find((asset) => asset.name === "watermark");
+    expect(watermark?.transparent).toBe(true);
+    expect(watermark?.maxBytes).toBeLessThan(1_000_000);
+    const document = new DOMParser().parseFromString(watermark!.svg, "image/svg+xml");
+    expect(document.querySelector("svg > rect")).toBeNull();
+  });
+
+  it("records the confirmed channel handle from author.json while keeping uncreated setups separate", () => {
+    const setup = buildChannelSetup(author, book);
+    expect(setup.status).toBe("created");
+    expect(setup.confirmed_handle).toBe("@dotheory");
+    expect(setup.confirmed_channel_url).toBe("https://www.youtube.com/@dotheory");
+    expect(setup.confirmed_channel_id).toBe("UC4CHvpLItOyp7tdCdqI8ncg");
+    expect(setup.confirmed_channel_id_url).toBe("https://www.youtube.com/channel/UC4CHvpLItOyp7tdCdqI8ncg");
+    const uncreated = buildChannelSetup({ ...author, links: { ...author.links, youtube: "" } }, book);
+    expect(uncreated.status).toBe("not_created");
+    expect(uncreated.confirmed_handle).toBeNull();
+    expect(uncreated.confirmed_channel_url).toBeNull();
+    expect(uncreated.confirmed_channel_id).toBeNull();
+    expect(uncreated.confirmed_channel_id_url).toBeNull();
+    expect(setup.proposed_handles[0]).toBe("@dotheory");
+    expect(setup.description.length).toBeLessThanOrEqual(1000);
+    expect(setup.description).toContain(author.name);
+    expect(setup.description).toContain(book.project.title);
+    expect(setup.description).toContain("The American Millennial Manifesto");
+    expect(setup.links.map((link) => link.url)).toContain("https://dotheory.org/amm");
+    expect(setup.playlists).toHaveLength(3);
+    for (const level of book.reader_contract.claim_levels) expect(setup.description).toContain(level);
+    expect(setup.description).toContain("practical and moral framework—not an ideology");
+    expect(setup.description).not.toMatch(/founded by|reclaim|rigged|break it|movement/i);
+    expect(setup.description).not.toMatch(/subscribe|weekly|coming soon|PhD/);
+    expect(buildSetupText(setup)).toContain("No published episodes, publishing cadence, channel ownership, or reserved handle are claimed.");
+  });
+
+  it("renders local download links, safe profile text, and copy controls without network dependencies", () => {
+    const setup = buildChannelSetup(author, book);
+    setup.name = '<img src="https://example.org/track">';
+    setup.description = '</textarea><script>alert("unsafe")</script>';
+    const document = new DOMParser().parseFromString(buildSetupPage(setup), "text/html");
+    expect(document.querySelector<HTMLInputElement>("#channel-name")?.value).toBe(setup.name);
+    expect(document.querySelector<HTMLTextAreaElement>("#description")?.value).toBe(setup.description);
+    expect(document.scripts).toHaveLength(1);
+    expect(document.querySelector("script[src],link[href],iframe")).toBeNull();
+    expect(document.querySelector("button[data-copy='description']")).not.toBeNull();
+    expect(document.querySelector("a[download][href='watermark.png']")).not.toBeNull();
+    expect([...document.images].every((image) => !image.getAttribute("src")?.includes(":"))).toBe(true);
+  });
+
+  it("embeds supplied assets for offline previews and names their downloads", () => {
+    const setup = buildChannelSetup(author, book);
+    const data = "data:image/png;base64,cG5n";
+    const document = new DOMParser().parseFromString(buildSetupPage(setup, "", { "banner.png": data }), "text/html");
+    expect(document.querySelector("a[download='banner.png']")?.getAttribute("href")).toBe(data);
+    expect(document.querySelector(`img[src='${data}']`)).not.toBeNull();
+  });
+
+  it("shows a real video with a still poster and native controls only when an export exists", () => {
+    const setup = { ...buildChannelSetup(author, book), video: SPLASH_VIDEO };
+    const document = new DOMParser().parseFromString(buildSetupPage(setup), "text/html");
+    const video = document.querySelector("video");
+    expect(video?.hasAttribute("controls")).toBe(true);
+    expect(video?.hasAttribute("autoplay")).toBe(false);
+    expect(video?.hasAttribute("loop")).toBe(false);
+    expect(video?.getAttribute("poster")).toBe("splash.png");
+    expect(video?.querySelector("source")?.getAttribute("src")).toBe("splash-intro.mp4");
+    expect(buildSetupText(setup)).toContain(`finished ${SPLASH_VIDEO.duration_seconds}-second introductory opening video with quiet digital audio`);
+    const stillOnly = new DOMParser().parseFromString(buildSetupPage(buildChannelSetup(author, book)), "text/html");
+    expect(stillOnly.querySelector("video")).toBeNull();
+  });
+
+  it("keeps the opening video's text to one short, typed line per scene, with T × E marked speculative", () => {
+    const splashSvg = buildChannelAssets(author).find((asset) => asset.name === "splash")!.svg;
+    const document = new DOMParser().parseFromString(splashSvg, "image/svg+xml");
+    expect(document.querySelectorAll("[data-caption]")).toHaveLength(SPLASH_CAPTIONS.length);
+    expect(document.querySelector("[data-act-card], [data-splash-chain]")).toBeNull();
+    expect(SPLASH_CAPTIONS.every(({ text }) => text.length <= 48)).toBe(true);
+    expect(SPLASH_CAPTIONS[0]).toMatchObject({ tag: "SPECULATIVE" });
+    expect(splashSvg).not.toMatch(/Time × Energy|Energy \(E\)/);
+  });
+
+  it("maps the 5-second opener onto the full animation from first frame to brand lockup", () => {
+    expect(SPLASH_BUMPER.duration_seconds).toBe(5);
+    expect(bumperToSplash(0)).toBe(0);
+    expect(bumperToSplash(5)).toBe(SPLASH_VIDEO.duration_seconds);
+    expect(splashToBumper(bumperToSplash(2.1))).toBeCloseTo(2.1);
+    const setup = { ...buildChannelSetup(author, book), video: SPLASH_VIDEO, bumper: SPLASH_BUMPER };
+    const document = new DOMParser().parseFromString(buildSetupPage(setup), "text/html");
+    expect(document.querySelector("video source[src='splash-bumper.mp4']")).not.toBeNull();
   });
 });

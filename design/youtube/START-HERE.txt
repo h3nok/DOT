@@ -1,0 +1,79 @@
+DIGITAL ORGANISM THEORY — CHANNEL SETUP
+
+Channel creation is pending. This package contains local artwork and proposed
+profile text. It does not reserve a handle or create a YouTube account.
+
+VISUAL REFERENCE
+The website's opening dot, single ring, and surrounding curved field.
+The banner and title card carry: Conditioning · Choice · Agency.
+Palette: DOT Daylight. Warm ivory #f2f0e8,
+deep green #142822, jade #285c4b.
+splash-intro.mp4 is the finished 14-second introductory opening video with quiet digital audio.
+It presents DOT's proposed model of reality in creation order, one typewriter line per scene: T × E (speculative), Big C emerging and stabilizing itself, Big C building tools — Reality Frames (RF₁…RFₙ, RF₀) — Little c, and choosing with others — before settling into the Digital Organism Theory brand lockup.
+splash-bumper.mp4 is the 5-second episode-opening cut of the same animation (no captions).
+splash.png is its still poster.
+
+1. CREATE THE CHANNEL
+Sign in to YouTube with the Google account you want to own the channel.
+Open Settings > Add or manage channel(s) > Create a channel.
+Use this display name: Digital Organism Theory
+Try these handles in order: @dotheory, @digitalorganismtheory, @dotheoryorg
+YouTube must confirm availability. These are proposals, not reserved handles.
+Select avatar.png as the profile picture and complete channel creation.
+Official guide: https://support.google.com/youtube/answer/1646861?hl=en
+
+2. ADD THE ARTWORK
+Open YouTube Studio > Customization > Profile.
+Upload banner.png (2560 x 1440) and avatar.png (800 x 800).
+Check YouTube's crop preview, then publish the profile changes.
+banner-mobile.png is a crop reference only; upload the full banner.png.
+watermark.png (512 x 512, transparent) is optional for future videos.
+Official branding guide: https://support.google.com/youtube/answer/10456525?hl=en
+
+3. ADD THE PROFILE TEXT AND LINKS
+Review channel-description.txt, then paste it into the Description field.
+It is third-person project copy for your review, not a quotation from the author.
+Add these profile links in order:
+Read Book One — free: https://dotheory.org/book/digital-organism-theory
+The American Millennial Manifesto: https://dotheory.org/amm
+Book One Concept Map: https://dotheory.org/doctrine
+DOT website: https://dotheory.org
+Publish the profile changes.
+Official profile guide: https://support.google.com/youtube/answer/2657964?hl=en
+
+4. RECORD THE ACTUAL CHANNEL ADDRESS
+Copy the address from your newly created channel page and keep it with your
+records. The website can be connected after this address is confirmed.
+Handle guidance: https://support.google.com/youtube/answer/11585688?hl=en
+
+DONE FOR NOW
+A trailer, first video, playlists, thumbnails, and upload schedule can wait.
+The thumbnail, title-card, and end-card files are optional templates for future work.
+No published episodes, publishing cadence, channel ownership, or reserved handle are claimed.
+
+PROPOSED PLAYLISTS (FOR WHEN VIDEOS ARE PUBLISHED)
+1. Book One — Consciousness: A Digital Organism
+   Foundational concepts from Book One: the Digital Organism, Canvas/Painting/Character, the Decoupling Principle, the Experience Loop, and the Fear-Gating Principle.
+2. The American Millennial Manifesto
+   Applying Digital Organism Theory to public life: how economic dependence becomes extraction, how extraction becomes power, and how inherited culture makes it feel normal.
+3. Epistemic Method & Open Questions
+   How Digital Organism Theory separates Observation, External model, DOT derivation, Speculative extension—and where the inquiry remains open to falsification.
+
+FILES
+banner.png / avatar.png — profile uploads
+watermark.png — optional transparent video mark
+splash-intro.mp4 — 3840 x 2160 (4K), 30 fps, 14 seconds, H.264 video with quiet digital AAC audio
+splash-storyboard.png — keyframes showing the motion sequence
+splash-bumper.mp4 — 3840 x 2160 (4K), 30 fps, 5 seconds, episode-opening cut
+splash.png — still title card and video poster
+end-card.png — 1920 x 1080 closing video colophon card (Book One + AMM + Claim levels)
+thumbnail-*.png — 1280 x 720 thumbnail templates for Book One, Epistemic Method, and AMM
+channel-description.txt — proposed description to review and paste
+channel-setup.json — structured setup record; confirmed handle and URL are empty
+index.html — open locally for previews and copy controls
+*.svg — editable artwork, with embedded local fonts
+FONT-LICENSES.txt — font license notices
+
+MANIFESTO
+Serves L1 (calm), L7 (honest setup state), L9 (local assets without trackers),
+and L10 (one setup step at a time). Violates no manifesto law.

@@ -139,3 +139,8 @@ frontend/.playwright/
 # is public. Published chapters live in frontend/src/content/essays/. The hero source video is already tracked.
 docs/blueprint/amm/*
 !docs/blueprint/amm/amm-hero-source.mp4
+
+# YouTube kit renders: rebuilt by `node frontend/scripts/render-channel-kit.mjs --video`.
+# The videos are published on YouTube; index.html inlines every image and runs ~45 MB.
+design/youtube/*.mp4
+design/youtube/index.html
