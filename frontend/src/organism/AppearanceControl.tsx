@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import {
   AlignJustify,
   AlignLeft,
@@ -173,6 +173,7 @@ export const AppearanceControl: React.FC<{
 }> = ({ placement = "floating" }) => {
   const { theme, setTheme } = useTheme();
   const { config, setConfig } = useOrganism();
+  const idPrefix = useId();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"environment" | "reading">("environment");
   const [environments, setEnvironments] = useState<SavedEnvironment[]>(loadEnvironments);
@@ -318,9 +319,9 @@ export const AppearanceControl: React.FC<{
                 key={value}
                 type="button"
                 role="tab"
-                id={`appearance-tab-${value}`}
+                id={`${idPrefix}-tab-${value}`}
                 aria-selected={tab === value}
-                aria-controls={`appearance-panel-${value}`}
+                aria-controls={`${idPrefix}-panel-${value}`}
                 tabIndex={tab === value ? 0 : -1}
                 onClick={() => setTab(value)}
                 className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
@@ -336,8 +337,8 @@ export const AppearanceControl: React.FC<{
 
           <div
             role="tabpanel"
-            id={`appearance-panel-${tab}`}
-            aria-labelledby={`appearance-tab-${tab}`}
+            id={`${idPrefix}-panel-${tab}`}
+            aria-labelledby={`${idPrefix}-tab-${tab}`}
             tabIndex={0}
             className="appearance-scroll min-h-0 flex-1 overflow-y-auto pt-2"
           >

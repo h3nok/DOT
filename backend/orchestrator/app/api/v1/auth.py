@@ -48,7 +48,9 @@ async def request_otp(
     payload: schemas.OtpRequestPayload,
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> fastapi.Response:
-    result = await auth_service.request_otp(session, str(payload.email))
+    result = await auth_service.request_otp(
+        session, str(payload.email), invite_token=payload.invite_token
+    )
     if not result["ok"]:
         raise fastapi.HTTPException(status_code=result["status"], detail=result["error"])
     return schemas.OtpRequestResponse(
@@ -65,7 +67,11 @@ async def verify_otp(
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> fastapi.Response:
     result = await auth_service.verify_otp(
-        session, str(payload.email), payload.code, payload.display_name
+        session,
+        str(payload.email),
+        payload.code,
+        payload.display_name,
+        invite_token=payload.invite_token,
     )
     if not result["ok"]:
         raise fastapi.HTTPException(status_code=result["status"], detail=result["error"])

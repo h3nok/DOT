@@ -274,3 +274,31 @@ def test_the_list_is_never_public(client: fastapi.testclient.TestClient, sealed:
 
     # Unsealing addresses is the most sensitive read in the service.
     assert response.status_code >= 400
+
+
+def test_the_list_requires_owner_write_scope_not_mere_membership(
+    client: fastapi.testclient.TestClient, sealed: None
+) -> None:
+    accepted = _subscribe(client, "reader@example.com")
+    _confirm(client, "reader@example.com", accepted["dev_code"])
+
+    # Sign in as a regular member (not an owner).
+    code = client.post("/v1/auth/otp/request", json={"email": "member@example.com"}).json()[
+        "dev_code"
+    ]
+    client.post("/v1/auth/otp/verify", json={"email": "member@example.com", "code": code})
+
+    member_attempt = client.get("/v1/readers")
+    assert member_attempt.status_code == 403
+
+    # Sign in as the steward/owner.
+    client.post("/v1/auth/logout")
+    owner_code = client.post("/v1/auth/otp/request", json={"email": "henok@sullix.com"}).json()[
+        "dev_code"
+    ]
+    client.post("/v1/auth/otp/verify", json={"email": "henok@sullix.com", "code": owner_code})
+
+    owner_read = client.get("/v1/readers")
+    assert owner_read.status_code == 200
+    assert len(owner_read.json()["readers"]) == 1
+    assert owner_read.json()["readers"][0]["email"] == "reader@example.com"

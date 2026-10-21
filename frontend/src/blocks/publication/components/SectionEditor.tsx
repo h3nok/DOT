@@ -110,8 +110,21 @@ export function SectionEditor({ section, onRefresh, onDirtyChange }: SectionEdit
   useEffect(() => {
     if (!dirty) return;
     const protectDraft = (event: BeforeUnloadEvent) => event.preventDefault();
+    const protectNavigation = (event: MouseEvent) => {
+      if (
+        (event.target as Element | null)?.closest("a[href]") &&
+        !window.confirm("Leave without saving this section?")
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
     window.addEventListener("beforeunload", protectDraft);
-    return () => window.removeEventListener("beforeunload", protectDraft);
+    document.addEventListener("click", protectNavigation, true);
+    return () => {
+      window.removeEventListener("beforeunload", protectDraft);
+      document.removeEventListener("click", protectNavigation, true);
+    };
   }, [dirty]);
 
   const handleSave = useCallback(async () => {

@@ -100,6 +100,6 @@ async def read_list(
     the owner write scope rather than mere membership — the same bar the join
     queue sets.
     """
-    app.auth.dependencies.ensure_write_scope(owner)
+    app.auth.dependencies.ensure_owner_write_scope(owner)
     rows = await readers_service.list_readers(session)
     return schemas.ReaderList(readers=[schemas.ReaderOut(**row) for row in rows])

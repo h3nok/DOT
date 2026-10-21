@@ -6,19 +6,23 @@ html[data-palette="dot"][data-theme] {
   --identity-accent: var(--identity-light-accent);
   --identity-muted: var(--identity-light-muted);
   --identity-border: var(--identity-light-border);
+  --identity-emerald: #0b7a53;
+  --identity-lumen: #12966b;
+  --identity-origin: #5b3b80;
+  --identity-rf: #b86614;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: var(--identity-surface);
+  --card: color-mix(in oklab, #ffffff 68%, var(--identity-surface));
   --card-foreground: var(--identity-ink);
-  --popover: var(--identity-surface);
+  --popover: color-mix(in oklab, #ffffff 78%, var(--identity-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
   --primary-foreground: var(--identity-surface);
-  --secondary: color-mix(in oklab, var(--identity-accent) 12%, var(--identity-surface));
+  --secondary: color-mix(in oklab, var(--identity-lumen) 14%, var(--identity-surface));
   --secondary-foreground: var(--identity-ink);
-  --muted: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
+  --muted: color-mix(in oklab, var(--identity-lumen) 8%, var(--identity-surface));
   --muted-foreground: var(--identity-muted);
-  --accent: color-mix(in oklab, var(--identity-accent) 12%, var(--identity-surface));
+  --accent: color-mix(in oklab, var(--identity-lumen) 16%, var(--identity-surface));
   --accent-foreground: var(--identity-ink);
   --border: var(--identity-border);
   --input: var(--identity-border);
@@ -28,15 +32,45 @@ html[data-palette="dot"][data-theme] {
 html[data-palette="dot"][data-identity-accent="signature"] {
   --organism-accent: var(--identity-accent);
   --organism-accent-strong: var(--identity-accent);
-  --organism-accent-soft: color-mix(in oklab, var(--identity-accent) 32%, transparent);
+  --organism-accent-soft: color-mix(in oklab, var(--identity-lumen) 34%, transparent);
 }
 
-html.dark[data-palette="dot"] {
+html.dark[data-palette="dot"],
+html.dark[data-palette="dot"][data-theme] {
   --identity-surface: var(--identity-dark-surface);
   --identity-ink: var(--identity-dark-ink);
   --identity-accent: var(--identity-dark-accent);
   --identity-muted: var(--identity-dark-muted);
   --identity-border: var(--identity-dark-border);
+  --identity-emerald: #2ad89d;
+  --identity-lumen: #2ad89d;
+  --identity-origin: #b99ce0;
+  --identity-rf: #f0a44c;
+  --card: color-mix(in oklab, #12966b 10%, var(--identity-dark-surface));
+  --popover: color-mix(in oklab, #12966b 14%, var(--identity-dark-surface));
+  --secondary: color-mix(in oklab, #2ad89d 14%, var(--identity-dark-surface));
+  --muted: color-mix(in oklab, #2ad89d 9%, var(--identity-dark-surface));
+  --accent: color-mix(in oklab, #2ad89d 16%, var(--identity-dark-surface));
+}
+
+/* Bring the YouTube channel kit's emerald-jade, violet T × E, and amber RF₀
+   architectural palette onto the default DOT Daylight / DOT Night surfaces. */
+html[data-palette="dot"][data-identity-accent="signature"] .home-journey,
+html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment {
+  --theory-origin: var(--identity-origin);
+  --theory-big-c: var(--identity-emerald);
+  --theory-rf: var(--identity-rf);
+  --theory-local: var(--identity-emerald);
+  --architecture-origin: var(--identity-origin);
+  --architecture-big-c: var(--identity-emerald);
+  --architecture-rf: var(--identity-rf);
+  --architecture-rf-ring: var(--identity-rf);
+  --architecture-local: var(--identity-emerald);
+  --architecture-live: color-mix(in oklab, var(--identity-lumen) 62%, var(--identity-ink));
+  --architecture-field: color-mix(in oklab, var(--identity-lumen) 28%, transparent);
+  --architecture-wash-opacity: 0.96;
+  --architecture-frame-wash-opacity: 0.12;
+  --architecture-local-wash-opacity: 0.22;
 }
 
 html[data-palette="dot"][data-paper="warm"][data-reading] {

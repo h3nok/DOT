@@ -256,11 +256,13 @@ const DoctrinePage = () => {
 
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = `DOT — Book One Concept Map — ${focusNode.title}`;
+    document.title = params.nodeId
+      ? `DOT — Book One Concept Map — ${focusNode.title}`
+      : "Book One Concept Map — Digital Organism Theory";
     return () => {
       document.title = previousTitle;
     };
-  }, [focusNode.title]);
+  }, [focusNode.title, params.nodeId]);
 
   useEffect(() => {
     if (

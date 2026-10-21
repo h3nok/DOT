@@ -192,7 +192,8 @@ export default function HomePage() {
             No ads, no profiling, no data sales.
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
-          <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 text-xs">
+          <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
+            <Link to="/amm" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">AMM</Link>
             <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
             <Link
               to="/readers"
@@ -200,6 +201,8 @@ export default function HomePage() {
             >
               Join the readers’ list
             </Link>
+            <Link to="/privacy" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Privacy</Link>
+            <Link to="/terms" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Terms</Link>
             {!isOwner && (
               // Membership is by invitation (ADR-0001); its sign-in stays quiet.
               <button

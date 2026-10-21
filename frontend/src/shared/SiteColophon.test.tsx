@@ -40,7 +40,8 @@ describe("SiteColophon", () => {
 
     const elsewhere = within(screen.getByRole("navigation", { name: "Elsewhere" }));
     expect(elsewhere.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("rel", "noreferrer me");
-    expect(elsewhere.queryByRole("link", { name: "YouTube" })).toBeNull();
+    expect(elsewhere.getByRole("link", { name: "YouTube" })).toHaveAttribute("href", "https://www.youtube.com/@dotheory");
+    expect(elsewhere.queryByRole("link", { name: "Substack" })).toBeNull();
     expect(elsewhere.getByRole("link", { name: "AMM on LinkedIn" })).toBeInTheDocument();
   });
 

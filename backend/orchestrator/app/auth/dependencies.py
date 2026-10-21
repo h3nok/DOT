@@ -193,3 +193,22 @@ def ensure_write_scope(owner: OwnerContext) -> None:
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
             detail="Owner context does not include write scope.",
         )
+
+
+def ensure_owner_write_scope(owner: OwnerContext) -> None:
+    """Require steward/owner write authority for unsealing and owner-only routes."""
+    settings: app.settings.Settings = app.settings.get_settings()
+    if (
+        settings.AUTH_MODE == "local_header"
+        and owner.owner_id == settings.CONTACT_OWNER_ID
+        and not owner.scopes
+    ):
+        return
+    if owner.role == "admin":
+        return
+    if owner.role == "owner" and "owner:write" in owner.scopes:
+        return
+    raise fastapi.HTTPException(
+        status_code=fastapi.status.HTTP_403_FORBIDDEN,
+        detail="Owner write scope is required.",
+    )

@@ -32,16 +32,16 @@
   ],
   "shortcuts": [
     {
-      "name": "DOT Academy",
-      "short_name": "Academy",
-      "description": "Enter the living inquiry around Digital Organism Theory",
-      "url": "/academy"
-    },
-    {
       "name": "Book One",
       "short_name": "Book One",
       "description": "Read the line-edited edition of Consciousness: A Digital Organism",
       "url": "/book/digital-organism-theory"
+    },
+    {
+      "name": "The American Millennial Manifesto",
+      "short_name": "AMM",
+      "description": "Applied Digital Organism Theory on money, power, and work",
+      "url": "/amm"
     },
     {
       "name": "Concept map",

@@ -18,14 +18,26 @@ import { RouteLoadingBoundary } from "./shared/RouteLoadingBoundary";
 import { ViewportObserver } from "./shared/ViewportObserver";
 import AmmMovedGuide from "./blocks/amm/AmmMovedGuide";
 
+function canonicalPathname(pathname: string, search: string): string {
+  const clean = pathname.replace(/\/+$/, "") || "/";
+  if (clean === "/essays") return "/blog";
+  if (clean === "/academy") return "/book/digital-organism-theory";
+  if (clean === "/amm/capital" || clean === "/amm/money" || clean.startsWith("/amm/money/")) {
+    return "/amm";
+  }
+  const version = new URLSearchParams(search).get("version");
+  if (/^\/writing\/[^/]+$/.test(clean) && version && /^[1-9]\d*$/.test(version)) {
+    return `${clean}/releases/${version}`;
+  }
+  return pathname;
+}
+
 function RouteCanonical() {
   const { pathname, search } = useLocation();
   useEffect(() => {
     // React 19 hoists Helmet's links but does not merge them with static HTML.
     // Update the build's canonical in place so there is one owner and one URL.
-    const version = new URLSearchParams(search).get("version");
-    const path = /^\/writing\/[^/]+$/.test(pathname) && version && /^[1-9]\d*$/.test(version)
-      ? `${pathname}/releases/${version}` : pathname;
+    const path = canonicalPathname(pathname, search);
     let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!link) { link = document.createElement("link"); link.rel = "canonical"; document.head.append(link); }
     link.href = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${path === "/" ? "" : path}`;
@@ -151,6 +163,7 @@ const FloatingAppearanceControl: React.FC = () => {
   ) {
     return null;
   }
+  if (pathname.startsWith("/read/")) return null;
   if (pathname === "/" || /^\/blog\/?$/.test(pathname)) return null;
   return <div className="app-floating-appearance" key={pathname}><AppearanceControl /></div>;
 };
@@ -240,14 +253,14 @@ const App: React.FC = () => {
                 <Route
                   path="/studio"
                   element={
-                    <StudioAuthGate>
+                    <StudioAuthGate ownerOnly>
                       <PublicationStudioIndexPage />
                     </StudioAuthGate>
                   }
                 />
                 <Route
                   path="/studio/writing"
-                  element={<StudioAuthGate><WritingStudioPage /></StudioAuthGate>}
+                  element={<StudioAuthGate ownerOnly><WritingStudioPage /></StudioAuthGate>}
                 />
                 <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly title="Contact inbox"><ContactInboxPage /></StudioAuthGate>} />
                 <Route path="/studio/pages/amm" element={<StudioAuthGate ownerOnly title="Edit AMM’s pages"><PageCopyStudio /></StudioAuthGate>} />
@@ -255,7 +268,7 @@ const App: React.FC = () => {
                 <Route
                   path="/studio/:projectId"
                   element={
-                    <StudioAuthGate>
+                    <StudioAuthGate ownerOnly>
                       <PublicationStudioPage />
                     </StudioAuthGate>
                   }

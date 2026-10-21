@@ -1910,39 +1910,39 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-architecture-emerge 300ms ease-out 1.15s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
-  }
-
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame-body {
     transform-box: fill-box;
     transform-origin: center;
-    animation: home-frame-resolve 650ms cubic-bezier(0.22, 1, 0.36, 1) 1.95s both;
+    animation: home-frame-resolve 650ms cubic-bezier(0.22, 1, 0.36, 1) 1.85s both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(2) .home-architecture-other-frame-body {
-    animation-delay: 2.15s;
+    animation-delay: 2.02s;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-other-frame:nth-child(3) .home-architecture-other-frame-body {
-    animation-delay: 2.35s;
+    animation-delay: 2.18s;
+  }
+
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: home-frame-resolve 750ms cubic-bezier(0.22, 1, 0.36, 1) 2.38s both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-polar-scale {
     transform-box: view-box;
     transform-origin: 348px 352px;
-    animation: home-polar-calibrate 600ms cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
+    animation: home-polar-calibrate 600ms cubic-bezier(0.22, 1, 0.36, 1) 2.52s both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-coordinate-axis,
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-measure-marks {
-    animation: home-architecture-emerge 350ms ease-out 2.3s both;
+    animation: home-architecture-emerge 350ms ease-out 2.68s both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="reality-frame"] {
-    animation: home-architecture-emerge 300ms ease-out 2.4s both;
+    animation: home-architecture-emerge 300ms ease-out 2.78s both;
   }
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-experiencer-stage {

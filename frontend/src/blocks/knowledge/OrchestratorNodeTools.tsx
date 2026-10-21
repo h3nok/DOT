@@ -45,11 +45,11 @@ const NODE_TOOLS: NodeTool[] = [
   },
   {
     id: "open",
-    label: "Open in orchestrator",
+    label: "Open in studio",
     hint: "Inspect readiness, validation, and manifests",
     icon: ArrowUpRight,
     needsOrchestrator: false,
-    to: "/orchestrator",
+    to: "/studio",
   },
 ];
 

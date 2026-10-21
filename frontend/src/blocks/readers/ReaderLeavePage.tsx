@@ -46,7 +46,7 @@ export default function ReaderLeavePage() {
     if (!token || sent.current) return;
     sent.current = true;
     // The token has done its job; keep it out of history and screenshots.
-    window.history.replaceState(null, "", window.location.pathname);
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
     void (allPublications ? leaveReaderList(token, true) : leaveReaderList(token))
       .then((ok) => setState(ok ? "left" : "failed"));
   }, [allPublications]);

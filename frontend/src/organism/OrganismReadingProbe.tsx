@@ -26,11 +26,16 @@ const READING_ROUTES = [
   "/doctrine",
   "/applied",
   "/blog",
+  "/amm",
   "/essays",
   "/_preview/essays",
   "/writing",
   "/publications",
   "/about",
+  "/contact",
+  "/readers",
+  "/privacy",
+  "/terms",
   "/studio",
 ];
 

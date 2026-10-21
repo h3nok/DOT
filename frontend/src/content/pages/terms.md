@@ -24,7 +24,7 @@ Reading Book One online, downloading its PDF, the concept map, the open question
 
 ## Contact
 
-For a refund, a question about a payment, or anything on this page: [nkenok@gmail.com](mailto:nkenok@gmail.com).
+For a refund, a question about a payment, or anything on this page: [henok@sullix.com](mailto:henok@sullix.com).
 
 ## Changes
 

@@ -378,7 +378,7 @@ jobs:
             --execution-environment gen2 \
             --add-volume name=objects,type=cloud-storage,bucket=${{ env.OBJECT_STORE_BUCKET }} \
             --add-volume-mount volume=objects,mount-path=/data/objects \
-            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_CONTACT_EMAIL=henok@sullix.com,ORCHESTRATOR_CONTACT_OWNER_ID=henok,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/data/objects,EMAIL_FROM=no-reply@dotheory.org,DOT_OWNER_EMAILS=nkenok@gmail.com \
+            --set-env-vars=ORCHESTRATOR_ENVIRONMENT=production,ORCHESTRATOR_AUTH_MODE=jwt,ORCHESTRATOR_AUTH_ENABLED=true,ORCHESTRATOR_FRONTEND_URL=https://dotheory.org,ORCHESTRATOR_CONTACT_EMAIL=henok@sullix.com,ORCHESTRATOR_CONTACT_OWNER_ID=henok,ORCHESTRATOR_TWIN_MODEL=gemini-3.6-flash,ORCHESTRATOR_REDIS_URL=memory://,ORCHESTRATOR_OBJECT_STORE_BACKEND=filesystem,ORCHESTRATOR_LOCAL_OBJECT_STORE_ROOT=/data/objects,EMAIL_FROM=no-reply@dotheory.org \
             --quiet \
             --project ${{ env.GCP_PROJECT_ID }}
 

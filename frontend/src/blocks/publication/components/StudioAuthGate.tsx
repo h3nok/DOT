@@ -6,7 +6,7 @@ import { SignIn } from "../../../dot/SignIn";
 import { useAuth } from "../../../dot/useAuth";
 import { DoWordmark } from "../../../shared/DoWordmark";
 
-export function StudioAuthGate({ children, ownerOnly = false, title = "Publication Studio" }: { children: ReactNode; ownerOnly?: boolean; title?: string }) {
+export function StudioAuthGate({ children, ownerOnly = true, title = "Publication Studio" }: { children: ReactNode; ownerOnly?: boolean; title?: string }) {
   const { user, loading } = useAuth();
   const [signInOpen, setSignInOpen] = useState(false);
 

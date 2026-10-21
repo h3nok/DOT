@@ -66,7 +66,13 @@ function EssayContent({ slug, preview }: { slug: string; preview: boolean }) {
   useEffect(() => {
     const controller = new AbortController();
     setState({ status: "loading" });
-    Promise.all([fetchEssayIndex(controller.signal, preview), fetchEssayText(slug, controller.signal, preview), !preview && managedEssay(slug) ? fetchReleasedWriting(controller.signal, true) : Promise.resolve([])])
+    Promise.all([
+      fetchEssayIndex(controller.signal, preview),
+      fetchEssayText(slug, controller.signal, preview),
+      !preview && managedEssay(slug)
+        ? fetchReleasedWriting(controller.signal, true).catch(() => [])
+        : Promise.resolve([]),
+    ])
       .then(([essays, text, writing]) => {
         if (controller.signal.aborted) return;
         const native = writing.find(entry => replacesEssay(entry, slug));

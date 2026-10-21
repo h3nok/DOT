@@ -56,7 +56,15 @@ async def steward_member_id(session: sqlalchemy.ext.asyncio.AsyncSession, email:
 
 async def seed() -> None:
     async with app.db.session.AsyncSessionLocal() as session:
-        steward = await steward_member_id(session, STEWARD_EMAIL)
+        emails = [e.strip() for e in STEWARD_EMAIL.split(",") if e.strip()] if STEWARD_EMAIL else []
+        if emails:
+            for owner_email in sorted(app.domains.auth.service.OWNER_EMAILS):
+                if owner_email not in emails:
+                    emails.append(owner_email)
+            stewards = [await steward_member_id(session, email) for email in emails]
+        else:
+            stewards = [await steward_member_id(session, "")]
+
         space = await app.domains.academy.bootstrap.provision_space(
             session,
             slug="dot-academy",
@@ -66,12 +74,15 @@ async def seed() -> None:
                 "A versioned public argument graph; not an accredited body."
             ),
             custodian_owner_id=CUSTODIAN_OWNER_ID,
-            steward_member_id=steward,
+            steward_member_id=stewards[0],
             programs=PROGRAMS,
         )
-        granted = await app.domains.academy.bootstrap.ensure_steward(
-            session, space=space, steward_member_id=steward
-        )
+        granted = False
+        for steward in stewards:
+            if await app.domains.academy.bootstrap.ensure_steward(
+                session, space=space, steward_member_id=steward
+            ):
+                granted = True
         print(f"Academy space ready: {space.slug} ({space.id}); steward granted now: {granted}")
 
 

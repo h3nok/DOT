@@ -1092,28 +1092,67 @@ export const OrganismMembrane: React.FC = () => {
       canvas.style.transformOrigin = `${cx}px ${cy}px`;
       radialOrigin.current = { x: cx, y: cy, loading: fieldAnchor?.kind === "loading" };
       ctx.translate(-w / 2, -h / 2);
-      ctx.lineWidth = 0.6;
-      ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.28, alpha * 0.15)})`;
-      ctx.beginPath();
-      for (const ring of mesh) {
-        ctx.moveTo(ring[0].x, ring[0].y);
-        for (const point of ring) ctx.lineTo(point.x, point.y);
-        ctx.closePath();
+      const dotBrand = config.palette === "dot" && config.tint !== "mono";
+      const spokeSat = dotBrand ? Math.max(sat, 54) : sat;
+      const spokeLight = dotBrand ? (document.documentElement.classList.contains("dark") ? 70 : 36) : light;
+      ctx.lineWidth = dotBrand ? 0.7 : 0.6;
+      if (dotBrand) {
+        const darkMode = document.documentElement.classList.contains("dark");
+        ctx.strokeStyle = darkMode
+          ? `hsla(268, 38%, 70%, ${Math.min(0.2, alpha * 0.14)})`
+          : `hsla(268, 28%, 42%, ${Math.min(0.18, alpha * 0.13)})`;
+        ctx.beginPath();
+        for (const ring of mesh) {
+          ctx.moveTo(ring[0].x, ring[0].y);
+          for (const point of ring) ctx.lineTo(point.x, point.y);
+          ctx.closePath();
+        }
+        ctx.stroke();
+        ctx.strokeStyle = `hsla(${hue}, ${spokeSat}%, ${spokeLight}%, ${Math.min(0.24, alpha * 0.17)})`;
+        ctx.beginPath();
+        for (let spoke = 0; spoke < mesh[0].length; spoke++) {
+          ctx.moveTo(mesh[0][spoke].x, mesh[0][spoke].y);
+          for (const ring of mesh) ctx.lineTo(ring[spoke].x, ring[spoke].y);
+        }
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.28, alpha * 0.15)})`;
+        ctx.beginPath();
+        for (const ring of mesh) {
+          ctx.moveTo(ring[0].x, ring[0].y);
+          for (const point of ring) ctx.lineTo(point.x, point.y);
+          ctx.closePath();
+        }
+        for (let spoke = 0; spoke < mesh[0].length; spoke++) {
+          ctx.moveTo(mesh[0][spoke].x, mesh[0][spoke].y);
+          for (const ring of mesh) ctx.lineTo(ring[spoke].x, ring[spoke].y);
+        }
+        ctx.stroke();
       }
-      for (let spoke = 0; spoke < mesh[0].length; spoke++) {
-        ctx.moveTo(mesh[0][spoke].x, mesh[0][spoke].y);
-        for (const ring of mesh) ctx.lineTo(ring[spoke].x, ring[spoke].y);
-      }
-      ctx.stroke();
       mesh.forEach((ring, index) => {
         const fade = 1 - 0.65 * index / mesh.length;
-        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${light}%, ${Math.min(0.85, alpha * fade)})`;
+        ctx.fillStyle = `hsla(${hue}, ${spokeSat}%, ${spokeLight}%, ${Math.min(0.72, alpha * fade * 0.85)})`;
         ctx.beginPath();
         for (const point of ring) {
-          ctx.moveTo(point.x + 0.85, point.y);
-          ctx.arc(point.x, point.y, 0.85, 0, Math.PI * 2);
+          ctx.moveTo(point.x + (dotBrand ? 1.0 : 0.85), point.y);
+          ctx.arc(point.x, point.y, dotBrand ? 1.0 : 0.85, 0, Math.PI * 2);
         }
         ctx.fill();
+        if (dotBrand && index >= 3 && index <= 12) {
+          ring.forEach((point, spokeIndex) => {
+            if ((index * 3 + spokeIndex) % 14 !== 0) return;
+            const isOrigin = (index + spokeIndex) % 3 === 0;
+            const nodeHue = isOrigin ? 268 : 160;
+            ctx.fillStyle = `hsla(${nodeHue}, 58%, 54%, ${Math.min(0.18, alpha * fade * 0.24)})`;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 3.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = `hsla(${nodeHue}, 62%, ${isOrigin ? 46 : 38}%, ${Math.min(0.65, alpha * fade * 0.68)})`;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
       });
       // The diagram supplies the centre when anchored; avoid a second disc.
       if (!bounds) {
@@ -1372,6 +1411,7 @@ export const OrganismMembrane: React.FC = () => {
     config.enabled,
     config.showMembrane,
     config.intensity,
+    config.palette,
     config.preset,
     config.tint,
     // Scale changes the point budget, so the field has to be rebuilt, not

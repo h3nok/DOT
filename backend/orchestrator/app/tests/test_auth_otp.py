@@ -215,3 +215,53 @@ def test_without_a_session_or_owner_header_a_write_is_rejected(
         json={"graph": {"id": "self", "label": "Anonymous", "kind": "self"}},
     )
     assert response.status_code == 401
+
+
+def test_production_sign_in_admits_owners_existing_members_and_invites_only(
+    client: fastapi.testclient.TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import app.domains.auth.service as svc
+
+    sent_codes: dict[str, str] = {}
+
+    async def _fake_send(email: str, code: str, *, purpose: str = "signin") -> bool:
+        sent_codes[email] = code
+        return True
+
+    monkeypatch.setenv("ORCHESTRATOR_ENVIRONMENT", "production")
+    monkeypatch.setenv("RESEND_API_KEY", "re_test_key")
+    monkeypatch.setattr(svc, "send_code_email", _fake_send)
+
+    # 1. Stranger without an invite or existing membership is rejected with 403.
+    stranger = client.post("/v1/auth/otp/request", json={"email": "stranger@example.com"})
+    assert stranger.status_code == 403
+    assert "invitation" in stranger.json()["detail"].lower()
+
+    # 2. Both default steward emails (henok@sullix.com and nkenok@gmail.com) are admitted.
+    for owner_email in ("henok@sullix.com", "nkenok@gmail.com"):
+        req = client.post("/v1/auth/otp/request", json={"email": owner_email})
+        assert req.status_code == 200, req.text
+
+    # 3. Verify owner code in production, issue an invite, and admit an invited guest.
+    verified_owner = client.post(
+        "/v1/auth/otp/verify",
+        json={"email": "henok@sullix.com", "code": sent_codes["henok@sullix.com"]},
+    )
+    assert verified_owner.status_code == 200, verified_owner.text
+    invite_token = client.post("/v1/auth/invites").json()["token"]
+    client.post("/v1/auth/logout")
+
+    invited_req = client.post(
+        "/v1/auth/otp/request",
+        json={"email": "invited@example.com", "invite_token": invite_token},
+    )
+    assert invited_req.status_code == 200, invited_req.text
+    invited_verify = client.post(
+        "/v1/auth/otp/verify",
+        json={
+            "email": "invited@example.com",
+            "code": sent_codes["invited@example.com"],
+            "invite_token": invite_token,
+        },
+    )
+    assert invited_verify.status_code == 200, invited_verify.text

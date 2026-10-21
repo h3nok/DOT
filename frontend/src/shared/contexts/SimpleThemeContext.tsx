@@ -115,7 +115,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // Set data-theme attribute for compatibility
     document.documentElement.setAttribute('data-theme', newTheme);
     const root = document.documentElement;
-    applyIdentityPalette(root, root.dataset.palette === 'dot' ? 'dot' : 'classic');
+    applyIdentityPalette(root, root.dataset.palette === 'classic' ? 'classic' : 'dot');
   };
 
   const applyTheme = (newTheme: string) => {

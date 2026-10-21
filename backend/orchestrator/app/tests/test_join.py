@@ -187,3 +187,34 @@ def test_the_queue_is_never_public(client: fastapi.testclient.TestClient, sealed
 
     # Who asked to join is exactly the public list this platform refuses to keep.
     assert response.status_code in (401, 403)
+
+
+def test_the_queue_requires_owner_write_scope_not_mere_membership(
+    client: fastapi.testclient.TestClient, sealed: None
+) -> None:
+    accepted = _request(client, "reader@example.com", "Let me in.")
+    client.post(
+        "/v1/join/requests/verify",
+        json={"email": "reader@example.com", "code": accepted["dev_code"]},
+    )
+
+    # Sign in as a regular member (not an owner).
+    code = client.post("/v1/auth/otp/request", json={"email": "member@example.com"}).json()[
+        "dev_code"
+    ]
+    client.post("/v1/auth/otp/verify", json={"email": "member@example.com", "code": code})
+
+    member_attempt = client.get("/v1/join/requests")
+    assert member_attempt.status_code == 403
+
+    # Sign in as the steward/owner.
+    client.post("/v1/auth/logout")
+    owner_code = client.post("/v1/auth/otp/request", json={"email": "henok@sullix.com"}).json()[
+        "dev_code"
+    ]
+    client.post("/v1/auth/otp/verify", json={"email": "henok@sullix.com", "code": owner_code})
+
+    owner_read = client.get("/v1/join/requests")
+    assert owner_read.status_code == 200
+    assert len(owner_read.json()["requests"]) == 1
+    assert owner_read.json()["requests"][0]["email"] == "reader@example.com"

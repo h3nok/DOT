@@ -46,10 +46,33 @@ def _now_utc() -> datetime.datetime:
 def _is_owner_email(email: str) -> bool:
     owner_emails: set[str] = {
         e.strip().lower()
-        for e in os.environ.get("DOT_OWNER_EMAILS", "nkenok@gmail.com").split(",")
+        for e in os.environ.get("DOT_OWNER_EMAILS", "henok@sullix.com,nkenok@gmail.com").split(",")
         if e.strip()
     }
     return email.strip().lower() in owner_emails
+
+
+async def _can_sign_in(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    email: str,
+    invite_token: str | None = None,
+) -> bool:
+    """Restrict production/staging sign-in to owners, existing members, or invite holders."""
+    if _is_owner_email(email):
+        return True
+    if os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development") not in {"production", "staging"}:
+        return True
+    email_hash = _hash_email(email)
+    existing: app.db.models.Member | None = await session.scalar(
+        sqlalchemy.select(app.db.models.Member).where(app.db.models.Member.email_hash == email_hash)
+    )
+    if existing is not None:
+        return True
+    if invite_token:
+        invite_check = await check_invite(session, invite_token)
+        if invite_check.get("valid"):
+            return True
+    return False
 
 
 def _mint_session_jwt(member: app.db.models.Member, email: str) -> str:
@@ -149,6 +172,7 @@ async def send_code_email(email: str, code: str, *, purpose: str = "signin") -> 
 async def request_otp(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
+    invite_token: str | None = None,
 ) -> dict:
     email_hash: str = _hash_email(email)
     now: datetime.datetime = _now_utc()
@@ -159,6 +183,13 @@ async def request_otp(
             "ok": False,
             "error": "Email sign-in is not available yet: the site cannot send codes.",
             "status": 503,
+        }
+
+    if not await _can_sign_in(session, email, invite_token):
+        return {
+            "ok": False,
+            "error": "Membership is by invitation.",
+            "status": 403,
         }
 
     # Enforce cooldown: reject if an unused code was issued within the window.
@@ -224,9 +255,17 @@ async def verify_otp(
     email: str,
     code: str,
     display_name: str | None,
+    invite_token: str | None = None,
 ) -> dict:
     email_hash: str = _hash_email(email)
     now: datetime.datetime = _now_utc()
+
+    if not await _can_sign_in(session, email, invite_token):
+        return {
+            "ok": False,
+            "error": "Membership is by invitation.",
+            "status": 403,
+        }
 
     record: app.db.models.OtpCode | None = await session.scalar(
         sqlalchemy.select(app.db.models.OtpCode)
@@ -276,6 +315,9 @@ async def verify_otp(
 
     await session.commit()
     await session.refresh(member)
+
+    if invite_token:
+        await accept_invite(session, invite_token, member.id)
 
     token: str = _mint_session_jwt(member, email)
     return {

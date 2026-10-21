@@ -5,12 +5,14 @@ import pydantic
 
 class OtpRequestPayload(pydantic.BaseModel):
     email: pydantic.EmailStr
+    invite_token: str | None = pydantic.Field(default=None, min_length=16, max_length=256)
 
 
 class OtpVerifyPayload(pydantic.BaseModel):
     email: pydantic.EmailStr
     code: str = pydantic.Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
     display_name: str | None = pydantic.Field(default=None, max_length=128)
+    invite_token: str | None = pydantic.Field(default=None, min_length=16, max_length=256)
 
 
 class SessionUser(pydantic.BaseModel):
