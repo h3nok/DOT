@@ -56,9 +56,13 @@ test("the transparent Host autoplays and loops, with pause and offscreen suspens
   await expect(video).toHaveCSS("border-top-width", "0px");
   await expect(video).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(video).toHaveCSS("box-shadow", "none");
+  // A click retried while the hero settles can scroll its button to the top
+  // edge, leaving the clip offscreen and suspended. Bring it back before judging.
   await feature.getByRole("button", { name: "Pause", exact: true }).click();
+  await feature.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
   await feature.getByRole("button", { name: "Play", exact: true }).click();
+  await feature.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(false);
   await page.locator("#amm-overview").scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
