@@ -81,6 +81,9 @@ test("autoplay explains the concepts once, then stops without looping or announc
   const concepts = page.getByRole("region", { name: "Key concepts and questions" });
   await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
+  // An installed clock follows wall time until paused. On a loaded runner the
+  // checks below let the 8 s reading timer fire before 7.9 s is measured.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1_000);
   const first = concepts.getByRole("group", { name: `1 of ${TOTAL}` });
   await runUntil(page, async () => await first.locator(".home-concept-slideshow-untyped").count() === 0);
   await expect(concepts.getByRole("heading", { name: "What you inherited" }))
