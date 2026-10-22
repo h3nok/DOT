@@ -40,4 +40,3 @@ def test_owner_addresses_follow_the_environment(monkeypatch: pytest.MonkeyPatch)
 def test_no_configured_address_keeps_the_local_handle(monkeypatch: pytest.MonkeyPatch) -> None:
     seed = _load_seed_script()
     assert seed.steward_emails("") == []
-
