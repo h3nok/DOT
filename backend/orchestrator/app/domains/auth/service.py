@@ -43,13 +43,17 @@ def _now_utc() -> datetime.datetime:
     return datetime.datetime.now(datetime.UTC)
 
 
-def _is_owner_email(email: str) -> bool:
-    owner_emails: set[str] = {
+def owner_emails() -> set[str]:
+    """Addresses treated as the steward on sign-in (``DOT_OWNER_EMAILS``)."""
+    return {
         e.strip().lower()
         for e in os.environ.get("DOT_OWNER_EMAILS", "henok@sullix.com,nkenok@gmail.com").split(",")
         if e.strip()
     }
-    return email.strip().lower() in owner_emails
+
+
+def _is_owner_email(email: str) -> bool:
+    return email.strip().lower() in owner_emails()
 
 
 async def _can_sign_in(

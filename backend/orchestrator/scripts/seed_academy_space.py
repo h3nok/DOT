@@ -54,13 +54,24 @@ async def steward_member_id(session: sqlalchemy.ext.asyncio.AsyncSession, email:
     return member.id
 
 
+def steward_emails(configured: str) -> list[str]:
+    """The configured steward address(es) first, then every owner address, without repeats.
+
+    Empty when no address is configured, so local runs keep the handle-based steward.
+    """
+    emails = [e.strip().lower() for e in configured.split(",") if e.strip()]
+    if not emails:
+        return []
+    for owner_email in sorted(app.domains.auth.service.owner_emails()):
+        if owner_email not in emails:
+            emails.append(owner_email)
+    return emails
+
+
 async def seed() -> None:
     async with app.db.session.AsyncSessionLocal() as session:
-        emails = [e.strip() for e in STEWARD_EMAIL.split(",") if e.strip()] if STEWARD_EMAIL else []
+        emails = steward_emails(STEWARD_EMAIL)
         if emails:
-            for owner_email in sorted(app.domains.auth.service.OWNER_EMAILS):
-                if owner_email not in emails:
-                    emails.append(owner_email)
             stewards = [await steward_member_id(session, email) for email in emails]
         else:
             stewards = [await steward_member_id(session, "")]
