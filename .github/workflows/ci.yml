@@ -114,8 +114,11 @@ jobs:
     name: FastAPI orchestrator quality gates
     runs-on: ubuntu-latest
     services:
+      # Service containers start before any step, so the daemon mirror set up in
+      # the deploy job cannot apply here; name Google's Docker Hub cache directly.
+      # Anonymous ECR Public pulls hit "Data limit exceeded" on shared runner IPs.
       postgres:
-        image: public.ecr.aws/docker/library/postgres:16
+        image: mirror.gcr.io/library/postgres:16
         env:
           POSTGRES_DB: dot_ci
           POSTGRES_USER: dot
