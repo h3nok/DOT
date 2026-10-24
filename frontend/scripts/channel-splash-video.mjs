@@ -16,12 +16,12 @@ export const SPLASH_VIDEO = {
   width: 3840,
   height: 2160,
   fps: 30,
-  duration_seconds: 14,
-  frames: 420,
+  duration_seconds: 18,
+  frames: 540,
   audio: true,
   audio_codec: "AAC",
   audio_style: "quiet digital",
-  animation_version: 11,
+  animation_version: 12,
   sequence: ["T × E", "Big C", "RF₁…RFₙ", "RF₀", "Little c", "Rules of RF₀ & Others"],
 };
 
@@ -38,24 +38,24 @@ export const SPLASH_BUMPER = {
   audio: true,
   audio_codec: "AAC",
   audio_style: "quiet digital",
-  animation_version: 3,
+  animation_version: 4,
 };
 
 /** One clean typewriter line per beat. No boxes, no paragraphs. */
 export const CAPTION_MS_PER_CHAR = 22;
 export const SPLASH_CAPTIONS = [
-  { start: 100, end: 1750, text: "T × E — before, after, and what allows it", tag: "SPECULATIVE" },
-  { start: 1850, end: 3350, text: "Big C emerges and stabilizes itself" },
-  { start: 3450, end: 6750, text: "Then it builds tools — worlds with rules" },
-  { start: 6900, end: 9050, text: "Little c — you, among others" },
-  { start: 9150, end: 11350, text: "See the rules. Choose with others." },
+  { start: 180, end: 2550, text: "T × E — before, after, and what allows it", tag: "SPECULATIVE" },
+  { start: 2700, end: 5350, text: "Big C emerges and stabilizes itself" },
+  { start: 5500, end: 9450, text: "Then it builds tools — worlds with rules" },
+  { start: 9600, end: 12350, text: "Little c — you, among others" },
+  { start: 12500, end: 15150, text: "See the rules. Choose with others." },
 ];
 export const SPLASH_TAGLINE = "CONDITIONING · CHOICE · AGENCY";
-export const LOCKUP_TITLE_START = 11550;
-export const LOCKUP_TAGLINE_START = 12200;
+export const LOCKUP_TITLE_START = 15300;
+export const LOCKUP_TAGLINE_START = 15850;
 
 /** Bumper seconds → splash seconds. Slow reveal, fast build, then the full brand lockup. */
-const BUMPER_SEGMENTS = [[0, 0], [0.5, 0.9], [3.2, 11.4], [5, 14]];
+const BUMPER_SEGMENTS = [[0, 0], [0.5, 1.3], [3.2, 15.2], [5, 18]];
 const mapSegments = (value, from, to) => {
   for (let i = 0; i < BUMPER_SEGMENTS.length - 1; i++) {
     const a = BUMPER_SEGMENTS[i];
@@ -72,27 +72,27 @@ export const splashToBumper = (seconds) => mapSegments(seconds, 1, 0);
 
 /** Score events in splash time; the bumper reuses them through the time map. */
 const SCORE_EVENTS = [
-  { t: 0.18, freq: NOTE.A3, amp: 0.55, pan: 0 },
-  { t: 0.78, freq: NOTE.A4, amp: 0.5, pan: -0.3 },
-  { t: 0.86, freq: NOTE.C5, amp: 0.45, pan: 0 },
-  { t: 0.94, freq: NOTE.E5, amp: 0.42, pan: 0.3 },
-  { t: 2.56, freq: NOTE.D5, amp: 0.45, pan: 0.45 },
-  { t: 3.04, freq: NOTE.E5, amp: 0.45, pan: -0.45 },
-  { t: 3.52, freq: NOTE.G5, amp: 0.42, pan: -0.2 },
-  { t: 4.78, freq: NOTE.A1, amp: 0.7, kind: "thump" },
-  { t: 4.78, freq: NOTE.A3, amp: 0.5, pan: -0.15 },
-  { t: 4.78, freq: NOTE.E4, amp: 0.42, pan: 0.15 },
-  { t: 7.08, freq: NOTE.A5, amp: 0.4, pan: 0 },
-  { t: 7.52, freq: NOTE.E5, amp: 0.3, pan: 0.4 },
-  { t: 7.72, freq: NOTE.G5, amp: 0.3, pan: 0.55 },
-  { t: 7.92, freq: NOTE.D5, amp: 0.3, pan: -0.5 },
-  { t: 9.92, freq: NOTE.C5, amp: 0.38, pan: -0.2 },
-  { t: 10.0, freq: NOTE.E5, amp: 0.34, pan: 0.2 },
-  { t: 10.38, freq: NOTE.G5, amp: 0.34, pan: -0.25 },
-  { t: 10.46, freq: NOTE.A5, amp: 0.32, pan: 0.25 },
+  { t: 0.22, freq: NOTE.A3, amp: 0.52, pan: 0 },
+  { t: 2.68, freq: NOTE.A4, amp: 0.48, pan: -0.28 },
+  { t: 2.78, freq: NOTE.C5, amp: 0.44, pan: 0 },
+  { t: 2.88, freq: NOTE.E5, amp: 0.42, pan: 0.28 },
+  { t: 5.58, freq: NOTE.D5, amp: 0.44, pan: 0.42 },
+  { t: 6.06, freq: NOTE.E5, amp: 0.44, pan: -0.42 },
+  { t: 6.54, freq: NOTE.G5, amp: 0.4, pan: -0.18 },
+  { t: 7.48, freq: NOTE.A1, amp: 0.68, kind: "thump" },
+  { t: 7.48, freq: NOTE.A3, amp: 0.48, pan: -0.15 },
+  { t: 7.48, freq: NOTE.E4, amp: 0.4, pan: 0.15 },
+  { t: 9.72, freq: NOTE.A5, amp: 0.4, pan: 0 },
+  { t: 10.18, freq: NOTE.E5, amp: 0.3, pan: 0.38 },
+  { t: 10.38, freq: NOTE.G5, amp: 0.3, pan: 0.52 },
+  { t: 10.58, freq: NOTE.D5, amp: 0.3, pan: -0.48 },
+  { t: 13.32, freq: NOTE.C5, amp: 0.38, pan: -0.2 },
+  { t: 13.42, freq: NOTE.E5, amp: 0.34, pan: 0.2 },
+  { t: 13.82, freq: NOTE.G5, amp: 0.34, pan: -0.24 },
+  { t: 13.92, freq: NOTE.A5, amp: 0.32, pan: 0.24 },
   // Brand moment: a two-note FM bell (sonic logo).
-  { t: 11.6, freq: NOTE.E5, amp: 0.55, pan: -0.1, kind: "bell" },
-  { t: 11.84, freq: NOTE.A5, amp: 0.5, pan: 0.1, kind: "bell" },
+  { t: 15.35, freq: NOTE.E5, amp: 0.54, pan: -0.1, kind: "bell" },
+  { t: 15.59, freq: NOTE.A5, amp: 0.48, pan: 0.1, kind: "bell" },
 ];
 
 const typedTicks = (startMs, text) => Array.from(text, (_, index) => (startMs + index * CAPTION_MS_PER_CHAR) / 1000);
@@ -219,24 +219,35 @@ export function buildSplashAnimationDocument(svg) {
     const primordialCore = make("circle", { cx: 348, cy: 352, r: 5, fill: "#ffffff", opacity: 0 });
     fxLayer.append(primordialHalo, primordialDot, primordialCore);
 
-    // Concentric emergence & evolution waves across the 14-second story:
-    // 1. T × E source (120ms) -> 2. Big C emerges (720ms) -> 3. RF₁/RF₂/RFₙ experiments (2650ms, 3150ms, 3650ms)
-    // -> 4. RF₀ stabilized for Free Will (4850ms, 5350ms) -> 5. Little c₁ created (7150ms, 7750ms)
-    // -> 6. Rules of RF₀, Intent, Cooperation & Evolution return wave to Big C (9550ms, 10250ms, 10650ms)
+    // Studio key-light halo inside the canonical 700x700 architecture space (settles to 0 at 18s so the final frame matches splash.png)
+    const studioDefs = svg.querySelector("defs");
+    const studioGrad = make("radialGradient", { id: "splash-studio-key-grad", cx: "42%", cy: "38%", r: "58%" });
+    const studioStop0 = make("stop", { offset: "0%", "stop-color": "#8b6bae", "stop-opacity": "0.26" });
+    const studioStop1 = make("stop", { offset: "55%", "stop-color": "#2ad89d", "stop-opacity": "0.10" });
+    const studioStop2 = make("stop", { offset: "100%", "stop-color": "#ffffff", "stop-opacity": "0" });
+    studioGrad.append(studioStop0, studioStop1, studioStop2);
+    if (studioDefs) studioDefs.append(studioGrad);
+    const studioKeyHalo = make("circle", { cx: 348, cy: 352, r: 340, fill: "url(#splash-studio-key-grad)", opacity: 0 });
+    archRoot.insertBefore(studioKeyHalo, archRoot.firstChild);
+
+    // Concentric emergence & evolution waves across the 18-second story:
+    // 1. T × E source (140ms) -> 2. Big C emerges (2720ms) -> 3. RF₁/RF₂/RFₙ experiments (5620ms, 6100ms, 6580ms)
+    // -> 4. RF₀ stabilized for Free Will (7520ms, 8020ms) -> 5. Little c₁ created (9740ms, 10340ms)
+    // -> 6. Rules of RF₀, Intent, Cooperation & Evolution return wave to Big C (13450ms, 13880ms, 14180ms)
     const echoSpecs = [
-      { cx: 348, cy: 352, start: 120, duration: 1650, color: "#5b3b80", minR: 12, maxR: 340, peak: 0.44, width: 2.4 },
-      { cx: 348, cy: 352, start: 720, duration: 1850, color: "#2ad89d", minR: 18, maxR: 316, peak: 0.52, width: 2.8 },
-      { cx: 543, cy: 200, start: 2680, duration: 1100, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
-      { cx: 145, cy: 494, start: 3180, duration: 1100, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
-      { cx: 113, cy: 276, start: 3680, duration: 1100, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
-      { cx: 348, cy: 352, start: 4850, duration: 1550, color: "#d98218", minR: 36, maxR: 215, peak: 0.54, width: 2.6 },
-      { cx: 348, cy: 352, start: 5350, duration: 1450, color: "#b86d0e", minR: 90, maxR: 202, peak: 0.4, width: 2 },
-      { cx: 314, cy: 332, start: 7150, duration: 1450, color: "#12966b", minR: 8, maxR: 102, peak: 0.56, width: 2.6 },
-      { cx: 314, cy: 332, start: 7750, duration: 1550, color: "#2ad89d", minR: 28, maxR: 136, peak: 0.45, width: 2.2 },
-      { cx: 414, cy: 490, start: 10150, duration: 1250, color: "#d98218", minR: 5, maxR: 54, peak: 0.58, width: 2.4 },
-      { cx: 413, cy: 230, start: 10380, duration: 1350, color: "#2ad89d", minR: 8, maxR: 66, peak: 0.55, width: 2.4 },
+      { cx: 348, cy: 352, start: 140, duration: 2100, color: "#5b3b80", minR: 12, maxR: 340, peak: 0.44, width: 2.4 },
+      { cx: 348, cy: 352, start: 2720, duration: 2100, color: "#2ad89d", minR: 18, maxR: 316, peak: 0.52, width: 2.8 },
+      { cx: 543, cy: 200, start: 5620, duration: 1150, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
+      { cx: 145, cy: 494, start: 6100, duration: 1150, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
+      { cx: 113, cy: 276, start: 6580, duration: 1150, color: "#d98218", minR: 8, maxR: 58, peak: 0.52, width: 2.2 },
+      { cx: 348, cy: 352, start: 7520, duration: 1650, color: "#d98218", minR: 36, maxR: 215, peak: 0.54, width: 2.6 },
+      { cx: 348, cy: 352, start: 8020, duration: 1550, color: "#b86d0e", minR: 90, maxR: 202, peak: 0.4, width: 2 },
+      { cx: 314, cy: 332, start: 9740, duration: 1550, color: "#12966b", minR: 8, maxR: 102, peak: 0.56, width: 2.6 },
+      { cx: 314, cy: 332, start: 10340, duration: 1650, color: "#2ad89d", minR: 28, maxR: 136, peak: 0.45, width: 2.2 },
+      { cx: 414, cy: 490, start: 13450, duration: 1350, color: "#d98218", minR: 5, maxR: 54, peak: 0.58, width: 2.4 },
+      { cx: 413, cy: 230, start: 13880, duration: 1450, color: "#2ad89d", minR: 8, maxR: 66, peak: 0.55, width: 2.4 },
       // Evolution feedback wave from Little c₁ & c₂ returning to Big C's overarching membrane!
-      { cx: 348, cy: 352, start: 10680, duration: 1650, color: "#12966b", minR: 72, maxR: 302, peak: 0.46, width: 2.5 },
+      { cx: 348, cy: 352, start: 14180, duration: 1850, color: "#12966b", minR: 72, maxR: 302, peak: 0.46, width: 2.5 },
     ];
     const echoes = echoSpecs.map((spec) => {
       const circle = make("circle", {
@@ -271,12 +282,12 @@ export function buildSplashAnimationDocument(svg) {
       });
     };
 
-    // 1. Big C projects experimental Reality Frames RF₁, RF₂, RFₙ (2.40s – 4.30s)
-    const rfExperimentFilaments = buildTravellerFilaments("[data-rf-filament]", 2420, 480, 920, "#d98218", "#b86d0e");
-    // 2. Big C engineers & stabilizes RF₀ for human experience (4.68s – 5.95s)
-    const rf0StabilizeBeams = buildTravellerFilaments("[data-rf0-beam]", 4680, 90, 960, "#d98218", "#b86d0e");
-    // 3. Big C creates Little c₁ and peers c₂…cₙ inside RF₀ (6.88s – 8.35s)
-    const littleCFilaments = buildTravellerFilaments("[data-seed-filament]", 6880, 85, 1020, "#2ad89d", "#086946");
+    // 1. Big C projects experimental Reality Frames RF₁, RF₂, RFₙ (5.48s – 7.40s)
+    const rfExperimentFilaments = buildTravellerFilaments("[data-rf-filament]", 5480, 480, 960, "#d98218", "#b86d0e");
+    // 2. Big C engineers & stabilizes RF₀ for human experience (7.40s – 8.70s)
+    const rf0StabilizeBeams = buildTravellerFilaments("[data-rf0-beam]", 7400, 95, 1020, "#d98218", "#b86d0e");
+    // 3. Big C creates Little c₁ and peers c₂…cₙ inside RF₀ (9.52s – 11.10s)
+    const littleCFilaments = buildTravellerFilaments("[data-seed-filament]", 9520, 90, 1060, "#2ad89d", "#086946");
     const allFilaments = [...rfExperimentFilaments, ...rf0StabilizeBeams, ...littleCFilaments];
 
     // Intent traveller spark + Cooperation pulse in Act V (The Purpose of Humanity)
@@ -333,7 +344,7 @@ export function buildSplashAnimationDocument(svg) {
       }
       const count = Math.min(item.full.length, Math.floor(elapsed / MS_PER_CHAR) + 1);
       item.el.textContent = item.full.slice(0, count);
-      const fade = Number.isFinite(item.end) && time > item.end - 240 ? 1 - ease(clamp((time - (item.end - 240)) / 240)) : 1;
+      const fade = Number.isFinite(item.end) && time > item.end - 260 ? 1 - ease(clamp((time - (item.end - 260)) / 260)) : 1;
       item.el.setAttribute("opacity", fade.toFixed(3));
       return { x: 960 + item.el.getComputedTextLength() / 2 + 4, typing: count < item.full.length, fade };
     };
@@ -354,120 +365,121 @@ export function buildSplashAnimationDocument(svg) {
       animate(lockup, [
         { opacity: 0, transform: "translateY(10px)" },
         { opacity: 1, transform: "translateY(0px)" }
-      ], 40, 580, "cubic-bezier(0.22,1,0.36,1)");
+      ], 40, 640, "cubic-bezier(0.22,1,0.36,1)");
     }
 
-    if (ambient) animate(ambient, [{ opacity: 0 }, { opacity: 1 }], 0, 900, "ease-out");
-    if (field) animate(field, [{ opacity: 0 }, { opacity: 1 }], 80, 1200, "ease-out");
+    if (ambient) animate(ambient, [{ opacity: 0 }, { opacity: 1 }], 0, 960, "ease-out");
+    if (field) animate(field, [{ opacity: 0 }, { opacity: 1 }], 80, 1280, "ease-out");
 
-    // Primordial spark at (348, 352) coalescing into Big C
+    // Primordial spark at (348, 352) coalescing into Big C at the transition to Act II (2.30s – 3.30s)
     animate(primordialHalo, [
       { opacity: 0, transform: "scale(0.1)", offset: 0 },
       { opacity: 0.65, transform: "scale(1.55)", offset: 0.45 },
       { opacity: 0, transform: "scale(2.8)", offset: 1 }
-    ], 420, 980, "ease-out", "348px 352px");
+    ], 2320, 980, "ease-out", "348px 352px");
     animate(primordialDot, [
       { opacity: 0, transform: "scale(0.1)", offset: 0 },
       { opacity: 1, transform: "scale(1.3)", offset: 0.4 },
       { opacity: 0, transform: "scale(0.4)", offset: 1 }
-    ], 380, 880, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
+    ], 2280, 880, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
     animate(primordialCore, [
       { opacity: 0, transform: "scale(0.1)", offset: 0 },
       { opacity: 0.98, transform: "scale(1.25)", offset: 0.4 },
       { opacity: 0, transform: "scale(0.2)", offset: 1 }
-    ], 420, 840, "ease-out", "348px 352px");
+    ], 2320, 840, "ease-out", "348px 352px");
 
-    // ACT I: T × E (The Source) & Big C Emergence (0.0s – 2.35s)
-    animate(archRoot.querySelector("[data-te-wash]"), [{ opacity: 0 }, { opacity: 1 }], 60, 800);
+    // ACT I: T × E (The Speculative Source — before, after, and what allows it) (0.0s – 2.55s)
+    animate(archRoot.querySelector("[data-te-wash]"), [{ opacity: 0 }, { opacity: 1 }], 60, 860);
     animate(archRoot.querySelector("[data-te-boundary]"), [
       { opacity: 0, transform: "scale(0.68)" },
       { opacity: 0.88, transform: "scale(1)" }
-    ], 100, 900, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 100, 960, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
     animate(archRoot.querySelector("[data-te-contours]"), [
       { opacity: 0, transform: "scale(0.8)" },
       { opacity: 0.8, transform: "scale(1)" }
-    ], 220, 900, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 220, 960, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
     animate(archRoot.querySelector("[data-label='te']"), [
       { opacity: 0, transform: "scale(0.7) translateY(10px)" },
       { opacity: 1, transform: "scale(1) translateY(0px)" }
-    ], 300, 560, "cubic-bezier(0.22,1,0.36,1)", "348px 22px");
+    ], 320, 620, "cubic-bezier(0.22,1,0.36,1)", "348px 22px");
 
+    // ACT II: Big C Emerges and Stabilizes Itself (2.60s – 5.35s)
     animate(archRoot.querySelector("[data-big-c-body]"), [
       { opacity: 0, transform: "scale(0.025)", offset: 0 },
       { opacity: 1, transform: "scale(1.03)", offset: 0.74 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 680, 1320, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
+    ], 2680, 1380, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-big-c-details]"), [
       { opacity: 0 },
       { opacity: 1 }
-    ], 1480, 660, "ease-out");
+    ], 3480, 720, "ease-out");
 
     archRoot.querySelectorAll("[data-big-c-node]").forEach((node, idx) => {
       animate(node, [
         { opacity: 0, transform: "scale(0.2)" },
         { opacity: 1, transform: "scale(1)" }
-      ], 1480 + idx * 65, 520, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
+      ], 3480 + idx * 70, 560, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
     });
 
     animate(archRoot.querySelector("[data-label='big-c']"), [
       { opacity: 0, transform: "scale(0.72)", offset: 0 },
       { opacity: 1, transform: "scale(1.12)", offset: 0.65 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 1320, 680, "cubic-bezier(0.22,1,0.36,1)", "348px 110px");
+    ], 3320, 720, "cubic-bezier(0.22,1,0.36,1)", "348px 110px");
 
     animate(archRoot.querySelector("[data-loop='outer']"), [
       { opacity: 0 },
       { opacity: 0.92 }
-    ], 1680, 680, "ease-out");
+    ], 3820, 740, "ease-out");
 
-    // ACT II: Big C Experiments with Reality Frames RF₁ → RF₂ → RFₙ FIRST (2.35s – 4.65s)
+    // ACT III-A: Big C Experiments with Candidate Reality Frames RF₁ → RF₂ → RFₙ FIRST (5.45s – 7.40s)
     archRoot.querySelectorAll("[data-rfn-body]").forEach((frameBody, idx) => {
       animate(frameBody, [
         { opacity: 0, transform: "scale(0.12) rotate(-35deg)", offset: 0 },
         { opacity: 1, transform: "scale(1.22) rotate(8deg)", offset: 0.62 },
         { opacity: 1, transform: "scale(1) rotate(0deg)", offset: 1 }
-      ], 2560 + idx * 480, 860, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
+      ], 5560 + idx * 480, 880, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
     });
 
-    // ACT III: RF₀ Is Engineered & Made Stable for Human Experience (4.65s – 6.85s)
+    // ACT III-B: RF₀ Is Engineered & Made Stable for Human Experience (7.40s – 9.45s)
     animate(archRoot.querySelector("[data-rf0-body]"), [
       { opacity: 0, transform: "scale(0.22)", offset: 0 },
       { opacity: 1, transform: "scale(1.03)", offset: 0.76 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 4760, 1120, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 7480, 1140, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-rf0-polar]"), [
       { opacity: 0, transform: "rotate(-48deg) scale(0.86)" },
       { opacity: 1, transform: "rotate(0deg) scale(1)" }
-    ], 4960, 1080, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 7720, 1100, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-rf0-axes]"), [
       { opacity: 0 },
       { opacity: 1 }
-    ], 5380, 680, "ease-out");
+    ], 8140, 700, "ease-out");
 
     animate(archRoot.querySelector("[data-label='rf0']"), [
       { opacity: 0, transform: "scale(0.72) translateY(8px)" },
       { opacity: 1, transform: "scale(1) translateY(0px)" }
-    ], 5480, 580, "cubic-bezier(0.22,1,0.36,1)", "348px 181px");
+    ], 8260, 620, "cubic-bezier(0.22,1,0.36,1)", "348px 181px");
 
-    // ACT IV: Big C Creates Little c₁ & Peers c₂…cₙ Inside RF₀ (6.85s – 9.15s)
+    // ACT IV: Big C Creates Little c₁ & Peers c₂…cₙ Inside RF₀ (9.55s – 12.35s)
     animate(archRoot.querySelector("[data-c1-cell]"), [
       { opacity: 0, transform: "scale(0.05)", offset: 0 },
       { opacity: 1, transform: "scale(1.18)", offset: 0.7 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 7080, 960, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
+    ], 9680, 980, "cubic-bezier(0.16,1,0.3,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-label='little-c']"), [
       { opacity: 0, transform: "translateX(-14px) scale(0.88)" },
       { opacity: 1, transform: "translateX(0px) scale(1)" }
-    ], 7440, 620, "cubic-bezier(0.22,1,0.36,1)", "418px 352px");
+    ], 10080, 640, "cubic-bezier(0.22,1,0.36,1)", "418px 352px");
 
     animate(archRoot.querySelector("[data-loop='inner']"), [
       { opacity: 0 },
       { opacity: 0.94 }
-    ], 7620, 660, "ease-out");
+    ], 10280, 680, "ease-out");
 
     archRoot.querySelectorAll("[data-peer]").forEach((peer, idx) => {
       const targetOpacity = peer.getAttribute("opacity") || "1";
@@ -475,40 +487,40 @@ export function buildSplashAnimationDocument(svg) {
         { opacity: 0, transform: "scale(0.12)", offset: 0 },
         { opacity: Number(targetOpacity), transform: "scale(1.18)", offset: 0.72 },
         { opacity: Number(targetOpacity), transform: "scale(1)", offset: 1 }
-      ], 7520 + idx * 180, 760, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
+      ], 10180 + idx * 190, 780, "cubic-bezier(0.22,1,0.36,1)", "center", "fill-box");
     });
 
     animate(archRoot.querySelector("[data-c1-awareness]"), [
       { opacity: 0, transform: "scale(0.28)", offset: 0 },
       { opacity: 1, transform: "scale(1.05)", offset: 0.75 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 7880, 880, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 10540, 900, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-label='awareness']"), [
       { opacity: 0, transform: "translateY(-8px)" },
       { opacity: 1, transform: "translateY(0px)" }
-    ], 8280, 560, "ease-out");
+    ], 10920, 600, "ease-out");
 
-    // ACT V: The Purpose of Humanity — Living by the Rules of RF₀ & With Others (9.15s – 11.75s)
+    // ACT V: The Purpose of Humanity — Living by the Rules of RF₀ & With Others (12.45s – 15.15s)
     animate(archRoot.querySelector("[data-little-c='constraints']"), [
       { opacity: 0, transform: "scale(1.18)" },
       { opacity: 1, transform: "scale(1)" }
-    ], 9180, 580, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
+    ], 12560, 600, "cubic-bezier(0.22,1,0.36,1)", "348px 352px");
 
     animate(archRoot.querySelector("[data-purpose-tag='rules']"), [
       { opacity: 0, transform: "translateX(8px)" },
       { opacity: 1, transform: "translateX(0px)" }
-    ], 9280, 520, "ease-out");
+    ], 12660, 540, "ease-out");
 
     animate(archRoot.querySelector("[data-little-c='options']"), [
       { opacity: 0 },
       { opacity: 1 }
-    ], 9460, 580, "ease-out");
+    ], 12840, 600, "ease-out");
 
     animate(archRoot.querySelector("[data-little-c='relations']"), [
       { opacity: 0 },
       { opacity: 1 }
-    ], 9680, 680, "ease-out");
+    ], 13080, 700, "ease-out");
 
     // Chosen option & Intent trajectory
     const chosenNode = archRoot.querySelector("[data-chosen-node]");
@@ -517,7 +529,7 @@ export function buildSplashAnimationDocument(svg) {
         { opacity: 0, transform: "scale(0.25)", offset: 0 },
         { opacity: 1, transform: "scale(1.55)", offset: 0.55 },
         { opacity: 1, transform: "scale(1)", offset: 1 }
-      ], 9920, 620, "cubic-bezier(0.22,1,0.36,1)", "391px 410px");
+      ], 13320, 640, "cubic-bezier(0.22,1,0.36,1)", "391px 410px");
     }
 
     const solidIntent = archRoot.querySelector("[data-intent-solid]");
@@ -527,7 +539,7 @@ export function buildSplashAnimationDocument(svg) {
       animate(solidIntent, [
         { opacity: 0, strokeDashoffset: String(sLen) },
         { opacity: 1, strokeDashoffset: "0" }
-      ], 9980, 580, "cubic-bezier(0.22,1,0.36,1)");
+      ], 13380, 620, "cubic-bezier(0.22,1,0.36,1)");
     }
 
     const dottedIntent = archRoot.querySelector("[data-intent-dotted]");
@@ -535,7 +547,7 @@ export function buildSplashAnimationDocument(svg) {
       animate(dottedIntent, [
         { opacity: 0 },
         { opacity: 0.95 }
-      ], 10320, 580, "ease-out");
+      ], 13740, 620, "ease-out");
     }
 
     if (intentGlowPath) {
@@ -543,26 +555,26 @@ export function buildSplashAnimationDocument(svg) {
         { opacity: 0 },
         { opacity: 0.52, offset: 0.55 },
         { opacity: 0.34, offset: 1 }
-      ], 10040, 960, "ease-out");
+      ], 13440, 980, "ease-out");
     }
 
     animate(archRoot.querySelector("[data-intent-end]"), [
       { opacity: 0, transform: "scale(0.2)", offset: 0 },
       { opacity: 1, transform: "scale(1.5)", offset: 0.6 },
       { opacity: 1, transform: "scale(1)", offset: 1 }
-    ], 10440, 540, "cubic-bezier(0.22,1,0.36,1)", "448px 510px");
+    ], 13860, 580, "cubic-bezier(0.22,1,0.36,1)", "448px 510px");
 
     animate(archRoot.querySelector("[data-purpose-tag='intent']"), [
       { opacity: 0, transform: "translateY(6px)" },
       { opacity: 1, transform: "translateY(0px)" }
-    ], 10480, 520, "ease-out");
+    ], 13900, 540, "ease-out");
 
     archRoot.querySelectorAll("[data-coop-arc]").forEach((arc) => {
       animate(arc, [
         { opacity: 0 },
         { opacity: 1, offset: 0.5 },
         { opacity: 0.96, offset: 1 }
-      ], 10380, 740, "ease-out");
+      ], 13820, 760, "ease-out");
     });
 
     const bigCMembrane = archRoot.querySelector("[data-big-c-membrane]");
@@ -597,130 +609,6 @@ export function buildSplashAnimationDocument(svg) {
     const clamp = (value) => Math.max(0, Math.min(1, value));
     const ease = (value) => 1 - Math.pow(1 - value, 3);
 
-    // Precompute base radialField parameters for 1920x1080 centered at (960, 442)
-    const FIELD_W = 1920;
-    const FIELD_H = 1080;
-    const FIELD_CX = 960;
-    const FIELD_CY = 442;
-    const FIELD_CORE = Math.min(FIELD_W, FIELD_H) * 0.047;
-    const FIELD_SPOKES = 96;
-    const FIELD_RINGS = 30;
-    const FIELD_EXTENT = Math.hypot(FIELD_W, FIELD_H);
-
-    // Dynamic living T × E background grid computation per frame
-    const updateLivingField = (time) => {
-      if (!fieldRingsPath || !fieldSpokesPath) return;
-      // Smooth envelope that guarantees 0 displacement at t=14000ms (matching still poster) while vividly moving at all earlier frames
-      const motionEnv = Math.sin(Math.PI * clamp(time / 14000));
-      // Shockwaves from Big C ignition (720ms), RF₀ stabilization (4850ms), Little c birth (7150ms), and Cooperation (10380ms)
-      const shock1 = Math.sin(Math.PI * clamp((time - 600) / 2200));
-      const shock2 = Math.sin(Math.PI * clamp((time - 4750) / 2200));
-      const shock3 = Math.sin(Math.PI * clamp((time - 7050) / 2200));
-      const shock4 = Math.sin(Math.PI * clamp((time - 10200) / 2200));
-
-      const grid = Array.from({ length: FIELD_RINGS }, (_, ring) => {
-        const progress = ring / (FIELD_RINGS - 1);
-        const baseRadius = FIELD_CORE * 1.2 * Math.pow(FIELD_EXTENT / (FIELD_CORE * 1.2), progress);
-        const power = 2 + 5 * Math.pow(progress, 3);
-        const radialRipple = motionEnv * (
-          6 * Math.sin(ring * 0.55 - time * 0.0038) +
-          4 * (shock1 + shock2 + shock3 + shock4) * Math.sin(ring * 0.7 - time * 0.0055)
-        );
-        const angleTwist = motionEnv * (
-          0.018 * Math.sin(ring * 0.24 - time * 0.0022) +
-          0.008 * Math.cos(ring * 0.4 + time * 0.0017)
-        );
-        return Array.from({ length: FIELD_SPOKES }, (_, spoke) => {
-          const baseAngle = (spoke / FIELD_SPOKES) * Math.PI * 2;
-          const spokeRipple = motionEnv * 2.5 * Math.cos(spoke * 0.25 + time * 0.0028);
-          const angle = baseAngle + angleTwist * (1 - 0.35 * progress);
-          const c = Math.cos(angle);
-          const s = Math.sin(angle);
-          const stretch = 1 / Math.pow(Math.pow(Math.abs(c), power) + Math.pow(Math.abs(s), power), 1 / power);
-          const r = Math.max(12, baseRadius + radialRipple + spokeRipple);
-          return {
-            x: FIELD_CX + r * c * stretch,
-            y: FIELD_CY + r * s * stretch,
-          };
-        });
-      });
-
-      const pt = (p) => p.x.toFixed(1) + " " + p.y.toFixed(1);
-      fieldRingsPath.setAttribute("d", grid.map((ring) => "M" + ring.map(pt).join("L") + "Z").join(""));
-      fieldSpokesPath.setAttribute("d", grid[0].map((_, s) => "M" + grid.map((ring) => pt(ring[s])).join("L")).join(""));
-
-      // Update synaptic field packets streaming along the warped grid
-      for (const pkt of fieldPacketSpecs) {
-        if (motionEnv <= 0.01) {
-          pkt.halo.setAttribute("opacity", "0");
-          pkt.core.setAttribute("opacity", "0");
-          continue;
-        }
-        let px = FIELD_CX;
-        let py = FIELD_CY;
-        if (pkt.mode === "spoke") {
-          const u = ((time * pkt.speed + pkt.phase) % 1 + 1) % 1;
-          const rFloat = 2 + u * (FIELD_RINGS - 5);
-          const r0 = Math.floor(rFloat);
-          const r1 = Math.min(FIELD_RINGS - 1, r0 + 1);
-          const f = rFloat - r0;
-          const p0 = grid[r0][pkt.spokeIdx];
-          const p1 = grid[r1][pkt.spokeIdx];
-          px = p0.x + (p1.x - p0.x) * f;
-          py = p0.y + (p1.y - p0.y) * f;
-        } else {
-          const u = ((time * pkt.speed * 0.7 + pkt.phase) % 1 + 1) % 1;
-          const sFloat = u * FIELD_SPOKES;
-          const s0 = Math.floor(sFloat) % FIELD_SPOKES;
-          const s1 = (s0 + 1) % FIELD_SPOKES;
-          const f = sFloat - Math.floor(sFloat);
-          const p0 = grid[pkt.ringIdx][s0];
-          const p1 = grid[pkt.ringIdx][s1];
-          px = p0.x + (p1.x - p0.x) * f;
-          py = p0.y + (p1.y - p0.y) * f;
-        }
-        pkt.halo.setAttribute("cx", px.toFixed(1));
-        pkt.halo.setAttribute("cy", py.toFixed(1));
-        pkt.halo.setAttribute("opacity", (0.38 * motionEnv).toFixed(3));
-        pkt.core.setAttribute("cx", px.toFixed(1));
-        pkt.core.setAttribute("cy", py.toFixed(1));
-        pkt.core.setAttribute("opacity", (0.92 * motionEnv).toFixed(3));
-      }
-    };
-
-    // Gentle cosine-eased camera on the centred architecture. Zoom stays ≤ 1.04 so the
-    // T × E label never reaches the "proposed model" pill at the top of the frame.
-    const cameraStops = [
-      { t: 0,     scale: 1.02, panX: 0,  panY: 0 },
-      { t: 1800,  scale: 0.96, panX: 0,  panY: 0 },
-      { t: 4400,  scale: 0.96, panX: 0,  panY: 0 },
-      { t: 5400,  scale: 1.00, panX: 0,  panY: 0 },
-      { t: 6600,  scale: 1.00, panX: 0,  panY: 0 },
-      { t: 7500,  scale: 1.04, panX: 6,  panY: 2 },
-      { t: 11400, scale: 1.03, panX: 4,  panY: 0 },
-      { t: 12700, scale: 1.00, panX: 0,  panY: 0 },
-      { t: 14000, scale: 1.00, panX: 0,  panY: 0 },
-    ];
-    const updateCamera = (time) => {
-      if (!archRoot) return;
-      let s0 = cameraStops[0];
-      let s1 = cameraStops[cameraStops.length - 1];
-      for (let i = 0; i < cameraStops.length - 1; i++) {
-        if (time >= cameraStops[i].t && time <= cameraStops[i + 1].t) {
-          s0 = cameraStops[i];
-          s1 = cameraStops[i + 1];
-          break;
-        }
-      }
-      const span = Math.max(1, s1.t - s0.t);
-      const u = clamp((time - s0.t) / span);
-      const smooth = 0.5 - 0.5 * Math.cos(u * Math.PI);
-      const camScale = 1.00 * (s0.scale + (s1.scale - s0.scale) * smooth);
-      const tx = -348 + s0.panX + (s1.panX - s0.panX) * smooth;
-      const ty = -352 + s0.panY + (s1.panY - s0.panY) * smooth;
-      archRoot.setAttribute("transform", \`translate(960 442) scale(\${camScale.toFixed(4)}) translate(\${tx.toFixed(2)} \${ty.toFixed(2)})\`);
-    };
-
     // Calm, clean motion: the structure builds and breathes, but nothing buzzes around it.
     // No travelling particles, sparks, orbiting dots, or scattered field nodes.
     for (const el of [
@@ -739,12 +627,27 @@ export function buildSplashAnimationDocument(svg) {
       const time = Math.max(0, Math.min(${SPLASH_VIDEO.duration_seconds * 1000}, milliseconds));
       for (const animation of animations) animation.currentTime = time;
 
-      // 1. Radial field reveal, living grid warp & deterministic camera lens
+      // 1. Radial field reveal & studio key-light envelope (settles to 0 at 18s so frame 539 matches splash.png)
       reveal.setAttribute("r", String(2100 * ease(clamp((time - 40) / 1950))));
-      // Camera and background grid stay still. Moving every fine line on every frame is what
-      // makes YouTube's re-compression blur the picture; only the parts being built move.
+      const studioEnv = Math.sin(Math.PI * clamp(time / 17600));
+      if (studioKeyHalo) {
+        if (time < 2600) {
+          studioStop0.setAttribute("stop-color", "#8b6bae");
+          studioStop1.setAttribute("stop-color", "#c3aee0");
+        } else if (time < 5500) {
+          studioStop0.setAttribute("stop-color", "#2ad89d");
+          studioStop1.setAttribute("stop-color", "#12966b");
+        } else if (time < 9550) {
+          studioStop0.setAttribute("stop-color", "#f2b866");
+          studioStop1.setAttribute("stop-color", "#d98218");
+        } else {
+          studioStop0.setAttribute("stop-color", "#2ad89d");
+          studioStop1.setAttribute("stop-color", "#d98218");
+        }
+        studioKeyHalo.setAttribute("opacity", (0.72 * studioEnv).toFixed(3));
+      }
 
-      // 1b. Typewriter captions (0s – 11.4s), then the brand lockup: title fades up, tagline types.
+      // 1b. Typewriter captions (0s – 15.15s), then the brand lockup: title fades up, tagline types.
       if (actStage) actStage.setAttribute("opacity", "1");
       let activeCaret = null;
       for (const item of captionItems) {
@@ -755,46 +658,24 @@ export function buildSplashAnimationDocument(svg) {
       }
       if (ledgerPanel) ledgerPanel.setAttribute("opacity", time < ${LOCKUP_TITLE_START} ? "0" : "1");
       if (lockupTitle) {
-        const titleIn = ease(clamp((time - ${LOCKUP_TITLE_START}) / 620));
+        const titleIn = ease(clamp((time - ${LOCKUP_TITLE_START}) / 640));
         lockupTitle.setAttribute("opacity", titleIn.toFixed(3));
         lockupTitle.setAttribute("transform", \`translate(0 \${((1 - titleIn) * 12).toFixed(1)})\`);
       }
       if (taglineItem) {
         const state = typeAt(taglineItem, time);
-        if (state) activeCaret = [taglineItem, state, taglineItem.typedAt + 900];
+        if (state) activeCaret = [taglineItem, state, taglineItem.typedAt + 950];
       }
       if (activeCaret) placeCaret(activeCaret[0], activeCaret[1], time, activeCaret[2]);
       else placeCaret(null, null, time);
 
-      // 2. Pre-Big-C undifferentiated awareness sparks spiraling into (348, 352)
-      for (const spark of awarenessSparks) {
-        const p = clamp((time - spark.start) / spark.duration);
-        if (p <= 0 || p >= 1) {
-          spark.halo.setAttribute("opacity", "0");
-          spark.dot.setAttribute("opacity", "0");
-        } else {
-          const ep = ease(p);
-          const r = spark.startR * (1 - ep);
-          const angle = spark.baseRad + ep * 1.15;
-          const x = (348 + Math.cos(angle) * r).toFixed(1);
-          const y = (352 + Math.sin(angle) * r).toFixed(1);
-          const light = Math.sin(Math.PI * p);
-          spark.halo.setAttribute("cx", x);
-          spark.halo.setAttribute("cy", y);
-          spark.halo.setAttribute("opacity", (light * 0.45).toFixed(3));
-          spark.dot.setAttribute("cx", x);
-          spark.dot.setAttribute("cy", y);
-          spark.dot.setAttribute("opacity", (light * 0.96).toFixed(3));
-        }
-      }
-
-      // 3. Living organic membrane breathing for Big C, Little c₁, and peers c₂…cₙ (settles to canonical phase at 14s)
-      const breatheEnvelope = Math.sin(Math.PI * clamp(time / 14000));
-      const bigCPhase = 0.35 + breatheEnvelope * Math.sin(time * 0.0024) * 0.78;
+      // 3. Living organic membrane breathing for Big C, Little c₁, and peers c₂…cₙ (settles to canonical phase at 18s)
+      const breatheEnvelope = Math.sin(Math.PI * clamp(time / 18000));
+      const bigCPhase = 0.35 + breatheEnvelope * Math.sin(time * 0.0022) * 0.78;
       if (bigCMembrane) {
         bigCMembrane.setAttribute("d", membranePath(348, 352, 300.5, { amplitude: 4.6, lobes: 5, phase: bigCPhase }));
       }
-      const c1Phase = 0.4 + breatheEnvelope * Math.sin(time * 0.0034) * 0.95;
+      const c1Phase = 0.4 + breatheEnvelope * Math.sin(time * 0.0031) * 0.95;
       const c1OuterD = membranePath(348, 352, 28, { amplitude: 2.1, lobes: 4, phase: c1Phase });
       const c1InnerD = membranePath(348, 352, 21.84, { amplitude: 1.54, lobes: 4, phase: c1Phase + 2 });
       if (c1Surface) c1Surface.setAttribute("d", c1OuterD);
@@ -802,7 +683,7 @@ export function buildSplashAnimationDocument(svg) {
       if (c1Inner) c1Inner.setAttribute("d", c1InnerD);
 
       for (const peer of peerCells) {
-        const pPhase = peer.order * 1.9 + breatheEnvelope * Math.sin(time * 0.0038 + peer.order) * 0.9;
+        const pPhase = peer.order * 1.9 + breatheEnvelope * Math.sin(time * 0.0034 + peer.order) * 0.9;
         if (peer.outer) {
           peer.outer.setAttribute("d", membranePath(peer.x, peer.y, 7.5, { amplitude: 7.5 * 0.075, lobes: 4, phase: pPhase }));
         }
@@ -812,7 +693,7 @@ export function buildSplashAnimationDocument(svg) {
       }
 
       // 4. Experimental Reality Frames RF₁ & RF₂ internal rule-grid rotation
-      const rfSpin = (breatheEnvelope * Math.sin(time * 0.0022) * 18).toFixed(2);
+      const rfSpin = (breatheEnvelope * Math.sin(time * 0.002) * 18).toFixed(2);
       if (latticeRules) {
         latticeRules.setAttribute("transform", \`rotate(\${rfSpin} 543 200)\`);
       }
@@ -820,40 +701,12 @@ export function buildSplashAnimationDocument(svg) {
         polarRules.setAttribute("transform", \`rotate(\${(-Number(rfSpin) * 1.2).toFixed(2)} 145 494)\`);
       }
 
-      // 5. Continuous clockwise dash flow & orbiting state-update particles on Big C's outer loop & Little c₁'s inner loop
+      // 5. Continuous clockwise dash flow on Big C's outer loop & Little c₁'s inner loop
       if (outerLoopPath) {
-        outerLoopPath.style.strokeDashoffset = String((-time * 0.032).toFixed(2));
-        if (time >= 1750 && breatheEnvelope > 0.02) {
-          const u = ((time - 1750) * 0.00028) % 1;
-          const pos = outerLoopPath.getPointAtLength(u * outerLoopLen);
-          const op = Math.min(1, (time - 1750) / 500) * breatheEnvelope;
-          outerLoopHalo.setAttribute("cx", pos.x.toFixed(1));
-          outerLoopHalo.setAttribute("cy", pos.y.toFixed(1));
-          outerLoopHalo.setAttribute("opacity", (0.48 * op).toFixed(3));
-          outerLoopDot.setAttribute("cx", pos.x.toFixed(1));
-          outerLoopDot.setAttribute("cy", pos.y.toFixed(1));
-          outerLoopDot.setAttribute("opacity", (0.95 * op).toFixed(3));
-        } else {
-          outerLoopHalo.setAttribute("opacity", "0");
-          outerLoopDot.setAttribute("opacity", "0");
-        }
+        outerLoopPath.style.strokeDashoffset = String((-time * 0.028).toFixed(2));
       }
       if (innerLoopPath) {
-        innerLoopPath.style.strokeDashoffset = String((-time * 0.028).toFixed(2));
-        if (time >= 7700 && breatheEnvelope > 0.02) {
-          const u = ((time - 7700) * 0.00042) % 1;
-          const pos = innerLoopPath.getPointAtLength(u * innerLoopLen);
-          const op = Math.min(1, (time - 7700) / 500) * breatheEnvelope;
-          innerLoopHalo.setAttribute("cx", pos.x.toFixed(1));
-          innerLoopHalo.setAttribute("cy", pos.y.toFixed(1));
-          innerLoopHalo.setAttribute("opacity", (0.5 * op).toFixed(3));
-          innerLoopDot.setAttribute("cx", pos.x.toFixed(1));
-          innerLoopDot.setAttribute("cy", pos.y.toFixed(1));
-          innerLoopDot.setAttribute("opacity", (0.96 * op).toFixed(3));
-        } else {
-          innerLoopHalo.setAttribute("opacity", "0");
-          innerLoopDot.setAttribute("opacity", "0");
-        }
+        innerLoopPath.style.strokeDashoffset = String((-time * 0.024).toFixed(2));
       }
 
       // 6. Concentric emergence & evolution echoes
@@ -868,63 +721,11 @@ export function buildSplashAnimationDocument(svg) {
         const p = clamp((time - item.start) / item.duration);
         if (p <= 0 || p >= 1) {
           item.pathEl.setAttribute("opacity", "0");
-          item.sparkHalo.setAttribute("opacity", "0");
-          item.sparkDot.setAttribute("opacity", "0");
         } else {
           const dist = item.total * ease(p);
-          const pos = item.pathEl.getPointAtLength(dist);
           const light = Math.sin(Math.PI * p);
           item.pathEl.style.strokeDashoffset = String((item.total * 0.48 - dist).toFixed(1));
           item.pathEl.setAttribute("opacity", String((light * 0.85).toFixed(3)));
-          item.sparkHalo.setAttribute("cx", pos.x.toFixed(1));
-          item.sparkHalo.setAttribute("cy", pos.y.toFixed(1));
-          item.sparkHalo.setAttribute("opacity", String((light * 0.54).toFixed(3)));
-          item.sparkDot.setAttribute("cx", pos.x.toFixed(1));
-          item.sparkDot.setAttribute("cy", pos.y.toFixed(1));
-          item.sparkDot.setAttribute("opacity", String((light * 0.98).toFixed(3)));
-        }
-      }
-
-      // 8. Intent traveller spark along c₁'s chosen trajectory
-      if (intentGlowPath) {
-        const p = clamp((time - 9960) / 960);
-        if (p <= 0 || p >= 1) {
-          intentSparkHalo.setAttribute("opacity", "0");
-          intentSparkDot.setAttribute("opacity", "0");
-        } else {
-          const dist = intentTotal * ease(p);
-          const pos = intentGlowPath.getPointAtLength(dist);
-          const light = Math.sin(Math.PI * p);
-          intentSparkHalo.setAttribute("cx", pos.x.toFixed(1));
-          intentSparkHalo.setAttribute("cy", pos.y.toFixed(1));
-          intentSparkHalo.setAttribute("opacity", String((light * 0.56).toFixed(3)));
-          intentSparkDot.setAttribute("cx", pos.x.toFixed(1));
-          intentSparkDot.setAttribute("cy", pos.y.toFixed(1));
-          intentSparkDot.setAttribute("opacity", String((light * 0.98).toFixed(3)));
-        }
-      }
-
-      // 9. Cooperation traveller spark between c₁ and c₂
-      if (coopLine) {
-        const p = clamp((time - 10260) / 1080);
-        if (p <= 0 || p >= 1) {
-          coopSparkHalo.setAttribute("opacity", "0");
-          coopSparkDot.setAttribute("opacity", "0");
-        } else {
-          const x1 = Number(coopLine.getAttribute("x1"));
-          const y1 = Number(coopLine.getAttribute("y1"));
-          const x2 = Number(coopLine.getAttribute("x2"));
-          const y2 = Number(coopLine.getAttribute("y2"));
-          const u = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
-          const cx = (x2 + (x1 - x2) * u).toFixed(1);
-          const cy = (y2 + (y1 - y2) * u).toFixed(1);
-          const light = Math.sin(Math.PI * p);
-          coopSparkHalo.setAttribute("cx", cx);
-          coopSparkHalo.setAttribute("cy", cy);
-          coopSparkHalo.setAttribute("opacity", String((light * 0.55).toFixed(3)));
-          coopSparkDot.setAttribute("cx", cx);
-          coopSparkDot.setAttribute("cy", cy);
-          coopSparkDot.setAttribute("opacity", String((light * 0.98).toFixed(3)));
         }
       }
 
@@ -1102,14 +903,15 @@ export function renderSplashVideo({ page, svg, output, ffmpeg = "ffmpeg" }) {
     sourceHash: splashSourceHash(svg),
     toSplashMs: (ms) => ms,
     captions: true,
-    sampleFrames: [30, 75, 120, 168, 238, 300, 345, 419],
+    sampleFrames: [39, 117, 204, 264, 345, 429, 486, 539],
     score: scoreFor({ durationSeconds: SPLASH_VIDEO.duration_seconds }),
     checks: [
-      [30, 75, "T × E must give way to Big C trying out possible worlds"],
-      [75, 168, "Big C must then settle RF₀"],
-      [168, 238, "Little c₁ and peers must appear inside RF₀"],
-      [238, 300, "Little c₁ must navigate RF₀ rules and peers via Intent and Cooperation"],
-      [300, 419, "The sequence must settle into the brand lockup"],
+      [39, 117, "T × E must give way to Big C emerging and stabilizing itself"],
+      [117, 204, "Big C must try out candidate Reality Frames RF₁…RFₙ"],
+      [204, 264, "Big C must then settle RF₀"],
+      [264, 345, "Little c₁ and peers must appear inside RF₀"],
+      [345, 429, "Little c₁ must navigate RF₀ rules and peers via Intent and Cooperation"],
+      [429, 539, "The sequence must settle into the brand lockup"],
     ],
   });
 }
@@ -1122,12 +924,12 @@ export function renderBumperVideo({ page, svg, output, ffmpeg = "ffmpeg" }) {
     sourceHash: bumperSourceHash(svg),
     toSplashMs: (ms) => bumperToSplash(ms / 1000) * 1000,
     captions: false,
-    sampleFrames: [6, 24, 45, 66, 87, 102, 120, 149],
+    sampleFrames: [8, 26, 48, 66, 86, 104, 122, 149],
     score: scoreFor({ durationSeconds: SPLASH_BUMPER.duration_seconds, mapTime: splashToBumper, captions: false }),
     checks: [
-      [6, 45, "The bumper must build the architecture"],
-      [45, 87, "The bumper must reach RF₀ and Little c"],
-      [87, 149, "The bumper must settle into the brand lockup"],
+      [8, 48, "The bumper must build the architecture"],
+      [48, 86, "The bumper must reach RF₀ and Little c"],
+      [86, 149, "The bumper must settle into the brand lockup"],
     ],
   });
 }

@@ -1,15 +1,16 @@
 /* Translucent paper consumers mix in OKLab: polar OKLCH interpolation with
    transparent can discard a low-chroma paper's hue and produce a pink cast. */
+html[data-palette="dot"],
 html[data-palette="dot"][data-theme] {
   --identity-surface: var(--identity-light-surface);
   --identity-ink: var(--identity-light-ink);
   --identity-accent: var(--identity-light-accent);
   --identity-muted: var(--identity-light-muted);
   --identity-border: var(--identity-light-border);
-  --identity-emerald: #0b7a53;
-  --identity-lumen: #12966b;
-  --identity-origin: #5b3b80;
-  --identity-rf: #b86614;
+  --identity-emerald: #146c4e;
+  --identity-lumen: #1b8762;
+  --identity-origin: #1f5e4b;
+  --identity-rf: #9a5b25;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
   --card: color-mix(in oklab, #ffffff 68%, var(--identity-surface));
@@ -27,6 +28,9 @@ html[data-palette="dot"][data-theme] {
   --border: var(--identity-border);
   --input: var(--identity-border);
   --ring: var(--identity-accent);
+  --attention-ink: var(--identity-ink);
+  --attention-line: color-mix(in oklab, var(--identity-accent) 62%, var(--identity-ink));
+  --attention-field: color-mix(in oklab, var(--identity-lumen) 6%, var(--identity-surface));
 }
 
 html[data-palette="dot"][data-identity-accent="signature"] {
@@ -42,47 +46,118 @@ html.dark[data-palette="dot"][data-theme] {
   --identity-accent: var(--identity-dark-accent);
   --identity-muted: var(--identity-dark-muted);
   --identity-border: var(--identity-dark-border);
-  --identity-emerald: #2ad89d;
-  --identity-lumen: #2ad89d;
-  --identity-origin: #b99ce0;
-  --identity-rf: #f0a44c;
-  --card: color-mix(in oklab, #12966b 10%, var(--identity-dark-surface));
-  --popover: color-mix(in oklab, #12966b 14%, var(--identity-dark-surface));
-  --secondary: color-mix(in oklab, #2ad89d 14%, var(--identity-dark-surface));
-  --muted: color-mix(in oklab, #2ad89d 9%, var(--identity-dark-surface));
-  --accent: color-mix(in oklab, #2ad89d 16%, var(--identity-dark-surface));
+  --identity-emerald: #5ee0ae;
+  --identity-lumen: #68e6b5;
+  --identity-origin: #8ad6b9;
+  --identity-rf: #f7c474;
+  --background: var(--identity-surface);
+  --foreground: var(--identity-ink);
+  --card: color-mix(in oklab, #153329 52%, var(--identity-dark-surface));
+  --card-foreground: var(--identity-ink);
+  --popover: color-mix(in oklab, #153329 64%, var(--identity-dark-surface));
+  --popover-foreground: var(--identity-ink);
+  --primary: var(--identity-accent);
+  --primary-foreground: var(--identity-surface);
+  --secondary: color-mix(in oklab, #54d19f 14%, var(--identity-dark-surface));
+  --secondary-foreground: var(--identity-ink);
+  --muted: color-mix(in oklab, #54d19f 9%, var(--identity-dark-surface));
+  --muted-foreground: var(--identity-muted);
+  --accent: color-mix(in oklab, #54d19f 16%, var(--identity-dark-surface));
+  --accent-foreground: var(--identity-ink);
+  --border: var(--identity-border);
+  --input: var(--identity-border);
+  --ring: var(--identity-accent);
+  --attention-ink: var(--identity-ink);
+  --attention-line: color-mix(in oklab, var(--identity-accent) 56%, var(--identity-ink));
+  --attention-field: color-mix(in oklab, #54d19f 8%, var(--identity-dark-surface));
 }
 
-/* Bring the YouTube channel kit's emerald-jade, violet T × E, and amber RF₀
-   architectural palette onto the default DOT Daylight / DOT Night surfaces. */
+/* Bring the 4K inquiry films' emerald-jade (158°) + warm gold (#f0b865 / #9a5b25)
+   architectural harmonic onto the default DOT Daylight / DOT Night surfaces. */
 html[data-palette="dot"][data-identity-accent="signature"] .home-journey,
-html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment {
+html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment,
+html[data-palette="dot"][data-identity-accent="signature"] .home-hero-stage,
+html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-stage {
   --theory-origin: var(--identity-origin);
   --theory-big-c: var(--identity-emerald);
   --theory-rf: var(--identity-rf);
   --theory-local: var(--identity-emerald);
-  --architecture-origin: var(--identity-origin);
-  --architecture-big-c: var(--identity-emerald);
-  --architecture-rf: var(--identity-rf);
-  --architecture-rf-ring: var(--identity-rf);
-  --architecture-local: var(--identity-emerald);
-  --architecture-live: color-mix(in oklab, var(--identity-lumen) 62%, var(--identity-ink));
-  --architecture-field: color-mix(in oklab, var(--identity-lumen) 28%, transparent);
-  --architecture-wash-opacity: 0.96;
-  --architecture-frame-wash-opacity: 0.12;
-  --architecture-local-wash-opacity: 0.22;
+  --architecture-origin: color-mix(in oklab, var(--identity-origin) 88%, var(--identity-ink));
+  --architecture-big-c: color-mix(in oklab, var(--identity-emerald) 90%, var(--identity-ink));
+  --architecture-rf: color-mix(in oklab, var(--identity-rf) 90%, var(--identity-ink));
+  --architecture-rf-ring: color-mix(in oklab, var(--identity-rf) 92%, var(--identity-ink));
+  --architecture-local: color-mix(in oklab, var(--identity-emerald) 92%, var(--identity-ink));
+  --architecture-loop-outer: var(--identity-emerald);
+  --architecture-loop-inner: var(--identity-rf);
+  --architecture-thread-from: var(--identity-emerald);
+  --architecture-thread-mid: var(--identity-lumen);
+  /* Intent stays jade so it remains distinct from the gold physical frame. */
+  --architecture-thread-to: var(--identity-emerald);
+  --architecture-thread-width: 1.45;
+  --architecture-live: color-mix(in oklab, var(--identity-lumen) 68%, var(--identity-ink));
+  --architecture-field: color-mix(in oklab, var(--identity-lumen) 34%, transparent);
+  --architecture-wash-opacity: 0.98;
+  --architecture-grid-opacity: 0.78;
+  --architecture-frame-wash-opacity: 0.15;
+  --architecture-local-wash-opacity: 0.26;
 }
 
+html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment::before {
+  background-image:
+    radial-gradient(
+      ellipse at 72% 46%,
+      color-mix(in oklab, var(--identity-lumen) 16%, transparent),
+      color-mix(in oklab, var(--identity-rf) 6%, transparent) 44%,
+      transparent 68%
+    );
+}
+
+html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment::before {
+  background-image:
+    radial-gradient(
+      ellipse at 72% 46%,
+      color-mix(in oklab, var(--identity-lumen) 22%, transparent),
+      color-mix(in oklab, var(--identity-rf) 8%, transparent) 44%,
+      transparent 68%
+    );
+}
+
+/* DOT Daylight (#f2f0e8) and DOT Night (#0c1715) are already pre-toned for
+   warm reading in identity.json; prevent the generic warm-brown paper mix in
+   appearance.css from neutralizing the obsidian-emerald ground or over-yellowing
+   the botanical vellum. */
+html[data-palette="dot"][data-paper="warm"],
+html.dark[data-palette="dot"][data-paper="warm"],
 html[data-palette="dot"][data-paper="warm"][data-reading] {
   --appearance-page-tone: var(--identity-surface);
   --appearance-page-ink: var(--identity-ink);
 }
 
+html[data-palette="dot"][data-paper="warm"] .book-surface,
+html.dark[data-palette="dot"][data-paper="warm"] .book-surface,
 html[data-palette="dot"][data-paper="warm"][data-reading] .book-surface {
   --book-paper: var(--identity-surface);
   --book-ink: var(--identity-ink);
   --book-muted: var(--identity-muted);
+  --book-cinnabar: var(--identity-accent);
+  --book-hairline: var(--identity-border);
   --book-vellum: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
+}
+
+html[data-palette="dot"] .appearance-panel {
+  --appearance-ground: color-mix(in oklab, #ffffff 55%, var(--identity-light-surface));
+}
+
+html[data-palette="dot"][data-ui-style] .appearance-panel[role="dialog"] {
+  background: var(--appearance-ground);
+}
+
+html.dark[data-palette="dot"] .appearance-panel {
+  --appearance-ground: color-mix(in oklab, #08110f 72%, var(--identity-dark-surface));
+}
+
+html.dark[data-palette="dot"][data-ui-style] .appearance-panel[role="dialog"] {
+  background: var(--appearance-ground);
 }
 
 html[data-palette="dot"][data-reading="serif"] .book-surface,

@@ -53,41 +53,55 @@ export const NucleusMark: React.FC<NucleusMarkProps> = ({
         width="100%"
         height="100%"
         fill="none"
+        shapeRendering="geometricPrecision"
         aria-hidden="true"
       >
         <circle
           className="nucleus-mark-field"
           cx={50}
           cy={50}
-          r={44}
-          stroke="var(--organism-accent-soft, color-mix(in oklch, var(--organism-accent) 32%, transparent))"
-          strokeWidth={1.35}
+          r={43.5}
+          stroke="var(--organism-accent-soft, color-mix(in oklch, var(--organism-accent) 42%, transparent))"
+          strokeWidth={1.15}
+          strokeDasharray="3 5"
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
         <circle
+          className="nucleus-mark-ring"
           cx={50}
           cy={50}
-          r={30}
+          r={33.64}
           stroke="var(--organism-accent)"
-          strokeWidth={1.55}
-          opacity={0.62}
+          strokeWidth={1.5}
+          opacity={0.78}
           vectorEffect="non-scaling-stroke"
         />
+        <g
+          className="nucleus-mark-nodes"
+          fill="var(--organism-accent-strong)"
+          opacity={0.86}
+        >
+          <circle cx={50} cy={16.36} r={2} />
+          <circle cx={83.64} cy={50} r={2} />
+          <circle cx={50} cy={83.64} r={2} />
+          <circle cx={16.36} cy={50} r={2} />
+        </g>
         <g className="nucleus-mark-arcs">
           <path
-            d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84"
+            d="M 50 22 C 65.5 22 78 34.5 78 50 C 78 65.5 65.5 78 50 78"
             stroke="var(--organism-accent-strong)"
-            strokeWidth={2.25}
+            strokeWidth={2.15}
             strokeLinecap="round"
-            opacity={0.9}
+            opacity={0.92}
             vectorEffect="non-scaling-stroke"
           />
           <path
-            d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16"
+            d="M 50 78 C 34.5 78 22 65.5 22 50 C 22 34.5 34.5 22 50 22"
             stroke="var(--organism-accent)"
-            strokeWidth={1.8}
+            strokeWidth={1.75}
             strokeLinecap="round"
-            opacity={0.56}
+            opacity={0.68}
             vectorEffect="non-scaling-stroke"
           />
         </g>
@@ -95,20 +109,27 @@ export const NucleusMark: React.FC<NucleusMarkProps> = ({
           className="nucleus-mark-inner"
           cx={50}
           cy={50}
-          r={15}
+          r={16.5}
           stroke="var(--organism-accent-strong)"
-          strokeWidth={1.4}
-          opacity={0.36}
+          strokeWidth={1.35}
+          opacity={0.54}
           vectorEffect="non-scaling-stroke"
         />
         <circle
           className="nucleus-mark-core"
           cx={50}
           cy={50}
-          r={7.5}
+          r={8.6}
           fill="var(--organism-accent-strong)"
         />
-        <circle cx={50} cy={50} r={3.25} fill="var(--background, white)" opacity={0.72} />
+        <circle
+          className="nucleus-mark-pin"
+          cx={50}
+          cy={50}
+          r={3.4}
+          fill="var(--background, white)"
+          opacity={0.92}
+        />
       </svg>
     </span>
   );

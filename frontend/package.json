@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "channel:inquiry": "node scripts/render-channel-inquiry.mjs",
     "post:new": "node scripts/posts.mjs new",
     "post:check": "node scripts/posts.mjs check",
     "post:preview": "vite --host 127.0.0.1 --open /_preview/essays",

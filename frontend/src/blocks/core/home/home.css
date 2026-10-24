@@ -222,30 +222,30 @@ html:has(.home-journey) {
 
 /* Threshold: one proposition beside the model's containment hypothesis. */
 .home-hero-environment {
-  --architecture-line: color-mix(in oklch, var(--foreground) 68%, transparent);
-  --architecture-quiet: color-mix(in oklch, var(--foreground) 38%, transparent);
-  --architecture-label: color-mix(in oklch, var(--foreground) 94%, transparent);
+  --architecture-line: color-mix(in oklch, var(--foreground) 78%, transparent);
+  --architecture-quiet: color-mix(in oklch, var(--foreground) 50%, transparent);
+  --architecture-label: color-mix(in oklch, var(--foreground) 98%, transparent);
   /* Labels sit on tinted rings, not the page: a translucent halo still lifts
      them off crossing lines without glowing against the tint. */
-  --architecture-label-halo: color-mix(in oklch, var(--background) 40%, transparent);
+  --architecture-label-halo: color-mix(in oklch, var(--background) 44%, transparent);
   --architecture-origin: var(--theory-origin);
   --architecture-big-c: var(--theory-big-c);
   --architecture-rf: var(--theory-rf);
   /* Reality Frames are built, not grown: a fixed bronze, apart from any theme accent. */
-  --architecture-rf-ring: oklch(0.56 0.095 62);
+  --architecture-rf-ring: oklch(0.62 0.11 66);
   --architecture-local: var(--theory-local);
-  /* The two process loops take hues no ring uses: plum for Big C's outer loop,
-     amber for Little c's inner loop, so direction of travel reads at a glance. */
-  --architecture-loop-outer: oklch(0.55 0.17 350);
-  --architecture-loop-inner: oklch(0.64 0.17 48);
+  /* The two process loops take emerald-jade for Big C's outer loop and warm
+     gold for Little c's inner loop, so direction of travel reads at a glance. */
+  --architecture-loop-outer: oklch(0.58 0.14 162);
+  --architecture-loop-inner: oklch(0.66 0.15 62);
   --architecture-live: color-mix(
     in oklch,
-    var(--organism-accent-strong) 28%,
+    var(--organism-accent-strong) 38%,
     var(--foreground)
   );
   --architecture-field: color-mix(
     in oklch,
-    var(--organism-accent-soft) 46%,
+    var(--organism-accent-soft) 58%,
     transparent
   );
   --architecture-thread-from: color-mix(
@@ -255,11 +255,11 @@ html:has(.home-journey) {
   );
   --architecture-thread-mid: var(--organism-accent-strong);
   --architecture-thread-to: var(--organism-accent-strong);
-  --architecture-thread-width: 1.1;
-  --architecture-wash-opacity: 0.8;
-  --architecture-grid-opacity: 0.58;
-  --architecture-frame-wash-opacity: 0.04;
-  --architecture-local-wash-opacity: 0.12;
+  --architecture-thread-width: 1.25;
+  --architecture-wash-opacity: 0.92;
+  --architecture-grid-opacity: 0.72;
+  --architecture-frame-wash-opacity: 0.08;
+  --architecture-local-wash-opacity: 0.18;
   display: flex;
   min-height: min(100svh, 60rem);
   align-items: center;
@@ -497,7 +497,7 @@ html:has(.home-journey) {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.55rem;
+  gap: 0.65rem;
   color: color-mix(
     in oklch,
     var(--organism-accent-strong) 88%,
@@ -509,6 +509,24 @@ html:has(.home-journey) {
   letter-spacing: 0.015em;
   line-height: 1.4;
   text-transform: none;
+}
+
+.home-hero-kicker > span:last-child {
+  text-box: trim-both cap alphabetic;
+}
+
+.home-hero-kicker .dot-mark {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: radial-gradient(
+    circle,
+    var(--background) 0 22%,
+    var(--organism-accent-strong) 26% 100%
+  );
+  box-shadow:
+    0 0 0 2px color-mix(in oklch, var(--background) 88%, transparent),
+    0 0 0 3px color-mix(in oklch, var(--organism-accent-strong) 48%, transparent),
+    0 0 0.65rem var(--organism-accent-soft);
 }
 
 .home-hero-title {
@@ -621,7 +639,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.625rem;
   color: var(--muted-foreground);
   font-family: var(--home-public-display-font);
   font-size: 0.75rem;
@@ -634,12 +652,31 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: color-mix(in oklab, var(--organism-accent-strong) 70%, var(--foreground));
+  padding: 0.25rem 0.5rem;
+  border: 1px solid color-mix(in oklab, var(--organism-accent-strong) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--organism-accent-strong) 8%, transparent);
+  color: color-mix(in oklab, var(--organism-accent-strong) 78%, var(--foreground));
+  font-family: var(--home-public-annotate-font);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-box: trim-both cap alphabetic;
+}
+
+.home-concept-slideshow-eyebrow > span[data-level="model"] {
+  border-color: color-mix(in oklab, var(--theory-rf) 42%, transparent);
+  background: color-mix(in oklab, var(--theory-rf) 9%, transparent);
+  color: color-mix(in oklab, var(--theory-rf) 82%, var(--foreground));
+}
+
+.home-concept-slideshow-eyebrow > span[data-level="hypothesis"] {
+  border-color: color-mix(in oklab, var(--theory-origin) 42%, transparent);
+  background: color-mix(in oklab, var(--theory-origin) 9%, transparent);
+  color: color-mix(in oklab, var(--theory-origin) 82%, var(--foreground));
 }
 
 .home-concept-slideshow-eyebrow > span + span::before {
-  color: var(--muted-foreground);
-  content: "·";
+  content: none;
 }
 
 .home-concept-slideshow-body {
@@ -744,11 +781,12 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 .home-concept-slideshow-eyebrow[data-frame] > span:first-child {
   display: inline-flex;
   align-items: center;
-  padding: 0.3rem 0.5rem 0.25rem;
+  padding: 0.25rem 0.5rem;
   border: 1px solid color-mix(in oklab, var(--home-frame-ink) 55%, transparent);
   border-radius: 999px;
   background: color-mix(in oklab, var(--home-frame-ink) 9%, transparent);
   color: var(--home-frame-ink);
+  text-box: trim-both cap alphabetic;
 }
 
 .home-concept-slideshow-content[data-frame] .home-concept-slideshow-term {
@@ -863,10 +901,10 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
 }
 
 .home-hero-stage {
-  --architecture-origin: color-mix(in oklab, var(--foreground) 32%, var(--theory-origin));
-  --architecture-big-c: color-mix(in oklab, var(--foreground) 32%, var(--theory-big-c));
-  --architecture-rf: color-mix(in oklab, var(--foreground) 32%, var(--theory-rf));
-  --architecture-local: color-mix(in oklab, var(--foreground) 32%, var(--theory-local));
+  --architecture-origin: color-mix(in oklab, var(--foreground) 12%, var(--theory-origin));
+  --architecture-big-c: color-mix(in oklab, var(--foreground) 12%, var(--theory-big-c));
+  --architecture-rf: color-mix(in oklab, var(--foreground) 12%, var(--theory-rf));
+  --architecture-local: color-mix(in oklab, var(--foreground) 12%, var(--theory-local));
   position: relative;
   z-index: 1;
   width: min(100%, 37.5rem);
@@ -880,22 +918,29 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
 
 /* Corner ticks: the plate is surveyed, not decorated. */
 .home-hero-stage::before {
+  --stage-reticle: color-mix(in oklch, var(--organism-accent-strong) 68%, var(--foreground));
   position: absolute;
   inset: -1px;
   z-index: 1;
   background:
-    linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1.1rem 1px,
-    linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 1.1rem,
-    linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1.1rem 1px,
-    linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 1.1rem,
-    linear-gradient(var(--foreground), var(--foreground)) 0 100% / 1.1rem 1px,
-    linear-gradient(var(--foreground), var(--foreground)) 0 100% / 1px 1.1rem,
-    linear-gradient(var(--foreground), var(--foreground)) 100% 100% / 1.1rem 1px,
-    linear-gradient(var(--foreground), var(--foreground)) 100% 100% / 1px 1.1rem;
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 0 0 / 1.25rem 1px,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 0 0 / 1px 1.25rem,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 100% 0 / 1.25rem 1px,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 100% 0 / 1px 1.25rem,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 0 100% / 1.25rem 1px,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 0 100% / 1px 1.25rem,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 100% 100% / 1.25rem 1px,
+    linear-gradient(var(--stage-reticle), var(--stage-reticle)) 100% 100% / 1px 1.25rem;
   background-repeat: no-repeat;
-  content: none;
-  opacity: 0.55;
+  content: "";
+  opacity: 0.56;
   pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .home-hero-stage::before {
+    content: none;
+  }
 }
 
 .home-hero-architecture {
@@ -958,7 +1003,7 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
    them fully forward. Their existing dash flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
-  opacity: 0.62;
+  opacity: 0.84;
   pointer-events: none;
   stroke-linecap: round;
   transition: opacity 360ms ease;
@@ -1076,12 +1121,13 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-measure-marks {
   fill: none;
   stroke: var(--architecture-label);
-  stroke-width: 0.55;
+  stroke-width: 0.95;
+  opacity: 0.86;
   pointer-events: none;
 }
 
 .home-architecture-measure-marks > path {
-  stroke-dasharray: 2 6;
+  stroke-dasharray: 2 5;
 }
 
 .home-architecture-field-stop {
@@ -1093,7 +1139,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-frame-stop {
-  stop-color: color-mix(in oklch, var(--architecture-rf) 72%, var(--background));
+  stop-color: color-mix(in oklch, var(--architecture-rf) 78%, var(--background));
 }
 
 .home-architecture-surface-gradient[data-material="big-c"] {
@@ -1108,47 +1154,47 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-concept-architecture {
   --surface-highlight: var(--background);
   --surface-edge-light: var(--background);
-  --surface-edge-shade: color-mix(in oklch, var(--foreground) 32%, var(--background));
+  --surface-edge-shade: color-mix(in oklch, var(--foreground) 26%, var(--background));
   shape-rendering: geometricPrecision;
 }
 
 .dark .home-hero-architecture__svg,
 .dark .home-concept-architecture {
-  --surface-highlight: color-mix(in oklch, var(--foreground) 20%, var(--background));
-  --surface-edge-light: color-mix(in oklch, var(--foreground) 48%, var(--background));
+  --surface-highlight: color-mix(in oklch, var(--foreground) 32%, var(--background));
+  --surface-edge-light: color-mix(in oklch, var(--foreground) 62%, var(--background));
   --surface-edge-shade: var(--background);
 }
 
 .home-architecture-surface-light {
-  stop-color: color-mix(in oklch, var(--surface-highlight) 94%, var(--surface-accent));
+  stop-color: color-mix(in oklch, var(--surface-highlight) 88%, var(--surface-accent));
 }
 
 .home-architecture-surface-body {
-  stop-color: color-mix(in oklch, var(--background) 92%, var(--surface-accent));
-}
-
-.home-architecture-surface-turn {
   stop-color: color-mix(in oklch, var(--background) 85%, var(--surface-accent));
 }
 
+.home-architecture-surface-turn {
+  stop-color: color-mix(in oklch, var(--background) 78%, var(--surface-accent));
+}
+
 .home-architecture-surface-shade {
-  stop-color: color-mix(in oklch, var(--surface-accent) 22%, var(--surface-edge-shade));
+  stop-color: color-mix(in oklch, var(--surface-accent) 28%, var(--surface-edge-shade));
 }
 
 .dark .home-architecture-surface-light {
-  stop-color: color-mix(in oklch, var(--surface-highlight) 64%, var(--surface-accent));
+  stop-color: color-mix(in oklch, var(--surface-highlight) 52%, var(--surface-accent));
 }
 
 .dark .home-architecture-surface-body {
-  stop-color: color-mix(in oklch, var(--background) 60%, var(--surface-accent));
+  stop-color: color-mix(in oklch, var(--background) 50%, var(--surface-accent));
 }
 
 .dark .home-architecture-surface-turn {
-  stop-color: color-mix(in oklch, var(--background) 80%, var(--surface-accent));
+  stop-color: color-mix(in oklch, var(--background) 68%, var(--surface-accent));
 }
 
 .dark .home-architecture-surface-shade {
-  stop-color: color-mix(in oklch, var(--background) 94%, var(--surface-accent));
+  stop-color: color-mix(in oklch, var(--background) 84%, var(--surface-accent));
 }
 
 .home-architecture-rim-light {
@@ -1156,7 +1202,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-rim-mid {
-  stop-color: color-mix(in oklch, var(--foreground) 14%, var(--background));
+  stop-color: color-mix(in oklch, var(--foreground) 22%, var(--background));
 }
 
 .home-architecture-rim-shade {
@@ -1164,9 +1210,9 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-surface {
-  fill-opacity: 0.65;
+  fill-opacity: 0.78;
   stroke-width: 2;
-  stroke-opacity: 0.5;
+  stroke-opacity: 0.72;
 }
 
 .home-architecture-field-wash {
@@ -1176,29 +1222,29 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-origin-boundary {
   fill: none;
   stroke: var(--architecture-origin);
-  stroke-dasharray: 1 8;
+  stroke-dasharray: 2 6;
   stroke-linecap: round;
-  stroke-width: 1.25;
-  opacity: 0.72;
+  stroke-width: 1.5;
+  opacity: 0.9;
 }
 
 .home-architecture-field-contours {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-origin) 46%, transparent);
-  stroke-dasharray: 1.5 8;
+  stroke: color-mix(in oklch, var(--architecture-origin) 64%, transparent);
+  stroke-dasharray: 2 7;
   stroke-linecap: round;
-  stroke-width: 0.8;
-  opacity: 0.76;
+  stroke-width: 1.05;
+  opacity: 0.88;
 }
 
 .home-architecture-field-contours line {
-  stroke: color-mix(in oklch, var(--architecture-origin) 62%, transparent);
+  stroke: color-mix(in oklch, var(--architecture-origin) 78%, transparent);
   stroke-dasharray: none;
-  stroke-width: 1.2;
+  stroke-width: 1.35;
 }
 
 .home-architecture-big-c-zone {
-  opacity: 0.96;
+  opacity: 0.98;
 }
 
 .home-architecture-big-c circle {
@@ -1206,48 +1252,48 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   stroke: var(--architecture-big-c);
   opacity: var(--contour-opacity);
   stroke-linecap: round;
-  stroke-width: 1.5;
+  stroke-width: 1.65;
 }
 
 .home-architecture-big-c circle[data-contour="1"] {
   --contour-opacity: 1;
 
   filter: none;
-  stroke-width: 2;
+  stroke-width: 2.15;
 }
 
 .home-architecture-big-c circle[data-contour="2"] {
-  --contour-opacity: 0.32;
-  stroke-width: 0.75;
+  --contour-opacity: 0.58;
+  stroke-width: 1.05;
 }
 
 .home-architecture-organism-inner-membrane {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 32%, transparent);
-  stroke-dasharray: 2 6;
+  stroke: color-mix(in oklch, var(--architecture-big-c) 54%, transparent);
+  stroke-dasharray: 2 5;
   stroke-linecap: round;
-  stroke-width: 0.9;
+  stroke-width: 1.05;
 }
 
 .home-architecture-membrane-bands {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 56%, transparent);
-  stroke-dasharray: 2 5;
+  stroke: color-mix(in oklch, var(--architecture-big-c) 72%, transparent);
+  stroke-dasharray: 2 4.5;
   stroke-linecap: round;
-  stroke-width: 0.8;
-  opacity: 0.74;
+  stroke-width: 0.95;
+  opacity: 0.86;
 }
 
 .home-architecture-organism-node line {
-  stroke: color-mix(in oklch, var(--architecture-big-c) 76%, var(--background));
+  stroke: color-mix(in oklch, var(--architecture-big-c) 86%, var(--background));
   stroke-linecap: round;
-  stroke-width: 1.15;
+  stroke-width: 1.25;
 }
 
 .home-architecture-organism-node circle {
-  fill: color-mix(in oklch, var(--background) 82%, var(--architecture-big-c));
+  fill: color-mix(in oklch, var(--background) 78%, var(--architecture-big-c));
   stroke: var(--architecture-big-c);
-  stroke-width: 1.15;
+  stroke-width: 1.25;
 }
 
 .home-architecture-organism-node-core {
@@ -1256,9 +1302,9 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-organelle-node {
-  fill: color-mix(in oklch, var(--architecture-big-c) 82%, var(--foreground));
+  fill: color-mix(in oklch, var(--architecture-big-c) 86%, var(--foreground));
   stroke: var(--background);
-  stroke-width: 0.75;
+  stroke-width: 0.85;
 }
 
 .home-architecture-frame-wash {
@@ -1268,9 +1314,9 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 
 /* A flat graphite plane: physical structure carries no lit, living material. */
 .home-architecture-frame-zone {
-  fill: color-mix(in oklch, var(--background) 93%, var(--architecture-rf));
+  fill: color-mix(in oklch, var(--background) 90%, var(--architecture-rf));
   stroke: none;
-  opacity: 0.94;
+  opacity: 0.96;
 }
 
 .home-architecture-frame-boundary {
@@ -1285,18 +1331,18 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-frame-bezel {
   fill: none;
   stroke: var(--architecture-rf-ring);
-  stroke-dasharray: 0.75 3;
-  stroke-width: 3;
-  opacity: 0.38;
+  stroke-dasharray: 1 3;
+  stroke-width: 3.2;
+  opacity: 0.64;
 }
 
 .home-architecture-frame-inset {
   fill: none;
-  stroke: color-mix(in oklch, var(--foreground) 42%, transparent);
+  stroke: color-mix(in oklch, var(--foreground) 56%, transparent);
   stroke-dasharray: none;
   stroke-linecap: round;
-  stroke-width: 1;
-  opacity: 0.68;
+  stroke-width: 1.1;
+  opacity: 0.82;
 }
 
 .home-architecture-grid {
@@ -1305,7 +1351,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 
 /* Other Reality Frames: built like RF₀, but hypothesized, so their edge is dashed. */
 .home-architecture-other-frame-zone {
-  fill: color-mix(in oklch, var(--background) 90%, var(--architecture-rf));
+  fill: color-mix(in oklch, var(--background) 88%, var(--architecture-rf));
   stroke: none;
 }
 
@@ -1314,18 +1360,18 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   stroke: var(--architecture-rf-ring);
   stroke-dasharray: 2.5 2.5;
   stroke-linecap: round;
-  stroke-width: 1.25;
+  stroke-width: 1.4;
 }
 
 .home-architecture-other-frame-rules {
   fill: none;
   stroke: var(--architecture-rf);
-  stroke-width: 0.9;
-  opacity: 0.62;
+  stroke-width: 1.05;
+  opacity: 0.78;
 }
 
 .home-architecture-other-frame-label {
-  fill: color-mix(in oklch, var(--architecture-rf) 70%, var(--foreground));
+  fill: color-mix(in oklch, var(--architecture-rf) 78%, var(--foreground));
   font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 15px;
   font-weight: 600;
@@ -1337,86 +1383,87 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 
 .home-architecture-gridpoint {
   fill: var(--architecture-quiet);
-  opacity: 0.72;
+  opacity: 0.88;
 }
 
 .home-architecture-frame-contours {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-rf) 26%, transparent);
-  stroke-dasharray: 1.5 6;
+  stroke: color-mix(in oklch, var(--architecture-rf) 48%, transparent);
+  stroke-dasharray: 2 5;
   stroke-linecap: round;
-  stroke-width: 0.75;
+  stroke-width: 0.95;
 }
 
 .home-architecture-coordinate-axis line {
   stroke: var(--architecture-line);
-  stroke-dasharray: 1 14;
+  stroke-dasharray: 2 8;
   stroke-linecap: round;
-  stroke-width: 1;
-  opacity: 0.28;
+  stroke-width: 1.1;
+  opacity: 0.52;
 }
 
 .home-architecture-frame-origin {
   fill: none;
   stroke: var(--architecture-rf);
   stroke-linecap: round;
-  stroke-width: 1;
-  opacity: 0.8;
+  stroke-width: 1.35;
+  opacity: 0.95;
 }
 
 .home-architecture-projection-marks path {
   fill: none;
-  stroke: color-mix(in oklch, var(--foreground) 62%, var(--architecture-live));
+  stroke: color-mix(in oklch, var(--foreground) 68%, var(--architecture-live));
   stroke-dasharray: 2 4;
   stroke-linecap: round;
-  stroke-width: 1;
-  opacity: 0.72;
+  stroke-width: 1.15;
+  opacity: 0.84;
 }
 
 .home-architecture-projection-marks circle {
   fill: var(--architecture-live);
-  opacity: 0.72;
+  opacity: 0.86;
 }
 
 .home-architecture-polar-scale line {
   stroke: var(--architecture-line);
-  stroke-width: 1;
-  opacity: 0.58;
+  stroke-width: 1.15;
+  opacity: 0.76;
 }
 
 .home-architecture-polar-scale line[data-major="true"] {
   stroke: var(--architecture-live);
-  stroke-width: 1.5;
-  opacity: 0.94;
+  stroke-width: 1.75;
+  opacity: 1;
 }
 
 .home-architecture-cardinal-labels text {
   fill: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 9px;
-  letter-spacing: 0.6px;
-  opacity: 0.58;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  opacity: 0.82;
 }
 
 .home-architecture-reticle line {
   stroke: var(--architecture-line);
-  stroke-width: 1;
-  opacity: 0.82;
+  stroke-width: 1.35;
+  opacity: 0.94;
 }
 
 .home-architecture-frame-options line {
   stroke: var(--architecture-rf);
-  stroke-dasharray: 3 5;
+  stroke-dasharray: 3 4.5;
   stroke-linecap: round;
-  stroke-width: 1.1;
-  opacity: 0.72;
+  stroke-width: 1.25;
+  opacity: 0.88;
 }
 
 /* Offered, not taken: the inbound arrowhead stays open. */
 .home-architecture-option-arrow {
   fill: none;
   stroke: var(--architecture-rf);
-  stroke-width: 1;
+  stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1425,7 +1472,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-frame-constraint line {
   stroke: var(--architecture-rf);
   stroke-linecap: round;
-  stroke-width: 1.3;
+  stroke-width: 1.45;
 }
 
 .home-architecture-constraint-arrow {
@@ -1436,42 +1483,57 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
    It is the reader's own boundary, so it reads a step brighter than the
    structural rings around it. */
 .home-architecture-awareness-ring {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-local) 85%, transparent);
-  stroke-dasharray: 2.5 4.5;
+  fill: color-mix(in oklch, var(--architecture-local) 4%, transparent);
+  stroke: color-mix(in oklch, var(--architecture-local) 92%, var(--foreground));
+  stroke-dasharray: 3.5 4.5;
   stroke-linecap: round;
-  stroke-width: 1.15;
+  stroke-width: 1.5;
 }
 
 /* The measured radius itself: solid to the ring, dotted where it could grow. */
 .home-architecture-awareness-halo {
   stroke: var(--home-ground-threshold, var(--background));
   stroke-linecap: round;
-  stroke-width: 3;
-  opacity: 0.95;
+  stroke-width: 3.6;
+  opacity: 0.96;
 }
 
 .home-architecture-awareness-spoke {
-  stroke: color-mix(in oklch, var(--architecture-local) 88%, var(--foreground));
+  stroke: color-mix(in oklch, var(--architecture-local) 92%, var(--foreground));
   stroke-linecap: round;
-  stroke-width: 1.15;
+  stroke-width: 1.45;
+}
+
+.home-architecture-awareness-spoke-potential {
+  stroke: color-mix(in oklch, var(--architecture-local) 82%, var(--architecture-rf));
+  stroke-dasharray: 2.5 4;
+  stroke-linecap: round;
+  stroke-width: 1.35;
+}
+
+.home-architecture-awareness-spoke-node {
+  fill: var(--background);
+  stroke: color-mix(in oklch, var(--architecture-local) 94%, var(--foreground));
+  stroke-width: 1.4;
 }
 
 .home-architecture-radius-arrow {
-  fill: color-mix(in oklch, var(--architecture-local) 92%, var(--foreground));
+  fill: color-mix(in oklch, var(--architecture-local) 84%, var(--architecture-rf));
 }
 
 .home-architecture-awareness-potential path {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-local) 42%, transparent);
-  stroke-dasharray: 1.5 5.5;
+  stroke: color-mix(in oklch, var(--architecture-local) 72%, var(--foreground));
+  stroke-dasharray: 2.5 5;
   stroke-linecap: round;
-  stroke-width: 0.9;
+  stroke-width: 1.25;
 }
 
 .home-architecture-awareness-potential path + path {
-  opacity: 0.55;
-  stroke-dasharray: 1 6.5;
+  opacity: 0.72;
+  stroke: color-mix(in oklch, var(--architecture-local) 56%, var(--architecture-rf));
+  stroke-dasharray: 2 5.5;
+  stroke-width: 1.1;
 }
 
 /* Little c meet only through RF₀: every coupling carries mutual pressure. */
@@ -1562,14 +1624,14 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 
 .home-architecture-causal-trace .home-architecture-awareness-trace {
   stroke-dasharray: none;
-  stroke-width: calc(var(--architecture-thread-width) * 1.35);
-  opacity: 0.95;
+  stroke-width: calc(var(--architecture-thread-width) * 1.45);
+  opacity: 0.98;
 }
 
 .home-architecture-causal-trace .home-architecture-potential-trace {
-  stroke-dasharray: 2.5 4.5;
-  stroke-width: var(--architecture-thread-width);
-  opacity: 0.85;
+  stroke-dasharray: 3.5 4.5;
+  stroke-width: calc(var(--architecture-thread-width) * 1.25);
+  opacity: 0.94;
 }
 
 .home-architecture-causal-trace .home-architecture-thread-glow {
@@ -1676,28 +1738,28 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-ring-label[data-layer="awareness-radius"] {
-  --ring-label-color: color-mix(in oklch, var(--architecture-local) 72%, var(--architecture-line));
+  --ring-label-color: color-mix(in oklch, var(--architecture-local) 88%, var(--foreground));
 }
 
 .home-architecture-ring-label[data-layer="awareness-radius"] text {
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 /* An elbow callout names the measure; it never masquerades as the radius. */
 .home-architecture-awareness-callout {
   fill: none;
-  stroke: color-mix(in oklch, var(--architecture-line) 70%, transparent);
+  stroke: color-mix(in oklch, var(--architecture-local) 82%, var(--foreground));
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 0.6;
+  stroke-width: 1.15;
 }
 
 .home-architecture-awareness-callout-dot {
   fill: var(--background);
-  stroke: color-mix(in oklch, var(--architecture-line) 82%, transparent);
-  stroke-width: 0.8;
+  stroke: color-mix(in oklch, var(--architecture-local) 92%, var(--foreground));
+  stroke-width: 1.25;
 }
 
 .home-architecture-ring-label text {
@@ -1730,16 +1792,16 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .dark .home-hero-stage {
-  --architecture-line: color-mix(in oklch, var(--foreground) 74%, transparent);
+  --architecture-line: color-mix(in oklch, var(--foreground) 84%, transparent);
   --architecture-label: var(--foreground);
-  --architecture-quiet: color-mix(in oklch, var(--foreground) 38%, transparent);
-  --architecture-origin: color-mix(in oklab, var(--theory-origin) 68%, var(--foreground));
-  --architecture-big-c: color-mix(in oklab, var(--theory-big-c) 68%, var(--foreground));
-  --architecture-rf: color-mix(in oklab, var(--theory-rf) 68%, var(--foreground));
-  --architecture-rf-ring: oklch(0.76 0.09 68);
-  --architecture-local: color-mix(in oklab, var(--theory-local) 68%, var(--foreground));
-  --architecture-loop-outer: oklch(0.76 0.15 350);
-  --architecture-loop-inner: oklch(0.8 0.15 60);
+  --architecture-quiet: color-mix(in oklch, var(--foreground) 52%, transparent);
+  --architecture-origin: color-mix(in oklab, var(--theory-origin) 84%, var(--foreground));
+  --architecture-big-c: color-mix(in oklab, var(--theory-big-c) 84%, var(--foreground));
+  --architecture-rf: color-mix(in oklab, var(--theory-rf) 84%, var(--foreground));
+  --architecture-rf-ring: oklch(0.82 0.11 72);
+  --architecture-local: color-mix(in oklab, var(--theory-local) 84%, var(--foreground));
+  --architecture-loop-outer: oklch(0.8 0.14 162);
+  --architecture-loop-inner: oklch(0.84 0.14 68);
 }
 
 .dark .home-hero-architecture .home-architecture-ring-label text {
@@ -1747,15 +1809,15 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .dark .home-architecture-coordinate-axis line {
-  opacity: 0.34;
-}
-
-.dark .home-architecture-polar-scale line {
   opacity: 0.56;
 }
 
+.dark .home-architecture-polar-scale line {
+  opacity: 0.78;
+}
+
 .dark .home-architecture-polar-scale line[data-major="true"] {
-  opacity: 0.92;
+  opacity: 1;
 }
 
 html[data-contrast="high"] .home-hero-stage {
@@ -1775,7 +1837,7 @@ html[data-contrast="high"] .home-hero-environment {
   --architecture-rf: var(--foreground);
   --architecture-rf-ring: var(--foreground);
   --architecture-local: var(--foreground);
-  --architecture-loop-outer: oklch(0.45 0.2 350);
+  --architecture-loop-outer: oklch(0.45 0.18 162);
   --architecture-loop-inner: oklch(0.55 0.19 48);
   --architecture-quiet: color-mix(in oklch, var(--foreground) 34%, transparent);
   --architecture-live: var(--foreground);
@@ -1788,11 +1850,24 @@ html[data-contrast="high"] .home-hero-kicker {
   color: var(--foreground);
 }
 
+.dark .home-hero-environment::before {
+  background-image: radial-gradient(
+    ellipse at 72% 47%,
+    color-mix(in oklch, var(--organism-accent-soft) 52%, transparent),
+    transparent 64%
+  );
+}
+
 /* Layer colour identifies structure; dashed links distinguish offered options
    and social coupling from the chosen Intent trace. */
 .home-hero-stage {
-  --architecture-grid-opacity: 0.28;
-  --architecture-wash-opacity: 0;
+  --architecture-grid-opacity: 0.68;
+  --architecture-wash-opacity: 0.88;
+}
+
+.dark .home-hero-stage {
+  --architecture-grid-opacity: 0.76;
+  --architecture-wash-opacity: 0.96;
 }
 
 .home-architecture-causal-trace path {
@@ -2185,11 +2260,11 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-architecture .home-architecture-ring-label text {
-    font-size: 34px;
+    font-size: 28px;
   }
 
   .home-hero-architecture .home-architecture-ring-label[data-layer="awareness-radius"] text {
-    font-size: 30px;
+    font-size: 22px;
   }
 
 }
@@ -2257,7 +2332,8 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   /* Keep the complete concentric model large enough to read without letting
-     its legend create horizontal overflow. */
+     its legend create horizontal overflow. At 320px the 700-unit SVG is
+     painted at 0.4 scale: 40/36-unit labels stay above 16/14 screen pixels. */
   .home-hero-architecture {
     width: 100%;
     max-width: none;
@@ -2266,11 +2342,11 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-architecture .home-architecture-ring-label text {
-    font-size: 34px;
+    font-size: 40px;
   }
 
   .home-hero-architecture .home-architecture-ring-label[data-layer="awareness-radius"] text {
-    font-size: 30px;
+    font-size: 36px;
   }
 
   .home-architecture-measure-marks,
@@ -2283,7 +2359,7 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-architecture-peer-label {
-    font-size: 28px;
+    font-size: 22px;
   }
 }
 
@@ -2293,11 +2369,11 @@ html[data-contrast="high"] .home-hero-kicker {
   }
 
   .home-hero-architecture .home-architecture-ring-label text {
-    font-size: 42px;
+    font-size: 40px;
   }
 
   .home-hero-architecture .home-architecture-ring-label[data-layer="awareness-radius"] text {
-    font-size: 38px;
+    font-size: 36px;
   }
 
   .home-hero-actions {
@@ -4996,4 +5072,219 @@ html[data-field="off"] .home-hero-stage::before {
 @media (max-width: 639px) {
   .home-hero-byline { flex-direction: column; align-items: flex-start; }
   .home-author-line::before { display: none; }
+}
+
+/* ── Concept Slideshow Movement Jump Pills ────────────────────────── */
+.home-concept-slideshow-movements {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-concept-slideshow-movement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  background: color-mix(in oklab, var(--card) 55%, transparent);
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.home-concept-slideshow-movement:hover {
+  color: var(--foreground);
+  border-color: color-mix(in oklab, var(--organism-accent-strong) 42%, transparent);
+}
+
+.home-concept-slideshow-movement[data-active="true"] {
+  border-color: color-mix(in oklab, var(--organism-accent-strong) 58%, transparent);
+  background: color-mix(in oklab, var(--organism-accent-strong) 12%, var(--card));
+  color: var(--foreground);
+}
+
+.home-concept-slideshow-movement__numeral {
+  font-family: var(--home-public-annotate-font);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--organism-accent-strong);
+}
+
+/* ── Home Visual Inquiry & Inner Experience Loop Section ──────────── */
+.home-film-environment {
+  padding-block: clamp(4.5rem, 8vw, 7rem);
+  background: var(--home-ground-reflection);
+}
+
+.home-film-layout {
+  max-width: 82rem;
+  margin-inline: auto;
+}
+
+/* The trailer alone, sized so the frame and its controls fit one screen. */
+.home-film-stage {
+  width: 100%;
+  max-width: max(20rem, calc((100svh - 17rem) * 16 / 9));
+  margin-inline: auto;
+}
+
+.home-film-inner-loop {
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+  padding-top: clamp(2.5rem, 4vw, 3rem);
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+.home-film-inner-loop__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .home-film-inner-loop__intro {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+}
+
+.home-film-inner-loop__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: color-mix(in oklab, var(--organism-accent-strong) 84%, var(--foreground));
+  font-family: var(--home-public-annotate-font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-film-inner-loop__summary {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.home-film-inner-loop__summary strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.home-film-inner-loop__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .home-film-inner-loop__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.home-film-loop-card {
+  --loop-card-accent: var(--organism-accent-strong);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.35rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  background: color-mix(in oklab, var(--card) 82%, var(--background));
+  box-shadow: 0 12px 28px -18px color-mix(in oklab, var(--foreground) 16%, transparent);
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.home-film-loop-card[data-tone="rf"] {
+  --loop-card-accent: var(--theory-rf);
+}
+
+.home-film-loop-card[data-tone="big-c"] {
+  --loop-card-accent: var(--theory-big-c);
+}
+
+.home-film-loop-card:hover {
+  border-color: color-mix(in oklab, var(--loop-card-accent) 48%, transparent);
+}
+
+.home-film-loop-card__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.home-film-loop-card__step {
+  color: color-mix(in oklab, var(--loop-card-accent) 82%, var(--foreground));
+  font-family: var(--home-public-annotate-font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-film-loop-card__formula {
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in oklab, var(--loop-card-accent) 32%, transparent);
+  background: color-mix(in oklab, var(--loop-card-accent) 10%, transparent);
+  color: var(--foreground);
+  font-family: var(--home-public-annotate-font);
+  font-size: 0.8125rem;
+}
+
+.home-film-loop-card__title {
+  margin: 1rem 0 0.5rem;
+  color: var(--foreground);
+  font-family: var(--home-public-reading-font);
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.home-film-loop-card__body {
+  margin: 0 0 1.25rem;
+  color: color-mix(in oklab, var(--foreground) 80%, var(--background));
+  font-family: var(--home-public-reading-font);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.home-film-loop-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  color: color-mix(in oklab, var(--loop-card-accent) 84%, var(--foreground));
+  font-family: var(--home-public-display-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.home-film-loop-card__link:hover {
+  color: var(--foreground);
 }

@@ -21,6 +21,7 @@ import AmmMovedGuide from "./blocks/amm/AmmMovedGuide";
 function canonicalPathname(pathname: string, search: string): string {
   const clean = pathname.replace(/\/+$/, "") || "/";
   if (clean === "/essays") return "/blog";
+  if (clean === "/videos") return "/films";
   if (clean === "/academy") return "/book/digital-organism-theory";
   if (clean === "/amm/capital" || clean === "/amm/money" || clean.startsWith("/amm/money/")) {
     return "/amm";
@@ -81,9 +82,11 @@ const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 // to hear again, and what the site keeps.
 const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
 const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
+const CommunityPage = React.lazy(() => import("./blocks/community/CommunityPage"));
 const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
+const FilmsPage = React.lazy(() => import("./blocks/films/FilmsPage"));
 const AmmPublicationPage = React.lazy(() => import("./blocks/amm/AmmPublicationPage"));
 const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
 const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
@@ -164,7 +167,7 @@ const FloatingAppearanceControl: React.FC = () => {
     return null;
   }
   if (pathname.startsWith("/read/")) return null;
-  if (pathname === "/" || /^\/blog\/?$/.test(pathname)) return null;
+  if (pathname === "/" || /^\/(blog|films|videos)\/?$/.test(pathname)) return null;
   return <div className="app-floating-appearance" key={pathname}><AppearanceControl /></div>;
 };
 
@@ -233,7 +236,10 @@ const App: React.FC = () => {
                 <Route path="/join" element={<JoinPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/community" element={<CommunityPage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/films" element={<FilmsPage />} />
+                <Route path="/videos" element={<Navigate to="/films" replace />} />
                 <Route path="/amm" element={<AmmPage />} />
                 <Route path="/amm/power" element={<AmmPowerPage />} />
                 <Route path="/amm/capital" element={<AmmMovedGuide />} />

@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { NucleusMark } from "../dot/NucleusMark";
 import { useOrganism, useOrganismFieldAnchor } from "../organism/OrganismContext";
 import { FIELD_HANDOFF } from "../organism/fieldComposition";
 import "./splash-emergence.css";
@@ -73,6 +74,7 @@ function LoadingDot({ loading }: { loading: boolean }) {
   }, [loading, fieldAnchor, reducedMotion, config.stillness, config.enabled]);
 
   if (!loading && !visible) return null;
+  const still = reducedMotion || config.stillness || !config.enabled;
   return (
     <div
       className="splash-emergence"
@@ -82,6 +84,12 @@ function LoadingDot({ loading }: { loading: boolean }) {
     >
       <div ref={setStage} className="splash-emergence__stage">
         <span className="splash-emergence__halo" />
+        <NucleusMark
+          size="100%"
+          reducedMotion={still}
+          thinking={!still}
+          className="splash-emergence__mark"
+        />
         <span className="splash-emergence__ring" />
         <span className="splash-emergence__dot" />
       </div>

@@ -2,6 +2,7 @@ import { ArrowUpRight, Check, Loader2 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { BloomSurface } from "./BloomSurface";
+import { DIRECT_SUPPORT_METHODS, DirectSupportSurface } from "./DirectSupportSurface";
 import { SupportChoices } from "./SupportChoices";
 import { SUPPORT_PAYMENT_LINK } from "./supportLink";
 import { formatAmount, parseSupportAmount, useSupport } from "./useSupport";
@@ -28,13 +29,23 @@ function readCheckoutReturn(): { state: ReturnState; sessionId: string | null } 
   return { state: "idle", sessionId: null };
 }
 
-export const SupportSurface: React.FC<SupportSurfaceProps> = ({
+export const SupportSurface: React.FC<SupportSurfaceProps> = (props) => {
+  const checkoutReturn = useMemo(readCheckoutReturn, []);
+  const [cardCheckout, setCardCheckout] = useState(checkoutReturn.state !== "idle");
+  if (DIRECT_SUPPORT_METHODS.length && !cardCheckout) {
+    return <DirectSupportSurface {...props} methods={DIRECT_SUPPORT_METHODS} onCard={() => setCardCheckout(true)} />;
+  }
+  return <StripeSupportSurface {...props} onDirectSupport={DIRECT_SUPPORT_METHODS.length ? () => setCardCheckout(false) : undefined} />;
+};
+
+const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: () => void }> = ({
   origin,
   reducedMotion = false,
   titleAs,
   initialPurpose = "lumen",
   context,
   onClose,
+  onDirectSupport,
 }) => {
   const {
     options, loading, available: configured, error: optionsError,
@@ -50,7 +61,8 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
   const [customAmount, setCustomAmount] = useState(authorSupport ? "20" : "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const common = { titleAs, origin, reducedMotion, zIndex: 58, onClose };
+  const directChoice = onDirectSupport && <button type="button" onClick={onDirectSupport} className="min-h-11 text-xs text-muted-foreground underline underline-offset-4">Back to direct support methods</button>;
+  const common = { titleAs, origin, reducedMotion, zIndex: 58, onClose, footer: directChoice };
 
   useEffect(() => {
     if (checkoutReturn.state !== "checking" || !checkoutReturn.sessionId) return;
@@ -183,6 +195,7 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
         : "A voluntary, one-time payment to the author. It pays for making Minty reliable, deepening the Book One reader, and keeping DOT running. It is not a charitable donation."}
       size="md"
       footer={
+        <div>
         <button type="button" disabled={busy} onClick={() => void submit()}
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--organism-accent-soft)] bg-foreground/[0.06] px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.1] disabled:opacity-50">
           {busy
@@ -190,6 +203,8 @@ export const SupportSurface: React.FC<SupportSurfaceProps> = ({
             : <ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
           Continue to Stripe
         </button>
+        {directChoice}
+        </div>
       }>
       {returnState === "cancelled" && <p className="mb-4 border-y border-border/40 py-3 text-xs text-muted-foreground">Checkout was closed. You can still read and download freely.</p>}
       {options && <SupportChoices options={options} reducedMotion={reducedMotion}

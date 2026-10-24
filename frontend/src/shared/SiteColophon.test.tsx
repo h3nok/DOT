@@ -24,8 +24,10 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["Films", "/films"],
       ["AMM", "/amm"],
       ["Contact", "/contact"],
+      ["Community", "/community"],
       ["Books", "/publications"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
@@ -59,8 +61,10 @@ describe("SiteColophon", () => {
     expect(siteLinks()).toEqual([
       ["About", "/about"],
       ["Blog", "/blog"],
+      ["Films", "/films"],
       ["AMM", "/amm"],
       ["Contact", "/contact"],
+      ["Community", "/community"],
       ["Books", "/publications"],
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],

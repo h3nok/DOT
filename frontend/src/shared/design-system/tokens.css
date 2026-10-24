@@ -16,19 +16,29 @@
   --public-radius: var(--radius, .8rem);
   --public-title-size: clamp(2.125rem, 5vw, 4.5rem);
   --public-section-size: clamp(1.75rem, 3vw, 2.5rem);
-  --public-forest: #366b55;
-  --public-copper: #9d542e;
-  --public-blue: #356785;
-  --public-plum: #776187;
-  --public-sage: #b7ceae;
-  --public-sand: #eac29c;
-  --public-sky: #b2cfdf;
-  --public-lilac: #d1c3df;
+  --public-forest: #285c4b;
+  --public-copper: #9a5b25;
+  --public-blue: #23586a;
+  --public-plum: #4d4366;
+  --public-sage: #cfe0d6;
+  --public-sand: #ead5b7;
+  --public-sky: #cde0e6;
+  --public-lilac: #dcd6e8;
+}
+
+.dark {
+  --public-forest: #54d19f;
+  --public-copper: #f0b865;
+  --public-blue: #68b8cb;
+  --public-plum: #9baed9;
+  --public-sage: #153329;
+  --public-sand: #332515;
+  --public-sky: #142c36;
+  --public-lilac: #1f2336;
 }
 
 [data-tone] { --intent-tone: var(--public-forest); --intent-light: var(--public-sage); }
 [data-tone="copper"] { --intent-tone: var(--public-copper); --intent-light: var(--public-sand); }
 [data-tone="blue"] { --intent-tone: var(--public-blue); --intent-light: var(--public-sky); }
 [data-tone="plum"] { --intent-tone: var(--public-plum); --intent-light: var(--public-lilac); }
-.dark [data-tone] { --intent-tone: var(--intent-light); }
 html[data-contrast="high"] [data-tone] { --intent-tone: var(--foreground); }

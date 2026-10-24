@@ -44,8 +44,10 @@ export function SiteColophon({
             About
           </Link>
           <Link to="/blog" className={LINK}>Blog</Link>
+          <Link to="/films" className={LINK}>Films</Link>
           <Link to="/amm" className={LINK}>AMM</Link>
           <Link to="/contact" className={LINK}>Contact</Link>
+          <Link to="/community" className={LINK}>Community</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
             <a href={FEED_URL} className={LINK}>

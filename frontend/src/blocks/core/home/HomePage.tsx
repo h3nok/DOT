@@ -21,6 +21,7 @@ import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
 import type { HeroAskRequest } from "./heroData";
 import { HomeJourneyNav } from "./HomeJourneyNav";
+import { HomeFilmSection } from "./HomeFilmSection";
 import { TheoryLayerJourney } from "./TheoryLayerJourney";
 import { Consciousness101 } from "./Consciousness101";
 import "./home.css";
@@ -158,6 +159,8 @@ export default function HomePage() {
       <Consciousness101 />
       {/* The architecture keeps its outside-to-inside causal order. */}
       <TheoryLayerJourney reducedMotion={reducedMotion} />
+      {/* Visual synthesis & Little c's inner Experience Loop (Canvas, Fear, Love). */}
+      <HomeFilmSection />
 
       {/* ── Further reading ──────────────────────────────────────────── */}
       <section
@@ -174,6 +177,20 @@ export default function HomePage() {
             description: "Complete and free · Fixed edition",
             icon: <BookOpen />,
           }}
+          secondary={[
+            {
+              to: "/films",
+              label: "Enter the Screening Room",
+            },
+            {
+              to: "/doctrine",
+              label: "Explore the interactive Doctrine",
+            },
+            {
+              to: "/amm",
+              label: "Inspect the Autonomous Moral Agent (AMM)",
+            },
+          ]}
         />
         <p className="mx-auto mt-6 max-w-xl text-center text-xs text-muted-foreground">
           Related work includes Thomas Campbell’s <cite>My Big TOE</cite>,
@@ -193,8 +210,13 @@ export default function HomePage() {
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
           <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
+            <Link to="/films" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Films</Link>
+            <Link to="/doctrine" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Doctrine</Link>
+            <Link to="/blog" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Essays</Link>
             <Link to="/amm" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">AMM</Link>
+            <Link to="/about" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">About</Link>
             <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
+            <Link to="/community" className="text-muted-foreground underline-offset-4 hover:underline">Community</Link>
             <Link
               to="/readers"
               className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"

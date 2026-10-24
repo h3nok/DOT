@@ -23,6 +23,12 @@ const PASSAGE_TICK_MS = 20;
 
 const fullLength = (concept: Concept) => concept.term.length + concept.text.length;
 
+const CONCEPT_MOVEMENTS = [
+  { id: "experience", numeral: "I", label: "Lived Experience", startIndex: 0, endIndex: 4 },
+  { id: "question", numeral: "II", label: "Open Question", startIndex: 5, endIndex: 11 },
+  { id: "architecture", numeral: "III", label: "Architecture", startIndex: 12, endIndex: 19 },
+] as const;
+
 export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const pointerPlayback = useRef(false);
@@ -103,6 +109,14 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
     setTyped({ id: nextConcept.id, length: fullLength(nextConcept) });
   };
 
+  const jumpTo = (targetIndex: number) => {
+    const nextConcept = HERO_CONCEPTS[targetIndex];
+    if (!nextConcept) return;
+    setPlaying(false);
+    setIndex(targetIndex);
+    setTyped({ id: nextConcept.id, length: fullLength(nextConcept) });
+  };
+
   const PlaybackIcon = last ? Check : playing && !still ? Pause : Play;
 
   return (
@@ -118,6 +132,25 @@ export function HeroConceptSlideshow({ reducedMotion = false }: { reducedMotion?
       }}
       onPointerLeave={() => setHovered(false)}
     >
+      <nav className="home-concept-slideshow-movements" aria-label="Concept movements">
+        {CONCEPT_MOVEMENTS.map(movement => {
+          const active = index >= movement.startIndex && index <= movement.endIndex;
+          return (
+            <button
+              key={movement.id}
+              type="button"
+              className="home-concept-slideshow-movement"
+              data-active={active}
+              aria-current={active ? "step" : undefined}
+              aria-label={`Jump to ${movement.label} concepts`}
+              onClick={() => jumpTo(movement.startIndex)}
+            >
+              <span className="home-concept-slideshow-movement__numeral">{movement.numeral}</span>
+              <span>{movement.label}</span>
+            </button>
+          );
+        })}
+      </nav>
       <p className="home-concept-slideshow-eyebrow" aria-hidden="true" data-frame={concept.frame}>
         <span>{frameLabel(concept)}</span>
         <span data-level={concept.level}>{LEVEL_LABEL[concept.level]}</span>

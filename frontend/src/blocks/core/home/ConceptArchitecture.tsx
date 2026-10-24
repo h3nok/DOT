@@ -50,6 +50,7 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
           ))}
         </g>
         <g data-active={layer === "little-c"} className="home-concept-contour">
+          <circle r={R.awareness + 28} strokeDasharray="2 8" className="home-concept-secondary" />
           <circle r={R.awareness} strokeDasharray="5 9" />
           <circle
             className="home-architecture-surface"
@@ -59,6 +60,9 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
             filter={`url(#${surfacePrefix}-shadow)`}
           />
           <path d="M-58 58L-18 18M54 -54L70 -70M-54 -54L-70 -70" />
+          <path d="M-24 14L-72 42" />
+          <path d="M-72 42L-102 59" strokeDasharray="3 5" className="home-concept-secondary" />
+          <circle cx="-72" cy="42" r="2.8" className="home-concept-node" />
           <circle r={R.core} className="home-concept-node" />
         </g>
       </g>

@@ -1,6 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
+// These cases exercise the card service; direct transfers have their own suite.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/src/content/support.json*", route => route.fulfill({
+    contentType: "application/javascript",
+    body: 'export default {preferredMethod:"zelle",zelle:{recipient:"",recipientName:""},cashApp:{url:""}}',
+  }));
+});
+
 import { expectNoHorizontalOverflow } from "./helpers";
 
 const COPY_ROUTE = "/book/digital-organism-theory/copy";

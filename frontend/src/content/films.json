@@ -1,0 +1,303 @@
+{
+  "eyebrow": "Films & Visual Inquiry",
+  "title": "The Observer in Motion.",
+  "subtitle": "Architectural films and visual essays on Digital Organism Theory, epistemic method, and applied systems analysis.",
+  "description": "Browse the Digital Organism Theory films and @dotheory YouTube series. Watch in the native theme-synced screening room or open episodes on YouTube with zero third-party tracking on page load.",
+  "channelHandle": "@dotheory",
+  "channelUrl": "https://www.youtube.com/@dotheory",
+  "privacyNote": "No trackers or cookies load on this page. The films play here, in your browser, and YouTube loads only if you ask for it.",
+  "seriesNote": "The episodes are in production. The reading behind each one is open now.",
+  "completionNote": "That is every film and series stream in the catalogue. New episodes appear on @dotheory without schedules, streaks, or notifications.",
+  "screeningFilms": [
+    {
+      "id": "inquiry-trailer",
+      "number": "FILM 01",
+      "badge": "Official Scientific Trailer · 4 Acts",
+      "title": "You, the Observer, Belong in the Inquiry",
+      "duration": "2:12",
+      "durationSeconds": 132,
+      "posterSeconds": 64.0,
+      "resolution": "4K UHD · Dark & Light Editions",
+      "summary": "A four-act visual introduction to Digital Organism Theory: from the first-order fact of lived experience, through the emergent conditions T × E, Big C, Little c, and Reality Frame Zero (RF₀), to the Canvas, the Painting, and Love as a low-entropy Canvas state.",
+      "claimLevels": [
+        "Observation",
+        "External model",
+        "DOT derivation",
+        "Speculative extension"
+      ],
+      "youtubeId": "",
+      "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "companion": {
+        "label": "Read Book One",
+        "to": "/book/digital-organism-theory"
+      },
+      "acts": [
+        {
+          "id": "act-1",
+          "code": "ACT I",
+          "title": "First-Person Observation & Emergent Principles",
+          "timestamp": "0:01",
+          "seconds": 1.4,
+          "summary": "Why first-person experience is the starting evidence of every science, and how DOT defines a Digital Organism.",
+          "readingLabel": "Chapter 1 · The Digital Organism",
+          "readingTo": "/book/digital-organism-theory/the-digital-organism"
+        },
+        {
+          "id": "act-2",
+          "code": "ACT II",
+          "title": "Architecture of Continuity (T × E → Big C → Little c → RF₀)",
+          "timestamp": "0:35",
+          "seconds": 34.8,
+          "summary": "Primordial Continuity (T) and External Environment (E), the persistence of Big C, undifferentiated Little c, and lawful RF₀.",
+          "readingLabel": "Chapter 3 · Architecture of Continuity",
+          "readingTo": "/book/digital-organism-theory/architecture-of-continuity"
+        },
+        {
+          "id": "act-3",
+          "code": "ACT III",
+          "title": "The Canvas, The Painting & Canvas Entropy",
+          "timestamp": "1:10",
+          "seconds": 70.2,
+          "summary": "How lived encounters record on the Canvas (C), render through the Painting (P), and divide Intent under high Canvas entropy (Fear).",
+          "readingLabel": "Chapter 5 · The Canvas",
+          "readingTo": "/book/digital-organism-theory/the-canvas"
+        },
+        {
+          "id": "act-4",
+          "code": "ACT IV",
+          "title": "Seeing the Painting & Love as Low Canvas Entropy",
+          "timestamp": "1:44",
+          "seconds": 104.4,
+          "summary": "Why the Painting is not the painter, and how reducing Canvas fragmentation allows coherent Intent (Love) to emerge.",
+          "readingLabel": "Chapter 6 · The Painting",
+          "readingTo": "/book/digital-organism-theory/the-painting"
+        }
+      ]
+    },
+    {
+      "id": "inquiry-intro",
+      "number": "FILM 02",
+      "badge": "Identity Film · 5 Beats",
+      "title": "Consciousness: A Digital Organism",
+      "duration": "0:30",
+      "durationSeconds": 30,
+      "posterSeconds": 10.5,
+      "resolution": "4K UHD · Dark & Light Editions",
+      "summary": "A concise 30-second synthesis of Book One: first-person observation, emergence in T × E, the 4-step Experience Loop inside RF₀, and Love as a low-entropy Canvas state for Little c.",
+      "claimLevels": [
+        "Observation",
+        "DOT derivation"
+      ],
+      "youtubeId": "",
+      "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "companion": {
+        "label": "Explore the Concept Map",
+        "to": "/doctrine"
+      },
+      "acts": [
+        {
+          "id": "intro-1",
+          "code": "00",
+          "title": "The Observer in the Inquiry",
+          "timestamp": "0:01",
+          "seconds": 0.5,
+          "summary": "Before you measure the world, you are here to experience it.",
+          "readingLabel": "Preface",
+          "readingTo": "/book/digital-organism-theory/preface"
+        },
+        {
+          "id": "intro-2",
+          "code": "01",
+          "title": "Emergence in T × E",
+          "timestamp": "0:06",
+          "seconds": 6.3,
+          "summary": "From Primordial Continuity (T) and External Environment (E), process emerges.",
+          "readingLabel": "Chapter 1 · The Digital Organism",
+          "readingTo": "/book/digital-organism-theory/the-digital-organism"
+        },
+        {
+          "id": "intro-3",
+          "code": "02",
+          "title": "The Experience Loop",
+          "timestamp": "0:12",
+          "seconds": 12.5,
+          "summary": "The Canvas carries your history; the Painting interprets RF₀.",
+          "readingLabel": "Chapter 5 · The Canvas",
+          "readingTo": "/book/digital-organism-theory/the-canvas"
+        },
+        {
+          "id": "intro-4",
+          "code": "03",
+          "title": "Love as Low Canvas Entropy",
+          "timestamp": "0:19",
+          "seconds": 18.7,
+          "summary": "When Canvas fragmentation drops, Fear stops governing and Intent coheres.",
+          "readingLabel": "Chapter 6 · The Painting",
+          "readingTo": "/book/digital-organism-theory/the-painting"
+        }
+      ]
+    },
+    {
+      "id": "mark-splash",
+      "number": "FILM 03",
+      "badge": "Episode Opener · Concentric Mark",
+      "title": "Digital Organism Theory — Emergence Mark",
+      "duration": "0:05",
+      "durationSeconds": 5,
+      "posterSeconds": 3.2,
+      "resolution": "4K UHD · Dark & Light Editions",
+      "summary": "The 5-second episode-opening signature: the concentric DOT nucleus and curved radial field settling into equilibrium with quiet digital audio.",
+      "claimLevels": [
+        "DOT derivation"
+      ],
+      "youtubeId": "",
+      "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "companion": {
+        "label": "About the Author",
+        "to": "/about"
+      },
+      "acts": []
+    }
+  ],
+  "streams": [
+    {
+      "id": "book-one",
+      "number": "STREAM 01",
+      "title": "Book One — Consciousness: A Digital Organism",
+      "description": "Foundational concepts from Book One: the Digital Organism, Canvas, Painting, and Character, the Decoupling Principle, the Experience Loop, and Canvas Entropy.",
+      "playlistUrl": "https://www.youtube.com/@dotheory/playlists",
+      "episodes": [
+        {
+          "id": "what-is-a-digital-organism",
+          "code": "EPISODE 01",
+          "title": "What Is a Digital Organism?",
+          "subtitle": "Experience as first-order evidence, pointing devices, and coherence preserved across change.",
+          "artwork": "introduction",
+          "status": "In production · Read the chapter now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "DOT derivation"
+          ],
+          "readingLabel": "Read Chapter 1: The Digital Organism",
+          "readingTo": "/book/digital-organism-theory/the-digital-organism",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 26.4
+        },
+        {
+          "id": "canvas-painting-character",
+          "code": "EPISODE 02",
+          "title": "Canvas, Painting, and Character",
+          "subtitle": "How lived experience leaves deltas on the Canvas, organizes into an interpretive Painting, and acts as Character.",
+          "artwork": "concepts",
+          "status": "In production · Read the chapters now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "External model",
+            "DOT derivation"
+          ],
+          "readingLabel": "Read Chapter 5: The Canvas",
+          "readingTo": "/book/digital-organism-theory/the-canvas",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 70.2
+        },
+        {
+          "id": "when-fear-governs-the-loop",
+          "code": "EPISODE 03",
+          "title": "When Fear Governs the Loop — Canvas Entropy & Love",
+          "subtitle": "Why unresolved Fear fragments the Canvas (high Canvas entropy) and why Love is a low-entropy Canvas state for Little c.",
+          "artwork": "agency",
+          "status": "In production · Read the chapters now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "DOT derivation"
+          ],
+          "readingLabel": "Read Chapter 6: The Painting",
+          "readingTo": "/book/digital-organism-theory/the-painting",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 81.6
+        }
+      ]
+    },
+    {
+      "id": "epistemic-method",
+      "number": "STREAM 02",
+      "title": "Epistemic Method & Open Questions",
+      "description": "How Digital Organism Theory separates Observation, External model, DOT derivation, and Speculative extension—and where the inquiry remains open to falsification.",
+      "playlistUrl": "https://www.youtube.com/@dotheory/playlists",
+      "episodes": [
+        {
+          "id": "where-the-theory-is-still-open",
+          "code": "EPISODE 04",
+          "title": "Where the Theory Is Still Open",
+          "subtitle": "Rendering Latency, the interaction burden, the Limit of Knowledge, and the empirical tests that could falsify Decoupling.",
+          "artwork": "open-questions",
+          "status": "In production · Explore Open Questions now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "External model",
+            "DOT derivation",
+            "Speculative extension"
+          ],
+          "readingLabel": "Explore Open Questions & Falsifiers",
+          "readingTo": "/applied",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 18.0
+        }
+      ]
+    },
+    {
+      "id": "amm-series",
+      "number": "STREAM 03",
+      "title": "The American Millennial Manifesto (Applied DOT)",
+      "description": "Applying Digital Organism Theory to public life: how economic dependence becomes extraction, how extraction becomes power, and how inherited culture makes it feel normal.",
+      "playlistUrl": "https://www.youtube.com/@dotheory/playlists",
+      "episodes": [
+        {
+          "id": "how-a-system-gets-inside-us",
+          "code": "EPISODE 05",
+          "title": "How a System Gets Inside Us",
+          "subtitle": "How civilization, institutions, and economic extraction enter daily experience as strokes on individual Canvases.",
+          "artwork": "amm",
+          "status": "In production · Read the AMM publication now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "External model",
+            "DOT derivation"
+          ],
+          "readingLabel": "Explore The American Millennial Manifesto",
+          "readingTo": "/amm",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 93.0
+        },
+        {
+          "id": "dependence-extraction-power",
+          "code": "EPISODE 06",
+          "title": "Dependence, Extraction, and Shared Agency",
+          "subtitle": "Why fear-governed institutions narrow human decision-space—and how personal and structural repainting proceed together.",
+          "artwork": "amm-power",
+          "status": "In production · Read Chapter One now",
+          "youtubeId": "",
+          "youtubeUrl": "https://www.youtube.com/@dotheory",
+          "claimLevels": [
+            "Observation",
+            "External model"
+          ],
+          "readingLabel": "Read Chapter One: The Leech",
+          "readingTo": "/essays/amm-chapter-one-the-leech",
+          "screeningFilmId": "inquiry-trailer",
+          "screeningSeconds": 115.0
+        }
+      ]
+    }
+  ]
+}

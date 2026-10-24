@@ -62,6 +62,9 @@ export function HeroProposition({
               href: "#possibility-field",
               label: "Explore the model",
               endIcon: <ArrowDown />,
+            }, {
+              to: "/community",
+              label: "Join the conversation",
             }]}
           />
 

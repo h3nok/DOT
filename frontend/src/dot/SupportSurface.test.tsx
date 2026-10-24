@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { SupportSurface } from "./SupportSurface";
 import { parseSupportAmount, useSupport } from "./useSupport";
+import type { DirectSupportMethod } from "../content/supportMethods.js";
 
 vi.mock("./useSupport", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./useSupport")>();
@@ -12,6 +13,11 @@ vi.mock("./useSupport", async (importOriginal) => {
 // The payment link is a build-time constant, so the tests drive it through a
 // hoisted cell rather than re-importing the module per case.
 const paymentLink = vi.hoisted(() => ({ current: null as string | null }));
+const directMethods = vi.hoisted(() => ({ current: [] as DirectSupportMethod[] }));
+vi.mock("./DirectSupportSurface", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./DirectSupportSurface")>();
+  return { ...actual, get DIRECT_SUPPORT_METHODS() { return directMethods.current; } };
+});
 vi.mock("./supportLink", () => ({
   get SUPPORT_PAYMENT_LINK() {
     return paymentLink.current;
@@ -34,7 +40,33 @@ describe("SupportSurface", () => {
   afterEach(() => {
     window.history.replaceState({}, "", "/");
     paymentLink.current = null;
+    directMethods.current = [];
     vi.clearAllMocks();
+  });
+
+  it("offers confirmed direct support without depending on the card service", () => {
+    directMethods.current = [{ id: "zelle", label: "Zelle", recipient: "author@example.com", recipientName: "Example Author" }];
+    mockedUseSupport.mockReturnValue(closedPlane);
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    expect(screen.getByText("author@example.com")).toBeInTheDocument();
+    expect(mockedUseSupport).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Use card checkout instead" }));
+    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Back to direct support methods" }));
+    expect(screen.getByText("author@example.com")).toBeInTheDocument();
+  });
+
+  it("still verifies a card checkout return when direct support is preferred", async () => {
+    directMethods.current = [{ id: "zelle", label: "Zelle", recipient: "author@example.com", recipientName: "Example Author" }];
+    window.history.replaceState({}, "", "/support?purpose=author&support=thanks&session_id=cs_example");
+    const getCheckoutStatus = vi.fn().mockResolvedValue("paid");
+    mockedUseSupport.mockReturnValue({ ...closedPlane, getCheckoutStatus });
+    render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
+    expect(await screen.findByRole("heading", { name: "You helped build it" })).toBeInTheDocument();
+    expect(getCheckoutStatus).toHaveBeenCalledWith("cs_example");
+    expect(screen.queryByText("author@example.com")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Back to direct support methods" }));
+    expect(screen.getByText("author@example.com")).toBeInTheDocument();
   });
 
   it("fails closed while neither the server plane nor a payment link is configured", () => {

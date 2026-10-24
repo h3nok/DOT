@@ -21,7 +21,8 @@ test("phone navigation opens deliberately, dismisses, routes, and yields to desk
   await menu.click();
   const panel = page.getByRole("dialog", { name: "Site navigation" });
   await expect(panel).toBeVisible();
-  await expect(panel.getByRole("link")).toHaveCount(6);
+  await expect(panel.getByRole("link")).toHaveCount(7);
+  await expect(panel.getByRole("link", { name: "Films", exact: true })).toHaveAttribute("href", "/films");
   await expect(panel.getByRole("link", { name: "Blog", exact: true })).toHaveAttribute("aria-current", "page");
   for (const link of await panel.getByRole("link").all()) await thumbControl(link);
   await page.keyboard.press("Escape");

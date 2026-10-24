@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated October 15, 2026.
+Last updated October 23, 2026.
 
 This site does not sell attention or data. There are no ads, no cross-site trackers, and no behavioural profiles. This page lists everything the site does handle, so that the promise can be checked.
 
@@ -46,7 +46,10 @@ The [contact page](/contact) accepts project discussions, collaboration, writing
 
 ## Payments
 
-The complete book and PDF require no payment. If you choose to support the author or the work, Stripe handles the one-time contribution and your card details never reach this site. See [Stripe's privacy policy](https://stripe.com/privacy). The site keeps the provider-confirmed amount, purpose, status, and a one-way fingerprint of the receipt email, not the address itself. Support does not create membership or add you to the reader list. Historical book purchase and refund records remain private, including their account association.
+The complete book and PDF require no payment. Support does not create membership or add you to the reader list.
+
+- **Direct transfers.** If a Zelle recipient or Cash App link is offered, the transfer happens through your bank or Cash App. They process the payment under their own privacy policies. Henok can see the sender information and note they provide with the transfer. This site does not receive a payment confirmation or add direct transfers to its card-payment records. No bank login, account number, or payment-app credential is collected here. A provider loads only when you choose to open it.
+- **Card checkout.** Stripe handles the one-time contribution and your card details never reach this site. See [Stripe's privacy policy](https://stripe.com/privacy). The site keeps the provider-confirmed amount, purpose, status, and a one-way fingerprint of the receipt email, not the address itself. Historical book purchase and refund records remain private, including their account association.
 
 ## Server logs
 

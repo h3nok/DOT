@@ -79,22 +79,27 @@ html[data-minty-resizing] * {
   to { transform: rotate(360deg); }
 }
 
+@keyframes nucleusNodeCounterSweep {
+  to { transform: rotate(-360deg); }
+}
+
 @keyframes nucleusFieldBreathe {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.42; }
+  50% { opacity: 0.48; }
 }
 
 @keyframes nucleusInnerBreathe {
-  0%, 100% { opacity: 0.36; }
-  50% { opacity: 0.7; }
+  0%, 100% { opacity: 0.44; }
+  50% { opacity: 0.78; }
 }
 
 @keyframes nucleusCorePulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.08); }
 }
 
 .nucleus-mark[data-thinking="true"] .nucleus-mark-arcs,
+.nucleus-mark[data-thinking="true"] .nucleus-mark-nodes,
 .nucleus-mark[data-thinking="true"] .nucleus-mark-core {
   transform-box: view-box;
   transform-origin: 50% 50%;
@@ -102,6 +107,10 @@ html[data-minty-resizing] * {
 
 .nucleus-mark[data-thinking="true"] .nucleus-mark-arcs {
   animation: nucleusArcSweep 9s linear infinite;
+}
+
+.nucleus-mark[data-thinking="true"] .nucleus-mark-nodes {
+  animation: nucleusNodeCounterSweep 18s linear infinite;
 }
 
 .nucleus-mark[data-thinking="true"] .nucleus-mark-field {

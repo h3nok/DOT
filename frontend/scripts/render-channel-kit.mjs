@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -10,6 +10,7 @@ import { loadTrailerVideo, renderTrailerVideo } from "./channel-trailer-video.mj
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const OUTPUT = path.join(ROOT, "design", "youtube");
+const FFMPEG = process.env.DOT_FFMPEG || (existsSync("/tmp/dot-channel-video-tools/ffmpeg") ? "/tmp/dot-channel-video-tools/ffmpeg" : "ffmpeg");
 // Load the same pure geometry on the repository's supported Node 20+, without
 // duplicating it or requiring Node's newer native TypeScript loader.
 const radialModule = ts.transpileModule(readFileSync(path.join(ROOT, "frontend", "src", "organism", "radialField.ts"), "utf8"), {
@@ -1062,15 +1063,15 @@ async function render() {
     const splash = assets.find((asset) => asset.name === "splash");
     const endCard = assets.find((asset) => asset.name === "end-card");
     const video = process.argv.includes("--video")
-      ? await renderSplashVideo({ page, svg: splash.svg, output: OUTPUT, ffmpeg: process.env.DOT_FFMPEG || "ffmpeg" })
+      ? await renderSplashVideo({ page, svg: splash.svg, output: OUTPUT, ffmpeg: FFMPEG })
       : await loadSplashVideo(OUTPUT, splash.svg);
     if (video) setup.video = video;
     const bumper = process.argv.includes("--video")
-      ? await renderBumperVideo({ page, svg: splash.svg, output: OUTPUT, ffmpeg: process.env.DOT_FFMPEG || "ffmpeg" })
+      ? await renderBumperVideo({ page, svg: splash.svg, output: OUTPUT, ffmpeg: FFMPEG })
       : await loadBumperVideo(OUTPUT, splash.svg);
     if (bumper) setup.bumper = bumper;
     const trailer = process.argv.includes("--trailer")
-      ? await renderTrailerVideo({ page, splashSvg: splash.svg, endCardSvg: endCard.svg, output: OUTPUT, ffmpeg: process.env.DOT_FFMPEG || "ffmpeg" })
+      ? await renderTrailerVideo({ page, splashSvg: splash.svg, endCardSvg: endCard.svg, output: OUTPUT, ffmpeg: FFMPEG })
       : await loadTrailerVideo(OUTPUT, splash.svg, endCard.svg);
     if (trailer) setup.trailer = trailer;
     await writeFile(path.join(OUTPUT, "FONT-LICENSES.txt"), fonts.licenses);
