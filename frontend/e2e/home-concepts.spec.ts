@@ -147,6 +147,9 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   const concepts = page.getByRole("region", { name: "Key concepts and questions" });
   await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
+  // As in the autoplay test: an installed clock follows wall time until paused,
+  // and a loaded runner otherwise spends the 8 s interval before the 7.9 s check.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1_000);
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await concepts.hover();
   await expect(concepts).toHaveAttribute("data-playback", "paused");
