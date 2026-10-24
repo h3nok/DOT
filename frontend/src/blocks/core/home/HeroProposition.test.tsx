@@ -108,19 +108,14 @@ describe("HeroProposition", () => {
     expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
   });
 
-  it("offers one primary reading action and quiet paths to the model and conversation", () => {
+  it("offers one reading action and nothing beside it", () => {
     renderProposition();
 
     expect(screen.getByRole("link", { name: "Read Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory/preface?path=start-where-you-live",
     );
-    expect(screen.getByRole("link", { name: /explore the model/i })).toHaveAttribute(
-      "href",
-      "#possibility-field",
-    );
-    expect(screen.getByRole("link", { name: "Join the conversation" })).toHaveAttribute("href", "/community");
-    expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(3);
+    expect(within(screen.getByRole("navigation", { name: "Begin exploring DOT" })).getAllByRole("link")).toHaveLength(1);
     expect(screen.getByRole("link", { name: "Read Book One" }))
       .not.toHaveAccessibleDescription();
     expect(screen.queryByText("Book One’s preface · Free to read")).not.toBeInTheDocument();

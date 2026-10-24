@@ -132,7 +132,7 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
   await concepts.scrollIntoViewIfNeeded();
-  await page.getByRole("link", { name: "Explore the model", exact: true }).hover();
+  await page.getByRole("navigation", { name: "Begin exploring DOT" }).getByRole("link", { name: "Read Book One" }).hover();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();
@@ -147,6 +147,9 @@ test("hover and leaving the hero suspend autoplay instead of consuming unread co
   const concepts = page.getByRole("region", { name: "Key concepts and questions" });
   await concepts.scrollIntoViewIfNeeded();
   await expect(concepts).toHaveAttribute("data-playback", "playing");
+  // As in the autoplay test: an installed clock follows wall time until paused,
+  // and a loaded runner otherwise spends the 8 s interval before the 7.9 s check.
+  await page.clock.pauseAt(await page.evaluate(() => Date.now()) + 1_000);
   await page.clock.runFor(typingTime(HERO_CONCEPTS[0]));
   await concepts.hover();
   await expect(concepts).toHaveAttribute("data-playback", "paused");
