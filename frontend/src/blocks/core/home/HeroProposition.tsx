@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ArrowDown, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
@@ -58,14 +58,6 @@ export function HeroProposition({
               label: HOME.primaryAction,
               icon: <BookOpen strokeWidth={1.5} />,
             }}
-            secondary={[{
-              href: "#possibility-field",
-              label: "Explore the model",
-              endIcon: <ArrowDown />,
-            }, {
-              to: "/community",
-              label: "Join the conversation",
-            }]}
           />
 
           <HeroConceptSlideshow reducedMotion={reducedMotion} />
