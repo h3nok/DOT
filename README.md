@@ -102,7 +102,7 @@ artifact directory; release tests require identical bytes. Author support is a
 separate, optional one-time contribution at `/support?purpose=author`, with a
 changeable $20 suggestion and the support plane's server-enforced $2–$5,000 card
 range. Free access never requires checkout. Stripe configuration and signed
-webhook delivery are still required before support can open. Historical book
+webhook delivery are required for card checkout. Historical book
 purchase/refund records remain private; new book purchase checkout is retired
 (ADR-0035; L1/L7/L8/L9/L10, none violated).
 
@@ -197,10 +197,18 @@ Keep the optional services separate from that reading launch:
   one-click `/readers/leave#<token>` link before announcing signup. A closed
   list asks for no address; an unreachable service reports a different state
   and offers contact and the book.
-- **Author support:** configure the Stripe keys and signed webhook delivery
-  described in the [orchestrator README](backend/orchestrator/README.md).
-  Verify hosted checkout, the receipt, and server-side settlement before
-  announcing contributions. Free downloads never depend on those checks.
+- **Author support:** confirmed direct-transfer destinations belong in
+  `frontend/src/content/support.json`: the enrolled Zelle email or U.S. mobile
+  number plus recipient name, and/or the author's HTTPS Cash App payment link.
+  Keep unused destinations empty. `preferredMethod` is `zelle` or `cashapp`.
+  These are public details; never put credentials or account numbers here.
+  Check the recipient in the bank/app before publishing. Direct transfers are
+  confirmed there and never entered into DOT's card-payment records. Card
+  checkout remains a separate choice; configure its Stripe keys and signed
+  webhook delivery as described in the
+  [orchestrator README](backend/orchestrator/README.md). Verify the receipt and
+  settlement before announcing card contributions. Free downloads never depend
+  on any payment check (ADR-0054).
 - **YouTube:** the artwork is ready, but the channel must be created in the
   author's account. Publish only a real, author-approved channel URL; the
   current site does not invent one or embed a player.
@@ -213,6 +221,14 @@ Run `make verify` before publishing. Focused desktop/mobile launch checks are:
 ```bash
 pnpm --dir frontend exec playwright test e2e/public-launch.spec.ts e2e/free-book.spec.ts
 ```
+
+The public `/community` invitation begins with an attributed passage from Book
+One and offers private writing conversations, reader updates, invitation
+requests, and optional author contributions as separate choices. Shared
+discussion space is not open yet; neither a subscription nor a contribution
+grants membership. Its mobile/desktop journey is checked by
+`pnpm --dir frontend exec playwright test e2e/community.spec.ts`. This serves
+L1/L2/L3/L7/L9/L10/L12 and violates none (ADR-0053).
 
 The reader-list browser checks use controlled API responses; they verify the
 interaction and request contract, not production mail delivery. Pushing `main`

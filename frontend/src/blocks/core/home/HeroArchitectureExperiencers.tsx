@@ -38,6 +38,9 @@ const AWARENESS_RADIUS = 72;
 const AWARENESS_SPOKE_ANGLE = 150;
 const AWARENESS_POTENTIAL_RADII = [96, 120] as const;
 const AWARENESS_ARC_SPAN = 28;
+const AWARENESS_SPOKE_START = polar(R.local + 3, AWARENESS_SPOKE_ANGLE);
+const AWARENESS_SPOKE_RING = polar(AWARENESS_RADIUS, AWARENESS_SPOKE_ANGLE);
+const AWARENESS_SPOKE_END = polar(128, AWARENESS_SPOKE_ANGLE);
 
 /** Options RF₀ presents, arriving at the edge of the awareness radius.
  *  Placed between the peers' bearings so no two marks share a direction. */
@@ -101,7 +104,7 @@ const PEERS = SOCIAL_CENTRES.map((peer, order) => {
 /** RF₀ hosts many Little c. c₁ is the reader; the rest share the same anatomy. */
 export function HeroArchitectureExperiencers({ ids }: { ids: HeroArchitectureIds }) {
   const {
-    arrowId, optionArrowId, constraintArrowId, couplingArrowId, localWashId, threadId, surfacePrefix,
+    arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, localWashId, threadId, surfacePrefix,
   } = ids;
 
   return (
@@ -233,11 +236,39 @@ export function HeroArchitectureExperiencers({ ids }: { ids: HeroArchitectureIds
               />
             ))}
           </g>
+          <line
+            className="home-architecture-awareness-halo"
+            x1={AWARENESS_SPOKE_START.x}
+            y1={AWARENESS_SPOKE_START.y}
+            x2={AWARENESS_SPOKE_END.x}
+            y2={AWARENESS_SPOKE_END.y}
+          />
+          <line
+            className="home-architecture-awareness-spoke"
+            x1={AWARENESS_SPOKE_START.x}
+            y1={AWARENESS_SPOKE_START.y}
+            x2={AWARENESS_SPOKE_RING.x}
+            y2={AWARENESS_SPOKE_RING.y}
+          />
+          <line
+            className="home-architecture-awareness-spoke-potential"
+            x1={AWARENESS_SPOKE_RING.x}
+            y1={AWARENESS_SPOKE_RING.y}
+            x2={AWARENESS_SPOKE_END.x}
+            y2={AWARENESS_SPOKE_END.y}
+            markerEnd={`url(#${radiusArrowId})`}
+          />
           <circle
             className="home-architecture-awareness-ring"
             cx={FRAME_CENTRE.x}
             cy={FRAME_CENTRE.y}
             r={AWARENESS_RADIUS}
+          />
+          <circle
+            className="home-architecture-awareness-spoke-node"
+            cx={AWARENESS_SPOKE_RING.x}
+            cy={AWARENESS_SPOKE_RING.y}
+            r="2.4"
           />
           {OPTION_ARROWS.map(({ angle, node }) => (
             <circle key={angle} className="home-architecture-option-node" cx={node.x} cy={node.y} r="2.6" />
@@ -247,7 +278,7 @@ export function HeroArchitectureExperiencers({ ids }: { ids: HeroArchitectureIds
             data-chosen="true"
             cx={CHOSEN_OPTION.x}
             cy={CHOSEN_OPTION.y}
-            r="3.4"
+            r="3.6"
           />
         </g>
       </g>

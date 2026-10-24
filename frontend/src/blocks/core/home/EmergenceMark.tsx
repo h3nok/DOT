@@ -33,7 +33,7 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
 
   return (
     <span style={{ display: "inline-block", width: size, height: size }} aria-hidden="true">
-      <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none">
+      <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" shapeRendering="geometricPrecision">
         <defs>
           <radialGradient id="emergence-halo">
             <stop offset="0%" stopColor={ACCENT_STRONG} stopOpacity={0.34} />
@@ -71,7 +71,7 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
         <motion.circle
           cx={50}
           cy={50}
-          r={7.5}
+          r={8.6}
           fill={ACCENT_STRONG}
           initial={settled ? false : { scale: 0, opacity: 0 }}
           animate={
@@ -96,17 +96,17 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
         <motion.circle
           cx={50}
           cy={50}
-          r={15}
+          r={16.5}
           stroke={ACCENT_STRONG}
-          strokeWidth={1.4}
+          strokeWidth={1.35}
           vectorEffect="non-scaling-stroke"
           initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.8 }}
           animate={
             settled
-              ? { pathLength: 1, opacity: 0.36, scale: 1 }
+              ? { pathLength: 1, opacity: 0.54, scale: 1 }
               : {
                   pathLength: 1,
-                  opacity: 0.36,
+                  opacity: 0.54,
                   scale: [0.8, 1, 1.08, 1],
                 }
           }
@@ -125,47 +125,61 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
 
         {/* 3 — the two arcs: structure that is not yet closed. */}
         <motion.path
-          d="M 50 16 C 68 16 84 31 84 50 C 84 69 68 84 50 84"
+          d="M 50 22 C 65.5 22 78 34.5 78 50 C 78 65.5 65.5 78 50 78"
           stroke={ACCENT_STRONG}
-          strokeWidth={2.25}
+          strokeWidth={2.15}
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
           initial={settled ? false : { pathLength: 0, opacity: 0, rotate: -9 }}
-          animate={{ pathLength: 1, opacity: 0.9, rotate: 0 }}
+          animate={{ pathLength: 1, opacity: 0.92, rotate: 0 }}
           style={{ transformOrigin: "50px 50px" }}
           transition={t(1.05, 1.45)}
         />
         <motion.path
-          d="M 50 84 C 32 84 16 69 16 50 C 16 31 32 16 50 16"
+          d="M 50 78 C 34.5 78 22 65.5 22 50 C 22 34.5 34.5 22 50 22"
           stroke={ACCENT}
-          strokeWidth={1.8}
+          strokeWidth={1.75}
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
           initial={settled ? false : { pathLength: 0, opacity: 0, rotate: 9 }}
-          animate={{ pathLength: 1, opacity: 0.56, rotate: 0 }}
+          animate={{ pathLength: 1, opacity: 0.68, rotate: 0 }}
           style={{ transformOrigin: "50px 50px" }}
           transition={t(1.3, 1.55)}
         />
 
-        {/* 4 — the field it now sits inside. */}
+        {/* 4 — the field and cardinal nodes it now sits inside. */}
         <motion.circle
           cx={50}
           cy={50}
-          r={30}
+          r={33.64}
           stroke={ACCENT}
-          strokeWidth={1.55}
+          strokeWidth={1.5}
           vectorEffect="non-scaling-stroke"
           initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.9 }}
-          animate={{ pathLength: 1, opacity: 0.62, scale: 1 }}
+          animate={{ pathLength: 1, opacity: 0.78, scale: 1 }}
           style={{ transformOrigin: "50px 50px" }}
           transition={t(1.75, 1.25)}
         />
+        <motion.g
+          fill={ACCENT_STRONG}
+          initial={settled ? false : { opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 0.86, scale: 1 }}
+          style={{ transformOrigin: "50px 50px" }}
+          transition={t(1.88, 0.95)}
+        >
+          <circle cx={50} cy={16.36} r={2} />
+          <circle cx={83.64} cy={50} r={2} />
+          <circle cx={50} cy={83.64} r={2} />
+          <circle cx={16.36} cy={50} r={2} />
+        </motion.g>
         <motion.circle
           cx={50}
           cy={50}
-          r={44}
+          r={43.5}
           stroke={ACCENT_SOFT}
-          strokeWidth={1.35}
+          strokeWidth={1.15}
+          strokeDasharray="3 5"
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
           initial={settled ? false : { pathLength: 0, opacity: 0, scale: 0.92 }}
           animate={
@@ -217,10 +231,10 @@ export function EmergenceMark({ size = 132, settled = false }: EmergenceMarkProp
         <motion.circle
           cx={50}
           cy={50}
-          r={3.25}
+          r={3.4}
           fill="var(--background, white)"
           initial={settled ? false : { opacity: 0 }}
-          animate={{ opacity: 0.72 }}
+          animate={{ opacity: 0.92 }}
           transition={t(0.75, 0.6)}
         />
       </svg>

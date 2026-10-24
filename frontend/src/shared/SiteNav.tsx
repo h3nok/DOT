@@ -8,6 +8,7 @@ const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
   ["/", "Home"],
   ["/about", "About"],
   ["/blog", "Blog"],
+  ["/films", "Films"],
   ["/book/digital-organism-theory", "Book One"],
   ["/contact", "Contact"],
 ];
@@ -26,7 +27,8 @@ export function SiteNav({ className = "" }: { className?: string }) {
 
   const links = (destinations: ReadonlyArray<readonly [string, string]>) => destinations.map(([to, label]) => {
     const current = pathname === to || (to !== "/" && pathname.startsWith(`${to}/`)) ||
-      (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname) || pathname.startsWith("/_preview/essays")));
+      (to === "/blog" && (/^\/(writing|essays)(\/|$)/.test(pathname) || pathname.startsWith("/_preview/essays"))) ||
+      (to === "/films" && /^\/videos(\/|$)/.test(pathname));
     return (
       <li key={to}>
         <Link to={to} aria-current={current ? "page" : undefined} onClick={() => setOpen(false)}>

@@ -299,11 +299,11 @@ test.describe("appearance controls change the rendered document", () => {
 
     await panel.getByRole("button", { name: "Canvas", exact: true }).click();
     await expect.poll(() => htmlAttribute(page, "data-field")).toBe("field");
-    await expect.poll(() => page.locator("canvas").count()).toBe(1);
+    await expect.poll(() => page.locator(".organism-membrane canvas").count()).toBe(1);
 
     await panel.getByRole("button", { name: "Still", exact: true }).click();
     await expect.poll(() => htmlAttribute(page, "data-field")).toBe("off");
-    await expect.poll(() => page.locator("canvas").count()).toBe(0);
+    await expect.poll(() => page.locator(".organism-membrane canvas").count()).toBe(0);
     await expect
       .poll(() =>
         page

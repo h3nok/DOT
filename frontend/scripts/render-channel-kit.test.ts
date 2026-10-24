@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import author from "../src/content/author.json";
+import identity from "../src/content/identity.json";
 import book from "../public/publications/henok/digital-organism-theory/v4/manifest.json";
 import { BANNER_SAFE_AREA, buildChannelAssets, buildChannelSetup } from "./render-channel-kit.mjs";
 import { buildSetupPage, buildSetupText } from "./channel-setup-page.mjs";
 import { bumperToSplash, SPLASH_BUMPER, SPLASH_CAPTIONS, SPLASH_VIDEO, splashToBumper } from "./channel-splash-video.mjs";
+import { buildInquiryDocument, INQUIRY_VIDEOS, inquirySubtitles, inquiryTypeTicks } from "./channel-inquiry-video.mjs";
 
 describe("YouTube channel artwork", () => {
   it("produces upload-sized banner, avatar, thumbnails, and title/end cards", () => {
@@ -175,5 +177,76 @@ describe("YouTube channel artwork", () => {
     const setup = { ...buildChannelSetup(author, book), video: SPLASH_VIDEO, bumper: SPLASH_BUMPER };
     const document = new DOMParser().parseFromString(buildSetupPage(setup), "text/html");
     expect(document.querySelector("video source[src='splash-bumper.mp4']")).not.toBeNull();
+  });
+
+  it("paces the mark-only splash, inquiry intro, and trailer with studio lighting, honest claim tags, and no dark-pattern CTAs", () => {
+    const markSplashSpec = INQUIRY_VIDEOS.find(({ name }) => name === "mark-splash")!;
+    const introSpec = INQUIRY_VIDEOS.find(({ name }) => name === "inquiry-intro")!;
+    const trailerSpec = INQUIRY_VIDEOS.find(({ name }) => name === "inquiry-trailer")!;
+    expect(markSplashSpec.duration).toBe(5);
+    expect(markSplashSpec.captions).toHaveLength(0);
+    expect(introSpec.duration).toBe(30);
+    expect(introSpec.samples).toHaveLength(6);
+    expect(trailerSpec.duration).toBe(132);
+    expect(trailerSpec.samples).toHaveLength(6);
+
+    const introSrt = inquirySubtitles(introSpec);
+    const trailerSrt = inquirySubtitles(trailerSpec);
+    // Act I of both films confronts the viewer with the phenomenon of experience BEFORE introducing the theory
+    expect(trailerSpec.captions[0].lines.join(" ")).not.toMatch(/Digital Organism Theory|Big C|RF₀/i);
+    expect(introSpec.captions[0].lines.join(" ")).not.toMatch(/Digital Organism Theory|Big C|RF₀/i);
+    expect(introSrt).toContain("Before you measure the world, you are here to experience it.");
+    expect(introSrt).toContain("A model centered on consciousness: the Digital Organism.");
+    expect(introSrt).toContain("Big C is the ground. T and E name its capacities: continuity and possibility.");
+    expect(introSrt).toContain("The Canvas carries your history. The Painting interprets RF₀.");
+    expect(introSrt).toContain("For Little c, Love is a low-entropy Canvas state.");
+    expect(introSrt).toContain("When Canvas fragmentation drops, Fear stops governing and Intent coheres.");
+    expect(introSrt).toContain("Consciousness: A Digital Organism");
+    expect(trailerSrt).toContain("The first fact of your existence is not a measurement.");
+    expect(trailerSrt).toContain("It is that you are here to experience one.");
+    expect(trailerSrt).toContain("Physics maps the external world.");
+    expect(trailerSrt).toContain("What maps first-person reality?");
+    expect(trailerSrt).toContain("A formal model of reality centered on consciousness.");
+    expect(trailerSrt).toContain("Experience is first-order; the model's concepts are pointing devices for it.");
+    expect(trailerSrt).toContain("What is a Digital Organism? Coherence preserved in change.");
+    expect(trailerSrt).toContain("An informational process that retains state and adapts across continuity.");
+    expect(trailerSrt).not.toMatch(/cognitive dissonance/i);
+    expect(trailerSrt).not.toMatch(/completely detached|completely digital|lives experience/i);
+    expect(introSrt + trailerSrt).not.toMatch(/Energy \(E\)|Energy source \(E\)|Time × Energy|Not sure for Big C/i);
+    // Book One v4: T and E are capacities of Big C, not an External Environment it emerged within.
+    expect(introSrt + trailerSrt).not.toMatch(/External Environment|within T × E|T × E\)? *→ *Big C/i);
+    expect(trailerSrt).toContain("Big C is the ground. T and E name its capacities.");
+    expect(trailerSrt).toContain("T: primordial continuity. E: unexpressed possibility. Neither comes before Big C.");
+    expect(trailerSrt).toContain("Big C localizes as Little c — an undifferentiated process.");
+    expect(trailerSrt).toContain("Little c is pure local awareness; its distinct history lives on its Canvas.");
+    expect(trailerSrt).toContain("RF₀: A lawful world where choices carry real consequence.");
+    expect(trailerSrt).toContain("The Canvas carries your record. The Painting renders meaning.");
+    expect(trailerSrt).toContain("Fear is high Canvas entropy. Fragmentation narrows Intent.");
+    expect(trailerSrt).toContain("The Painting is not the painter. See the lens, and quiet the noise.");
+    expect(trailerSrt).toContain("For Little c, being Love means Canvas entropy is low.");
+    expect(trailerSrt).toContain("When Canvas fragmentation clears, awareness sees clearly and Intent coheres.");
+    expect(trailerSrt).toContain("The Observer Belongs in the Inquiry.");
+    expect(introSrt + trailerSrt).not.toMatch(/subscribe now|hit the bell|like and subscribe|so much advice|what matters to you|current events\. your choices/i);
+
+    // Every split beat highlights at most one single focusTerm (no multi-color rainbow regex)
+    const splitBeats = trailerSpec.captions.filter((c) => c.layout === "split");
+    expect(splitBeats.every((c) => typeof c.focusTerm === "string" && c.focusTerm.length > 0)).toBe(true);
+
+    const html = buildInquiryDocument({ video: trailerSpec, identity, fonts: "" });
+    expect(html).toContain("pillLabel");
+    expect(html).toContain("drawHomeArchitecture");
+    expect(html).toContain("drawHomeExperienceLoop");
+    expect(html).toContain("drawBigCLoop");
+    expect(html).toContain("drawLittleCLoop");
+    expect(html).toContain("drawOrdinaryRoomScene");
+    expect(html).toContain("window.seekInquiry");
+    expect(html).toContain("window.inquiryTextBounds");
+
+    const introTicks = inquiryTypeTicks(introSpec);
+    const trailerTicks = inquiryTypeTicks(trailerSpec);
+    expect(introTicks.length).toBeGreaterThan(40);
+    expect(trailerTicks.length).toBeGreaterThan(120);
+    expect(introTicks.every((t: number) => t > 0 && t < introSpec.duration)).toBe(true);
+    expect(trailerTicks.every((t: number) => t > 0 && t < trailerSpec.duration)).toBe(true);
   });
 });

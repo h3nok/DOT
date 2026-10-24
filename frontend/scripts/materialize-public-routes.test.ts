@@ -26,6 +26,8 @@ import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
 import AMM from "../src/content/amm.json";
+import COMMUNITY from "../src/content/community.json";
+import BLOG from "../src/content/blog.json";
 
 interface PublicRoute {
   route: string;
@@ -47,6 +49,22 @@ const nodeOfType = (route: PublicRoute, type: string) =>
   route.structuredData["@graph"].find((node) => node["@type"] === type);
 
 describe("public route metadata", () => {
+  it("makes the community invitation readable and shareable without JavaScript", () => {
+    const community = routes.find(route => route.route === "/community")!;
+    const html = community.prerender!;
+    const text = document.createElement("div");
+    text.innerHTML = html;
+    expect(text.querySelector("h1")?.textContent).toBe(COMMUNITY.heading);
+    expect(text.textContent).toContain(BLOG.startingPoint.quote);
+    expect(text.textContent).toContain(COMMUNITY.status);
+    expect(text.textContent).toContain(COMMUNITY.supportDescription);
+    expect(text.querySelector('a[href="/contact?purpose=writing"]')?.textContent).toBe(COMMUNITY.conversationAction);
+    expect(text.querySelector('a[href="/support?purpose=author"]')?.textContent).toBe(COMMUNITY.supportAction);
+    expect(text.querySelector('a[href="/readers"]')).not.toBeNull();
+    expect(text.querySelector('a[href="/join"]')).not.toBeNull();
+    expect(nodeOfType(community, "WebPage")?.description).toBe(COMMUNITY.description);
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("https://dotheory.org/community/");
+  });
   it("keeps how power works built for its address but hidden: out of search, unlinked, old addresses home", async () => {
     const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: {
       "amm.money.examples.borrowing.mechanic": "<strong>Owner’s debt explanation</strong>",
@@ -283,6 +301,19 @@ describe("public route metadata", () => {
     expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/academy");
     expect(rootDocument(shell, manifest)).not.toContain('href="/academy"');
     expect(rootDocument(shell, manifest)).not.toContain('"name":"DOT Academy"');
+  });
+
+  it("materializes the Films screening room and keeps /videos as a canonical alias", () => {
+    const films = routes.find((candidate) => candidate.route === "/films")!;
+    expect(films).toBeDefined();
+    expect(films.prerender).toContain("You, the Observer, Belong in the Inquiry");
+    expect(films.prerender).toContain("https://www.youtube.com/@dotheory");
+    expect(films.prerender).toContain("/book/digital-organism-theory/the-digital-organism");
+
+    const videos = routes.find((candidate) => candidate.route === "/videos")!;
+    expect(videos.canonicalRoute).toBe("/films");
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("<loc>https://dotheory.org/films/</loc>");
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("<loc>https://dotheory.org/videos/</loc>");
   });
 
   it("gives the Book One landing its own share image", () => {

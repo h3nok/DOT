@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BookOpen,
   Download,
+  Film,
   Network,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -149,6 +150,13 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               >
                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
                 Free PDF edition
+              </Link>
+              <Link
+                to="/films"
+                className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
+              >
+                <Film className="h-3.5 w-3.5" aria-hidden="true" />
+                2-minute visual trailer
               </Link>
             </div>
             {!savedPath && (

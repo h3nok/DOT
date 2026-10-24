@@ -1,4 +1,4 @@
-.contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, #b7ceae); }
+.contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, var(--public-sage)); }
 .contact-masthead { max-width: 44rem; padding-block: .5rem 3rem; }
 .contact-masthead > p:last-child { max-width: 46ch; margin-top: 1.4rem; color: var(--muted-foreground); font-size: 1rem; line-height: 1.8; }
 .contact-layout { display: grid; gap: 3rem; align-items: start; }
@@ -28,7 +28,7 @@
 .contact-quiet-action svg { width: 1rem; height: 1rem; }
 .contact-error { padding: 1rem; border-left: 3px solid var(--foreground); background: color-mix(in oklab, var(--background) 92%, #c67550); font-size: .875rem; line-height: 1.7; }
 .contact-receipt,
-.contact-availability { display: grid; justify-items: start; gap: 1.25rem; padding: 2rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in oklab, var(--background) 97%, #b7ceae); }
+.contact-availability { display: grid; justify-items: start; gap: 1.25rem; padding: 2rem; border: 1px solid var(--border); border-radius: 1rem; background: color-mix(in oklab, var(--background) 97%, var(--public-sage)); }
 .contact-receipt-mark { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--contact-paper); color: var(--organism-accent-strong, var(--foreground)); }
 .contact-receipt p,
 .contact-availability p { color: var(--muted-foreground); font-size: .875rem; line-height: 1.8; }

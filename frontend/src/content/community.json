@@ -1,0 +1,23 @@
+{
+  "title": "Community",
+  "heading": "An inquiry worth sharing.",
+  "description": "Lived experience, open questions, and thoughtful conversation around the writing of Henok Ghebrechristos.",
+  "invitation": "Start with a passage that speaks to you. Bring a question, a different experience, or a disagreement. Agreement with Digital Organism Theory is not a condition of conversation.",
+  "status": "The community begins with direct conversations with Henok. There is no shared discussion space open here yet. Membership is by invitation; a request does not create an account or guarantee admission.",
+  "conversationTitle": "What did the writing bring up for you?",
+  "conversationDescription": "Share what resonated, what did not, or what your own experience adds. Your message goes privately to Henok; it is not posted publicly or added to a mailing list.",
+  "conversationAction": "Start a conversation",
+  "principlesTitle": "Room for difference. Care for each other.",
+  "principles": [
+    { "title": "Speak from experience", "description": "Distinguish what happened, how you interpret it, and what remains uncertain." },
+    { "title": "Question with care", "description": "Challenge an idea without making the person defending it an enemy." },
+    { "title": "Respect another person’s story", "description": "Ask permission before sharing someone else’s words or personal details." },
+    { "title": "Come and go freely", "description": "Read at your own pace. Participation, subscription, and financial support are separate choices." }
+  ],
+  "followTitle": "Keep in touch, at your pace.",
+  "followDescription": "The reader list offers occasional writing updates after you confirm your address. RSS is available without signup. Neither gives you membership, and the list is easy to leave.",
+  "supportTitle": "Help sustain the work, if you wish.",
+  "supportDescription": "Optional, one-time contributions support independent writing and research. Choose your own amount. Reading the complete book and downloading its PDF remain free.",
+  "supportNote": "Contributing buys no membership, access, or influence. Available payment methods are shown on the support page.",
+  "supportAction": "Support the author · optional"
+}

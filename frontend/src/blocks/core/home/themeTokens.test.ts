@@ -32,6 +32,7 @@ const HERO_FILES = [
   "HeroConceptSlideshow.tsx",
   "Consciousness101.tsx",
   "TheoryLayerJourney.tsx",
+  "HomeFilmSection.tsx",
   "HomeJourneyNav.tsx",
   "ArchitectureDiagram.tsx",
   "StepOneUnlearning.tsx",
@@ -178,10 +179,14 @@ describe("home entry theme compatibility", () => {
     expect(styles).toContain(".home-architecture-awareness-ring");
     expect(styles).toContain(".home-architecture-awareness-trace");
     expect(styles).toContain(".home-architecture-potential-trace");
-    // Potential arcs in the free quadrant.
+    // Potential arcs and radial expansion spoke in the free quadrant.
     expect(architecture).toContain("AWARENESS_POTENTIAL_RADII");
     expect(architecture).toContain("AWARENESS_ARC_SPAN");
+    expect(architecture).toContain("home-architecture-awareness-spoke");
+    expect(architecture).toContain("home-architecture-awareness-spoke-potential");
+    expect(architecture).toContain("markerEnd={`url(#${radiusArrowId})`}");
     expect(styles).toContain(".home-architecture-awareness-potential path");
+    expect(styles).toContain(".home-architecture-awareness-spoke-potential");
     expect(styles).toMatch(/\.home-architecture-option-arrow\s*\{[\s\S]*?fill: none;/);
     // RF₀'s constraint is a separate, solid mark on the body, never an option.
     expect(architecture).toContain("CONSTRAINT_ANGLES");

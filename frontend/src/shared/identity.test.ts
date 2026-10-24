@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import identity from "../content/identity.json";
@@ -62,5 +64,21 @@ describe("shared DOT identity", () => {
 
   it("uses the same environment settings on both sides of a system-theme change", () => {
     expect(defaultConfigFor("light")).toEqual(defaultConfigFor("dark"));
+  });
+
+  it("aligns DOT Daylight and DOT Night with the emerald-jade + warm-gold harmonic and preserves pure paper grounds", () => {
+    const identityCss = readFileSync(join(process.cwd(), "src/organism/identity.css"), "utf8");
+    const tokensCss = readFileSync(join(process.cwd(), "src/shared/design-system/tokens.css"), "utf8");
+
+    expect(identityCss).toContain("--identity-emerald: #5ee0ae;");
+    expect(identityCss).toContain("--identity-rf: #f7c474;");
+    expect(identityCss).toContain("--architecture-loop-outer: var(--identity-emerald);");
+    expect(identityCss).toContain("--architecture-loop-inner: var(--identity-rf);");
+    expect(identityCss).toContain('html.dark[data-palette="dot"][data-paper="warm"]');
+
+    expect(tokensCss).toContain("--public-forest: #54d19f;");
+    expect(tokensCss).toContain("--public-copper: #f0b865;");
+    expect(tokensCss).toContain("--public-sage: #153329;");
+    expect(tokensCss).toContain("--public-sand: #332515;");
   });
 });

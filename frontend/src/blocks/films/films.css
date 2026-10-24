@@ -1,0 +1,1028 @@
+/* Films & Visual Inquiry — a screening room and a finite channel catalogue.
+   Every surface here is opaque: the film is the only moving picture on the page,
+   so nothing else lets the field show through it. */
+
+.films-page,
+.films-screening-shell {
+  --films-accent: var(--organism-accent-strong, var(--identity-lumen));
+  --films-gold: var(--identity-rf, var(--organism-accent));
+  --films-surface: color-mix(in oklab, var(--card) 72%, var(--background));
+  --films-chrome: color-mix(in oklab, var(--card) 86%, var(--background));
+  --films-art: color-mix(in oklab, var(--card) 55%, var(--background));
+  --films-border: var(--border);
+  --films-border-strong: color-mix(in oklab, var(--films-accent) 38%, var(--border));
+  --films-muted: var(--muted-foreground);
+}
+
+/* The field stays faint behind the page so it never competes with a film. */
+html:has(.films-page) .organism-membrane {
+  opacity: calc(var(--appearance-field-opacity, 1) * 0.18);
+}
+
+/* PageShell nests <main> below .App, so the shared rule that lifts content above
+   the membrane misses it and the field paints over every card. Lift it here. */
+.films-page {
+  position: relative;
+  z-index: 1;
+}
+
+.films-page {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-bottom: clamp(5rem, 9vw, 8rem);
+}
+
+/* ── Masthead ─────────────────────────────────────────────────────────── */
+
+.films-masthead {
+  display: flex;
+  flex-direction: column;
+  min-height: min(calc(100svh - 7rem), 52rem);
+}
+
+.films-masthead-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding-bottom: 1.35rem;
+  border-bottom: 1px solid var(--films-border);
+}
+
+.films-byline {
+  color: var(--films-muted);
+  line-height: 1.7;
+}
+
+.films-inline-link {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--foreground) 35%, var(--background));
+  text-underline-offset: 0.25em;
+}
+
+.films-inline-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.films-hero-grid {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  gap: 2.5rem;
+  padding-block: clamp(3.5rem, 8vw, 6rem);
+}
+
+@media (min-width: 960px) {
+  .films-hero-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+}
+
+.films-page .films-hero-title {
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.films-hero-subtitle {
+  max-width: 40ch;
+  color: var(--foreground);
+  line-height: 1.65;
+}
+
+.films-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: 2rem;
+}
+
+.films-privacy-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  max-width: 44ch;
+  margin-top: 2rem;
+  color: var(--films-muted);
+  line-height: 1.65;
+}
+
+.films-privacy-line svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  color: var(--films-accent);
+}
+
+/* ── Buttons & links ──────────────────────────────────────────────────── */
+
+.films-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--films-accent);
+  border-radius: 999px;
+  background: var(--films-accent);
+  color: var(--background);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.films-btn-primary:hover {
+  background: color-mix(in oklab, var(--films-accent) 86%, var(--foreground));
+}
+
+.films-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  background: var(--films-chrome);
+  color: var(--foreground);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.films-btn-secondary:hover {
+  border-color: var(--films-border-strong);
+}
+
+.films-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--foreground) 30%, var(--background));
+  text-underline-offset: 0.3em;
+  cursor: pointer;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+
+.films-text-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.films-text-link--accent {
+  color: var(--films-accent);
+  text-decoration-color: color-mix(in oklab, var(--films-accent) 40%, var(--background));
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+
+.films-section {
+  padding-top: clamp(4rem, 8vw, 6.5rem);
+  margin-top: clamp(1rem, 3vw, 2rem);
+  border-top: 1px solid var(--films-border);
+  scroll-margin-top: 4rem;
+}
+
+.films-section-head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.films-section-head--split {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 960px) {
+  .films-section-head--split {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+}
+
+.films-section-title {
+  margin-top: 0.6rem;
+  line-height: 1.08;
+  color: var(--foreground);
+}
+
+.films-section-aside p {
+  max-width: 40ch;
+  color: var(--films-muted);
+  line-height: 1.7;
+}
+
+.films-section-aside .films-text-link {
+  margin-top: 0.5rem;
+}
+
+/* ── Film tabs ────────────────────────────────────────────────────────── */
+
+.films-tabs {
+  display: grid;
+  gap: 0 clamp(1.25rem, 3vw, 2.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+@media (min-width: 768px) {
+  .films-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.films-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: 1rem 0 0.75rem;
+  border: 0;
+  border-top: 2px solid var(--films-border);
+  background: none;
+  color: var(--films-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.films-tab:hover {
+  border-top-color: var(--films-border-strong);
+  color: var(--foreground);
+}
+
+.films-tab[aria-selected="true"] {
+  border-top-color: var(--films-accent);
+  color: var(--foreground);
+}
+
+.films-tab-meta {
+  color: var(--films-muted);
+}
+
+.films-tab[aria-selected="true"] .films-tab-meta {
+  color: var(--films-accent);
+}
+
+.films-tab-title {
+  line-height: 1.4;
+}
+
+/* ── Player shell ─────────────────────────────────────────────────────── */
+
+.films-screening-shell {
+  container-type: inline-size;
+  border: 1px solid var(--films-border);
+  border-radius: 1rem;
+  background: var(--films-chrome);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -40px color-mix(in oklab, var(--foreground) 30%, var(--background));
+}
+
+.films-stage-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.films-stage-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+/* One solid button in the corner, so the poster frame reads clean. */
+.films-play-hero-btn {
+  position: absolute;
+  left: clamp(0.75rem, 2vw, 1.5rem);
+  bottom: clamp(0.75rem, 2vw, 1.5rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.4rem 1.1rem 0.4rem 0.4rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 10px 30px -16px color-mix(in oklab, var(--foreground) 45%, var(--background));
+  cursor: pointer;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.films-play-hero-btn:hover {
+  border-color: var(--films-accent);
+  transform: translateY(-1px);
+}
+
+.films-play-hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: var(--films-accent);
+  color: var(--background);
+}
+
+.films-play-hero-label {
+}
+
+.films-live-caption-bar {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--films-border);
+  background: var(--films-chrome);
+}
+
+.films-live-caption-lines {
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+/* YouTube privacy gate: only reachable when a film has a YouTube upload. */
+.films-youtube-privacy-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--background);
+}
+
+.films-youtube-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.films-privacy-gate {
+  max-width: 34rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--films-border);
+  border-radius: 1rem;
+  background: var(--card);
+  text-align: center;
+}
+
+.films-privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--films-accent);
+}
+
+.films-privacy-title {
+  margin-top: 0.9rem;
+  color: var(--foreground);
+}
+
+.films-privacy-copy {
+  margin-top: 0.65rem;
+  line-height: 1.7;
+  color: var(--films-muted);
+}
+
+.films-privacy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 1.35rem;
+}
+
+/* Transport */
+.films-transport-shell {
+  border-top: 1px solid var(--films-border);
+  background: var(--films-chrome);
+}
+
+.films-transport-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.films-transport-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--films-muted);
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.films-transport-btn:hover,
+.films-transport-btn[aria-pressed="true"] {
+  border-color: var(--films-border);
+  color: var(--foreground);
+}
+
+.films-transport-btn--primary {
+  background: var(--films-accent);
+  color: var(--background);
+}
+
+.films-transport-btn--primary:hover {
+  color: var(--background);
+  background: color-mix(in oklab, var(--films-accent) 86%, var(--foreground));
+}
+
+.films-transport-btn--text {
+  width: auto;
+  padding: 0 0.6rem;
+}
+
+.films-transport-time {
+  flex-shrink: 0;
+  min-width: 5.5rem;
+  color: var(--films-muted);
+  white-space: nowrap;
+}
+
+.films-scrubber-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 4rem;
+  height: 1.5rem;
+}
+
+.films-scrubber-progress {
+  position: absolute;
+  left: 0;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--films-accent);
+  pointer-events: none;
+}
+
+.films-scrubber-notch {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 0.8rem;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: var(--films-gold);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.films-transport-slider {
+  width: 100%;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--films-border);
+  accent-color: var(--films-accent);
+  cursor: pointer;
+}
+
+@media (max-width: 639px) {
+  .films-transport-bar {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+  }
+
+  .films-scrubber-wrap {
+    order: -1;
+    flex-basis: 100%;
+  }
+
+  .films-transport-time {
+    margin-right: auto;
+  }
+}
+
+/* Act buttons under the scrubber, where a page does not list the acts itself. */
+.films-transport-acts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.45rem;
+  padding: 0.55rem clamp(0.75rem, 2vw, 1.25rem) 0.8rem;
+  border-top: 1px solid var(--films-border);
+}
+
+/* Sized by the player, not the window: two across in a half-width player, four in a wide one. */
+@container (min-width: 520px) {
+  .films-transport-acts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 860px) {
+  .films-transport-acts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.films-transport-act-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--films-border);
+  border-radius: 0.5rem;
+  background: var(--films-surface);
+  color: var(--films-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.films-transport-act-pill:hover {
+  border-color: var(--films-border-strong);
+  color: var(--foreground);
+}
+
+.films-transport-act-pill[data-active="true"] {
+  border-color: var(--films-accent);
+  color: var(--foreground);
+}
+
+.films-transport-act-code {
+  color: var(--films-gold);
+  white-space: nowrap;
+}
+
+.films-transport-act-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.films-transport-act-time {
+  color: var(--films-muted);
+}
+
+/* ── The active film: what it is, then its acts ───────────────────────── */
+
+.films-detail {
+  display: grid;
+  gap: 3rem;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+@media (min-width: 960px) {
+  .films-detail[data-columns="2"] {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+}
+
+.films-detail-copy {
+  max-width: 40rem;
+}
+
+.films-detail-title {
+  margin-top: 0.75rem;
+  line-height: 1.15;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+
+.films-detail-summary {
+  margin-top: 1rem;
+  color: var(--films-muted);
+  line-height: 1.8;
+}
+
+.films-claims {
+  margin-top: 1.25rem;
+  color: var(--films-muted);
+  line-height: 1.6;
+}
+
+.films-claims-label {
+  margin-right: 0.35rem;
+  color: var(--foreground);
+}
+
+.films-detail-copy .films-text-link {
+  margin-top: 1rem;
+}
+
+.films-acts {
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--films-border);
+}
+
+.films-act {
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: baseline;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--films-border);
+}
+
+.films-seek-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  background: var(--films-surface);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.films-seek-btn:hover {
+  border-color: var(--films-accent);
+  color: var(--films-accent);
+}
+
+.films-act-code {
+  color: var(--films-gold);
+}
+
+.films-act-title {
+  margin-top: 0.3rem;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+
+.films-act-link {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: var(--films-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--films-accent) 35%, var(--background));
+  text-underline-offset: 0.3em;
+}
+
+.films-act-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.films-transcript {
+  margin-top: 1.5rem;
+}
+
+.films-transcript-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.films-transcript-summary::-webkit-details-marker {
+  display: none;
+}
+
+.films-transcript-summary::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 160ms ease;
+}
+
+.films-transcript[open] > .films-transcript-summary::before {
+  transform: rotate(45deg);
+}
+
+.films-transcript-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.films-transcript-item {
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: baseline;
+}
+
+.films-transcript-line {
+  line-height: 1.6;
+  color: var(--foreground);
+}
+
+.films-transcript-note {
+  margin-top: 0.25rem;
+  color: var(--films-muted);
+}
+
+/* ── Series ───────────────────────────────────────────────────────────── */
+
+.films-streams {
+  display: grid;
+}
+
+.films-stream {
+  padding-block: clamp(3rem, 6vw, 4.5rem);
+  border-top: 1px solid var(--films-border);
+}
+
+.films-stream-intro {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
+}
+
+@media (min-width: 960px) {
+  .films-stream-intro {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+}
+
+.films-stream-title {
+  margin-top: 0.6rem;
+  line-height: 1.15;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+
+.films-stream-description {
+  max-width: 44ch;
+  color: var(--films-muted);
+  line-height: 1.75;
+}
+
+.films-episodes {
+  display: grid;
+  gap: clamp(2.5rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .films-episodes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.films-episode {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+/* An odd count leads with one episode across the full row, art beside its text,
+   so no row is left half empty. */
+@media (min-width: 768px) {
+  .films-episodes[data-layout="lead"] > .films-episode:first-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+.films-episode-art {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--films-border);
+  border-radius: 0.85rem;
+  background: var(--films-art);
+  color: var(--foreground);
+  overflow: hidden;
+}
+
+.film-episode-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.films-episode-code {
+  color: var(--films-muted);
+}
+
+.films-episode-title {
+  margin-top: 0.4rem;
+  line-height: 1.35;
+  color: var(--foreground);
+}
+
+.films-episode-subtitle {
+  margin-top: 0.5rem;
+  color: var(--films-muted);
+  line-height: 1.65;
+}
+
+.films-episode-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.films-completion-note {
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--films-border);
+  color: var(--films-muted);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.films-continue {
+  margin-top: clamp(4rem, 8vw, 6rem);
+}
+
+/* ── Type ───────────────────────────────────────────────────────────────
+   Three faces, one job each, on a short scale: serif for titles, sans for text
+   and controls, mono for labels and timestamps. The rules above set no type of
+   their own, so every section on the page reads in the same voice. */
+
+.films-page,
+.films-screening-shell {
+  --films-serif: var(--font-serif, "Source Serif 4", Georgia, serif);
+  --films-sans: var(--font-sans, "Space Grotesk", system-ui, sans-serif);
+  --films-mono: var(--font-mono, "JetBrains Mono", monospace);
+}
+
+/* Titles */
+.films-page .films-hero-title,
+.films-section-title,
+.films-detail-title,
+.films-stream-title,
+.films-privacy-title,
+.films-tab-title,
+.films-act-title,
+.films-episode-title {
+  font-family: var(--films-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.films-page .films-hero-title {
+  font-size: clamp(3rem, 6.2vw, 5.75rem);
+  letter-spacing: -0.045em;
+}
+
+.films-section-title {
+  font-size: clamp(2.1rem, 3.6vw, 3.1rem);
+  letter-spacing: -0.03em;
+}
+
+.films-detail-title,
+.films-stream-title {
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  letter-spacing: -0.02em;
+}
+
+.films-privacy-title,
+.films-act-title,
+.films-episode-title {
+  font-size: 1.25rem;
+}
+
+.films-tab-title {
+  font-size: 1.125rem;
+}
+
+/* Text: a lede, a body size, a small size */
+.films-hero-subtitle,
+.films-section-aside p,
+.films-detail-summary,
+.films-stream-description,
+.films-episode-subtitle,
+.films-transcript-line,
+.films-live-caption-lines,
+.films-byline,
+.films-privacy-line,
+.films-privacy-copy,
+.films-claims,
+.films-completion-note,
+.films-act-link {
+  font-family: var(--films-sans);
+  font-weight: 400;
+}
+
+.films-hero-subtitle {
+  font-size: clamp(1.125rem, 1.35vw, 1.25rem);
+}
+
+.films-section-aside p,
+.films-detail-summary,
+.films-stream-description,
+.films-episode-subtitle,
+.films-transcript-line,
+.films-live-caption-lines {
+  font-size: 1rem;
+}
+
+.films-byline,
+.films-privacy-line,
+.films-privacy-copy,
+.films-claims,
+.films-completion-note,
+.films-act-link {
+  font-size: 0.875rem;
+}
+
+/* Controls */
+.films-btn-primary,
+.films-btn-secondary,
+.films-text-link,
+.films-transcript-summary,
+.films-play-hero-label {
+  font-family: var(--films-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.films-btn-primary,
+.films-play-hero-label {
+  font-weight: 600;
+}
+
+/* Labels: the product's mono kicker, the same as .dot-label */
+.films-tab-meta,
+.films-act-code,
+.films-episode-code,
+.films-claims-label,
+.films-privacy-badge {
+  font-family: var(--films-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Timestamps and notation: mono at the label size, figures aligned */
+.films-seek-btn,
+.films-transport-time,
+.films-transcript-note {
+  font-family: var(--films-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.films-transcript-note {
+  font-weight: 400;
+}
+
+/* Player chrome: the same faces, one step smaller to fit a half-width player */
+.films-transport-btn--text,
+.films-transport-act-title {
+  font-family: var(--films-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.films-transport-act-code,
+.films-transport-act-time {
+  font-family: var(--films-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.films-transport-act-code {
+  letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .films-tab,
+  .films-transcript-summary::before,
+  .films-play-hero-btn,
+  .films-text-link,
+  .films-btn-primary {
+    transition: none;
+  }
+
+  .films-play-hero-btn:hover {
+    transform: none;
+  }
+}

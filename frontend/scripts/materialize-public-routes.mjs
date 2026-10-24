@@ -14,6 +14,7 @@ import { headingSlug } from "../src/attention-os/reader/headingSlug.js";
 import { parseEvidenceChart } from "../src/attention-os/reader/evidenceChart.js";
 import { ESSAYS_ROUTE, readEssays } from "./essays.mjs";
 import { resolveAmmCopy } from "../src/content/editable/ammCopy.js";
+import { resolveSupportMethods } from "../src/content/supportMethods.js";
 
 const SITE_URL = "https://dotheory.org";
 
@@ -27,12 +28,15 @@ const BOOK_ROUTE = "/book/digital-organism-theory";
 const ACADEMY_ROUTE = "/academy";
 const ABOUT_ROUTE = "/about";
 const CONTACT_ROUTE = "/contact";
+const COMMUNITY_ROUTE = "/community";
 const INBOX_ROUTE = "/studio/inbox";
 const READERS_ROUTE = "/readers";
 const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
 const PUBLICATIONS_ROUTE = "/publications";
 const BLOG_ROUTE = "/blog";
+const FILMS_ROUTE = "/films";
+const VIDEOS_ROUTE = "/videos";
 const WRITING_ROUTE = "/writing";
 
 // Paths are relative to the frontend package, where the build runs.
@@ -43,6 +47,8 @@ const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"
 const BOOK_LANDING = JSON.parse(readFileSync(path.join(CONTENT_DIR, "publications", "bookLanding.json"), "utf8"));
 const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
+const COMMUNITY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "community.json"), "utf8"));
+const SUPPORT_METHODS = resolveSupportMethods(JSON.parse(readFileSync(path.join(CONTENT_DIR, "support.json"), "utf8")));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
 const CAREER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "career.json"), "utf8"));
 const PROJECTS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "projects.json"), "utf8"));
@@ -58,6 +64,7 @@ const OTHER_BUILDER_PROJECTS = BUILDER.otherProjects.map((slug) => {
 });
 const NEWSLETTER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "newsletter.json"), "utf8"));
 const BLOG = JSON.parse(readFileSync(path.join(CONTENT_DIR, "blog.json"), "utf8"));
+const FILMS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "films.json"), "utf8"));
 const AMM = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm.json"), "utf8"));
 const AMM_MEDIA = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-media.json"), "utf8"));
 const AMM_CAPITAL = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-capital.json"), "utf8"));
@@ -618,10 +625,12 @@ function siteNav(essaysPublished) {
     ["/doctrine", "Concept map"],
     ["/applied", "Open questions"],
     [BLOG_ROUTE, "Blog"],
+    [FILMS_ROUTE, "Films"],
     [PUBLICATIONS_ROUTE, "Books"],
     ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
     [ABOUT_ROUTE, "About"],
     [CONTACT_ROUTE, "Contact"],
+    [COMMUNITY_ROUTE, "Community"],
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
     [TERMS_ROUTE, "Terms"],
@@ -839,7 +848,9 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
           breadcrumb([home, { name: titleOf(route), route: route.route }]),
         ),
         prerender: page(
-          `${heading}<p>Payments are taken by Stripe, which emails the receipt. A payment buys no access, membership, or standing. Who runs the site, the refund policy, and a contact address: ${link(TERMS_ROUTE, "Terms and refunds")}.</p>`,
+          `${heading}${SUPPORT_METHODS.map(method => method.id === "zelle"
+            ? `<section><h2>Zelle</h2><p>Recipient: ${escapeHtml(method.recipient)}</p><p>Name to check: ${escapeHtml(method.recipientName)}</p><p>Open Zelle in your banking app, enter this recipient, and choose an amount. Check the recipient name before sending. Your bank must offer Zelle for your account.</p></section>`
+            : `<section><h2>Cash App</h2><p>${link(method.url, "Continue to Cash App")}</p><p>Check the recipient and amount before sending.</p></section>`).join("")}${SUPPORT_METHODS.length ? "<p>Confirmation comes from your bank or Cash App. This page cannot confirm a direct transfer.</p>" : ""}<p>Card checkout uses Stripe, which emails the receipt. A payment buys no access, membership, or standing. Who runs the site, the refund policy, and a contact address: ${link(TERMS_ROUTE, "Terms and refunds")}.</p>`,
         ),
       };
     }
@@ -1236,7 +1247,73 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     structuredData: graph(webPageNode({ route: `${ESSAYS_ROUTE}/${slug}`, title: move.title, description: `${move.title} is now a section of a chapter.` })),
     prerender: prerenderAmm(`<h1>${escapeHtml(move.title)}</h1><p>This section now appears in ${link(`${move.route}#${move.anchor}`, essays.find(essay => `${ESSAYS_ROUTE}/${essay.slug}` === move.route)?.title ?? "its chapter")}.</p>`),
   }));
-  return [...staticRoutes, blogRoute, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
+  const communityRoute = {
+    route: COMMUNITY_ROUTE,
+    title: `${COMMUNITY.title} — ${AUTHOR.name}`,
+    description: COMMUNITY.description,
+    image: "/og/henok-writing.png",
+    imageAlt: `Writing and inquiry by ${AUTHOR.name}`,
+    structuredData: graph(
+      webPageNode({ route: COMMUNITY_ROUTE, title: `${COMMUNITY.title} — ${AUTHOR.name}`, description: COMMUNITY.description }),
+      breadcrumb([home, { name: COMMUNITY.title, route: COMMUNITY_ROUTE }]),
+    ),
+    prerender: page([
+      `<header><p>${escapeHtml(COMMUNITY.title)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h1>${escapeHtml(COMMUNITY.heading)}</h1><p>${escapeHtml(COMMUNITY.description)}</p><p>${escapeHtml(COMMUNITY.invitation)}</p></header>`,
+      `<section><p>${escapeHtml(BLOG.startingPoint.label)}</p><h2>${escapeHtml(BLOG.startingPoint.title)}</h2><p>${escapeHtml(BLOG.startingPoint.description)}</p><blockquote><p>“${escapeHtml(BLOG.startingPoint.quote)}”</p><cite>${escapeHtml(BLOG.startingPoint.sourceLabel)}</cite></blockquote><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></section>`,
+      `<section><h2>${escapeHtml(COMMUNITY.conversationTitle)}</h2><p>${escapeHtml(COMMUNITY.conversationDescription)}</p><p>${link(`${CONTACT_ROUTE}?purpose=writing`, COMMUNITY.conversationAction)}</p><p>${escapeHtml(COMMUNITY.status)}</p><p>${link("/join", "Request an invitation")}</p></section>`,
+      `<section><h2>${escapeHtml(COMMUNITY.principlesTitle)}</h2><dl>${COMMUNITY.principles.map(principle => `<dt>${escapeHtml(principle.title)}</dt><dd>${escapeHtml(principle.description)}</dd>`).join("")}</dl></section>`,
+      `<section><h2>${escapeHtml(COMMUNITY.followTitle)}</h2><p>${escapeHtml(COMMUNITY.followDescription)}</p><p>${link(READERS_ROUTE, "Open the reader list")} · ${link("/feed.xml", "Follow with RSS")}</p></section>`,
+      `<section><h2>${escapeHtml(COMMUNITY.supportTitle)}</h2><p>${escapeHtml(COMMUNITY.supportDescription)}</p><p>${link("/support?purpose=author", COMMUNITY.supportAction)}</p><p>${escapeHtml(COMMUNITY.supportNote)}</p></section>`,
+      `<p>There is no need to sign up to keep reading. ${link(BLOG_ROUTE, "Explore the writing")}</p>`,
+    ].join("")),
+  };
+
+  const filmsRoute = {
+    route: FILMS_ROUTE,
+    title: `${FILMS.eyebrow} — ${AUTHOR.name}`,
+    description: FILMS.description,
+    structuredData: graph(
+      {
+        ...webPageNode({ route: FILMS_ROUTE, title: `${FILMS.eyebrow} — ${AUTHOR.name}`, description: FILMS.description }),
+        "@type": "CollectionPage",
+        author: { "@id": PERSON_ID },
+      },
+      breadcrumb([home, { name: "Films", route: FILMS_ROUTE }]),
+    ),
+    prerender: page(
+      [
+        `<header><p>${escapeHtml(FILMS.eyebrow)} · By ${link(ABOUT_ROUTE, AUTHOR.name)}</p>`,
+        `<h1>${escapeHtml(FILMS.title)}</h1>`,
+        `<p>${escapeHtml(FILMS.subtitle)}</p>`,
+        `<p>${link(FILMS.channelUrl, `${FILMS.channelHandle} on YouTube`)}</p>`,
+        `<p>${escapeHtml(FILMS.privacyNote)}</p></header>`,
+        `<section id="screening-room"><h2>Featured Films</h2><ol>${FILMS.screeningFilms.map((film) => [
+          `<li><h3>${escapeHtml(film.number)}: ${escapeHtml(film.title)} (${escapeHtml(film.duration)})</h3>`,
+          `<p>${escapeHtml(film.summary)}</p>`,
+          `<p>Claims: ${film.claimLevels.map(escapeHtml).join(" · ")} · ${link(film.companion.to, film.companion.label)}</p>`,
+          film.acts.length > 0
+            ? `<ol>${film.acts.map((act) => `<li><strong>${escapeHtml(act.code)} (${escapeHtml(act.timestamp)}) — ${escapeHtml(act.title)}</strong> (${link(act.readingTo, act.readingLabel)})</li>`).join("")}</ol>`
+            : "",
+          "</li>",
+        ].join("")).join("")}</ol></section>`,
+        `<section id="channel-streams"><h2>Series on ${escapeHtml(FILMS.channelHandle)}</h2><p>${escapeHtml(FILMS.seriesNote)}</p>${FILMS.streams.map((stream) => [
+          `<section><h3>${escapeHtml(stream.number)}: ${escapeHtml(stream.title)}</h3><p>${escapeHtml(stream.description)}</p>`,
+          `<ul>${stream.episodes.map((ep) => `<li><h4>${escapeHtml(ep.code)} · ${escapeHtml(ep.title)}</h4><p>${escapeHtml(ep.subtitle)}</p><p>${link(ep.readingTo, ep.readingLabel)}</p></li>`).join("")}</ul></section>`,
+        ].join("")).join("")}<p>${escapeHtml(FILMS.completionNote)}</p></section>`,
+      ].join(""),
+    ),
+  };
+
+  const videosAliasRoute = {
+    route: VIDEOS_ROUTE,
+    canonicalRoute: FILMS_ROUTE,
+    title: `${FILMS.eyebrow} — ${AUTHOR.name}`,
+    description: FILMS.description,
+    structuredData: graph(webPageNode({ route: FILMS_ROUTE, title: `${FILMS.eyebrow} — ${AUTHOR.name}`, description: FILMS.description })),
+    prerender: page(`<h1>${escapeHtml(FILMS.title)}</h1><p>${escapeHtml(FILMS.description)}</p><p>${link(FILMS_ROUTE, "Open the Films & Screening Room")}</p>`),
+  };
+
+  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, videosAliasRoute, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */
@@ -1326,6 +1403,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
+    `<p>${link(COMMUNITY_ROUTE, "Join the conversation")}</p>`,
     `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.sourcePath, HOME.culture.sourceLabel)}</p></section>`,
     `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
     `<h2>Book One</h2>${contentsList(manifest)}`,

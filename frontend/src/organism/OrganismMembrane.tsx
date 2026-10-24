@@ -1099,10 +1099,22 @@ export const OrganismMembrane: React.FC = () => {
       if (dotBrand) {
         const darkMode = document.documentElement.classList.contains("dark");
         ctx.strokeStyle = darkMode
-          ? `hsla(268, 38%, 70%, ${Math.min(0.2, alpha * 0.14)})`
-          : `hsla(268, 28%, 42%, ${Math.min(0.18, alpha * 0.13)})`;
+          ? `hsla(158, 48%, 66%, ${Math.min(0.22, alpha * 0.15)})`
+          : `hsla(158, 42%, 34%, ${Math.min(0.18, alpha * 0.13)})`;
         ctx.beginPath();
         for (const ring of mesh) {
+          ctx.moveTo(ring[0].x, ring[0].y);
+          for (const point of ring) ctx.lineTo(point.x, point.y);
+          ctx.closePath();
+        }
+        ctx.stroke();
+        // Warm gold (RF₀) inner harmonic rings matching the 4K inquiry films.
+        ctx.strokeStyle = darkMode
+          ? `hsla(38, 72%, 68%, ${Math.min(0.16, alpha * 0.11)})`
+          : `hsla(32, 64%, 40%, ${Math.min(0.14, alpha * 0.1)})`;
+        ctx.beginPath();
+        for (let ringIdx = 2; ringIdx <= Math.min(7, mesh.length - 1); ringIdx += 2) {
+          const ring = mesh[ringIdx];
           ctx.moveTo(ring[0].x, ring[0].y);
           for (const point of ring) ctx.lineTo(point.x, point.y);
           ctx.closePath();
@@ -1139,15 +1151,17 @@ export const OrganismMembrane: React.FC = () => {
         }
         ctx.fill();
         if (dotBrand && index >= 3 && index <= 12) {
+          const darkMode = document.documentElement.classList.contains("dark");
           ring.forEach((point, spokeIndex) => {
             if ((index * 3 + spokeIndex) % 14 !== 0) return;
-            const isOrigin = (index + spokeIndex) % 3 === 0;
-            const nodeHue = isOrigin ? 268 : 160;
-            ctx.fillStyle = `hsla(${nodeHue}, 58%, 54%, ${Math.min(0.18, alpha * fade * 0.24)})`;
+            const isGold = (index + spokeIndex) % 3 === 0;
+            const nodeHue = isGold ? 38 : 158;
+            const nodeSat = isGold ? 74 : 58;
+            ctx.fillStyle = `hsla(${nodeHue}, ${nodeSat}%, ${darkMode ? 64 : 46}%, ${Math.min(0.2, alpha * fade * 0.26)})`;
             ctx.beginPath();
             ctx.arc(point.x, point.y, 3.4, 0, Math.PI * 2);
             ctx.fill();
-            ctx.fillStyle = `hsla(${nodeHue}, 62%, ${isOrigin ? 46 : 38}%, ${Math.min(0.65, alpha * fade * 0.68)})`;
+            ctx.fillStyle = `hsla(${nodeHue}, ${nodeSat + 4}%, ${darkMode ? (isGold ? 72 : 66) : (isGold ? 42 : 34)}%, ${Math.min(0.72, alpha * fade * 0.72)})`;
             ctx.beginPath();
             ctx.arc(point.x, point.y, 1.5, 0, Math.PI * 2);
             ctx.fill();

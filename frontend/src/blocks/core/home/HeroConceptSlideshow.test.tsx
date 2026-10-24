@@ -245,4 +245,18 @@ describe("HeroConceptSlideshow", () => {
     second.unmount();
     expect(vi.getTimerCount()).toBe(0);
   });
+
+  it("lets readers jump directly between the three concept movements", () => {
+    render(<HeroConceptSlideshow reducedMotion />);
+    const region = screen.getByRole("region", { name: "Key concepts and questions" });
+
+    fireEvent.click(within(region).getByRole("button", { name: "Jump to Architecture concepts" }));
+    expect(within(region).getByRole("heading", { name: "T × E: The Source" })).toBeVisible();
+
+    fireEvent.click(within(region).getByRole("button", { name: "Jump to Open Question concepts" }));
+    expect(within(region).getByRole("heading", { name: "The Closed Question" })).toBeVisible();
+
+    fireEvent.click(within(region).getByRole("button", { name: "Jump to Lived Experience concepts" }));
+    expect(within(region).getByRole("heading", { name: "What you inherited" })).toBeVisible();
+  });
 });

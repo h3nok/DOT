@@ -39,7 +39,7 @@
 }
 
 .do-wordmark svg > circle:last-child {
-  --do-dot-opacity: 0.72;
+  --do-dot-opacity: 0.92;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -50,6 +50,12 @@
 
   html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-arcs path:last-child {
     animation-delay: 100ms;
+  }
+
+  html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-nodes {
+    transform-box: view-box;
+    transform-origin: center;
+    animation: do-nodes-emerge 720ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
   }
 
   html:not([data-motion="still"]):not([data-organism="off"]) .do-wordmark[data-emergence="play"] .nucleus-mark-core,
@@ -75,6 +81,11 @@
 @keyframes do-contour-emerge {
   from { stroke-dashoffset: 110; }
   to { stroke-dashoffset: 0; }
+}
+
+@keyframes do-nodes-emerge {
+  from { opacity: 0; transform: scale(0.84); }
+  to { opacity: 0.86; transform: scale(1); }
 }
 
 @keyframes do-dot-emerge {
