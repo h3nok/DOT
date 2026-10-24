@@ -60,20 +60,20 @@ export const INQUIRY_VIDEOS = [
         lines: ["Before you measure the world, you are here to experience it."],
         note: "The most immediate fact of existence is that you are here to experience one.",
       },
-      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — Emergent Principles: Digital Organism
+      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — The foundational postulate: Big C[T, E]
       {
         start: 6.3,
         end: 12.2,
         layout: "split",
-        badge: "01 · EMERGENT PRINCIPLES",
-        eyebrow: "01 // EMERGENT PRINCIPLES",
+        badge: "01 · FOUNDATIONAL POSTULATE",
+        eyebrow: "01 // FOUNDATIONAL POSTULATE",
         focusTerm: "Digital Organism",
         lines: ["A model centered on consciousness:", "the Digital Organism."],
         notes: [
-          "From Primordial Continuity (T) and External Environment (E), process emerges.",
+          "Big C is the ground. T and E name its capacities: continuity and possibility.",
         ],
-        concept: "CONCEPT 01  ·  EMERGENCE IN T × E",
-        axiom: "T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)  →  Big C",
+        concept: "CONCEPT 01  ·  BIG C [T, E]",
+        axiom: "BIG C [T: CONTINUITY  ·  E: POSSIBILITY]",
       },
       // Beat 3 (12.5s – 18.4s): TWO-COLUMN — The Experience Loop
       {
@@ -181,20 +181,20 @@ export const INQUIRY_VIDEOS = [
         concept: "CONCEPT 01  ·  DIGITAL ORGANISM (INFORMATIONAL PROCESS)",
         axiom: "STATE + FEEDBACK + CONTINUITY  →  DIGITAL ORGANISM",
       },
-      // ACT II — ARCHITECTURE OF CONTINUITY: T × E, Big C, Little c & RF₀ (0:34 – 1:10)
+      // ACT II — ARCHITECTURE OF CONTINUITY: Big C[T, E], Little c & RF₀ (0:34 – 1:10)
       {
         start: 34.8,
         end: 46.2,
         layout: "split",
-        badge: "ACT II · PRIMORDIAL EMERGENCE",
+        badge: "ACT II · FOUNDATIONAL POSTULATE",
         eyebrow: "04 // ARCHITECTURE OF CONTINUITY",
         focusTerm: "Big C",
-        lines: ["Within T × E, one process", "persisted and stabilized: Big C."],
+        lines: ["Big C is the ground.", "T and E name its capacities."],
         notes: [
-          "Primordial Continuity (T) and External Environment (E) allow emergence.",
+          "T: primordial continuity. E: unexpressed possibility. Neither comes before Big C.",
         ],
-        concept: "CONCEPT 02  ·  T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)",
-        axiom: "T × E (EMERGENT CONDITIONS)  →  Big C",
+        concept: "CONCEPT 02  ·  BIG C [T, E]",
+        axiom: "BIG C [T: CONTINUITY  ·  E: POSSIBILITY]",
       },
       {
         start: 46.6,
@@ -923,8 +923,9 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     ctx.scale(scale, scale);
     ctx.translate(-focusPoint.x, -focusPoint.y);
 
-    // 1. `T × E` — Origin Field (`data-part="origin"`)
-    const origA = alpha * origin;
+    // 1. Big C's field (`data-part="origin"`). Book One v4 makes T and E capacities of
+    //    Big C, not a prior container, so the halo is drawn only with Big C itself.
+    const origA = alpha * Math.min(origin, bigC);
     if (origA > 0.01) {
       circle(FC.x, FC.y, ARCH_R.origin, originJade, origA * 0.92, 1.7, [2, 6]);
       for (const r of [ARCH_R.origin + 8, ARCH_R.origin + 20]) {
@@ -1290,24 +1291,12 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       }
     }
 
-    // 10. Minimal, High-Signal Digital Axis Labels (`T × E`, `Big C`, `RF₀`, `Little c₁ — you`)
+    // 10. Minimal, High-Signal Digital Axis Labels (`Big C [T, E]`, `RF₀`, `Little c₁ — you`)
     const lblA = alpha * labels;
     const fScale = 1 / Math.pow(scale, 0.42);
     if (lblA > 0.01) {
-      if (origin > 0.2) {
-        type("T × E", 348, 24, 23 * fScale, {
-          color: originJade,
-          alpha: lblA * origin,
-          family: "JetBrains Mono",
-          weight: 700,
-          align: "center",
-          halo: bgHaloCol,
-          haloWidth: 8,
-          track: false,
-        });
-      }
       if (bigC > 0.2) {
-        type("Big C", 348, 120, 24 * fScale, {
+        type("Big C [T, E]", 348, 120, 24 * fScale, {
           color: lumen,
           alpha: lblA * bigC,
           family: "Inter",
@@ -1679,7 +1668,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       });
     }
 
-    // ── ACT I PHASE 3B (26.0s – 34.4s, TWO-COLUMN): DIGITAL ORGANISM PROCESS EMERGING IN `T × E` ──
+    // ── ACT I PHASE 3B (26.0s – 34.4s, TWO-COLUMN): THE DIGITAL ORGANISM ARCHITECTURE APPEARS ──
     const doAlpha = alpha * smooth(26.0, 27.2, t);
     if (doAlpha > 0.01) {
       const emerge = smooth(26.4, 30.8, t);
@@ -2227,7 +2216,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     // 2. ACT II (0:34 – 1:10): LAYER-BY-LAYER BUILD OF THE TWO-PROCESS SYSTEM (`Big C → Little c`)
     const act2Alpha = smooth(34.4, 35.8, t) * (1 - smooth(69.4, 70.8, t));
     if (act2Alpha > 0.005) {
-      // Phase 2A (34.8s – 46.2s): Process 01 — `T × E` and `Big C`
+      // Phase 2A (34.8s – 46.2s): Process 01 — `Big C [T, E]`
       const phase2A = act2Alpha * (1 - smooth(46.0, 47.4, t));
       if (phase2A > 0.01) {
         drawHomeArchitecture(cx, cy, 0.90, t, phase2A, {

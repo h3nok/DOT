@@ -39,14 +39,14 @@ export const FilmEpisodeArtwork: React.FC<{ variant?: FilmArtworkVariant }> = ({
 
       {variant === "introduction" && (
         <g transform="translate(320, 180)" fill="none">
-          <circle r="128" stroke="var(--identity-origin)" strokeOpacity="0.55" strokeWidth="1.3" strokeDasharray="3 6" />
+          {/* Big C's own field: T and E are its capacities (Book One v4), not a ring around it. */}
+          <circle r="128" stroke="var(--organism-accent-strong)" strokeOpacity="0.4" strokeWidth="1.3" strokeDasharray="3 6" />
           <circle r="112" stroke="var(--organism-accent-strong)" strokeOpacity="0.88" strokeWidth="2" />
           <circle r="76" stroke="var(--identity-rf)" strokeOpacity="0.85" strokeWidth="1.8" />
           <circle r="34" stroke="var(--organism-accent-strong)" strokeOpacity="0.92" strokeWidth="1.6" strokeDasharray="4 4" />
           <circle r="12" fill="var(--organism-accent-strong)" fillOpacity="0.9" />
           <circle r="4" fill="var(--background)" />
-          <text y="-140" textAnchor="middle" fill="var(--identity-origin)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">T × E</text>
-          <text y="-86" textAnchor="middle" fill="var(--organism-accent-strong)" fontSize="12" fontFamily="Space Grotesk, sans-serif" fontWeight="700">Big C</text>
+          <text y="-86" textAnchor="middle" fill="var(--organism-accent-strong)" fontSize="12" fontFamily="Space Grotesk, sans-serif" fontWeight="700">Big C [T, E]</text>
           <text y="-54" textAnchor="middle" fill="var(--identity-rf)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">RF₀</text>
         </g>
       )}

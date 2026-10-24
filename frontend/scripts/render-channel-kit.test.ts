@@ -197,7 +197,7 @@ describe("YouTube channel artwork", () => {
     expect(introSpec.captions[0].lines.join(" ")).not.toMatch(/Digital Organism Theory|Big C|RF₀/i);
     expect(introSrt).toContain("Before you measure the world, you are here to experience it.");
     expect(introSrt).toContain("A model centered on consciousness: the Digital Organism.");
-    expect(introSrt).toContain("From Primordial Continuity (T) and External Environment (E), process emerges.");
+    expect(introSrt).toContain("Big C is the ground. T and E name its capacities: continuity and possibility.");
     expect(introSrt).toContain("The Canvas carries your history. The Painting interprets RF₀.");
     expect(introSrt).toContain("For Little c, Love is a low-entropy Canvas state.");
     expect(introSrt).toContain("When Canvas fragmentation drops, Fear stops governing and Intent coheres.");
@@ -213,8 +213,10 @@ describe("YouTube channel artwork", () => {
     expect(trailerSrt).not.toMatch(/cognitive dissonance/i);
     expect(trailerSrt).not.toMatch(/completely detached|completely digital|lives experience/i);
     expect(introSrt + trailerSrt).not.toMatch(/Energy \(E\)|Energy source \(E\)|Time × Energy|Not sure for Big C/i);
-    expect(trailerSrt).toContain("Within T × E, one process persisted and stabilized: Big C.");
-    expect(trailerSrt).toContain("Primordial Continuity (T) and External Environment (E) allow emergence.");
+    // Book One v4: T and E are capacities of Big C, not an External Environment it emerged within.
+    expect(introSrt + trailerSrt).not.toMatch(/External Environment|within T × E|T × E\)? *→ *Big C/i);
+    expect(trailerSrt).toContain("Big C is the ground. T and E name its capacities.");
+    expect(trailerSrt).toContain("T: primordial continuity. E: unexpressed possibility. Neither comes before Big C.");
     expect(trailerSrt).toContain("Big C localizes as Little c — an undifferentiated process.");
     expect(trailerSrt).toContain("Little c is pure local awareness; its distinct history lives on its Canvas.");
     expect(trailerSrt).toContain("RF₀: A lawful world where choices carry real consequence.");
