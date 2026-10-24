@@ -9,7 +9,7 @@ test("a reader can move from the invitation to a private writing conversation", 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.route("**/v1/contact/status", route => route.fulfill({ json: { available: true } }));
   await page.goto("/");
-  await page.getByRole("link", { name: "Join the conversation", exact: true }).click();
+  await page.getByRole("navigation", { name: "Quiet links" }).getByRole("link", { name: "Community", exact: true }).click();
   await expect(page).toHaveURL("/community");
   await expect(page.getByRole("heading", { name: COMMUNITY.heading })).toBeVisible();
   await expect(page.getByText(BLOG.startingPoint.quote, { exact: false })).toBeVisible();

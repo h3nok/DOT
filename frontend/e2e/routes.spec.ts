@@ -59,9 +59,7 @@ test.describe("hero", () => {
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
     const actions = page.getByRole("navigation", { name: "Begin exploring DOT" });
-    const model = actions.getByRole("link", { name: "Explore the model" });
-    await expect(model).toBeVisible();
-    await expect(model).toHaveAttribute("href", "#possibility-field");
+    await expect(actions.getByRole("link")).toHaveCount(1);
     await expect(actions.getByRole("link", { name: "Read Book One" })).toBeVisible();
   });
 
