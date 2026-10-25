@@ -5133,10 +5133,10 @@ html[data-field="off"] .home-hero-stage::before {
   margin-inline: auto;
 }
 
-/* The trailer alone, sized so the frame and its controls fit one screen. */
+/* The trailer alone, sized as a focused compact screening window. */
 .home-film-stage {
   width: 100%;
-  max-width: max(20rem, calc((100svh - 17rem) * 16 / 9));
+  max-width: min(46rem, max(20rem, calc((100svh - 18rem) * 16 / 9)));
   margin-inline: auto;
 }
 

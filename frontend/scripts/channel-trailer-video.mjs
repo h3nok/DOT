@@ -216,7 +216,7 @@ export function buildTrailerAnimationDocument(splashSvg) {
           line2: "— Not Matter",
           body1: "From T × E — before and after, and what allows it (speculative) —",
           body2: "Big C emerges, stabilizes, then builds tools: Reality Frames.",
-          insight: "Big C[T, E] is a self-sustaining organism resisting decay (PuE).",
+          insight: "Within T × E, Big C is a self-sustaining organism resisting decay (PuE).",
           footerLeft: "CONSCIOUSNESS: A DIGITAL ORGANISM",
           footerRight: "Why awareness is the foundation, not a byproduct",
           stepIndex: 1,

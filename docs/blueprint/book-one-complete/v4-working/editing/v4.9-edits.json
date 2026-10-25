@@ -282,8 +282,8 @@
       "paragraph": 193,
       "section": "CHAPTER 1The Digital Organism",
       "old": "This analogy neither makes a bacterium a laptop nor reduces life to code. It says that living persistence requires more than possessing matter. It requires organized differences that matter to the organism and influence what it does next.",
-      "new": "The analogy concerns organized differences that matter to an organism and influence what it does next. It does not identify life with electronic computation.",
-      "reason": "Condense the scope of the analogy."
+      "new": "The analogy concerns organized differences, patterns, that matter to an organism and influence what it does next. A Digital Organism takes pattern in and puts pattern out; what it carries between the two is its state. The analogy does not identify life with electronic computation.",
+      "reason": "Condense the scope of the analogy. Author decision 2026-10-23: state here the pattern-in, pattern-out reading of a Digital Organism that the revised Equation Guide opening relies on."
     },
     {
       "paragraph": 201,
@@ -1922,6 +1922,17 @@
       "old": "One honest question can be a stroke. One boundary can be a stroke. One repaired harm can be a stroke. One institution redesigned around human decision-space can be a stroke. One experiment that reports a failed prediction can be a stroke. One moment in which another person is not reduced to the Painting they carry can be a stroke.",
       "new": "The next stroke may be an honest question, a boundary, or a repaired harm. It may be an institution redesigned around human decision-space, an experiment reporting a failed prediction, or a moment in which another person is seen as more than the Painting they carry.",
       "reason": "Keep the range of possible actions while reducing the repeated sentence template."
+    },
+    {
+      "paragraph": 1905,
+      "section": "APPENDIXEquation and Notation Guide",
+      "old": "The equations in Book One expose relationships inside DOT’s architecture. They do not make the model true by giving it symbols. Most functions remain abstract because DOT has not yet identified their physical implementation or operational measurement.",
+      "new": "A Digital Organism does two things with pattern: it takes pattern in and it puts pattern out. Information, sensation, and returning consequence come in; response, action, and the Painting built from what the Canvas carries go out. Mathematics is among the most refined patterns Little c has produced. Applied to RF₀, it formalizes the world invariants, the rules this Frame keeps, and there it can be exact.",
+      "insert_after": [
+        "That exactness invites a familiar mistake: taking the rules of a Frame for the foundation of reality. The mistake has a motive. Consequence can return hard, and under that pressure Fear narrows what Intent can draft (Equation 5.8). Living by the Frame’s rules alone can then feel safer than examining the Canvas through which every rule is read. No equation about the world replaces that examination. Every reader, mathematician or not, still has to reflect on what their own Canvas carries and begin repainting it.",
+        "Book One’s equations accept the same limit. They expose relationships inside DOT’s architecture; they do not make the model true by giving it symbols. Most functions remain abstract because DOT has not yet identified their physical implementation or operational measurement. Read them as patterns that point to processes. The Experience Loop equations describe one you can also observe in your own life."
+      ],
+      "reason": "Author-approved revision, 2026-10-23. Opens the guide with what the equations are: patterns made by a pattern-making organism. Names the mistake of taking a Frame’s rules for the foundation, and its Fear-gated motive (Preface, Fear and inquiry; Equation 5.8), while keeping the original statement of the equations’ limits. The last sentence limits first-person observation to the Experience Loop equations, since Equation 4.4 and the Frame equations cannot be observed that way."
     }
   ]
 }

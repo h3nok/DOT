@@ -16,12 +16,13 @@ Henok Ghebrechristos · October 2026
 - [Inspect the validation record](v4.9-review/DOT-Complete-Book-One-v4.9-Review-Validation.json).
 
 The v4.9 DOCX is the current private editorial handoff. Its
-[273 recorded paragraph operations](editing/v4.9-edits.json) shorten repeated
+[274 recorded paragraph operations](editing/v4.9-edits.json) shorten repeated
 definitions and qualifications, improve transitions, and add personal texture
 from the author's supplied account. It removes about 3,000 words and preserves
 the print design, native equations, references, fields, links, and depth passages.
-The PDF proof has 174 pages. The current fundamental-Big-C position remains;
+The PDF proof has 176 pages. The current fundamental-Big-C position remains;
 the redline records an author question about the alternative emergence account.
+On 2026-10-23 the author approved a new opening for the Equation and Notation Guide.
 This revision is not a public release.
 
 The preceding v4.8 DOCX applies a recorded

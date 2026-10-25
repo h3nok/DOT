@@ -93,6 +93,18 @@ def revise_paragraph(paragraph, value):
         raise ValueError("Run-preserving edit did not produce the exact approved text")
 
 
+def body_template(paragraphs):
+    """A plain body paragraph to clone for inserted text: one run, nothing structural."""
+    for p in paragraphs:
+        if style_id(p) != "DOTBody" or len(p.getElementsByTagName("w:r")) != 1:
+            continue
+        if any(p.getElementsByTagName(tag) for tag in (
+                "w:bookmarkStart", "w:hyperlink", "m:oMath", "w:instrText", "w:fldSimple", "w:drawing", "w:sectPr")):
+            continue
+        return p
+    raise ValueError("No plain body paragraph to use as an insertion template")
+
+
 def protected(document):
     result = invariant(document)
     for tag in ("w:bookmarkStart", "w:bookmarkEnd", "w:sectPr", "w:drawing", "w:fldChar"):
@@ -146,6 +158,7 @@ def build(output):
     parts, doc = load_package(source)
     before = protected(doc)
     paragraphs = list(doc.getElementsByTagName("w:p"))
+    template = body_template(paragraphs).cloneNode(True)
     indexed = {e["paragraph"]: e for e in manifest["edits"]}
     if len(indexed) != len(manifest["edits"]):
         raise ValueError("Duplicate edit target")
@@ -162,6 +175,14 @@ def build(output):
         if edit["new"]:
             revise_paragraph(p, edit["new"])
             expected.append(edit["new"])
+            # New body paragraphs follow the edited one; they inherit the plain body style.
+            anchor = p
+            for extra in edit.get("insert_after", []):
+                inserted = template.cloneNode(True)
+                revise_paragraph(inserted, extra)
+                anchor.parentNode.insertBefore(inserted, anchor.nextSibling)
+                anchor = inserted
+                expected.append(extra)
         else:
             for tag in ("w:bookmarkStart", "w:bookmarkEnd", "w:hyperlink", "m:oMath", "w:instrText", "w:fldSimple", "w:sectPr", "w:drawing"):
                 if p.getElementsByTagName(tag):
@@ -189,16 +210,22 @@ def build(output):
     path = output / f"{NAME}.docx"
     write_package(parts, path)
     review = output / f"{NAME}-Redline.html"
-    redline(manifest, review)
+    shown = {**manifest, "edits": [
+        {**e, "new": " ¶ ".join([e["new"], *e.get("insert_after", [])])} for e in manifest["edits"]]}
+    redline(shown, review)
+    question = manifest["author_review_questions"][0]
+    answer = ("<p><strong>Resolved:</strong> " + html.escape(question["resolution"]) + "</p>") if question.get("resolution") else ""
     review.write_text(review.read_text().replace("v4.6 editorial redline", "v4.9 editorial revision")
                       .replace("frozen v4.5 manuscript", "v4.8 review manuscript")
                       .replace("Layout changes and native concept plates are visible in the review PDF.", "The print design and native manuscript structures are preserved.")
-                      .replace("</html>", "<h2>Author review question</h2><p>" + html.escape(manifest["author_review_questions"][0]["question"]) + "</p></html>"))
+                      .replace("</html>", "<h2>Author review question</h2><p>" + html.escape(question["question"]) + "</p>" + answer + "</html>"))
     report = {
         "source_sha256": manifest["source_sha256"],
         "editorial_operations": len(indexed),
         "paragraphs_removed": sum(not e["new"] for e in indexed.values()),
-        "words_removed_net": sum(len(e["old"].split()) - len(e["new"].split()) for e in indexed.values()),
+        "paragraphs_inserted": sum(len(e.get("insert_after", [])) for e in indexed.values()),
+        "words_removed_net": sum(len(e["old"].split()) - len(" ".join([e["new"], *e.get("insert_after", [])]).split())
+                                 for e in indexed.values()),
         "native_equations_preserved": len(before["math"]),
         "equation_fields_preserved": len(before["instructions"]),
         "depth_passages": depth,

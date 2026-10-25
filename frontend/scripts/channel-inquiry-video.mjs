@@ -60,20 +60,20 @@ export const INQUIRY_VIDEOS = [
         lines: ["Before you measure the world, you are here to experience it."],
         note: "The most immediate fact of existence is that you are here to experience one.",
       },
-      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — The foundational postulate: Big C[T, E]
+      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — Emergent Principles: T × E → Big C
       {
         start: 6.3,
         end: 12.2,
         layout: "split",
-        badge: "01 · FOUNDATIONAL POSTULATE",
-        eyebrow: "01 // FOUNDATIONAL POSTULATE",
+        badge: "01 · EMERGENT PRINCIPLES",
+        eyebrow: "01 // T × E: THE SOURCE",
         focusTerm: "Digital Organism",
         lines: ["A model centered on consciousness:", "the Digital Organism."],
         notes: [
-          "Big C is the ground. T and E name its capacities: continuity and possibility.",
+          "From Primordial Continuity (T) and External Environment (E), process emerges.",
         ],
-        concept: "CONCEPT 01  ·  BIG C [T, E]",
-        axiom: "BIG C [T: CONTINUITY  ·  E: POSSIBILITY]",
+        concept: "CONCEPT 01  ·  EMERGENCE IN T × E",
+        axiom: "T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)  →  Big C",
       },
       // Beat 3 (12.5s – 18.4s): TWO-COLUMN — The Experience Loop
       {
@@ -181,20 +181,20 @@ export const INQUIRY_VIDEOS = [
         concept: "CONCEPT 01  ·  DIGITAL ORGANISM (INFORMATIONAL PROCESS)",
         axiom: "STATE + FEEDBACK + CONTINUITY  →  DIGITAL ORGANISM",
       },
-      // ACT II — ARCHITECTURE OF CONTINUITY: Big C[T, E], Little c & RF₀ (0:34 – 1:10)
+      // ACT II — ARCHITECTURE OF CONTINUITY: T × E, Big C, Little c & RF₀ (0:34 – 1:10)
       {
         start: 34.8,
         end: 46.2,
         layout: "split",
-        badge: "ACT II · FOUNDATIONAL POSTULATE",
+        badge: "ACT II · THE SOURCE CONDITIONS",
         eyebrow: "04 // ARCHITECTURE OF CONTINUITY",
         focusTerm: "Big C",
-        lines: ["Big C is the ground.", "T and E name its capacities."],
+        lines: ["Within T × E, one process", "persisted and stabilized: Big C."],
         notes: [
-          "T: primordial continuity. E: unexpressed possibility. Neither comes before Big C.",
+          "T is primordial continuity; E is the external environment of possibility.",
         ],
-        concept: "CONCEPT 02  ·  BIG C [T, E]",
-        axiom: "BIG C [T: CONTINUITY  ·  E: POSSIBILITY]",
+        concept: "CONCEPT 02  ·  T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)",
+        axiom: "T × E (THE SOURCE)  →  Big C",
       },
       {
         start: 46.6,
@@ -923,9 +923,9 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     ctx.scale(scale, scale);
     ctx.translate(-focusPoint.x, -focusPoint.y);
 
-    // 1. Big C's field (`data-part="origin"`). Book One v4 makes T and E capacities of
-    //    Big C, not a prior container, so the halo is drawn only with Big C itself.
-    const origA = alpha * Math.min(origin, bigC);
+    // 1. `T × E` — The Source Field (`data-part="origin"`): Primordial Continuity (T)
+    //    and External Environment / Possibility (E) within which Big C emerged.
+    const origA = alpha * origin;
     if (origA > 0.01) {
       circle(FC.x, FC.y, ARCH_R.origin, originJade, origA * 0.92, 1.7, [2, 6]);
       for (const r of [ARCH_R.origin + 8, ARCH_R.origin + 20]) {
@@ -1291,12 +1291,24 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       }
     }
 
-    // 10. Minimal, High-Signal Digital Axis Labels (`Big C [T, E]`, `RF₀`, `Little c₁ — you`)
+    // 10. Minimal, High-Signal Digital Axis Labels (`T × E`, `Big C`, `RF₀`, `Little c₁ — you`)
     const lblA = alpha * labels;
     const fScale = 1 / Math.pow(scale, 0.42);
     if (lblA > 0.01) {
+      if (origin > 0.2) {
+        type("T × E", 348, 24, 23 * fScale, {
+          color: originJade,
+          alpha: lblA * origin,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "center",
+          halo: bgHaloCol,
+          haloWidth: 8,
+          track: false,
+        });
+      }
       if (bigC > 0.2) {
-        type("Big C [T, E]", 348, 120, 24 * fScale, {
+        type("Big C", 348, 120, 24 * fScale, {
           color: lumen,
           alpha: lblA * bigC,
           family: "Inter",
@@ -1519,7 +1531,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       labels: compact ? 0 : 1,
     });
     if (showNotation && !compact) {
-      pillLabel("Big C[T, E] ↻  ·  SELF-PRESERVING CONSCIOUS ORGANISM", cx, cy + radius + 44, 15.5, {
+      pillLabel("T × E  →  Big C ↻  ·  SELF-PRESERVING CONSCIOUS ORGANISM", cx, cy + radius + 44, 15.5, {
         color: lumen,
         border: isLight ? "rgba(9, 133, 93, 0.48)" : "rgba(126, 250, 208, 0.54)",
         alpha,
@@ -2025,11 +2037,11 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         track: false,
       });
       const sectionRight = intro
-        ? "YOU, THE OBSERVER  ·  Big C → Little c"
+        ? "YOU, THE OBSERVER  ·  T × E → Big C → Little c"
         : t < 34.6
           ? "ACT I  ·  THE DIGITAL ORGANISM"
           : t < 70.0
-            ? "ACT II  ·  Big C, Little c & RF₀"
+            ? "ACT II  ·  T × E, Big C, Little c & RF₀"
             : t < 104.2
               ? "ACT III  ·  THE CANVAS, THE PAINTING & THE LOOP"
               : "ACT IV  ·  DECOUPLING & LOVE";
