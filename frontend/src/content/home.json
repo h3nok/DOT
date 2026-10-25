@@ -2,6 +2,14 @@
   "title": "Trust your experience.",
   "criticalLine": "Understand what shapes you. Choose how you live.",
   "primaryAction": "Read Book One",
+  "explore": {
+    "eyebrow": "Explore at your pace",
+    "title": "Begin with what speaks to you.",
+    "filmLabel": "Watch the introduction",
+    "storyLabel": "From Henok’s experience",
+    "communityLabel": "Community & conversation",
+    "authorLabel": "About Henok"
+  },
   "critiques": [
     {
       "id": "home.concept.status-quo",

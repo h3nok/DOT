@@ -24,7 +24,7 @@ export function PageHeader({
         <Link
           to={backTo}
           aria-label={backTo === "/" && backLabel === "DOT" ? "DOT — Home" : undefined}
-          className="do-wordmark-link inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="site-page-header-brand do-wordmark-link inline-flex min-h-11 items-center gap-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           {backTo !== "/" && <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />}
           {backLabel === "DOT" ? (
@@ -35,11 +35,11 @@ export function PageHeader({
         </Link>
         <SiteNav />
         {right && (
-          <nav aria-label="Page context" className="flex items-center gap-1">
+          <nav aria-label="Page context" className="site-page-header-context flex items-center gap-1">
             {right}
           </nav>
         )}
-        {controls && <div className="flex items-center gap-1">{controls}</div>}
+        {controls && <div className="site-page-header-controls flex items-center gap-1">{controls}</div>}
       </div>
     </header>
   );
@@ -75,8 +75,7 @@ export function PageShell({
         </a>
       )}
       {header}
-      {/* The scroll margin clears the sticky header (two rows on a phone) when
-          the skip link or a fragment brings <main> to the top. */}
+      {/* The scroll margin also clears a second row of page-context controls. */}
       <main
         id="main-content"
         className={`site-page-main dot-page-container scroll-mt-24 pb-24 pt-12 sm:scroll-mt-16 sm:pt-16 ${wide ? "dot-page-wide" : ""} ${className}`}

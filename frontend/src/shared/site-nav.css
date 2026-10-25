@@ -11,18 +11,27 @@
 .site-nav-desktop a[aria-current="page"]::after { position: absolute; bottom: .25rem; left: 50%; width: .3125rem; height: .3125rem; border-radius: 50%; background: var(--organism-accent-strong, currentColor); content: ""; transform: translateX(-50%); }
 .site-nav-trigger { display: none; }
 .site-nav-links a:focus-visible, .site-nav-trigger:focus-visible, .site-nav-panel button:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
-.site-nav-panel { z-index: 55; width: min(20rem, calc(100vw - 2rem)); max-height: min(28rem, var(--radix-popover-content-available-height)); overflow-y: auto; overscroll-behavior: contain; padding: .5rem; border: 1px solid var(--border); border-radius: var(--public-radius); background: var(--background); color: var(--foreground); box-shadow: 0 .75rem 2rem color-mix(in oklab, var(--foreground) 12%, transparent); transform-origin: var(--radix-popover-content-transform-origin); }
-.site-nav-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-inline: .75rem 0; margin-bottom: .25rem; }
+.site-nav-panel { z-index: 55; display: flex; flex-direction: column; width: min(24rem, calc(100vw - 2rem)); max-height: min(42rem, var(--radix-popover-content-available-height), calc(var(--visible-height) - var(--safe-top) - var(--safe-bottom) - 5.5rem)); overflow: hidden; padding: .5rem; border: 1px solid var(--border); border-radius: var(--public-radius); background: var(--background); color: var(--foreground); box-shadow: 0 1rem 3rem color-mix(in oklab, var(--foreground) 14%, transparent); transform-origin: var(--radix-popover-content-transform-origin); }
+/* Navigation stays readable over films and illustrations in every environment. */
+html[data-ui-style] .site-nav-panel[role="dialog"] { border: 1px solid var(--border); background: var(--background); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 1rem 3rem color-mix(in oklab, var(--foreground) 14%, transparent); }
+html[data-contrast="high"] .site-nav-panel[role="dialog"] { border-color: var(--foreground); box-shadow: none; }
+.site-nav-panel-heading { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 1rem; padding-inline: .75rem .125rem; padding-bottom: .375rem; margin-bottom: .25rem; border-bottom: 1px solid var(--border); }
 .site-nav-panel-heading button { display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); border-radius: 50%; }
+.site-nav-panel-heading button:hover { background: color-mix(in oklab, var(--foreground) 6%, transparent); }
 .site-nav-panel-heading svg { width: 1rem; height: 1rem; }
+.site-nav-panel-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 /* One calm list: hairlines between rows instead of a grid of framed tiles. */
 .site-nav-panel .site-nav-links { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 .site-nav-panel .site-nav-links li + li { border-top: 1px solid color-mix(in oklab, var(--border) 70%, transparent); }
-.site-nav-panel .site-nav-links a { display: flex; justify-content: space-between; min-height: 3rem; padding: .75rem; border-radius: .5rem; color: var(--foreground); font-size: .9375rem; }
+.site-nav-panel .site-nav-links a { display: flex; justify-content: space-between; min-height: 4.25rem; padding: .75rem; border-radius: .5rem; color: var(--foreground); font-size: 1rem; }
 .site-nav-panel .site-nav-links a::before { inset: .125rem 0; }
+.site-nav-link-copy { display: flex; min-width: 0; flex-direction: column; gap: .1875rem; }
+.site-nav-description { color: var(--muted-foreground); font-size: .8125rem; font-weight: 400; line-height: 1.5; letter-spacing: 0; }
+.site-nav-link-arrow { width: 1rem; height: 1rem; flex-shrink: 0; color: var(--muted-foreground); }
+.site-nav-reader-list a { color: var(--organism-accent-strong, var(--foreground)); }
 .site-nav-panel a[aria-current="page"] { font-weight: 600; }
 .site-nav-panel a[aria-current="page"]::before { background: color-mix(in oklab, var(--organism-accent-strong, currentColor) 7%, transparent); }
-.site-nav-panel a[aria-current="page"]::after { width: .375rem; height: .375rem; border-radius: 50%; background: var(--organism-accent-strong, currentColor); content: ""; }
+.site-nav-panel a[aria-current="page"] .site-nav-link-arrow { color: var(--organism-accent-strong, currentColor); }
 @media (forced-colors: active) {
   .site-nav-links a[aria-current="page"]::after { background: currentColor; forced-color-adjust: none; }
 }

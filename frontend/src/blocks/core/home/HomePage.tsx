@@ -22,9 +22,11 @@ import { HeroProposition } from "./HeroProposition";
 import type { HeroAskRequest } from "./heroData";
 import { HomeJourneyNav } from "./HomeJourneyNav";
 import { HomeFilmSection } from "./HomeFilmSection";
+import { HomeDiscovery } from "./HomeDiscovery";
 import { TheoryLayerJourney } from "./TheoryLayerJourney";
 import { Consciousness101 } from "./Consciousness101";
 import "./home.css";
+import "./home-editorial.css";
 
 export default function HomePage() {
   const { isOwner, logout } = useAuth();
@@ -155,6 +157,8 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
+      <HomeDiscovery />
+
       {/* Cultural conditioning gives readers a way into the proposed architecture. */}
       <Consciousness101 />
       {/* The architecture keeps its outside-to-inside causal order. */}
@@ -188,7 +192,7 @@ export default function HomePage() {
             },
             {
               to: "/amm",
-              label: "Inspect the Autonomous Moral Agent (AMM)",
+              label: "Read the American Millennial Manifesto",
             },
           ]}
         />

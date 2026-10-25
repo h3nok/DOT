@@ -1,9 +1,77 @@
 .community-page {
-  max-width: 52rem;
+  max-width: 56rem;
+  padding-top: clamp(2rem, 5vw, 4rem);
 }
 
 .community-page .public-masthead {
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Keep the chosen field as atmosphere, with a quiet surface behind the words. */
+html:has(.community-page) .organism-membrane {
+  opacity: calc(var(--appearance-field-opacity, 1) * 0.22);
+}
+
+.community-page :is(h2, section[id]) {
+  scroll-margin-top: 6.5rem;
+}
+
+.community-page .public-masthead-title {
+  max-width: 19ch;
+}
+
+.community-page .public-masthead-title + p {
+  margin-top: 1rem;
+}
+
+.community-page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin-block: 1.25rem;
+}
+
+.community-page-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  max-width: 100%;
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 0.3em;
+}
+
+.community-page-nav a:first-child {
+  padding: 0.65rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--organism-accent-strong) 30%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--card) 90%, var(--organism-accent-soft));
+  text-decoration: none;
+}
+
+.community-page-nav svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.community-page-nav a:hover {
+  color: var(--organism-accent-strong);
+  text-decoration-color: currentColor;
+}
+
+.community-page :is(a, h2):focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 5px;
+}
+
+.community-page .community-invitation {
+  max-width: 66ch;
+  font-size: 0.9375rem;
 }
 
 .community-page .public-masthead p,
@@ -73,6 +141,11 @@
   font-weight: 600;
 }
 
+.community-principles > div {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
 .community-principles dd {
   margin: 0;
   color: var(--muted-foreground);
@@ -91,7 +164,31 @@
 }
 
 @media (max-width: 520px) {
+  .community-page-nav {
+    gap: 0.4rem 1.25rem;
+  }
+
+  .community-passage,
+  .community-support {
+    padding: 1.25rem;
+  }
+
+  .community-passage blockquote {
+    margin-block: 1.25rem;
+    padding-inline-start: 1rem;
+  }
+
+  .community-section {
+    margin-block: 2rem;
+  }
+
   .community-principles {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
+}
+
+html[data-contrast="high"] .community-page-nav a:first-child {
+  border-color: var(--foreground);
+  background: var(--background);
 }

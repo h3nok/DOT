@@ -33,6 +33,7 @@ const HERO_FILES = [
   "Consciousness101.tsx",
   "TheoryLayerJourney.tsx",
   "HomeFilmSection.tsx",
+  "HomeDiscovery.tsx",
   "HomeJourneyNav.tsx",
   "ArchitectureDiagram.tsx",
   "StepOneUnlearning.tsx",

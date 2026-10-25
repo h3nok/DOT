@@ -1398,11 +1398,14 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
   // Already escaped: it is read out of the shell's own attribute.
   const description = /<meta\s+name="description"\s+content="([^"]*)"/.exec(shell)?.[1] ?? "";
   const latest = essays.slice(0, 5);
+  const trailer = FILMS.screeningFilms.find(film => film.id === "inquiry-trailer");
   const body = [
     `<p>Digital Organism Theory</p><h1>${escapeHtml(HOME.title)}</h1><p>${escapeHtml(HOME.criticalLine)}</p>`,
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
+    `<p>${link(FILMS_ROUTE, HOME.explore.filmLabel)} · ${link(COMMUNITY_ROUTE, HOME.explore.communityLabel)}</p>`,
+    `<section id="field-notes"><p>${escapeHtml(HOME.explore.eyebrow)}</p><h2>${escapeHtml(HOME.explore.title)}</h2>${trailer ? `<h3>${escapeHtml(trailer.title)}</h3><p>${escapeHtml(trailer.duration)} · ${link(FILMS_ROUTE, HOME.explore.filmLabel)}</p>` : ""}<h3>${escapeHtml(BLOG.startingPoint.title)}</h3><blockquote><p>“${escapeHtml(BLOG.startingPoint.quote)}”</p><cite>${escapeHtml(BLOG.startingPoint.sourceLabel)}</cite></blockquote><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p><p>${escapeHtml(COMMUNITY.description)}</p><p>${link(COMMUNITY_ROUTE, COMMUNITY.conversationAction)} · ${link(ABOUT_ROUTE, HOME.explore.authorLabel)}</p></section>`,
     `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.sourcePath, HOME.culture.sourceLabel)}</p></section>`,
     `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
     `<h2>Book One</h2>${contentsList(manifest)}`,

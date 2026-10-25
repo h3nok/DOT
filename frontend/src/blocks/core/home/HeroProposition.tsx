@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
@@ -59,6 +60,11 @@ export function HeroProposition({
               icon: <BookOpen strokeWidth={1.5} />,
             }}
           />
+
+          <nav className="home-entry-links" aria-label="More ways to explore">
+            <a href="#visual-inquiry">{HOME.explore.filmLabel}</a>
+            <Link to="/community">{HOME.explore.communityLabel}</Link>
+          </nav>
 
           <HeroConceptSlideshow reducedMotion={reducedMotion} />
         </div>

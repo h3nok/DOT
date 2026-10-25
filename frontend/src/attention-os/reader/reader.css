@@ -1,0 +1,85 @@
+/* The Reader keeps its chosen measure and type settings. Wide content scrolls
+   within the passage, while the page itself stays inside the viewport. */
+.book-prose {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.book-prose :is(.book-table-scroll, pre, .katex-display) {
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--book-muted) transparent;
+}
+
+.book-prose .katex-display > .katex {
+  display: inline-block;
+  min-width: 100%;
+  padding-inline: 0.2rem;
+}
+
+.book-prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+.book-reference-sheet {
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+  scrollbar-width: thin;
+}
+
+.book-reference-sheet__close:focus-visible {
+  outline: 2px solid var(--book-cinnabar);
+  outline-offset: 3px;
+}
+
+@media screen and (max-width: 639px) {
+  .book-reading-grid {
+    padding-inline: max(1.25rem, env(safe-area-inset-left)) max(1.25rem, env(safe-area-inset-right));
+    padding-top: 2.25rem;
+    padding-bottom: max(3rem, calc(env(safe-area-inset-bottom) + 2rem));
+  }
+
+  .book-chapter-header {
+    padding-bottom: 2rem;
+  }
+
+  .book-chapter-header .book-reading-heading {
+    margin-top: 1.25rem;
+    font-size: calc(clamp(1.875rem, 8vw, 2.5rem) * var(--reading-scale, 1));
+    line-height: 1.12;
+  }
+
+  .book-reader .book-prose {
+    padding-block: 2rem;
+  }
+
+  .book-prose .book-depth__summary {
+    display: grid;
+    min-height: 2.75rem;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.4rem 0.65rem;
+    padding-block: 1rem;
+  }
+
+  .book-prose .book-depth__time {
+    grid-column: 3;
+  }
+
+  .book-prose .book-depth__body {
+    padding-inline-start: 0.75rem;
+  }
+
+  .book-reference-sheet {
+    inset-inline: max(0.75rem, env(safe-area-inset-left)) max(0.75rem, env(safe-area-inset-right));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    max-height: min(75svh, calc(var(--visible-height, 100svh) - 1.5rem));
+  }
+
+  .book-reference-sheet .book-reading-heading {
+    font-size: calc(1.125rem * var(--reading-scale, 1));
+    line-height: 1.3;
+  }
+}

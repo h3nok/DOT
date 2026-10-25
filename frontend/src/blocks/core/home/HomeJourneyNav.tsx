@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
   { id: "threshold", label: "An invitation to examine experience" },
+  { id: "field-notes", label: "Film, lived experience, and conversation" },
   { id: "consciousness-101", label: "The culture inside us" },
-  { id: "possibility-field", label: "T × E: the source" },
-  { id: "big-c", label: "Big C: primordial consciousness" },
-  { id: "reality-frame", label: "RF₀: the physical universe" },
-  { id: "little-c", label: "Little c: the local experiencer" },
-  { id: "visual-inquiry", label: "Visual inquiry & inner loop" },
-  { id: "choose-path", label: "Book and Academy" },
+  { id: "possibility-field", label: "The model’s starting assumption" },
+  { id: "big-c", label: "An account of consciousness" },
+  { id: "reality-frame", label: "A shared world" },
+  { id: "little-c", label: "Your point of view" },
+  { id: "visual-inquiry", label: "Personal exploration in film" },
+  { id: "choose-path", label: "Keep exploring" },
 ] as const;
 
 type HomeSectionId = (typeof HOME_SECTIONS)[number]["id"];

@@ -261,7 +261,7 @@ html:has(.home-journey) {
   --architecture-frame-wash-opacity: 0.08;
   --architecture-local-wash-opacity: 0.18;
   display: flex;
-  min-height: min(100svh, 60rem);
+  min-height: min(92svh, 54rem);
   align-items: center;
   overflow: hidden;
   background: var(--home-ground-threshold);
@@ -5076,8 +5076,8 @@ html[data-field="off"] .home-hero-stage::before {
 
 /* ── Concept Slideshow Movement Jump Pills ────────────────────────── */
 .home-concept-slideshow-movements {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
   gap: 0.35rem;
   margin-bottom: 0.75rem;
@@ -5086,6 +5086,9 @@ html[data-field="off"] .home-hero-stage::before {
 .home-concept-slideshow-movement {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: var(--touch-target);
   gap: 0.35rem;
   padding: 0.25rem 0.65rem;
   border-radius: 9999px;
@@ -5093,7 +5096,7 @@ html[data-field="off"] .home-hero-stage::before {
   background: color-mix(in oklab, var(--card) 55%, transparent);
   color: var(--muted-foreground);
   font-family: var(--home-public-display-font);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.2;

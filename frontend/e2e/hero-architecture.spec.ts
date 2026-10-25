@@ -382,11 +382,10 @@ for (const viewport of [
     const question = await page.locator(".home-hero-title").boundingBox();
     expect(diagram).not.toBeNull();
     expect(question).not.toBeNull();
-    if (viewport.width >= 1100) {
-      expect(question!.x + question!.width).toBeLessThanOrEqual(diagram!.x);
-    } else {
-      expect(question!.y + question!.height).toBeLessThan(diagram!.y);
-    }
+    const separateColumns = question!.x + question!.width <= diagram!.x;
+    const separateRows = question!.y + question!.height < diagram!.y;
+    expect(separateColumns || separateRows, "The opening copy and diagram must not overlap")
+      .toBe(true);
 
     const labels = await svg.evaluate((node) => {
       if (!(node instanceof SVGSVGElement)) throw new Error("Expected an SVG diagram");

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MessageCircle } from "lucide-react";
+import { ArrowDown, MessageCircle } from "lucide-react";
 
 import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import { author } from "../../content/author";
@@ -17,12 +17,16 @@ export default function CommunityPage() {
     <PageShell className="community-page" header={<PageHeader />} footer={<SiteColophon />}>
       <PageIntro eyebrow={`${COMMUNITY.title} · ${author.name}`} title={COMMUNITY.heading}>
         <p>{COMMUNITY.description}</p>
-        <p>{COMMUNITY.invitation}</p>
+        <nav className="community-page-nav" aria-label="On this page">
+          <a href="#community-conversation-title">Conversation<ArrowDown aria-hidden="true" /></a>
+          <a href="#community-passage-title">A starting passage<ArrowDown aria-hidden="true" /></a>
+        </nav>
+        <p className="community-invitation">{COMMUNITY.invitation}</p>
       </PageIntro>
 
       <Surface as="section" className="community-passage" aria-labelledby="community-passage-title">
         <p className="dot-label">{BLOG.startingPoint.label}</p>
-        <h2 id="community-passage-title" className="dot-section-heading">{BLOG.startingPoint.title}</h2>
+        <h2 id="community-passage-title" tabIndex={-1} className="dot-section-heading">{BLOG.startingPoint.title}</h2>
         <p>{BLOG.startingPoint.description}</p>
         <blockquote>
           <p>“{BLOG.startingPoint.quote}”</p>
@@ -32,7 +36,7 @@ export default function CommunityPage() {
       </Surface>
 
       <section className="community-section" aria-labelledby="community-conversation-title">
-        <h2 id="community-conversation-title" className="dot-section-heading">{COMMUNITY.conversationTitle}</h2>
+        <h2 id="community-conversation-title" tabIndex={-1} className="dot-section-heading">{COMMUNITY.conversationTitle}</h2>
         <p>{COMMUNITY.conversationDescription}</p>
         <FocusNav label="Take part" primary={{ to: "/contact?purpose=writing", label: COMMUNITY.conversationAction, icon: <MessageCircle /> }} />
         <p className="community-note">{COMMUNITY.status}</p>
