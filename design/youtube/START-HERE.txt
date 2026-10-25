@@ -8,7 +8,7 @@ The website's opening dot, single ring, and surrounding curved field.
 The banner and title card carry: Conditioning · Choice · Agency.
 Palette: DOT Daylight. Warm ivory #f2f0e8,
 deep green #142822, jade #285c4b.
-splash-intro.mp4 is the finished 14-second introductory opening video with quiet digital audio.
+splash-intro.mp4 is the finished 18-second introductory opening video with quiet digital audio.
 It presents DOT's proposed model of reality in creation order, one typewriter line per scene: T × E (speculative), Big C emerging and stabilizing itself, Big C building tools — Reality Frames (RF₁…RFₙ, RF₀) — Little c, and choosing with others — before settling into the Digital Organism Theory brand lockup.
 splash-bumper.mp4 is the 5-second episode-opening cut of the same animation (no captions).
 splash.png is its still poster.
@@ -62,7 +62,7 @@ PROPOSED PLAYLISTS (FOR WHEN VIDEOS ARE PUBLISHED)
 FILES
 banner.png / avatar.png — profile uploads
 watermark.png — optional transparent video mark
-splash-intro.mp4 — 3840 x 2160 (4K), 30 fps, 14 seconds, H.264 video with quiet digital AAC audio
+splash-intro.mp4 — 3840 x 2160 (4K), 30 fps, 18 seconds, H.264 video with quiet digital AAC audio
 splash-storyboard.png — keyframes showing the motion sequence
 splash-bumper.mp4 — 3840 x 2160 (4K), 30 fps, 5 seconds, episode-opening cut
 splash.png — still title card and video poster

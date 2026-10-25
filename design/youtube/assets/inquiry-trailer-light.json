@@ -1,0 +1,253 @@
+{
+  "name": "inquiry-trailer-light",
+  "title": "You, the Observer, Belong in the Inquiry — Official Scientific Trailer",
+  "duration": 132,
+  "samples": [
+    5.5,
+    22,
+    31,
+    64,
+    118,
+    129
+  ],
+  "captions": [
+    {
+      "start": 1.4,
+      "end": 9.2,
+      "layout": "center",
+      "badge": "ACT I · FIRST-PERSON OBSERVATION",
+      "eyebrow": "00 // THE FIRST FACT OF EXISTENCE",
+      "lines": [
+        "The first fact of your existence is not a measurement.",
+        "It is that you are here to experience one."
+      ],
+      "notes": [
+        "Every equation, instrument, and proof begins inside lived experience."
+      ]
+    },
+    {
+      "start": 9.6,
+      "end": 17.6,
+      "layout": "split",
+      "badge": "ACT I · TWO WAYS OF KNOWING",
+      "eyebrow": "01 // THE MISSING HALF OF INQUIRY",
+      "focusTerm": "first-person",
+      "lines": [
+        "Physics maps the external world.",
+        "What maps first-person reality?"
+      ],
+      "notes": [
+        "Science describes matter from outside; you inhabit experience from within."
+      ],
+      "concept": "STARTING DISTINCTION  ·  DESCRIPTION VS. EXPERIENCE",
+      "axiom": "THIRD-PERSON MEASUREMENT  VS.  FIRST-PERSON REALITY"
+    },
+    {
+      "start": 18,
+      "end": 26,
+      "layout": "split",
+      "badge": "ACT I · POINTING DEVICES",
+      "eyebrow": "02 // CONSCIOUSNESS AT THE CENTER",
+      "focusTerm": "consciousness",
+      "lines": [
+        "A formal model of reality",
+        "centered on consciousness."
+      ],
+      "notes": [
+        "Experience is first-order; the model's concepts are pointing devices for it."
+      ],
+      "concept": "EPISTEMIC RULE  ·  THE MAP IS NOT THE TERRITORY",
+      "axiom": "FIRST-ORDER EXPERIENCE  →  SECOND-ORDER FORMAL MODEL"
+    },
+    {
+      "start": 26.4,
+      "end": 34.4,
+      "layout": "split",
+      "badge": "ACT I · EMERGENT PRINCIPLES",
+      "eyebrow": "03 // THE DIGITAL ORGANISM",
+      "focusTerm": "Digital Organism",
+      "lines": [
+        "What is a Digital Organism?",
+        "Coherence preserved in change."
+      ],
+      "notes": [
+        "An informational process that retains state and adapts across continuity."
+      ],
+      "concept": "CONCEPT 01  ·  DIGITAL ORGANISM (INFORMATIONAL PROCESS)",
+      "axiom": "STATE + FEEDBACK + CONTINUITY  →  DIGITAL ORGANISM"
+    },
+    {
+      "start": 34.8,
+      "end": 46.2,
+      "layout": "split",
+      "badge": "ACT II · PRIMORDIAL EMERGENCE",
+      "eyebrow": "04 // ARCHITECTURE OF CONTINUITY",
+      "focusTerm": "Big C",
+      "lines": [
+        "Within T × E, one process",
+        "persisted and stabilized: Big C."
+      ],
+      "notes": [
+        "Primordial Continuity (T) and External Environment (E) allow emergence."
+      ],
+      "concept": "CONCEPT 02  ·  T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)",
+      "axiom": "T × E (EMERGENT CONDITIONS)  →  Big C"
+    },
+    {
+      "start": 46.6,
+      "end": 58,
+      "layout": "split",
+      "badge": "ACT II · LOCALIZED AWARENESS",
+      "eyebrow": "05 // UNDIFFERENTIATED PROCESS",
+      "focusTerm": "Little c",
+      "lines": [
+        "Big C localizes as Little c —",
+        "an undifferentiated process."
+      ],
+      "notes": [
+        "Little c is pure local awareness; its distinct history lives on its Canvas."
+      ],
+      "concept": "CONCEPT 03  ·  Little c (LOCAL SELF-AWARE PROCESS)",
+      "axiom": "Little c (UNDIFFERENTIATED)  +  CANVAS (CARRIED STATE)"
+    },
+    {
+      "start": 58.4,
+      "end": 69.8,
+      "layout": "split",
+      "badge": "ACT II · REALITY FRAME ZERO",
+      "eyebrow": "06 // THE SHARED PHYSICAL WORLD",
+      "focusTerm": "RF₀",
+      "lines": [
+        "RF₀: A lawful world where",
+        "choices carry real consequence."
+      ],
+      "notes": [
+        "Stable rules and seamless continuity make relationship and growth possible."
+      ],
+      "concept": "CONCEPT 04  ·  REALITY FRAME ZERO (RF₀)",
+      "axiom": "Big C  →  RF₀ (LAWFUL FRAME)  →  Little c₁"
+    },
+    {
+      "start": 70.2,
+      "end": 81.2,
+      "layout": "split",
+      "badge": "ACT III · MEMORY & INTERPRETATION",
+      "eyebrow": "07 // THE CANVAS & THE PAINTING",
+      "focusTerm": "Painting",
+      "lines": [
+        "The Canvas carries your record.",
+        "The Painting renders meaning."
+      ],
+      "notes": [
+        "From inside experience, your Painting rarely feels like a lens; it feels real."
+      ],
+      "concept": "CONCEPT 05  ·  THE CANVAS (C) & THE PAINTING (P)",
+      "axiom": "CANVAS (ACCUMULATED RECORD)  →  PAINTING (ACTIVE LENS)"
+    },
+    {
+      "start": 81.6,
+      "end": 92.6,
+      "layout": "split",
+      "badge": "ACT III · CANVAS ENTROPY",
+      "eyebrow": "08 // FEAR VS. LOVE ON THE CANVAS",
+      "focusTerm": "Canvas entropy",
+      "lines": [
+        "Fear is high Canvas entropy.",
+        "Fragmentation narrows Intent."
+      ],
+      "notes": [
+        "Unresolved threat and competing patterns divide attention and contract choice."
+      ],
+      "concept": "CONCEPT 06  ·  INTENT–ENTROPY INVERSION",
+      "axiom": "FEAR (HIGH CANVAS ENTROPY)  VS.  LOVE (LOW ENTROPY)"
+    },
+    {
+      "start": 93,
+      "end": 104,
+      "layout": "split",
+      "badge": "ACT III · THE EXPERIENCE LOOP",
+      "eyebrow": "09 // THE RECURSIVE CYCLE",
+      "focusTerm": "Intent",
+      "lines": [
+        "World enters. Painting colors.",
+        "Intent acts. Canvas updates."
+      ],
+      "notes": [
+        "When the Painting goes unseen, yesterday's trace scripts tomorrow's choice."
+      ],
+      "concept": "CONCEPT 07  ·  THE 4-STEP EXPERIENCE LOOP",
+      "axiom": "01 REALITY  →  02 PAINTING  →  03 INTENT  →  04 CANVAS"
+    },
+    {
+      "start": 104.4,
+      "end": 114.6,
+      "layout": "split",
+      "badge": "ACT IV · SEEING THE PAINTING",
+      "eyebrow": "10 // THE PAINTING IS NOT THE PAINTER",
+      "focusTerm": "not the painter",
+      "lines": [
+        "The Painting is not the painter.",
+        "See the lens, and quiet the noise."
+      ],
+      "notes": [
+        "Recognizing inherited patterns on the Canvas reduces internal fragmentation."
+      ],
+      "concept": "CONCEPT 08  ·  DECOUPLING & QUIETING NOISE",
+      "axiom": "INSPECT THE PAINTING (P)  →  REDUCE CANVAS ENTROPY (E_C ↓)"
+    },
+    {
+      "start": 115,
+      "end": 124.8,
+      "layout": "split",
+      "badge": "ACT IV · COHERENCE OF Little c",
+      "eyebrow": "11 // LOVE AS LOW CANVAS ENTROPY",
+      "focusTerm": "Love",
+      "lines": [
+        "For Little c, being Love means",
+        "Canvas entropy is low."
+      ],
+      "notes": [
+        "When Canvas fragmentation clears, awareness sees clearly and Intent coheres."
+      ],
+      "concept": "CORE AXIOM  ·  LOVE = LOW-ENTROPY CANVAS STATE",
+      "axiom": "E_C ↓ (LOW CANVAS ENTROPY)  →  COHERENT INTENT (LOVE)"
+    },
+    {
+      "start": 125.2,
+      "end": 132,
+      "layout": "center",
+      "eyebrow": "DIGITAL ORGANISM THEORY",
+      "lines": [
+        "The Observer Belongs in the Inquiry."
+      ],
+      "note": "dotheory.org"
+    }
+  ],
+  "theme": "light",
+  "file": "inquiry-trailer-light.mp4",
+  "width": 3840,
+  "height": 2160,
+  "fps": 30,
+  "frames": 3960,
+  "codec": "H.264",
+  "audio": "AAC stereo 48 kHz",
+  "max_volume_dbfs": -18.4,
+  "style": "Precision architectural plates, dual-theme studio lighting (Dark Obsidian & Light Archival), Big C and Little c mathematical loops, and canonical DOT mark.",
+  "context": {
+    "topic": "You, the Observer, Belong in the Inquiry — A Formal Framework for the Experienced World",
+    "audience": "Readers and investigators seeking a formal, falsifiable, and humanly sensitive framework for the subjective, experienced world.",
+    "framing": "Honor the mathematical rigor of physics in formalizing the external world (RF₀); bridge gently from first-person experience to the missing formal framework for the experienced world; present Big C, Little c, the Canvas, the Painting, and Love as a formal model of reality.",
+    "checked_on": "2026-10-22",
+    "source": {
+      "title": "AI and Human Development: Convenings with Purpose",
+      "publisher": "UN Office for Partnerships",
+      "published_on": "2026-09-23",
+      "url": "https://unpartnerships.un.org/publications/2026/ai-and-human-development-convenings-purpose",
+      "relevance": "Public context around consciousness, AI, human agency, and institutional systems."
+    },
+    "claim_boundary": "Visuals represent theoretical constructs (Observation, External Model, DOT Derivation, Speculative Extension), not physical observations of what consciousness looks like.",
+    "manifesto": "Serves L1, L2, L7, L8, and L10: calm, finite motion, honest claims, contemplative pacing, and one focus. Violates none."
+  },
+  "render_sha256": "d537a929a6620e1be1568a661b5fc933b666275adaf32287f8e07480817f7536",
+  "video_sha256": "0084fa8b1b21e36fe865e43d666388edf11a9c8bc72983e9d05318a4f174776e"
+}

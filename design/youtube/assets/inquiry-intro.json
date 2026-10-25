@@ -1,0 +1,114 @@
+{
+  "name": "inquiry-intro",
+  "title": "You, the Observer — Consciousness: A Digital Organism",
+  "duration": 30,
+  "samples": [
+    2.8,
+    8.2,
+    10.5,
+    16,
+    22,
+    27.8
+  ],
+  "captions": [
+    {
+      "start": 0.5,
+      "end": 6,
+      "layout": "center",
+      "badge": "FIRST-PERSON OBSERVATION · PRIMARY EVIDENCE",
+      "eyebrow": "00 // THE OBSERVER IN THE INQUIRY",
+      "lines": [
+        "Before you measure the world, you are here to experience it."
+      ],
+      "note": "The most immediate fact of existence is that you are here to experience one."
+    },
+    {
+      "start": 6.3,
+      "end": 12.2,
+      "layout": "split",
+      "badge": "01 · EMERGENT PRINCIPLES",
+      "eyebrow": "01 // EMERGENT PRINCIPLES",
+      "focusTerm": "Digital Organism",
+      "lines": [
+        "A model centered on consciousness:",
+        "the Digital Organism."
+      ],
+      "notes": [
+        "From Primordial Continuity (T) and External Environment (E), process emerges."
+      ],
+      "concept": "CONCEPT 01  ·  EMERGENCE IN T × E",
+      "axiom": "T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)  →  Big C"
+    },
+    {
+      "start": 12.5,
+      "end": 18.4,
+      "layout": "split",
+      "badge": "02 · THE EXPERIENCE LOOP",
+      "eyebrow": "02 // THE EXPERIENCE LOOP",
+      "focusTerm": "Painting",
+      "lines": [
+        "The Canvas carries your history.",
+        "The Painting interprets RF₀."
+      ],
+      "notes": [
+        "Inside our lawful physical world (RF₀), every choice updates who you become."
+      ],
+      "concept": "CONCEPT 02  ·  CANVAS, PAINTING & INTENT",
+      "axiom": "01 REALITY  →  02 PAINTING  →  03 INTENT  →  04 CANVAS"
+    },
+    {
+      "start": 18.7,
+      "end": 24.6,
+      "layout": "split",
+      "badge": "03 · LOW CANVAS ENTROPY",
+      "eyebrow": "03 // LOVE AS LOW CANVAS ENTROPY",
+      "focusTerm": "Love",
+      "lines": [
+        "For Little c, Love is a",
+        "low-entropy Canvas state."
+      ],
+      "notes": [
+        "When Canvas fragmentation drops, Fear stops governing and Intent coheres."
+      ],
+      "concept": "CORE AXIOM  ·  INTENT–ENTROPY INVERSION",
+      "axiom": "LOW CANVAS ENTROPY (E_C ↓)  →  COHERENT INTENT (LOVE)"
+    },
+    {
+      "start": 24.9,
+      "end": 30,
+      "layout": "center",
+      "eyebrow": "DIGITAL ORGANISM THEORY",
+      "lines": [
+        "Consciousness: A Digital Organism"
+      ],
+      "note": "dotheory.org"
+    }
+  ],
+  "theme": "dark",
+  "file": "inquiry-intro.mp4",
+  "width": 3840,
+  "height": 2160,
+  "fps": 30,
+  "frames": 900,
+  "codec": "H.264",
+  "audio": "AAC stereo 48 kHz",
+  "max_volume_dbfs": -18.4,
+  "style": "Precision architectural plates, dual-theme studio lighting (Dark Obsidian & Light Archival), Big C and Little c mathematical loops, and canonical DOT mark.",
+  "context": {
+    "topic": "You, the Observer, Belong in the Inquiry — A Formal Framework for the Experienced World",
+    "audience": "Readers and investigators seeking a formal, falsifiable, and humanly sensitive framework for the subjective, experienced world.",
+    "framing": "Honor the mathematical rigor of physics in formalizing the external world (RF₀); bridge gently from first-person experience to the missing formal framework for the experienced world; present Big C, Little c, the Canvas, the Painting, and Love as a formal model of reality.",
+    "checked_on": "2026-10-22",
+    "source": {
+      "title": "AI and Human Development: Convenings with Purpose",
+      "publisher": "UN Office for Partnerships",
+      "published_on": "2026-09-23",
+      "url": "https://unpartnerships.un.org/publications/2026/ai-and-human-development-convenings-purpose",
+      "relevance": "Public context around consciousness, AI, human agency, and institutional systems."
+    },
+    "claim_boundary": "Visuals represent theoretical constructs (Observation, External Model, DOT Derivation, Speculative Extension), not physical observations of what consciousness looks like.",
+    "manifesto": "Serves L1, L2, L7, L8, and L10: calm, finite motion, honest claims, contemplative pacing, and one focus. Violates none."
+  },
+  "render_sha256": "49e0ce464398ab71a173cd23eb59fe20e066a6895b424b2b9b87b0025f7b1bca",
+  "video_sha256": "d3f082d7c9edd0b5b3c044b3c5f0b8433b18b8aaa70408a9d4abee171bc3b117"
+}

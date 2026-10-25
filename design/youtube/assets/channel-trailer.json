@@ -5,11 +5,11 @@
   "width": 1920,
   "height": 1080,
   "fps": 30,
-  "duration_seconds": 40,
-  "frames": 1200,
+  "duration_seconds": 44,
+  "frames": 1320,
   "audio": true,
   "audio_codec": "AAC",
-  "animation_version": 3,
+  "animation_version": 4,
   "audio_style": "quiet digital",
   "movements": [
     "Why Habits, Headlines & Systems Feel Locked",
@@ -19,6 +19,6 @@
     "Read Free at dotheory.org · @dotheory"
   ],
   "codec": "H.264",
-  "source_sha256": "815f06babcbfad4c187d2e7826d3c567d3eb2a46d18541020d42fe7b716c7f34",
-  "video_sha256": "c5722144842aea0120eceeb61118484486ce92d1e9425988b191fecf84a5bbda"
+  "source_sha256": "1c3b2563877ece014d8fba90b6d1b61a1d61bfb4e4acc07a401d54c672977b91",
+  "video_sha256": "ea8aeed4d5d0d22b34dc2fd254b5db9aff8b8cbbbbb4d96963c023502bf8bdc9"
 }
