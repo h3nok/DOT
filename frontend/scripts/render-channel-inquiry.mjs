@@ -366,6 +366,7 @@ function preview(embeddedFonts, identity) {
   const videos = INQUIRY_VIDEOS.map(({ name, duration, title, captions }) => {
     const label = name === "mark-splash" ? "MARK-ONLY SPLASH" : name.endsWith("intro") ? "FILM 2 · THE DOT IDENTITY FILM" : "FILM 1 · OFFICIAL DOT TRAILER";
     const srtLink = captions.length ? `<a download href="assets/${name}.srt">Captions (.srt)</a>` : "";
+    const spokenTrack = name === "inquiry-trailer" ? `<track kind="captions" src="assets/inquiry-trailer.vtt" srclang="en" label="English">` : "";
     return `<article>
       <div class="meta"><span>${label}</span><span>${duration} SECONDS · ${resolution === "4k" ? "4K UHD" : "1080p"} (${outputWidth}×${outputHeight}) · 30 FPS · DARK &amp; LIGHT EDITIONS</span></div>
       <h2>${duration}-second ${name === "mark-splash" ? "mark-only splash" : name.endsWith("intro") ? "identity film" : "cinematic trailer"} — ${title}</h2>
@@ -373,7 +374,7 @@ function preview(embeddedFonts, identity) {
         <div class="edition-card">
           <div class="edition-tag">DARK STUDIO EDITION (OBSIDIAN BLACK)</div>
           <div class="video-stage">
-            <video controls playsinline preload="metadata" poster="assets/${name}-poster.png"><source src="${name}.mp4" type="video/mp4"></video>
+            <video controls playsinline preload="metadata" poster="assets/${name}-poster.png"><source src="${name}.mp4" type="video/mp4">${spokenTrack}</video>
             <a class="video-cta-overlay" href="https://dotheory.org" target="_blank" rel="noopener noreferrer" title="Visit dotheory.org">dotheory.org ↗</a>
           </div>
           <p class="links"><a download href="${name}.mp4">Download Dark MP4</a>${srtLink}<a href="assets/${name}-storyboard.png">Dark Storyboard</a><a href="assets/${name}-poster.png">Dark Poster</a><a href="https://dotheory.org" target="_blank" rel="noopener noreferrer">dotheory.org ↗</a></p>
@@ -381,7 +382,7 @@ function preview(embeddedFonts, identity) {
         <div class="edition-card light-card">
           <div class="edition-tag">LIGHT ARCHIVAL EDITION (ALABASTER)</div>
           <div class="video-stage">
-            <video controls playsinline preload="metadata" poster="assets/${name}-light-poster.png"><source src="${name}-light.mp4" type="video/mp4"></video>
+            <video controls playsinline preload="metadata" poster="assets/${name}-light-poster.png"><source src="${name}-light.mp4" type="video/mp4">${spokenTrack}</video>
             <a class="video-cta-overlay" href="https://dotheory.org" target="_blank" rel="noopener noreferrer" title="Visit dotheory.org">dotheory.org ↗</a>
           </div>
           <p class="links"><a download href="${name}-light.mp4">Download Light MP4</a>${srtLink}<a href="assets/${name}-light-storyboard.png">Light Storyboard</a><a href="assets/${name}-light-poster.png">Light Poster</a><a href="https://dotheory.org" target="_blank" rel="noopener noreferrer">dotheory.org ↗</a></p>
@@ -391,8 +392,8 @@ function preview(embeddedFonts, identity) {
   }).join("");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOT · The Observer Belongs in the Inquiry (Dark &amp; Light Suite)</title><style>${embeddedFonts}
   *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#0b1a15 0%,#030605 62%,#010202 100%);color:#f4f8f6;font:18px/1.65 "Space Grotesk",sans-serif}main{max-width:1360px;margin:auto;padding:56px 28px}header{max-width:880px;margin-bottom:44px}.eyebrow,.meta,.edition-tag{font:700 13px/1.6 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#54d19f}.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:8px}h1{font-size:clamp(30px,5vw,58px);font-weight:700;line-height:1.08;letter-spacing:-1.6px;margin:10px 0 18px;color:#f4f8f6}h2{font-weight:700;font-size:clamp(21px,2.8vw,28px);letter-spacing:-.02em;margin:0 0 20px;color:#f4f8f6}p{color:#b4c8bf}.lead{font:600 clamp(18px,2.2vw,22px)/1.58 "Source Serif 4",Georgia,serif;color:#d6e6df}article{margin:0 0 48px;padding:28px;border-radius:18px;background:rgba(7,13,11,.92);border:1.5px solid ${identity.dark.border};box-shadow:0 18px 44px rgba(0,0,0,.55)}.edition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.edition-card{padding:18px;border-radius:14px;background:rgba(3,6,5,.92);border:1px solid ${identity.dark.border}}.edition-card.light-card{background:#f6faf8;color:#0d1f19;border-color:#d4e2dc}.edition-card.light-card .edition-tag{color:#146c4e}.edition-card.light-card a{color:#146c4e}.edition-tag{margin-bottom:10px}.video-stage{position:relative}.video-cta-overlay{position:absolute;top:14px;right:14px;z-index:2;padding:6px 12px;border-radius:999px;background:rgba(2,4,3,.78);border:1px solid rgba(84,209,159,.38);color:#6ee2b4;font:600 12px/1.2 "JetBrains Mono",monospace;text-decoration:none;backdrop-filter:blur(8px);transition:border-color .18s ease,background .18s ease}.video-cta-overlay:hover{background:rgba(12,28,22,.92);border-color:#54d19f}.light-card .video-cta-overlay{background:rgba(246,250,248,.88);border-color:rgba(20,108,78,.32);color:#146c4e}video{display:block;width:100%;aspect-ratio:16/9;background:#020303;border-radius:10px;border:1px solid ${identity.dark.border}}.light-card video{background:#f6faf8;border-color:#d4e2dc}a{color:#6ee2b4;font-weight:600;text-underline-offset:4px}.links{display:flex;flex-wrap:wrap;gap:12px 20px;margin:14px 0 0;font-size:15px}footer{border-top:1.5px solid ${identity.dark.border};padding-top:24px;font-size:15px}summary{cursor:pointer;font-weight:700;color:#f4f8f6}img{max-width:100%}@media(max-width:960px){.edition-grid{grid-template-columns:1fr}}@media(max-width:720px){main{padding:24px 14px 40px}header{margin-bottom:28px}article{padding:16px 14px;margin-bottom:28px;border-radius:14px}video{border-radius:8px}.links{gap:10px 16px;font-size:15px}}</style></head><body><main>
-  <header><p class="eyebrow">DIGITAL ORGANISM THEORY · DARK STUDIO &amp; LIGHT ARCHIVAL FILM SUITE</p><h1>The Observer Belongs<br>in the Inquiry.</h1><p class="lead">Pitting Digital Organism Theory against the blind spot of reductive materialism and unexamined dogma—before unfolding the Big C and Little c mathematical loops, RF₀, the Canvas and the Painting, and the observer’s return in near-silence. Rendered in both Dark Studio (Obsidian) and Light Archival (Ivory Monograph) editions.</p></header>${videos}
-  <footer><p>Current-events context: <a href="${INQUIRY_CONTEXT.source.url}">${INQUIRY_CONTEXT.source.title}</a> · ${INQUIRY_CONTEXT.source.publisher}, 23 September 2026. Context checked 22 October 2026.</p><p>DOT's consciousness model remains a proposed, falsifiable model: <em>“The model must permit criticism that it cannot reinterpret as pathology.”</em></p><details><summary>Read the verbatim narration &amp; on-screen lines</summary>${INQUIRY_VIDEOS.filter((v) => v.captions.length).map((v) => `<h3>${v.duration}-second ${v.name.endsWith("intro") ? "DOT Identity Film" : "Official DOT Trailer"}</h3><p>${v.captions.map((c) => { const noteText = c.notes ? c.notes.join(" ") : c.note; return `<strong>${c.lines.join(" ")}</strong>${noteText ? ` — <em>${noteText}</em>` : ""}`; }).join("<br>")}</p>`).join("")}</details></footer>
+  <header><p class="eyebrow">DIGITAL ORGANISM THEORY · DARK STUDIO &amp; LIGHT ARCHIVAL FILM SUITE</p><h1>The Observer Belongs<br>in the Inquiry.</h1><p class="lead">An invitation to explore your own experience: a short message, a map, the patterns you carry, and the possibility of a different response. The film introduces DOT through familiar moments and leaves its larger hypotheses open to questions and evidence. Available in Dark Studio and Light Archival editions.</p></header>${videos}
+  <footer><p>Current-events context: <a href="${INQUIRY_CONTEXT.source.url}">${INQUIRY_CONTEXT.source.title}</a> · ${INQUIRY_CONTEXT.source.publisher}, 23 September 2026. Context checked 22 October 2026.</p><p>DOT's consciousness model remains a proposed, falsifiable model: <em>“The model must permit criticism that it cannot reinterpret as pathology.”</em></p><details><summary>Read the verbatim narration &amp; on-screen lines</summary>${INQUIRY_VIDEOS.filter((v) => v.captions.length).map((v) => `<h3>${v.duration}-second ${v.name.endsWith("intro") ? "DOT Identity Film" : "Official DOT Trailer"}</h3><p>${v.captions.map((c) => { const noteText = c.notes ? c.notes.join(" ") : c.note; return c.primaryStatement ? c.primaryStatement : `<strong>${c.lines.join(" ")}</strong>${noteText ? ` — <em>${noteText}</em>` : ""}`; }).join("<br>")}</p>`).join("")}</details></footer>
   </main></body></html>`;
 }
 
@@ -400,6 +401,11 @@ await mkdir(OUTPUT, { recursive: true });
 await mkdir(ASSETS_DIR, { recursive: true });
 const identity = JSON.parse(await readFile(path.join(ROOT, "frontend/src/content/identity.json"), "utf8"));
 const embeddedFonts = await fonts();
+if (process.argv.includes("--preview-only")) {
+  await writeFile(path.join(OUTPUT, "inquiry-preview.html"), preview(embeddedFonts, identity));
+  console.log(`Preview: ${path.join(OUTPUT, "inquiry-preview.html")}`);
+  process.exit(0);
+}
 if (!stillsOnly) await run(FFMPEG, ["-version"]);
 const browser = await chromium.launch({ ...(process.env.DOT_CHROME ? { executablePath: process.env.DOT_CHROME } : {}) });
 const temporary = await mkdtemp(path.join(OUTPUT, ".tmp-inquiry-"));

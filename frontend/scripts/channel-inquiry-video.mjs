@@ -402,7 +402,7 @@ export const INQUIRY_VIDEOS = [
     title: "You, the Observer, Belong in the Inquiry — Official Scientific Trailer",
     duration: 532,
     posterSeconds: 88,
-    samples: [2.6, 88, 174, 323, 446, 528],
+    samples: [2.6, 88, 174, 323, 358, 528],
     scenes: TRAILER_SCENES,
     captions: TRAILER_SCENES.map((scene) => ({
       id: scene.id,
@@ -656,7 +656,7 @@ function inquiryAnimation({
     const right = left + width;
     const top = y - size * 0.88;
     const bottom = y + size * 0.28;
-    textBounds.push({ text: String(text), left, right, top, bottom, region: textRegion });
+    textBounds.push({ text: String(text), left, right, top, bottom, size, region: textRegion });
   }
 
   function tokenizeFocusTerm(str, baseColor, focusTerm, focusColor = focusHighlight) {
@@ -705,7 +705,7 @@ function inquiryAnimation({
     if (letterSpacing !== null && "letterSpacing" in ctx) {
       ctx.letterSpacing = letterSpacing;
     } else if ("letterSpacing" in ctx) {
-      ctx.letterSpacing = family === "JetBrains Mono" ? "0.04em" : finalSize >= 34 ? "-0.022em" : "-0.008em";
+      ctx.letterSpacing = isTrailer ? "0px" : family === "JetBrains Mono" ? "0.04em" : finalSize >= 34 ? "-0.022em" : "-0.008em";
     }
     ctx.font = `${style} ${weight} ${finalSize}px "${family}", sans-serif`;
     let fullWidth = ctx.measureText(str).width;
@@ -1419,11 +1419,11 @@ function inquiryAnimation({
     const fScale = 1 / Math.pow(scale, 0.42);
     if (lblA > 0.01) {
       if (origin > 0.2) {
-        type(isTrailer ? "Continuity · Possibility" : "T × E", 348, 22, (isTrailer ? 20 : 24) * fScale, {
+        type(isTrailer ? "Continuity · Possibility" : "T × E", 348, 22, (isTrailer ? 28 : 24) * fScale, {
           color: originJade,
           alpha: lblA * origin,
-          family: "JetBrains Mono",
-          weight: 700,
+          family: isTrailer ? "Inter" : "JetBrains Mono",
+          weight: isTrailer ? 500 : 700,
           align: "center",
           halo: bgHaloCol,
           haloWidth: 9,
@@ -1431,11 +1431,11 @@ function inquiryAnimation({
         });
       }
       if (bigC > 0.2) {
-        type("Big C", 348, 108, 26 * fScale, {
+        type("Big C", 348, 108, (isTrailer ? 34 : 26) * fScale, {
           color: lumen,
           alpha: lblA * bigC,
           family: "Inter",
-          weight: 700,
+          weight: isTrailer ? 500 : 700,
           align: "center",
           halo: bgHaloCol,
           haloWidth: 9,
@@ -1443,11 +1443,11 @@ function inquiryAnimation({
         });
       }
       if (rf0 > 0.2) {
-        type("RF₀", 348, 186, 24 * fScale, {
+        type("RF₀", 348, 186, (isTrailer ? 32 : 24) * fScale, {
           color: warmGold,
           alpha: lblA * rf0,
-          family: "JetBrains Mono",
-          weight: 700,
+          family: isTrailer ? "Inter" : "JetBrains Mono",
+          weight: isTrailer ? 500 : 700,
           align: "center",
           halo: bgHaloCol,
           haloWidth: 9,
@@ -1455,8 +1455,8 @@ function inquiryAnimation({
         });
       }
       if (littleC > 0.2) {
-        if (isTrailer) type("Little c · you", C1.x, C1.y + 78, 18 * fScale, {
-          color: lumen, alpha: lblA * littleC, family: "Space Grotesk", weight: 500,
+        if (isTrailer) type("Little c · you", C1.x, C1.y + 78, 24 * fScale, {
+          color: lumen, alpha: lblA * littleC, family: "Inter", weight: 500,
           align: "center", halo: bgHaloCol, haloWidth: 7, track: false,
         });
         else pillLabel("Little c₁ · YOU", C1.x, C1.y + 78, 15.5 * fScale, {
@@ -2616,12 +2616,12 @@ function inquiryAnimation({
       fill: isLight ? "#ffffff" : "#0c1712", stroke: muted, lineWidth: 2, alpha,
     });
     line([[-326, -155], [-259, -155]], muted, alpha * 0.55, 3);
-    type("Message", -292, -104, 20, { color: muted, alpha, family: "Space Grotesk", align: "center", track: false });
+    type("Message", -292, -104, 28, { color: muted, alpha, family: "Inter", align: "center", track: false });
     roundRect(-382, -55, 180, 86, 20, {
       fill: isLight ? "#dcebe2" : "#183d2c", alpha: alpha * appear,
     });
-    type("Okay.", -292, -2, 36, {
-      color: deepInk, alpha: alpha * appear, family: "Space Grotesk", weight: 500, align: "center", track: false,
+    type("Okay.", -292, -2, 44, {
+      color: deepInk, alpha: alpha * appear, family: "Inter", weight: 500, align: "center", track: false,
     });
     line([[-330, 145], [-254, 145]], muted, alpha * 0.45, 3);
 
@@ -2630,31 +2630,48 @@ function inquiryAnimation({
     line([[-60, -12], [-8, 70], [48, 70]], muted, alpha * readings * 0.65, 1.6);
     dot(48, -76, 4, threatAmber, alpha * readings);
     dot(48, 70, 4, emerald, alpha * readings);
-    type("They’re upset.", 75, -61, 38, {
-      color: threatAmber, alpha: alpha * readings, family: "Space Grotesk", weight: 500, track: false,
+    type("They’re upset.", 75, -61, 40, {
+      color: threatAmber, alpha: alpha * readings, family: "Inter", weight: 500, track: false,
     });
-    type("They’re busy.", 75, 85, 38, {
-      color: lumen, alpha: alpha * readings, family: "Space Grotesk", weight: 500, track: false,
+    type("They’re busy.", 75, 85, 40, {
+      color: lumen, alpha: alpha * readings, family: "Inter", weight: 500, track: false,
     });
-    type("One message. More than one reading.", 50, 158, 22, {
-      color: bodyCopyCol, alpha: alpha * readings, family: "Space Grotesk", track: false,
+    type("One message. More than one reading.", 50, 158, 28, {
+      color: bodyCopyCol, alpha: alpha * readings, family: "Inter", track: false,
     });
     ctx.restore();
   }
 
   function drawMapVignette(cx, cy, scale, t, alpha) {
     if (alpha < 0.005) return;
-    const elapsed = Math.max(0, t - sc(5).start);
-    const reveal = smooth(0.2, 2.4, elapsed);
+    const elapsed = Math.max(0, t - sc(5).start - 2.2);
+    const mapIn = smooth(0, 1.4, elapsed);
+    const encounter = smooth(7, 10, elapsed);
+    const revise = smooth(13, 17, elapsed);
+    const walk = smooth(2, 24, elapsed);
+    const oldRoute = [[-545, 110], [-475, 35], [-410, 35], [-340, -95]];
+    const revisedRoute = [[-545, 110], [-475, 35], [-450, 92], [-360, 72], [-340, -95]];
+    const street = [[40, 115], [145, 35], [250, 35], [365, -105], [535, -105]];
+    const detour = [[40, 115], [145, 35], [210, 135], [355, 105], [365, -105], [535, -105]];
+    const placeOn = (points, progress) => {
+      const distances = points.slice(1).map((point, i) => Math.hypot(point[0] - points[i][0], point[1] - points[i][1]));
+      let remaining = distances.reduce((sum, distance) => sum + distance, 0) * clamp(progress);
+      for (let i = 0; i < distances.length; i++) {
+        if (remaining <= distances[i]) return [mix(points[i][0], points[i + 1][0], remaining / distances[i]), mix(points[i][1], points[i + 1][1], remaining / distances[i])];
+        remaining -= distances[i];
+      }
+      return points.at(-1);
+    };
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
-    // Folded paper and a walked street share a route without sharing a frame.
-    const paper = [[-330, -140], [-246, -158], [-162, -136], [-78, -154], [-78, 132], [-162, 152], [-246, 130], [-330, 150]];
+
+    // A folded map suggests a route; a familiar street can contradict it.
+    const paper = [[-575, -160], [-475, -177], [-375, -156], [-285, -174], [-285, 154], [-375, 174], [-475, 153], [-575, 173]];
     ctx.save();
-    ctx.globalAlpha = alpha;
+    ctx.globalAlpha = alpha * mapIn;
     ctx.beginPath();
-    paper.forEach(([x, y], index) => index === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+    paper.forEach(([x, y], index) => index ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
     ctx.closePath();
     ctx.fillStyle = isLight ? "#ffffff" : "#14271e";
     ctx.fill();
@@ -2662,36 +2679,124 @@ function inquiryAnimation({
     ctx.lineWidth = 1.6;
     ctx.stroke();
     ctx.restore();
-    line([[-246, -158], [-246, 130]], muted, alpha * 0.35, 1.2);
-    line([[-162, -136], [-162, 152]], muted, alpha * 0.35, 1.2);
-    for (const y of [-88, -24, 40, 104]) line([[-315, y + 12], [-95, y - 8]], muted, alpha * 0.20, 1.1);
-    const route = [[-306, 96], [-265, 38], [-218, 57], [-180, -16], [-112, -85]];
-    line(route, emerald, alpha * reveal, 4.2, reveal);
-    dot(-306, 96, 5, warmGold, alpha * reveal);
-    dot(-112, -85, 6, emerald, alpha * reveal);
+    for (const x of [-475, -375]) line([[x, -168], [x, 160]], muted, alpha * mapIn * 0.32, 1.2);
+    for (const y of [-100, -28, 44, 116]) line([[-560, y + 12], [-300, y - 6]], muted, alpha * mapIn * 0.18, 1.1);
+    line(oldRoute, warmGold, alpha * mapIn * (1 - revise * 0.75), 3, 1, [6, 7]);
+    line(revisedRoute, emerald, alpha * revise, 4.5, revise);
+    dot(-545, 110, 5, warmGold, alpha * mapIn);
+    dot(-340, -95, 6, emerald, alpha * mapIn);
+    if (revise > 0.01) {
+      line([[-424, 25], [-410, 45], [-396, 25]], threatAmber, alpha * revise, 3);
+    }
 
-    const street = [[4, 140], [62, 48], [138, 65], [234, -94]];
-    line(street, isLight ? "#d6ded5" : "#20382c", alpha, 48);
-    line(street, warmGold, alpha * 0.75, 2, 1, [6, 9]);
-    // A small house and a tree make this a lived place, not another flowchart.
-    line([[84, -72], [84, -122], [124, -154], [164, -122], [164, -72], [84, -72]], muted, alpha * 0.9, 2.4);
-    line([[73, -121], [124, -163], [175, -121]], emerald, alpha * 0.95, 3.4);
-    line([[114, -72], [114, -103], [136, -103], [136, -72]], warmGold, alpha * 0.85, 2.2);
-    line([[258, 68], [258, 12]], muted, alpha * 0.8, 4);
-    dot(258, -7, 32, emerald, alpha * 0.23);
-    circle(258, -7, 32, emerald, alpha * 0.7, 1.4);
-    const walk = (elapsed * 0.045) % 1;
-    const personX = mix(street[0][0], street[1][0], walk);
-    const personY = mix(street[0][1], street[1][1], walk);
-    dot(personX, personY - 14, 5.5, deepInk, alpha * reveal);
-    line([[personX, personY - 7], [personX, personY + 8]], deepInk, alpha * reveal, 3);
-    line([[personX - 7, personY + 18], [personX, personY + 8], [personX + 7, personY + 18]], deepInk, alpha * reveal, 2.2);
+    line(street, isLight ? "#d9e1da" : "#20382c", alpha * mapIn, 38);
+    line(street, warmGold, alpha * mapIn * 0.65, 1.8, 1, [6, 9]);
+    line(detour.slice(1, 5), isLight ? "#d9e1da" : "#20382c", alpha * encounter, 34);
+    line(detour.slice(1, 5), emerald, alpha * encounter * 0.75, 2, 1, [5, 7]);
 
-    type("The map", -204, 214, 30, { color: deepInk, alpha, family: "Space Grotesk", weight: 500, align: "center", track: false });
-    type("A useful model", -204, 250, 22, { color: bodyCopyCol, alpha, family: "Space Grotesk", align: "center", track: false });
-    type("The street", 132, 214, 30, { color: deepInk, alpha, family: "Space Grotesk", weight: 500, align: "center", track: false });
-    type("A lived experience", 132, 250, 22, { color: bodyCopyCol, alpha, family: "Space Grotesk", align: "center", track: false });
+    // The destination, tree and temporary road barrier make the encounter concrete.
+    line([[455, -156], [455, -208], [495, -240], [535, -208], [535, -156]], muted, alpha * mapIn * 0.85, 2.5);
+    line([[445, -207], [495, -248], [545, -207]], emerald, alpha * mapIn, 3.5);
+    line([[485, -156], [485, -187], [507, -187], [507, -156]], warmGold, alpha * mapIn * 0.85, 2.2);
+    line([[550, 118], [550, 61]], muted, alpha * mapIn * 0.8, 4);
+    dot(550, 33, 31, emerald, alpha * mapIn * 0.22);
+    circle(550, 33, 31, emerald, alpha * mapIn * 0.65, 1.5);
+    line([[250, 12], [250, 59]], threatAmber, alpha * encounter, 8);
+    line([[238, 6], [238, 65]], threatAmber, alpha * encounter, 2.5);
+    line([[262, 6], [262, 65]], threatAmber, alpha * encounter, 2.5);
+    const rain = encounter * (1 - smooth(17, 21, elapsed));
+    for (let i = 0; i < 7; i++) {
+      const x = 60 + i * 42;
+      line([[x, -192], [x - 9, -174]], muted, alpha * rain * 0.45, 1.8);
+    }
+    const [personX, personY] = placeOn(detour, walk);
+    dot(personX, personY - 19, 7, deepInk, alpha * mapIn);
+    line([[personX, personY - 11], [personX, personY + 8]], deepInk, alpha * mapIn, 3.6);
+    line([[personX - 9, personY + 22], [personX, personY + 8], [personX + 9, personY + 22]], deepInk, alpha * mapIn, 2.7);
+
+    line([[-245, -4], [-120, -4], [-65, 20]], muted, alpha * mapIn * (1 - revise * 0.7), 2, mapIn);
+    arrowHead(-65, 20, 0.41, 9, muted, alpha * mapIn * (1 - revise * 0.7), true);
+    const feedback = [[300, 192], [245, 225], [-180, 225], [-245, 150]];
+    line(feedback, emerald, alpha * revise * 0.8, 2, revise);
+    arrowHead(-245, 150, -2.28, 10, emerald, alpha * revise, true);
     ctx.restore();
+
+    // These labels are measured in stage coordinates by the existing bounds gate.
+    textRegion = { left: 128, right: 1792, top: 300, bottom: 920, role: "model vignette" };
+    const label = (text, x, y, size, color = deepInk, opacity = 1) => type(text, cx + x * scale, cy + y * scale, size * scale, {
+      color, alpha: alpha * opacity, family: "Inter", weight: 500, align: "center", maxWidth: 600 * scale,
+    });
+    label(revise > 0.5 ? "A revised map" : "A useful map", -430, -228, 40, deepInk, mapIn);
+    label("What you meet", 280, -228, 40, deepInk, mapIn);
+    label("Find a way.", -430, 276, 36, bodyCopyCol, mapIn * (1 - revise));
+    label("Refine what guides you.", -430, 276, 36, bodyCopyCol, revise);
+    label("An unexpected detour.", 280, 276, 36, bodyCopyCol, encounter);
+    textRegion = null;
+  }
+
+  function drawExperienceLoopVignette(cx, cy, scale, t, alpha) {
+    if (alpha < 0.005) return;
+    const elapsed = Math.max(0, t - sc(9).start - 2.2);
+    const reconsider = smooth(10.7, 12.2, elapsed);
+    const passTime = reconsider > 0.5 ? Math.max(0, elapsed - 12) : elapsed;
+    const completed = passTime >= 13.2;
+    const active = completed ? 0 : Math.min(5, Math.floor(passTime / 2.2));
+    const nodes = [
+      { title: "Experience", x: -545, y: -80, first: "A reply: “Okay.”", next: "The same reply: “Okay.”" },
+      { title: "Interpretation", x: 0, y: -210, first: "“They’re rejecting me.”", next: "“Perhaps they’re busy.”" },
+      { title: "Intent", x: 545, y: -80, first: "Protect myself.", next: "Understand first." },
+      { title: "Action", x: 545, y: 165, first: "A defensive reply.", next: "“What did you mean?”" },
+      { title: "Consequence", x: 0, y: 270, first: "A tense exchange.", next: "A chance for more context." },
+      { title: "Learning", x: -545, y: 165, first: "Expect rejection next time.", next: "Carry a fuller understanding." },
+    ];
+    const paths = [
+      [[-360, -132], [-275, -205], [-230, -220], [-175, -220]],
+      [[175, -220], [230, -220], [275, -205], [360, -132]],
+      [[730, -55], [780, -15], [780, 105], [730, 145]],
+      [[360, 215], [275, 270], [230, 280], [180, 280]],
+      [[-180, 280], [-230, 280], [-275, 270], [-360, 215]],
+      [[-730, 145], [-780, 105], [-780, -15], [-730, -55]],
+    ];
+    const bezier = (points) => Array.from({ length: 48 }, (_, index) => {
+      const u = index / 47;
+      return [0, 1].map(axis => (1 - u) ** 3 * points[0][axis] + 3 * (1 - u) ** 2 * u * points[1][axis] + 3 * (1 - u) * u ** 2 * points[2][axis] + u ** 3 * points[3][axis]);
+    });
+    const reveal = smooth(0, 1.5, elapsed);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    paths.forEach((control, index) => {
+      const path = bezier(control);
+      const progress = completed ? 1 : clamp((passTime - index * 2.2 - 0.3) / 1.4);
+      line(path, muted, alpha * reveal * 0.22, 1.5);
+      line(path, reconsider > 0.5 ? emerald : warmGold, alpha * reveal * 0.9, 2.6, progress);
+      const end = path.at(-1), before = path.at(-2);
+      arrowHead(end[0], end[1], Math.atan2(end[1] - before[1], end[0] - before[0]), 9, reconsider > 0.5 ? emerald : warmGold, alpha * reveal * progress, true);
+    });
+    // An ordinary message stays at the centre while its meaning and response change.
+    roundRect(-132, -26, 264, 104, 24, { fill: isLight ? "#e1ece5" : "#18372b", alpha: alpha * reveal });
+    ctx.restore();
+
+    textRegion = { left: 128, right: 1792, top: 300, bottom: 980, role: "experience loop" };
+    const label = (text, x, y, size, color = deepInk, opacity = 1, maxWidth = 430) => {
+      const lines = wrapFilmCopy(text, maxWidth * scale, size * scale, 500, "Inter");
+      lines.forEach((copy, index) => type(copy, cx + x * scale, cy + (y + index * size * 1.3) * scale, size * scale, {
+        color, alpha: alpha * opacity, family: "Inter", weight: 500, align: "center",
+      }));
+    };
+    label("Okay.", 0, 45, 58, deepInk, reveal);
+    label(completed ? "Meet the next moment." : reconsider > 0.5 ? "Pause. Ask. Find out." : "The first reaction", 0, 127, 27, bodyCopyCol, reveal, 520);
+    nodes.forEach((node, index) => {
+      const emphasis = index === active ? 1 : 0.8;
+      const color = index === active ? (reconsider > 0.5 ? emerald : warmGold) : deepInk;
+      label(`${index + 1}`, node.x, node.y - 46, 24, color, reveal * emphasis);
+      label(node.title, node.x, node.y, 40, color, reveal);
+      if (index === 5) label("Carried change", node.x, node.y + 36, 28, bodyCopyCol, reveal * emphasis);
+      const y = node.y + (index === 5 ? 72 : 44);
+      const exampleAlpha = 1 - smooth(0.15, 0.5, reconsider) + smooth(0.5, 0.85, reconsider);
+      label(reconsider > 0.5 ? node.next : node.first, node.x, y, 32, bodyCopyCol, reveal * exampleAlpha * emphasis, 430);
+    });
+    textRegion = null;
   }
 
   function drawPaintingVignette(cx, cy, scale, t, alpha) {
@@ -2724,8 +2829,8 @@ function inquiryAnimation({
     });
     ctx.restore();
     line([[-294, 197], [294, 197]], rfBronze, alpha * 0.9, 9);
-    type("Each experience leaves a trace.", 0, 320, 26, {
-      color: bodyCopyCol, alpha: alpha * smooth(1, 3, elapsed), family: "Space Grotesk", align: "center", track: false,
+    type("Each experience leaves a trace.", 0, 320, 30, {
+      color: bodyCopyCol, alpha: alpha * smooth(1, 3, elapsed), family: "Inter", align: "center", track: false,
     });
     ctx.restore();
   }
@@ -2735,17 +2840,17 @@ function inquiryAnimation({
   // not columns: each scene gives its main idea the space it needs.
   const trailerPlacements = [
     { figure: [960, 310, 0.68], text: [960, 620, 1540, 72, "center"], noteY: 840 },
-    { figure: [450, 570, 1.18], text: [1020, 365, 770, 60, "left"] },
+    { figure: [520, 590, 1.05], text: [1008, 365, 784, 64, "left"] },
     { figure: [960, 310, 1], text: [960, 610, 1500, 72, "center"], noteY: 830 },
-    { figure: [960, 590, 1.10], text: [960, 175, 1600, 56, "center"], noteY: 955 },
-    { figure: [440, 590, 1.05], text: [1020, 360, 770, 58, "left"] },
-    { figure: [960, 610, 1.05], text: [960, 175, 1600, 54, "center"], noteY: 965 },
-    { figure: [1390, 585, 0.96], text: [128, 320, 800, 56, "left"] },
-    { figure: [460, 570, 0.95], text: [1020, 360, 770, 56, "left"] },
-    { figure: [960, 590, 1.25], text: [960, 175, 1600, 60, "center"], noteY: 950 },
-    { figure: [960, 590, 1.10], text: [960, 175, 1540, 62, "center"], noteY: 955 },
-    { figure: [470, 590, 1.05], text: [1000, 300, 810, 54, "left"] },
-    { figure: [960, 610, 0.95], text: [960, 160, 1650, 56, "center"], noteY: 955 },
+    { figure: [960, 590, 1.10], text: [960, 175, 1600, 64, "center"], noteY: 955 },
+    { figure: [960, 590, 1.05], text: [960, 175, 1600, 64, "center"], noteY: 955 },
+    { figure: [960, 610, 1.05], text: [960, 175, 1600, 64, "center"], noteY: 965 },
+    { figure: [1400, 590, 0.96], text: [128, 365, 784, 64, "left"] },
+    { figure: [520, 540, 0.95], text: [1008, 365, 784, 64, "left"] },
+    { figure: [960, 585, 1], text: [960, 175, 1600, 64, "center"], noteY: 950 },
+    { figure: [960, 590, 1.10], text: [960, 175, 1540, 64, "center"], noteY: 955 },
+    { figure: [520, 590, 1.05], text: [1008, 365, 784, 64, "left"] },
+    { figure: [960, 610, 0.95], text: [960, 160, 1650, 64, "center"], noteY: 955 },
   ];
 
   function trailerPlacement(t) {
@@ -2753,7 +2858,7 @@ function inquiryAnimation({
     return trailerPlacements[index] || trailerPlacements[0];
   }
 
-  function wrapFilmCopy(text, width, size, weight = 500, family = "Space Grotesk") {
+  function wrapFilmCopy(text, width, size, weight = 500, family = "Inter") {
     ctx.save();
     ctx.font = `${weight} ${size}px "${family}"`;
     if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
@@ -3302,16 +3407,9 @@ function inquiryAnimation({
     const paintingA = stageA * envelope(t, sc(8).start + 0.05, sc(8).end - 0.05, 0.55, 0.45);
     drawPaintingVignette(cx, cy, figureScale, t, paintingA);
 
-    // The accumulated painting leads into the complete embodied experience loop.
+    // An ordinary exchange makes each step, and the carried learning, visible.
     const s89A = stageA * envelope(t, sc(9).start + 0.05, sc(9).end - 0.05, 0.40, 0.40);
-    if (s89A > 0.01) {
-      const isScene8 = t < sc(9).start;
-      drawHomeExperienceLoop(cx, cy, 0.98 * figureScale, t, s89A, {
-        startT: sc(8).start + 0.2,
-        sixStep: true,
-        highlightPair: isScene8,
-      });
-    }
+    drawExperienceLoopVignette(cx, cy, figureScale, t, s89A);
 
     // Scene 10: Concentric 5-Layer Organism Radar — High Entropy Rust (When Fear Takes the Lead)
     const s10A = stageA * envelope(t, sc(10).start + 0.05, sc(10).end - 0.05, 0.40, 0.40);
@@ -3366,32 +3464,32 @@ function inquiryAnimation({
         const pEye = clamp((t - 0.25) / 0.55);
         const pHead = clamp((t - 0.65) / 0.85);
         const pSub = clamp((t - 1.35) / 0.70);
-        type("DIGITAL ORGANISM THEORY  ·  BOOK ONE", 960, 686, 18.5, {
+        type("Digital Organism Theory · Book One", 960, 686, 28, {
           color: emerald,
           alpha: openSplashAlpha * 0.96,
-          family: "JetBrains Mono",
-          weight: 700,
-          letterSpacing: "0.08em",
+          family: "Inter",
+          weight: 500,
+          letterSpacing: "0px",
           align: "center",
           progress: pEye,
         });
-        type("The Observer Belongs in the Inquiry.", 960, 756, 52, {
+        type("The Observer Belongs in the Inquiry.", 960, 756, 60, {
           color: deepInk,
           alpha: openSplashAlpha,
           family: "Inter",
-          weight: 700,
+          weight: 500,
           letterSpacing: "-0.022em",
           align: "center",
           progress: pHead,
           caret: pHead > 0.01 && pHead < 0.995,
           caretColor: emerald,
         });
-        type("CONSCIOUSNESS: A DIGITAL ORGANISM", 960, 816, 19.5, {
+        type("Consciousness: A Digital Organism", 960, 816, 30, {
           color: warmGold,
           alpha: openSplashAlpha * 0.94,
-          family: "JetBrains Mono",
-          weight: 600,
-          letterSpacing: "0.06em",
+          family: "Inter",
+          weight: 400,
+          letterSpacing: "0px",
           align: "center",
           progress: pSub,
         });
@@ -3405,31 +3503,31 @@ function inquiryAnimation({
         const pEye = clamp(cDt / 0.45);
         const pUrl = clamp((cDt - 0.28) / 0.55);
         const pSub = clamp((cDt - 0.78) / 0.68);
-        type("SEE WHAT IS THERE  ·  SEE WHAT YOU ADDED  ·  PAINT AGAIN", 960, 672, 18, {
+        type("See what is there. See what you added. Paint again.", 960, 672, 28, {
           color: emerald,
           alpha: cAlpha * 0.96,
-          family: "JetBrains Mono",
-          weight: 700,
-          letterSpacing: "0.07em",
+          family: "Inter",
+          weight: 500,
+          letterSpacing: "0px",
           align: "center",
           progress: pEye,
         });
-        type("DOTHEORY.ORG", 960, 748, 60, {
+        type("DOTHEORY.ORG", 960, 748, 72, {
           color: deepInk,
           alpha: cAlpha,
           family: "Inter",
-          weight: 700,
+          weight: 500,
           letterSpacing: "-0.02em",
           align: "center",
           progress: pUrl,
           caret: pUrl > 0.01 && pUrl < 0.995,
           caretColor: warmGold,
         });
-        type("Let us rebuild our community—together.", 960, 814, 33, {
+        type("Let us rebuild our community—together.", 960, 814, 38, {
           color: warmGold,
           alpha: cAlpha * 0.98,
           family: "Inter",
-          weight: 600,
+          weight: 400,
           align: "center",
           progress: pSub,
           caret: pSub > 0.01 && pSub < 0.995,
@@ -3445,34 +3543,28 @@ function inquiryAnimation({
 
         const placement = trailerPlacements[index];
         const [x, baseY, width, size, align] = placement.text;
-        const dt = Math.max(0, t - start);
         const rise = 8 * (1 - smooth(start, start + 0.75, t));
         const tagCol = caption.mode === "high_entropy" ? rustCol
           : caption.mode === "coherence" || caption.mode === "finale" ? goldCol : emerald;
         const left = align === "center" ? x - width / 2 : x;
-        const headlineLines = caption.lines.flatMap((copy) => wrapFilmCopy(copy, width, size, 600));
-        const lineHeight = size * 1.17;
+        const headlineLines = caption.lines.flatMap((copy) => wrapFilmCopy(copy, width, size, 500));
+        const lineHeight = size * 1.22;
         const headlineBottom = baseY + (headlineLines.length - 1) * lineHeight + size * 0.28;
         textRegion = { left: left - 2, right: left + width + 2, top: baseY - 106, bottom: headlineBottom + 14, role: "headline" };
-        const title = (caption.actHeader || caption.eyebrow).replace(/^\d+\s*\/\/\s*/, "");
-        type(title, x, baseY - 64 + rise, 18, {
-          color: tagCol, alpha: alpha * 0.92, family: "Space Grotesk", weight: 500,
-          letterSpacing: "0.08em", align, maxWidth: width, progress: clamp(dt / 0.65),
-        });
         headlineLines.forEach((copy, lineIndex) => {
           type(copy, x, baseY + lineIndex * lineHeight + rise, size, {
-            color: deepInk, alpha, family: "Space Grotesk", weight: 600,
-            letterSpacing: "-0.025em", align, maxWidth: width,
+            color: deepInk, alpha, family: "Inter", weight: 500,
+            letterSpacing: "-0.012em", align, maxWidth: width,
             focusTerm: caption.focusTerm || null, focusColor: tagCol,
-            progress: clamp((dt - 0.12 - lineIndex * 0.24) / 0.7),
+            progress: 1,
           });
         });
 
-        const noteSize = align === "center" ? 32 : 30;
+        const noteSize = 40;
         const noteWidth = align === "center" ? Math.min(width, 1250) : width;
         const noteLeft = align === "center" ? x - noteWidth / 2 : x;
-        const noteLeading = noteSize * 1.4;
-        const sourceNotes = caption.notes || (caption.note ? [caption.note] : []);
+        const noteLeading = noteSize * 1.45;
+        const sourceNotes = index === 4 || index === 8 ? [] : caption.notes || (caption.note ? [caption.note] : []);
         const notes = align === "center"
           ? sourceNotes.flatMap((copy) => wrapFilmCopy(copy, noteWidth, noteSize))
           : wrapFilmCopy(sourceNotes.join(" "), noteWidth, noteSize);
@@ -3480,8 +3572,8 @@ function inquiryAnimation({
         textRegion = { left: noteLeft - 2, right: noteLeft + noteWidth + 2, top: noteY - noteSize, bottom: noteY + (notes.length - 1) * noteLeading + 12, role: "notes" };
         notes.forEach((copy, lineIndex) => {
           type(copy, x, noteY + lineIndex * noteLeading + rise, noteSize, {
-            color: bodyCopyCol, alpha: alpha * 0.96, family: "Space Grotesk", weight: 400,
-            align, maxWidth: noteWidth, progress: clamp((dt - 0.6 - lineIndex * 0.2) / 0.7),
+            color: bodyCopyCol, alpha: alpha * 0.96, family: "Inter", weight: 400,
+            align, maxWidth: noteWidth, progress: 1,
           });
         });
         textRegion = null;
@@ -3700,6 +3792,33 @@ function inquiryAnimation({
     });
   }
 
+  function sectionTitle(t) {
+    if (!isTrailer || diagramOnly) return;
+    const scene = (video.scenes || []).find(item => t >= item.start && t < item.start + 2.2);
+    if (!scene) return;
+    const elapsed = t - scene.start;
+    const shade = 1 - smooth(1.65, 2.2, elapsed);
+    const titleAlpha = 1 - smooth(1.5, 2.05, elapsed);
+    ctx.save();
+    ctx.globalAlpha = shade;
+    ctx.fillStyle = "#040706";
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+    if (shade > 0.999) textBounds.length = 0;
+    const raw = scene.actHeader.replace(/^\d+\s*\/\/\s*/, "").toLowerCase();
+    const title = raw.charAt(0).toUpperCase() + raw.slice(1);
+    const lines = wrapFilmCopy(title, 1450, 72, 500);
+    const startY = 552 - (lines.length - 1) * 46;
+    textRegion = { left: 160, right: 1760, top: 280, bottom: 820, role: "section title" };
+    type(`Section ${String(scene.number).padStart(2, "0")}`, 960, startY - 112, 22, {
+      color: "#91a89e", alpha: titleAlpha, family: "Inter", weight: 500, align: "center", letterSpacing: "0px",
+    });
+    lines.forEach((copy, index) => type(copy, 960, startY + index * 92, 72, {
+      color: "#edf3f0", alpha: titleAlpha, family: "Inter", weight: 500, align: "center", maxWidth: 1450, letterSpacing: "-0.012em",
+    }));
+    textRegion = null;
+  }
+
   function renderFrame(t) {
     textBounds.length = 0;
     ctx.save();
@@ -3707,6 +3826,7 @@ function inquiryAnimation({
     background(t);
     project(t);
     if (!markOnly && !diagramOnly) captions(t);
+    sectionTitle(t);
     ctx.restore();
     if (!targetCanvas && typeof window !== "undefined") {
       window.inquiryTextBounds = textBounds.map((entry) => ({ ...entry }));
@@ -3723,7 +3843,11 @@ function inquiryAnimation({
   window.seekInquiry = (seconds) => {
     renderFrame(Number(seconds) || 0);
   };
-  window.inquiryReady = document.fonts.ready.then(() => {
+  // Canvas-only text does not request a face until it is drawn. Load the film's
+  // actual weights before its first exported frame instead of accepting fallback.
+  const filmFaces = isTrailer ? ['400 40px "Inter"', '500 64px "Inter"']
+    : ['400 40px "Inter"', '700 64px "Inter"', '700 20px "JetBrains Mono"'];
+  window.inquiryReady = Promise.all([document.fonts.ready, ...filmFaces.map(face => document.fonts.load(face))]).then(() => {
     renderFrame(0);
     return true;
   });
