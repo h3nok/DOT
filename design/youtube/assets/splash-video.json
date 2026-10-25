@@ -5,12 +5,12 @@
   "width": 3840,
   "height": 2160,
   "fps": 30,
-  "duration_seconds": 14,
-  "frames": 420,
+  "duration_seconds": 18,
+  "frames": 540,
   "audio": true,
   "audio_codec": "AAC",
   "audio_style": "quiet digital",
-  "animation_version": 11,
+  "animation_version": 12,
   "sequence": [
     "T × E",
     "Big C",
@@ -20,8 +20,8 @@
     "Rules of RF₀ & Others"
   ],
   "codec": "H.264",
-  "integrated_lufs": -29.9,
-  "true_peak_dbfs": -14.1,
+  "integrated_lufs": -30.9,
+  "true_peak_dbfs": -13.9,
   "source_sha256": "0107ccab26d85d0e3fcca5cb46b87f513935d84b7cfa88abecc2d7b4d5ebd653",
-  "video_sha256": "0caffb4a8ef294eb62ce4a67410feba98df63658054ed9bdd85dab30b4ef5b9d"
+  "video_sha256": "31fcf6351d91d108029fbb35b535b7ba3eb71d2b4ba023e76f485d19db15cca2"
 }

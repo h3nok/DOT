@@ -10,10 +10,10 @@
   "audio": true,
   "audio_codec": "AAC",
   "audio_style": "quiet digital",
-  "animation_version": 3,
+  "animation_version": 4,
   "codec": "H.264",
-  "integrated_lufs": -26.5,
-  "true_peak_dbfs": -14,
-  "source_sha256": "9a2da66718e0827ed5f5aae879dbbaea3d160b7c3c0125a118798ce25a38e807",
-  "video_sha256": "fe3952a7fcd0a5d50d4757ca51d91bb0c17e80a8b67dcde27f6b81032887904f"
+  "integrated_lufs": -26.2,
+  "true_peak_dbfs": -14.1,
+  "source_sha256": "be50e7acee49c9deef3baf653bd9a45c4d13a1d994082075adcffd5ad472ccb7",
+  "video_sha256": "f69ac4b79eba47534f43ba11a9dfce2deecf2c54eaf54bfbbc62d8d94d6720bf"
 }
