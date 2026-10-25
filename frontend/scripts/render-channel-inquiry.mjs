@@ -9,6 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 import { NOTE, writeDigitalScore } from "./channel-digital-audio.mjs";
+import { mixVoiceover } from "./remux-channel-inquiry.mjs";
 import { buildInquiryDocument, INQUIRY_CONTEXT, INQUIRY_VIDEOS, inquirySubtitles, inquiryTypeTicks } from "./channel-inquiry-video.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -17,6 +18,13 @@ const ASSETS_DIR = path.join(OUTPUT, "assets");
 const FFMPEG = process.env.DOT_FFMPEG || (existsSync("/tmp/dot-channel-video-tools/ffmpeg") ? "/tmp/dot-channel-video-tools/ffmpeg" : "ffmpeg");
 const FPS = 30;
 const stillsOnly = process.argv.includes("--stills");
+const onlyArg = process.argv.find((a) => a.startsWith("--only="))?.split("=")[1] || null;
+const encoder = process.argv.find((a) => a.startsWith("--encoder="))?.split("=")[1] || "libx264";
+const resolution = process.argv.find((a) => a.startsWith("--resolution="))?.split("=")[1] || "4k";
+assert.ok(["libx264", "h264_nvenc"].includes(encoder), "--encoder must be libx264 or h264_nvenc");
+assert.ok(["4k", "1080p"].includes(resolution), "--resolution must be 4k or 1080p");
+const outputWidth = resolution === "4k" ? 3840 : 1920;
+const outputHeight = resolution === "4k" ? 2160 : 1080;
 
 async function fonts() {
   const declarations = [];
@@ -26,7 +34,9 @@ async function fonts() {
     ["inter", "Inter", 600, "normal"],
     ["inter", "Inter", 700, "normal"],
     ["inter", "Inter", 400, "italic"],
+    ["space-grotesk", "Space Grotesk", 400, "normal"],
     ["space-grotesk", "Space Grotesk", 500, "normal"],
+    ["space-grotesk", "Space Grotesk", 600, "normal"],
     ["space-grotesk", "Space Grotesk", 700, "normal"],
     ["source-serif-4", "Source Serif 4", 400, "normal"],
     ["source-serif-4", "Source Serif 4", 600, "normal"],
@@ -50,6 +60,7 @@ async function fonts() {
 async function run(command, args) {
   const child = spawn(command, args, { stdio: ["ignore", "ignore", "pipe"] });
   let log = "";
+  child.stdin?.on("error", () => {});
   child.stderr.on("data", (chunk) => {
     log += chunk;
   });
@@ -79,19 +90,26 @@ function score(video) {
       peak: 0.12,
       cinematicSilence: true,
       ticks: inquiryTypeTicks(video),
-      // Quiet, non-musical frame-advance micro-pulses only (no bells or meditation pads)
+      // Opening 5s DOT Emergence Splash chords + scene transition cues across all 12 trailer scenes
       events: [
-        { t: 9.6, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 18.0, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 26.4, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 34.8, freq: NOTE.A1, amp: 0.15, kind: "thump" },
-        { t: 46.6, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 58.4, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 70.2, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 81.6, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 93.0, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 104.4, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 115.0, freq: NOTE.A1, amp: 0.12, kind: "thump" },
+        { t: 0.16, freq: NOTE.A2, amp: 0.14, pan: -0.1, kind: "thump" },
+        { t: 1.42, freq: NOTE.E2, amp: 0.12, pan: 0.1, kind: "thump" },
+        { t: 2.92, freq: NOTE.A2, amp: 0.14, pan: 0, kind: "thump" },
+        ...(video.scenes || []).map((sc, idx) => ({
+          t: sc.start,
+          freq:
+            idx === 9
+              ? 116.54
+              : idx === 10 || idx === 11
+                ? NOTE.A2
+                : idx % 3 === 1
+                  ? (NOTE.D3 ?? 146.83)
+                  : idx % 3 === 2
+                    ? (NOTE.E3 ?? 164.81)
+                    : NOTE.A2,
+          amp: idx === 10 ? 0.16 : 0.13,
+          kind: "thump",
+        })),
       ],
     };
   }
@@ -115,10 +133,13 @@ async function verifyForegroundMotion(page, video, outName) {
     const canvas = document.querySelector("canvas");
     const s = canvas.width / 1920;
     const ctx = canvas.getContext("2d");
-    window.seekInquiry(isCentered ? 0.9 : 38.0);
-    const a = ctx.getImageData((isCentered ? 670 : 1080) * s, 160 * s, 580 * s, 480 * s).data;
-    window.seekInquiry(isCentered ? 2.1 : 41.2);
-    const b = ctx.getImageData((isCentered ? 670 : 1080) * s, 160 * s, 580 * s, 480 * s).data;
+    window.seekInquiry(isCentered ? 0.9 : 44.0);
+    const focus = window.inquiryVisualFocus || { x: 960, y: 400 };
+    const x = Math.max(0, Math.min(1340, focus.x - 290));
+    const y = Math.max(0, Math.min(600, focus.y - 240));
+    const a = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
+    window.seekInquiry(isCentered ? 2.1 : 47.2);
+    const b = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
     let total = 0;
     for (let i = 0; i < a.length; i += 4) {
       total += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
@@ -132,24 +153,34 @@ async function verifyForegroundMotion(page, video, outName) {
 async function render(page, video, identity, embeddedFonts, temporary, theme = "dark") {
   const isLight = theme === "light";
   const outName = isLight ? `${video.name}-light` : video.name;
-  // Render ALL videos at native 4K UHD (3840x2160, scale: 2) so YouTube uses its 4K VP9/AV1 high-bitrate tier and text/lines are razor-sharp.
-  const is4k = true;
+  // Poster and layout QA use the full 4K canvas independently of delivery size.
+  const is4k = resolution === "4k";
   const document = buildInquiryDocument({ video, identity, fonts: embeddedFonts, scale: 2, theme });
   await page.setContent(document);
   await page.evaluate(() => window.inquiryReady);
   await verifyForegroundMotion(page, video, outName);
-  const thumbs = [];
-  for (const t of video.samples) {
-    const bounds = await page.evaluate((sampleTime) => {
-      window.seekInquiry(sampleTime);
-      return window.inquiryTextBounds;
-    }, t);
-    if (video.name === "inquiry-trailer" && t >= 9.5 && t < 125) {
-      const leftCaptionBounds = bounds.filter((b) => b.left < 200 && b.top > 250 && b.bottom < 900);
-      for (const b of leftCaptionBounds) {
-        assert.ok(b.right < 968, `Left caption crosses grid divider at ${t}s (${outName}): ${b.text} (right=${b.right})`);
+  if (video.name === "inquiry-trailer") {
+    // Check every scene, including early text emergence and the final lockup.
+    const times = video.scenes.flatMap((scene) => [scene.start + 0.4, scene.start + 3, (scene.start + scene.end) / 2]);
+    for (const t of times) {
+      const bounds = await page.evaluate((time) => {
+        window.seekInquiry(time);
+        return window.inquiryTextBounds.filter((bound) => bound.region);
+      }, t);
+      for (const bound of bounds) {
+        const { region } = bound;
+        assert.ok(bound.left >= region.left && bound.right <= region.right && bound.top >= region.top && bound.bottom <= region.bottom,
+          `Caption leaves its ${region.role} placement at ${t}s (${outName}): ${bound.text}`);
+        assert.ok(bound.left >= 64 && bound.right <= 1856 && bound.top >= 64 && bound.bottom <= 1024,
+          `Caption leaves the safe frame at ${t}s (${outName}): ${bound.text}`);
       }
     }
+  }
+  const thumbs = [];
+  for (const t of video.samples) {
+    await page.evaluate((sampleTime) => {
+      window.seekInquiry(sampleTime);
+    }, t);
     const image = await page.evaluate(() => {
       const thumb = document.createElement("canvas");
       thumb.width = 640;
@@ -160,7 +191,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     thumbs.push({ t, image });
   }
 
-  await page.evaluate((t) => window.seekInquiry(t), video.samples.at(-1));
+  const posterTime = video.name === "inquiry-trailer" ? (video.posterSeconds || 140.0) : video.samples.at(-1);
+  await page.evaluate((t) => window.seekInquiry(t), posterTime);
   const posterBase64 = await page.evaluate(() => document.querySelector("canvas").toDataURL("image/png").split(",")[1]);
   const posterPath = path.join(ASSETS_DIR, `${outName}-poster.png`);
   await writeFile(posterPath, Buffer.from(posterBase64, "base64"));
@@ -190,13 +222,31 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   }
   if (stillsOnly) return;
 
-  // Use 1920x1080 canvas capture piped into multi-threaded FFmpeg Lanczos 4K (3840x2160) H.264 High@L5.1 encoder for fast 4K UHD output
+  // Capture deterministic frames; optional NVENC keeps the same audio and timing.
   const streamDoc = buildInquiryDocument({ video, identity, fonts: embeddedFonts, scale: 1, theme });
   await page.setContent(streamDoc);
   await page.evaluate(() => window.inquiryReady);
 
   const wavPath = path.join(temporary, `${outName}.wav`);
-  await writeDigitalScore({ ...score(video), wavPath });
+  if (video.name === "inquiry-trailer") {
+    await mixVoiceover({
+      scenes: video.scenes,
+      masterDir: path.join(ROOT, "artifacts/voiceover/masters"),
+      outputPath: wavPath,
+      durationSeconds: video.duration,
+    });
+    // The closing community card is a visual invitation. Check the actual mix
+    // so a longer regenerated scene cannot accidentally narrate over it.
+    const quietTail = await run(FFMPEG, [
+      "-hide_banner", "-ss", String(video.duration - 7.2), "-i", wavPath,
+      "-af", "volumedetect", "-vn", "-f", "null", "-",
+    ]);
+    const quietPeakText = quietTail.match(/max_volume:\s*(-inf|[-\d.]+) dB/)?.[1];
+    const quietPeak = quietPeakText === "-inf" ? -Infinity : Number(quietPeakText);
+    assert.ok(quietPeak <= -70, `The final community card must be silent (${outName}): ${quietPeak} dBFS`);
+  } else {
+    await writeDigitalScore({ ...score(video), wavPath });
+  }
   const file = path.join(temporary, `${outName}.mp4`);
   const child = spawn(
     FFMPEG,
@@ -216,19 +266,18 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
       "-i",
       wavPath,
       "-vf",
-      "scale=3840:2160:flags=lanczos+accurate_rnd",
+      `scale=${outputWidth}:${outputHeight}:flags=lanczos+accurate_rnd`,
       "-c:v",
-      "libx264",
+      encoder,
       "-profile:v",
       "high",
       "-level:v",
-      "5.1",
+      is4k ? "5.1" : "4.2",
       "-threads",
       "0",
-      "-preset",
-      "superfast",
-      "-crf",
-      "11",
+      ...(encoder === "h264_nvenc"
+        ? ["-preset", "p6", "-tune", "hq", "-rc", "vbr", "-cq", "18", "-b:v", "0"]
+        : ["-preset", "superfast", "-crf", "11"]),
       "-pix_fmt",
       "yuv420p",
       "-color_primaries",
@@ -243,6 +292,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
       "192k",
       "-ar",
       "48000",
+      "-ac",
+      "2",
       "-t",
       String(video.duration),
       "-movflags",
@@ -252,6 +303,7 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     { stdio: ["pipe", "ignore", "pipe"] },
   );
   let log = "";
+  child.stdin?.on("error", () => {});
   child.stderr.on("data", (chunk) => {
     log += chunk;
   });
@@ -281,7 +333,7 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   assert.match(decoded, new RegExp(`frame=\\s*${video.duration * FPS}\\b`));
   const mins = String(Math.floor(video.duration / 60)).padStart(2, "0");
   const secs = String(video.duration % 60).padStart(2, "0");
-  assert.ok(decoded.includes(`Duration: 00:${mins}:${secs}.00`));
+  assert.match(decoded, new RegExp(`Duration: 00:${mins}:${secs}\\.\\d{2}`));
   const loudness = await run(FFMPEG, ["-hide_banner", "-i", file, "-af", "volumedetect", "-vn", "-f", "null", "-"]);
   const maximum = Number(loudness.match(/max_volume: ([-\d.]+) dB/)?.[1]);
   assert.ok(maximum < -1, `Audio peak needs headroom: ${maximum}`);
@@ -290,14 +342,15 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     name: outName,
     theme,
     file: `${outName}.mp4`,
-    width: is4k ? 3840 : 1920,
-    height: is4k ? 2160 : 1080,
+    width: outputWidth,
+    height: outputHeight,
+    encoder,
     fps: FPS,
     frames: video.duration * FPS,
     codec: "H.264",
     audio: "AAC stereo 48 kHz",
     max_volume_dbfs: maximum,
-    style: "Precision architectural plates, dual-theme studio lighting (Dark Obsidian & Light Archival), Big C and Little c mathematical loops, and canonical DOT mark.",
+    style: "Open cinematic typography, variable scene compositions, full-stage and offset DOT geometry, and the canonical DOT mark in dark and light editions.",
     context: INQUIRY_CONTEXT,
     render_sha256: createHash("sha256").update(document).digest("hex"),
     video_sha256: createHash("sha256").update(await readFile(file)).digest("hex"),
@@ -314,7 +367,7 @@ function preview(embeddedFonts, identity) {
     const label = name === "mark-splash" ? "MARK-ONLY SPLASH" : name.endsWith("intro") ? "FILM 2 · THE DOT IDENTITY FILM" : "FILM 1 · OFFICIAL DOT TRAILER";
     const srtLink = captions.length ? `<a download href="assets/${name}.srt">Captions (.srt)</a>` : "";
     return `<article>
-      <div class="meta"><span>${label}</span><span>${duration} SECONDS · 4K UHD (3840×2160) · 30 FPS · DARK &amp; LIGHT EDITIONS</span></div>
+      <div class="meta"><span>${label}</span><span>${duration} SECONDS · ${resolution === "4k" ? "4K UHD" : "1080p"} (${outputWidth}×${outputHeight}) · 30 FPS · DARK &amp; LIGHT EDITIONS</span></div>
       <h2>${duration}-second ${name === "mark-splash" ? "mark-only splash" : name.endsWith("intro") ? "identity film" : "cinematic trailer"} — ${title}</h2>
       <div class="edition-grid">
         <div class="edition-card">
@@ -349,7 +402,7 @@ const identity = JSON.parse(await readFile(path.join(ROOT, "frontend/src/content
 const embeddedFonts = await fonts();
 if (!stillsOnly) await run(FFMPEG, ["-version"]);
 const browser = await chromium.launch({ ...(process.env.DOT_CHROME ? { executablePath: process.env.DOT_CHROME } : {}) });
-const temporary = await mkdtemp(path.join(os.tmpdir(), "dot-inquiry-"));
+const temporary = await mkdtemp(path.join(OUTPUT, ".tmp-inquiry-"));
 try {
   const darkPage = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   const lightPage = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
@@ -360,6 +413,7 @@ try {
     throw error;
   });
   for (const video of INQUIRY_VIDEOS) {
+    if (onlyArg && video.name !== onlyArg) continue;
     await Promise.all([
       render(darkPage, video, identity, embeddedFonts, temporary, "dark"),
       render(lightPage, video, identity, embeddedFonts, temporary, "light"),

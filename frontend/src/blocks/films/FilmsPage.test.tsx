@@ -5,6 +5,8 @@ import { describe, expect, it } from "vitest";
 import FilmsPage from "./FilmsPage";
 import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import filmsData from "../../content/films.json";
+import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
+import { INQUIRY_VIDEOS } from "../../../scripts/channel-inquiry-video.mjs";
 
 const renderFilmsPage = (initialEntry = "/films") =>
   render(
@@ -36,7 +38,7 @@ describe("FilmsPage", () => {
     expect(tabs).toHaveLength(3);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
     expect(tabs[0]).toHaveTextContent(
-      "You, the Observer, Belong in the Inquiry",
+      filmsData.screeningFilms[0].title,
     );
 
     // Switch to FILM 02 (30s Identity Film)
@@ -60,6 +62,20 @@ describe("FilmsPage", () => {
     expect(
       screen.getByRole("link", { name: /@dotheory on YouTube/ }),
     ).toHaveAttribute("href", "https://www.youtube.com/@dotheory");
+  });
+
+  it("lets a phone reader choose a scene without starting playback", () => {
+    renderFilmsPage("/films");
+    const scenes = screen.getByRole("combobox", { name: "Jump to trailer scene" });
+    fireEvent.change(scenes, { target: { value: "scene-11" } });
+
+    expect(scenes).toHaveValue("scene-11");
+    expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
+    expect(screen.getByRole("button", {
+      name: "Jump to Scene 11: 11 // LOVE, RESPONSIBILITY, AND REPAIR",
+    })).toHaveAttribute("data-active", "true");
+    expect(screen.getByRole("slider", { name: "Seek timeline in seconds" }))
+      .toHaveAttribute("aria-valuetext", expect.stringContaining(`of ${filmsData.screeningFilms[0].duration.padStart(5, "0")}`));
   });
 
   it("connects every trailer act to its timestamp and Book One chapter, and exposes the synchronized transcript", () => {
@@ -87,9 +103,65 @@ describe("FilmsPage", () => {
 
     const transcriptSummary = screen.getByText("Read the transcript");
     fireEvent.click(transcriptSummary);
+    const transcript = screen.getByRole("list", { name: "Film transcript" });
+    const trailer = INQUIRY_VIDEOS.find((video) => video.name === "inquiry-trailer")!;
+    expect(within(transcript).getAllByRole("listitem")).toHaveLength(trailer.captions.length);
+    for (const caption of trailer.captions) {
+      expect(within(transcript).getByText(caption.primaryStatement!)).toBeInTheDocument();
+    }
     expect(
-      screen.getByText(/For Little c, being Love means Canvas entropy is low\./),
+      screen.getByRole("button", {
+        name: "Jump to Scene 11: 11 // LOVE, RESPONSIBILITY, AND REPAIR",
+      }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Disable synchronized voiceover",
+      }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("keeps claim levels available in a closed disclosure", () => {
+    renderFilmsPage("/films");
+    const summary = screen.getByText("About this film’s claims");
+    const disclosure = summary.closest("details");
+    expect(disclosure).not.toHaveAttribute("open");
+    fireEvent.click(summary);
+    expect(disclosure).toHaveAttribute("open");
+    expect(disclosure).toHaveTextContent(filmsData.screeningFilms[0].claimLevels.join(" · "));
+    fireEvent.click(summary);
+    expect(disclosure).not.toHaveAttribute("open");
+  });
+
+  it("shows spoken caption words independently of narration and clears them after the final cue", () => {
+    const { container } = renderFilmsPage("/films");
+    fireEvent.click(screen.getByRole("button", { name: "Show synchronized caption bar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Disable synchronized voiceover" }));
+    const timeline = screen.getByRole("slider", { name: "Seek timeline in seconds" });
+    const first = spokenTrailerCaptions[0];
+    fireEvent.change(timeline, { target: { value: String(first.startSeconds + 0.05) } });
+    const caption = container.querySelector(".films-live-caption-lines");
+    expect(caption).toHaveTextContent(first.text.replace(/\s+/g, " "));
+    expect(screen.getByRole("button", { name: "Enable synchronized voiceover" })).toBeInTheDocument();
+
+    const final = spokenTrailerCaptions[spokenTrailerCaptions.length - 1];
+    fireEvent.change(timeline, { target: { value: String(final.endSeconds + 0.1) } });
+    expect(caption).toBeEmptyDOMElement();
+  });
+
+  it("retains the identity film’s caption text and notes when no narration paragraph exists", () => {
+    renderFilmsPage("/films");
+    const tabs = within(screen.getByRole("tablist", { name: "Select film to screen" })).getAllByRole("tab");
+    fireEvent.click(tabs[1]);
+    fireEvent.click(screen.getByText("Read the transcript"));
+    const transcript = screen.getByRole("list", { name: "Film transcript" });
+    const intro = INQUIRY_VIDEOS.find((video) => video.name === "inquiry-intro")!;
+    for (const caption of intro.captions) {
+      expect(within(transcript).getByText(caption.lines.join(" "))).toBeInTheDocument();
+      for (const note of caption.notes ?? (caption.note ? [caption.note] : [])) {
+        expect(within(transcript).getByText(note)).toBeInTheDocument();
+      }
+    }
   });
 
   it("presents the 3 finite @dotheory channel streams and ends with a finite completion boundary (Law 3)", () => {

@@ -3,6 +3,8 @@ import {
   ArrowUpRight,
   Captions,
   Maximize2,
+  Mic,
+  MicOff,
   Pause,
   Play,
   RotateCcw,
@@ -11,12 +13,15 @@ import {
   VolumeX,
 } from "lucide-react";
 import identity from "../../content/identity.json";
+import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
 import {
   INQUIRY_VIDEOS,
   inquiryTypeTicks,
   mountInquiryCanvas,
   type InquiryVideoSpec,
+  type TrailerSceneSpec,
 } from "../../../scripts/channel-inquiry-video.mjs";
+import { TrailerAudioEngine } from "./TrailerAudioEngine";
 
 export interface ScreeningAct {
   id: string;
@@ -49,9 +54,9 @@ export interface ScreeningFilmMeta {
   acts: ScreeningAct[];
 }
 
-function formatTime(seconds: number): string {
+function formatTimecode(seconds: number): string {
   const clamped = Math.max(0, Math.floor(seconds));
-  const mins = Math.floor(clamped / 60);
+  const mins = String(Math.floor(clamped / 60)).padStart(2, "0");
   const secs = String(clamped % 60).padStart(2, "0");
   return `${mins}:${secs}`;
 }
@@ -92,16 +97,29 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   const [youtubeConsented, setYoutubeConsented] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [showCaptionsBar, setShowCaptionsBar] = useState(false);
+  const [voiceoverEnabled, setVoiceoverEnabled] = useState(true);
+  const [voiceoverUnavailable, setVoiceoverUnavailable] = useState(false);
+  const [showCaptionsBar, setShowCaptionsBar] = useState(
+    () => typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia("(max-width: 639px)").matches,
+  );
   const [currentTime, setCurrentTime] = useState<number>(film.posterSeconds);
   const [hasStarted, setHasStarted] = useState(false);
+  const [fullscreenAvailable, setFullscreenAvailable] = useState(false);
 
-  const stageRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const controllerRef = useRef<{ seek: (seconds: number) => void } | null>(null);
   const timeRef = useRef<number>(film.posterSeconds);
-  const audioCtxRef = useRef<AudioContext | null>(null);
+  const audioEngineRef = useRef<TrailerAudioEngine | null>(null);
+  const lastSceneIdRef = useRef<string | null>(null);
   const lastTickIndexRef = useRef<number>(-1);
+
+  useEffect(() => {
+    setFullscreenAvailable(
+      typeof playerRef.current?.requestFullscreen === "function" &&
+      document.fullscreenEnabled !== false,
+    );
+  }, []);
 
   const videoSpec: InquiryVideoSpec = useMemo(() => {
     return (
@@ -110,7 +128,28 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     );
   }, [film.id]);
 
-  const ticks = useMemo(() => inquiryTypeTicks(videoSpec), [videoSpec]);
+  const scenes: TrailerSceneSpec[] = useMemo(
+    () => videoSpec.scenes ?? [],
+    [videoSpec.scenes],
+  );
+  const narrationOnly = videoSpec.name === "inquiry-trailer";
+  const ticks = useMemo(
+    () => narrationOnly ? [] : inquiryTypeTicks(videoSpec),
+    [narrationOnly, videoSpec],
+  );
+
+  const getAudioEngine = useCallback(() => {
+    if (!audioEngineRef.current) {
+      const engine = new TrailerAudioEngine(setVoiceoverUnavailable, {
+        narrationOnly,
+        voiceOffsetSeconds: narrationOnly ? 0.18 : 0,
+      });
+      engine.setMuted(muted);
+      engine.setVoiceoverEnabled(voiceoverEnabled);
+      audioEngineRef.current = engine;
+    }
+    return audioEngineRef.current;
+  }, [muted, voiceoverEnabled, narrationOnly]);
 
   // Observe site theme changes (DOT Daylight / DOT Night) so the player stays in lockstep
   // with AppearanceControl.
@@ -134,9 +173,13 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     setPlaying(false);
     setHasStarted(false);
     setSourceMode("native");
+    setVoiceoverUnavailable(false);
     timeRef.current = film.posterSeconds;
     setCurrentTime(film.posterSeconds);
     lastTickIndexRef.current = -1;
+    lastSceneIdRef.current = null;
+    audioEngineRef.current?.destroy();
+    audioEngineRef.current = null;
   }, [film.id, film.posterSeconds]);
 
   // Mount or re-mount the deterministic 4K canvas renderer when film or edition changes.
@@ -154,6 +197,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       video: videoSpec,
       identity: identity as unknown as Record<string, unknown>,
       theme: edition,
+      diagramOnly: false,
     });
     controllerRef.current = handle;
     handle.seek(timeRef.current);
@@ -164,33 +208,52 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     }
   }, [videoSpec, edition, sourceMode]);
 
+  // Active scene for the 12-scene trailer (returns null during the 0:00–0:05 DOT Emergence Opening Splash)
+  const activeScene: TrailerSceneSpec | null = useMemo(() => {
+    if (!scenes.length) return null;
+    if (currentTime < scenes[0].start) return null;
+    return (
+      scenes.find((sc) => currentTime >= sc.start && currentTime < sc.end) ??
+      scenes[scenes.length - 1]
+    );
+  }, [scenes, currentTime]);
+
+  // Keep recorded narration on the film clock; procedural sound is for short films.
+  useEffect(() => {
+    const engine = audioEngineRef.current;
+    if (!playing || sourceMode !== "native") {
+      engine?.pause();
+      lastSceneIdRef.current = null;
+      return;
+    }
+    const liveEngine = getAudioEngine();
+    liveEngine.start();
+    if (activeScene) {
+      const sceneIdx = Math.max(0, activeScene.number - 1);
+      liveEngine.updateScene(
+        sceneIdx,
+        timeRef.current,
+        videoSpec.duration,
+        activeScene.primaryStatement,
+        activeScene.start,
+      );
+      lastSceneIdRef.current = activeScene.id;
+    } else {
+      liveEngine.clearScene();
+    }
+  }, [playing, sourceMode, activeScene, currentTime, videoSpec.duration, getAudioEngine]);
+
   const playKeystrokeTick = useCallback(
-    (index: number) => {
+    (index: number, atTime: number) => {
       if (muted || typeof window === "undefined") return;
-      const Ctx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!Ctx) return;
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new Ctx();
+      // Only trigger typewriter ticks during the first 2.5s of each scene's text reveal
+      if (scenes.length > 0) {
+        const sc = scenes.find((s) => atTime >= s.start && atTime < s.end);
+        if (sc && atTime - sc.start > 2.5) return;
       }
-      const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") {
-        void ctx.resume();
-      }
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(1750 + ((index * 7) % 5) * 120, now);
-      gain.gain.setValueAtTime(0.014, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.014);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.015);
+      getAudioEngine().playKeystrokeTick(index);
     },
-    [muted],
+    [muted, scenes, getAudioEngine],
   );
 
   const seekTo = useCallback(
@@ -199,6 +262,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       timeRef.current = clamped;
       setCurrentTime(clamped);
       controllerRef.current?.seek(clamped);
+      lastSceneIdRef.current = null;
       let nextIdx = -1;
       for (let i = 0; i < ticks.length; i++) {
         if (ticks[i] <= clamped) nextIdx = i;
@@ -234,7 +298,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       for (let i = lastTickIndexRef.current + 1; i < ticks.length; i++) {
         if (ticks[i] <= nextTime) {
           if (ticks[i] >= timeRef.current - 0.05) {
-            playKeystrokeTick(i);
+            playKeystrokeTick(i, ticks[i]);
           }
           lastTickIndexRef.current = i;
         } else {
@@ -260,12 +324,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     return () => window.cancelAnimationFrame(raf);
   }, [playing, sourceMode, ticks, videoSpec.duration, playKeystrokeTick]);
 
-  // Cleanup AudioContext on unmount.
+  // Cleanup AudioEngine on unmount.
   useEffect(() => {
     return () => {
-      if (audioCtxRef.current) {
-        void audioCtxRef.current.close().catch(() => {});
-      }
+      audioEngineRef.current?.destroy();
+      audioEngineRef.current = null;
     };
   }, []);
 
@@ -285,8 +348,24 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     setPlaying(true);
   };
 
+  const toggleMute = () => {
+    setMuted((prev) => {
+      const next = !prev;
+      audioEngineRef.current?.setMuted(next);
+      return next;
+    });
+  };
+
+  const toggleVoiceover = () => {
+    setVoiceoverEnabled((prev) => {
+      const next = !prev;
+      audioEngineRef.current?.setVoiceoverEnabled(next);
+      return next;
+    });
+  };
+
   const handleFullscreen = () => {
-    const el = stageRef.current;
+    const el = playerRef.current;
     if (!el) return;
     if (document.fullscreenElement) {
       void document.exitFullscreen?.();
@@ -303,6 +382,23 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       ) ?? null
     );
   }, [videoSpec.captions, currentTime]);
+
+  const activeSpokenCaption = useMemo(
+    () => narrationOnly
+      ? spokenTrailerCaptions.find((caption) =>
+          currentTime >= caption.startSeconds && currentTime < caption.endSeconds,
+        )?.text ?? ""
+      : "",
+    [narrationOnly, currentTime],
+  );
+  const captionReadout = narrationOnly
+    ? activeSpokenCaption
+    : activeCaption
+      ? `${activeCaption.lines.join(" ")} ${(activeCaption.notes ?? (activeCaption.note ? [activeCaption.note] : [])).join(" ")}`
+      : "";
+  const captionDisplay = narrationOnly
+    ? hasStarted ? activeSpokenCaption : film.title
+    : activeCaption?.lines.join(" ") ?? film.title;
 
   // Active act based on currentTime
   const activeActId = useMemo(() => {
@@ -321,13 +417,20 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     Math.max(0, (currentTime / Math.max(1, videoSpec.duration)) * 100),
   );
 
+  const formattedTotalDuration = useMemo(
+    () => formatTimecode(videoSpec.duration),
+    [videoSpec.duration],
+  );
+
   return (
     <div
+      ref={playerRef}
       className={`films-screening-shell ${compact ? "films-screening-shell--compact" : ""}`}
       data-edition={edition}
+      data-scene-mode={activeScene?.mode ?? "default"}
     >
       {/* Main 16:9 Stage */}
-      <div ref={stageRef} className="films-stage-viewport">
+      <div className="films-stage-viewport">
         {sourceMode === "native" ? (
           <>
             <canvas
@@ -363,10 +466,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               </button>
             )}
 
-            {/* Live SR-accessible caption readout only after playback starts */}
-            {hasStarted && activeCaption && (
+            {/* Short-film text retains its live readout. The spoken trailer’s
+                accessible transcript avoids competing speech over its narration. */}
+            {!narrationOnly && hasStarted && captionReadout && (
               <div className="sr-only" aria-live="polite">
-                {`${activeCaption.lines.join(" ")} ${(activeCaption.notes ?? (activeCaption.note ? [activeCaption.note] : [])).join(" ")}`}
+                {captionReadout}
               </div>
             )}
           </>
@@ -436,12 +540,20 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       {sourceMode === "native" && showCaptionsBar && videoSpec.captions.length > 0 && (
         <div className="films-live-caption-bar" aria-hidden="true">
           <p className="films-live-caption-lines">
-            {activeCaption ? activeCaption.lines.join(" ") : film.title}
+            {captionDisplay}
           </p>
         </div>
       )}
 
-      {/* Transport Scrubber Bar & Optional Act Markers (Native Mode) */}
+      {sourceMode === "native" && voiceoverEnabled && voiceoverUnavailable && (
+        <div className="films-live-caption-bar" role="status">
+          <p className="films-live-caption-lines">
+            This scene’s narration could not play. You can still read the film transcript.
+          </p>
+        </div>
+      )}
+
+      {/* Transport Scrubber Bar & Scene Markers (Native Mode) */}
       {sourceMode === "native" && (
         <div className="films-transport-shell">
           <div className="films-transport-bar">
@@ -469,7 +581,8 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
             </button>
 
             <span className="films-transport-time" aria-live="off">
-              {formatTime(currentTime)} <span aria-hidden="true">/</span> {film.duration}
+              {formatTimecode(currentTime)} <span aria-hidden="true">/</span>{" "}
+              {formattedTotalDuration}
             </span>
 
             <div className="films-scrubber-wrap">
@@ -478,14 +591,38 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
                 style={{ width: `${progressPercent}%` }}
                 aria-hidden="true"
               />
-              {film.acts.map((act) => (
-                <span
-                  key={act.id}
-                  className="films-scrubber-notch"
-                  style={{ left: `${(act.seconds / Math.max(1, videoSpec.duration)) * 100}%` }}
-                  aria-hidden="true"
-                />
-              ))}
+              {scenes.length > 0
+                ? scenes.map((sc) => {
+                    const isCurrentScene = activeScene?.id === sc.id;
+                    return (
+                      <button
+                        key={sc.id}
+                        type="button"
+                        className="films-scrubber-scene-marker"
+                        data-active={isCurrentScene ? "true" : "false"}
+                        data-mode={sc.mode}
+                        style={{
+                          left: `${(sc.start / Math.max(1, videoSpec.duration)) * 100}%`,
+                        }}
+                        title={`Scene ${sc.number}: ${sc.actHeader} (${sc.timecode})`}
+                        aria-label={`Jump to Scene ${sc.number}: ${sc.actHeader}`}
+                        onClick={() => {
+                          setHasStarted(true);
+                          seekTo(sc.start + 0.05);
+                        }}
+                      />
+                    );
+                  })
+                : film.acts.map((act) => (
+                    <span
+                      key={act.id}
+                      className="films-scrubber-notch"
+                      style={{
+                        left: `${(act.seconds / Math.max(1, videoSpec.duration)) * 100}%`,
+                      }}
+                      aria-hidden="true"
+                    />
+                  ))}
               <input
                 type="range"
                 min={0}
@@ -493,6 +630,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
                 step={0.1}
                 value={currentTime}
                 aria-label="Seek timeline in seconds"
+                aria-valuetext={`${formatTimecode(currentTime)} of ${formattedTotalDuration}`}
                 className="films-transport-slider"
                 onChange={(e) => {
                   setHasStarted(true);
@@ -507,7 +645,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
                 className="films-transport-btn"
                 aria-pressed={showCaptionsBar}
                 onClick={() => setShowCaptionsBar((v) => !v)}
-                aria-label={showCaptionsBar ? "Hide synchronized caption bar" : "Show synchronized caption bar"}
+                aria-label={
+                  showCaptionsBar
+                    ? "Hide synchronized caption bar"
+                    : "Show synchronized caption bar"
+                }
                 title={showCaptionsBar ? "Hide caption bar" : "Show caption bar"}
               >
                 <Captions className="h-4 w-4" aria-hidden="true" />
@@ -517,8 +659,31 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
             <button
               type="button"
               className="films-transport-btn"
-              onClick={() => setMuted((m) => !m)}
-              aria-label={muted ? "Unmute digital keystroke audio" : "Mute digital keystroke audio"}
+              aria-pressed={voiceoverEnabled}
+              onClick={toggleVoiceover}
+              aria-label={
+                voiceoverEnabled
+                  ? "Disable synchronized voiceover"
+                  : "Enable synchronized voiceover"
+              }
+              title={voiceoverEnabled ? "Voiceover On" : "Voiceover Off"}
+            >
+              {voiceoverEnabled ? (
+                <Mic className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <MicOff className="h-4 w-4" aria-hidden="true" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="films-transport-btn"
+              onClick={toggleMute}
+              aria-label={
+                muted
+                  ? "Unmute film audio"
+                  : "Mute film audio"
+              }
               title={muted ? "Unmute audio" : "Mute audio"}
             >
               {muted ? (
@@ -541,16 +706,40 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               </button>
             )}
 
-            <button
-              type="button"
-              className="films-transport-btn"
-              onClick={handleFullscreen}
-              aria-label="Toggle fullscreen"
-              title="Toggle fullscreen"
-            >
-              <Maximize2 className="h-4 w-4" aria-hidden="true" />
-            </button>
+            {fullscreenAvailable && (
+              <button
+                type="button"
+                className="films-transport-btn"
+                onClick={handleFullscreen}
+                aria-label="Toggle fullscreen"
+                title="Toggle fullscreen"
+              >
+                <Maximize2 className="h-4 w-4" aria-hidden="true" />
+              </button>
+            )}
           </div>
+
+          {scenes.length > 0 && (
+            <label className="films-scene-jump">
+              <span>Jump to scene</span>
+              <select
+                aria-label="Jump to trailer scene"
+                value={activeScene?.id ?? "opening"}
+                onChange={(event) => {
+                  const scene = scenes.find((item) => item.id === event.target.value);
+                  setHasStarted(true);
+                  seekTo(scene ? scene.start + 0.05 : 0);
+                }}
+              >
+                <option value="opening">Opening · 00:00</option>
+                {scenes.map((scene) => (
+                  <option key={scene.id} value={scene.id}>
+                    {scene.number}. {scene.actHeader.replace(/^\d+\s*\/\/\s*/, "")} · {formatTimecode(scene.start)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           {/* Inline Act Quick-Jump Bar inside Player Chrome (only when explicitly requested) */}
           {showActs && film.acts.length > 0 && (

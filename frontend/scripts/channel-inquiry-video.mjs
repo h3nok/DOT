@@ -36,6 +36,285 @@ export const INQUIRY_CONTEXT = {
   manifesto: "Serves L1, L2, L7, L8, and L10: calm, finite motion, honest claims, contemplative pacing, and one focus. Violates none.",
 };
 
+export const TRAILER_SCENES = [
+  {
+    id: "scene-1",
+    number: 1,
+    start: 5,
+    end: 36,
+    timecode: "0:05 – 0:36",
+    mode: "seed",
+    actHeader: "01 // THE GAP WE FEEL",
+    primaryStatement:
+      "We can map distant galaxies, build intelligent machines, and describe the physical world with extraordinary precision. Yet we can still struggle to understand ourselves. A conversation can leave us hurt before we understand why. We can recognize an old pattern and still find ourselves repeating it. A life can look coherent from the outside while feeling misaligned within.",
+    lines: [
+      "Coherent from the outside.",
+      "Misaligned within.",
+    ],
+    notes: [
+      "We can map distant galaxies and build intelligent machines,",
+      "yet still struggle to understand ourselves.",
+    ],
+    concept: "THE STARTING QUESTION  ·  LIVED EXPERIENCE",
+    axiom: "OUTER PRECISION  ·  UNRESOLVED INNER LIFE",
+    systemSubtleTag: "[ THE GAP WE FEEL : OUTER PRECISION vs. INNER LIFE ]",
+    focusTerm: "misaligned",
+  },
+  {
+    id: "scene-2",
+    number: 2,
+    start: 36,
+    end: 72,
+    timecode: "0:36 – 1:12",
+    mode: "seed",
+    actHeader: "02 // THE NEAREST FACT",
+    primaryStatement:
+      "Digital Organism Theory, or DOT, grew from questions like these. What is experience? How does it become the way we understand ourselves? And how can that understanding help us live more responsibly with one another? Begin with the nearest fact: experience occurs. Before you can examine a measurement, question an idea, or decide what deserves another look, you are already experiencing something. There is a first-person side to the inquiry.",
+    lines: [
+      "Begin with the nearest fact:",
+      "experience occurs.",
+    ],
+    notes: [
+      "Before you examine any measurement or question an idea,",
+      "there is already a first-person side to the inquiry.",
+    ],
+    concept: "OBSERVATION  ·  THE MINIMUM DATUM (DOT-E0)",
+    axiom: "DOT-E0 :  Experience occurs.",
+    systemSubtleTag: "[ MINIMUM DATUM : EXPERIENCE OCCURS (DOT-E0) ]",
+    focusTerm: "experience",
+  },
+  {
+    id: "scene-3",
+    number: 3,
+    start: 72,
+    end: 101,
+    timecode: "1:12 – 1:41",
+    mode: "seed",
+    actHeader: "03 // A FAMILIAR MESSAGE",
+    primaryStatement:
+      "Imagine you send someone a thoughtful message. Their reply is one word: Okay. You feel a sting. Perhaps they are upset. Perhaps they are simply busy. The feeling is real; the first explanation may be wrong. That distinction creates room to inquire. Feeling is data. Understanding what it tells us takes care, comparison, and a willingness to be corrected.",
+    lines: [
+      "One word.",
+      "More than one explanation.",
+    ],
+    notes: [
+      "A feeling is real.",
+      "Its first explanation can change.",
+    ],
+    concept: "SUBJECTIVE DATA PRINCIPLE  ·  OBSERVATION (DOT-E1)",
+    axiom: "OCCURRENCE IS IMMEDIATE  ·  INTERPRETATION IS REVISABLE",
+    systemSubtleTag: "[ SUBJECTIVE DATA PRINCIPLE : FEELING IS DATA ]",
+    focusTerm: "explanation",
+  },
+  {
+    id: "scene-4",
+    number: 4,
+    start: 101,
+    end: 154,
+    timecode: "1:41 – 2:34",
+    mode: "outer_scan",
+    actHeader: "04 // A WORLD WE CAN QUESTION",
+    primaryStatement:
+      "Science gives us powerful ways to make those corrections. Measurement, prediction, and shared scrutiny help us discover where an explanation succeeds and where it fails. We encounter a world with stable constraints. Signals take time. Physical processes follow laws. In quantum experiments, the measurement arrangement matters to the pattern we observe. These findings do not establish Digital Organism Theory. They belong among the observations any account of reality must respect. And every result we examine still reaches us through experience. The relationship between the measurable world and the experience of living in it remains central to the inquiry.",
+    lines: [
+      "Every result we examine",
+      "reaches us through experience.",
+    ],
+    notes: [
+      "Measurement, prediction, and shared scrutiny test our claims—",
+      "and every result still enters through conscious experience.",
+    ],
+    concept: "EPISTEMIC PRIORITY  ·  DEFINITION (DOT-D2)",
+    axiom: "UsesAsEvidence(S, e)  ⇒  Experiences(S, r(e))",
+    systemSubtleTag: "[ EPISTEMIC PRIORITY : EVIDENCE ENTERS THROUGH EXPERIENCE ]",
+    focusTerm: "experience",
+  },
+  {
+    id: "scene-5",
+    number: 5,
+    start: 154,
+    end: 193,
+    timecode: "2:34 – 3:13",
+    mode: "outer_scan",
+    actHeader: "05 // THE LANGUAGE OF A MODEL",
+    primaryStatement:
+      "When you visit a new place, a map helps you find your way. The road still brings weather, detours, and turns you did not expect. A useful model works in a similar way. It helps us notice relationships, make predictions, and discover where our understanding needs to change. DOT uses the language of systems: information, continuity, feedback, and change. Its computational metaphors are handles for exploring experience. Keep what helps you see more clearly, and question what does not.",
+    lines: [
+      "A model is a map.",
+      "Experience is the terrain.",
+    ],
+    notes: [
+      "Use it to find your way.",
+      "Let what you encounter refine it.",
+    ],
+    concept: "METAPHORIC MEDIATION  ·  EPISTEMIC DISCIPLINE",
+    axiom: "FIRST-ORDER: EXPERIENCE  ·  SECOND-ORDER: MODEL",
+    systemSubtleTag: "[ METAPHORIC MEDIATION : HANDLES FOR RELATIONSHIPS ]",
+    focusTerm: "map",
+  },
+  {
+    id: "scene-6",
+    number: 6,
+    start: 193,
+    end: 249,
+    timecode: "3:13 – 4:09",
+    mode: "intersection",
+    actHeader: "06 // THE DIGITAL ORGANISM",
+    primaryStatement:
+      "DOT proposes that Consciousness is fundamental. It calls the encompassing process Big C. Here, digital describes a process that retains information, responds to change, and works to preserve or develop its coherence. Within this hypothesis, Big C has two capacities. A melody offers a simple comparison: the notes have an order, and the next note can differ from the last. T names primordial continuity: the ordering through which change can occur and be retained. E names unexpressed possibility: the capacity for more than one distinguishable state. T and E are capacities of Big C. They do not precede it or produce it. The theory must work out what follows, and what evidence could show it to be mistaken.",
+    lines: [
+      "What if consciousness",
+      "is fundamental?",
+    ],
+    notes: [
+      "Continuity carries change.",
+      "Possibility leaves room for something new.",
+    ],
+    concept: "FOUNDATIONAL HYPOTHESIS  ·  DOT-H1 / H2 / M2",
+    axiom: "Big C[T, E]  ·  SELF-PRESERVING CONSCIOUS PROCESS ↻",
+    systemSubtleTag: "[ FOUNDATIONAL HYPOTHESIS : Big C[T, E] ]",
+    focusTerm: "consciousness",
+  },
+  {
+    id: "scene-7",
+    number: 7,
+    start: 249,
+    end: 301,
+    timecode: "4:09 – 5:01",
+    mode: "canvas_build",
+    actHeader: "07 // A LOCAL LIFE IN A SHARED WORLD",
+    primaryStatement:
+      "Within that architecture, Big C differentiates into local centers of self-awareness. Each is called Little c. The model proposes that these local centers encounter a rule-bound environment through living bodies. Our physical universe is Reality Frame Zero, or RF-zero. Your Reality Stream is the sequence of experience available to you within it. Calling the world a Frame leaves its consequences fully real. Gravity resists you. Pain hurts. Other people have lives of their own. DOT describes the body as the biological interface through which Little c perceives and acts. An open question is how we could test this account against other explanations.",
+    lines: [
+      "Gravity resists you. Pain hurts.",
+      "Other people are real.",
+    ],
+    notes: [
+      "RF₀ is our shared physical Reality Frame; your body is the",
+      "biological interface through which your Reality Stream arrives.",
+    ],
+    concept: "REALITY FRAME & INTERFACE  ·  DOT-H3 / H4 / H5",
+    axiom: "Big C[T, E]  →  RF₀ (Frame)  →  RS (Stream)  →  Little c",
+    systemSubtleTag: "[ REALITY FRAME RF₀ & REALITY STREAM : EMBODIED INTERFACE ]",
+    focusTerm: "real",
+  },
+  {
+    id: "scene-8",
+    number: 8,
+    start: 301,
+    end: 343,
+    timecode: "5:01 – 5:43",
+    mode: "painting_mesh",
+    actHeader: "08 // WHAT EXPERIENCE LEAVES BEHIND",
+    primaryStatement:
+      "Think of learning to ride a bicycle. At first, you pay attention to every movement. With practice, your responses change. The ride ends, but the learning stays. Other experiences can change whom you trust, the habits you repeat, and what feels possible. DOT calls the capacity to carry those changes forward the Canvas. Like brushstrokes building a painting, those changes form patterns. The Painting is the pattern through which you interpret the next moment. What takes shape can be examined, questioned, and developed.",
+    lines: [
+      "What stays with you",
+      "after an experience ends?",
+    ],
+    notes: [
+      "The Canvas carries change.",
+      "The Painting shapes how you meet the next moment.",
+    ],
+    concept: "PERSISTENT LEARNING  ·  MODEL (DOT-M4 / M5)",
+    axiom: "Canvas (Retains Change)  →  Painting (Interpretive Lens)",
+    systemSubtleTag: "[ PERSISTENT LEARNING : THE CANVAS & THE PAINTING ]",
+    focusTerm: "experience",
+  },
+  {
+    id: "scene-9",
+    number: 9,
+    start: 343,
+    end: 374,
+    timecode: "5:43 – 6:14",
+    mode: "painting_mesh",
+    actHeader: "09 // THE EXPERIENCE LOOP",
+    primaryStatement:
+      "Return to that short message. You read Okay, feel rejected, and answer defensively. The reply you receive becomes part of what you expect next time. Another response may be possible. You could pause and ask what the person meant. Experience, interpretation, intent, action, and consequence form a loop. Noticing the loop gives you something concrete to explore in your own life.",
+    lines: [
+      "Notice the pattern.",
+      "Try another response.",
+    ],
+    notes: [
+      "A pause. A question. A different reply.",
+      "Each gives the next moment a new starting point.",
+    ],
+    concept: "THE EXPERIENCE LOOP  ·  PRACTICAL ARCHITECTURE",
+    axiom: "Experience → Interpretation → Intent → Action → ΔCanvas",
+    systemSubtleTag: "[ EXPERIENCE LOOP : INTERPRETATION → INTENT → ACTION → ΔCANVAS ]",
+    focusTerm: "response",
+  },
+  {
+    id: "scene-10",
+    number: 10,
+    start: 374,
+    end: 423,
+    timecode: "6:14 – 7:03",
+    mode: "high_entropy",
+    actHeader: "10 // WHEN FEAR TAKES THE LEAD",
+    primaryStatement:
+      "Much of your first Painting formed before you could examine it. Family, language, culture, and circumstance helped shape what felt safe, possible, or true. Some of those patterns still serve you. Others can keep defending against a world that has already changed. Fear can protect us. But when it governs interpretation, a question can feel like an attack, disagreement can feel like rejection, and an old defense can make a new choice difficult to see. Recognizing the pattern creates an opening. You can begin asking what is happening now, what you have brought to it, and which responses are actually available.",
+    lines: [
+      "Fear can protect us—or",
+      "govern what we can see.",
+    ],
+    notes: [
+      "When Fear governs interpretation, old defenses narrow choice;",
+      "recognizing the pattern opens room for what is available now.",
+    ],
+    concept: "THE FEAR-GATING PRINCIPLE  ·  MODEL (DOT-M6)",
+    axiom: "GOVERNING FEAR  →  CONTRACTED DECISION-SPACE",
+    systemSubtleTag: "[ FEAR-GATING : PROTECTIVE FEAR vs. GOVERNING FEAR ]",
+    focusTerm: "Fear",
+  },
+  {
+    id: "scene-11",
+    number: 11,
+    start: 423,
+    end: 475,
+    timecode: "7:03 – 7:55",
+    mode: "coherence",
+    actHeader: "11 // LOVE, RESPONSIBILITY, AND REPAIR",
+    primaryStatement:
+      "In DOT, Love names the condition in which Fear no longer governs you. You may still feel afraid. What changes is the room available for truth, care, boundaries, and choice. There is room for reality to contradict an inherited belief. Room to hear another person without immediately defending yourself. Room to acknowledge harm and begin repairing it. You did not choose your first Painting. Yet you are responsible for what you paint once you can see it. Compassion recognizes why a stroke formed. Responsibility examines what it is doing now. We work with the choices we have, and we share responsibility for making better choices possible for others.",
+    lines: [
+      "You did not choose your first Painting.",
+      "You are responsible once you see it.",
+    ],
+    notes: [
+      "Love is the condition in which Fear no longer governs you—",
+      "making room for truth, care, boundaries, and repair.",
+    ],
+    concept: "LOVE & CONSCIOUS AUTHORSHIP  ·  DOT-H7",
+    axiom: "COMPASSION SEES WHY IT FORMED  ·  RESPONSIBILITY SEES NOW",
+    systemSubtleTag: "[ LOVE & RESPONSIBILITY : FREEDOM FROM GOVERNANCE BY FEAR ]",
+    focusTerm: "Love",
+  },
+  {
+    id: "scene-12",
+    number: 12,
+    start: 475,
+    end: 532,
+    timecode: "7:55 – 8:52",
+    mode: "finale",
+    actHeader: "12 // THE INQUIRY WE SHARE",
+    primaryStatement:
+      "Our Paintings meet in families, friendships, workplaces, and communities. What we carry inwardly affects what we build together. Personal development begins in moments we can actually notice. A conversation. A familiar fear. A choice that usually feels automatic. Pick one moment from your own day. Ask what happened, what you made it mean, and what other response might be available. You can read the book, try the practical ideas, and return with questions. Challenge the larger hypotheses through evidence. Let your experience inform the inquiry, and let inquiry change how you meet your experience. Explore at your own pace.",
+    lines: [
+      "Begin with your own experience.",
+      "Explore at your own pace.",
+    ],
+    notes: [
+      "Notice. Question. Try. Reflect.",
+      "Bring what you discover back to the inquiry.",
+    ],
+    concept: "AN INVITATION TO SHARED INQUIRY  ·  DOTHEORY.ORG",
+    axiom: "DOTHEORY.ORG  ·  Let us rebuild our community—together.",
+    systemSubtleTag: "DOTHEORY.ORG — LET US REBUILD OUR COMMUNITY—TOGETHER",
+    focusTerm: "experience",
+  },
+];
+
 export const INQUIRY_VIDEOS = [
   {
     name: "mark-splash",
@@ -121,197 +400,39 @@ export const INQUIRY_VIDEOS = [
   {
     name: "inquiry-trailer",
     title: "You, the Observer, Belong in the Inquiry — Official Scientific Trailer",
-    duration: 132,
-    samples: [5.5, 22.0, 31.0, 64.0, 118.0, 129.0],
-    captions: [
-      // ACT I — FIRST-PERSON EXPERIENCE & EMERGENT PRINCIPLES (0:00 – 0:34)
-      {
-        start: 1.4,
-        end: 9.2,
-        layout: "center",
-        badge: "ACT I · FIRST-PERSON OBSERVATION",
-        eyebrow: "00 // THE FIRST FACT OF EXISTENCE",
-        lines: [
-          "The first fact of your existence is not a measurement.",
-          "It is that you are here to experience one.",
-        ],
-        notes: [
-          "Every equation, instrument, and proof begins inside lived experience.",
-        ],
-      },
-      {
-        start: 9.6,
-        end: 17.6,
-        layout: "split",
-        badge: "ACT I · TWO WAYS OF KNOWING",
-        eyebrow: "01 // THE MISSING HALF OF INQUIRY",
-        focusTerm: "first-person",
-        lines: ["Physics maps the external world.", "What maps first-person reality?"],
-        notes: [
-          "Science describes matter from outside; you inhabit experience from within.",
-        ],
-        concept: "STARTING DISTINCTION  ·  DESCRIPTION VS. EXPERIENCE",
-        axiom: "THIRD-PERSON MEASUREMENT  VS.  FIRST-PERSON REALITY",
-      },
-      {
-        start: 18.0,
-        end: 26.0,
-        layout: "split",
-        badge: "ACT I · POINTING DEVICES",
-        eyebrow: "02 // CONSCIOUSNESS AT THE CENTER",
-        focusTerm: "consciousness",
-        lines: ["A formal model of reality", "centered on consciousness."],
-        notes: [
-          "Experience is first-order; the model's concepts are pointing devices for it.",
-        ],
-        concept: "EPISTEMIC RULE  ·  THE MAP IS NOT THE TERRITORY",
-        axiom: "FIRST-ORDER EXPERIENCE  →  SECOND-ORDER FORMAL MODEL",
-      },
-      {
-        start: 26.4,
-        end: 34.4,
-        layout: "split",
-        badge: "ACT I · EMERGENT PRINCIPLES",
-        eyebrow: "03 // THE DIGITAL ORGANISM",
-        focusTerm: "Digital Organism",
-        lines: ["What is a Digital Organism?", "Coherence preserved in change."],
-        notes: [
-          "An informational process that retains state and adapts across continuity.",
-        ],
-        concept: "CONCEPT 01  ·  DIGITAL ORGANISM (INFORMATIONAL PROCESS)",
-        axiom: "STATE + FEEDBACK + CONTINUITY  →  DIGITAL ORGANISM",
-      },
-      // ACT II — ARCHITECTURE OF CONTINUITY: T × E, Big C, Little c & RF₀ (0:34 – 1:10)
-      {
-        start: 34.8,
-        end: 46.2,
-        layout: "split",
-        badge: "ACT II · THE SOURCE CONDITIONS",
-        eyebrow: "04 // ARCHITECTURE OF CONTINUITY",
-        focusTerm: "Big C",
-        lines: ["Within T × E, one process", "persisted and stabilized: Big C."],
-        notes: [
-          "T is primordial continuity; E is the external environment of possibility.",
-        ],
-        concept: "CONCEPT 02  ·  T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)",
-        axiom: "T × E (THE SOURCE)  →  Big C",
-      },
-      {
-        start: 46.6,
-        end: 58.0,
-        layout: "split",
-        badge: "ACT II · LOCALIZED AWARENESS",
-        eyebrow: "05 // UNDIFFERENTIATED PROCESS",
-        focusTerm: "Little c",
-        lines: ["Big C localizes as Little c —", "an undifferentiated process."],
-        notes: [
-          "Little c is pure local awareness; its distinct history lives on its Canvas.",
-        ],
-        concept: "CONCEPT 03  ·  Little c (LOCAL SELF-AWARE PROCESS)",
-        axiom: "Little c (UNDIFFERENTIATED)  +  CANVAS (CARRIED STATE)",
-      },
-      {
-        start: 58.4,
-        end: 69.8,
-        layout: "split",
-        badge: "ACT II · REALITY FRAME ZERO",
-        eyebrow: "06 // THE SHARED PHYSICAL WORLD",
-        focusTerm: "RF₀",
-        lines: ["RF₀: A lawful world where", "choices carry real consequence."],
-        notes: [
-          "Stable rules and seamless continuity make relationship and growth possible.",
-        ],
-        concept: "CONCEPT 04  ·  REALITY FRAME ZERO (RF₀)",
-        axiom: "Big C  →  RF₀ (LAWFUL FRAME)  →  Little c₁",
-      },
-      // ACT III — THE CANVAS, THE PAINTING & THE EXPERIENCE LOOP (1:10 – 1:44)
-      {
-        start: 70.2,
-        end: 81.2,
-        layout: "split",
-        badge: "ACT III · MEMORY & INTERPRETATION",
-        eyebrow: "07 // THE CANVAS & THE PAINTING",
-        focusTerm: "Painting",
-        lines: ["The Canvas carries your record.", "The Painting renders meaning."],
-        notes: [
-          "From inside experience, your Painting rarely feels like a lens; it feels real.",
-        ],
-        concept: "CONCEPT 05  ·  THE CANVAS (C) & THE PAINTING (P)",
-        axiom: "CANVAS (ACCUMULATED RECORD)  →  PAINTING (ACTIVE LENS)",
-      },
-      {
-        start: 81.6,
-        end: 92.6,
-        layout: "split",
-        badge: "ACT III · CANVAS ENTROPY",
-        eyebrow: "08 // FEAR VS. LOVE ON THE CANVAS",
-        focusTerm: "Canvas entropy",
-        lines: ["Fear is high Canvas entropy.", "Fragmentation narrows Intent."],
-        notes: [
-          "Unresolved threat and competing patterns divide attention and contract choice.",
-        ],
-        concept: "CONCEPT 06  ·  INTENT–ENTROPY INVERSION",
-        axiom: "FEAR (HIGH CANVAS ENTROPY)  VS.  LOVE (LOW ENTROPY)",
-      },
-      {
-        start: 93.0,
-        end: 104.0,
-        layout: "split",
-        badge: "ACT III · THE EXPERIENCE LOOP",
-        eyebrow: "09 // THE RECURSIVE CYCLE",
-        focusTerm: "Intent",
-        lines: ["World enters. Painting colors.", "Intent acts. Canvas updates."],
-        notes: [
-          "When the Painting goes unseen, yesterday's trace scripts tomorrow's choice.",
-        ],
-        concept: "CONCEPT 07  ·  THE 4-STEP EXPERIENCE LOOP",
-        axiom: "01 REALITY  →  02 PAINTING  →  03 INTENT  →  04 CANVAS",
-      },
-      // ACT IV — SEEING THE PAINTING, AGENCY & LOVE AS LOW CANVAS ENTROPY (1:44 – 2:12)
-      {
-        start: 104.4,
-        end: 114.6,
-        layout: "split",
-        badge: "ACT IV · SEEING THE PAINTING",
-        eyebrow: "10 // THE PAINTING IS NOT THE PAINTER",
-        focusTerm: "not the painter",
-        lines: ["The Painting is not the painter.", "See the lens, and quiet the noise."],
-        notes: [
-          "Recognizing inherited patterns on the Canvas reduces internal fragmentation.",
-        ],
-        concept: "CONCEPT 08  ·  DECOUPLING & QUIETING NOISE",
-        axiom: "INSPECT THE PAINTING (P)  →  REDUCE CANVAS ENTROPY (E_C ↓)",
-      },
-      {
-        start: 115.0,
-        end: 124.8,
-        layout: "split",
-        badge: "ACT IV · COHERENCE OF Little c",
-        eyebrow: "11 // LOVE AS LOW CANVAS ENTROPY",
-        focusTerm: "Love",
-        lines: ["For Little c, being Love means", "Canvas entropy is low."],
-        notes: [
-          "When Canvas fragmentation clears, awareness sees clearly and Intent coheres.",
-        ],
-        concept: "CORE AXIOM  ·  LOVE = LOW-ENTROPY CANVAS STATE",
-        axiom: "E_C ↓ (LOW CANVAS ENTROPY)  →  COHERENT INTENT (LOVE)",
-      },
-      {
-        start: 125.2,
-        end: 132.0,
-        layout: "center",
-        eyebrow: "DIGITAL ORGANISM THEORY",
-        lines: [
-          "The Observer Belongs in the Inquiry.",
-        ],
-        note: "dotheory.org",
-      },
-    ],
+    duration: 532,
+    posterSeconds: 88,
+    samples: [2.6, 88, 174, 323, 446, 528],
+    scenes: TRAILER_SCENES,
+    captions: TRAILER_SCENES.map((scene) => ({
+      id: scene.id,
+      number: scene.number,
+      start: scene.start,
+      end: scene.end,
+      timecode: scene.timecode,
+      layout: [1, 3, 4, 6, 9, 10, 12].includes(scene.number) ? "center" : "split",
+      mode: scene.mode,
+      badge: scene.actHeader,
+      eyebrow: scene.actHeader,
+      actHeader: scene.actHeader,
+      primaryStatement: scene.primaryStatement,
+      systemSubtleTag: scene.systemSubtleTag,
+      focusTerm: scene.focusTerm,
+      lines: scene.lines,
+      notes: scene.notes,
+      // Technical keys stay in the source notes; the film follows the spoken inquiry.
+    })),
   },
 ];
 
 /** This function is serialized into a self-contained browser document. */
-function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanvas = null }) {
+function inquiryAnimation({
+  video,
+  identity,
+  theme = "dark",
+  canvas: targetCanvas = null,
+  diagramOnly = false,
+}) {
   const canvas = targetCanvas || document.querySelector("canvas");
   const ctx = canvas ? canvas.getContext("2d", { willReadFrequently: true }) : null;
   if (!canvas || !ctx) {
@@ -361,6 +482,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
   const intro = baseName === "inquiry-intro";
   const markOnly = baseName === "mark-splash";
   const textBounds = [];
+  let textRegion = null;
 
   // ── EXACT HOME SCREEN GEOMETRY CONSTANTS (`HeroArchitecture.tsx` & `architectureGeometry.ts`) ──
   const ARCH_R = {
@@ -534,10 +656,10 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     const right = left + width;
     const top = y - size * 0.88;
     const bottom = y + size * 0.28;
-    textBounds.push({ text: String(text), left, right, top, bottom });
+    textBounds.push({ text: String(text), left, right, top, bottom, region: textRegion });
   }
 
-  function tokenizeFocusTerm(str, baseColor, focusTerm) {
+  function tokenizeFocusTerm(str, baseColor, focusTerm, focusColor = focusHighlight) {
     if (!focusTerm) return [{ start: 0, end: str.length, color: baseColor }];
     const idx = str.indexOf(focusTerm);
     if (idx === -1) return [{ start: 0, end: str.length, color: baseColor }];
@@ -548,7 +670,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     segments.push({
       start: idx,
       end: idx + focusTerm.length,
-      color: focusHighlight,
+      color: focusColor,
     });
     if (idx + focusTerm.length < str.length) {
       segments.push({ start: idx + focusTerm.length, end: str.length, color: baseColor });
@@ -568,6 +690,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     caretColor = warmGold,
     caretAlpha = 0.92,
     focusTerm = null,
+    focusColor = focusHighlight,
     halo = null,
     haloWidth = 6,
     track = true,
@@ -600,7 +723,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     const exact = str.length * p;
     const wholeCount = isDone ? str.length : Math.floor(exact);
     const frac = isDone ? 0 : exact - wholeCount;
-    const segments = tokenizeFocusTerm(str, color, focusTerm);
+    const segments = tokenizeFocusTerm(str, color, focusTerm, focusColor);
 
     for (const seg of segments) {
       if (seg.start < wholeCount) {
@@ -1034,7 +1157,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
           }
         }
         circle(pos.x, pos.y, OTHER_FRAME_RADIUS, rfBronze, otherA * 0.94, 1.5, [2.5, 2.5]);
-        type(`RF${index === "1" ? "₁" : index === "2" ? "₂" : "ₙ"}`, pos.x, pos.y + 6, 16, {
+        type(`RF${index === "1" ? "₁" : index === "2" ? "₂" : "ₙ"}`, pos.x, pos.y + 6, 18, {
           color: warmGold,
           alpha: otherA * 0.98,
           family: "Space Grotesk",
@@ -1131,15 +1254,15 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
           showPin: false,
         });
         const sub = peer.index === "2" ? "₂" : peer.index === "3" ? "₃" : peer.index === "4" ? "₄" : "ₙ";
-        type(`c${sub}`, peer.x, peer.y - peer.awareness - 6, 17, {
+        type(`c${sub}`, peer.x, peer.y - peer.awareness - 6, 19, {
           color: lumen,
           alpha: pAlpha,
           family: "Space Grotesk",
           style: "italic",
-          weight: 500,
+          weight: 600,
           align: "center",
           halo: bgHaloCol,
-          haloWidth: 4.5,
+          haloWidth: 5,
           track: false,
         });
       });
@@ -1291,66 +1414,58 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       }
     }
 
-    // 10. Minimal, High-Signal Digital Axis Labels (`T × E`, `Big C`, `RF₀`, `Little c₁ — you`)
+    // 10. Minimal, High-Signal Digital Axis Labels (`Big C[T, E]`, `RF₀`, `Little c₁ — you`)
     const lblA = alpha * labels;
     const fScale = 1 / Math.pow(scale, 0.42);
     if (lblA > 0.01) {
       if (origin > 0.2) {
-        type("T × E", 348, 24, 23 * fScale, {
+        type(isTrailer ? "Continuity · Possibility" : "T × E", 348, 22, (isTrailer ? 20 : 24) * fScale, {
           color: originJade,
           alpha: lblA * origin,
           family: "JetBrains Mono",
           weight: 700,
           align: "center",
           halo: bgHaloCol,
-          haloWidth: 8,
+          haloWidth: 9,
           track: false,
         });
       }
       if (bigC > 0.2) {
-        type("Big C", 348, 120, 24 * fScale, {
+        type("Big C", 348, 108, 26 * fScale, {
           color: lumen,
           alpha: lblA * bigC,
           family: "Inter",
           weight: 700,
           align: "center",
           halo: bgHaloCol,
-          haloWidth: 8,
+          haloWidth: 9,
           track: false,
         });
       }
       if (rf0 > 0.2) {
-        type("RF₀", 348, 200, 23 * fScale, {
+        type("RF₀", 348, 186, 24 * fScale, {
           color: warmGold,
           alpha: lblA * rf0,
           family: "JetBrains Mono",
           weight: 700,
           align: "center",
           halo: bgHaloCol,
-          haloWidth: 8,
+          haloWidth: 9,
           track: false,
         });
       }
       if (littleC > 0.2) {
-        line([[344, 332], [388, 332]], lumen, lblA * littleC * 0.86, 1.4);
-        type("Little c₁", 396, 337, 22 * fScale, {
-          color: lumen,
-          alpha: lblA * littleC,
-          family: "Inter",
-          weight: 700,
-          align: "left",
-          halo: bgHaloCol,
-          haloWidth: 7,
-          track: false,
+        if (isTrailer) type("Little c · you", C1.x, C1.y + 78, 18 * fScale, {
+          color: lumen, alpha: lblA * littleC, family: "Space Grotesk", weight: 500,
+          align: "center", halo: bgHaloCol, haloWidth: 7, track: false,
         });
-        type("YOU", 396, 358, 14.5 * fScale, {
-          color: warmGold,
-          alpha: lblA * littleC * 0.98,
-          family: "JetBrains Mono",
-          weight: 700,
-          align: "left",
-          halo: bgHaloCol,
-          haloWidth: 6,
+        else pillLabel("Little c₁ · YOU", C1.x, C1.y + 78, 15.5 * fScale, {
+          color: lumen,
+          border: isLight ? "rgba(9, 133, 93, 0.45)" : "rgba(126, 250, 208, 0.48)",
+          bg: pillFill,
+          alpha: lblA * littleC * 0.96,
+          padX: 12,
+          padY: 4,
           track: false,
         });
       }
@@ -1360,12 +1475,118 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
   }
 
   /**
-   * CANONICAL HOME SCREEN 4-STEP EXPERIENCE LOOP (`ArchitectureDiagram.tsx`, 760×540 coordinate stage):
-   * Ultra-clean digital telemetry: single-word node titles (`Reality`, `Painting`, `Intent`, `Canvas`),
-   * animated signal packets along directed edges, and zero cluttered edge text.
+   * CANONICAL HOME SCREEN EXPERIENCE LOOP (`ArchitectureDiagram.tsx`, 760×540 coordinate stage):
+   * Supports both the compact 4-node loop (for the 30s intro) and the complete 6-step embodied
+   * Experience Loop (`Experience → Painting → Intent → Action → Consequence → Canvas`) for Book One v4.
    */
-  function drawHomeExperienceLoop(cx, cy, scale = 1.05, t = 0, alpha = 1) {
+  function drawHomeExperienceLoop(
+    cx,
+    cy,
+    scale = 1.0,
+    t = 0,
+    alpha = 1,
+    { startT = intro ? 12.5 : 54.5, sixStep = isTrailer, highlightPair = false } = {},
+  ) {
     if (alpha <= 0.001) return;
+
+    if (sixStep) {
+      const activeIdx = Math.floor(((t * 0.42) % 6 + 6) % 6);
+      const nodes = [
+        { num: "01", title: "Experience", role: "arrives", x: 162, y: 142 },
+        { num: "02", title: "Painting", role: "interprets", x: 380, y: 112 },
+        { num: "03", title: "Intent", role: "chooses", x: 598, y: 142 },
+        { num: "04", title: "Action", role: "body acts", x: 598, y: 406 },
+        { num: "05", title: "Consequence", role: "returns", x: 380, y: 436 },
+        { num: "06", title: "Canvas", role: "carries change", x: 162, y: 406 },
+      ];
+      const nodeR = 64;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.translate(-380, -272);
+
+      circle(380, 274, 96, hairlineCol, alpha * 0.55, 1.1, [3, 6]);
+
+      // Directed edges between the 6 nodes (`01 → 02 → 03 → 04 → 05 → 06 → 01`)
+      nodes.forEach((n1, idx) => {
+        const n2 = nodes[(idx + 1) % nodes.length];
+        const dx = n2.x - n1.x;
+        const dy = n2.y - n1.y;
+        const dist = Math.hypot(dx, dy);
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const from = [n1.x + ux * (nodeR + 6), n1.y + uy * (nodeR + 6)];
+        const to = [n2.x - ux * (nodeR + 8), n2.y - uy * (nodeR + 8)];
+        const isAct = highlightPair ? idx === 5 || idx === 1 : idx === activeIdx;
+        const col = isAct ? warmGold : emerald;
+        line([from, to], col, alpha * (isAct ? 0.98 : 0.62), isAct ? 2.5 : 1.6);
+        arrowHead(to[0], to[1], Math.atan2(dy, dx), 6.8, col, alpha * (isAct ? 0.98 : 0.68), true);
+        const u = (((t * 0.85 + idx * 0.16) % 1) + 1) % 1;
+        const px = mix(from[0], to[0], u);
+        const py = mix(from[1], to[1], u);
+        dot(px, py, isAct ? 5.2 : 3.6, col, alpha * (isAct ? 0.42 : 0.22));
+        dot(px, py, isAct ? 2.4 : 1.7, isAct ? warmGold : lumen, alpha * (isAct ? 0.98 : 0.72));
+
+        // Subtle radial spoke to central Little c (380, 274)
+        const cdx = 380 - n1.x;
+        const cdy = 274 - n1.y;
+        const cdist = Math.hypot(cdx, cdy);
+        const rFrom = [n1.x + (cdx / cdist) * (nodeR + 4), n1.y + (cdy / cdist) * (nodeR + 4)];
+        const rTo = [380 - (cdx / cdist) * 54, 274 - (cdy / cdist) * 54];
+        line([rFrom, rTo], isAct ? lumen : muted, alpha * (isAct ? 0.75 : 0.32), 1.2, 1, [3, 4]);
+      });
+
+      // Central Experiencing Observer: `Little c` centered at (380, 274)
+      dot(380, 274, 46, isLight ? "#eef7f2" : "#0b1d17", alpha * 0.98);
+      circle(380, 274, 46, emerald, alpha * 0.92, 1.6);
+      circle(380, 274, 38, lumen, alpha * 0.78, 1.25, [3, 3]);
+      type("Little c", 380, 270, 18, {
+        color: deepInk,
+        alpha,
+        family: "Inter",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      type("YOU", 380, 290, 13, {
+        color: warmGold,
+        alpha: alpha * 0.96,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+
+      // 6 Circular State Nodes (`r = 64`)
+      nodes.forEach((node, idx) => {
+        const isAct = highlightPair ? idx === 1 || idx === 5 : idx === activeIdx;
+        dot(node.x, node.y + 4, nodeR, isLight ? "rgba(13, 117, 83, 0.08)" : "rgba(0, 0, 0, 0.52)", alpha);
+        dot(node.x, node.y, nodeR, isLight ? (isAct ? "#ffffff" : "#f2f7f4") : (isAct ? "#0f241d" : "#07110e"), alpha * 0.98);
+        circle(node.x, node.y, nodeR, isAct ? warmGold : emerald, alpha * (isAct ? 0.98 : 0.62), isAct ? 2.5 : 1.5);
+
+        type(node.title, node.x, node.y - 2, 22, {
+          color: deepInk,
+          alpha,
+          family: "Space Grotesk",
+          weight: 500,
+          align: "center",
+          track: false,
+        });
+
+        type(node.role, node.x, node.y + 24, 14, {
+          color: isAct ? warmGold : muted,
+          alpha: alpha * 0.96,
+          family: "Space Grotesk",
+          weight: 500,
+          align: "center",
+          track: false,
+        });
+      });
+
+      ctx.restore();
+      return;
+    }
 
     const activeIdx = Math.floor(((t * 0.45) % 4 + 4) % 4);
     const nodes = [
@@ -1381,16 +1602,16 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       { from: [176, 318], to: [176, 226], angle: -Math.PI / 2 },
     ];
     const residuals = [
-      { from: [244, 186], to: [326, 214] },
-      { from: [516, 186], to: [434, 214] },
-      { from: [516, 358], to: [434, 294] },
-      { from: [244, 358], to: [326, 294] },
+      { from: [246, 186], to: [324, 236] },
+      { from: [514, 186], to: [436, 236] },
+      { from: [514, 358], to: [436, 308] },
+      { from: [246, 358], to: [324, 308] },
     ];
 
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
-    ctx.translate(-380, -270);
+    ctx.translate(-380, -272);
 
     // Subtle, refined outer RF₀ architectural boundary (`14, 14, 732, 512, rx=24`)
     roundRect(14, 14, 732, 512, 24, {
@@ -1400,9 +1621,9 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       alpha: alpha * 0.85,
       dash: [6, 7],
     });
-    const loopHeaderT = clamp((t - (intro ? 12.5 : 93.0)) / 0.68);
-    const loopRightT = clamp((t - (intro ? 12.82 : 93.45)) / 0.48);
-    type("PROCESS 02  ·  LITTLE c EXPERIENCE LOOP", 38, 44, 15, {
+    const loopHeaderT = clamp((t - startT) / 0.68);
+    const loopRightT = clamp((t - (startT + 0.32)) / 0.48);
+    type("PROCESS 02  ·  LITTLE c EXPERIENCE LOOP", 38, 44, 16.5, {
       color: warmGold,
       alpha: alpha * 0.94,
       family: "JetBrains Mono",
@@ -1412,7 +1633,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       caretColor: warmGold,
       track: false,
     });
-    type("RF₀ ENVIRONMENT", 722, 44, 15, {
+    type("RF₀ ENVIRONMENT", 722, 44, 16.5, {
       color: emerald,
       alpha: alpha * 0.9,
       family: "JetBrains Mono",
@@ -1424,10 +1645,10 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       track: false,
     });
 
-    // Single delicate orbital guide circle
-    circle(380, 254, 118, hairlineCol, alpha * 0.55, 1.1, [3, 6]);
+    // Single delicate orbital guide circle centered cleanly at (380, 272)
+    circle(380, 272, 108, hairlineCol, alpha * 0.55, 1.1, [3, 6]);
 
-    // Inward residual spokes (`RESIDUAL_LINKS`) stopping cleanly outside Little c label
+    // Inward residual spokes (`RESIDUAL_LINKS`) stopping cleanly outside Little c core
     residuals.forEach((rLink, idx) => {
       const isAct = idx === activeIdx;
       const col = isAct ? lumen : muted;
@@ -1449,22 +1670,21 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       dot(px, py, isAct ? 2.6 : 1.8, isAct ? warmGold : lumen, alpha * (isAct ? 0.98 : 0.72));
     });
 
-    // Central Experiencing Observer: `Little c` at (380, 254)
-    dot(380, 254, 42, isLight ? "#eef7f2" : "#0b1d17", alpha * 0.98);
-    circle(380, 254, 42, emerald, alpha * 0.9, 1.5);
-    circle(380, 254, 34, lumen, alpha * 0.78, 1.25, [3, 3]);
-    nucleus(380, 254, 44, alpha, 1, t);
-
-    // Clean opaque backing capsule for `Little c · YOU`
-    roundRect(380 - 76, 305, 152, 30, 15, {
-      fill: isLight ? "rgba(246, 250, 248, 0.96)" : "rgba(5, 10, 8, 0.96)",
-      stroke: hairlineCol,
-      lineWidth: 1.1,
-      alpha: alpha * 0.94,
-    });
-    type("Little c  ·  YOU", 380, 325, 14.5, {
+    // Central Experiencing Observer: `Little c` centered at (380, 272)
+    dot(380, 272, 48, isLight ? "#eef7f2" : "#0b1d17", alpha * 0.98);
+    circle(380, 272, 48, emerald, alpha * 0.92, 1.6);
+    circle(380, 272, 40, lumen, alpha * 0.78, 1.25, [3, 3]);
+    type("Little c", 380, 268, 18.5, {
       color: deepInk,
       alpha,
+      family: "Inter",
+      weight: 700,
+      align: "center",
+      track: false,
+    });
+    type("YOU", 380, 289, 13.5, {
+      color: warmGold,
+      alpha: alpha * 0.96,
       family: "JetBrains Mono",
       weight: 700,
       align: "center",
@@ -1478,7 +1698,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       dot(node.x, node.y, 82, isLight ? (isAct ? "#ffffff" : "#f2f7f4") : (isAct ? "#0f241d" : "#07110e"), alpha * 0.98);
       circle(node.x, node.y, 82, isAct ? warmGold : emerald, alpha * (isAct ? 0.98 : 0.62), isAct ? 2.6 : 1.5);
 
-      type(node.num, node.x, node.y - 31, 15, {
+      type(node.num, node.x, node.y - 31, 16.5, {
         color: isAct ? warmGold : lumen,
         alpha: alpha * 0.98,
         family: "JetBrains Mono",
@@ -1487,7 +1707,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         track: false,
       });
 
-      type(node.title, node.x, node.y + 7, 25, {
+      type(node.title, node.x, node.y + 8, 28, {
         color: deepInk,
         alpha,
         family: "Inter",
@@ -1496,11 +1716,11 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         track: false,
       });
 
-      type(node.role, node.x, node.y + 39, 13.5, {
+      type(node.role, node.x, node.y + 41, 15, {
         color: isAct ? warmGold : muted,
         alpha: alpha * 0.96,
         family: "JetBrains Mono",
-        weight: 600,
+        weight: 700,
         align: "center",
         track: false,
       });
@@ -1703,21 +1923,21 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
   }
 
   /**
-   * ACT III DUAL-INTERPRETATION PLATE (`drawDualInterpretationScene`, 81.6s – 92.6s):
+   * ACT III DUAL-INTERPRETATION PLATE (`drawDualInterpretationScene`):
    * Clean digital telemetry comparing Fear vs. Love (Epistemic Clarity).
    */
-  function drawDualInterpretationScene(cx, cy, radius, t, alpha = 1) {
+  function drawDualInterpretationScene(cx, cy, radius, t, alpha = 1, { startT = 75.0 } = {}) {
     if (alpha <= 0.001) return;
 
     const srcX = cx - 295;
     const srcY = cy;
     const cardX = cx - 95;
-    const cardW = 478;
-    const cardH = 192;
-    const topCardY = cy - 220;
+    const cardW = 486;
+    const cardH = 196;
+    const topCardY = cy - 224;
     const botCardY = cy + 28;
 
-    const flowProg = smooth(81.8, 84.0, t);
+    const flowProg = smooth(startT + 0.1, startT + 1.8, t);
     const topBranch = Array.from({ length: 40 }, (_, k) => {
       const u = k / 39;
       return [
@@ -1742,13 +1962,13 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     line([[srcX - 10, srcY], [srcX + 10, srcY]], warmGold, alpha * 0.92, 1.5);
     line([[srcX, srcY - 10], [srcX, srcY + 10]], warmGold, alpha * 0.92, 1.5);
     circle(srcX, srcY, 3.5, warmGold, alpha * 0.92, 1.3);
-    pillLabel("RF₀ EVENT", srcX, srcY - 88, 14, {
+    pillLabel("RF₀ EVENT", srcX, srcY - 88, 15.5, {
       color: warmIvory,
       border: isLight ? "rgba(156, 96, 14, 0.52)" : "rgba(255, 212, 126, 0.58)",
       alpha,
       dotColor: warmGold,
     });
-    pillLabel("SAME INPUT", srcX, srcY + 94, 13, {
+    pillLabel("SAME INPUT", srcX, srcY + 96, 14.5, {
       color: muted,
       border: hairlineCol,
       alpha: alpha * 0.94,
@@ -1771,12 +1991,12 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       coreRadius: 5.2,
     });
 
-    const cardADT = Math.max(0, t - 81.75);
+    const cardADT = Math.max(0, t - (startT + 0.05));
     const pA0 = clamp(cardADT / 0.38);
-    const pA1 = clamp((cardADT - 0.28) / 0.46);
-    const pA2 = clamp((cardADT - 0.62) / 0.52);
+    const pA1 = clamp((cardADT - 0.24) / 0.42);
+    const pA2 = clamp((cardADT - 0.52) / 0.48);
 
-    type("FEAR  ·  HIGH CANVAS ENTROPY", cardX + 124, topCardY + 46, 16.5, {
+    type("FEAR  ·  HIGH CANVAS ENTROPY", cardX + 124, topCardY + 48, 17.5, {
       color: threatAmber,
       alpha,
       family: "JetBrains Mono",
@@ -1786,7 +2006,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       caret: pA0 > 0.01 && pA0 < 0.995,
       caretColor: threatAmber,
     });
-    type("Fragmented · Defensive", cardX + 124, topCardY + 90, 28, {
+    type("Fragmented · Defensive", cardX + 124, topCardY + 92, 30, {
       color: deepInk,
       alpha,
       family: "Inter",
@@ -1796,7 +2016,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       caret: pA1 > 0.01 && pA1 < 0.995,
       caretColor: threatAmber,
     });
-    type("Competing traces narrow Intent.", cardX + 124, topCardY + 130, 20.5, {
+    type("Competing traces narrow Intent.", cardX + 124, topCardY + 132, 22, {
       color: bodyCopyCol,
       alpha: alpha * 0.96,
       family: "Inter",
@@ -1810,7 +2030,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       const u = k / 47;
       return [
         mix(cardX + 124, cardX + cardW - 28, u),
-        topCardY + 162 + Math.sin(u * 26 + t * 4.2) * 5.5,
+        topCardY + 164 + Math.sin(u * 26 + t * 4.2) * 5.5,
       ];
     });
     line(waveA, threatAmber, alpha * 0.88, 1.9);
@@ -1833,12 +2053,12 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       coreRadius: 5.6,
     });
 
-    const cardBDT = Math.max(0, t - 82.85);
+    const cardBDT = Math.max(0, t - (startT + 0.55));
     const pB0 = clamp(cardBDT / 0.38);
-    const pB1 = clamp((cardBDT - 0.28) / 0.46);
-    const pB2 = clamp((cardBDT - 0.62) / 0.52);
+    const pB1 = clamp((cardBDT - 0.24) / 0.42);
+    const pB2 = clamp((cardBDT - 0.52) / 0.48);
 
-    type("LOVE  ·  LOW CANVAS ENTROPY", cardX + 124, botCardY + 46, 16.5, {
+    type("LOVE  ·  LOW CANVAS ENTROPY", cardX + 124, botCardY + 48, 17.5, {
       color: lumen,
       alpha,
       family: "JetBrains Mono",
@@ -1848,7 +2068,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       caret: pB0 > 0.01 && pB0 < 0.995,
       caretColor: lumen,
     });
-    type("Coherent · Clear Sight", cardX + 124, botCardY + 90, 28, {
+    type("Coherent · Clear Sight", cardX + 124, botCardY + 92, 30, {
       color: deepInk,
       alpha,
       family: "Inter",
@@ -1858,7 +2078,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       caret: pB1 > 0.01 && pB1 < 0.995,
       caretColor: lumen,
     });
-    type("Low Canvas entropy frees Intent.", cardX + 124, botCardY + 130, 20.5, {
+    type("Low Canvas entropy frees Intent.", cardX + 124, botCardY + 132, 22, {
       color: bodyCopyCol,
       alpha: alpha * 0.96,
       family: "Inter",
@@ -1872,15 +2092,710 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       const u = k / 47;
       return [
         mix(cardX + 124, cardX + cardW - 28, u),
-        botCardY + 160 + Math.sin(u * 10 - t * 2.0) * 5.0,
+        botCardY + 164 + Math.sin(u * 10 - t * 2.0) * 5.0,
       ];
     });
     line(waveB, lumen, alpha * 0.9, 2.0);
   }
 
+  // ── 90-SECOND GENERAL-AUDIENCE TRAILER: 5-LAYER CONCENTRIC ARCHITECTURE & LERP STATE ──
+  const isTrailer = baseName === "inquiry-trailer";
+  const trailerBgPrimary = isLight ? "#F4F3EF" : "#0C110F";
+  const trailerTextPrimary = isLight ? "#1C1E1D" : "#EDEFE9";
+  const trailerTextMuted = isLight ? "#6E7571" : "#8E9A94";
+  const trailerGridLine = isLight ? "rgba(28, 30, 29, 0.12)" : "rgba(237, 239, 233, 0.12)";
+  const RGB_SAGE = isLight ? [74, 107, 93] : [98, 158, 134];     // #4A6B5D
+  const RGB_RUST = isLight ? [184, 93, 67] : [214, 110, 80];     // #B85D43
+  const RGB_GOLD = isLight ? [200, 157, 84] : [224, 178, 100];   // #C89D54
+
+  const CANVAS_NODES_SPEC = Array.from({ length: 32 }, (_, idx) => {
+    const ringBand = idx % 3;
+    const baseRadius = 96 + ringBand * 18 + ((idx * 7) % 9) - 4;
+    const harmonicRadius = idx % 2 === 0 ? 104 : 126;
+    const baseAngle = (idx / 32) * TAU + ((idx % 4) - 1.5) * 0.04;
+    const harmonicAngle = (idx / 32) * TAU;
+    const speedFactor = (idx % 2 === 0 ? 1 : -0.78) * (0.82 + ((idx * 5) % 7) * 0.06);
+    const seedPhase = idx * 1.37;
+    const appearOrder = idx / 32;
+    return {
+      idx,
+      baseRadius,
+      harmonicRadius,
+      baseAngle,
+      harmonicAngle,
+      speedFactor,
+      seedPhase,
+      appearOrder,
+    };
+  });
+
+  const INTENT_VECTORS_SPEC = Array.from({ length: 12 }, (_, idx) => {
+    const baseAngle = (idx / 12) * TAU - Math.PI / 2 + Math.PI / 12;
+    const chaosAngleOffset = ((idx * 5) % 7 - 3) * 0.19;
+    const chaosLengthOffset = ((idx * 3) % 5 - 2) * 14;
+    return { idx, baseAngle, chaosAngleOffset, chaosLengthOffset };
+  });
+
+  let lastTrailerTime = null;
+  const trailerRenderState = {
+    colorRGB: [...RGB_SAGE],
+    secondaryRGB: [...RGB_SAGE],
+    coreRadius: 8.5,
+    nodeSpeed: 0.22,
+    jitterAmount: 0,
+    meshOpacity: 0,
+    meshOrder: 0,
+    outerRingProgress: 0,
+    boundaryAlpha: 0,
+    canvasAlpha: 0,
+    waveAmplitude: 0.35,
+    inwardWaveAlpha: 0,
+    outwardWaveAlpha: 0.65,
+    vectorAlpha: 0,
+    vectorAlignment: 0.5,
+    labelOpacity: 0,
+    finalCalloutAlpha: 0,
+  };
+
+  function sc(num) {
+    const list = video.scenes || [];
+    return list[num - 1] || list[list.length - 1] || { start: (num - 1) * 20, end: num * 20 };
+  }
+
+  function computeTrailerTargetState(t) {
+    // 12-Scene boundaries driven dynamically by video.scenes:
+    const s4 = smooth(sc(4).start, sc(4).start + 1.2, t);
+    const s6 = smooth(sc(6).start, sc(6).start + 1.2, t);
+    const s7 = smooth(sc(7).start, sc(7).start + 1.2, t);
+    const s8 = smooth(sc(8).start, sc(8).start + 1.2, t);
+    const s10 = smooth(sc(10).start, sc(10).start + 1.2, t);
+    const s11 = smooth(sc(11).start, sc(11).start + 1.2, t);
+    const s12 = smooth(sc(12).start, sc(12).start + 1.2, t);
+
+    const entropyAmt = s10 * (1 - s11);
+    const finaleAmt = s12;
+
+    // Interpolate primary RGB: Sage -> Rust (S10) -> Gold (S11) -> Sage/Gold Equilibrium (S12)
+    const r =
+      RGB_SAGE[0] * (1 - s10) +
+      RGB_RUST[0] * entropyAmt +
+      RGB_GOLD[0] * s11 * (1 - finaleAmt * 0.55) +
+      RGB_SAGE[0] * finaleAmt * 0.55;
+    const g =
+      RGB_SAGE[1] * (1 - s10) +
+      RGB_RUST[1] * entropyAmt +
+      RGB_GOLD[1] * s11 * (1 - finaleAmt * 0.55) +
+      RGB_SAGE[1] * finaleAmt * 0.55;
+    const b =
+      RGB_SAGE[2] * (1 - s10) +
+      RGB_RUST[2] * entropyAmt +
+      RGB_GOLD[2] * s11 * (1 - finaleAmt * 0.55) +
+      RGB_SAGE[2] * finaleAmt * 0.55;
+
+    // Secondary accent RGB: Gold for core & vectors in S11/S12, Rust in S10, Sage otherwise
+    const sr =
+      RGB_SAGE[0] * (1 - s10) +
+      RGB_RUST[0] * entropyAmt +
+      RGB_GOLD[0] * s11;
+    const sg =
+      RGB_SAGE[1] * (1 - s10) +
+      RGB_RUST[1] * entropyAmt +
+      RGB_GOLD[1] * s11;
+    const sb =
+      RGB_SAGE[2] * (1 - s10) +
+      RGB_RUST[2] * entropyAmt +
+      RGB_GOLD[2] * s11;
+
+    return {
+      colorRGB: [r, g, b],
+      secondaryRGB: [sr, sg, sb],
+      coreRadius: mix(8.5, 11.5, s11),
+      nodeSpeed: mix(0.28, 1.45, entropyAmt) * (1 - s11 * 0.45),
+      jitterAmount: entropyAmt * 14.0,
+      meshOpacity: smooth(sc(8).start + 0.2, sc(8).start + 3.2, t) * mix(0.88, 0.72, s11),
+      meshOrder: s11,
+      outerRingProgress: smooth(sc(4).start + 0.2, sc(4).start + 4.2, t),
+      boundaryAlpha: smooth(sc(6).start + 0.2, sc(6).start + 3.0, t),
+      canvasAlpha: smooth(sc(7).start + 0.2, sc(7).start + 3.0, t),
+      waveAmplitude: mix(0.35, 1.0, s6),
+      inwardWaveAlpha: smooth(sc(4).start + 0.4, sc(4).start + 2.0, t) * (1 - s12 * 0.35),
+      outwardWaveAlpha: smooth(0.4, 1.8, t),
+      vectorAlpha: smooth(sc(10).start + 0.2, sc(10).start + 2.2, t),
+      vectorAlignment: s11,
+      labelOpacity: smooth(sc(6).start + 0.8, sc(6).start + 3.0, t) * (1 - s12 * 0.25),
+      finalCalloutAlpha: smooth(sc(12).start + 0.4, sc(12).start + 2.4, t),
+    };
+  }
+
+  function stepTrailerRenderState(t) {
+    const target = computeTrailerTargetState(t);
+    const isSequential =
+      lastTrailerTime !== null &&
+      Math.abs(t - lastTrailerTime) > 0.0001 &&
+      Math.abs(t - lastTrailerTime) < 0.25;
+    lastTrailerTime = t;
+    const factor = isSequential ? 0.14 : 1.0;
+
+    for (let i = 0; i < 3; i++) {
+      trailerRenderState.colorRGB[i] = mix(trailerRenderState.colorRGB[i], target.colorRGB[i], factor);
+      trailerRenderState.secondaryRGB[i] = mix(
+        trailerRenderState.secondaryRGB[i],
+        target.secondaryRGB[i],
+        factor,
+      );
+    }
+    const keys = [
+      "coreRadius",
+      "nodeSpeed",
+      "jitterAmount",
+      "meshOpacity",
+      "meshOrder",
+      "outerRingProgress",
+      "boundaryAlpha",
+      "canvasAlpha",
+      "waveAmplitude",
+      "inwardWaveAlpha",
+      "outwardWaveAlpha",
+      "vectorAlpha",
+      "vectorAlignment",
+      "labelOpacity",
+      "finalCalloutAlpha",
+    ];
+    for (const key of keys) {
+      trailerRenderState[key] = mix(trailerRenderState[key], target[key], factor);
+    }
+    return trailerRenderState;
+  }
+
+  function rgbCss(rgb, alpha = 1) {
+    const r = Math.round(rgb[0]);
+    const g = Math.round(rgb[1]);
+    const b = Math.round(rgb[2]);
+    return `rgba(${r}, ${g}, ${b}, ${clamp(alpha).toFixed(3)})`;
+  }
+
+  /**
+   * Section 3 & 4: 5-Layer Concentric Architecture for the 90-second General-Audience Trailer.
+   * Smoothly interpolates all radii, opacities, colors, rotation speeds, and particle jitter at 60fps.
+   */
+  function drawConcentricTrailerDiagram(cx, cy, scale = 1.15, t = 0, alpha = 1) {
+    const st = stepTrailerRenderState(t);
+    const primaryCol = rgbCss(st.colorRGB, 1);
+    const secondaryCol = rgbCss(st.secondaryRGB, 1);
+    const sageCol = rgbCss(RGB_SAGE, 1);
+    const goldCol = rgbCss(RGB_GOLD, 1);
+    const rustCol = rgbCss(RGB_RUST, 1);
+    const emerge = smooth(0.15, 1.4, t) * clamp(alpha);
+    if (emerge <= 0.001) return;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // Subtle architectural axis hairlines & radar crosshairs
+    const axisR = 285 * scale;
+    line([[-axisR, 0], [axisR, 0]], trailerGridLine, emerge * 0.75, 1.0, 1, [3, 7]);
+    line([[0, -axisR], [0, axisR]], trailerGridLine, emerge * 0.75, 1.0, 1, [3, 7]);
+
+    // ── LAYER 5: External Environment (E) & Intent Vectors (r = 255px) ──
+    const rEnv = 255 * scale;
+    if (st.outerRingProgress > 0.005) {
+      const envArc = TAU * clamp(st.outerRingProgress);
+      arcSegment(
+        0,
+        0,
+        rEnv,
+        -Math.PI / 2,
+        -Math.PI / 2 + envArc,
+        primaryCol,
+        emerge * 0.72,
+        1.7,
+        [7, 9],
+        -t * 14,
+      );
+
+      // Rotating degree ticks around the perimeter
+      const tickCount = 72;
+      const visibleTicks = Math.floor(tickCount * clamp(st.outerRingProgress));
+      const rotOffset = t * 0.045;
+      for (let i = 0; i < visibleTicks; i++) {
+        const a = -Math.PI / 2 + (i / tickCount) * TAU + rotOffset;
+        const isMajor = i % 6 === 0;
+        const innerT = rEnv + (isMajor ? 4 : 5) * scale;
+        const outerT = rEnv + (isMajor ? 13 : 9) * scale;
+        line(
+          [
+            [Math.cos(a) * innerT, Math.sin(a) * innerT],
+            [Math.cos(a) * outerT, Math.sin(a) * outerT],
+          ],
+          primaryCol,
+          emerge * (isMajor ? 0.68 : 0.34),
+          isMajor ? 1.5 : 1.0,
+        );
+      }
+
+      // Scanning waves traveling INWARD from outer ring toward center (Scene 2+)
+      if (st.inwardWaveAlpha > 0.01) {
+        for (let w = 0; w < 3; w++) {
+          const phase = ((t * 0.36 + w / 3) % 1);
+          const minR = st.boundaryAlpha > 0.3 ? 215 * scale : 18 * scale;
+          const scanR = mix(rEnv, minR, phase);
+          const waveAlpha =
+            Math.sin(phase * Math.PI) * st.inwardWaveAlpha * emerge * 0.46;
+          circle(0, 0, scanR, primaryCol, waveAlpha, 1.4, [5, 8]);
+        }
+      }
+    }
+
+    // ── LAYER 4: T × E Boundary (The Digital Organism Interface, r = 215px) ──
+    const rBoundary = 215 * scale;
+    if (st.boundaryAlpha > 0.005) {
+      const bAlpha = st.boundaryAlpha * emerge;
+      // Structural boundary ring with subtle interference ripples
+      const ripplePts = [];
+      const steps = 96;
+      const rippleAmp =
+        (2.4 + st.jitterAmount * 0.32) * scale * st.waveAmplitude;
+      for (let s = 0; s <= steps; s++) {
+        const u = (s / steps) * TAU;
+        const wave =
+          Math.sin(u * 8 + t * 3.2) * 0.6 +
+          Math.cos(u * 12 - t * 2.4) * 0.4;
+        const rr = rBoundary + wave * rippleAmp;
+        ripplePts.push([Math.cos(u) * rr, Math.sin(u) * rr]);
+      }
+      line(ripplePts, primaryCol, bAlpha * 0.88, 2.2);
+      circle(0, 0, rBoundary - 6 * scale, primaryCol, bAlpha * 0.26, 1.0, [2, 6]);
+
+      // Perimeter collision / intersection nodes along T × E boundary
+      const collisionCount = 16;
+      for (let c = 0; c < collisionCount; c++) {
+        const a = (c / collisionCount) * TAU + t * 0.08;
+        const pulse = 0.5 + 0.5 * Math.sin(t * 3.6 + c * 1.1);
+        const cxNode = Math.cos(a) * rBoundary;
+        const cyNode = Math.sin(a) * rBoundary;
+        dot(cxNode, cyNode, (2.6 + pulse * 2.2) * scale, secondaryCol, bAlpha * (0.45 + pulse * 0.45));
+        if (pulse > 0.72) {
+          circle(cxNode, cyNode, (6 + pulse * 5) * scale, secondaryCol, bAlpha * 0.28, 1.1);
+        }
+      }
+    }
+
+    // ── Intent Vectors (12 directional arrows projecting outward from boundary) ──
+    if (st.vectorAlpha > 0.005) {
+      const vAlpha = st.vectorAlpha * emerge;
+      const align = clamp(st.vectorAlignment);
+      INTENT_VECTORS_SPEC.forEach((vec) => {
+        const jitterAngle =
+          (1 - align) *
+          (vec.chaosAngleOffset + Math.sin(t * 7.5 + vec.idx * 2.1) * 0.14);
+        const angle = vec.baseAngle + jitterAngle;
+        const startR = rBoundary + 4 * scale;
+        const alignedLen = 58 * scale;
+        const chaoticLen =
+          (36 + vec.chaosLengthOffset + Math.sin(t * 9.0 + vec.idx * 1.7) * 12) *
+          scale;
+        const vecLen = mix(chaoticLen, alignedLen, align);
+        const endR = startR + vecLen;
+
+        const sx = Math.cos(angle) * startR;
+        const sy = Math.sin(angle) * startR;
+        const ex = Math.cos(angle) * endR;
+        const ey = Math.sin(angle) * endR;
+
+        const vecCol = align > 0.5 ? goldCol : rustCol;
+        if (align < 0.45) {
+          // Jagged fractured vector shaft during High Entropy (Fear)
+          const midR = (startR + endR) * 0.5;
+          const perp = angle + Math.PI / 2;
+          const kink = Math.sin(t * 11 + vec.idx * 3.1) * 7.5 * (1 - align) * scale;
+          const mx = Math.cos(angle) * midR + Math.cos(perp) * kink;
+          const my = Math.sin(angle) * midR + Math.sin(perp) * kink;
+          line([[sx, sy], [mx, my], [ex, ey]], vecCol, vAlpha * 0.88, 2.2);
+        } else {
+          // Smooth luminous golden ray during Coherence (Love)
+          line([[sx, sy], [ex, ey]], vecCol, vAlpha * 0.92, 2.5);
+        }
+        arrowHead(ex, ey, angle, 9.0 * scale, vecCol, vAlpha * 0.94);
+      });
+    }
+
+    // ── LAYER 2: The Canvas (Accumulated Experience & Memory, r = 95px..135px) ──
+    const rCanvasInner = 95 * scale;
+    const rCanvasOuter = 135 * scale;
+    const computedNodes = [];
+
+    if (st.canvasAlpha > 0.005) {
+      const cAlpha = st.canvasAlpha * emerge;
+      circle(0, 0, rCanvasInner, primaryCol, cAlpha * 0.28, 1.2, [3, 6]);
+      circle(0, 0, rCanvasOuter, primaryCol, cAlpha * 0.32, 1.2, [4, 7]);
+
+      const buildProgress = smooth(sc(7).start + 0.4, sc(8).end, t);
+      const orderAmt = clamp(st.meshOrder);
+
+      CANVAS_NODES_SPEC.forEach((node) => {
+        const nodeAppear = smooth(
+          node.appearOrder * 0.72,
+          node.appearOrder * 0.72 + 0.26,
+          buildProgress,
+        );
+        if (nodeAppear <= 0.005) return;
+
+        const orbitSpeed = mix(node.speedFactor * 0.26, 0.22, orderAmt);
+        const rawAngle = node.baseAngle + t * orbitSpeed;
+        const orderedAngle = node.harmonicAngle + t * 0.18 * (node.idx % 2 === 0 ? 1 : -1);
+        const angle = mix(rawAngle, orderedAngle, orderAmt);
+
+        const jitterR =
+          st.jitterAmount *
+          Math.sin(t * 14.0 + node.seedPhase * 3.7) *
+          scale;
+        const jitterA =
+          (st.jitterAmount / 130) *
+          Math.cos(t * 16.0 + node.seedPhase * 2.3);
+
+        const finalAngle = angle + jitterA;
+        const finalR =
+          mix(node.baseRadius, node.harmonicRadius, orderAmt) * scale + jitterR;
+
+        const nx = Math.cos(finalAngle) * finalR;
+        const ny = Math.sin(finalAngle) * finalR;
+        computedNodes.push({ x: nx, y: ny, angle: finalAngle, r: finalR, alpha: nodeAppear, idx: node.idx });
+      });
+    }
+
+    // ── LAYER 3: The Painting (The Conditioned Perceptual Lens, r = 145px..175px) ──
+    const rPaintInner = 145 * scale;
+    const rPaintOuter = 175 * scale;
+    if (st.meshOpacity > 0.005 && computedNodes.length > 4) {
+      const mAlpha = st.meshOpacity * emerge;
+      const orderAmt = clamp(st.meshOrder);
+
+      circle(0, 0, rPaintInner, primaryCol, mAlpha * 0.36, 1.3);
+      circle(0, 0, rPaintOuter, primaryCol, mAlpha * 0.46, 1.5, orderAmt > 0.5 ? null : [6, 5]);
+
+      // Polygonal lens vertices in the 145px..175px Painting zone
+      const lensCount = 16;
+      const lensPts = [];
+      for (let k = 0; k < lensCount; k++) {
+        const baseA = (k / lensCount) * TAU + t * (orderAmt > 0.5 ? 0.12 : -0.16);
+        const chaosA =
+          (1 - orderAmt) *
+          (st.jitterAmount / 95) *
+          Math.sin(t * 12 + k * 2.1);
+        const a = baseA + chaosA;
+        const baseR = (k % 2 === 0 ? 148 : 172) * scale;
+        const harmR = (k % 2 === 0 ? 152 : 168) * scale;
+        const rr =
+          mix(baseR, harmR, orderAmt) +
+          (1 - orderAmt) * st.jitterAmount * 0.65 * Math.cos(t * 13 + k * 1.9) * scale;
+        lensPts.push({ x: Math.cos(a) * rr, y: Math.sin(a) * rr, angle: a });
+      }
+
+      // Connect adjacent & cross-polygonal lens vertices (The Painting web)
+      for (let k = 0; k < lensCount; k++) {
+        const p1 = lensPts[k];
+        const p2 = lensPts[(k + 1) % lensCount];
+        const p3 = lensPts[(k + 2) % lensCount];
+        line([[p1.x, p1.y], [p2.x, p2.y]], primaryCol, mAlpha * 0.66, 1.5);
+        if (orderAmt > 0.4 || k % 2 === 0) {
+          line([[p1.x, p1.y], [p3.x, p3.y]], primaryCol, mAlpha * 0.40, 1.2);
+        }
+        // In High Entropy (Scene 6), add tangled cross-snarls across the lens
+        if (st.jitterAmount > 2.5 && k % 2 === 0) {
+          const pChaos = lensPts[(k + 5) % lensCount];
+          line(
+            [[p1.x, p1.y], [pChaos.x, pChaos.y]],
+            rustCol,
+            mAlpha * clamp(st.jitterAmount / 14) * 0.60,
+            1.35,
+          );
+        }
+        dot(p1.x, p1.y, 2.8 * scale, primaryCol, mAlpha * 0.82);
+      }
+
+      // Connect Canvas memory nodes to the Painting polygonal web
+      for (let i = 0; i < computedNodes.length; i++) {
+        const n1 = computedNodes[i];
+        const n2 = computedNodes[(i + 1) % computedNodes.length];
+        line([[n1.x, n1.y], [n2.x, n2.y]], primaryCol, mAlpha * n1.alpha * 0.52, 1.25);
+
+        const targetLens = lensPts[i % lensCount];
+        line(
+          [[n1.x, n1.y], [targetLens.x, targetLens.y]],
+          orderAmt > 0.5 ? goldCol : primaryCol,
+          mAlpha * n1.alpha * 0.45,
+          1.15,
+        );
+      }
+
+      // Outward awareness pulses bent/deflected by the Painting mesh (Scene 5 & 6) or shining cleanly through (Scene 7 & 8)
+      const rayCount = 8;
+      for (let rIdx = 0; rIdx < rayCount; rIdx++) {
+        const baseA = (rIdx / rayCount) * TAU + t * 0.15;
+        const rStart = 28 * scale;
+        const rMid = 158 * scale;
+        const rOut = 212 * scale;
+        const deflect =
+          (1 - orderAmt) *
+          (0.22 + (st.jitterAmount / 14) * 0.28) *
+          (rIdx % 2 === 0 ? 1 : -1);
+        const sx = Math.cos(baseA) * rStart;
+        const sy = Math.sin(baseA) * rStart;
+        const mx = Math.cos(baseA) * rMid;
+        const my = Math.sin(baseA) * rMid;
+        const ox = Math.cos(baseA + deflect) * rOut;
+        const oy = Math.sin(baseA + deflect) * rOut;
+        line(
+          [[sx, sy], [mx, my], [ox, oy]],
+          orderAmt > 0.5 ? goldCol : secondaryCol,
+          mAlpha * 0.44,
+          1.5,
+          1,
+          orderAmt > 0.5 ? null : [4, 5],
+        );
+      }
+    }
+
+    // Draw the 32 Canvas nodes on top of the mesh lines so they stay crisp
+    computedNodes.forEach((n) => {
+      const cAlpha = st.canvasAlpha * n.alpha * emerge;
+      const nodeCol = st.meshOrder > 0.5 && n.idx % 2 === 0 ? goldCol : primaryCol;
+      dot(n.x, n.y, 6.4 * scale, nodeCol, cAlpha * 0.25);
+      dot(n.x, n.y, 3.6 * scale, nodeCol, cAlpha * 0.95);
+    });
+
+    // ── Scene 11 Golden Awakening Shockwave from Little c₁ ──
+    const s11Start = sc(11).start;
+    if (t >= s11Start && t <= s11Start + 4.8) {
+      const shockProgress = smooth(s11Start, s11Start + 3.4, t);
+      const shockFade = 1 - smooth(s11Start + 2.2, s11Start + 4.5, t);
+      const shockR = mix(18 * scale, 285 * scale, shockProgress);
+      circle(0, 0, shockR, goldCol, shockFade * emerge * 0.85, 3.2);
+      circle(0, 0, shockR * 0.88, goldCol, shockFade * emerge * 0.42, 1.6);
+    }
+
+    // ── LAYER 1: Canonical Little c₁ Organic 4-Lobe Cell at (0, 0) ──
+    if (st.outwardWaveAlpha > 0.005) {
+      const maxRippleR =
+        st.boundaryAlpha > 0.3 ? rBoundary : 185 * scale;
+      for (let rp = 0; rp < 3; rp++) {
+        const phase = ((t * 0.38 + rp / 3) % 1);
+        const rr = mix(24 * scale, maxRippleR, phase);
+        const rAlpha =
+          (1 - phase) *
+          Math.sin(phase * Math.PI) *
+          st.outwardWaveAlpha *
+          emerge *
+          0.55;
+        circle(0, 0, rr, secondaryCol, rAlpha, 1.5);
+      }
+    }
+
+    const cellR = (st.jitterAmount > 2.5 ? 22 : st.meshOrder > 0.5 ? 28 : 25) * scale;
+    drawOrganicCell(0, 0, cellR, t, emerge, {
+      phase: 0.4,
+      withSurface: true,
+      tint: secondaryCol,
+      coreRadius: 5.8 * scale,
+      showPin: true,
+    });
+
+    ctx.restore();
+  }
+
+  function drawMessageVignette(cx, cy, scale, t, alpha) {
+    if (alpha < 0.005) return;
+    const elapsed = Math.max(0, t - sc(3).start);
+    const appear = smooth(0, 1.2, elapsed);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    // An ordinary phone is the object in this example, rather than a card
+    // containing an abstract principle.
+    roundRect(-410, -176, 236, 350, 30, {
+      fill: isLight ? "#ffffff" : "#0c1712", stroke: muted, lineWidth: 2, alpha,
+    });
+    line([[-326, -155], [-259, -155]], muted, alpha * 0.55, 3);
+    type("Message", -292, -104, 20, { color: muted, alpha, family: "Space Grotesk", align: "center", track: false });
+    roundRect(-382, -55, 180, 86, 20, {
+      fill: isLight ? "#dcebe2" : "#183d2c", alpha: alpha * appear,
+    });
+    type("Okay.", -292, -2, 36, {
+      color: deepInk, alpha: alpha * appear, family: "Space Grotesk", weight: 500, align: "center", track: false,
+    });
+    line([[-330, 145], [-254, 145]], muted, alpha * 0.45, 3);
+
+    const readings = smooth(0.8, 2.1, elapsed);
+    line([[-150, -12], [-60, -12], [-8, -76], [48, -76]], muted, alpha * readings * 0.65, 1.6);
+    line([[-60, -12], [-8, 70], [48, 70]], muted, alpha * readings * 0.65, 1.6);
+    dot(48, -76, 4, threatAmber, alpha * readings);
+    dot(48, 70, 4, emerald, alpha * readings);
+    type("They’re upset.", 75, -61, 38, {
+      color: threatAmber, alpha: alpha * readings, family: "Space Grotesk", weight: 500, track: false,
+    });
+    type("They’re busy.", 75, 85, 38, {
+      color: lumen, alpha: alpha * readings, family: "Space Grotesk", weight: 500, track: false,
+    });
+    type("One message. More than one reading.", 50, 158, 22, {
+      color: bodyCopyCol, alpha: alpha * readings, family: "Space Grotesk", track: false,
+    });
+    ctx.restore();
+  }
+
+  function drawMapVignette(cx, cy, scale, t, alpha) {
+    if (alpha < 0.005) return;
+    const elapsed = Math.max(0, t - sc(5).start);
+    const reveal = smooth(0.2, 2.4, elapsed);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    // Folded paper and a walked street share a route without sharing a frame.
+    const paper = [[-330, -140], [-246, -158], [-162, -136], [-78, -154], [-78, 132], [-162, 152], [-246, 130], [-330, 150]];
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    paper.forEach(([x, y], index) => index === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+    ctx.closePath();
+    ctx.fillStyle = isLight ? "#ffffff" : "#14271e";
+    ctx.fill();
+    ctx.strokeStyle = hairlineCol;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+    ctx.restore();
+    line([[-246, -158], [-246, 130]], muted, alpha * 0.35, 1.2);
+    line([[-162, -136], [-162, 152]], muted, alpha * 0.35, 1.2);
+    for (const y of [-88, -24, 40, 104]) line([[-315, y + 12], [-95, y - 8]], muted, alpha * 0.20, 1.1);
+    const route = [[-306, 96], [-265, 38], [-218, 57], [-180, -16], [-112, -85]];
+    line(route, emerald, alpha * reveal, 4.2, reveal);
+    dot(-306, 96, 5, warmGold, alpha * reveal);
+    dot(-112, -85, 6, emerald, alpha * reveal);
+
+    const street = [[4, 140], [62, 48], [138, 65], [234, -94]];
+    line(street, isLight ? "#d6ded5" : "#20382c", alpha, 48);
+    line(street, warmGold, alpha * 0.75, 2, 1, [6, 9]);
+    // A small house and a tree make this a lived place, not another flowchart.
+    line([[84, -72], [84, -122], [124, -154], [164, -122], [164, -72], [84, -72]], muted, alpha * 0.9, 2.4);
+    line([[73, -121], [124, -163], [175, -121]], emerald, alpha * 0.95, 3.4);
+    line([[114, -72], [114, -103], [136, -103], [136, -72]], warmGold, alpha * 0.85, 2.2);
+    line([[258, 68], [258, 12]], muted, alpha * 0.8, 4);
+    dot(258, -7, 32, emerald, alpha * 0.23);
+    circle(258, -7, 32, emerald, alpha * 0.7, 1.4);
+    const walk = (elapsed * 0.045) % 1;
+    const personX = mix(street[0][0], street[1][0], walk);
+    const personY = mix(street[0][1], street[1][1], walk);
+    dot(personX, personY - 14, 5.5, deepInk, alpha * reveal);
+    line([[personX, personY - 7], [personX, personY + 8]], deepInk, alpha * reveal, 3);
+    line([[personX - 7, personY + 18], [personX, personY + 8], [personX + 7, personY + 18]], deepInk, alpha * reveal, 2.2);
+
+    type("The map", -204, 214, 30, { color: deepInk, alpha, family: "Space Grotesk", weight: 500, align: "center", track: false });
+    type("A useful model", -204, 250, 22, { color: bodyCopyCol, alpha, family: "Space Grotesk", align: "center", track: false });
+    type("The street", 132, 214, 30, { color: deepInk, alpha, family: "Space Grotesk", weight: 500, align: "center", track: false });
+    type("A lived experience", 132, 250, 22, { color: bodyCopyCol, alpha, family: "Space Grotesk", align: "center", track: false });
+    ctx.restore();
+  }
+
+  function drawPaintingVignette(cx, cy, scale, t, alpha) {
+    if (alpha < 0.005) return;
+    const elapsed = Math.max(0, t - sc(8).start);
+    const strokes = [
+      { points: [[-216, 88], [-142, -56], [-22, -91], [84, -48]], color: emerald, width: 36 },
+      { points: [[-156, 112], [-55, 42], [67, 68], [202, -55]], color: warmGold, width: 44 },
+      { points: [[-224, -104], [-117, -123], [2, -15], [169, 14]], color: originJade, width: 30 },
+      { points: [[-72, 132], [14, 69], [119, 91], [224, 40]], color: copper, width: 28 },
+      { points: [[-211, 20], [-118, 64], [18, -46], [183, -111]], color: lumen, width: 20 },
+    ];
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    // The frame belongs to a physical canvas on an easel; the strokes remain
+    // visible as later experiences arrive.
+    line([[-170, 157], [-227, 278]], rfBronze, alpha * 0.85, 8);
+    line([[170, 157], [227, 278]], rfBronze, alpha * 0.85, 8);
+    line([[0, -244], [0, -173]], rfBronze, alpha * 0.85, 8);
+    ctx.save();
+    ctx.rotate(-0.035);
+    roundRect(-270, -185, 540, 370, 2, {
+      fill: isLight ? "#f7f0df" : "#d8dfcd", stroke: isLight ? "#d2c7ad" : "#637d67", lineWidth: 3, alpha,
+    });
+    strokes.forEach((stroke, index) => {
+      const progress = smooth(index * 2.0, index * 2.0 + 4.0, elapsed);
+      line(stroke.points, stroke.color, alpha * 0.62, stroke.width, progress);
+      line(stroke.points.map(([x, y]) => [x, y - 6]), stroke.color, alpha * 0.22, 3, progress);
+    });
+    ctx.restore();
+    line([[-294, 197], [294, 197]], rfBronze, alpha * 0.9, 9);
+    type("Each experience leaves a trace.", 0, 320, 26, {
+      color: bodyCopyCol, alpha: alpha * smooth(1, 3, elapsed), family: "Space Grotesk", align: "center", track: false,
+    });
+    ctx.restore();
+  }
+
+  // The film moves between an open statement, an expansive figure, and an
+  // off-centre conversation between words and geometry. These are placements,
+  // not columns: each scene gives its main idea the space it needs.
+  const trailerPlacements = [
+    { figure: [960, 310, 0.68], text: [960, 620, 1540, 72, "center"], noteY: 840 },
+    { figure: [450, 570, 1.18], text: [1020, 365, 770, 60, "left"] },
+    { figure: [960, 310, 1], text: [960, 610, 1500, 72, "center"], noteY: 830 },
+    { figure: [960, 590, 1.10], text: [960, 175, 1600, 56, "center"], noteY: 955 },
+    { figure: [440, 590, 1.05], text: [1020, 360, 770, 58, "left"] },
+    { figure: [960, 610, 1.05], text: [960, 175, 1600, 54, "center"], noteY: 965 },
+    { figure: [1390, 585, 0.96], text: [128, 320, 800, 56, "left"] },
+    { figure: [460, 570, 0.95], text: [1020, 360, 770, 56, "left"] },
+    { figure: [960, 590, 1.25], text: [960, 175, 1600, 60, "center"], noteY: 950 },
+    { figure: [960, 590, 1.10], text: [960, 175, 1540, 62, "center"], noteY: 955 },
+    { figure: [470, 590, 1.05], text: [1000, 300, 810, 54, "left"] },
+    { figure: [960, 610, 0.95], text: [960, 160, 1650, 56, "center"], noteY: 955 },
+  ];
+
+  function trailerPlacement(t) {
+    const index = Math.max(0, (video.scenes || []).findIndex((scene) => t >= scene.start && t < scene.end));
+    return trailerPlacements[index] || trailerPlacements[0];
+  }
+
+  function wrapFilmCopy(text, width, size, weight = 500, family = "Space Grotesk") {
+    ctx.save();
+    ctx.font = `${weight} ${size}px "${family}"`;
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
+    const lines = [];
+    let current = "";
+    const words = text.replace(/\bBig C\b/g, "Big\u00a0C").replace(/\bLittle c\b/g, "Little\u00a0c").split(/[ \t\n]+/);
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (current && ctx.measureText(candidate).width > width) {
+        lines.push(current);
+        current = word;
+      } else current = candidate;
+    }
+    if (current) lines.push(current);
+    ctx.restore();
+    return lines;
+  }
+
   function studioFocus(t) {
     if (markOnly) {
       return { x: 960, y: 540, r: 295, splitAmt: 0, toMark: 1 };
+    }
+    if (isTrailer) {
+      if (diagramOnly) {
+        return { x: 960, y: 516, r: 335, splitAmt: 0, toMark: 0 };
+      }
+      const toSplit = smooth(4.4, 5.5, t);
+      const toMark = smooth(video.duration - 7.2, video.duration - 5.8, t);
+      const splitAmt = toSplit * (1 - toMark);
+      const placement = trailerPlacement(t);
+      const index = Math.max(0, (video.scenes || []).findIndex((scene) => t >= scene.start && t < scene.end));
+      const previous = trailerPlacements[Math.max(0, index - 1)];
+      const move = smooth(sc(index + 1).start, sc(index + 1).start + 1.1, t);
+      const figure = placement.figure.map((value, i) => mix(previous.figure[i], value, move));
+      return {
+        x: mix(960, figure[0], splitAmt),
+        y: mix(toMark > 0.5 ? 364 : 388, figure[1], splitAmt),
+        r: mix(250, 265 * figure[2], splitAmt),
+        diagramScale: figure[2],
+        splitAmt,
+        toMark,
+      };
     }
     if (intro) {
       const toSplit = smooth(5.8, 6.8, t);
@@ -1910,11 +2825,11 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     const focus = studioFocus(t);
     const emerge = markOnly
       ? smooth(0, 0.5, t)
-      : intro
-        ? smooth(0.05, 0.8, t)
+      : intro || isTrailer
+        ? smooth(0.05, 0.7, t)
         : smooth(0.4, 2.2, t);
 
-    // 1. Deep Obsidian Black (Dark) / Crisp Alabaster White (Light) Base — Zero Beige
+    // 1. Deep Obsidian Black (Dark) / Crisp Alabaster White (Light) Base
     ctx.fillStyle = isLight ? "#f6faf8" : "#020303";
     ctx.fillRect(0, 0, W, H);
 
@@ -1949,7 +2864,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         ctx.fillRect(0, 0, W, H);
       }
 
-      // 4. Primary Stage Optical Halo (Pure Emerald-Jade Depth)
+      // 4. Primary Stage Optical Halo (Shifts dynamically in Scene 6 Rust & Scene 7 Gold for Trailer)
       const keyRadius = focus.r * 2.35;
       const keyLight = ctx.createRadialGradient(
         focus.x - focus.r * 0.12,
@@ -1959,7 +2874,12 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         focus.y,
         keyRadius,
       );
-      if (isLight) {
+      if (isTrailer) {
+        const st = stepTrailerRenderState(t);
+        keyLight.addColorStop(0, rgbCss(st.secondaryRGB, (isLight ? 0.13 : 0.17) * emerge));
+        keyLight.addColorStop(0.46, rgbCss(st.colorRGB, (isLight ? 0.05 : 0.07) * emerge));
+        keyLight.addColorStop(1, rgbCss(st.colorRGB, 0));
+      } else if (isLight) {
         keyLight.addColorStop(0, `rgba(20, 108, 78, ${(0.09 * emerge).toFixed(3)})`);
         keyLight.addColorStop(0.46, `rgba(31, 94, 75, ${(0.04 * emerge).toFixed(3)})`);
         keyLight.addColorStop(1, "rgba(246, 250, 248, 0)");
@@ -2016,40 +2936,47 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       }
     }
 
-    if (markOnly) return;
+    if (markOnly || diagramOnly) return;
 
-    // Clean vertical Swiss-grid divider in Two-Column mode
-    if (focus.splitAmt > 0.01) {
-      line([[DIVIDER_X, 116], [DIVIDER_X, 968]], hairlineCol, focus.splitAmt * 0.78, 1.1);
+    // The short identity film retains its original split treatment.
+    if (!isTrailer && focus.splitAmt > 0.01) {
+      line([[DIVIDER_X, 112], [DIVIDER_X, 944]], hairlineCol, focus.splitAmt * 0.82, 1.2);
     }
 
-    // Refined top running header: appears ONLY after Digital Organism Theory is introduced
-    // (Act I Beat 4 at 26.4s in the trailer; Beat 2 at 6.3s in the intro)
-    const dotIntroduced = intro ? smooth(6.3, 7.3, t) : smooth(26.4, 27.6, t);
+    // The trailer carries one scene title, without a second running headline.
+    if (isTrailer) return;
+
+    // Refined top running header (bottom area stays 100% open for player chrome & YouTube scrubber)
+    const dotIntroduced = isTrailer
+      ? smooth(0.2, 1.2, t)
+      : intro
+        ? smooth(6.3, 7.3, t)
+        : smooth(26.4, 27.6, t);
     const headerAlpha = focus.splitAmt * dotIntroduced;
     if (headerAlpha > 0.01) {
-      line([[MARGIN_L, 90], [MARGIN_R, 90]], hairlineCol, 0.68 * headerAlpha, 1.0);
-      type("DIGITAL ORGANISM THEORY  ·  A MODEL OF REALITY", MARGIN_L, 68, 15, {
+      line([[MARGIN_L, 90], [MARGIN_R, 90]], hairlineCol, 0.72 * headerAlpha, 1.1);
+      type("DIGITAL ORGANISM THEORY  ·  A COMPLETE THEORY OF REALITY", MARGIN_L, 66, 16, {
         color: emerald,
-        alpha: headerAlpha * 0.90,
+        alpha: headerAlpha * 0.94,
         family: "JetBrains Mono",
         weight: 700,
         track: false,
       });
-      const sectionRight = intro
-        ? "YOU, THE OBSERVER  ·  T × E → Big C → Little c"
-        : t < 34.6
-          ? "ACT I  ·  THE DIGITAL ORGANISM"
-          : t < 70.0
-            ? "ACT II  ·  T × E, Big C, Little c & RF₀"
-            : t < 104.2
-              ? "ACT III  ·  THE CANVAS, THE PAINTING & THE LOOP"
-              : "ACT IV  ·  DECOUPLING & LOVE";
-      type(sectionRight, MARGIN_R, 68, 14.5, {
+      const activeScene =
+        isTrailer && video.scenes
+          ? video.scenes.find((sc) => t >= sc.start && t < sc.end) ||
+            video.scenes[video.scenes.length - 1]
+          : null;
+      const sectionRight = activeScene
+        ? activeScene.actHeader
+        : intro
+          ? "YOU, THE OBSERVER  ·  T × E → Big C → Little c"
+          : "DIGITAL ORGANISM THEORY";
+      type(sectionRight, MARGIN_R, 66, 15.5, {
         color: muted,
-        alpha: headerAlpha * 0.84,
+        alpha: headerAlpha * 0.88,
         family: "JetBrains Mono",
-        weight: 600,
+        weight: 700,
         align: "right",
         track: false,
       });
@@ -2163,7 +3090,7 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
 
       // Beat 3 (12.5s – 18.4s, TWO-COLUMN): Home Screen 4-Step Experience Loop (`ArchitectureDiagram.tsx`)
       if (rf0In > 0.01) {
-        drawHomeExperienceLoop(cx, cy, 1.08, t, rf0In);
+        drawHomeExperienceLoop(cx, cy, 1.0, t, rf0In);
       }
 
       // Beat 4 (18.7s – 24.6s, TWO-COLUMN): Home Screen `Little c₁` Awareness Expansion & Intent Vector Toward Love
@@ -2210,134 +3137,152 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
       return;
     }
 
-    // ── FILM 1: 132-SECOND OFFICIAL SCIENTIFIC TRAILER (COMMANDING FULL-STAGE HOME SCREEN ARCHITECTURE) ──
+    // ── FILM 1: 12-SCENE BOOK ONE V4 TRAILER (OPENING SPLASH → 12 SCENES → CLOSING COMMUNITY SPLASH) ──
     const cx = focus.x;
     const cy = focus.y;
-    const r = focus.r;
+    const figureScale = diagramOnly ? 1 : (focus.diagramScale || 1);
 
-    // 1. ACT I (0:00 – 0:34): Center First-Person `Little c₁` → `RF₀` vs `Little c₁` → Isolated `Little c₁` & Digital Organism Definition
-    const act1Alpha = smooth(0.4, 1.6, t) * (1 - smooth(34.0, 35.4, t));
-    if (act1Alpha > 0.005) {
-      drawOrdinaryRoomScene(cx, cy, r, t, act1Alpha, {
-        dissolveStart: 22.0,
-        dissolveEnd: 31.0,
-        showLittleCOverlay: 0,
+    // Helper for the 36-spoke Concentric Emergence Field + Canonical DOT Nucleus Mark (Opening & Closing Splashes)
+    function drawConcentricSplashMark(mx, my, splashAlpha, buildProg) {
+      if (splashAlpha <= 0.005) return;
+      const breathe = 1 + 0.012 * Math.sin(t * 1.5);
+      const spokeCount = 36;
+      const ringRadii = [196, 238, 286, 340, 400];
+      const rot = (1 - buildProg) * 0.14 + t * 0.012;
+
+      for (let s = 0; s < spokeCount; s++) {
+        const angle = (s / spokeCount) * TAU + rot;
+        const pts = ringRadii.map((r) => {
+          const squash = 1 + 0.04 * Math.cos(angle * 2);
+          return [mx + Math.cos(angle) * r * squash, my + Math.sin(angle) * r * squash];
+        });
+        line(pts, emerald, splashAlpha * 0.22, 1.0);
+      }
+
+      ringRadii.forEach((r, rIdx) => {
+        const f = 1 - rIdx / (ringRadii.length + 1);
+        const pts = [];
+        for (let s = 0; s <= spokeCount * 2; s++) {
+          const angle = (s / (spokeCount * 2)) * TAU + rot;
+          const squash = 1 + 0.04 * Math.cos(angle * 2);
+          pts.push([mx + Math.cos(angle) * r * squash, my + Math.sin(angle) * r * squash]);
+        }
+        line(pts, rIdx % 2 === 0 ? emerald : warmGold, splashAlpha * 0.26 * f, 1.05);
+        for (let s = 0; s < spokeCount; s++) {
+          const angle = (s / spokeCount) * TAU + rot;
+          const squash = 1 + 0.04 * Math.cos(angle * 2);
+          const px = mx + Math.cos(angle) * r * squash;
+          const py = my + Math.sin(angle) * r * squash;
+          const emergent = rIdx <= 3 && (rIdx * 5 + s) % 9 === 0;
+          if (emergent) {
+            const col = (rIdx + s) % 3 === 0 ? warmGold : lumen;
+            dot(px, py, 4.2, col, splashAlpha * 0.28 * f);
+            dot(px, py, 1.8, col, splashAlpha * 0.92 * f);
+          } else {
+            dot(px, py, 1.15, emerald, splashAlpha * 0.50 * f);
+          }
+        }
       });
+
+      nucleus(mx, my, 304 * breathe, splashAlpha, buildProg, t);
     }
 
-    // 2. ACT II (0:34 – 1:10): LAYER-BY-LAYER BUILD OF THE TWO-PROCESS SYSTEM (`Big C → Little c`)
-    const act2Alpha = smooth(34.4, 35.8, t) * (1 - smooth(69.4, 70.8, t));
-    if (act2Alpha > 0.005) {
-      // Phase 2A (34.8s – 46.2s): Process 01 — `Big C [T, E]`
-      const phase2A = act2Alpha * (1 - smooth(46.0, 47.4, t));
-      if (phase2A > 0.01) {
-        drawHomeArchitecture(cx, cy, 0.90, t, phase2A, {
-          focusPoint: FC,
-          reticle: 0.9,
-          origin: 1,
-          bigC: 1,
-          outerLoop: 1,
-          otherFrames: 0,
-          rf0: 0,
-          peers: 0,
-          littleC: 0,
-          innerLoop: 0,
-          awareness: 0,
-          intent: 0,
-          labels: 1,
-        });
-      }
-
-      // Phase 2B (46.6s – 58.0s): Process 02 — `Big C → Little c₁` (Two-Process System)
-      const triadAlpha = act2Alpha * smooth(46.2, 47.6, t) * (1 - smooth(57.8, 59.2, t));
-      if (triadAlpha > 0.01) {
-        drawHomeArchitecture(cx, cy, 0.90, t, triadAlpha, {
-          focusPoint: FC,
-          reticle: 0.9,
-          origin: 0.85,
-          bigC: 1,
-          outerLoop: 1,
-          otherFrames: 1,
-          rf0: 0.22,
-          peers: 1,
-          littleC: 1,
-          innerLoop: 1,
-          awareness: 1,
-          intent: 0,
-          labels: 1,
-        });
-      }
-
-      // Phase 2C (58.4s – 69.8s): Complete Home Screen `HeroArchitecture.tsx` with `RF₀` Locked In
-      const rf0Alpha = act2Alpha * smooth(58.0, 59.6, t);
-      if (rf0Alpha > 0.01) {
-        drawHomeArchitecture(cx, cy, 0.90, t, rf0Alpha, {
-          focusPoint: FC,
-          reticle: 1,
-          origin: 1,
-          bigC: 1,
-          outerLoop: 1,
-          otherFrames: 1,
-          rf0: 1,
-          peers: 1,
-          littleC: 1,
-          innerLoop: 1,
-          awareness: 1,
-          intent: 1,
-          intentProgress: smooth(59.4, 64.2, t),
-          labels: 1,
-        });
-      }
+    // Opening Splash (0.0s – 5.0s): Full 5-Second Centered DOT Emergence Field + Canonical DOT Nucleus Mark
+    const openSplashA = diagramOnly ? 0 : smooth(0.05, 0.65, t) * (1 - smooth(4.4, 5.4, t));
+    if (openSplashA > 0.01) {
+      drawConcentricSplashMark(cx, cy, openSplashA, smooth(0.2, 3.4, t));
     }
 
-    // 3. ACT III (1:10 – 1:44): THE CANVAS, THE PAINTING, AND THE HOME SCREEN 4-STEP EXPERIENCE LOOP
-    // Part A (70.2s – 81.2s): Magnified Home Screen `Little c₁` Cell (Inner Canvas & Outer Painting Membranes)
-    const act3PartA = smooth(69.8, 71.2, t) * (1 - smooth(80.8, 82.2, t));
-    if (act3PartA > 0.005) {
-      drawHomeArchitecture(cx, cy, 1.56, t, act3PartA, {
+    const stageA = diagramOnly ? 1 : smooth(4.5, 5.5, t) * (1 - focus.toMark);
+
+    // Scenes 1 and 2: the local observer; scene 3 grounds interpretation in an ordinary message.
+    const s123A = stageA * envelope(t, sc(1).start, sc(2).end - 0.05, 0.35, 0.40);
+    if (s123A > 0.01) {
+      const em1 = smooth(4.8, 7.6, t);
+      const inS2 = smooth(sc(2).start - 0.3, sc(2).start + 0.8, t);
+      const inS3 = smooth(sc(3).start - 0.3, sc(3).start + 0.8, t);
+      const scScale = mix(mix(1.48, 1.56, inS2), 1.42, inS3) * figureScale;
+      drawHomeArchitecture(cx, cy, scScale, t, s123A, {
         focusPoint: C1,
-        reticle: 0.7,
+        reticle: 0.8,
         origin: 0,
         bigC: 0,
         outerLoop: 0,
         otherFrames: 0,
-        rf0: 0.55,
-        peers: 0.65,
+        rf0: mix(0.22, 0.42, inS3),
+        peers: inS3 * 0.45,
         littleC: 1,
-        innerLoop: 1,
-        awareness: 1,
-        intent: 0.85,
-        intentProgress: 0.5,
+        innerLoop: em1,
+        awareness: em1,
+        awarenessExpand: 0.15 + inS2 * 0.15,
+        intent: em1 * mix(0.45, 0.85, inS3),
+        intentProgress: em1,
         labels: 1,
       });
     }
 
-    // Part B (81.6s – 92.6s): Invariant RF₀ Event Refracted Through Fear vs. Love
-    const act3PartB = smooth(81.2, 82.4, t) * (1 - smooth(92.2, 93.4, t));
-    if (act3PartB > 0.005) {
-      drawDualInterpretationScene(cx, cy, r, t, act3PartB);
+    const messageA = stageA * envelope(t, sc(3).start + 0.05, sc(3).end - 0.05, 0.55, 0.45);
+    drawMessageVignette(cx, cy, figureScale, t, messageA);
+
+    // Science retains the shared-world geometry; the following scene opens onto map and street.
+    const s45A = stageA * envelope(t, sc(4).start + 0.05, sc(4).end - 0.05, 0.40, 0.40);
+    if (s45A > 0.01) {
+      const inS5 = smooth(sc(5).start - 0.3, sc(5).start + 0.9, t);
+      drawHomeArchitecture(cx, cy, mix(1.18, 1.04, inS5) * figureScale, t, s45A, {
+        focusPoint: FC,
+        reticle: mix(0.85, 1.0, inS5),
+        origin: inS5 * 0.45,
+        bigC: inS5 * 0.35,
+        outerLoop: inS5 * 0.35,
+        otherFrames: 0,
+        rf0: 1,
+        peers: 0.85,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        intent: 0.65,
+        intentProgress: 0.65,
+        labels: 1,
+      });
+      for (let w = 0; w < 3; w++) {
+        const phase = ((t * 0.34 + w / 3) % 1);
+        const scanR = mix(228, 42, phase);
+        const wAlpha = Math.sin(phase * Math.PI) * s45A * 0.50;
+        circle(cx, cy, scanR, warmGold, wAlpha, 1.6, [6, 8]);
+      }
     }
 
-    // Part C (93.0s – 104.0s): Canonical Home Screen 4-Step Experience Loop (`ArchitectureDiagram.tsx`)
-    const act3PartC = smooth(92.6, 93.8, t) * (1 - smooth(103.6, 104.8, t));
-    if (act3PartC > 0.005) {
-      drawHomeExperienceLoop(cx, cy, 1.05, t, act3PartC);
-    }
+    const mapA = stageA * envelope(t, sc(5).start + 0.05, sc(5).end - 0.05, 0.55, 0.45);
+    drawMapVignette(cx, cy, figureScale, t, mapA);
 
-    // 4. ACT IV (1:44 – 2:12): DECOUPLING, INTENT & LOVE AS EPISTEMIC AND LIFE NECESSITY FOR US
-    const act4Room = smooth(104.0, 105.2, t) * (1 - smooth(114.2, 115.4, t));
-    if (act4Room > 0.005) {
-      drawOrdinaryRoomScene(cx, cy, r, t, act4Room, {
-        showLittleCOverlay: 1,
+    // Scene 6: Home Screen Macro Architecture (`Big C[T, E] ↻`)
+    const s6A = stageA * envelope(t, sc(6).start + 0.05, sc(6).end - 0.05, 0.40, 0.40);
+    if (s6A > 0.01) {
+      const em6 = smooth(sc(6).start + 0.4, sc(6).start + 4.5, t);
+      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s6A, {
+        focusPoint: FC,
+        reticle: 0.85,
+        origin: 1,
+        bigC: em6,
+        outerLoop: em6,
+        otherFrames: em6 * 0.65,
+        rf0: 0,
+        peers: 0,
+        littleC: em6 * 0.72,
+        innerLoop: em6 * 0.72,
+        awareness: em6 * 0.55,
+        intent: 0,
+        labels: 1,
       });
     }
 
-    // Part B (115.0s – 124.8s): Full Home Screen `HeroArchitecture.tsx` Illuminated with Expanded Awareness & Intent
-    const act4Arch = smooth(114.6, 115.8, t) * (1 - smooth(124.4, 125.6, t));
-    if (act4Arch > 0.005) {
-      drawHomeArchitecture(cx, cy, 0.90, t, act4Arch, {
+    // Scene 7: Complete Nested Architecture (`Big C[T, E] → RF₀ (Frame) → Reality Stream → Little c₁…cₙ`)
+    const s7A = stageA * envelope(t, sc(7).start + 0.05, sc(7).end - 0.05, 0.40, 0.40);
+    if (s7A > 0.01) {
+      const em7 = smooth(sc(7).start + 0.4, sc(7).start + 4.5, t);
+      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s7A, {
         focusPoint: FC,
-        reticle: 1,
+        reticle: 0.9,
         origin: 1,
         bigC: 1,
         outerLoop: 1,
@@ -2347,35 +3292,203 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
         littleC: 1,
         innerLoop: 1,
         awareness: 1,
-        awarenessExpand: 1,
+        awarenessExpand: 0.25 * em7,
+        intent: 1,
+        intentProgress: em7,
+        labels: 1,
+      });
+    }
+
+    const paintingA = stageA * envelope(t, sc(8).start + 0.05, sc(8).end - 0.05, 0.55, 0.45);
+    drawPaintingVignette(cx, cy, figureScale, t, paintingA);
+
+    // The accumulated painting leads into the complete embodied experience loop.
+    const s89A = stageA * envelope(t, sc(9).start + 0.05, sc(9).end - 0.05, 0.40, 0.40);
+    if (s89A > 0.01) {
+      const isScene8 = t < sc(9).start;
+      drawHomeExperienceLoop(cx, cy, 0.98 * figureScale, t, s89A, {
+        startT: sc(8).start + 0.2,
+        sixStep: true,
+        highlightPair: isScene8,
+      });
+    }
+
+    // Scene 10: Concentric 5-Layer Organism Radar — High Entropy Rust (When Fear Takes the Lead)
+    const s10A = stageA * envelope(t, sc(10).start + 0.05, sc(10).end - 0.05, 0.40, 0.40);
+    if (s10A > 0.01) {
+      drawConcentricTrailerDiagram(cx, cy, 0.94 * figureScale, t, s10A);
+    }
+
+    // Scene 11: Concentric 5-Layer Organism Radar — Golden Awakening & Low-Entropy Coherence (Love, Responsibility, and Repair)
+    const s11A = stageA * envelope(t, sc(11).start + 0.05, sc(11).end - 0.05, 0.40, 0.40);
+    if (s11A > 0.01) {
+      drawConcentricTrailerDiagram(cx, cy, 0.94 * figureScale, t, s11A);
+    }
+
+    // Scene 12: Shared inquiry opens across the stage before the community closing.
+    const s12A = stageA * smooth(sc(12).start + 0.05, sc(12).start + 0.9, t);
+    if (s12A > 0.01) {
+      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s12A, {
+        focusPoint: FC,
+        reticle: 0.9,
+        origin: 1,
+        bigC: 1,
+        outerLoop: 1,
+        otherFrames: 1,
+        rf0: 1,
+        peers: 1,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: 0.75,
         intent: 1,
         intentProgress: 1,
         labels: 1,
       });
     }
 
-    // Part C (125.2s – 132.0s, CENTER-JUSTIFIED): Final Lockup (Concentric Home Screen Architecture + Nucleus)
-    if (focus.toMark > 0.005) {
-      drawHomeArchitecture(cx, cy, 0.64, t, focus.toMark * 0.58, {
-        focusPoint: FC,
-        reticle: 0,
-        origin: 1,
-        bigC: 1,
-        outerLoop: 1,
-        otherFrames: 0,
-        rf0: 0.8,
-        peers: 0,
-        littleC: 0,
-        innerLoop: 0,
-        awareness: 0,
-        intent: 0,
-        labels: 0,
-      });
-      nucleus(cx, cy, 246, focus.toMark, smooth(124.8, 127.0, t), t);
+    // Closing Community Splash (final ~7 seconds of Scene 12): Centered Concentric Emergence Field + DOT Nucleus Mark
+    if (focus.toMark > 0.01) {
+      drawConcentricSplashMark(cx, cy, focus.toMark, smooth(video.duration - 7.0, video.duration - 4.8, t));
     }
   }
 
   function captions(t) {
+    if (isTrailer) {
+      const focus = studioFocus(t);
+      const last = video.captions.length - 1;
+      const rustCol = rgbCss(RGB_RUST, 1);
+      const goldCol = rgbCss(RGB_GOLD, 1);
+
+      // ── OPENING SPLASH CENTERED TITLE (0.0s – 5.0s: 5-Second DOT Emergence Before Scene 1) ──
+      const openSplashAlpha = envelope(t, 0.15, 4.85, 0.45, 0.55);
+      if (openSplashAlpha > 0.01) {
+        const pEye = clamp((t - 0.25) / 0.55);
+        const pHead = clamp((t - 0.65) / 0.85);
+        const pSub = clamp((t - 1.35) / 0.70);
+        type("DIGITAL ORGANISM THEORY  ·  BOOK ONE", 960, 686, 18.5, {
+          color: emerald,
+          alpha: openSplashAlpha * 0.96,
+          family: "JetBrains Mono",
+          weight: 700,
+          letterSpacing: "0.08em",
+          align: "center",
+          progress: pEye,
+        });
+        type("The Observer Belongs in the Inquiry.", 960, 756, 52, {
+          color: deepInk,
+          alpha: openSplashAlpha,
+          family: "Inter",
+          weight: 700,
+          letterSpacing: "-0.022em",
+          align: "center",
+          progress: pHead,
+          caret: pHead > 0.01 && pHead < 0.995,
+          caretColor: emerald,
+        });
+        type("CONSCIOUSNESS: A DIGITAL ORGANISM", 960, 816, 19.5, {
+          color: warmGold,
+          alpha: openSplashAlpha * 0.94,
+          family: "JetBrains Mono",
+          weight: 600,
+          letterSpacing: "0.06em",
+          align: "center",
+          progress: pSub,
+        });
+      }
+
+      // ── CLOSING COMMUNITY SPLASH CENTERED LOCKUP (Final ~7.0s of Scene 12) ──
+      if (focus.toMark > 0.01) {
+        const cStart = video.duration - 6.8;
+        const cDt = Math.max(0, t - cStart);
+        const cAlpha = focus.toMark;
+        const pEye = clamp(cDt / 0.45);
+        const pUrl = clamp((cDt - 0.28) / 0.55);
+        const pSub = clamp((cDt - 0.78) / 0.68);
+        type("SEE WHAT IS THERE  ·  SEE WHAT YOU ADDED  ·  PAINT AGAIN", 960, 672, 18, {
+          color: emerald,
+          alpha: cAlpha * 0.96,
+          family: "JetBrains Mono",
+          weight: 700,
+          letterSpacing: "0.07em",
+          align: "center",
+          progress: pEye,
+        });
+        type("DOTHEORY.ORG", 960, 748, 60, {
+          color: deepInk,
+          alpha: cAlpha,
+          family: "Inter",
+          weight: 700,
+          letterSpacing: "-0.02em",
+          align: "center",
+          progress: pUrl,
+          caret: pUrl > 0.01 && pUrl < 0.995,
+          caretColor: warmGold,
+        });
+        type("Let us rebuild our community—together.", 960, 814, 33, {
+          color: warmGold,
+          alpha: cAlpha * 0.98,
+          family: "Inter",
+          weight: 600,
+          align: "center",
+          progress: pSub,
+          caret: pSub > 0.01 && pSub < 0.995,
+          caretColor: lumen,
+        });
+      }
+
+      video.captions.forEach((caption, index) => {
+        const end = index === last ? video.duration - 7.1 : caption.end - 0.05;
+        const start = index === 0 ? 5.05 : caption.start + 0.05;
+        const alpha = envelope(t, start, end, 0.6, 0.5) * (1 - focus.toMark);
+        if (alpha < 0.001) return;
+
+        const placement = trailerPlacements[index];
+        const [x, baseY, width, size, align] = placement.text;
+        const dt = Math.max(0, t - start);
+        const rise = 8 * (1 - smooth(start, start + 0.75, t));
+        const tagCol = caption.mode === "high_entropy" ? rustCol
+          : caption.mode === "coherence" || caption.mode === "finale" ? goldCol : emerald;
+        const left = align === "center" ? x - width / 2 : x;
+        const headlineLines = caption.lines.flatMap((copy) => wrapFilmCopy(copy, width, size, 600));
+        const lineHeight = size * 1.17;
+        const headlineBottom = baseY + (headlineLines.length - 1) * lineHeight + size * 0.28;
+        textRegion = { left: left - 2, right: left + width + 2, top: baseY - 106, bottom: headlineBottom + 14, role: "headline" };
+        const title = (caption.actHeader || caption.eyebrow).replace(/^\d+\s*\/\/\s*/, "");
+        type(title, x, baseY - 64 + rise, 18, {
+          color: tagCol, alpha: alpha * 0.92, family: "Space Grotesk", weight: 500,
+          letterSpacing: "0.08em", align, maxWidth: width, progress: clamp(dt / 0.65),
+        });
+        headlineLines.forEach((copy, lineIndex) => {
+          type(copy, x, baseY + lineIndex * lineHeight + rise, size, {
+            color: deepInk, alpha, family: "Space Grotesk", weight: 600,
+            letterSpacing: "-0.025em", align, maxWidth: width,
+            focusTerm: caption.focusTerm || null, focusColor: tagCol,
+            progress: clamp((dt - 0.12 - lineIndex * 0.24) / 0.7),
+          });
+        });
+
+        const noteSize = align === "center" ? 32 : 30;
+        const noteWidth = align === "center" ? Math.min(width, 1250) : width;
+        const noteLeft = align === "center" ? x - noteWidth / 2 : x;
+        const noteLeading = noteSize * 1.4;
+        const sourceNotes = caption.notes || (caption.note ? [caption.note] : []);
+        const notes = align === "center"
+          ? sourceNotes.flatMap((copy) => wrapFilmCopy(copy, noteWidth, noteSize))
+          : wrapFilmCopy(sourceNotes.join(" "), noteWidth, noteSize);
+        const noteY = Math.min(placement.noteY || headlineBottom + 68, 944, 1006 - (notes.length - 1) * noteLeading);
+        textRegion = { left: noteLeft - 2, right: noteLeft + noteWidth + 2, top: noteY - noteSize, bottom: noteY + (notes.length - 1) * noteLeading + 12, role: "notes" };
+        notes.forEach((copy, lineIndex) => {
+          type(copy, x, noteY + lineIndex * noteLeading + rise, noteSize, {
+            color: bodyCopyCol, alpha: alpha * 0.96, family: "Space Grotesk", weight: 400,
+            align, maxWidth: noteWidth, progress: clamp((dt - 0.6 - lineIndex * 0.2) / 0.7),
+          });
+        });
+        textRegion = null;
+      });
+      return;
+    }
+
     const last = video.captions.length - 1;
     video.captions.forEach((caption, index) => {
       const end = index === last ? video.duration + 0.6 : caption.end;
@@ -2593,10 +3706,11 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
     ctx.scale(SCALE, SCALE);
     background(t);
     project(t);
-    if (!markOnly) captions(t);
+    if (!markOnly && !diagramOnly) captions(t);
     ctx.restore();
     if (!targetCanvas && typeof window !== "undefined") {
       window.inquiryTextBounds = textBounds.map((entry) => ({ ...entry }));
+      window.inquiryVisualFocus = studioFocus(t);
     }
   }
 
@@ -2615,8 +3729,11 @@ function inquiryAnimation({ video, identity, theme = "dark", canvas: targetCanva
   });
 }
 
-export function mountInquiryCanvas(canvas, { video, identity, theme = "dark" }) {
-  return inquiryAnimation({ video, identity, theme, canvas });
+export function mountInquiryCanvas(
+  canvas,
+  { video, identity, theme = "dark", diagramOnly = false },
+) {
+  return inquiryAnimation({ video, identity, theme, canvas, diagramOnly });
 }
 
 function srtTimestamp(seconds) {
@@ -2679,7 +3796,7 @@ export function inquirySubtitles(video) {
       return [
         index + 1,
         `${srtTimestamp(caption.start)} --> ${srtTimestamp(caption.end)}`,
-        caption.lines.join(" "),
+        caption.primaryStatement || caption.lines.join(" "),
         ...notes,
         "",
       ].join("\n");

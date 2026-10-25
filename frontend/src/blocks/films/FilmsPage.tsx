@@ -199,10 +199,13 @@ export default function FilmsPage() {
               <p className="dot-label">{activeFilm.badge}</p>
               <h3 className="films-detail-title">{activeFilm.title}</h3>
               <p className="films-detail-summary">{activeFilm.summary}</p>
-              <p className="films-claims">
-                <span className="films-claims-label">Claims</span>{" "}
-                {activeFilm.claimLevels.join(" · ")}
-              </p>
+              <details className="films-claims">
+                <summary className="films-claims-summary">About this film’s claims</summary>
+                <p className="films-claims-copy">
+                  <span className="films-claims-label">Claim levels</span>{" "}
+                  {activeFilm.claimLevels.join(" · ")}
+                </p>
+              </details>
               <Link to={activeFilm.companion.to} className="films-text-link films-text-link--accent">
                 <span>{activeFilm.companion.label}</span>
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -246,9 +249,10 @@ export default function FilmsPage() {
                     <summary className="films-transcript-summary">
                       Read the transcript
                     </summary>
-                    <ol className="films-transcript-list">
+                    <ol className="films-transcript-list" aria-label="Film transcript">
                       {activeVideoSpec.captions.map((cap, index) => {
                         const stamp = formatBeatTime(cap.start);
+                        const narration = cap.primaryStatement?.trim();
                         const notes =
                           cap.notes ?? (cap.note ? [cap.note] : []);
                         return (
@@ -265,9 +269,9 @@ export default function FilmsPage() {
                             </button>
                             <div>
                               <p className="films-transcript-line">
-                                {cap.lines.join(" ")}
+                                {narration || cap.lines.join(" ")}
                               </p>
-                              {notes.map((n, idx) => (
+                              {!narration && notes.map((n, idx) => (
                                 <p key={idx} className="films-transcript-note">
                                   {n}
                                 </p>
