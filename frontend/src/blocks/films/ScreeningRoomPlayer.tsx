@@ -83,7 +83,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   film,
   seekRequest = null,
   compact = false,
-  showActs = true,
+  showActs = false,
 }) => {
   // The film's edition is the site's theme: the Appearance control is the one switch.
   const [edition, setEdition] = useState<"dark" | "light">(detectSiteTheme);
@@ -116,7 +116,10 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   // with AppearanceControl.
   useEffect(() => {
     if (typeof MutationObserver === "undefined") return;
-    const sync = () => setEdition(detectSiteTheme());
+    const sync = () => {
+      const next = detectSiteTheme();
+      setEdition((prev) => (prev === next ? prev : next));
+    };
     sync();
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, {
@@ -292,7 +295,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     }
   };
 
-  // Active caption for screen-reader & live caption bar
+  // Active caption for screen-reader & optional live caption bar
   const activeCaption = useMemo(() => {
     return (
       videoSpec.captions.find(
@@ -360,12 +363,12 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               </button>
             )}
 
-            {/* Live SR-accessible caption readout */}
-            <div className="sr-only" aria-live="polite">
-              {activeCaption
-                ? `${activeCaption.lines.join(" ")} ${(activeCaption.notes ?? (activeCaption.note ? [activeCaption.note] : [])).join(" ")}`
-                : ""}
-            </div>
+            {/* Live SR-accessible caption readout only after playback starts */}
+            {hasStarted && activeCaption && (
+              <div className="sr-only" aria-live="polite">
+                {`${activeCaption.lines.join(" ")} ${(activeCaption.notes ?? (activeCaption.note ? [activeCaption.note] : [])).join(" ")}`}
+              </div>
+            )}
           </>
         ) : (
           <div className="films-youtube-privacy-stage">
@@ -429,7 +432,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
         )}
       </div>
 
-      {/* Caption bar: the current line, for anyone who wants it below the frame */}
+      {/* Caption bar: the current line, only when explicitly toggled on */}
       {sourceMode === "native" && showCaptionsBar && videoSpec.captions.length > 0 && (
         <div className="films-live-caption-bar" aria-hidden="true">
           <p className="films-live-caption-lines">
@@ -438,7 +441,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
         </div>
       )}
 
-      {/* Transport Scrubber Bar & Act Markers (Native Mode) */}
+      {/* Transport Scrubber Bar & Optional Act Markers (Native Mode) */}
       {sourceMode === "native" && (
         <div className="films-transport-shell">
           <div className="films-transport-bar">
@@ -549,7 +552,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
             </button>
           </div>
 
-          {/* Inline Act Quick-Jump Bar inside Player Chrome */}
+          {/* Inline Act Quick-Jump Bar inside Player Chrome (only when explicitly requested) */}
           {showActs && film.acts.length > 0 && (
             <div className="films-transport-acts" role="group" aria-label="Jump to film act">
               {film.acts.map((act) => {

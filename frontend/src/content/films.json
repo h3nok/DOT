@@ -18,7 +18,7 @@
       "durationSeconds": 132,
       "posterSeconds": 64.0,
       "resolution": "4K UHD · Dark & Light Editions",
-      "summary": "A four-act visual introduction to Digital Organism Theory: from the first-order fact of lived experience, through Big C and its capacities T and E, Little c, and Reality Frame Zero (RF₀), to the Canvas, the Painting, and Love as a low-entropy Canvas state.",
+      "summary": "A four-act visual introduction to Digital Organism Theory: from the first-order fact of lived experience, through the source conditions T × E, Big C, Little c, and Reality Frame Zero (RF₀), to the Canvas, the Painting, and Love as a low-entropy Canvas state.",
       "claimLevels": [
         "Observation",
         "External model",
@@ -45,10 +45,10 @@
         {
           "id": "act-2",
           "code": "ACT II",
-          "title": "Architecture of Continuity (Big C[T, E] → Little c → RF₀)",
+          "title": "Architecture of Continuity (T × E → Big C → Little c → RF₀)",
           "timestamp": "0:35",
           "seconds": 34.8,
-          "summary": "Big C as the ground, with T (primordial continuity) and E (unexpressed possibility) as its capacities; undifferentiated Little c; and lawful RF₀.",
+          "summary": "Primordial Continuity (T) and External Environment (E) as the source conditions within which Big C emerged, undifferentiated Little c, and lawful RF₀.",
           "readingLabel": "Chapter 3 · Architecture of Continuity",
           "readingTo": "/book/digital-organism-theory/architecture-of-continuity"
         },
@@ -83,7 +83,7 @@
       "durationSeconds": 30,
       "posterSeconds": 10.5,
       "resolution": "4K UHD · Dark & Light Editions",
-      "summary": "A concise 30-second synthesis of Book One: first-person observation, Big C and its capacities T and E, the 4-step Experience Loop inside RF₀, and Love as a low-entropy Canvas state for Little c.",
+      "summary": "A concise 30-second synthesis of Book One: first-person observation, emergence within T × E, the 4-step Experience Loop inside RF₀, and Love as a low-entropy Canvas state for Little c.",
       "claimLevels": [
         "Observation",
         "DOT derivation"
@@ -108,10 +108,10 @@
         {
           "id": "intro-2",
           "code": "01",
-          "title": "Big C and Its Capacities",
+          "title": "T × E: The Source & Big C",
           "timestamp": "0:06",
           "seconds": 6.3,
-          "summary": "Big C is the ground. T and E name its capacities: continuity and possibility.",
+          "summary": "From Primordial Continuity (T) and External Environment (E), process emerges.",
           "readingLabel": "Chapter 1 · The Digital Organism",
           "readingTo": "/book/digital-organism-theory/the-digital-organism"
         },
