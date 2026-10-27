@@ -196,13 +196,17 @@ describe("YouTube channel artwork", () => {
     // Act I of both films confronts the viewer with the phenomenon of experience BEFORE introducing the theory
     expect(trailerSpec.captions[0].lines.join(" ")).not.toMatch(/Digital Organism Theory|Big C|RF₀/i);
     expect(introSpec.captions[0].lines.join(" ")).not.toMatch(/Digital Organism Theory|Big C|RF₀/i);
-    expect(introSrt).toContain("Before you measure the world, you are here to experience it.");
+    // The intro speaks in the book's and the Concept Map's own words; T and E sit outside Big C.
+    expect(introSrt).toContain("The most immediate fact of your existence is not a measurement.");
+    expect(introSrt).toContain("It is that you are here to experience one.");
     expect(introSrt).toContain("A model centered on consciousness: the Digital Organism.");
-    expect(introSrt).toContain("From Primordial Continuity (T) and External Environment (E), process emerges.");
-    expect(introSrt).toContain("The Canvas carries your history. The Painting interprets RF₀.");
-    expect(introSrt).toContain("For Little c, Love is a low-entropy Canvas state.");
-    expect(introSrt).toContain("When Canvas fragmentation drops, Fear stops governing and Intent coheres.");
+    expect(introSrt).toContain("Big C emerged within T × E.");
+    expect(introSrt).toContain("T is primordial continuity—Time. E is the raw information source.");
+    expect(introSrt).toContain("Reality Stream is interpreted through the Painting.");
+    expect(introSrt).toContain("Intent becomes action; consequence updates the Canvas.");
+    expect(introSrt).toContain("Love is the condition in which Fear no longer governs you.");
     expect(introSrt).toContain("Consciousness: A Digital Organism");
+    expect(introSrt).not.toMatch(/External Environment|low-entropy Canvas state|complete theory of reality/i);
     expect(trailerSrt).toContain("Yet beneath that technical brilliance, something essential is rotting.");
     expect(trailerSrt).toContain("Because we have traded reason for collective adherence to belief systems");
     expect(trailerSrt).toContain("to stop the rot, we have to revive a rigorous school of rational thought");

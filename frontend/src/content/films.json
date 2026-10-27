@@ -84,10 +84,11 @@
       "durationSeconds": 30,
       "posterSeconds": 10.5,
       "resolution": "4K UHD · Dark & Light Editions",
-      "summary": "A concise 30-second synthesis of Book One: first-person observation, emergence within T × E, the 4-step Experience Loop inside RF₀, and Love as a low-entropy Canvas state for Little c.",
+      "summary": "A 30-second introduction to Book One: the observer in the inquiry, Big C within T × E, the Experience Loop, and Love as the condition in which Fear no longer governs.",
       "claimLevels": [
         "Observation",
-        "DOT derivation"
+        "Model",
+        "Hypothesis"
       ],
       "youtubeId": "",
       "youtubeUrl": "https://www.youtube.com/@dotheory",
@@ -102,17 +103,17 @@
           "title": "The Observer in the Inquiry",
           "timestamp": "0:01",
           "seconds": 0.5,
-          "summary": "Before you measure the world, you are here to experience it.",
+          "summary": "The most immediate fact of your existence is not a measurement. It is that you are here to experience one.",
           "readingLabel": "Preface",
           "readingTo": "/book/digital-organism-theory/preface"
         },
         {
           "id": "intro-2",
           "code": "01",
-          "title": "T × E: The Source & Big C",
+          "title": "Big C within T × E",
           "timestamp": "0:06",
           "seconds": 6.3,
-          "summary": "From Primordial Continuity (T) and External Environment (E), process emerges.",
+          "summary": "Big C emerged within T × E. T is primordial continuity—Time. E is the raw information source.",
           "readingLabel": "Chapter 1 · The Digital Organism",
           "readingTo": "/book/digital-organism-theory/the-digital-organism"
         },
@@ -122,19 +123,19 @@
           "title": "The Experience Loop",
           "timestamp": "0:12",
           "seconds": 12.5,
-          "summary": "The Canvas carries your history; the Painting interprets RF₀.",
+          "summary": "Reality Stream is interpreted through the Painting; Intent becomes action; consequence updates the Canvas.",
           "readingLabel": "Chapter 5 · The Canvas",
           "readingTo": "/book/digital-organism-theory/the-canvas"
         },
         {
           "id": "intro-4",
           "code": "03",
-          "title": "Love as Low Canvas Entropy",
+          "title": "Love and Fear",
           "timestamp": "0:19",
           "seconds": 18.7,
-          "summary": "When Canvas fragmentation drops, Fear stops governing and Intent coheres.",
-          "readingLabel": "Chapter 6 · The Painting",
-          "readingTo": "/book/digital-organism-theory/the-painting"
+          "summary": "Love is the condition in which Fear no longer governs you.",
+          "readingLabel": "Preface · Love as an Epistemic Condition",
+          "readingTo": "/book/digital-organism-theory/preface#love-as-an-epistemic-condition"
         }
       ]
     },
