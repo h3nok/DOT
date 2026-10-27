@@ -7,6 +7,21 @@
   "channelUrl": "https://www.youtube.com/@dotheory",
   "privacyNote": "No trackers or cookies load on this page. The films play here, in your browser, without sound.",
   "conceptFilmsNote": "One silent film for each concept in the Book One concept map, in the map’s order. Each runs sixteen seconds and shows the map’s own definition. Nothing plays until you press play, and no film moves on to the next by itself.",
+  "conceptTour": {
+    "title": "Book One, concept by concept",
+    "label": "Academy · Silent film",
+    "opening": {
+      "eyebrow": "Digital Organism Theory · Book One",
+      "line": "The most immediate fact of your existence is not a measurement.",
+      "note": "It is that you are here to experience one.",
+      "source": "Book One · Preface"
+    },
+    "closing": {
+      "eyebrow": "Digital Organism Theory",
+      "title": "Consciousness: A Digital Organism",
+      "source": "Book One · dotheory.org"
+    }
+  },
   "seriesNote": "The episodes are in production. The reading behind each one is open now.",
   "completionNote": "That is every film and series stream in the catalogue. New episodes appear on @dotheory without schedules, streaks, or notifications.",
   "screeningFilms": [

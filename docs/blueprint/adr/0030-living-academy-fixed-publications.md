@@ -135,7 +135,10 @@ seconds and shows the concept map's own name and definition. Films have no
 sound, start only when asked, end on their final frame, and never advance to
 the next film. A link can name one film with `?concept=`. The narrated
 inquiry film is no longer screened on the site; its renders stay in the
-YouTube kit. The homepage plays the short introduction without narration.
+YouTube kit. The homepage plays one silent film through every concept in the
+same order, built from the same motion studies: the preface's opening line,
+ten seconds per concept, and the book's title, about three minutes in all.
+Short films have no sound of any kind.
 
 Serves L1 (calm, silent motion), L3 (no autoplay or chaining), and L7 (text
 taken from the concept map, links to the source passage). Violates no

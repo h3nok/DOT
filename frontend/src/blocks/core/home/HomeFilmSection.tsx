@@ -2,16 +2,13 @@ import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import filmsData from "../../../content/films.json";
-import {
-  ScreeningRoomPlayer,
-  type ScreeningFilmMeta,
-} from "../../films/ScreeningRoomPlayer";
+import { ConceptTourPlayer } from "../../films/ConceptTourPlayer";
+import { CONCEPT_TOUR_SECONDS } from "../../films/conceptTour";
+import { formatDuration } from "../../films/filmTime";
 import "../../films/films.css";
 
-// The homepage plays the short film without narration; the narrated film lives in the Academy.
-const INTRO_FILM = (filmsData.screeningFilms as ScreeningFilmMeta[]).find(
-  (film) => film.id === "inquiry-intro",
-);
+// The homepage plays one silent film through every concept in the Concept Map.
+const TOUR = filmsData.conceptTour;
 
 const INNER_LOOP_CARDS = [
   {
@@ -44,8 +41,6 @@ const INNER_LOOP_CARDS = [
 ] as const;
 
 export function HomeFilmSection() {
-  if (!INTRO_FILM) return null;
-
   return (
     <section
       id="visual-inquiry"
@@ -55,13 +50,13 @@ export function HomeFilmSection() {
       <div className="dot-page-container dot-page-wide home-film-layout">
         <header className="home-film-heading">
           <div>
-            <p className="dot-label">Academy · Visual inquiry · {INTRO_FILM.duration}</p>
-            <h2 id="visual-inquiry-title">{INTRO_FILM.title}</h2>
+            <p className="dot-label">{TOUR.label} · {formatDuration(CONCEPT_TOUR_SECONDS)}</p>
+            <h2 id="visual-inquiry-title">{TOUR.title}</h2>
           </div>
           <Link to="/academy/films">Films in the Academy <ArrowRight aria-hidden="true" /></Link>
         </header>
         <div className="home-film-stage">
-          <ScreeningRoomPlayer film={INTRO_FILM} compact />
+          <ConceptTourPlayer />
         </div>
 
         {/* Inner Loop & Canvas Entropy bridge */}
