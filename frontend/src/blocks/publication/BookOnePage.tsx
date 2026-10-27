@@ -39,7 +39,7 @@ import {
   type BookReleaseSection,
   type DotBookOneManifest,
 } from "../../content/publications/dotBookOne";
-import { bookConceptsForSection } from "../../content/publications/dotBookConcepts";
+import { bookConceptsForSection, conceptMapHref } from "../../content/publications/dotBookConcepts";
 import { AppearanceControl } from "../../organism";
 import { DoWordmark } from "../../shared/DoWordmark";
 import BookCitation from "./BookCitation";
@@ -239,6 +239,11 @@ function BookReader({
   const step = (target: BookReleaseSection) =>
     path ? `${bookSectionRoute(target)}?path=${path.id}` : bookSectionRoute(target);
   const sourceCount = citedReferenceCount(content);
+  // Link only the related concepts the Concept Map has a page for, once each.
+  const relatedConcepts = section.related_concepts.flatMap((concept) => {
+    const href = conceptMapHref(concept);
+    return href ? [{ concept, href }] : [];
+  }).filter((entry, i, all) => all.findIndex((other) => other.href === entry.href) === i);
   const pathPosition = path ? positionOf(path, section.slug) : -1;
   const readingPosition = pathPosition >= 0 ? pathPosition + 1 : index + 1;
   const readingTotal = pathPosition >= 0 ? path?.steps.length ?? 1 : manifest.sections.length;
@@ -443,7 +448,7 @@ function BookReader({
               storageId={`${manifest.release.id}.${section.slug}`}
             />
 
-            {section.related_concepts.length > 0 ? (
+            {relatedConcepts.length > 0 ? (
               <section
                 className="book-coda__section"
                 aria-labelledby="book-related-concepts-title"
@@ -462,10 +467,10 @@ function BookReader({
 
                 <div className="book-coda__section-body">
                   <div className="book-coda__concepts">
-                    {section.related_concepts.map((concept) => (
+                    {relatedConcepts.map(({ concept, href }) => (
                       <Link
                         key={concept}
-                        to={`/doctrine/${encodeURIComponent(concept)}`}
+                        to={href}
                         className="book-coda__concept"
                       >
                         {conceptLabel(concept)}

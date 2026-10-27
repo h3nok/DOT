@@ -133,6 +133,20 @@ definitionsById.set("limit-of-knowledge", {
   mapHref: "/doctrine/limits-and-debts",
 });
 
+/** The release manifest names Fear by a shorter id than the Concept Map uses. */
+const mapIdsByManifestConcept: Readonly<Record<string, string>> = {
+  fear: "fear-gating",
+};
+
+/**
+ * The Concept Map page for a concept the release manifest relates to a
+ * section, or null when the map has no page for it. A link to a concept the
+ * map lacks would land on the wrong page, so such concepts are not linked.
+ */
+export function conceptMapHref(concept: string): string | null {
+  return definitionsById.get(mapIdsByManifestConcept[concept] ?? concept)?.mapHref ?? null;
+}
+
 /**
  * Keep each chapter's annotations finite. A concept is defined only on its
  * first use in that section, and every definition resolves to Book One.

@@ -274,6 +274,14 @@ const DoctrinePage = () => {
     }
   }, [focusId, params.nodeId]);
 
+  // An address for a concept the map lacks would otherwise show the first
+  // concept under the wrong name; send the reader to the map itself.
+  useEffect(() => {
+    if (params.nodeId && !getDoctrineNode(params.nodeId)) {
+      navigate("/doctrine", { replace: true });
+    }
+  }, [navigate, params.nodeId]);
+
   useEffect(() => {
     window.localStorage.setItem(readingPrefsStorageKey, JSON.stringify(prefs));
   }, [prefs]);
