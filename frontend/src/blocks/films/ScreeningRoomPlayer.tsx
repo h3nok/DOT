@@ -62,6 +62,13 @@ function formatTimecode(seconds: number): string {
   return `${mins}:${secs}`;
 }
 
+/** Index of the last time at or before `seconds`, or -1 when none has passed. */
+function lastIndexAtOrBefore(times: readonly number[], seconds: number): number {
+  let index = -1;
+  while (index + 1 < times.length && times[index + 1] <= seconds) index += 1;
+  return index;
+}
+
 function detectSiteTheme(): "dark" | "light" {
   if (typeof document === "undefined") return "dark";
   const root = document.documentElement;
@@ -115,6 +122,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   const audioEngineRef = useRef<TrailerAudioEngine | null>(null);
   const lastSceneIdRef = useRef<string | null>(null);
   const lastTickIndexRef = useRef<number>(-1);
+  const lastCueIndexRef = useRef<number>(-1);
 
   useEffect(() => {
     setFullscreenAvailable(
@@ -137,6 +145,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   const narrationOnly = videoSpec.name === "inquiry-trailer";
   const ticks = useMemo(
     () => narrationOnly ? [] : inquiryTypeTicks(videoSpec),
+    [narrationOnly, videoSpec],
+  );
+  // A short film's score marks each beat once, as its text arrives.
+  const cues = useMemo(
+    () => narrationOnly ? [] : videoSpec.captions.map((caption) => caption.start),
     [narrationOnly, videoSpec],
   );
 
@@ -179,6 +192,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     timeRef.current = film.posterSeconds;
     setCurrentTime(film.posterSeconds);
     lastTickIndexRef.current = -1;
+    lastCueIndexRef.current = -1;
     lastSceneIdRef.current = null;
     audioEngineRef.current?.destroy();
     audioEngineRef.current = null;
@@ -220,7 +234,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     );
   }, [scenes, currentTime]);
 
-  // Keep recorded narration on the film clock; procedural sound is for short films.
+  // Keep recorded narration on the film clock; short films get their beat tones instead.
   useEffect(() => {
     const engine = audioEngineRef.current;
     if (!playing || sourceMode !== "native") {
@@ -238,7 +252,6 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       liveEngine.updateScene(
         sceneIdx,
         timeRef.current,
-        videoSpec.duration,
         scene.primaryStatement,
         scene.start,
       );
@@ -246,7 +259,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     } else {
       liveEngine.clearScene();
     }
-  }, [playing, sourceMode, activeScene, currentTime, videoSpec.duration, getAudioEngine, narrationOnly, scenes]);
+  }, [playing, sourceMode, activeScene, currentTime, getAudioEngine, narrationOnly, scenes]);
 
   const playKeystrokeTick = useCallback(
     (index: number, atTime: number) => {
@@ -269,14 +282,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       setCurrentTime(clamped);
       controllerRef.current?.seek(clamped);
       lastSceneIdRef.current = null;
-      let nextIdx = -1;
-      for (let i = 0; i < ticks.length; i++) {
-        if (ticks[i] <= clamped) nextIdx = i;
-        else break;
-      }
-      lastTickIndexRef.current = nextIdx;
+      // Seeking never strikes a beat; only playing through one does.
+      lastTickIndexRef.current = lastIndexAtOrBefore(ticks, clamped);
+      lastCueIndexRef.current = lastIndexAtOrBefore(cues, clamped);
     },
-    [ticks, videoSpec.duration],
+    [ticks, cues, videoSpec.duration],
   );
 
   // Handle external seek requests (e.g. clicking an Act card or Transcript beat).
@@ -318,6 +328,11 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
         }
       }
 
+      for (let i = lastCueIndexRef.current + 1; i < cues.length && cues[i] <= nextTime; i++) {
+        if (cues[i] >= timeRef.current - 0.05) audioEngineRef.current?.playCue(i);
+        lastCueIndexRef.current = i;
+      }
+
       if (nextTime >= videoSpec.duration) {
         timeRef.current = videoSpec.duration;
         setCurrentTime(videoSpec.duration);
@@ -334,7 +349,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
 
     raf = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(raf);
-  }, [playing, sourceMode, ticks, videoSpec.duration, playKeystrokeTick]);
+  }, [playing, sourceMode, ticks, cues, videoSpec.duration, playKeystrokeTick]);
 
   // Cleanup AudioEngine on unmount.
   useEffect(() => {

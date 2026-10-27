@@ -331,31 +331,32 @@ export const INQUIRY_VIDEOS = [
     title: "You, the Observer — Consciousness: A Digital Organism",
     duration: 30,
     samples: [2.8, 8.2, 10.5, 16.0, 22.0, 27.8],
+    // Every statement is the book's or the Concept Map's own wording; T and E follow ADR-0026.
     captions: [
-      // Beat 1 (0.5s – 6.0s): CENTER-JUSTIFIED — First-Person Observation
+      // Beat 1 (0.5s – 6.0s): CENTER-JUSTIFIED — the Preface's opening
       {
         start: 0.5,
         end: 6.0,
         layout: "center",
-        badge: "FIRST-PERSON OBSERVATION · PRIMARY EVIDENCE",
+        badge: "FIRST-PERSON OBSERVATION · PREFACE",
         eyebrow: "00 // THE OBSERVER IN THE INQUIRY",
-        lines: ["Before you measure the world, you are here to experience it."],
-        note: "The most immediate fact of existence is that you are here to experience one.",
+        lines: ["The most immediate fact of your existence", "is not a measurement."],
+        note: "It is that you are here to experience one.",
       },
-      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — Emergent Principles: T × E → Big C
+      // Beat 2 (6.3s – 12.2s): TWO-COLUMN — Big C emerged within T × E
       {
         start: 6.3,
         end: 12.2,
         layout: "split",
-        badge: "01 · EMERGENT PRINCIPLES",
-        eyebrow: "01 // T × E: THE SOURCE",
+        badge: "01 · BIG C WITHIN T × E",
+        eyebrow: "01 // BIG C WITHIN T × E",
         focusTerm: "Digital Organism",
         lines: ["A model centered on consciousness:", "the Digital Organism."],
         notes: [
-          "From Primordial Continuity (T) and External Environment (E), process emerges.",
+          "Big C emerged within T × E.",
+          "T is primordial continuity—Time. E is the raw information source.",
         ],
-        concept: "CONCEPT 01  ·  EMERGENCE IN T × E",
-        axiom: "T (CONTINUITY) × E (EXTERNAL ENVIRONMENT)  →  Big C",
+        axiom: "T (TIME) × E (RAW INFORMATION SOURCE)  →  Big C",
       },
       // Beat 3 (12.5s – 18.4s): TWO-COLUMN — The Experience Loop
       {
@@ -365,27 +366,21 @@ export const INQUIRY_VIDEOS = [
         badge: "02 · THE EXPERIENCE LOOP",
         eyebrow: "02 // THE EXPERIENCE LOOP",
         focusTerm: "Painting",
-        lines: ["The Canvas carries your history.", "The Painting interprets RF₀."],
-        notes: [
-          "Inside our lawful physical world (RF₀), every choice updates who you become.",
-        ],
-        concept: "CONCEPT 02  ·  CANVAS, PAINTING & INTENT",
+        lines: ["Reality Stream is interpreted", "through the Painting."],
+        notes: ["Intent becomes action; consequence updates the Canvas."],
         axiom: "01 REALITY  →  02 PAINTING  →  03 INTENT  →  04 CANVAS",
       },
-      // Beat 4 (18.7s – 24.6s): TWO-COLUMN — Love as Low Canvas Entropy
+      // Beat 4 (18.7s – 24.6s): TWO-COLUMN — Love and Fear
       {
         start: 18.7,
         end: 24.6,
         layout: "split",
-        badge: "03 · LOW CANVAS ENTROPY",
-        eyebrow: "03 // LOVE AS LOW CANVAS ENTROPY",
+        badge: "03 · LOVE AS AN EPISTEMIC CONDITION",
+        eyebrow: "03 // LOVE AND FEAR",
         focusTerm: "Love",
-        lines: ["For Little c, Love is a", "low-entropy Canvas state."],
-        notes: [
-          "When Canvas fragmentation drops, Fear stops governing and Intent coheres.",
-        ],
-        concept: "CORE AXIOM  ·  INTENT–ENTROPY INVERSION",
-        axiom: "LOW CANVAS ENTROPY (E_C ↓)  →  COHERENT INTENT (LOVE)",
+        lines: ["Love is the condition in which", "Fear no longer governs you."],
+        notes: ["When Fear governs, the set of responses", "that feels available becomes narrower."],
+        axiom: "THE FEAR-GATING PRINCIPLE  ·  LOVE AS AN EPISTEMIC CONDITION",
       },
       // Beat 5 (24.9s – 30.0s): CENTER-JUSTIFIED — Final Lockup
       {
@@ -3912,7 +3907,7 @@ function inquiryAnimation({
     const headerAlpha = focus.splitAmt * dotIntroduced;
     if (headerAlpha > 0.01) {
       line([[MARGIN_L, 90], [MARGIN_R, 90]], hairlineCol, 0.72 * headerAlpha, 1.1);
-      type("DIGITAL ORGANISM THEORY  ·  A COMPLETE THEORY OF REALITY", MARGIN_L, 66, 16, {
+      type("DIGITAL ORGANISM THEORY  ·  BOOK ONE", MARGIN_L, 66, intro ? 20 : 16, {
         color: emerald,
         alpha: headerAlpha * 0.94,
         family: "JetBrains Mono",
@@ -3929,7 +3924,7 @@ function inquiryAnimation({
         : intro
           ? "YOU, THE OBSERVER  ·  T × E → Big C → Little c"
           : "DIGITAL ORGANISM THEORY";
-      type(sectionRight, MARGIN_R, 66, 15.5, {
+      type(sectionRight, MARGIN_R, 66, intro ? 19 : 15.5, {
         color: muted,
         alpha: headerAlpha * 0.88,
         family: "JetBrains Mono",
@@ -5697,7 +5692,7 @@ function inquiryAnimation({
         const pEye = clamp((dt - 0.04) / 0.30);
         const pL0 = clamp((dt - 0.24) / 0.48);
         const pNote = clamp((dt - 0.78) / 0.38);
-        type(caption.eyebrow, 960, 684 + rise, 17.5, {
+        type(caption.eyebrow, 960, 684 + rise, intro ? 20 : 17.5, {
           color: muted,
           alpha: alpha * 0.92,
           family: "JetBrains Mono",
@@ -5719,7 +5714,7 @@ function inquiryAnimation({
           caretColor: emerald,
         });
         if (caption.note) {
-          type(caption.note, 960, 812 + rise, 21, {
+          type(caption.note, 960, 812 + rise, intro ? 25 : 21, {
             color: emerald,
             alpha: alpha * 0.92,
             family: "JetBrains Mono",
@@ -5734,10 +5729,14 @@ function inquiryAnimation({
         return;
       }
 
+      // The intro plays in a page-width player, so its supporting text runs larger.
+      const noteSize = intro ? 29 : 25;
+      const noteLeading = intro ? 44 : 38;
+
       if (isCenterLayout) {
         const baseY = 668 + rise;
         const pEye = clamp((dt - 0.02 * speed) / (0.30 * speed));
-        type(caption.eyebrow, 960, baseY, 18, {
+        type(caption.eyebrow, 960, baseY, intro ? 20 : 18, {
           color: muted,
           alpha: alpha * 0.92,
           family: "JetBrains Mono",
@@ -5773,7 +5772,7 @@ function inquiryAnimation({
           const nStart = noteBaseStart + idx * 0.42 * speed;
           const nDur = 0.44 * speed;
           const pNote = clamp((dt - nStart) / nDur);
-          type(noteLine, 960, y + idx * 38, 25, {
+          type(noteLine, 960, y + idx * noteLeading, noteSize, {
             color: bodyCopyCol,
             alpha: alpha * 0.96,
             family: "Inter",
@@ -5791,7 +5790,7 @@ function inquiryAnimation({
       // TWO-COLUMN LEFT DIGITAL STAGE (Measured Single-Concept Highlight & Unaccented Concept Card)
       const baseY = 334 + rise;
       const pEye = clamp((dt - 0.02 * speed) / (0.30 * speed));
-      type(caption.eyebrow, x, baseY, 17, {
+      type(caption.eyebrow, x, baseY, intro ? 20 : 17, {
         color: muted,
         alpha: alpha * 0.88,
         family: "JetBrains Mono",
@@ -5831,7 +5830,7 @@ function inquiryAnimation({
       notes.forEach((noteLine, idx) => {
         const nStart = noteStart + idx * 0.44 * speed;
         const pNote = clamp((dt - nStart) / noteDur);
-        type(noteLine, x, y + idx * 38, 25, {
+        type(noteLine, x, y + idx * noteLeading, noteSize, {
           color: bodyCopyCol,
           alpha: alpha * 0.96,
           family: "Inter",
@@ -5848,8 +5847,8 @@ function inquiryAnimation({
         const axStart = noteStart + notes.length * 0.44 * speed + 0.04 * speed;
         const axDur = 0.38 * speed;
         const pAx = clamp((dt - axStart) / axDur);
-        const cardTop = y + notes.length * 38 + 28;
-        const cardH = caption.concept ? 78 : 52;
+        const cardTop = y + notes.length * noteLeading + 28;
+        const cardH = caption.concept ? 78 : intro ? 60 : 52;
         const cardA = alpha * clamp((dt - (axStart - 0.08 * speed)) / (0.22 * speed));
         if (cardA > 0.005) {
           roundRect(x, cardTop, MAX_LEFT_TEXT_W - 8, cardH, 10, {
@@ -5872,8 +5871,8 @@ function inquiryAnimation({
             progress: pConcept,
           });
         }
-        const axY = caption.concept ? cardTop + 58 : cardTop + 34;
-        type(caption.axiom, x + 20, axY, 19.5, {
+        const axY = caption.concept ? cardTop + 58 : cardTop + (intro ? 38 : 34);
+        type(caption.axiom, x + 20, axY, intro ? 22 : 19.5, {
           color: isLight ? "#243b32" : "#b8ccc4",
           alpha: alpha * 0.92,
           family: "JetBrains Mono",
