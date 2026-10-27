@@ -107,8 +107,9 @@ export async function masterVoiceover(inputPath, outputPath, {
   const preparation = "aformat=channel_layouts=mono,highpass=f=65";
   const input = await measureAudioLoudness(inputPath, { ffmpeg, filter: preparation });
   let gainDb = targetLufs - input.integratedLufs;
-  // Sample limiting needs margin for intersample peaks. Measure the completed
-  // waveform too, rather than assuming its sample ceiling is its true peak.
+  // Limit the reconstructed waveform, including peaks between low-rate speech
+  // samples. Limiting at the input rate can miss those peaks before 48 kHz output.
+  // Keep headroom and measure the completed master rather than trusting a ceiling.
   let ceilingDb = truePeak - 0.8;
 
   return await atomicAudioOutput(outputPath, async (temporary) => {
@@ -118,7 +119,7 @@ export async function masterVoiceover(inputPath, outputPath, {
       appliedGainDb = gainDb;
       const limit = Math.max(0.0625, 10 ** (ceilingDb / 20));
       const filters = [
-        preparation, `volume=${gainDb.toFixed(3)}dB`,
+        preparation, "aresample=192000", `volume=${gainDb.toFixed(3)}dB`,
         `alimiter=limit=${limit.toFixed(6)}:attack=5:release=60:level=0:latency=1`,
       ];
       if (leadInSeconds > 0) filters.push(`adelay=${Math.round(leadInSeconds * 1000)}:all=1`);

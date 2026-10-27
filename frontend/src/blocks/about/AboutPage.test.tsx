@@ -29,14 +29,16 @@ const renderPage = () =>
   );
 
 describe("AboutPage", () => {
-  it("uses one shared book link in the header", () => {
+  it("uses one shared book link in Explore", () => {
     renderPage();
 
+    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
     const context = within(screen.getByRole("navigation", { name: "Primary" }));
     expect(context.getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory",
     );
+    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
     expect(screen.queryByRole("navigation", { name: "Page context" })).toBeNull();
     expect(screen.getByRole("link", { name: "Essays and letters" })).toHaveAttribute("href", "/blog");
   });

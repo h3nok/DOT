@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 const HOME_SECTIONS = [
   { id: "threshold", label: "An invitation to examine experience" },
-  { id: "field-notes", label: "Film, lived experience, and conversation" },
   { id: "consciousness-101", label: "The culture inside us" },
   { id: "possibility-field", label: "The model’s starting assumption" },
   { id: "big-c", label: "An account of consciousness" },

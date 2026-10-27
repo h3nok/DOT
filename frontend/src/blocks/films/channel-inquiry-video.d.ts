@@ -68,6 +68,7 @@ declare module "*/scripts/channel-inquiry-video.mjs" {
   }
 
   export const TRAILER_SCENES: TrailerSceneSpec[];
+  export const TRAILER_VOICE_OFFSET_SECONDS: number;
   export const INQUIRY_VIDEOS: InquiryVideoSpec[];
   export function inquiryTypeTicks(video: InquiryVideoSpec): number[];
   export function inquirySubtitles(video: InquiryVideoSpec): string;

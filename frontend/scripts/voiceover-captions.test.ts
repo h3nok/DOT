@@ -17,11 +17,11 @@ describe("captions aligned to recorded narration", () => {
   it("keeps the approved wording and punctuation while aligning contractions to actual words", () => {
     const { scene, record } = fixture("I'm here; the model is not the road.", "I am here the model is not the road");
     const cues = buildNarrationCues([scene], [record], { durationSeconds: 70 });
-    expect(cues[0].startSeconds).toBeCloseTo(5 + 0.18 + 0.4);
+    expect(cues[0].startSeconds).toBeCloseTo(5 + 2.4 + 0.4);
     expect(cues.map((cue: { text: string }) => cue.text).join(" ").replace(/\n/g, " "))
       .toBe(scene.primaryStatement);
-    expect(narrationSrt(cues)).toMatch(/^1\n00:00:05,580 -->/);
-    expect(narrationVtt(cues)).toMatch(/^WEBVTT\n\n00:00:05\.580 -->/);
+    expect(narrationSrt(cues)).toMatch(/^1\n00:00:07,800 -->/);
+    expect(narrationVtt(cues)).toMatch(/^WEBVTT\n\n00:00:07\.800 -->/);
   });
 
   it("makes readable two-line cues and retains every word of a longer passage", () => {
@@ -44,7 +44,7 @@ describe("captions aligned to recorded narration", () => {
     const { scene, record } = fixture(text, actual);
     const cues = buildNarrationCues([scene], [record], { durationSeconds: 70 });
     expect(cues.map((cue: { text: string }) => cue.text.replace(/\n/g, " ")).join(" ")).toBe(text);
-    expect(cues.at(-1).endSeconds).toBeCloseTo(5.18 + record.segments[0].words.at(-1)!.end + 0.14);
+    expect(cues.at(-1).endSeconds).toBeCloseTo(7.4 + record.segments[0].words.at(-1)!.end + 0.14);
   });
 
   it("keeps a final word with its phrase rather than flashing a one-word orphan", () => {

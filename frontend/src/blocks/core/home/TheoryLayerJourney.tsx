@@ -16,11 +16,11 @@ const THEORY_LAYERS = [
     status: "Starting assumption",
     title: "Something lasts. Something can change.",
     lede:
-      "Continuity means something can carry on. Possibility means change can happen. DOT calls these T and E, and assumes they existed before our universe.",
+      "DOT starts with T—primordial Time, where change can persist—and E, the raw fabric of unformed information. It proposes that Big C emerged within their interaction, before our physical universe.",
     humanStakes:
       "A memory connects your past to this moment; your next reply can change a conversation. These are ways into the ideas, not evidence for their proposed origin.",
     memoryWord: "Possibility",
-    memoryLine: "Continuity carries. Possibility opens.",
+    memoryLine: "Continuity carries. Information takes form.",
     handoff: "From possibility to persistence",
     conventional:
       "Cosmology uses measurements to reconstruct the history of our universe. Its models do not settle why there is a universe or why its laws exist.",

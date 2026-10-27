@@ -114,7 +114,7 @@ export const SCENE_AUDIO_PROFILES: SceneAudioProfile[] = [
     pulseDepth: 22,
     masterDroneGain: 0.066,
   },
-  // Scene 6: 06 // THE DIGITAL ORGANISM — Expansive Big C[T, E] foundation
+  // Scene 6: 06 // THE DIGITAL ORGANISM — T × E, within which Big C emerged
   {
     sceneIndex: 5,
     rootHz: 110.0,
@@ -257,6 +257,7 @@ export class TrailerAudioEngine {
   private failedVoiceoverSceneIndex = -1;
   private voiceoverPlayPending = false;
   private voiceoverPlayGeneration = 0;
+  private voiceoverSeekRequested = false;
 
   constructor(
     private readonly onVoiceoverError: (unavailable: boolean) => void = () => {},
@@ -496,6 +497,22 @@ export class TrailerAudioEngine {
     this.onVoiceoverError(false);
   }
 
+  public get waitingForVoiceover(): boolean {
+    const audio = this.activeAudioElement;
+    return Boolean(
+      this.isPlaying &&
+      this.voiceoverEnabled &&
+      audio &&
+      this.currentSceneOffset >= 0 &&
+      (!Number.isFinite(audio.duration) || this.currentSceneOffset < audio.duration) &&
+      (audio.readyState < 3 || audio.seeking),
+    );
+  }
+
+  public requestVoiceoverSeek(): void {
+    this.voiceoverSeekRequested = true;
+  }
+
   /**
    * Smoothly transitions the ambient drone frequencies, filter cutoff, and tension/resolution
    * layers for the active scene while keeping narration on its scene-local clock.
@@ -518,7 +535,7 @@ export class TrailerAudioEngine {
     }
     this.currentSceneIndex = safeIdx;
     const sceneOffset = elapsedTime - sceneStart - (this.options.voiceOffsetSeconds ?? 0);
-    this.currentSceneOffset = Math.max(0, sceneOffset);
+    this.currentSceneOffset = sceneOffset;
 
     const ctx = this.ctx;
     if (ctx && this.isPlaying) {
@@ -563,11 +580,6 @@ export class TrailerAudioEngine {
           this.playResolutionShockwave(ctx);
         }
       }
-    }
-
-    if (sceneOffset < 0) {
-      this.pauseVoiceover();
-      return;
     }
 
     if (
@@ -658,6 +670,7 @@ export class TrailerAudioEngine {
     if (!audio) {
       try {
         audio = new Audio(`/audio/scene-${sceneNumber}.mp3`);
+        audio.preload = "auto";
         audio.volume = 0.9;
         audio.muted = this.isMuted;
         audio.playbackRate = 1;
@@ -677,12 +690,21 @@ export class TrailerAudioEngine {
     // Seeking and resuming use the same scene-local clock. Never speed up a recording
     // to catch the pictures, and never restart the scene when resuming halfway through.
     const offset = this.currentSceneOffset;
+    // The section title gives the current recording time to load. Keep it paused
+    // until narration begins so a slower download does not discard the opening words.
+    if (offset < 0) {
+      this.pauseVoiceover();
+      return;
+    }
     if (Number.isFinite(audio.duration) && offset >= audio.duration) {
       audio.pause();
       return;
     }
-    if (audio.readyState >= 1 && Math.abs(audio.currentTime - offset) > 0.4) {
+    // A delayed render can report an old clock after audio has already advanced.
+    // Rewind only for an explicit seek, so a long frame never repeats spoken words.
+    if (audio.readyState >= 1 && (this.voiceoverSeekRequested || offset - audio.currentTime > 0.4)) {
       audio.currentTime = offset;
+      this.voiceoverSeekRequested = false;
     }
     if (!this.isPlaying || !this.voiceoverEnabled || !audio.paused || this.voiceoverPlayPending) {
       return;

@@ -136,6 +136,29 @@ describe.skipIf(!ffmpegAvailable)("lossless narration mastering with FFmpeg", ()
     expect(information.durationSeconds).toBeCloseTo(4.5, 2);
   });
 
+  it("controls reconstructed peaks from low-rate synthesis while retaining its duration", async () => {
+    const directory = await fixtureDirectory();
+    const original = path.join(directory, "synthesis-24k.wav");
+    // Sharp consonant-like bursts at the synthesis rate produce peaks between
+    // samples when reconstructed at the delivery rate. No author's audio is used.
+    const samples = new Float32Array(24000 * 3);
+    for (let i = 0; i < samples.length; i++) {
+      const time = i / 24000;
+      const envelope = 0.08 + 0.8 * Math.exp(-((time % 0.21) / 0.004));
+      samples[i] = envelope * (Math.sin(2 * Math.PI * 5100 * time) + 0.4 * Math.sin(2 * Math.PI * 8700 * time));
+    }
+    const raw = path.join(directory, "synthesis.f32");
+    await writeFile(raw, Buffer.from(samples.buffer));
+    await runFFmpeg(["-y", "-f", "f32le", "-ar", "24000", "-ac", "1", "-i", raw, "-c:a", "pcm_f32le", original]);
+    const master = path.join(directory, "master.wav");
+    const information = await masterVoiceover(original, master);
+    const measured = await measureAudioLoudness(master);
+    expect(Math.abs(measured.integratedLufs + 17)).toBeLessThanOrEqual(0.3);
+    expect(measured.truePeak).toBeLessThanOrEqual(-1.4);
+    expect(information.sampleRate).toBe(48000);
+    expect(information.durationSeconds).toBeCloseTo(3.5, 2);
+  });
+
   it("processes every configured scene while keeping masters private and speech longer than old windows", async () => {
     const directory = await fixtureDirectory();
     const inputDir = path.join(directory, "recordings");

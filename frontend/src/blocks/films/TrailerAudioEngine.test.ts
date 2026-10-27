@@ -51,7 +51,9 @@ describe("recorded trailer narration", () => {
     // The Love scene also used to create an additional resolution chime.
     engine.updateScene(10, 420, 560, "Recorded narration", 420);
     engine.updateScene(10, 420.1, 560, "Recorded narration", 420);
-    expect(RecordedScene.instances).toHaveLength(0);
+    expect(RecordedScene.instances).toHaveLength(1);
+    expect(RecordedScene.instances[0].paused).toBe(true);
+    expect(RecordedScene.instances[0].play).not.toHaveBeenCalled();
     engine.updateScene(10, 425.18, 560, "Recorded narration", 420);
     const voice = RecordedScene.instances[0];
     await Promise.resolve();
@@ -67,6 +69,7 @@ describe("recorded trailer narration", () => {
     expect(voice.currentTime).toBeCloseTo(12);
     expect(voice.playbackRate).toBe(1);
     expect(voice.paused).toBe(false);
+    engine.requestVoiceoverSeek();
     engine.updateScene(10, 420.05, 560, "Recorded narration", 420);
     engine.updateScene(10, 420.1, 560, "Recorded narration", 420);
     expect(voice.paused).toBe(true);
@@ -75,6 +78,53 @@ describe("recorded trailer narration", () => {
     expect(voice.currentTime).toBeCloseTo(0.1);
     expect(RecordedScene.instances).toHaveLength(1);
     expect(audioContext).not.toHaveBeenCalled();
+    engine.destroy();
+  });
+
+  it("does not repeat narration after a delayed clock update, while honoring an explicit backward seek", async () => {
+    const { engine } = createEngine();
+    engine.updateScene(0, 10, 500, "Recorded narration", 5);
+    const voice = RecordedScene.instances[0];
+    await Promise.resolve();
+    voice.currentTime = 7;
+    engine.updateScene(0, 10.5, 500, "Recorded narration", 5);
+    expect(voice.currentTime).toBe(7);
+
+    engine.requestVoiceoverSeek();
+    engine.updateScene(0, 7, 500, "Recorded narration", 5);
+    expect(voice.currentTime).toBe(2);
+    expect(voice.playbackRate).toBe(1);
+    engine.destroy();
+  });
+
+  it("loads narration during the section title without playing it when metadata arrives early", async () => {
+    const engine = new TrailerAudioEngine(() => {}, {
+      narrationOnly: true,
+      voiceOffsetSeconds: 2.4,
+    });
+    engine.setVoiceoverEnabled(true);
+    engine.start();
+    engine.updateScene(7, 301.05, 560, "Recorded narration", 301);
+    const voice = RecordedScene.instances[0];
+    expect(voice.src).toBe("/audio/scene-8.mp3");
+    expect(voice.play).not.toHaveBeenCalled();
+    expect(engine.waitingForVoiceover).toBe(false);
+
+    engine.updateScene(7, 302.3, 560, "Recorded narration", 301);
+    voice.dispatchEvent(new Event("loadedmetadata"));
+    expect(voice.play).not.toHaveBeenCalled();
+    expect(voice.paused).toBe(true);
+    expect(voice.currentTime).toBe(0);
+
+    engine.updateScene(7, 303.45, 560, "Recorded narration", 301);
+    expect(engine.waitingForVoiceover).toBe(true);
+    voice.readyState = 3;
+    expect(engine.waitingForVoiceover).toBe(false);
+    await Promise.resolve();
+    expect(RecordedScene.instances).toHaveLength(1);
+    expect(voice.paused).toBe(false);
+    expect(voice.currentTime).toBe(0);
+    expect(voice.playbackRate).toBe(1);
     engine.destroy();
   });
 

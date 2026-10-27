@@ -69,14 +69,30 @@ describe("trailer retiming", () => {
 });
 
 describe.skipIf(!ffmpegAvailable)("actual narration/video remux", () => {
+  it("leaves section titles silent before starting narration at its natural rate", async () => {
+    const { directory, masterDir } = await fixture();
+    const scenes = sourceScenes.map((scene, index) => ({ ...scene, start: 5 + index * 3, end: 8 + index * 3 }));
+    const outputPath = path.join(directory, "title-pause.wav");
+    const masters = await mixVoiceover({ scenes, masterDir, outputPath, durationSeconds: 11 });
+    expect(masters.map((master) => master.start)).toEqual([7.4, 10.4]);
+    expect(masters.map((master) => master.durationSeconds)).toEqual([0.25, 0.25]);
+    const { stderr } = await runFFmpeg([
+      "-ss", "5", "-t", "2.2", "-i", outputPath,
+      "-af", "volumedetect", "-vn", "-f", "null", "-",
+    ]);
+    const peak = stderr.match(/max_volume: (-inf|[-\d.]+) dB/)?.[1];
+    expect(peak).toBeDefined();
+    expect(peak === "-inf" ? -Infinity : Number(peak)).toBeLessThan(-70);
+  });
+
   it("mixes un-stretched narration and rejects a scene window that would cut it", async () => {
     const { directory, masterDir } = await fixture();
     const outputPath = path.join(directory, "mix.wav");
-    const masters = await mixVoiceover({ scenes: targets, masterDir, outputPath, durationSeconds: 6.3 });
+    const masters = await mixVoiceover({ scenes: targets, masterDir, outputPath, durationSeconds: 6.3, voiceOffsetSeconds: 0.18 });
     expect(masters.map((master) => master.durationSeconds)).toEqual([0.25, 0.25]);
     expect((await probeAudio(outputPath)).durationSeconds).toBeCloseTo(6.3, 2);
     await expect(mixVoiceover({
-      scenes: [{ ...targets[0], end: 5.2 }], masterDir, outputPath, durationSeconds: 6.3,
+      scenes: [{ ...targets[0], end: 5.2 }], masterDir, outputPath, durationSeconds: 6.3, voiceOffsetSeconds: 0.18,
     })).rejects.toThrow("do not shorten the voice");
   });
 
@@ -91,7 +107,7 @@ describe.skipIf(!ffmpegAvailable)("actual narration/video remux", () => {
     const original = await readFile(sourcePath);
     const result = await remuxTrailer({
       sourcePath, destinationPath, sourceScenes, targetScenes: changed ? targets : sourceScenes,
-      masterDir, threads: 1,
+      masterDir, threads: 1, voiceOffsetSeconds: 0.18,
     });
     expect(result.frames).toBe(changed ? 189 : 180);
     expect(result.provenance.method).toContain(changed ? "scene-retiming" : "video-copy");
@@ -116,7 +132,7 @@ describe.skipIf(!ffmpegAvailable)("actual narration/video remux", () => {
     ]);
     await writeFile(destinationPath, "previous delivery");
     await rm(path.join(masterDir, "scene-2.wav"));
-    await expect(remuxTrailer({ sourcePath, destinationPath, sourceScenes, targetScenes: targets, masterDir })).rejects.toThrow("FFmpeg failed");
+    await expect(remuxTrailer({ sourcePath, destinationPath, sourceScenes, targetScenes: targets, masterDir, voiceOffsetSeconds: 0.18 })).rejects.toThrow("FFmpeg failed");
     expect(await readFile(destinationPath, "utf8")).toBe("previous delivery");
   });
 });

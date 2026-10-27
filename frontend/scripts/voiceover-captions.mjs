@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { TRAILER_VOICE_OFFSET_SECONDS } from "./channel-inquiry-video.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const CONTRACTIONS = {
@@ -164,7 +165,7 @@ function sceneCues(scene, record, { offsetSeconds, maxLineLength }) {
 }
 
 export function buildNarrationCues(scenes, records, {
-  durationSeconds, offsetSeconds = 0.18, silentTailSeconds = 7.2, maxLineLength = 42,
+  durationSeconds, offsetSeconds = TRAILER_VOICE_OFFSET_SECONDS, silentTailSeconds = 7.2, maxLineLength = 42,
 } = {}) {
   assert.ok(Number.isFinite(durationSeconds) && durationSeconds > silentTailSeconds, "A valid film duration is required");
   assert.equal(records.length, scenes.length, "ASR scene count does not match the film");

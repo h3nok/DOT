@@ -89,7 +89,7 @@ export const HERO_CONCEPTS: ReadonlyArray<Concept> = [
   {
     id: "home.concept.source",
     term: "T × E: The Source",
-    text: "Continuity (T) and possibility (E). DOT takes them as the source: the conditions within which consciousness first arose.",
+    text: "T is primordial Time: continuity through which change can persist. E is the raw fabric of unformed information. DOT proposes that Big C emerged within their interaction.",
     level: "hypothesis",
     part: "te",
   },

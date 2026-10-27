@@ -66,6 +66,25 @@ did not — do not claim to have composed from primitives that are absent.
   `scripts/materialize-public-routes.mjs`, which writes each public page's own text into its
   HTML at build time (ADR-0033). Never write essays or bios in the author's voice.
 
+## Theory fidelity — author-confirmed
+
+- **Big C emerged within T × E.** T and E are outside Big C, as recorded in
+  ADR-0026 and reaffirmed by the author on 2026-10-25. They are not capacities
+  contained within Big C.
+- The author confirmed the refined Scene 6 definitions on 2026-10-25: **T is
+  primordial continuity—Time**, the continuous flow through which states unfold
+  and change persists. **E is the raw information source—the stuff itself**,
+  the source of bits and unformed possibility. Big C is the living, conscious
+  pattern that emerged within these prerequisites, retains state, responds to
+  change, and transforms raw input into coherent, structured output.
+- Keep this relationship consistent in narration, captions, diagrams, and public
+  explanations. A familiar analogy must preserve the theory's relationships.
+- The v4 working manuscript and released v4 book contain a conflicting editorial
+  revision that calls T/E capacities of Big C and uses `Big C[T,E]`. Do not treat
+  those passages as authority over the author's clarification or ADR-0026.
+  Preserve sealed releases under ADR-0018; reconcile the book through a corrected
+  edition rather than silently editing its released files.
+
 ## Commands
 
 ```bash

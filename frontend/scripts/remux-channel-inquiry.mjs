@@ -3,12 +3,12 @@ import { createReadStream } from "node:fs";
 import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { INQUIRY_VIDEOS, TRAILER_SCENES } from "./channel-inquiry-video.mjs";
+import { INQUIRY_VIDEOS, TRAILER_SCENES, TRAILER_VOICE_OFFSET_SECONDS } from "./channel-inquiry-video.mjs";
 import { DEFAULT_FFMPEG, probeAudio, runFFmpeg } from "./voiceover-audio.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const FPS = 30;
-export const VOICE_OFFSET_SECONDS = 0.18;
+export const VOICE_OFFSET_SECONDS = TRAILER_VOICE_OFFSET_SECONDS;
 
 export function buildRetimingPlan(sourceScenes, targetScenes, { fps = FPS } = {}) {
   if (!Array.isArray(sourceScenes) || !Array.isArray(targetScenes) ||
@@ -181,6 +181,7 @@ export async function remuxTrailer({
   sourcePath, destinationPath, sourceScenes, targetScenes = TRAILER_SCENES,
   masterDir = path.join(ROOT, "artifacts/voiceover/masters"),
   ffmpeg = DEFAULT_FFMPEG, threads = 0, encoder = "libx264",
+  voiceOffsetSeconds = VOICE_OFFSET_SECONDS,
 }) {
   videoEncoderArguments(encoder, threads);
   const plan = buildRetimingPlan(sourceScenes, targetScenes);
@@ -193,7 +194,7 @@ export async function remuxTrailer({
   const staging = await mkdtemp(path.join(path.dirname(destinationPath), ".remux-"));
   try {
     const voice = path.join(staging, "voice.wav");
-    const masters = await mixVoiceover({ scenes: targetScenes, masterDir, outputPath: voice, durationSeconds: plan.durationSeconds, ffmpeg });
+    const masters = await mixVoiceover({ scenes: targetScenes, masterDir, outputPath: voice, durationSeconds: plan.durationSeconds, ffmpeg, voiceOffsetSeconds });
     const visual = path.join(staging, "visual.mp4");
     await retimeVideo(sourcePath, visual, plan, { ffmpeg, threads, encoder });
     const chapters = path.join(staging, "chapters.ffmeta");

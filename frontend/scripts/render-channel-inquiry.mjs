@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { existsSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { copyFile, mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -129,23 +129,27 @@ function score(video) {
 async function verifyForegroundMotion(page, video, outName) {
   const baseName = video.baseName || video.name.replace(/-light$/, "");
   const centered = baseName !== "inquiry-trailer";
-  const difference = await page.evaluate((isCentered) => {
+  // Check a meaningful loop progression, rather than old absolute timestamps
+  // that can fall in a settled scene after narration is retimed.
+  const loopScene = video.scenes?.find((scene) => scene.number === 9);
+  const times = centered ? [0.9, 2.1] : [loopScene.start + 5, loopScene.start + 18];
+  const difference = await page.evaluate(([first, second]) => {
     const canvas = document.querySelector("canvas");
     const s = canvas.width / 1920;
     const ctx = canvas.getContext("2d");
-    window.seekInquiry(isCentered ? 0.9 : 44.0);
+    window.seekInquiry(first);
     const focus = window.inquiryVisualFocus || { x: 960, y: 400 };
     const x = Math.max(0, Math.min(1340, focus.x - 290));
     const y = Math.max(0, Math.min(600, focus.y - 240));
     const a = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
-    window.seekInquiry(isCentered ? 2.1 : 47.2);
+    window.seekInquiry(second);
     const b = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
     let total = 0;
     for (let i = 0; i < a.length; i += 4) {
       total += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
     }
     return total / ((a.length / 4) * 3);
-  }, centered);
+  }, times);
   assert.ok(difference > 0.35, `Foreground is too static (${outName}): ${difference}`);
   console.log(`${outName}: moving foreground verified (${difference.toFixed(2)} mean pixel change)`);
 }
@@ -217,7 +221,7 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   });
   await page.screenshot({ path: path.join(ASSETS_DIR, `${outName}-storyboard.png`) });
   await page.setViewportSize({ width: 1920, height: 1080 });
-  if (!isLight && video.captions.length) {
+  if (!isLight && video.captions.length && video.name !== "inquiry-trailer") {
     await writeFile(path.join(ASSETS_DIR, `${video.name}.srt`), inquirySubtitles(video));
   }
   if (stillsOnly) return;
@@ -226,6 +230,16 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   const streamDoc = buildInquiryDocument({ video, identity, fonts: embeddedFonts, scale: 1, theme });
   await page.setContent(streamDoc);
   await page.evaluate(() => window.inquiryReady);
+  const extraPages = [];
+  if (video.duration > 60) {
+    for (let i = 0; i < 3; i++) {
+      const p = await page.context().browser().newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+      await p.setContent(streamDoc);
+      await p.evaluate(() => window.inquiryReady);
+      extraPages.push(p);
+    }
+  }
+  const workerPages = [page, ...extraPages];
 
   const wavPath = path.join(temporary, `${outName}.wav`);
   if (video.name === "inquiry-trailer") {
@@ -277,7 +291,7 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
       "0",
       ...(encoder === "h264_nvenc"
         ? ["-preset", "p6", "-tune", "hq", "-rc", "vbr", "-cq", "18", "-b:v", "0"]
-        : ["-preset", "superfast", "-crf", "11"]),
+        : ["-preset", "superfast", "-crf", "17"]),
       "-pix_fmt",
       "yuv420p",
       "-color_primaries",
@@ -309,14 +323,23 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   });
   const done = once(child, "close");
   done.catch(() => {});
+  const totalFrames = video.duration * FPS;
+  const batchSize = workerPages.length;
   try {
-    for (let frame = 0; frame < video.duration * FPS; frame++) {
-      const base64 = await page.evaluate((t) => {
-        window.seekInquiry(t);
-        return document.querySelector("canvas").toDataURL("image/jpeg", 0.96).split(",")[1];
-      }, frame / FPS);
-      if (!child.stdin.write(Buffer.from(base64, "base64"))) await once(child.stdin, "drain");
-      if (frame % (FPS * 12) === 0) console.log(`${outName}: ${frame / FPS}/${video.duration}s`);
+    for (let frame = 0; frame < totalFrames; frame += batchSize) {
+      const count = Math.min(batchSize, totalFrames - frame);
+      const base64List = await Promise.all(
+        Array.from({ length: count }, (_, idx) =>
+          workerPages[idx].evaluate((t) => {
+            window.seekInquiry(t);
+            return document.querySelector("canvas").toDataURL("image/jpeg", 0.96).split(",")[1];
+          }, (frame + idx) / FPS),
+        ),
+      );
+      for (let idx = 0; idx < count; idx++) {
+        if (!child.stdin.write(Buffer.from(base64List[idx], "base64"))) await once(child.stdin, "drain");
+        if ((frame + idx) % (FPS * 12) === 0) console.log(`${outName}: ${(frame + idx) / FPS}/${video.duration}s`);
+      }
     }
     child.stdin.end();
     const [code] = await done;
@@ -324,6 +347,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   } catch (error) {
     child.kill();
     throw error;
+  } finally {
+    await Promise.all(extraPages.map((p) => p.close().catch(() => {})));
   }
   const decoded = await run(FFMPEG, ["-hide_banner", "-i", file, "-f", "null", "-"]);
   assert.match(decoded, /Video: h264/);
@@ -353,7 +378,10 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     style: "Open cinematic typography, variable scene compositions, full-stage and offset DOT geometry, and the canonical DOT mark in dark and light editions.",
     context: INQUIRY_CONTEXT,
     render_sha256: createHash("sha256").update(document).digest("hex"),
-    video_sha256: createHash("sha256").update(await readFile(file)).digest("hex"),
+    video_sha256: await new Promise((resolve, reject) => {
+      const hash = createHash("sha256");
+      createReadStream(file).on("data", (c) => hash.update(c)).on("end", () => resolve(hash.digest("hex"))).on("error", reject);
+    }),
   };
   const readyFile = path.join(OUTPUT, `.${outName}.ready.mp4`);
   await copyFile(file, readyFile);

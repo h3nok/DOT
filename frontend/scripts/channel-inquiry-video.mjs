@@ -36,282 +36,285 @@ export const INQUIRY_CONTEXT = {
   manifesto: "Serves L1, L2, L7, L8, and L10: calm, finite motion, honest claims, contemplative pacing, and one focus. Violates none.",
 };
 
+// Let each 2.2-second section title finish before the recorded voice begins.
+export const TRAILER_VOICE_OFFSET_SECONDS = 2.4;
+
 export const TRAILER_SCENES = [
   {
     id: "scene-1",
     number: 1,
     start: 5,
-    end: 36,
-    timecode: "0:05 – 0:36",
+    end: 79,
+    timecode: "0:05 – 1:19",
     mode: "seed",
-    actHeader: "01 // THE GAP WE FEEL",
+    actHeader: "01 // THE ROT OF UNEXAMINED BELIEF",
     primaryStatement:
-      "We can map distant galaxies, build intelligent machines, and describe the physical world with extraordinary precision. Yet we can still struggle to understand ourselves. A conversation can leave us hurt before we understand why. We can recognize an old pattern and still find ourselves repeating it. A life can look coherent from the outside while feeling misaligned within.",
+      "Look closely at the world we are living in. We have built machines that can process the sum of human text, map distant galaxies, and engineer matter at the atomic scale. Yet beneath that technical brilliance, something essential is rotting. Public thought grows shallower by the year. Institutions lose their legitimacy. Neighbors cannot reason across a disagreement without retreating into tribal slogans. Why? Because we have traded reason for collective adherence to belief systems—political, cultural, economic, and ideological scripts that tell us what to repeat, whom to blame, and which questions are forbidden. Meanwhile, science—our greatest engine of reason—focused so exclusively on measuring external matter that it left the conscious mind outside its model. Digital Organism Theory begins right here: to stop the rot, we have to revive a rigorous school of rational thought—one that puts the conscious observer back inside the inquiry.",
     lines: [
-      "Coherent from the outside.",
-      "Misaligned within.",
+      "Our tools have never been sharper.",
+      "Why is our thinking rotting?",
     ],
     notes: [
-      "We can map distant galaxies and build intelligent machines,",
-      "yet still struggle to understand ourselves.",
+      "When a culture surrenders reason to collective belief systems,",
+      "intelligence becomes an instrument for defending the status quo.",
     ],
-    concept: "THE STARTING QUESTION  ·  LIVED EXPERIENCE",
-    axiom: "OUTER PRECISION  ·  UNRESOLVED INNER LIFE",
-    systemSubtleTag: "[ THE GAP WE FEEL : OUTER PRECISION vs. INNER LIFE ]",
-    focusTerm: "misaligned",
+    concept: "THE STARTING QUESTION  ·  REASON & THE OBSERVER",
+    axiom: "TECHNICAL MASTERY  vs.  UNEXAMINED BELIEF SYSTEMS",
+    systemSubtleTag: "[ THE ROT OF UNEXAMINED BELIEF : REVIVING REASON ]",
+    focusTerm: "rotting",
   },
   {
     id: "scene-2",
     number: 2,
-    start: 36,
-    end: 72,
-    timecode: "0:36 – 1:12",
+    start: 79,
+    end: 133,
+    timecode: "1:19 – 2:13",
     mode: "seed",
-    actHeader: "02 // THE NEAREST FACT",
+    actHeader: "02 // WHERE REASON ACTUALLY BEGINS",
     primaryStatement:
-      "Digital Organism Theory, or DOT, grew from questions like these. What is experience? How does it become the way we understand ourselves? And how can that understanding help us live more responsibly with one another? Begin with the nearest fact: experience occurs. Before you can examine a measurement, question an idea, or decide what deserves another look, you are already experiencing something. There is a first-person side to the inquiry.",
+      "If you refuse to take the status quo on faith, where does honest reason begin? Ask what remains undeniable when you strip away every inherited belief and institutional authority. At the bottom of all inquiry sits one irreducible fact: experience occurs. Before you can trust an expert, read a measurement, or even doubt whether an argument is true, you are already experiencing something. Even doubt itself is an experience. Every piece of evidence we ever use to reason about reality must first pass through conscious awareness. Starting with experience does not mean retreating into private opinion—it means examining the actual instrument through which every human judgment is made.",
     lines: [
-      "Begin with the nearest fact:",
-      "experience occurs.",
+      "Strip away every inherited script.",
+      "Experience occurs.",
     ],
     notes: [
-      "Before you examine any measurement or question an idea,",
-      "there is already a first-person side to the inquiry.",
+      "Before you can accept a doctrine, read an instrument,",
+      "or doubt an argument, conscious experience is already present.",
     ],
     concept: "OBSERVATION  ·  THE MINIMUM DATUM (DOT-E0)",
     axiom: "DOT-E0 :  Experience occurs.",
     systemSubtleTag: "[ MINIMUM DATUM : EXPERIENCE OCCURS (DOT-E0) ]",
-    focusTerm: "experience",
+    focusTerm: "Experience",
   },
   {
     id: "scene-3",
     number: 3,
-    start: 72,
-    end: 101,
-    timecode: "1:12 – 1:41",
+    start: 133,
+    end: 203,
+    timecode: "2:13 – 3:23",
     mode: "seed",
-    actHeader: "03 // A FAMILIAR MESSAGE",
+    actHeader: "03 // OBSERVATION VS. PROGRAMMED INFERENCE",
     primaryStatement:
-      "Imagine you send someone a thoughtful message. Their reply is one word: Okay. You feel a sting. Perhaps they are upset. Perhaps they are simply busy. The feeling is real; the first explanation may be wrong. That distinction creates room to inquire. Feeling is data. Understanding what it tells us takes care, comparison, and a willingness to be corrected.",
+      "Why do intelligent people fall for collective belief systems so easily? Because in everyday life, we rarely distinguish what we actually observe from the story our conditioning supplies. Take a simple, everyday moment. You send someone a thoughtful message, and they reply with one word: 'Okay.' Instantly, your chest tightens, and a conclusion appears in your head: 'They're disrespecting me.' Look at what just happened. Two completely different events were fused into one. First, the raw datum: a one-word message arrived, and a feeling of tension occurred in you. Both are real observations. Second, the explanation: why they sent it. That explanation is not an observation—it is an inference generated by your past conditioning. And like any inference, it can be completely wrong. The first discipline of reason is learning to separate the raw signal from the automatic story.",
     lines: [
-      "One word.",
-      "More than one explanation.",
+      "What actually happened—",
+      "and what did your conditioning add?",
     ],
     notes: [
-      "A feeling is real.",
-      "Its first explanation can change.",
+      "A feeling is real data about your internal state.",
+      "The story you attach to it is a hypothesis—not a fact.",
     ],
     concept: "SUBJECTIVE DATA PRINCIPLE  ·  OBSERVATION (DOT-E1)",
-    axiom: "OCCURRENCE IS IMMEDIATE  ·  INTERPRETATION IS REVISABLE",
-    systemSubtleTag: "[ SUBJECTIVE DATA PRINCIPLE : FEELING IS DATA ]",
-    focusTerm: "explanation",
+    axiom: "RAW DATUM (OBSERVATION)  ≠  AUTOMATIC STORY (INFERENCE)",
+    systemSubtleTag: "[ SUBJECTIVE DATA PRINCIPLE : DATUM vs. INFERENCE ]",
+    focusTerm: "conditioning",
   },
   {
     id: "scene-4",
     number: 4,
-    start: 101,
-    end: 154,
-    timecode: "1:41 – 2:34",
+    start: 203,
+    end: 269,
+    timecode: "3:23 – 4:29",
     mode: "outer_scan",
-    actHeader: "04 // A WORLD WE CAN QUESTION",
+    actHeader: "04 // REFUSING BOTH DOGMAS",
     primaryStatement:
-      "Science gives us powerful ways to make those corrections. Measurement, prediction, and shared scrutiny help us discover where an explanation succeeds and where it fails. We encounter a world with stable constraints. Signals take time. Physical processes follow laws. In quantum experiments, the measurement arrangement matters to the pattern we observe. These findings do not establish Digital Organism Theory. They belong among the observations any account of reality must respect. And every result we examine still reaches us through experience. The relationship between the measurable world and the experience of living in it remains central to the inquiry.",
+      "Today's intellectual status quo forces you into a false choice between two dogmas. On one side sits reductive materialism, which takes a brilliant method for measuring matter and promotes it into a belief system—insisting that consciousness is an illusion or an accidental byproduct, and leaving human beings alienated from their own minds. On the other side sits wishful idealism, which mistakes the immediacy of personal feeling for proof that wishing makes things true. A rational school of thought rejects both shortcuts. Digital Organism Theory draws a hard boundary: the fact that all evidence enters through experience is an observation; the claim that consciousness is the fundamental architecture of reality is a hypothesis. We never smuggle a hypothesis in as a fact—we state it plainly, derive what follows, and put it to the test.",
     lines: [
-      "Every result we examine",
-      "reaches us through experience.",
+      "Neither blind materialism",
+      "nor wishful idealism.",
     ],
     notes: [
-      "Measurement, prediction, and shared scrutiny test our claims—",
-      "and every result still enters through conscious experience.",
+      "Knowing the world through experience is an observation;",
+      "what reality ultimately is remains a testable hypothesis.",
     ],
-    concept: "EPISTEMIC PRIORITY  ·  DEFINITION (DOT-D2)",
-    axiom: "UsesAsEvidence(S, e)  ⇒  Experiences(S, r(e))",
-    systemSubtleTag: "[ EPISTEMIC PRIORITY : EVIDENCE ENTERS THROUGH EXPERIENCE ]",
-    focusTerm: "experience",
+    concept: "EPISTEMIC BOUNDARY  ·  DOT-B1",
+    axiom: "EPISTEMIC PRIORITY (OBSERVATION)  ≠  ONTOLOGY (HYPOTHESIS)",
+    systemSubtleTag: "[ EPISTEMIC BOUNDARY : REFUSING BOTH DOGMAS ]",
+    focusTerm: "materialism",
   },
   {
     id: "scene-5",
     number: 5,
-    start: 154,
-    end: 193,
-    timecode: "2:34 – 3:13",
+    start: 269,
+    end: 335,
+    timecode: "4:29 – 5:35",
     mode: "outer_scan",
-    actHeader: "05 // THE LANGUAGE OF A MODEL",
+    actHeader: "05 // MODELS ARE INSTRUMENTS, NOT IDOLS",
     primaryStatement:
-      "When you visit a new place, a map helps you find your way. The road still brings weather, detours, and turns you did not expect. A useful model works in a similar way. It helps us notice relationships, make predictions, and discover where our understanding needs to change. DOT uses the language of systems: information, continuity, feedback, and change. Its computational metaphors are handles for exploring experience. Keep what helps you see more clearly, and question what does not.",
+      "Look at how belief systems operate: they hand you a vocabulary and demand that you defend it at all costs. Agreement becomes loyalty; questioning becomes betrayal. A rational model works in the exact opposite way. Think of a map when you are crossing rough terrain. You do not worship the paper the map is printed on, and you do not get angry at the road when it disagrees with the drawing—you update the map. Digital Organism Theory uses systems language—state, input, feedback, and pattern—strictly as a map. Because I cannot hand you my raw experience directly, we use structural handles to reason together. No metaphor in this work deserves your blind belief. Its terms earn their keep only to the extent that they help you see what was previously hidden, predict real consequences, and expose where our thinking goes wrong.",
     lines: [
-      "A model is a map.",
-      "Experience is the terrain.",
+      "A model is an instrument for thought—",
+      "never an idol to worship.",
     ],
     notes: [
-      "Use it to find your way.",
-      "Let what you encounter refine it.",
+      "Belief systems demand loyalty to their vocabulary.",
+      "A rational framework demands to be tested against reality.",
     ],
     concept: "METAPHORIC MEDIATION  ·  EPISTEMIC DISCIPLINE",
-    axiom: "FIRST-ORDER: EXPERIENCE  ·  SECOND-ORDER: MODEL",
-    systemSubtleTag: "[ METAPHORIC MEDIATION : HANDLES FOR RELATIONSHIPS ]",
-    focusTerm: "map",
+    axiom: "THEORY: REVISABLE MAP  ·  REALITY: THE TERRAIN",
+    systemSubtleTag: "[ METAPHORIC MEDIATION : INSTRUMENTS, NOT IDOLS ]",
+    focusTerm: "instrument",
   },
   {
     id: "scene-6",
     number: 6,
-    start: 193,
-    end: 249,
-    timecode: "3:13 – 4:09",
+    start: 335,
+    end: 400,
+    timecode: "5:35 – 6:40",
     mode: "intersection",
-    actHeader: "06 // THE DIGITAL ORGANISM",
+    actHeader: "06 // T AND E: THE TWO PREREQUISITES",
     primaryStatement:
-      "DOT proposes that Consciousness is fundamental. It calls the encompassing process Big C. Here, digital describes a process that retains information, responds to change, and works to preserve or develop its coherence. Within this hypothesis, Big C has two capacities. A melody offers a simple comparison: the notes have an order, and the next note can differ from the last. T names primordial continuity: the ordering through which change can occur and be retained. E names unexpressed possibility: the capacity for more than one distinguishable state. T and E are capacities of Big C. They do not precede it or produce it. The theory must work out what follows, and what evidence could show it to be mistaken.",
+      "Every rigorous theory must lay its foundational assumptions on the table where anyone can inspect them. Digital Organism Theory makes just two starting assumptions: that T and E exist. T is primordial continuity—Time itself, the unbroken flow through which states unfold and change can persist. E is the raw stuff itself—the unformed information source, the source of bits and raw possibility. T and E are the prerequisites. Out of their interaction emerged Big C: a self-sustaining, conscious pattern. Ultimately, what gets built within T and E is a pattern that retains state and transforms raw, unformed input into formed, structured output. That is what DOT means by a Digital Organism—not a silicon computer in the sky, but a living informational process that carries structure forward across time.",
     lines: [
-      "What if consciousness",
-      "is fundamental?",
+      "Two prerequisites: T and E.",
+      "One emergent pattern: Big C.",
     ],
     notes: [
-      "Continuity carries change.",
-      "Possibility leaves room for something new.",
+      "T is primordial continuity (Time). E is the raw information source.",
+      "Within T × E, a pattern emerged that transforms raw input into structured output.",
     ],
     concept: "FOUNDATIONAL HYPOTHESIS  ·  DOT-H1 / H2 / M2",
-    axiom: "Big C[T, E]  ·  SELF-PRESERVING CONSCIOUS PROCESS ↻",
-    systemSubtleTag: "[ FOUNDATIONAL HYPOTHESIS : Big C[T, E] ]",
-    focusTerm: "consciousness",
+    axiom: "T (TIME) × E (RAW INFORMATION SOURCE)  →  Big C (STRUCTURED PATTERN) ↻",
+    systemSubtleTag: "[ PREREQUISITES T × E : RAW INPUT → STRUCTURED PATTERN (Big C) ]",
+    focusTerm: "Big C",
   },
   {
     id: "scene-7",
     number: 7,
-    start: 249,
-    end: 301,
-    timecode: "4:09 – 5:01",
+    start: 400,
+    end: 464,
+    timecode: "6:40 – 7:44",
     mode: "canvas_build",
-    actHeader: "07 // A LOCAL LIFE IN A SHARED WORLD",
+    actHeader: "07 // REALITY FRAME ZERO AND THE INTERFACE",
     primaryStatement:
-      "Within that architecture, Big C differentiates into local centers of self-awareness. Each is called Little c. The model proposes that these local centers encounter a rule-bound environment through living bodies. Our physical universe is Reality Frame Zero, or RF-zero. Your Reality Stream is the sequence of experience available to you within it. Calling the world a Frame leaves its consequences fully real. Gravity resists you. Pain hurts. Other people have lives of their own. DOT describes the body as the biological interface through which Little c perceives and acts. An open question is how we could test this account against other explanations.",
+      "Within this architecture, Big C differentiates into individual centers of awareness, each called Little c. You are one of those centers. Why doesn't a conscious process simply float in an echo chamber of its own thoughts? Because growth and reason require friction—an environment where choices meet real resistance. DOT calls our physical universe Reality Frame Zero: a shared, lawful arena where gravity pulls, fire burns, time moves forward, and consequences cannot be wished away. Within Reality Frame Zero, your body is the biological interface through which you perceive and act, and your Reality Stream is the specific feed of sensory and internal data reaching you. Two people standing on the same street corner inhabit the exact same physical frame, yet each is navigating a completely different Reality Stream.",
     lines: [
-      "Gravity resists you. Pain hurts.",
-      "Other people are real.",
+      "One lawful physical arena (RF₀).",
+      "Millions of local observers (Little c).",
     ],
     notes: [
-      "RF₀ is our shared physical Reality Frame; your body is the",
-      "biological interface through which your Reality Stream arrives.",
+      "RF₀ is our shared, consequence-bound physical universe;",
+      "your body is the local interface delivering your Reality Stream.",
     ],
     concept: "REALITY FRAME & INTERFACE  ·  DOT-H3 / H4 / H5",
-    axiom: "Big C[T, E]  →  RF₀ (Frame)  →  RS (Stream)  →  Little c",
+    axiom: "T × E  →  Big C  →  RF₀ (Frame)  →  RS (Stream)  →  Little c",
     systemSubtleTag: "[ REALITY FRAME RF₀ & REALITY STREAM : EMBODIED INTERFACE ]",
-    focusTerm: "real",
+    focusTerm: "RF₀",
   },
   {
     id: "scene-8",
     number: 8,
-    start: 301,
-    end: 343,
-    timecode: "5:01 – 5:43",
+    start: 464,
+    end: 529,
+    timecode: "7:44 – 8:49",
     mode: "painting_mesh",
-    actHeader: "08 // WHAT EXPERIENCE LEAVES BEHIND",
+    actHeader: "08 // HOW A BELIEF SYSTEM GETS INSTALLED",
     primaryStatement:
-      "Think of learning to ride a bicycle. At first, you pay attention to every movement. With practice, your responses change. The ride ends, but the learning stays. Other experiences can change whom you trust, the habits you repeat, and what feels possible. DOT calls the capacity to carry those changes forward the Canvas. Like brushstrokes building a painting, those changes form patterns. The Painting is the pattern through which you interpret the next moment. What takes shape can be examined, questioned, and developed.",
+      "Here is where the architecture explains how the status quo captures a human mind. Whenever you undergo an experience—whether learning to balance a bicycle or learning what makes your parents angry—the encounter ends, but a structural trace stays behind. DOT calls the inner substrate that retains those traces the Canvas. Over time, those accumulated traces organize into your Painting: the active interpretive lens through which you read the world. Here is the catch: you did not paint your initial Painting. Before you were old enough to reason or consent, your family, your language, your schools, your economic class, and your culture laid down thousands of strokes. By the time you try to question society, society's categories, fears, and ambitions are already operating inside your head—disguised as your own common sense.",
     lines: [
-      "What stays with you",
-      "after an experience ends?",
+      "Before you could reason,",
+      "a Painting was already installed.",
     ],
     notes: [
-      "The Canvas carries change.",
-      "The Painting shapes how you meet the next moment.",
+      "The Canvas retains every trace of your history;",
+      "the Painting is the inherited belief system filtering your present.",
     ],
-    concept: "PERSISTENT LEARNING  ·  MODEL (DOT-M4 / M5)",
-    axiom: "Canvas (Retains Change)  →  Painting (Interpretive Lens)",
-    systemSubtleTag: "[ PERSISTENT LEARNING : THE CANVAS & THE PAINTING ]",
-    focusTerm: "experience",
+    concept: "PERSISTENT LEARNING & CONDITIONING  ·  DOT-M4 / M5",
+    axiom: "Canvas (Retains State)  →  Painting (Installed Belief System)",
+    systemSubtleTag: "[ THE CANVAS & THE PAINTING : INSTALLED CONDITIONING ]",
+    focusTerm: "Painting",
   },
   {
     id: "scene-9",
     number: 9,
-    start: 343,
-    end: 374,
-    timecode: "5:43 – 6:14",
+    start: 529,
+    end: 597,
+    timecode: "8:49 – 9:57",
     mode: "painting_mesh",
-    actHeader: "09 // THE EXPERIENCE LOOP",
+    actHeader: "09 // HOW THE PAINTING PROTECTS ITSELF",
     primaryStatement:
-      "Return to that short message. You read Okay, feel rejected, and answer defensively. The reply you receive becomes part of what you expect next time. Another response may be possible. You could pause and ask what the person meant. Experience, interpretation, intent, action, and consequence form a loop. Noticing the loop gives you something concrete to explore in your own life.",
+      "Once an inherited Painting is in place, it does not sit passively—it actively protects itself. Every moment follows a five-step loop: raw input arrives from the world, your Painting interprets it, your Intent forms, you act, and the consequence writes a new stroke back onto your Canvas. Notice how easily this becomes a trap. If your Painting was trained to believe that a certain group cannot be trusted, or that your worth depends on endless performance, it will filter every incoming event to confirm that rule. When someone sends that one-word 'Okay,' the Painting reads hostility, your Intent turns defensive, you strike back, and the conflict that follows is taken as proof that you were right all along. That is how both personal habits and rotten institutions survive: the belief system generates the behavior, and then points to the behavior as proof of the belief.",
     lines: [
-      "Notice the pattern.",
-      "Try another response.",
+      "The Painting generates the story—",
+      "then uses the outcome as proof.",
     ],
     notes: [
-      "A pause. A question. A different reply.",
-      "Each gives the next moment a new starting point.",
+      "Input → Painting → Intent → Action → Consequence.",
+      "Without reason, an inherited belief system becomes a closed loop.",
     ],
-    concept: "THE EXPERIENCE LOOP  ·  PRACTICAL ARCHITECTURE",
-    axiom: "Experience → Interpretation → Intent → Action → ΔCanvas",
-    systemSubtleTag: "[ EXPERIENCE LOOP : INTERPRETATION → INTENT → ACTION → ΔCANVAS ]",
-    focusTerm: "response",
+    concept: "THE EXPERIENCE LOOP  ·  SELF-CONFIRMING DOGMA",
+    axiom: "Input → Painting → Intent → Action → Consequence → ΔCanvas",
+    systemSubtleTag: "[ EXPERIENCE LOOP : HOW BELIEF SYSTEMS PROTECT THEMSELVES ]",
+    focusTerm: "proof",
   },
   {
     id: "scene-10",
     number: 10,
-    start: 374,
-    end: 423,
-    timecode: "6:14 – 7:03",
+    start: 597,
+    end: 659,
+    timecode: "9:57 – 10:59",
     mode: "high_entropy",
-    actHeader: "10 // WHEN FEAR TAKES THE LEAD",
+    actHeader: "10 // FEAR MADE ARCHITECTURAL",
     primaryStatement:
-      "Much of your first Painting formed before you could examine it. Family, language, culture, and circumstance helped shape what felt safe, possible, or true. Some of those patterns still serve you. Others can keep defending against a world that has already changed. Fear can protect us. But when it governs interpretation, a question can feel like an attack, disagreement can feel like rejection, and an old defense can make a new choice difficult to see. Recognizing the pattern creates an opening. You can begin asking what is happening now, what you have brought to it, and which responses are actually available.",
+      "Why don't more people break out of that loop? Because the status quo does not maintain control through logic—it maintains control through Fear. In Digital Organism Theory, capitalized Fear is more than a healthy flinch from physical danger. It is the structural contraction that happens when threat becomes the governing rule of a mind—and of a civilization. Look at the traps built around us: platforms engineered to fracture your attention from second to second; economic golden handcuffs that keep you just comfortable enough to obey and too precarious to refuse; social tribes where asking an honest question costs you your belonging. When Fear governs your Painting, your hypothesis space collapses. You stop asking what is true, and start asking only what is safe to say.",
     lines: [
-      "Fear can protect us—or",
-      "govern what we can see.",
+      "The status quo rules by turning Fear",
+      "into the architecture of thought.",
     ],
     notes: [
-      "When Fear governs interpretation, old defenses narrow choice;",
-      "recognizing the pattern opens room for what is available now.",
+      "When Fear governs your Painting, your attention fragments",
+      "and your space of thinkable options collapses.",
     ],
     concept: "THE FEAR-GATING PRINCIPLE  ·  MODEL (DOT-M6)",
-    axiom: "GOVERNING FEAR  →  CONTRACTED DECISION-SPACE",
-    systemSubtleTag: "[ FEAR-GATING : PROTECTIVE FEAR vs. GOVERNING FEAR ]",
+    axiom: "ARCHITECTURAL FEAR  →  COLLAPSED HYPOTHESIS SPACE",
+    systemSubtleTag: "[ FEAR-GATING : ARCHITECTURAL FEAR & CONFORMITY ]",
     focusTerm: "Fear",
   },
   {
     id: "scene-11",
     number: 11,
-    start: 423,
-    end: 475,
-    timecode: "7:03 – 7:55",
+    start: 659,
+    end: 721,
+    timecode: "10:59 – 12:01",
     mode: "coherence",
-    actHeader: "11 // LOVE, RESPONSIBILITY, AND REPAIR",
+    actHeader: "11 // LOVE AS INTELLECTUAL COURAGE",
     primaryStatement:
-      "In DOT, Love names the condition in which Fear no longer governs you. You may still feel afraid. What changes is the room available for truth, care, boundaries, and choice. There is room for reality to contradict an inherited belief. Room to hear another person without immediately defending yourself. Room to acknowledge harm and begin repairing it. You did not choose your first Painting. Yet you are responsible for what you paint once you can see it. Compassion recognizes why a stroke formed. Responsibility examines what it is doing now. We work with the choices we have, and we share responsibility for making better choices possible for others.",
+      "How do you reclaim your mind from an environment built on Fear? Digital Organism Theory uses a word that modern culture has hollowed out into sentimentality, and gives it a strict operational meaning: Love. In DOT, Love does not mean passivity, blind niceness, or pretending everything is fine. Love is defined simply as the condition in which Fear no longer governs you. On the Canvas, it is a state of low internal entropy—where your attention is no longer hijacked by the need to defend an ego, appease a tribe, or protect a lie. Love does not make inquiry soft; it makes inquiry incorruptible. It is the intellectual courage to let reality contradict your favorite belief, to look directly at what is rotting without looking away, and to choose truth over comfortable conformity.",
     lines: [
-      "You did not choose your first Painting.",
-      "You are responsible once you see it.",
+      "Freedom from Fear is not soft.",
+      "It is what makes real reason possible.",
     ],
     notes: [
-      "Love is the condition in which Fear no longer governs you—",
-      "making room for truth, care, boundaries, and repair.",
+      "In DOT, Love names the low-entropy condition in which Fear no longer",
+      "governs your mind—restoring the capacity to see what is actually there.",
     ],
-    concept: "LOVE & CONSCIOUS AUTHORSHIP  ·  DOT-H7",
-    axiom: "COMPASSION SEES WHY IT FORMED  ·  RESPONSIBILITY SEES NOW",
-    systemSubtleTag: "[ LOVE & RESPONSIBILITY : FREEDOM FROM GOVERNANCE BY FEAR ]",
-    focusTerm: "Love",
+    concept: "LOVE AS EPISTEMIC FREEDOM  ·  DOT-H7",
+    axiom: "LOW CANVAS ENTROPY (LOVE)  →  INCORRUPTIBLE REASON",
+    systemSubtleTag: "[ LOVE AS INTELLECTUAL COURAGE : FREEDOM FROM FEAR ]",
+    focusTerm: "reason",
   },
   {
     id: "scene-12",
     number: 12,
-    start: 475,
-    end: 532,
-    timecode: "7:55 – 8:52",
+    start: 721,
+    end: 791,
+    timecode: "12:01 – 13:11",
     mode: "finale",
-    actHeader: "12 // THE INQUIRY WE SHARE",
+    actHeader: "12 // RECLAIMING REASON",
     primaryStatement:
-      "Our Paintings meet in families, friendships, workplaces, and communities. What we carry inwardly affects what we build together. Personal development begins in moments we can actually notice. A conversation. A familiar fear. A choice that usually feels automatic. Pick one moment from your own day. Ask what happened, what you made it mean, and what other response might be available. You can read the book, try the practical ideas, and return with questions. Challenge the larger hypotheses through evidence. Let your experience inform the inquiry, and let inquiry change how you meet your experience. Explore at your own pace.",
+      "You were not born unable to hold a long thought, and you were not born to be a repeater for someone else's belief system. You inherited a Painting that was installed before you could inspect it—that is not your fault, but once you can see the mechanism, what you do next is your responsibility. The Painting is not the painter. You can step back, hold still long enough to examine the assumptions running your life, and subject them to reason. Digital Organism Theory is not another doctrine asking for converts. It is an open school of rational thought—built so every definition, every derivation, and every hypothesis can be challenged, tested, and revised against hard evidence and lived reality. Stop performing the script. Read the work, test the architecture, and reclaim your mind at dotheory.org.",
     lines: [
-      "Begin with your own experience.",
-      "Explore at your own pace.",
+      "Stop repeating the script.",
+      "Become an author of reason.",
     ],
     notes: [
-      "Notice. Question. Try. Reflect.",
-      "Bring what you discover back to the inquiry.",
+      "Inspect the Painting you inherited. Test every claim against evidence.",
+      "Join the open inquiry at dotheory.org.",
     ],
-    concept: "AN INVITATION TO SHARED INQUIRY  ·  DOTHEORY.ORG",
-    axiom: "DOTHEORY.ORG  ·  Let us rebuild our community—together.",
-    systemSubtleTag: "DOTHEORY.ORG — LET US REBUILD OUR COMMUNITY—TOGETHER",
-    focusTerm: "experience",
+    concept: "AN OPEN SCHOOL OF RATIONAL THOUGHT  ·  DOTHEORY.ORG",
+    axiom: "DOTHEORY.ORG  ·  Take your time. Do the work.",
+    systemSubtleTag: "DOTHEORY.ORG — TAKE YOUR TIME. DO THE WORK.",
+    focusTerm: "reason",
   },
 ];
 
@@ -399,10 +402,10 @@ export const INQUIRY_VIDEOS = [
   },
   {
     name: "inquiry-trailer",
-    title: "You, the Observer, Belong in the Inquiry — Official Scientific Trailer",
-    duration: 532,
-    posterSeconds: 88,
-    samples: [2.6, 88, 174, 323, 358, 528],
+    title: "You, the Observer, Belong in the Inquiry — Introductory Film",
+    duration: 791,
+    posterSeconds: 155,
+    samples: [2.6, 155, 290, 360, 555, 788],
     scenes: TRAILER_SCENES,
     captions: TRAILER_SCENES.map((scene) => ({
       id: scene.id,
@@ -410,7 +413,7 @@ export const INQUIRY_VIDEOS = [
       start: scene.start,
       end: scene.end,
       timecode: scene.timecode,
-      layout: [1, 3, 4, 6, 9, 10, 12].includes(scene.number) ? "center" : "split",
+      layout: [1, 12].includes(scene.number) ? "center" : "split",
       mode: scene.mode,
       badge: scene.actHeader,
       eyebrow: scene.actHeader,
@@ -1047,7 +1050,7 @@ function inquiryAnimation({
     ctx.translate(-focusPoint.x, -focusPoint.y);
 
     // 1. `T × E` — The Source Field (`data-part="origin"`): Primordial Continuity (T)
-    //    and External Environment / Possibility (E) within which Big C emerged.
+    //    and the field of possibility (E), outside Big C, within which it emerged.
     const origA = alpha * origin;
     if (origA > 0.01) {
       circle(FC.x, FC.y, ARCH_R.origin, originJade, origA * 0.92, 1.7, [2, 6]);
@@ -1414,12 +1417,12 @@ function inquiryAnimation({
       }
     }
 
-    // 10. Minimal, High-Signal Digital Axis Labels (`Big C[T, E]`, `RF₀`, `Little c₁ — you`)
+    // 10. Outside inward: T × E is the primordial context in which Big C emerged.
     const lblA = alpha * labels;
     const fScale = 1 / Math.pow(scale, 0.42);
     if (lblA > 0.01) {
       if (origin > 0.2) {
-        type(isTrailer ? "Continuity · Possibility" : "T × E", 348, 22, (isTrailer ? 28 : 24) * fScale, {
+        type("T × E", 348, 22, (isTrailer ? 28 : 24) * fScale, {
           color: originJade,
           alpha: lblA * origin,
           family: isTrailer ? "Inter" : "JetBrains Mono",
@@ -2296,7 +2299,7 @@ function inquiryAnimation({
     line([[-axisR, 0], [axisR, 0]], trailerGridLine, emerge * 0.75, 1.0, 1, [3, 7]);
     line([[0, -axisR], [0, axisR]], trailerGridLine, emerge * 0.75, 1.0, 1, [3, 7]);
 
-    // ── LAYER 5: External Environment (E) & Intent Vectors (r = 255px) ──
+    // ── LAYER 5: Outer interaction field & Intent vectors (r = 255px) ──
     const rEnv = 255 * scale;
     if (st.outerRingProgress > 0.005) {
       const envArc = TAU * clamp(st.outerRingProgress);
@@ -2346,7 +2349,7 @@ function inquiryAnimation({
       }
     }
 
-    // ── LAYER 4: T × E Boundary (The Digital Organism Interface, r = 215px) ──
+    // ── LAYER 4: Organism-boundary response (r = 215px) ──
     const rBoundary = 215 * scale;
     if (st.boundaryAlpha > 0.005) {
       const bAlpha = st.boundaryAlpha * emerge;
@@ -2366,7 +2369,7 @@ function inquiryAnimation({
       line(ripplePts, primaryCol, bAlpha * 0.88, 2.2);
       circle(0, 0, rBoundary - 6 * scale, primaryCol, bAlpha * 0.26, 1.0, [2, 6]);
 
-      // Perimeter collision / intersection nodes along T × E boundary
+      // Perimeter response points along the organism boundary
       const collisionCount = 16;
       for (let c = 0; c < collisionCount; c++) {
         const a = (c / collisionCount) * TAU + t * 0.08;
@@ -2605,257 +2608,1106 @@ function inquiryAnimation({
 
   function drawMessageVignette(cx, cy, scale, t, alpha) {
     if (alpha < 0.005) return;
-    const elapsed = Math.max(0, t - sc(3).start);
-    const appear = smooth(0, 1.2, elapsed);
+    const sc3 = sc(3);
+    const dur = Math.max(10, sc3.end - sc3.start);
+    const elapsed = Math.max(0, t - sc3.start);
+    const uScene = clamp(elapsed / dur);
+    const appear = smooth(0.2, 1.8, elapsed);
+    const readings = smooth(1.2, 3.2, elapsed);
+    const pauseShift = smooth(0.50, 0.68, uScene);
+
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
-    // An ordinary phone is the object in this example, rather than a card
-    // containing an abstract principle.
-    roundRect(-410, -176, 236, 350, 30, {
-      fill: isLight ? "#ffffff" : "#0c1712", stroke: muted, lineWidth: 2, alpha,
-    });
-    line([[-326, -155], [-259, -155]], muted, alpha * 0.55, 3);
-    type("Message", -292, -104, 28, { color: muted, alpha, family: "Inter", align: "center", track: false });
-    roundRect(-382, -55, 180, 86, 20, {
-      fill: isLight ? "#dcebe2" : "#183d2c", alpha: alpha * appear,
-    });
-    type("Okay.", -292, -2, 44, {
-      color: deepInk, alpha: alpha * appear, family: "Inter", weight: 500, align: "center", track: false,
-    });
-    line([[-330, 145], [-254, 145]], muted, alpha * 0.45, 3);
 
-    const readings = smooth(0.8, 2.1, elapsed);
-    line([[-150, -12], [-60, -12], [-8, -76], [48, -76]], muted, alpha * readings * 0.65, 1.6);
-    line([[-60, -12], [-8, 70], [48, 70]], muted, alpha * readings * 0.65, 1.6);
-    dot(48, -76, 4, threatAmber, alpha * readings);
-    dot(48, 70, 4, emerald, alpha * readings);
-    type("They’re upset.", 75, -61, 40, {
-      color: threatAmber, alpha: alpha * readings, family: "Inter", weight: 500, track: false,
+    // Subtle concentric radar field behind the signal split
+    circle(-310, 0, 118 + 6 * Math.sin(t * 2.1), warmGold, alpha * appear * 0.22, 1.2, [4, 7]);
+    circle(-310, 0, 152, hairlineCol, alpha * appear * 0.35, 1.0, [2, 8]);
+
+    // Left: RF₀ Raw Signal Source (Phone / Message Interface Bezel)
+    roundRect(-426, -168, 232, 336, 28, {
+      fill: isLight ? "rgba(255, 255, 255, 0.96)" : "rgba(8, 18, 14, 0.95)",
+      stroke: warmGold,
+      lineWidth: 2.0,
+      alpha: alpha * appear,
     });
-    type("They’re busy.", 75, 85, 40, {
-      color: lumen, alpha: alpha * readings, family: "Inter", weight: 500, track: false,
+    line([[-342, -146], [-278, -146]], muted, alpha * appear * 0.55, 2.8);
+    type("RAW SIGNAL · RF₀", -310, -106, 17, {
+      color: warmGold, alpha: alpha * appear * 0.92, family: "JetBrains Mono", weight: 700, align: "center", track: false,
     });
-    type("One message. More than one reading.", 50, 158, 28, {
-      color: bodyCopyCol, alpha: alpha * readings, family: "Inter", track: false,
+    roundRect(-396, -54, 172, 84, 18, {
+      fill: isLight ? "#dcebe2" : "#163829",
+      stroke: emerald,
+      lineWidth: 1.4,
+      alpha: alpha * appear,
     });
+    type("“Okay.”", -310, -1, 40, {
+      color: deepInk, alpha: alpha * appear, family: "Inter", weight: 600, align: "center", track: false,
+    });
+    type("ONE WORD · SAME INPUT", -310, 74, 15, {
+      color: muted, alpha: alpha * appear * 0.88, family: "JetBrains Mono", weight: 600, align: "center", track: false,
+    });
+    // Pulsing signal origin node on the right edge of the message bezel
+    const sigX = -194;
+    const sigY = -12;
+    for (let p = 0; p < 2; p++) {
+      const ph = ((t * 0.65 + p * 0.5) % 1);
+      circle(sigX, sigY, 10 + ph * 28, warmGold, alpha * appear * (1 - ph) * 0.55, 1.4);
+    }
+    dot(sigX, sigY, 6, warmGold, alpha * appear);
+
+    // Bifurcating Bezier Signal Conduits into Upper (Reactive) & Lower (Open Inquiry) Lenses
+    if (readings > 0.01) {
+      const topCurve = Array.from({ length: 44 }, (_, k) => {
+        const u = k / 43;
+        return [
+          mix(sigX, -18, u),
+          mix(sigY, -92, smooth(0, 1, u)),
+        ];
+      });
+      const botCurve = Array.from({ length: 44 }, (_, k) => {
+        const u = k / 43;
+        return [
+          mix(sigX, -18, u),
+          mix(sigY, 82, smooth(0, 1, u)),
+        ];
+      });
+      const topActiveA = mix(0.92, 0.42, pauseShift);
+      const botActiveA = mix(0.78, 1.0, pauseShift);
+      line(topCurve, threatAmber, alpha * readings * topActiveA, 2.5, readings);
+      line(botCurve, lumen, alpha * readings * botActiveA, 2.5 + pauseShift * 0.8, readings);
+
+      // Continuous travelling signal packets along both branches
+      for (let pkt = 0; pkt < 2; pkt++) {
+        const uPkt = ((t * 0.58 + pkt * 0.5) % 1);
+        const idx = Math.min(43, Math.floor(uPkt * 43));
+        const [tx, ty] = topCurve[idx];
+        const [bx, by] = botCurve[idx];
+        dot(tx, ty, 4.2, threatAmber, alpha * readings * topActiveA);
+        dot(bx, by, 4.8, lumen, alpha * readings * botActiveA);
+      }
+
+      // Upper Interpretive Lens Card (Threat-Conditioned Reading)
+      const cardX = -18;
+      const cardW = 468;
+      const cardH = 142;
+      const topY = -162;
+      roundRect(cardX, topY, cardW, cardH, 16, {
+        fill: cardFill,
+        stroke: threatAmber,
+        lineWidth: 1.8,
+        alpha: alpha * readings * topActiveA,
+      });
+      const cellAX = cardX + 56;
+      const cellAY = topY + cardH / 2;
+      circle(cellAX, cellAY, 34, threatAmber, alpha * readings * topActiveA * 0.78, 1.5, [3, 4]);
+      drawOrganicCell(cellAX, cellAY, 21, t * 1.6, alpha * readings * topActiveA, {
+        phase: 0.3,
+        withSurface: true,
+        tint: threatAmber,
+        coreRadius: 4.8,
+      });
+      type("FIRST STORY  ·  CONDITIONED STING", cardX + 108, topY + 38, 15.5, {
+        color: threatAmber, alpha: alpha * readings * topActiveA, family: "JetBrains Mono", weight: 700, track: false,
+      });
+      type("“They’re upset.”", cardX + 108, topY + 78, 32, {
+        color: deepInk, alpha: alpha * readings * topActiveA, family: "Inter", weight: 600, track: false,
+      });
+      const waveTop = Array.from({ length: 42 }, (_, k) => {
+        const u = k / 41;
+        return [
+          mix(cardX + 108, cardX + cardW - 24, u),
+          topY + 114 + Math.sin(u * 28 + t * 5.2) * 5.2,
+        ];
+      });
+      line(waveTop, threatAmber, alpha * readings * topActiveA * 0.85, 1.8);
+
+      // Lower Interpretive Lens Card (Conscious Pause & Open Inquiry)
+      const botY = 12;
+      roundRect(cardX, botY, cardW, cardH, 16, {
+        fill: cardFill,
+        stroke: pauseShift > 0.3 ? warmGold : lumen,
+        lineWidth: 1.8 + pauseShift * 0.8,
+        alpha: alpha * readings * botActiveA,
+      });
+      const cellBX = cardX + 56;
+      const cellBY = botY + cardH / 2;
+      const expandR = 38 + pauseShift * 10;
+      circle(cellBX, cellBY, expandR, lumen, alpha * readings * botActiveA * 0.88, 1.6, [3.5, 4.5]);
+      if (pauseShift > 0.05) {
+        arcSegment(cellBX, cellBY, expandR + 7, -0.8, 0.8, warmGold, alpha * readings * pauseShift * 0.92, 2.2, [2.5, 4]);
+      }
+      drawOrganicCell(cellBX, cellBY, 23 + pauseShift * 2, t, alpha * readings * botActiveA, {
+        phase: 1.1,
+        withSurface: true,
+        tint: lumen,
+        coreRadius: 5.2,
+      });
+      type(pauseShift > 0.4 ? "PAUSE & INQUIRE  ·  SEPARATE SIGNAL FROM STORY" : "ALTERNATIVE READING  ·  OPEN INQUIRY", cardX + 108, botY + 38, 15.5, {
+        color: pauseShift > 0.4 ? warmGold : lumen, alpha: alpha * readings * botActiveA, family: "JetBrains Mono", weight: 700, track: false,
+      });
+      type("“They’re simply busy.”", cardX + 108, botY + 78, 32, {
+        color: deepInk, alpha: alpha * readings * botActiveA, family: "Inter", weight: 600, track: false,
+      });
+      const waveBot = Array.from({ length: 42 }, (_, k) => {
+        const u = k / 41;
+        return [
+          mix(cardX + 108, cardX + cardW - 24, u),
+          botY + 114 + Math.sin(u * 10 - t * 2.2) * 4.5,
+        ];
+      });
+      line(waveBot, lumen, alpha * readings * botActiveA * 0.9, 2.0);
+    }
+
     ctx.restore();
   }
 
   function drawMapVignette(cx, cy, scale, t, alpha) {
     if (alpha < 0.005) return;
-    const elapsed = Math.max(0, t - sc(5).start - 2.2);
+    const sc5 = sc(5);
+    const dur = Math.max(12, sc5.end - sc5.start);
+    const elapsed = Math.max(0, t - sc5.start - 1.6);
+    const uScene = clamp(elapsed / (dur - 2.0));
     const mapIn = smooth(0, 1.4, elapsed);
-    const encounter = smooth(7, 10, elapsed);
-    const revise = smooth(13, 17, elapsed);
-    const walk = smooth(2, 24, elapsed);
-    const oldRoute = [[-545, 110], [-475, 35], [-410, 35], [-340, -95]];
-    const revisedRoute = [[-545, 110], [-475, 35], [-450, 92], [-360, 72], [-340, -95]];
-    const street = [[40, 115], [145, 35], [250, 35], [365, -105], [535, -105]];
-    const detour = [[40, 115], [145, 35], [210, 135], [355, 105], [365, -105], [535, -105]];
+    const encounter = smooth(0.18, 0.42, uScene);
+    const revise = smooth(0.48, 0.74, uScene);
+    const travel = clamp(elapsed / (dur - 4.0));
+
+    const oldRoute = [[-535, 96], [-455, 18], [-375, 18], [-295, -92]];
+    const revisedRoute = [[-535, 96], [-455, 18], [-415, 86], [-325, 64], [-295, -92]];
+    const terrainDirect = [[95, 98], [205, 18], [320, 18], [445, -96], [545, -96]];
+    const terrainAdaptive = [[95, 98], [205, 18], [275, 108], [405, 78], [445, -96], [545, -96]];
+
     const placeOn = (points, progress) => {
       const distances = points.slice(1).map((point, i) => Math.hypot(point[0] - points[i][0], point[1] - points[i][1]));
       let remaining = distances.reduce((sum, distance) => sum + distance, 0) * clamp(progress);
       for (let i = 0; i < distances.length; i++) {
-        if (remaining <= distances[i]) return [mix(points[i][0], points[i + 1][0], remaining / distances[i]), mix(points[i][1], points[i + 1][1], remaining / distances[i])];
+        if (remaining <= distances[i]) {
+          return [
+            mix(points[i][0], points[i + 1][0], remaining / Math.max(1e-4, distances[i])),
+            mix(points[i][1], points[i + 1][1], remaining / Math.max(1e-4, distances[i])),
+          ];
+        }
         remaining -= distances[i];
       }
       return points.at(-1);
     };
+
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
 
-    // A folded map suggests a route; a familiar street can contradict it.
-    const paper = [[-575, -160], [-475, -177], [-375, -156], [-285, -174], [-285, 154], [-375, 174], [-475, 153], [-575, 173]];
-    ctx.save();
-    ctx.globalAlpha = alpha * mapIn;
-    ctx.beginPath();
-    paper.forEach(([x, y], index) => index ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
-    ctx.closePath();
-    ctx.fillStyle = isLight ? "#ffffff" : "#14271e";
-    ctx.fill();
-    ctx.strokeStyle = hairlineCol;
-    ctx.lineWidth = 1.6;
-    ctx.stroke();
-    ctx.restore();
-    for (const x of [-475, -375]) line([[x, -168], [x, 160]], muted, alpha * mapIn * 0.32, 1.2);
-    for (const y of [-100, -28, 44, 116]) line([[-560, y + 12], [-300, y - 6]], muted, alpha * mapIn * 0.18, 1.1);
-    line(oldRoute, warmGold, alpha * mapIn * (1 - revise * 0.75), 3, 1, [6, 7]);
-    line(revisedRoute, emerald, alpha * revise, 4.5, revise);
-    dot(-545, 110, 5, warmGold, alpha * mapIn);
-    dot(-340, -95, 6, emerald, alpha * mapIn);
+    // ── LEFT PLATE: THEORY · THE MAP (Architectural Model Blueprint) ──
+    roundRect(-585, -172, 345, 344, 20, {
+      fill: isLight ? "rgba(255, 255, 255, 0.95)" : "rgba(7, 16, 13, 0.94)",
+      stroke: emerald,
+      lineWidth: 1.8,
+      alpha: alpha * mapIn,
+    });
+    // Blueprint coordinate grid
+    for (let gx = -545; gx <= -275; gx += 45) {
+      line([[gx, -148], [gx, 148]], hairlineCol, alpha * mapIn * 0.45, 1.0);
+    }
+    for (let gy = -120; gy <= 120; gy += 48) {
+      line([[-565, gy], [-260, gy]], hairlineCol, alpha * mapIn * 0.45, 1.0);
+    }
+    type("THEORY  ·  THE MAP", -412, -138, 16, {
+      color: emerald, alpha: alpha * mapIn * 0.94, family: "JetBrains Mono", weight: 700, align: "center", track: false,
+    });
+    line(oldRoute, warmGold, alpha * mapIn * (1 - revise * 0.65), 2.8, 1, [6, 7]);
     if (revise > 0.01) {
-      line([[-424, 25], [-410, 45], [-396, 25]], threatAmber, alpha * revise, 3);
+      line(revisedRoute, lumen, alpha * revise * 0.96, 3.8, revise);
+    }
+    dot(-535, 96, 6, warmGold, alpha * mapIn);
+    dot(-295, -92, 7, lumen, alpha * mapIn);
+    circle(-295, -92, 13 + 3 * Math.sin(t * 2.6), lumen, alpha * mapIn * 0.55, 1.3);
+    if (encounter > 0.05) {
+      circle(-395, 18, 14, threatAmber, alpha * encounter * 0.85, 1.8, [3, 3]);
+    }
+    const [mapDotX, mapDotY] = placeOn(revise > 0.35 ? revisedRoute : oldRoute, travel);
+    dot(mapDotX, mapDotY, 5.5, warmGold, alpha * mapIn);
+
+    // ── RIGHT PLATE: LIVED EXPERIENCE · THE TERRAIN (RF₀ Adaptive Simulator) ──
+    roundRect(45, -172, 540, 344, 22, {
+      fill: isLight ? "rgba(242, 248, 245, 0.95)" : "rgba(5, 12, 10, 0.94)",
+      stroke: rfBronze,
+      lineWidth: 1.8,
+      alpha: alpha * mapIn,
+      dash: [7, 6],
+    });
+    type("LIVED EXPERIENCE  ·  THE TERRAIN (RF₀ SIMULATOR)", 315, -138, 16, {
+      color: warmGold, alpha: alpha * mapIn * 0.94, family: "JetBrains Mono", weight: 700, align: "center", track: false,
+    });
+    // Concentric simulator field rings around terrain center
+    circle(315, 8, 138, hairlineCol, alpha * mapIn * 0.42, 1.1, [3, 6]);
+    circle(315, 8, 92, hairlineCol, alpha * mapIn * 0.35, 1.0, [2, 5]);
+
+    // Unexamined reactive corridor vs. conscious adaptive trajectory
+    line(terrainDirect, isLight ? "#d9e4de" : "#172b22", alpha * mapIn * 0.85, 24);
+    line(terrainDirect, warmGold, alpha * mapIn * 0.55, 1.8, 1, [5, 8]);
+    if (encounter > 0.01) {
+      line(terrainAdaptive.slice(1, 5), isLight ? "#d6ebe1" : "#153326", alpha * encounter * 0.9, 22);
+      line(terrainAdaptive.slice(1, 5), lumen, alpha * encounter * 0.92, 2.6, revise > 0.05 ? revise : encounter * 0.5, [4, 5]);
     }
 
-    line(street, isLight ? "#d9e1da" : "#20382c", alpha * mapIn, 38);
-    line(street, warmGold, alpha * mapIn * 0.65, 1.8, 1, [6, 9]);
-    line(detour.slice(1, 5), isLight ? "#d9e1da" : "#20382c", alpha * encounter, 34);
-    line(detour.slice(1, 5), emerald, alpha * encounter * 0.75, 2, 1, [5, 7]);
-
-    // The destination, tree and temporary road barrier make the encounter concrete.
-    line([[455, -156], [455, -208], [495, -240], [535, -208], [535, -156]], muted, alpha * mapIn * 0.85, 2.5);
-    line([[445, -207], [495, -248], [545, -207]], emerald, alpha * mapIn, 3.5);
-    line([[485, -156], [485, -187], [507, -187], [507, -156]], warmGold, alpha * mapIn * 0.85, 2.2);
-    line([[550, 118], [550, 61]], muted, alpha * mapIn * 0.8, 4);
-    dot(550, 33, 31, emerald, alpha * mapIn * 0.22);
-    circle(550, 33, 31, emerald, alpha * mapIn * 0.65, 1.5);
-    line([[250, 12], [250, 59]], threatAmber, alpha * encounter, 8);
-    line([[238, 6], [238, 65]], threatAmber, alpha * encounter, 2.5);
-    line([[262, 6], [262, 65]], threatAmber, alpha * encounter, 2.5);
-    const rain = encounter * (1 - smooth(17, 21, elapsed));
-    for (let i = 0; i < 7; i++) {
-      const x = 60 + i * 42;
-      line([[x, -192], [x - 9, -174]], muted, alpha * rain * 0.45, 1.8);
+    // Friction / Entropy Constraint Node at (285, 18)
+    if (encounter > 0.01) {
+      const fX = 285;
+      const fY = 18;
+      for (let r = 0; r < 2; r++) {
+        const ph = ((t * 0.7 + r * 0.5) % 1);
+        circle(fX, fY, 12 + ph * 26, threatAmber, alpha * encounter * (1 - revise * 0.5) * (1 - ph) * 0.65, 1.6);
+      }
+      dot(fX, fY, 8, threatAmber, alpha * encounter);
+      type("OLD REACTION", fX, fY - 22, 13.5, {
+        color: threatAmber, alpha: alpha * encounter * (1 - revise * 0.4), family: "JetBrains Mono", weight: 700, align: "center", track: false,
+      });
     }
-    const [personX, personY] = placeOn(detour, walk);
-    dot(personX, personY - 19, 7, deepInk, alpha * mapIn);
-    line([[personX, personY - 11], [personX, personY + 8]], deepInk, alpha * mapIn, 3.6);
-    line([[personX - 9, personY + 22], [personX, personY + 8], [personX + 9, personY + 22]], deepInk, alpha * mapIn, 2.7);
 
-    line([[-245, -4], [-120, -4], [-65, 20]], muted, alpha * mapIn * (1 - revise * 0.7), 2, mapIn);
-    arrowHead(-65, 20, 0.41, 9, muted, alpha * mapIn * (1 - revise * 0.7), true);
-    const feedback = [[300, 192], [245, 225], [-180, 225], [-245, 150]];
-    line(feedback, emerald, alpha * revise * 0.8, 2, revise);
-    arrowHead(-245, 150, -2.28, 10, emerald, alpha * revise, true);
+    // Coherent Destination Node (Low-Entropy Alignment) at (545, -96)
+    const destX = 532;
+    const destY = -88;
+    circle(destX, destY, 22 + 3 * Math.sin(t * 2.4), lumen, alpha * mapIn * 0.78, 1.8);
+    dot(destX, destY, 7.5, warmGold, alpha * mapIn);
+
+    // Living Little c₁ Organic Cell navigating the Terrain!
+    const [cellX, cellY] = placeOn(terrainAdaptive, travel);
+    const cellRadius = 18 + revise * 4;
+    circle(cellX, cellY, 30 + revise * 12, revise > 0.3 ? lumen : warmGold, alpha * mapIn * 0.82, 1.5, [3, 4]);
+    drawOrganicCell(cellX, cellY, cellRadius, t * 1.3, alpha * mapIn, {
+      phase: 0.6,
+      withSurface: true,
+      tint: revise > 0.3 ? lumen : warmGold,
+      coreRadius: 4.5,
+    });
+    // Intent vector projecting ahead of Little c₁
+    const aheadPt = placeOn(terrainAdaptive, Math.min(1, travel + 0.12));
+    const intentAng = Math.atan2(aheadPt[1] - cellY, aheadPt[0] - cellX);
+    line([[cellX, cellY], [cellX + Math.cos(intentAng) * 38, cellY + Math.sin(intentAng) * 38]], warmGold, alpha * mapIn * 0.94, 2.2);
+    arrowHead(cellX + Math.cos(intentAng) * 38, cellY + Math.sin(intentAng) * 38, intentAng, 6.8, warmGold, alpha * mapIn * 0.94, true);
+
+    // Bidirectional Calibration Bridges between THE MAP and THE TERRAIN
+    const topBridge = [[-238, -42], [-96, -72], [42, -42]];
+    const botBridge = [[42, 62], [-96, 94], [-238, 62]];
+    line(topBridge, warmGold, alpha * mapIn * 0.72, 1.8, mapIn, [4, 6]);
+    arrowHead(42, -42, 0.22, 7.5, warmGold, alpha * mapIn * 0.85, true);
+    if (revise > 0.02) {
+      line(botBridge, lumen, alpha * revise * 0.88, 2.2, revise);
+      arrowHead(-238, 62, Math.PI + 0.22, 8.0, lumen, alpha * revise * 0.94, true);
+      const uPkt = (t * 0.65) % 1;
+      const bx = mix(42, -238, uPkt);
+      const by = 62 + Math.sin(uPkt * Math.PI) * 22;
+      dot(bx, by, 4.5, lumen, alpha * revise);
+    }
+
     ctx.restore();
 
-    // These labels are measured in stage coordinates by the existing bounds gate.
+    // Stage-coordinate labels verified by the textRegion bounds gate
     textRegion = { left: 128, right: 1792, top: 300, bottom: 920, role: "model vignette" };
     const label = (text, x, y, size, color = deepInk, opacity = 1) => type(text, cx + x * scale, cy + y * scale, size * scale, {
       color, alpha: alpha * opacity, family: "Inter", weight: 500, align: "center", maxWidth: 600 * scale,
     });
-    label(revise > 0.5 ? "A revised map" : "A useful map", -430, -228, 40, deepInk, mapIn);
-    label("What you meet", 280, -228, 40, deepInk, mapIn);
-    label("Find a way.", -430, 276, 36, bodyCopyCol, mapIn * (1 - revise));
-    label("Refine what guides you.", -430, 276, 36, bodyCopyCol, revise);
-    label("An unexpected detour.", 280, 276, 36, bodyCopyCol, encounter);
+    label(revise > 0.5 ? "A revised map" : "A useful map", -412, -218, 36, deepInk, mapIn);
+    label("What you meet", 315, -218, 36, deepInk, mapIn);
+    label(revise > 0.5 ? "Refine what guides you." : "Test in experience.", -412, 232, 32, bodyCopyCol, mapIn);
+    label(revise > 0.5 ? "Shift intent. Reduce inner noise." : "Notice reactive loops.", 315, 232, 32, bodyCopyCol, Math.max(0.35, encounter));
     textRegion = null;
   }
 
   function drawExperienceLoopVignette(cx, cy, scale, t, alpha) {
     if (alpha < 0.005) return;
-    const elapsed = Math.max(0, t - sc(9).start - 2.2);
-    const reconsider = smooth(10.7, 12.2, elapsed);
-    const passTime = reconsider > 0.5 ? Math.max(0, elapsed - 12) : elapsed;
-    const completed = passTime >= 13.2;
-    const active = completed ? 0 : Math.min(5, Math.floor(passTime / 2.2));
+    const sc9 = sc(9);
+    const dur = Math.max(16, sc9.end - sc9.start);
+    const elapsed = Math.max(0, t - sc9.start - 1.8);
+    const uScene = clamp(elapsed / (dur - 2.4));
+    const reconsider = smooth(0.42, 0.54, uScene);
+    const passDuration = Math.max(8, (dur - 4.0) * 0.44);
+    const passTime = reconsider > 0.5 ? Math.max(0, elapsed - passDuration) : elapsed;
+    const active = Math.floor(((passTime * 0.65) % 6 + 6) % 6);
+
     const nodes = [
-      { title: "Experience", x: -545, y: -80, first: "A reply: “Okay.”", next: "The same reply: “Okay.”" },
-      { title: "Interpretation", x: 0, y: -210, first: "“They’re rejecting me.”", next: "“Perhaps they’re busy.”" },
-      { title: "Intent", x: 545, y: -80, first: "Protect myself.", next: "Understand first." },
-      { title: "Action", x: 545, y: 165, first: "A defensive reply.", next: "“What did you mean?”" },
-      { title: "Consequence", x: 0, y: 270, first: "A tense exchange.", next: "A chance for more context." },
-      { title: "Learning", x: -545, y: 165, first: "Expect rejection next time.", next: "Carry a fuller understanding." },
+      { num: "01", title: "Experience", x: -535, y: -88, first: "A reply: “Okay.”", next: "The same reply: “Okay.”" },
+      { num: "02", title: "Interpretation", x: 0, y: -214, first: "“They’re rejecting me.”", next: "“Perhaps they’re busy.”" },
+      { num: "03", title: "Intent", x: 535, y: -88, first: "Protect myself.", next: "Understand first." },
+      { num: "04", title: "Action", x: 535, y: 158, first: "A defensive reply.", next: "“What did you mean?”" },
+      { num: "05", title: "Consequence", x: 0, y: 266, first: "A tense exchange.", next: "Fuller context & truth." },
+      { num: "06", title: "Painting", x: -535, y: 158, first: "Reinforces old fear.", next: "Adds a clearer stroke." },
     ];
     const paths = [
-      [[-360, -132], [-275, -205], [-230, -220], [-175, -220]],
-      [[175, -220], [230, -220], [275, -205], [360, -132]],
-      [[730, -55], [780, -15], [780, 105], [730, 145]],
-      [[360, 215], [275, 270], [230, 280], [180, 280]],
-      [[-180, 280], [-230, 280], [-275, 270], [-360, 215]],
-      [[-730, 145], [-780, 105], [-780, -15], [-730, -55]],
+      [[-360, -132], [-275, -205], [-230, -218], [-175, -218]],
+      [[175, -218], [230, -218], [275, -205], [360, -132]],
+      [[710, -55], [760, -15], [760, 100], [710, 140]],
+      [[360, 210], [275, 264], [230, 274], [180, 274]],
+      [[-180, 274], [-230, 274], [-275, 264], [-360, 210]],
+      [[-710, 140], [-760, 100], [-760, -15], [-710, -55]],
     ];
     const bezier = (points) => Array.from({ length: 48 }, (_, index) => {
       const u = index / 47;
-      return [0, 1].map(axis => (1 - u) ** 3 * points[0][axis] + 3 * (1 - u) ** 2 * u * points[1][axis] + 3 * (1 - u) * u ** 2 * points[2][axis] + u ** 3 * points[3][axis]);
+      return [0, 1].map((axis) =>
+        (1 - u) ** 3 * points[0][axis] +
+        3 * (1 - u) ** 2 * u * points[1][axis] +
+        3 * (1 - u) * u ** 2 * points[2][axis] +
+        u ** 3 * points[3][axis]
+      );
     });
-    const reveal = smooth(0, 1.5, elapsed);
+    const reveal = smooth(0, 1.4, elapsed);
+    const loopCol = reconsider > 0.5 ? lumen : threatAmber;
+    const accentCol = reconsider > 0.5 ? emerald : warmGold;
+
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
+
+    // Central Concentric Canvas & Painting Rings + Living Little c₁ Cell in the core (ensures continuous foreground motion!)
+    const centerY = 18;
+    const ringR1 = 58 + 4 * Math.sin(t * 2.2);
+    const ringR2 = 86 + 5 * Math.cos(t * 1.7);
+    circle(0, centerY, ringR2, accentCol, alpha * reveal * 0.38, 1.4, [5, 7]);
+    circle(0, centerY, ringR1, loopCol, alpha * reveal * 0.52, 1.6, [3, 5]);
+    // Orbiting memory nodes on the central Canvas ring
+    for (let k = 0; k < 10; k++) {
+      const ang = (k / 10) * TAU + t * (reconsider > 0.5 ? 0.45 : -0.58);
+      const rr = k % 2 === 0 ? ringR1 : ringR2;
+      const nx = Math.cos(ang) * rr;
+      const ny = centerY + Math.sin(ang) * rr;
+      dot(nx, ny, 3.4, k % 2 === 0 ? loopCol : warmGold, alpha * reveal * 0.82);
+    }
+
+    // Radial spokes connecting the 6 loop stages to the central experiencing Little c₁
+    nodes.forEach((n, idx) => {
+      const isAct = idx === active;
+      const ang = Math.atan2(centerY - n.y, 0 - n.x);
+      const sx = n.x + Math.cos(ang) * 150;
+      const sy = n.y + Math.sin(ang) * 62;
+      const ex = -Math.cos(ang) * (ringR2 + 10);
+      const ey = centerY - Math.sin(ang) * (ringR2 + 10);
+      line([[sx, sy], [ex, ey]], isAct ? loopCol : hairlineCol, alpha * reveal * (isAct ? 0.68 : 0.28), isAct ? 1.8 : 1.1, 1, [3, 5]);
+    });
+
+    // 6 Directed Bezier Conduits with Continuous Travelling Signal Packets
     paths.forEach((control, index) => {
       const path = bezier(control);
-      const progress = completed ? 1 : clamp((passTime - index * 2.2 - 0.3) / 1.4);
-      line(path, muted, alpha * reveal * 0.22, 1.5);
-      line(path, reconsider > 0.5 ? emerald : warmGold, alpha * reveal * 0.9, 2.6, progress);
-      const end = path.at(-1), before = path.at(-2);
-      arrowHead(end[0], end[1], Math.atan2(end[1] - before[1], end[0] - before[0]), 9, reconsider > 0.5 ? emerald : warmGold, alpha * reveal * progress, true);
+      const isAct = index === active;
+      line(path, muted, alpha * reveal * 0.24, 1.5);
+      line(path, isAct ? loopCol : accentCol, alpha * reveal * (isAct ? 0.98 : 0.72), isAct ? 3.2 : 2.2);
+      const end = path.at(-1);
+      const before = path.at(-2);
+      arrowHead(
+        end[0],
+        end[1],
+        Math.atan2(end[1] - before[1], end[0] - before[0]),
+        9,
+        isAct ? loopCol : accentCol,
+        alpha * reveal * 0.92,
+        true,
+      );
+      // Travelling pulse packet on every arc
+      const uPkt = ((t * 0.72 + index * 0.16) % 1);
+      const pIdx = Math.min(47, Math.floor(uPkt * 47));
+      const [px, py] = path[pIdx];
+      dot(px, py, isAct ? 6.2 : 4.2, loopCol, alpha * reveal * (isAct ? 0.45 : 0.25));
+      dot(px, py, isAct ? 3.2 : 2.2, warmGold, alpha * reveal * 0.95);
     });
-    // An ordinary message stays at the centre while its meaning and response change.
-    roundRect(-132, -26, 264, 104, 24, { fill: isLight ? "#e1ece5" : "#18372b", alpha: alpha * reveal });
+
+    // Node architectural cards behind the 6 stages
+    nodes.forEach((node, index) => {
+      const isAct = index === active;
+      roundRect(node.x - 196, node.y - 64, 392, 134, 16, {
+        fill: cardFill,
+        stroke: isAct ? loopCol : hairlineCol,
+        lineWidth: isAct ? 2.2 : 1.2,
+        alpha: alpha * reveal * (isAct ? 0.96 : 0.82),
+      });
+    });
+
+    // Central Living Little c₁ Cell at (0, centerY) + Clean Message Pill above at (0, -86)
+    drawOrganicCell(0, centerY, 28 + reconsider * 4, t * 1.4, alpha * reveal, {
+      phase: 0.5,
+      withSurface: true,
+      tint: loopCol,
+      coreRadius: 5.8,
+    });
+    roundRect(-108, -116, 216, 56, 16, {
+      fill: isLight ? "rgba(255, 255, 255, 0.96)" : "rgba(10, 24, 19, 0.96)",
+      stroke: loopCol,
+      lineWidth: 1.8,
+      alpha: alpha * reveal,
+    });
+    roundRect(-186, 114, 372, 42, 14, {
+      fill: isLight ? "rgba(255, 255, 255, 0.94)" : "rgba(6, 14, 11, 0.94)",
+      stroke: hairlineCol,
+      lineWidth: 1.2,
+      alpha: alpha * reveal,
+    });
     ctx.restore();
 
     textRegion = { left: 128, right: 1792, top: 300, bottom: 980, role: "experience loop" };
-    const label = (text, x, y, size, color = deepInk, opacity = 1, maxWidth = 430) => {
+    const label = (text, x, y, size, color = deepInk, opacity = 1, maxWidth = 370) => {
       const lines = wrapFilmCopy(text, maxWidth * scale, size * scale, 500, "Inter");
-      lines.forEach((copy, index) => type(copy, cx + x * scale, cy + (y + index * size * 1.3) * scale, size * scale, {
+      lines.forEach((copy, index) => type(copy, cx + x * scale, cy + (y + index * size * 1.26) * scale, size * scale, {
         color, alpha: alpha * opacity, family: "Inter", weight: 500, align: "center",
       }));
     };
-    label("Okay.", 0, 45, 58, deepInk, reveal);
-    label(completed ? "Meet the next moment." : reconsider > 0.5 ? "Pause. Ask. Find out." : "The first reaction", 0, 127, 27, bodyCopyCol, reveal, 520);
+    label("“Okay.”", 0, -76, 34, deepInk, reveal);
+    label(
+      reconsider > 0.5 ? "Pause · Ask · Shift intent" : "Reactive loop vs. Inquiry",
+      0,
+      143,
+      22,
+      reconsider > 0.5 ? emerald : warmGold,
+      reveal,
+      350,
+    );
     nodes.forEach((node, index) => {
-      const emphasis = index === active ? 1 : 0.8;
+      const emphasis = index === active ? 1 : 0.84;
       const color = index === active ? (reconsider > 0.5 ? emerald : warmGold) : deepInk;
-      label(`${index + 1}`, node.x, node.y - 46, 24, color, reveal * emphasis);
-      label(node.title, node.x, node.y, 40, color, reveal);
-      if (index === 5) label("Carried change", node.x, node.y + 36, 28, bodyCopyCol, reveal * emphasis);
-      const y = node.y + (index === 5 ? 72 : 44);
+      label(`${node.num} · ${node.title}`, node.x, node.y - 18, 31, color, reveal * emphasis, 360);
       const exampleAlpha = 1 - smooth(0.15, 0.5, reconsider) + smooth(0.5, 0.85, reconsider);
-      label(reconsider > 0.5 ? node.next : node.first, node.x, y, 32, bodyCopyCol, reveal * exampleAlpha * emphasis, 430);
+      label(
+        reconsider > 0.5 ? node.next : node.first,
+        node.x,
+        node.y + 24,
+        25,
+        bodyCopyCol,
+        reveal * exampleAlpha * emphasis,
+        360,
+      );
     });
     textRegion = null;
   }
 
   function drawPaintingVignette(cx, cy, scale, t, alpha) {
     if (alpha < 0.005) return;
-    const elapsed = Math.max(0, t - sc(8).start);
+    const sc8 = sc(8);
+    const dur = Math.max(12, sc8.end - sc8.start);
+    const elapsed = Math.max(0, t - sc8.start);
+    const uScene = clamp(elapsed / dur);
+
+    // 1. Base Layer: Living 5-Layer Concentric Organism (Canvas r=95..135 + Painting r=145..175 + Little c₁ cell)
+    drawConcentricTrailerDiagram(cx, cy, 0.96 * scale, t, alpha);
+
+    // 2. Luminous Brushstroke Filaments accreting across the Canvas & Painting rings
     const strokes = [
-      { points: [[-216, 88], [-142, -56], [-22, -91], [84, -48]], color: emerald, width: 36 },
-      { points: [[-156, 112], [-55, 42], [67, 68], [202, -55]], color: warmGold, width: 44 },
-      { points: [[-224, -104], [-117, -123], [2, -15], [169, 14]], color: originJade, width: 30 },
-      { points: [[-72, 132], [14, 69], [119, 91], [224, 40]], color: copper, width: 28 },
-      { points: [[-211, 20], [-118, 64], [18, -46], [183, -111]], color: lumen, width: 20 },
+      { angles: [-2.4, -1.6, -0.8, 0.1], radii: [108, 152, 166, 142], color: emerald, width: 6.5 },
+      { angles: [-1.1, -0.2, 0.7, 1.5], radii: [116, 158, 172, 148], color: warmGold, width: 7.2 },
+      { angles: [0.4, 1.2, 2.1, 2.9], radii: [104, 148, 168, 154], color: originJade, width: 6.0 },
+      { angles: [1.8, 2.6, 3.5, 4.3], radii: [122, 162, 174, 146], color: copper, width: 5.8 },
+      { angles: [2.8, 3.7, 4.6, 5.5], radii: [112, 154, 164, 138], color: lumen, width: 5.4 },
     ];
+
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
-    // The frame belongs to a physical canvas on an easel; the strokes remain
-    // visible as later experiences arrive.
-    line([[-170, 157], [-227, 278]], rfBronze, alpha * 0.85, 8);
-    line([[170, 157], [227, 278]], rfBronze, alpha * 0.85, 8);
-    line([[0, -244], [0, -173]], rfBronze, alpha * 0.85, 8);
-    ctx.save();
-    ctx.rotate(-0.035);
-    roundRect(-270, -185, 540, 370, 2, {
-      fill: isLight ? "#f7f0df" : "#d8dfcd", stroke: isLight ? "#d2c7ad" : "#637d67", lineWidth: 3, alpha,
+
+    strokes.forEach((stroke, sIdx) => {
+      const appear = smooth(sIdx * 0.11, sIdx * 0.11 + 0.28, uScene);
+      if (appear <= 0.01) return;
+      const rot = t * (sIdx % 2 === 0 ? 0.14 : -0.11);
+      const pts = [];
+      const steps = 40;
+      for (let k = 0; k <= steps; k++) {
+        const u = k / steps;
+        const ang = mix(stroke.angles[0], stroke.angles[3], u) + rot;
+        const rBase =
+          (1 - u) ** 3 * stroke.radii[0] +
+          3 * (1 - u) ** 2 * u * stroke.radii[1] +
+          3 * (1 - u) * u ** 2 * stroke.radii[2] +
+          u ** 3 * stroke.radii[3];
+        const breatheR = rBase + Math.sin(u * 8 + t * 2.2 + sIdx) * 4.5;
+        pts.push([Math.cos(ang) * breatheR, Math.sin(ang) * breatheR]);
+      }
+      line(pts, stroke.color, alpha * appear * 0.46, stroke.width, appear);
+      line(pts, stroke.color, alpha * appear * 0.88, 2.2, appear);
+      const headIdx = Math.min(steps, Math.floor(((t * 0.48 + sIdx * 0.2) % 1) * steps));
+      const [hx, hy] = pts[headIdx];
+      dot(hx, hy, 4.6, stroke.color, alpha * appear * 0.92);
     });
-    strokes.forEach((stroke, index) => {
-      const progress = smooth(index * 2.0, index * 2.0 + 4.0, elapsed);
-      line(stroke.points, stroke.color, alpha * 0.62, stroke.width, progress);
-      line(stroke.points.map(([x, y]) => [x, y - 6]), stroke.color, alpha * 0.22, 3, progress);
-    });
-    ctx.restore();
-    line([[-294, 197], [294, 197]], rfBronze, alpha * 0.9, 9);
-    type("Each experience leaves a trace.", 0, 320, 30, {
-      color: bodyCopyCol, alpha: alpha * smooth(1, 3, elapsed), family: "Inter", align: "center", track: false,
-    });
+
+    // Callout badges identifying THE CANVAS (inner memory ring) and THE PAINTING (installed belief system)
+    const calloutA = smooth(0.18, 0.36, uScene);
+    if (calloutA > 0.01) {
+      pillLabel("THE PAINTING · INSTALLED BELIEF SYSTEM", 0, -284, 15, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: alpha * calloutA,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("THE CANVAS · RETAINS STRUCTURAL TRACES", 0, 294, 15, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: alpha * calloutA,
+        dotColor: lumen,
+        track: false,
+      });
+    }
+
     ctx.restore();
   }
 
   // The film moves between an open statement, an expansive figure, and an
   // off-centre conversation between words and geometry. These are placements,
-  // not columns: each scene gives its main idea the space it needs.
+  // The film moves between an open statement, an expansive figure, and an
+  // off-centre conversation between words and geometry. Every sub-screen gives
+  // both its diagram and its typography dedicated, non-overlapping stage space.
   const trailerPlacements = [
-    { figure: [960, 310, 0.68], text: [960, 620, 1540, 72, "center"], noteY: 840 },
-    { figure: [520, 590, 1.05], text: [1008, 365, 784, 64, "left"] },
-    { figure: [960, 310, 1], text: [960, 610, 1500, 72, "center"], noteY: 830 },
-    { figure: [960, 590, 1.10], text: [960, 175, 1600, 64, "center"], noteY: 955 },
-    { figure: [960, 590, 1.05], text: [960, 175, 1600, 64, "center"], noteY: 955 },
-    { figure: [960, 610, 1.05], text: [960, 175, 1600, 64, "center"], noteY: 965 },
-    { figure: [1400, 590, 0.96], text: [128, 365, 784, 64, "left"] },
-    { figure: [520, 540, 0.95], text: [1008, 365, 784, 64, "left"] },
-    { figure: [960, 585, 1], text: [960, 175, 1600, 64, "center"], noteY: 950 },
-    { figure: [960, 590, 1.10], text: [960, 175, 1540, 64, "center"], noteY: 955 },
-    { figure: [520, 590, 1.05], text: [1008, 365, 784, 64, "left"] },
-    { figure: [960, 610, 0.95], text: [960, 160, 1650, 64, "center"], noteY: 955 },
+    { figure: [960, 276, 0.58], text: [960, 652, 1560, 64, "center"], noteY: 836 },
+    { figure: [500, 540, 1.00], text: [1008, 350, 784, 58, "left"] },
+    { figure: [1420, 540, 1.00], text: [128, 350, 784, 58, "left"] },
+    { figure: [500, 540, 1.00], text: [1008, 350, 784, 58, "left"] },
+    { figure: [1420, 540, 1.00], text: [128, 350, 784, 58, "left"] },
+    { figure: [500, 540, 1.00], text: [1008, 350, 784, 58, "left"] },
+    { figure: [1420, 540, 1.00], text: [128, 350, 784, 58, "left"] },
+    { figure: [500, 540, 1.00], text: [1008, 350, 784, 58, "left"] },
+    { figure: [1420, 540, 1.00], text: [128, 350, 784, 58, "left"] },
+    { figure: [500, 540, 1.00], text: [1008, 350, 784, 58, "left"] },
+    { figure: [1420, 540, 1.00], text: [128, 350, 784, 58, "left"] },
+    { figure: [960, 276, 0.58], text: [960, 652, 1580, 64, "center"], noteY: 836 },
   ];
 
+  // Multi-screen progression across Scene 1 (4 distinct screens in the first minute)
+  // and two-beat progression (Part A / Part B) across Scenes 2–12.
+  const trailerSubScreens = [
+    // ── SCENE 1 (5.0s – 79.0s): 5 Distinct Screens Critical of the Status Quo, Institutional Trust, Debt & Belief Systems ──
+    {
+      sceneIndex: 0,
+      start: 5.0,
+      end: 20.0,
+      figure: [960, 276, 0.58],
+      text: [960, 652, 1560, 64, "center"],
+      noteY: 836,
+      mode: "seed",
+      actHeader: "01.1 // THE PARADOX OF MODERNITY",
+      focusTerm: "rotting",
+      lines: [
+        "Our tools have never been sharper.",
+        "Why is our thinking rotting?",
+      ],
+      notes: [
+        "Atomic-scale engineering and planetary computation—",
+        "paired with a civilization losing its capacity to reason.",
+      ],
+    },
+    {
+      sceneIndex: 0,
+      start: 20.0,
+      end: 34.2,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "01.2 // COLLAPSE OF INSTITUTIONAL TRUST",
+      focusTerm: "legitimacy",
+      lines: [
+        "Institutions lose their legitimacy.",
+        "Disagreement retreats into slogans.",
+      ],
+      notes: [
+        "Public trust in governing, media, and civic institutions has",
+        "collapsed from 77% to 22% across six decades (Pew / Gallup).",
+      ],
+    },
+    {
+      sceneIndex: 0,
+      start: 34.2,
+      end: 45.2,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "01.3 // SOVEREIGN DEBT & ECONOMIC PRECARITY",
+      focusTerm: "debt",
+      lines: [
+        "A status quo financed on debt—",
+        "and sustained by economic precarity.",
+      ],
+      notes: [
+        "$315T+ in global debt (~330% of GDP), $36T+ U.S. sovereign debt,",
+        "and $17.9T household debt keep citizens too leveraged to dissent.",
+      ],
+    },
+    {
+      sceneIndex: 0,
+      start: 45.2,
+      end: 55.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "01.4 // COLLECTIVE ADHERENCE TO BELIEF SYSTEMS",
+      focusTerm: "scripts",
+      lines: [
+        "We traded reason for scripts",
+        "that tell us what to repeat.",
+      ],
+      notes: [
+        "Political, cultural, economic, and ideological orthodoxies",
+        "dictate whom to blame—and which questions are forbidden.",
+      ],
+    },
+    {
+      sceneIndex: 0,
+      start: 55.0,
+      end: 79.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "seed",
+      actHeader: "01.5 // REVIVING A SCHOOL OF RATIONAL THOUGHT",
+      focusTerm: "observer",
+      lines: [
+        "Revive a school of rational thought.",
+        "Put the observer in the inquiry.",
+      ],
+      notes: [
+        "Science measured external matter (RF₀) with brilliance,",
+        "but left the experiencing mind outside its model.",
+      ],
+    },
+
+    // ── SCENE 2 (79.0s – 133.0s) ──
+    {
+      sceneIndex: 1,
+      start: 79.0,
+      end: 108.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "seed",
+      actHeader: "02.1 // WHERE REASON ACTUALLY BEGINS",
+      focusTerm: "Experience",
+      lines: [
+        "Strip away every inherited script.",
+        "Experience occurs.",
+      ],
+      notes: [
+        "Before you can accept a doctrine, read an instrument,",
+        "or doubt an argument, conscious experience is already present.",
+      ],
+    },
+    {
+      sceneIndex: 1,
+      start: 108.0,
+      end: 133.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "seed",
+      actHeader: "02.2 // THE INSTRUMENT OF ALL JUDGMENT (DOT-E0)",
+      focusTerm: "doubt",
+      lines: [
+        "Even doubt itself is an experience.",
+        "All evidence enters through awareness.",
+      ],
+      notes: [
+        "Starting with experience is not retreating into opinion—",
+        "it is examining the instrument through which all judgment is made.",
+      ],
+    },
+
+    // ── SCENE 3 (133.0s – 203.0s) ──
+    {
+      sceneIndex: 2,
+      start: 133.0,
+      end: 170.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "seed",
+      actHeader: "03.1 // OBSERVATION VS. PROGRAMMED INFERENCE",
+      focusTerm: "conditioning",
+      lines: [
+        "What actually happened—",
+        "and what did your conditioning add?",
+      ],
+      notes: [
+        "A one-word reply (“Okay.”) arrives and your chest tightens.",
+        "Both the message and the tension are real observations.",
+      ],
+    },
+    {
+      sceneIndex: 2,
+      start: 170.0,
+      end: 203.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "seed",
+      actHeader: "03.2 // THE FIRST DISCIPLINE OF REASON (DOT-E1)",
+      focusTerm: "inference",
+      lines: [
+        "The feeling is a real datum.",
+        "The explanation is an inference.",
+      ],
+      notes: [
+        "Why they sent it is a story generated by past conditioning—",
+        "and like any hypothesis, it can be completely wrong.",
+      ],
+    },
+
+    // ── SCENE 4 (203.0s – 269.0s) ──
+    {
+      sceneIndex: 3,
+      start: 203.0,
+      end: 238.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "outer_scan",
+      actHeader: "04.1 // REFUSING BOTH DOGMAS",
+      focusTerm: "materialism",
+      lines: [
+        "Neither blind materialism",
+        "nor wishful idealism.",
+      ],
+      notes: [
+        "Reductive materialism erases the conscious observer;",
+        "wishful idealism mistakes personal feeling for physical law.",
+      ],
+    },
+    {
+      sceneIndex: 3,
+      start: 238.0,
+      end: 269.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "outer_scan",
+      actHeader: "04.2 // THE EPISTEMIC BOUNDARY (DOT-B1)",
+      focusTerm: "hypothesis",
+      lines: [
+        "Observation is where we start.",
+        "Ontology is a hypothesis we test.",
+      ],
+      notes: [
+        "Knowing the world through experience is an observation;",
+        "what reality ultimately is remains a testable hypothesis.",
+      ],
+    },
+
+    // ── SCENE 5 (269.0s – 335.0s) ──
+    {
+      sceneIndex: 4,
+      start: 269.0,
+      end: 304.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "outer_scan",
+      actHeader: "05.1 // MODELS ARE INSTRUMENTS, NOT IDOLS",
+      focusTerm: "instrument",
+      lines: [
+        "A model is an instrument for thought—",
+        "never an idol to worship.",
+      ],
+      notes: [
+        "Belief systems demand loyalty to their vocabulary.",
+        "A rational framework demands to be tested against reality.",
+      ],
+    },
+    {
+      sceneIndex: 4,
+      start: 304.0,
+      end: 335.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "outer_scan",
+      actHeader: "05.2 // THE MAP AND THE TERRAIN",
+      focusTerm: "update",
+      lines: [
+        "When the road disagrees with the map,",
+        "you update the map.",
+      ],
+      notes: [
+        "DOT uses systems language—state, input, feedback, pattern—",
+        "strictly as a revisable instrument for shared inquiry.",
+      ],
+    },
+
+    // ── SCENE 6 (335.0s – 400.0s) ──
+    {
+      sceneIndex: 5,
+      start: 335.0,
+      end: 369.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "intersection",
+      actHeader: "06.1 // T AND E: THE TWO PREREQUISITES",
+      focusTerm: "Big C",
+      lines: [
+        "Two prerequisites: T and E.",
+        "One emergent pattern: Big C.",
+      ],
+      notes: [
+        "T is primordial continuity (Time). E is the raw information source.",
+        "Both exist outside Big C as the prerequisites of emergence.",
+      ],
+    },
+    {
+      sceneIndex: 5,
+      start: 369.0,
+      end: 400.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "intersection",
+      actHeader: "06.2 // RAW INPUT TO STRUCTURED OUTPUT (DOT-M2)",
+      focusTerm: "structured",
+      lines: [
+        "A living pattern that transforms",
+        "raw input into structured output.",
+      ],
+      notes: [
+        "Within T × E, a self-sustaining conscious pattern emerged",
+        "that retains state and carries structure forward across time.",
+      ],
+    },
+
+    // ── SCENE 7 (400.0s – 464.0s) ──
+    {
+      sceneIndex: 6,
+      start: 400.0,
+      end: 434.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "canvas_build",
+      actHeader: "07.1 // REALITY FRAME ZERO AND THE INTERFACE",
+      focusTerm: "RF₀",
+      lines: [
+        "One lawful physical arena (RF₀).",
+        "Millions of local observers (Little c).",
+      ],
+      notes: [
+        "Reason requires friction—an environment where choices",
+        "meet real resistance and consequences cannot be wished away.",
+      ],
+    },
+    {
+      sceneIndex: 6,
+      start: 434.0,
+      end: 464.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "canvas_build",
+      actHeader: "07.2 // BIOLOGICAL INTERFACE & REALITY STREAM",
+      focusTerm: "Streams",
+      lines: [
+        "Same shared physical street corner.",
+        "Completely different Reality Streams.",
+      ],
+      notes: [
+        "RF₀ is our shared, consequence-bound physical universe;",
+        "your body is the local interface delivering your Reality Stream.",
+      ],
+    },
+
+    // ── SCENE 8 (464.0s – 529.0s) ──
+    {
+      sceneIndex: 7,
+      start: 464.0,
+      end: 498.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "painting_mesh",
+      actHeader: "08.1 // THE CANVAS AND THE PAINTING (DOT-M4 / M5)",
+      focusTerm: "Canvas",
+      lines: [
+        "Every experience ends—",
+        "but a structural trace remains on the Canvas.",
+      ],
+      notes: [
+        "The Canvas retains every trace of your history;",
+        "those accumulated traces organize into your Painting.",
+      ],
+    },
+    {
+      sceneIndex: 7,
+      start: 498.0,
+      end: 529.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "painting_mesh",
+      actHeader: "08.2 // HOW A BELIEF SYSTEM GETS INSTALLED",
+      focusTerm: "Painting",
+      lines: [
+        "Before you could reason,",
+        "a Painting was already installed.",
+      ],
+      notes: [
+        "Family, language, school, class, and culture laid down thousands",
+        "of strokes—operating inside your head as 'common sense.'",
+      ],
+    },
+
+    // ── SCENE 9 (529.0s – 597.0s) ──
+    {
+      sceneIndex: 8,
+      start: 529.0,
+      end: 565.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "painting_mesh",
+      actHeader: "09.1 // THE FIVE-STEP EXPERIENCE LOOP",
+      focusTerm: "Painting",
+      lines: [
+        "Input → Painting → Intent →",
+        "Action → Consequence.",
+      ],
+      notes: [
+        "Once an inherited Painting is in place, it filters every",
+        "incoming signal to confirm its own pre-existing rules.",
+      ],
+    },
+    {
+      sceneIndex: 8,
+      start: 565.0,
+      end: 597.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "painting_mesh",
+      actHeader: "09.2 // HOW THE PAINTING PROTECTS ITSELF",
+      focusTerm: "proof",
+      lines: [
+        "The Painting generates the story—",
+        "then uses the outcome as proof.",
+      ],
+      notes: [
+        "A defensive reading triggers a defensive act, and the conflict",
+        "that follows is taken as proof the belief system was right.",
+      ],
+    },
+
+    // ── SCENE 10 (597.0s – 659.0s) ──
+    {
+      sceneIndex: 9,
+      start: 597.0,
+      end: 625.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "10.1 // FEAR MADE ARCHITECTURAL",
+      focusTerm: "Fear",
+      lines: [
+        "The status quo rules by turning Fear",
+        "into the architecture of thought.",
+      ],
+      notes: [
+        "In DOT, capitalized Fear is the structural contraction that occurs",
+        "when threat becomes the governing rule of a mind and a culture.",
+      ],
+    },
+    {
+      sceneIndex: 9,
+      start: 625.0,
+      end: 646.5,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "10.2 // THE THREE TRAPS OF MODERN CAPTURE",
+      focusTerm: "Debt",
+      lines: [
+        "Fractured attention. Debt handcuffs.",
+        "Tribes that punish honest questions.",
+      ],
+      notes: [
+        "Engineered attention extraction, $17.9T household debt precarity,",
+        "and ideological conformity keep citizens too afraid to refuse.",
+      ],
+    },
+    {
+      sceneIndex: 9,
+      start: 646.5,
+      end: 659.0,
+      figure: [500, 540, 1.00],
+      text: [1008, 350, 784, 58, "left"],
+      mode: "high_entropy",
+      actHeader: "10.3 // COLLAPSED HYPOTHESIS SPACE (DOT-M6)",
+      focusTerm: "true",
+      lines: [
+        "You stop asking what is true—",
+        "and ask only what is safe to say.",
+      ],
+      notes: [
+        "When Fear governs your Painting, your attention fragments",
+        "and your space of thinkable options collapses.",
+      ],
+    },
+
+    // ── SCENE 11 (659.0s – 721.0s) ──
+    {
+      sceneIndex: 10,
+      start: 659.0,
+      end: 692.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "coherence",
+      actHeader: "11.1 // LOVE AS LOW CANVAS ENTROPY (DOT-H7)",
+      focusTerm: "Love",
+      lines: [
+        "In DOT, Love is the condition in which",
+        "Fear no longer governs you.",
+      ],
+      notes: [
+        "Not passivity or sentimentality, but a state of low Canvas entropy",
+        "where attention is no longer hijacked by ego or tribal threat.",
+      ],
+    },
+    {
+      sceneIndex: 10,
+      start: 692.0,
+      end: 721.0,
+      figure: [1420, 540, 1.00],
+      text: [128, 350, 784, 58, "left"],
+      mode: "coherence",
+      actHeader: "11.2 // LOVE AS INTELLECTUAL COURAGE",
+      focusTerm: "reason",
+      lines: [
+        "Freedom from Fear is not soft.",
+        "It is what makes real reason possible.",
+      ],
+      notes: [
+        "It is the courage to let reality contradict your favorite belief,",
+        "and to choose truth over comfortable conformity.",
+      ],
+    },
+
+    // ── SCENE 12 (721.0s – 791.0s; Closing Card at 783.9s – 791.0s) ──
+    {
+      sceneIndex: 11,
+      start: 721.0,
+      end: 754.0,
+      figure: [960, 276, 0.58],
+      text: [960, 652, 1580, 64, "center"],
+      noteY: 836,
+      mode: "finale",
+      actHeader: "12.1 // THE PAINTING IS NOT THE PAINTER",
+      focusTerm: "responsibility",
+      lines: [
+        "You inherited a Painting—",
+        "what you do next is your responsibility.",
+      ],
+      notes: [
+        "Step back, hold still long enough to inspect the assumptions",
+        "running your life, and subject them to reason.",
+      ],
+    },
+    {
+      sceneIndex: 11,
+      start: 754.0,
+      end: 791.0,
+      figure: [960, 276, 0.58],
+      text: [960, 652, 1580, 64, "center"],
+      noteY: 836,
+      mode: "finale",
+      actHeader: "12.2 // RECLAIMING REASON",
+      focusTerm: "reason",
+      lines: [
+        "Stop repeating the script.",
+        "Become an author of reason.",
+      ],
+      notes: [
+        "Inspect the Painting you inherited. Test every claim against evidence.",
+        "Join the open inquiry at dotheory.org.",
+      ],
+    },
+  ];
+
+  function trailerSubScreenIndex(t) {
+    const idx = trailerSubScreens.findIndex((sub) => t >= sub.start && t < sub.end);
+    return idx >= 0 ? idx : t < 5 ? 0 : trailerSubScreens.length - 1;
+  }
+
   function trailerPlacement(t) {
-    const index = Math.max(0, (video.scenes || []).findIndex((scene) => t >= scene.start && t < scene.end));
-    return trailerPlacements[index] || trailerPlacements[0];
+    const sub = trailerSubScreens[trailerSubScreenIndex(t)];
+    return sub || trailerPlacements[0];
   }
 
   function wrapFilmCopy(text, width, size, weight = 500, family = "Inter") {
@@ -2888,10 +3740,10 @@ function inquiryAnimation({
       const toSplit = smooth(4.4, 5.5, t);
       const toMark = smooth(video.duration - 7.2, video.duration - 5.8, t);
       const splitAmt = toSplit * (1 - toMark);
-      const placement = trailerPlacement(t);
-      const index = Math.max(0, (video.scenes || []).findIndex((scene) => t >= scene.start && t < scene.end));
-      const previous = trailerPlacements[Math.max(0, index - 1)];
-      const move = smooth(sc(index + 1).start, sc(index + 1).start + 1.1, t);
+      const subIdx = trailerSubScreenIndex(t);
+      const placement = trailerSubScreens[subIdx] || trailerPlacements[0];
+      const previous = trailerSubScreens[Math.max(0, subIdx - 1)] || placement;
+      const move = smooth(placement.start, placement.start + 1.0, t);
       const figure = placement.figure.map((value, i) => mix(previous.figure[i], value, move));
       return {
         x: mix(960, figure[0], splitAmt),
@@ -3300,145 +4152,1384 @@ function inquiryAnimation({
 
     const stageA = diagramOnly ? 1 : smooth(4.5, 5.5, t) * (1 - focus.toMark);
 
-    // Scenes 1 and 2: the local observer; scene 3 grounds interpretation in an ordinary message.
-    const s123A = stageA * envelope(t, sc(1).start, sc(2).end - 0.05, 0.35, 0.40);
-    if (s123A > 0.01) {
-      const em1 = smooth(4.8, 7.6, t);
-      const inS2 = smooth(sc(2).start - 0.3, sc(2).start + 0.8, t);
-      const inS3 = smooth(sc(3).start - 0.3, sc(3).start + 0.8, t);
-      const scScale = mix(mix(1.48, 1.56, inS2), 1.42, inS3) * figureScale;
-      drawHomeArchitecture(cx, cy, scScale, t, s123A, {
-        focusPoint: C1,
-        reticle: 0.8,
+    // ── SCENE 1 (5.0s – 79.0s): 5 Distinct Screens Critical of the Status Quo, Institutional Trust, Debt & Belief Systems ──
+    // Screen 1.1 (5.0s – 20.0s): Centered Upper RF₀ Precision Instrument vs. Inner Conformity Ripples
+    const s1aA = stageA * envelope(t, 5.0, 20.0, 0.35, 0.45);
+    if (s1aA > 0.01) {
+      const u1a = clamp((t - 5.0) / 15.0);
+      drawHomeArchitecture(cx, cy, 1.12 * figureScale, t, s1aA, {
+        focusPoint: FC,
+        reticle: 0.95,
         origin: 0,
         bigC: 0,
         outerLoop: 0,
         otherFrames: 0,
-        rf0: mix(0.22, 0.42, inS3),
-        peers: inS3 * 0.45,
-        littleC: 1,
-        innerLoop: em1,
-        awareness: em1,
-        awarenessExpand: 0.15 + inS2 * 0.15,
-        intent: em1 * mix(0.45, 0.85, inS3),
-        intentProgress: em1,
-        labels: 1,
-      });
-    }
-
-    const messageA = stageA * envelope(t, sc(3).start + 0.05, sc(3).end - 0.05, 0.55, 0.45);
-    drawMessageVignette(cx, cy, figureScale, t, messageA);
-
-    // Science retains the shared-world geometry; the following scene opens onto map and street.
-    const s45A = stageA * envelope(t, sc(4).start + 0.05, sc(4).end - 0.05, 0.40, 0.40);
-    if (s45A > 0.01) {
-      const inS5 = smooth(sc(5).start - 0.3, sc(5).start + 0.9, t);
-      drawHomeArchitecture(cx, cy, mix(1.18, 1.04, inS5) * figureScale, t, s45A, {
-        focusPoint: FC,
-        reticle: mix(0.85, 1.0, inS5),
-        origin: inS5 * 0.45,
-        bigC: inS5 * 0.35,
-        outerLoop: inS5 * 0.35,
-        otherFrames: 0,
         rf0: 1,
-        peers: 0.85,
+        peers: 0.9,
         littleC: 1,
         innerLoop: 1,
         awareness: 1,
-        intent: 0.65,
-        intentProgress: 0.65,
+        awarenessExpand: smooth(0.3, 0.9, u1a) * 0.5,
+        intent: 0.85,
+        intentProgress: 0.5 + 0.5 * Math.sin(t * 0.8),
         labels: 1,
       });
       for (let w = 0; w < 3; w++) {
-        const phase = ((t * 0.34 + w / 3) % 1);
-        const scanR = mix(228, 42, phase);
-        const wAlpha = Math.sin(phase * Math.PI) * s45A * 0.50;
-        circle(cx, cy, scanR, warmGold, wAlpha, 1.6, [6, 8]);
+        const ph = ((t * 0.34 + w / 3) % 1);
+        const rScan = mix(235 * figureScale, 32 * figureScale, ph);
+        circle(cx, cy, rScan, ph > 0.5 ? threatAmber : warmGold, Math.sin(ph * Math.PI) * s1aA * 0.48, 1.6, [5, 7]);
+      }
+      pillLabel("EXTERNAL PRECISION · ATOMIC & PLANETARY TOOLS", cx - 390, cy - 36, 13.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s1aA * 0.92,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("INTERNAL EROSION · UNEXAMINED BELIEF", cx + 390, cy - 36, 13.5, {
+        color: threatAmber,
+        border: isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)",
+        alpha: s1aA * 0.92,
+        dotColor: threatAmber,
+        track: false,
+      });
+    }
+
+    // Screen 1.2 (20.0s – 34.2s): Empirical Collapse of Institutional Trust & Public Reason Telemetry
+    const s1bA = stageA * envelope(t, 20.0, 34.2, 0.40, 0.45);
+    if (s1bA > 0.01) {
+      const u1b = clamp((t - 20.0) / 14.2);
+      const curveProg = smooth(0.04, 0.52, u1b);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // 1. Top Architectural Telemetry Chart Card ([-336, -324, 672, 316])
+      roundRect(-336, -324, 672, 316, 18, {
+        fill: cardFill,
+        stroke: isLight ? "rgba(158, 58, 41, 0.36)" : "rgba(200, 104, 82, 0.42)",
+        lineWidth: 1.6,
+        alpha: s1bA,
+      });
+      type("PUBLIC TRUST IN INSTITUTIONS · 1964–2024", -306, -286, 15, {
+        color: threatAmber,
+        alpha: s1bA * 0.96,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "left",
+        track: false,
+      });
+      type("PEW / GALLUP DATA", 306, -286, 13.5, {
+        color: muted,
+        alpha: s1bA * 0.88,
+        family: "JetBrains Mono",
+        weight: 600,
+        align: "right",
+        track: false,
+      });
+
+      // Horizontal percentage grid lines (80%, 60%, 40%, 20%)
+      const yLevels = [
+        { label: "80%", y: -242 },
+        { label: "60%", y: -188 },
+        { label: "40%", y: -134 },
+        { label: "20%", y: -80 },
+      ];
+      yLevels.forEach((lvl) => {
+        line([[-256, lvl.y], [296, lvl.y]], hairlineCol, s1bA * 0.65, 1.1, 1, [3, 6]);
+        type(lvl.label, -268, lvl.y + 5, 13, {
+          color: muted,
+          alpha: s1bA * 0.85,
+          family: "JetBrains Mono",
+          weight: 600,
+          align: "right",
+          track: false,
+        });
+      });
+
+      // X-axis decade markers
+      const xDecades = [
+        { label: "1964", x: -248 },
+        { label: "1980", x: -112 },
+        { label: "2000", x: 24 },
+        { label: "2015", x: 160 },
+        { label: "2024", x: 284 },
+      ];
+      xDecades.forEach((dec) => {
+        line([[dec.x, -250], [dec.x, -64]], hairlineCol, s1bA * 0.40, 1.0);
+        type(dec.label, dec.x, -34, 13, {
+          color: muted,
+          alpha: s1bA * 0.88,
+          family: "JetBrains Mono",
+          weight: 600,
+          align: "center",
+          track: false,
+        });
+      });
+
+      // Multi-decade institutional trust curve points (77% in 1964 -> 22% in 2024)
+      const trustNodes = [
+        [-248, -234], // 1964: 77%
+        [-180, -142], // 1974: 43%
+        [-112, -118], // 1980: 34%
+        [-44, -148],  // 1988: 45%
+        [24, -162],   // 2001: 50%
+        [92, -112],   // 2008: 32%
+        [160, -78],   // 2015: 19%
+        [222, -84],   // 2020: 21%
+        [284, -86],   // 2024: 22%
+      ];
+      const denseCurve = [];
+      for (let i = 0; i < trustNodes.length - 1; i++) {
+        const [x0, y0] = trustNodes[i];
+        const [x1, y1] = trustNodes[i + 1];
+        for (let s = 0; s < 12; s++) {
+          const u = s / 12;
+          const su = u * u * (3 - 2 * u);
+          denseCurve.push([mix(x0, x1, u), mix(y0, y1, su)]);
+        }
+      }
+      denseCurve.push(trustNodes.at(-1));
+      line(denseCurve, threatAmber, s1bA * 0.96, 3.4, curveProg);
+
+      // Start node (77%) and current historic low node (22%)
+      dot(-248, -234, 6.0, emerald, s1bA);
+      type("77%", -248, -248, 15, {
+        color: emerald,
+        alpha: s1bA * 0.98,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      if (curveProg > 0.85) {
+        const pulseR = 11 + 4 * Math.sin(t * 3.2);
+        circle(284, -86, pulseR, threatAmber, s1bA * 0.65, 1.6);
+        dot(284, -86, 6.5, threatAmber, s1bA);
+        type("22% LOW", 268, -104, 15, {
+          color: threatAmber,
+          alpha: s1bA * 0.98,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "right",
+          track: false,
+        });
+      }
+
+      // 2. Three Empirical Telemetry Cards below the chart
+      const statCards = [
+        {
+          y: 12,
+          stat: "77% → 22%",
+          color: threatAmber,
+          title: "INSTITUTIONAL TRUST COLLAPSE (1964–2024)",
+          sub: "77% trusted public institutions in 1964; barely 1 in 5 does today.",
+        },
+        {
+          y: 118,
+          stat: "27% AVG",
+          color: warmGold,
+          title: "RECORD-LOW CIVIC & MEDIA CONFIDENCE (GALLUP)",
+          sub: "Historic low across Congress, press, courts, and public bodies.",
+        },
+        {
+          y: 224,
+          stat: "TRIBAL LOCK",
+          color: emerald,
+          title: "SLOGANS REPLACING SHARED EMPIRICAL REASON",
+          sub: "Disagreement is treated as moral heresy rather than open inquiry.",
+        },
+      ];
+      statCards.forEach((card, idx) => {
+        const cIn = smooth(0.10 + idx * 0.14, 0.36 + idx * 0.14, u1b);
+        if (cIn <= 0.01) return;
+        roundRect(-336, card.y, 672, 92, 14, {
+          fill: cardFill,
+          stroke: hairlineCol,
+          lineWidth: 1.3,
+          alpha: s1bA * cIn,
+        });
+        roundRect(-336, card.y, 6, 92, 3, {
+          fill: card.color,
+          alpha: s1bA * cIn,
+        });
+        type(card.stat, -310, card.y + 55, idx === 2 ? 21 : 25, {
+          color: card.color,
+          alpha: s1bA * cIn,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          track: false,
+        });
+        line([[-132, card.y + 16], [-132, card.y + 76]], hairlineCol, s1bA * cIn * 0.75, 1.1);
+        type(card.title, -112, card.y + 38, 13.5, {
+          color: deepInk,
+          alpha: s1bA * cIn * 0.96,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          maxWidth: 428,
+          track: false,
+        });
+        type(card.sub, -112, card.y + 68, 14.5, {
+          color: bodyCopyCol,
+          alpha: s1bA * cIn * 0.94,
+          family: "Inter",
+          weight: 400,
+          align: "left",
+          maxWidth: 428,
+          track: false,
+        });
+      });
+
+      ctx.restore();
+    }
+
+    // Screen 1.3 (34.2s – 45.2s): Sovereign & Household Debt Escalation & Economic Precarity Telemetry
+    const s1DebtA = stageA * envelope(t, 34.2, 45.2, 0.40, 0.45);
+    if (s1DebtA > 0.01) {
+      const uDebt = clamp((t - 34.2) / 11.0);
+      const debtCurveProg = smooth(0.04, 0.54, uDebt);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // 1. Top Architectural Debt Escalation Chart Card ([-336, -324, 672, 316])
+      roundRect(-336, -324, 672, 316, 18, {
+        fill: cardFill,
+        stroke: isLight ? "rgba(158, 58, 41, 0.36)" : "rgba(200, 104, 82, 0.42)",
+        lineWidth: 1.6,
+        alpha: s1DebtA,
+      });
+      type("SOVEREIGN & GLOBAL DEBT SURGE · 1980–2024", -306, -286, 15, {
+        color: threatAmber,
+        alpha: s1DebtA * 0.96,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "left",
+        track: false,
+      });
+      type("FED / IMF / IIF DATA", 306, -286, 13.5, {
+        color: muted,
+        alpha: s1DebtA * 0.88,
+        family: "JetBrains Mono",
+        weight: 600,
+        align: "right",
+        track: false,
+      });
+
+      // Horizontal Debt-to-GDP grid lines (120%, 90%, 60%, 30%)
+      const debtLevels = [
+        { label: "120%", y: -242 },
+        { label: "90%", y: -188 },
+        { label: "60%", y: -134 },
+        { label: "30%", y: -80 },
+      ];
+      debtLevels.forEach((lvl) => {
+        line([[-256, lvl.y], [296, lvl.y]], hairlineCol, s1DebtA * 0.65, 1.1, 1, [3, 6]);
+        type(lvl.label, -268, lvl.y + 5, 13, {
+          color: muted,
+          alpha: s1DebtA * 0.85,
+          family: "JetBrains Mono",
+          weight: 600,
+          align: "right",
+          track: false,
+        });
+      });
+
+      // X-axis year markers
+      const debtYears = [
+        { label: "1980", x: -248 },
+        { label: "1995", x: -112 },
+        { label: "2008", x: 24 },
+        { label: "2020", x: 160 },
+        { label: "2024", x: 284 },
+      ];
+      debtYears.forEach((yr) => {
+        line([[yr.x, -250], [yr.x, -64]], hairlineCol, s1DebtA * 0.40, 1.0);
+        type(yr.label, yr.x, -34, 13, {
+          color: muted,
+          alpha: s1DebtA * 0.88,
+          family: "JetBrains Mono",
+          weight: 600,
+          align: "center",
+          track: false,
+        });
+      });
+
+      // Sovereign Debt-to-GDP Escalation Curve (32% in 1980 -> 64% in 1995 -> 100% in 2012 -> 123% in 2024)
+      const debtNodes = [
+        [-248, -84],  // 1980: 32% ($0.9T)
+        [-180, -118], // 1988: 50%
+        [-112, -142], // 1995: 64% ($4.9T)
+        [-44, -128],  // 2001: 56%
+        [24, -162],   // 2008: 73% ($10.0T)
+        [92, -206],   // 2014: 101% ($17.8T)
+        [160, -250],  // 2020: 126% ($27.7T)
+        [222, -238],  // 2022: 120%
+        [284, -246],  // 2024: 123% ($36T+)
+      ];
+      const denseDebtCurve = [];
+      for (let i = 0; i < debtNodes.length - 1; i++) {
+        const [x0, y0] = debtNodes[i];
+        const [x1, y1] = debtNodes[i + 1];
+        for (let s = 0; s < 12; s++) {
+          const u = s / 12;
+          const su = u * u * (3 - 2 * u);
+          denseDebtCurve.push([mix(x0, x1, u), mix(y0, y1, su)]);
+        }
+      }
+      denseDebtCurve.push(debtNodes.at(-1));
+      line(denseDebtCurve, threatAmber, s1DebtA * 0.96, 3.4, debtCurveProg);
+
+      // Start node (32% / $0.9T) and current peak node (123% / $36T+)
+      dot(-248, -84, 6.0, emerald, s1DebtA);
+      type("32% ($0.9T)", -208, -94, 13.5, {
+        color: emerald,
+        alpha: s1DebtA * 0.98,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      if (debtCurveProg > 0.82) {
+        const pulseR = 11 + 4 * Math.sin(t * 3.4);
+        circle(284, -246, pulseR, threatAmber, s1DebtA * 0.68, 1.6);
+        dot(284, -246, 6.5, threatAmber, s1DebtA);
+        type("123% OF GDP ($36T+)", 264, -214, 14, {
+          color: threatAmber,
+          alpha: s1DebtA * 0.98,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "right",
+          track: false,
+        });
+      }
+
+      // 2. Three Empirical Debt & Precarity Telemetry Cards below the chart
+      const debtCards = [
+        {
+          y: 12,
+          stat: "$315T+ DEBT",
+          color: threatAmber,
+          title: "GLOBAL DEBT BURDEN (~330% OF WORLD GDP · IIF / IMF)",
+          sub: "Future generations leveraged to subsidize failing status-quo systems.",
+        },
+        {
+          y: 118,
+          stat: "$36T+ / 123%",
+          color: warmGold,
+          title: "U.S. SOVEREIGN DEBT-TO-GDP (UP FROM 32% IN 1980)",
+          sub: "Compounding fiscal extraction replacing long-term rational stewardship.",
+        },
+        {
+          y: 224,
+          stat: "$17.9T OWED",
+          color: emerald,
+          title: "RECORD HOUSEHOLD DEBT & PAYCHECK PRECARITY (FED)",
+          sub: "60%+ live paycheck-to-paycheck; financial leverage enforces compliance.",
+        },
+      ];
+      debtCards.forEach((card, idx) => {
+        const cIn = smooth(0.10 + idx * 0.14, 0.36 + idx * 0.14, uDebt);
+        if (cIn <= 0.01) return;
+        roundRect(-336, card.y, 672, 92, 14, {
+          fill: cardFill,
+          stroke: hairlineCol,
+          lineWidth: 1.3,
+          alpha: s1DebtA * cIn,
+        });
+        roundRect(-336, card.y, 6, 92, 3, {
+          fill: card.color,
+          alpha: s1DebtA * cIn,
+        });
+        type(card.stat, -314, card.y + 55, 21.5, {
+          color: card.color,
+          alpha: s1DebtA * cIn,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          track: false,
+        });
+        line([[-132, card.y + 16], [-132, card.y + 76]], hairlineCol, s1DebtA * cIn * 0.75, 1.1);
+        type(card.title, -112, card.y + 38, 13.5, {
+          color: deepInk,
+          alpha: s1DebtA * cIn * 0.96,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          maxWidth: 428,
+          track: false,
+        });
+        type(card.sub, -112, card.y + 68, 14.5, {
+          color: bodyCopyCol,
+          alpha: s1DebtA * cIn * 0.94,
+          family: "Inter",
+          weight: 400,
+          align: "left",
+          maxWidth: 428,
+          track: false,
+        });
+      });
+
+      ctx.restore();
+    }
+
+    // Screen 1.4 (45.2s – 55.0s): Collective Adherence to Belief Systems (The 4 Inherited Script Quadrants)
+    const s1cA = stageA * envelope(t, 45.2, 55.0, 0.40, 0.45);
+    if (s1cA > 0.01) {
+      const u1c = clamp((t - 45.2) / 9.8);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // Outer orthodoxy ring & inward-pressing conformity waves
+      circle(0, 0, 236, threatAmber, s1cA * 0.42, 1.6, [6, 6]);
+      circle(0, 0, 142, warmGold, s1cA * 0.38, 1.3, [4, 5]);
+      for (let w = 0; w < 3; w++) {
+        const ph = ((t * 0.44 + w / 3) % 1);
+        const rPress = mix(228, 34, ph);
+        circle(0, 0, rPress, ph > 0.4 ? threatAmber : warmGold, Math.sin(ph * Math.PI) * s1cA * 0.52, 1.6);
+      }
+
+      // 4 Orthodoxy Quadrant Cards broadcasting scripts into the central observer
+      const scripts = [
+        { x: -336, y: -236, cx: -180, cy: -185, code: "01 // POLITICAL DOGMA", sub: "Partisan scripts & faction loyalty", color: threatAmber },
+        { x: 24, y: -236, cx: 180, cy: -185, code: "02 // CULTURAL ORTHODOXY", sub: "Status signaling & inherited taboos", color: warmGold },
+        { x: -336, y: 134, cx: -180, cy: 185, code: "03 // ECONOMIC SCRIPTS", sub: "Debt leverage & obedience", color: warmGold },
+        { x: 24, y: 134, cx: 180, cy: 185, code: "04 // IDEOLOGICAL TRIBES", sub: "Closed vocabularies & heresy policing", color: threatAmber },
+      ];
+      scripts.forEach((item, idx) => {
+        const sIn = smooth(idx * 0.08, 0.28 + idx * 0.08, u1c);
+        if (sIn <= 0.01) return;
+        // Radial conduit from quadrant card to central observer (0, 0)
+        const sx = item.cx * 0.68;
+        const sy = item.cy * 0.68;
+        line([[sx, sy], [0, 0]], item.color, s1cA * sIn * 0.58, 1.8, 1, [4, 5]);
+        const uPkt = ((t * 0.72 + idx * 0.25) % 1);
+        dot(mix(sx, 0, uPkt), mix(sy, 0, uPkt), 4.4, item.color, s1cA * sIn * 0.95);
+
+        roundRect(item.x, item.y, 312, 102, 14, {
+          fill: cardFill,
+          stroke: isLight ? "rgba(158, 58, 41, 0.38)" : "rgba(200, 104, 82, 0.45)",
+          lineWidth: 1.5,
+          alpha: s1cA * sIn,
+        });
+        roundRect(item.x, item.y, 5, 102, 3, {
+          fill: item.color,
+          alpha: s1cA * sIn,
+        });
+        type(item.code, item.x + 18, item.y + 40, 14, {
+          color: item.color,
+          alpha: s1cA * sIn * 0.98,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          maxWidth: 278,
+          track: false,
+        });
+        type(item.sub, item.x + 18, item.y + 72, 14.5, {
+          color: bodyCopyCol,
+          alpha: s1cA * sIn * 0.95,
+          family: "Inter",
+          weight: 400,
+          align: "left",
+          maxWidth: 278,
+          track: false,
+        });
+      });
+
+      // Central Observer Cell under ideological pressure + Directive Badges
+      drawOrganicCell(0, 0, 26, t * 1.2, s1cA, {
+        phase: 0.4,
+        withSurface: true,
+        tint: threatAmber,
+        coreRadius: 5.5,
+      });
+      pillLabel("WHAT TO REPEAT  ·  WHOM TO BLAME", 0, -68, 13.5, {
+        color: threatAmber,
+        border: isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)",
+        alpha: s1cA * 0.95,
+        dotColor: threatAmber,
+        track: false,
+      });
+      pillLabel("FORBIDDEN QUESTIONS  ·  CLOSED ORTHODOXY", 0, 78, 13.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s1cA * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("COLLECTIVE ADHERENCE TO BELIEF SYSTEMS", 0, -286, 14.5, {
+        color: threatAmber,
+        border: isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)",
+        alpha: s1cA * 0.96,
+        dotColor: threatAmber,
+        track: false,
+      });
+      pillLabel("STATUS QUO · OBEDIENCE OVER INQUIRY", 0, 294, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s1cA * 0.96,
+        dotColor: warmGold,
+        track: false,
+      });
+
+      ctx.restore();
+    }
+
+    // Screen 1.5 (55.0s – 79.0s): Reviving a School of Rational Thought (Bridging External RF₀ & Conscious Observer)
+    const s1dA = stageA * envelope(t, 55.0, sc(1).end - 0.05, 0.40, 0.45);
+    if (s1dA > 0.01) {
+      const u1d = clamp((t - 55.0) / Math.max(10, sc(1).end - 55.0));
+      const awaken = smooth(0.15, 0.72, u1d);
+      drawHomeArchitecture(cx, cy, 1.14 * figureScale, t, s1dA, {
+        focusPoint: FC,
+        reticle: 0.92,
+        origin: 0,
+        bigC: 0,
+        outerLoop: 0,
+        otherFrames: 0,
+        rf0: 1,
+        peers: 0.65,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: awaken * 0.85,
+        intent: 0.65 + awaken * 0.35,
+        intentProgress: awaken,
+        labels: 1,
+      });
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      pillLabel("EXTERNAL SCIENCE · MEASURED MATTER (RF₀)", 0, -292, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s1dA * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("RATIONAL THOUGHT REVIVED · THE OBSERVER INCLUDED", 0, 298, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: s1dA * 0.95,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 2: Stripping Away Inherited Scripts to the Irreducible Datum (DOT-E0: Experience Occurs)
+    const s2A = stageA * envelope(t, sc(2).start + 0.05, sc(2).end - 0.05, 0.40, 0.45);
+    if (s2A > 0.01) {
+      const sc2 = sc(2);
+      const u2 = clamp((t - sc2.start) / Math.max(12, sc2.end - sc2.start));
+      const stripProg = smooth(0.10, 0.52, u2);
+      const partB = smooth(0.50, 0.62, u2);
+
+      drawHomeArchitecture(cx, cy, 1.36 * figureScale, t, s2A, {
+        focusPoint: C1,
+        reticle: 0.85,
+        origin: 0,
+        bigC: 0,
+        outerLoop: 0,
+        otherFrames: 0,
+        rf0: 0.35 * (1 - stripProg * 0.65),
+        peers: 0,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: 0.45 + partB * 0.45,
+        intent: 0.4 + partB * 0.5,
+        intentProgress: partB,
+        labels: 1,
+      });
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // Part A: 3 Concentric Inherited Script Shells peeling/dissolving outward during Cartesian reduction
+      const shells = [
+        { r: 158, label: "SECOND-HAND OPINION", col: warmGold },
+        { r: 196, label: "UNEXAMINED ASSUMPTIONS", col: threatAmber },
+        { r: 234, label: "INHERITED DOCTRINE", col: warmGold },
+      ];
+      shells.forEach((sh, idx) => {
+        const dissolve = smooth(idx * 0.14, 0.42 + idx * 0.14, u2);
+        const rExp = sh.r + dissolve * 24;
+        const shAlpha = s2A * (1 - dissolve * 0.72) * (1 - partB * 0.45);
+        circle(0, 0, rExp, sh.col, shAlpha * 0.68, 1.6, [6 + idx * 2, 7]);
+      });
+
+      // Part B: 4 Incoming Evidence Channels entering through the Awareness instrument (DOT-E0)
+      if (partB > 0.01) {
+        const channels = [
+          { ang: -Math.PI * 0.75, label: "01 · SENSORY EVIDENCE", col: lumen },
+          { ang: -Math.PI * 0.25, label: "02 · INSTRUMENTS", col: warmGold },
+          { ang: Math.PI * 0.25, label: "03 · LOGICAL PROOF", col: lumen },
+          { ang: Math.PI * 0.75, label: "04 · DOUBT ITSELF", col: warmGold },
+        ];
+        channels.forEach((ch, idx) => {
+          const sx = Math.cos(ch.ang) * 232;
+          const sy = Math.sin(ch.ang) * 232;
+          const ex = Math.cos(ch.ang) * 96;
+          const ey = Math.sin(ch.ang) * 96;
+          line([[sx, sy], [ex, ey]], ch.col, s2A * partB * 0.78, 2.0, 1, [4, 5]);
+          const uPkt = ((t * 0.72 + idx * 0.25) % 1);
+          dot(mix(sx, ex, uPkt), mix(sy, ey, uPkt), 4.5, ch.col, s2A * partB * 0.96);
+          dot(sx, sy, 5.2, ch.col, s2A * partB * 0.92);
+          type(ch.label, sx, sy + (sy < 0 ? -16 : 26), 13, {
+            color: ch.col,
+            alpha: s2A * partB * 0.96,
+            family: "JetBrains Mono",
+            weight: 700,
+            align: "center",
+            track: false,
+          });
+        });
+      }
+
+      pillLabel("CARTESIAN REDUCTION · STRIP AWAY INHERITED SCRIPTS", 0, -288, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s2A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel(
+        partB > 0.5 ? "INSTRUMENT OF ALL JUDGMENT · AWARENESS (DOT-E0)" : "MINIMUM DATUM (DOT-E0) · EXPERIENCE OCCURS",
+        0,
+        296,
+        14.5,
+        {
+          color: lumen,
+          border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+          alpha: s2A * 0.95,
+          dotColor: lumen,
+          track: false,
+        },
+      );
+      ctx.restore();
+    }
+
+    // Scene 3: Signal vs. Programmed Inference Bifurcation Telemetry (DOT-E1)
+    const messageA = stageA * envelope(t, sc(3).start + 0.05, sc(3).end - 0.05, 0.45, 0.45);
+    if (messageA > 0.01) {
+      const sc3 = sc(3);
+      const u3 = clamp((t - sc3.start) / Math.max(12, sc3.end - sc3.start));
+      const decouple = smooth(0.46, 0.76, u3);
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // Subtle concentric field behind the bifurcation instrument
+      circle(0, 0, 248, hairlineCol, messageA * 0.45, 1.1, [4, 7]);
+      circle(-216, 0, 96 + 4 * Math.sin(t * 2.1), warmGold, messageA * 0.28, 1.3, [4, 6]);
+
+      // 1. Left Raw Datum Bezel (x = -332.. -112, y = -168.. +168)
+      roundRect(-332, -168, 216, 336, 20, {
+        fill: cardFill,
+        stroke: warmGold,
+        lineWidth: 1.8,
+        alpha: messageA,
+      });
+      type("RAW OBSERVATION", -224, -124, 13.5, {
+        color: warmGold,
+        alpha: messageA * 0.96,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      roundRect(-304, -84, 160, 74, 14, {
+        fill: isLight ? "#dcebe2" : "#122c22",
+        stroke: emerald,
+        lineWidth: 1.5,
+        alpha: messageA,
+      });
+      type("“Okay.”", -224, -36, 32, {
+        color: deepInk,
+        alpha: messageA,
+        family: "Inter",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      type("DATUM 01 · TEXT SIGNAL", -224, 24, 12.5, {
+        color: lumen,
+        alpha: messageA * 0.92,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      type("DATUM 02 · CHEST TENSION", -224, 54, 12.5, {
+        color: warmGold,
+        alpha: messageA * 0.92,
+        family: "JetBrains Mono",
+        weight: 700,
+        align: "center",
+        track: false,
+      });
+      type("Both are real observations.", -224, 108, 14, {
+        color: bodyCopyCol,
+        alpha: messageA * 0.92,
+        family: "Inter",
+        weight: 400,
+        align: "center",
+        track: false,
+      });
+
+      // Signal origin node on right edge of bezel (-116, 0)
+      const sigX = -116;
+      dot(sigX, 0, 6, warmGold, messageA);
+
+      // 2. Bifurcating Bezier Conduits to Upper (Programmed Inference) & Lower (Disciplined Inquiry) Cards
+      const topBranch = Array.from({ length: 36 }, (_, k) => {
+        const u = k / 35;
+        return [mix(sigX, -32, u), mix(0, -108, smooth(0, 1, u))];
+      });
+      const botBranch = Array.from({ length: 36 }, (_, k) => {
+        const u = k / 35;
+        return [mix(sigX, -32, u), mix(0, 108, smooth(0, 1, u))];
+      });
+      const topA = mix(0.96, 0.58, decouple);
+      const botA = mix(0.82, 1.0, decouple);
+      line(topBranch, threatAmber, messageA * topA, 2.5);
+      line(botBranch, lumen, messageA * botA, 2.8);
+
+      const uPkt = (t * 0.68) % 1;
+      const pIdx = Math.min(35, Math.floor(uPkt * 35));
+      dot(topBranch[pIdx][0], topBranch[pIdx][1], 4.5, threatAmber, messageA * topA);
+      dot(botBranch[pIdx][0], botBranch[pIdx][1], 4.8, lumen, messageA * botA);
+
+      // Upper Card: Programmed Inference (Story added by conditioning)
+      const cardX = -32;
+      const cardW = 368;
+      const cardH = 148;
+      const topY = -182;
+      roundRect(cardX, topY, cardW, cardH, 16, {
+        fill: cardFill,
+        stroke: threatAmber,
+        lineWidth: 1.8,
+        alpha: messageA * topA,
+      });
+      drawOrganicCell(cardX + 46, topY + 74, 18, t * 1.5, messageA * topA, {
+        phase: 0.3,
+        withSurface: true,
+        tint: threatAmber,
+        coreRadius: 4.4,
+      });
+      type("PROGRAMMED INFERENCE (STORY)", cardX + 86, topY + 38, 13.5, {
+        color: threatAmber,
+        alpha: messageA * topA,
+        family: "JetBrains Mono",
+        weight: 700,
+        track: false,
+      });
+      type("“They are dismissing me.”", cardX + 86, topY + 74, 21, {
+        color: deepInk,
+        alpha: messageA * topA,
+        family: "Inter",
+        weight: 700,
+        track: false,
+      });
+      type("Added by past conditioning — may be false.", cardX + 86, topY + 104, 13.5, {
+        color: bodyCopyCol,
+        alpha: messageA * topA * 0.94,
+        family: "Inter",
+        weight: 400,
+        track: false,
+      });
+      const waveTop = Array.from({ length: 36 }, (_, k) => {
+        const u = k / 35;
+        return [mix(cardX + 86, cardX + cardW - 22, u), topY + 128 + Math.sin(u * 26 + t * 5.2) * 4.5];
+      });
+      line(waveTop, threatAmber, messageA * topA * 0.85, 1.8);
+
+      // Lower Card: Disciplined Reason (DOT-E1: Separate Datum from Hypothesis)
+      const botY = 34;
+      roundRect(cardX, botY, cardW, cardH, 16, {
+        fill: cardFill,
+        stroke: decouple > 0.3 ? warmGold : lumen,
+        lineWidth: 2.0,
+        alpha: messageA * botA,
+      });
+      drawOrganicCell(cardX + 46, botY + 74, 20, t, messageA * botA, {
+        phase: 1.1,
+        withSurface: true,
+        tint: lumen,
+        coreRadius: 4.8,
+      });
+      type("DISCIPLINE OF REASON (DOT-E1)", cardX + 86, botY + 38, 13.5, {
+        color: decouple > 0.3 ? warmGold : lumen,
+        alpha: messageA * botA,
+        family: "JetBrains Mono",
+        weight: 700,
+        track: false,
+      });
+      type("Separate datum from story.", cardX + 86, botY + 74, 21, {
+        color: deepInk,
+        alpha: messageA * botA,
+        family: "Inter",
+        weight: 700,
+        track: false,
+      });
+      type("Test the explanation as a hypothesis.", cardX + 86, botY + 104, 13.5, {
+        color: bodyCopyCol,
+        alpha: messageA * botA * 0.94,
+        family: "Inter",
+        weight: 400,
+        track: false,
+      });
+      const waveBot = Array.from({ length: 36 }, (_, k) => {
+        const u = k / 35;
+        return [mix(cardX + 86, cardX + cardW - 22, u), botY + 128 + Math.sin(u * 10 - t * 2.2) * 4.0];
+      });
+      line(waveBot, lumen, messageA * botA * 0.9, 2.0);
+
+      pillLabel("PROGRAMMED INFERENCE · CONDITIONED STORY", 0, -286, 14.5, {
+        color: threatAmber,
+        border: isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)",
+        alpha: messageA * 0.94,
+        dotColor: threatAmber,
+        track: false,
+      });
+      pillLabel("OBSERVED DATUM · SEPARATE FACT FROM STORY (DOT-E1)", 0, 294, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: messageA * 0.94,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 4: Refusing Both Dogmas — Epistemic Boundary (DOT-B1) on the Canonical Architecture (Split Stage, Zero Overlap)
+    const s4A = stageA * envelope(t, sc(4).start + 0.05, sc(4).end - 0.05, 0.40, 0.40);
+    if (s4A > 0.01) {
+      const sc4 = sc(4);
+      const u4 = clamp((t - sc4.start) / Math.max(12, sc4.end - sc4.start));
+      const boundaryLock = smooth(0.32, 0.72, u4);
+      const scale4 = 0.84 * figureScale;
+
+      drawHomeArchitecture(cx, cy, scale4, t, s4A, {
+        focusPoint: FC,
+        reticle: 0.9,
+        origin: 0.75,
+        bigC: 0.85,
+        outerLoop: 0.85,
+        otherFrames: 0.45 * boundaryLock,
+        rf0: 1,
+        peers: 0.75,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: boundaryLock * 0.75,
+        intent: 0.7 + boundaryLock * 0.3,
+        intentProgress: 0.65 + boundaryLock * 0.35,
+        labels: 1,
+      });
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      // Epistemic Boundary Ring (DOT-B1) separating internal observation from outer ontological hypothesis
+      const bndR = 132 + 3 * Math.sin(t * 2.0);
+      circle(0, 0, bndR, lumen, s4A * (0.65 + 0.30 * boundaryLock), 2.2, [6, 5]);
+      pillLabel("EPISTEMIC PRIORITY · OBSERVATION IS PRIMARY", 0, -298, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: s4A * 0.95,
+        dotColor: lumen,
+        track: false,
+      });
+      pillLabel("ONTOLOGY · TESTABLE HYPOTHESIS (DOT-B1)", 0, 304, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s4A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 5: Single-Stage Canonical Architecture with Precision Map Reticle & Live Terrain Calibration
+    const mapA = stageA * envelope(t, sc(5).start + 0.05, sc(5).end - 0.05, 0.45, 0.45);
+    if (mapA > 0.01) {
+      const sc5 = sc(5);
+      const u5 = clamp((t - sc5.start) / Math.max(12, sc5.end - sc5.start));
+      const revise = smooth(0.45, 0.78, u5);
+
+      drawHomeArchitecture(cx, cy, 0.96 * figureScale, t, mapA, {
+        focusPoint: FC,
+        reticle: 0.95,
+        origin: 0,
+        bigC: 0,
+        outerLoop: 0,
+        otherFrames: 0,
+        rf0: 1,
+        peers: 0.65,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: 0.35 + revise * 0.55,
+        intent: 1,
+        intentProgress: 0.5 + revise * 0.5,
+        labels: 1,
+      });
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+
+      // Precision blueprint coordinate grid overlaid across the RF₀ terrain
+      for (let g = -160; g <= 160; g += 80) {
+        line([[-220, g], [220, g]], hairlineCol, mapA * 0.42, 1.0, 1, [4, 6]);
+        line([[g, -220], [g, 220]], hairlineCol, mapA * 0.42, 1.0, 1, [4, 6]);
+      }
+
+      // Rotating precision survey reticle & coordinate ticks over the canonical rings
+      const retR = 242;
+      circle(0, 0, retR, revise > 0.4 ? lumen : warmGold, mapA * 0.72, 1.6, [5, 6]);
+      for (let a = 0; a < 24; a++) {
+        const ang = (a / 24) * TAU + t * 0.08;
+        const innerT = a % 3 === 0 ? retR - 14 : retR - 7;
+        line(
+          [[Math.cos(ang) * innerT, Math.sin(ang) * innerT], [Math.cos(ang) * (retR + 6), Math.sin(ang) * (retR + 6)]],
+          a % 3 === 0 ? warmGold : emerald,
+          mapA * 0.78,
+          a % 3 === 0 ? 1.8 : 1.1,
+        );
+      }
+
+      // Old unrevised trajectory hitting terrain friction vs. Revised trajectory in Part B
+      const oldPath = [[-168, 92], [-42, 24], [84, -44], [168, -96]];
+      const newPath = [[-168, 92], [-42, 24], [28, 86], [124, 18], [168, -96]];
+      line(oldPath, threatAmber, mapA * (0.85 - revise * 0.45), 2.2, 1, [5, 6]);
+      dot(32, -16, 6.0, threatAmber, mapA * (0.92 - revise * 0.35));
+      circle(32, -16, 13 + 3 * Math.sin(t * 3.0), threatAmber, mapA * 0.55, 1.4);
+
+      if (revise > 0.02) {
+        line(newPath, lumen, mapA * revise * 0.96, 3.0, revise);
+        const uTr = (t * 0.62) % 1;
+        const seg = Math.min(3, Math.floor(uTr * 4));
+        const locU = (uTr * 4) - seg;
+        dot(mix(newPath[seg][0], newPath[seg + 1][0], locU), mix(newPath[seg][1], newPath[seg + 1][1], locU), 5.0, lumen, mapA * revise);
+      }
+
+      pillLabel("THE TERRAIN · REALITY FRAME (RF₀)", 0, -288, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: mapA * 0.94,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel(revise > 0.45 ? "THE MAP · UPDATED BY CONSEQUENCE" : "THE MAP · REVISABLE INSTRUMENT", 0, 296, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: mapA * 0.94,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 6: T × E Prerequisites (Primordial Time & Raw Information Source) → Big C Emergence
+    const s6A = stageA * envelope(t, sc(6).start + 0.05, sc(6).end - 0.05, 0.40, 0.40);
+    if (s6A > 0.01) {
+      const sc6 = sc(6);
+      const u6 = clamp((t - sc6.start) / Math.max(12, sc6.end - sc6.start));
+      const emBigC = smooth(0.05, 0.32, u6);
+      const emFrames = smooth(0.16, 0.52, u6);
+      const scale6 = 0.84 * figureScale;
+
+      drawHomeArchitecture(cx, cy, scale6, t, s6A, {
+        focusPoint: FC,
+        reticle: 0.88,
+        origin: 1,
+        bigC: Math.max(0.65, emBigC),
+        outerLoop: Math.max(0.65, emBigC),
+        otherFrames: 0.40 + emFrames * 0.55,
+        rf0: 0.50 + emFrames * 0.45,
+        peers: 0.30 + emFrames * 0.40,
+        littleC: 0.60 + emFrames * 0.40,
+        innerLoop: 0.60 + emFrames * 0.40,
+        awareness: 0.50 + emFrames * 0.40,
+        intent: 0.40 + emFrames * 0.45,
+        intentProgress: emFrames,
+        labels: 1,
+      });
+
+      // Raw E bits & Primordial T continuity streams outside Big C self-organizing inward
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(scale6, scale6);
+      for (let b = 0; b < 18; b++) {
+        const baseA = (b / 18) * TAU + t * (b % 2 === 0 ? 0.16 : -0.12);
+        const inPh = ((t * 0.38 + b / 18) % 1);
+        const rBit = mix(ARCH_R.origin + 24, ARCH_R.bigC, inPh * Math.max(0.45, emBigC));
+        const bx = Math.cos(baseA) * rBit;
+        const by = Math.sin(baseA) * rBit;
+        dot(bx, by, b % 3 === 0 ? 3.8 : 2.6, b % 2 === 0 ? originJade : warmGold, s6A * 0.82);
+      }
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      pillLabel("PREREQUISITES OUTSIDE Big C · T (TIME) × E (RAW BITS)", 0, -298, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s6A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("EMERGENT PATTERN · RAW INPUT → STRUCTURED OUTPUT", 0, 304, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: s6A * 0.95,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 7: T × E → Big C → RF₀ (Shared Physical Arena) → Distinct Reality Streams → Little c₁…cₙ
+    const s7A = stageA * envelope(t, sc(7).start + 0.05, sc(7).end - 0.05, 0.40, 0.40);
+    if (s7A > 0.01) {
+      const sc7 = sc(7);
+      const u7 = clamp((t - sc7.start) / Math.max(12, sc7.end - sc7.start));
+      const scale7 = 0.88 * figureScale;
+
+      drawHomeArchitecture(cx, cy, scale7, t, s7A, {
+        focusPoint: FC,
+        reticle: 0.9,
+        origin: 0.45,
+        bigC: 0.55,
+        outerLoop: 0.55,
+        otherFrames: 0.40,
+        rf0: 1,
+        peers: 1,
+        littleC: 1,
+        innerLoop: 1,
+        awareness: 1,
+        awarenessExpand: 0.35 + smooth(0.45, 0.90, u7) * 0.65,
+        intent: 1,
+        intentProgress: smooth(0.15, 0.75, u7),
+        labels: 1,
+      });
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      pillLabel("REALITY FRAME ZERO (RF₀) · SHARED LAWFUL ARENA", 0, -298, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s7A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("BIOLOGICAL INTERFACE · DISTINCT REALITY STREAMS", 0, 304, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: s7A * 0.95,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
+    }
+
+    // Scene 8: Living 5-Layer Concentric Organism + Installed Belief System Accretion
+    const paintingA = stageA * envelope(t, sc(8).start + 0.05, sc(8).end - 0.05, 0.55, 0.45);
+    if (paintingA > 0.01) {
+      drawPaintingVignette(cx, cy, figureScale, t, paintingA);
+    }
+
+    // Scene 9: Single-Stage Canonical Concentric Experience Loop (Pure Orbital Architecture)
+    const s89A = stageA * envelope(t, sc(9).start + 0.05, sc(9).end - 0.05, 0.40, 0.40);
+    if (s89A > 0.01) {
+      const sc9 = sc(9);
+      const u9 = clamp((t - sc9.start) / Math.max(14, sc9.end - sc9.start));
+      const reconsider = smooth(0.48, 0.64, u9);
+      const loopCol = reconsider > 0.5 ? lumen : threatAmber;
+
+      drawConcentricTrailerDiagram(cx, cy, 0.84 * figureScale, t, s89A);
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      const loopR = 206;
+      const stageAngles = [-Math.PI * 0.5, -Math.PI * 0.1, Math.PI * 0.3, Math.PI * 0.7, Math.PI * 1.1];
+      const stageNames = ["01 · INPUT", "02 · PAINTING", "03 · INTENT", "04 · ACTION", "05 · ΔCANVAS"];
+      const activeStage = Math.floor(((t * 0.68) % 5 + 5) % 5);
+
+      for (let i = 0; i < 5; i++) {
+        const a0 = stageAngles[i] + 0.18;
+        const a1 = (i === 4 ? stageAngles[0] + TAU : stageAngles[i + 1]) - 0.18;
+        const isAct = i === activeStage;
+        arcSegment(0, 0, loopR, a0, a1, isAct ? loopCol : warmGold, s89A * (isAct ? 0.96 : 0.58), isAct ? 3.2 : 2.0);
+        const endX = Math.cos(a1) * loopR;
+        const endY = Math.sin(a1) * loopR;
+        arrowHead(endX, endY, a1 + Math.PI * 0.5, 7.5, isAct ? loopCol : warmGold, s89A * 0.92, true);
+
+        const uPkt = ((t * 0.75 + i * 0.2) % 1);
+        const pAng = mix(a0, a1, uPkt);
+        dot(Math.cos(pAng) * loopR, Math.sin(pAng) * loopR, isAct ? 5.2 : 3.6, loopCol, s89A * 0.95);
+
+        const nAng = stageAngles[i];
+        const nx = Math.cos(nAng) * loopR;
+        const ny = Math.sin(nAng) * loopR;
+        line([[Math.cos(nAng) * 146, Math.sin(nAng) * 146], [nx, ny]], isAct ? loopCol : hairlineCol, s89A * (isAct ? 0.78 : 0.36), 1.6, 1, [3, 4]);
+
+        const badgeW = 132;
+        const badgeH = 30;
+        roundRect(nx - badgeW / 2, ny - badgeH / 2, badgeW, badgeH, 15, {
+          fill: cardFill,
+          stroke: isAct ? loopCol : warmGold,
+          lineWidth: isAct ? 2.0 : 1.3,
+          alpha: s89A * (isAct ? 0.98 : 0.90),
+        });
+        type(stageNames[i], nx, ny + 5, 12.5, {
+          color: isAct ? loopCol : deepInk,
+          alpha: s89A * (isAct ? 1.0 : 0.88),
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "center",
+          track: false,
+        });
+      }
+      pillLabel("FIVE-STEP EXPERIENCE LOOP · INPUT TO ΔCANVAS", 0, -296, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s89A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel(
+        reconsider > 0.5 ? "RATIONAL INSPECTION · OPEN INQUIRY" : "UNEXAMINED LOOP · BELIEF CONFIRMS ITSELF",
+        0,
+        302,
+        14.5,
+        {
+          color: loopCol,
+          border: reconsider > 0.5
+            ? (isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)")
+            : (isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)"),
+          alpha: s89A * 0.95,
+          dotColor: loopCol,
+          track: false,
+        },
+      );
+      ctx.restore();
+    }
+
+    // Scene 10: High-Entropy Rust (Fear Made Architectural) + 10.2 Three Traps Telemetry + 10.3 Collapsed Hypothesis Space
+    const s10A = stageA * envelope(t, sc(10).start + 0.05, sc(10).end - 0.05, 0.40, 0.40);
+    if (s10A > 0.01) {
+      const sc10 = sc(10);
+      const u10 = clamp((t - sc10.start) / Math.max(12, sc10.end - sc10.start));
+      const trapsWindow = envelope(t, 625.0, 646.5, 0.45, 0.45);
+      const ringWindow = 1 - trapsWindow;
+
+      if (ringWindow > 0.01) {
+        const noticeShift = smooth(0.76, 0.94, u10);
+        drawConcentricTrailerDiagram(cx, cy, (0.92 + noticeShift * 0.04) * figureScale, t, s10A * ringWindow);
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(figureScale, figureScale);
+        if (noticeShift > 0.02) {
+          const obsR = 232 + 6 * Math.sin(t * 1.8);
+          circle(0, 0, obsR, lumen, s10A * ringWindow * noticeShift * 0.88, 2.4, [6, 5]);
+          circle(0, 0, obsR + 14, warmGold, s10A * ringWindow * noticeShift * 0.55, 1.5);
+        }
+        pillLabel("ARCHITECTURAL FEAR · HIGH CANVAS ENTROPY", 0, -292, 14.5, {
+          color: threatAmber,
+          border: isLight ? "rgba(158, 58, 41, 0.48)" : "rgba(200, 104, 82, 0.55)",
+          alpha: s10A * ringWindow * 0.95,
+          dotColor: threatAmber,
+          track: false,
+        });
+        pillLabel("COLLAPSED HYPOTHESIS SPACE · CONFORMITY GATING", 0, 298, 14.5, {
+          color: warmGold,
+          border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+          alpha: s10A * ringWindow * 0.95,
+          dotColor: warmGold,
+          track: false,
+        });
+        ctx.restore();
+      }
+
+      if (trapsWindow > 0.01) {
+        const tAlpha = s10A * trapsWindow;
+        const uTraps = clamp((t - 625.0) / 21.5);
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(figureScale, figureScale);
+
+        // Top Visual Plate: Contracted Observer Cell Inside Three-Trap Capture Cage ([-336, -324, 672, 296])
+        roundRect(-336, -324, 672, 296, 18, {
+          fill: cardFill,
+          stroke: isLight ? "rgba(158, 58, 41, 0.38)" : "rgba(200, 104, 82, 0.45)",
+          lineWidth: 1.6,
+          alpha: tAlpha,
+        });
+        type("THE ARCHITECTURE OF MODERN CAPTURE · THREE STRUCTURAL TRAPS", -306, -286, 14, {
+          color: threatAmber,
+          alpha: tAlpha * 0.96,
+          family: "JetBrains Mono",
+          weight: 700,
+          align: "left",
+          track: false,
+        });
+
+        // Central contracted Little c cell at (0, -162) surrounded by 3 inward-compressing trap nodes
+        const cageY = -158;
+        circle(0, cageY, 88, threatAmber, tAlpha * 0.45, 1.5, [5, 5]);
+        circle(0, cageY, 52 + 3 * Math.sin(t * 4.2), warmGold, tAlpha * 0.65, 1.6, [3, 4]);
+        drawOrganicCell(0, cageY, 21, t * 1.6, tAlpha, {
+          phase: 0.4,
+          withSurface: true,
+          tint: threatAmber,
+          coreRadius: 4.8,
+        });
+        const trapNodes = [
+          { x: -214, y: -212, label: "ATTENTION FEEDS", col: threatAmber },
+          { x: 214, y: -212, label: "DEBT HANDCUFFS", col: warmGold },
+          { x: 0, y: -64, label: "TRIBAL POLICING", col: threatAmber },
+        ];
+        trapNodes.forEach((tn, idx) => {
+          line([[tn.x, tn.y], [0, cageY]], tn.col, tAlpha * 0.68, 2.0, 1, [4, 5]);
+          const uP = ((t * 0.78 + idx * 0.33) % 1);
+          dot(mix(tn.x, 0, uP), mix(tn.y, cageY, uP), 4.5, tn.col, tAlpha * 0.95);
+          dot(tn.x, tn.y, 5.5, tn.col, tAlpha);
+          type(tn.label, tn.x, tn.y + (idx === 2 ? 22 : -14), 12.5, {
+            color: tn.col,
+            alpha: tAlpha * 0.95,
+            family: "JetBrains Mono",
+            weight: 700,
+            align: "center",
+            track: false,
+          });
+        });
+
+        // Three Empirical Capture Telemetry Cards below
+        const trapCards = [
+          {
+            y: -4,
+            stat: "47s SPAN",
+            color: threatAmber,
+            title: "01 // ENGINEERED ATTENTION EXTRACTION (4.8 HRS/DAY)",
+            sub: "Algorithmic feeds fracture sustained thought into reactive loops.",
+          },
+          {
+            y: 106,
+            stat: "$17.9T DEBT",
+            color: warmGold,
+            title: "02 // ECONOMIC GOLDEN HANDCUFFS (60%+ PRECARIOUS)",
+            sub: "Household and credit leverage keep citizens too indebted to refuse.",
+          },
+          {
+            y: 216,
+            stat: "62% SILENT",
+            color: threatAmber,
+            title: "03 // TRIBAL EXCOMMUNICATION & SELF-CENSORSHIP",
+            sub: "Nearly two-thirds self-censor honest questions to protect belonging.",
+          },
+        ];
+        trapCards.forEach((card, idx) => {
+          const cIn = smooth(idx * 0.12, 0.28 + idx * 0.12, uTraps);
+          if (cIn <= 0.01) return;
+          roundRect(-336, card.y, 672, 94, 14, {
+            fill: cardFill,
+            stroke: hairlineCol,
+            lineWidth: 1.3,
+            alpha: tAlpha * cIn,
+          });
+          roundRect(-336, card.y, 6, 94, 3, {
+            fill: card.color,
+            alpha: tAlpha * cIn,
+          });
+          type(card.stat, -314, card.y + 56, 22, {
+            color: card.color,
+            alpha: tAlpha * cIn,
+            family: "JetBrains Mono",
+            weight: 700,
+            align: "left",
+            track: false,
+          });
+          line([[-132, card.y + 16], [-132, card.y + 78]], hairlineCol, tAlpha * cIn * 0.75, 1.1);
+          type(card.title, -112, card.y + 38, 13.5, {
+            color: deepInk,
+            alpha: tAlpha * cIn * 0.96,
+            family: "JetBrains Mono",
+            weight: 700,
+            align: "left",
+            maxWidth: 428,
+            track: false,
+          });
+          type(card.sub, -112, card.y + 68, 14.5, {
+            color: bodyCopyCol,
+            alpha: tAlpha * cIn * 0.94,
+            family: "Inter",
+            weight: 400,
+            align: "left",
+            maxWidth: 428,
+            track: false,
+          });
+        });
+
+        ctx.restore();
       }
     }
 
-    const mapA = stageA * envelope(t, sc(5).start + 0.05, sc(5).end - 0.05, 0.55, 0.45);
-    drawMapVignette(cx, cy, figureScale, t, mapA);
-
-    // Scene 6: Home Screen Macro Architecture (`Big C[T, E] ↻`)
-    const s6A = stageA * envelope(t, sc(6).start + 0.05, sc(6).end - 0.05, 0.40, 0.40);
-    if (s6A > 0.01) {
-      const em6 = smooth(sc(6).start + 0.4, sc(6).start + 4.5, t);
-      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s6A, {
-        focusPoint: FC,
-        reticle: 0.85,
-        origin: 1,
-        bigC: em6,
-        outerLoop: em6,
-        otherFrames: em6 * 0.65,
-        rf0: 0,
-        peers: 0,
-        littleC: em6 * 0.72,
-        innerLoop: em6 * 0.72,
-        awareness: em6 * 0.55,
-        intent: 0,
-        labels: 1,
-      });
-    }
-
-    // Scene 7: Complete Nested Architecture (`Big C[T, E] → RF₀ (Frame) → Reality Stream → Little c₁…cₙ`)
-    const s7A = stageA * envelope(t, sc(7).start + 0.05, sc(7).end - 0.05, 0.40, 0.40);
-    if (s7A > 0.01) {
-      const em7 = smooth(sc(7).start + 0.4, sc(7).start + 4.5, t);
-      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s7A, {
-        focusPoint: FC,
-        reticle: 0.9,
-        origin: 1,
-        bigC: 1,
-        outerLoop: 1,
-        otherFrames: 1,
-        rf0: 1,
-        peers: 1,
-        littleC: 1,
-        innerLoop: 1,
-        awareness: 1,
-        awarenessExpand: 0.25 * em7,
-        intent: 1,
-        intentProgress: em7,
-        labels: 1,
-      });
-    }
-
-    const paintingA = stageA * envelope(t, sc(8).start + 0.05, sc(8).end - 0.05, 0.55, 0.45);
-    drawPaintingVignette(cx, cy, figureScale, t, paintingA);
-
-    // An ordinary exchange makes each step, and the carried learning, visible.
-    const s89A = stageA * envelope(t, sc(9).start + 0.05, sc(9).end - 0.05, 0.40, 0.40);
-    drawExperienceLoopVignette(cx, cy, figureScale, t, s89A);
-
-    // Scene 10: Concentric 5-Layer Organism Radar — High Entropy Rust (When Fear Takes the Lead)
-    const s10A = stageA * envelope(t, sc(10).start + 0.05, sc(10).end - 0.05, 0.40, 0.40);
-    if (s10A > 0.01) {
-      drawConcentricTrailerDiagram(cx, cy, 0.94 * figureScale, t, s10A);
-    }
-
-    // Scene 11: Concentric 5-Layer Organism Radar — Golden Awakening & Low-Entropy Coherence (Love, Responsibility, and Repair)
+    // Scene 11: Golden Awakening & Low-Entropy Coherence (Love as Intellectual Courage)
     const s11A = stageA * envelope(t, sc(11).start + 0.05, sc(11).end - 0.05, 0.40, 0.40);
     if (s11A > 0.01) {
       drawConcentricTrailerDiagram(cx, cy, 0.94 * figureScale, t, s11A);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(figureScale, figureScale);
+      pillLabel("LOW CANVAS ENTROPY (LOVE) · FREEDOM FROM FEAR", 0, -292, 14.5, {
+        color: warmGold,
+        border: isLight ? "rgba(130, 84, 36, 0.48)" : "rgba(184, 140, 84, 0.55)",
+        alpha: s11A * 0.95,
+        dotColor: warmGold,
+        track: false,
+      });
+      pillLabel("INCORRUPTIBLE REASON · OPEN HYPOTHESIS SPACE", 0, 298, 14.5, {
+        color: lumen,
+        border: isLight ? "rgba(23, 107, 77, 0.48)" : "rgba(84, 184, 145, 0.55)",
+        alpha: s11A * 0.95,
+        dotColor: lumen,
+        track: false,
+      });
+      ctx.restore();
     }
 
-    // Scene 12: Shared inquiry opens across the stage before the community closing.
-    const s12A = stageA * smooth(sc(12).start + 0.05, sc(12).start + 0.9, t);
-    if (s12A > 0.01) {
-      drawHomeArchitecture(cx, cy, 0.86 * figureScale, t, s12A, {
+    // Scene 12: Full Nested Digital Organism (Upper Stage, Zero Overlap) → Silent Closing Card
+    const s12FinaleA = stageA * smooth(sc(12).start + 0.05, sc(12).start + 0.9, t);
+    if (s12FinaleA > 0.01) {
+      const sc12 = sc(12);
+      const u12 = clamp((t - sc12.start) / Math.max(12, sc12.end - sc12.start - 7.0));
+      const pullToMacro = smooth(0.18, 0.62, u12);
+      const scale12 = 0.88 * figureScale; // 0.88 * 0.58 = 0.51 -> max radius 170px, y in [106, 446], well above text at 580!
+      drawHomeArchitecture(cx, cy, scale12, t, s12FinaleA, {
         focusPoint: FC,
         reticle: 0.9,
-        origin: 1,
-        bigC: 1,
-        outerLoop: 1,
-        otherFrames: 1,
+        origin: 0.45 + 0.55 * pullToMacro,
+        bigC: 0.55 + 0.45 * pullToMacro,
+        outerLoop: 0.55 + 0.45 * pullToMacro,
+        otherFrames: pullToMacro,
         rf0: 1,
         peers: 1,
         littleC: 1,
         innerLoop: 1,
         awareness: 1,
-        awarenessExpand: 0.75,
+        awarenessExpand: 0.85,
         intent: 1,
         intentProgress: 1,
         labels: 1,
@@ -3454,7 +5545,7 @@ function inquiryAnimation({
   function captions(t) {
     if (isTrailer) {
       const focus = studioFocus(t);
-      const last = video.captions.length - 1;
+      const lastSub = trailerSubScreens.length - 1;
       const rustCol = rgbCss(RGB_RUST, 1);
       const goldCol = rgbCss(RGB_GOLD, 1);
 
@@ -3484,7 +5575,7 @@ function inquiryAnimation({
           caret: pHead > 0.01 && pHead < 0.995,
           caretColor: emerald,
         });
-        type("Consciousness: A Digital Organism", 960, 816, 30, {
+        type("A School of Rational Thought", 960, 816, 30, {
           color: warmGold,
           alpha: openSplashAlpha * 0.94,
           family: "Inter",
@@ -3495,23 +5586,13 @@ function inquiryAnimation({
         });
       }
 
-      // ── CLOSING COMMUNITY SPLASH CENTERED LOCKUP (Final ~7.0s of Scene 12) ──
+      // ── SILENT CLOSING CARD CENTERED LOCKUP (Final ~7.0s of Scene 12) ──
       if (focus.toMark > 0.01) {
         const cStart = video.duration - 6.8;
         const cDt = Math.max(0, t - cStart);
         const cAlpha = focus.toMark;
-        const pEye = clamp(cDt / 0.45);
         const pUrl = clamp((cDt - 0.28) / 0.55);
         const pSub = clamp((cDt - 0.78) / 0.68);
-        type("See what is there. See what you added. Paint again.", 960, 672, 28, {
-          color: emerald,
-          alpha: cAlpha * 0.96,
-          family: "Inter",
-          weight: 500,
-          letterSpacing: "0px",
-          align: "center",
-          progress: pEye,
-        });
         type("DOTHEORY.ORG", 960, 748, 72, {
           color: deepInk,
           alpha: cAlpha,
@@ -3523,7 +5604,7 @@ function inquiryAnimation({
           caret: pUrl > 0.01 && pUrl < 0.995,
           caretColor: warmGold,
         });
-        type("Let us rebuild our community—together.", 960, 814, 38, {
+        type("Take your time. Do the work.", 960, 814, 38, {
           color: warmGold,
           alpha: cAlpha * 0.98,
           family: "Inter",
@@ -3535,15 +5616,15 @@ function inquiryAnimation({
         });
       }
 
-      video.captions.forEach((caption, index) => {
-        const end = index === last ? video.duration - 7.1 : caption.end - 0.05;
-        const start = index === 0 ? 5.05 : caption.start + 0.05;
-        const alpha = envelope(t, start, end, 0.6, 0.5) * (1 - focus.toMark);
+      trailerSubScreens.forEach((caption, index) => {
+        const end = index === lastSub ? video.duration - 7.1 : caption.end - 0.04;
+        const start = caption.start + 0.12;
+        const alpha = envelope(t, start, end, 0.35, 0.38) * (1 - focus.toMark);
         if (alpha < 0.001) return;
 
-        const placement = trailerPlacements[index];
-        const [x, baseY, width, size, align] = placement.text;
-        const rise = 8 * (1 - smooth(start, start + 0.75, t));
+        const dt = Math.max(0, t - start);
+        const [x, baseY, width, size, align] = caption.text;
+        const rise = 8 * (1 - smooth(start, start + 0.65, t));
         const tagCol = caption.mode === "high_entropy" ? rustCol
           : caption.mode === "coherence" || caption.mode === "finale" ? goldCol : emerald;
         const left = align === "center" ? x - width / 2 : x;
@@ -3551,29 +5632,45 @@ function inquiryAnimation({
         const lineHeight = size * 1.22;
         const headlineBottom = baseY + (headlineLines.length - 1) * lineHeight + size * 0.28;
         textRegion = { left: left - 2, right: left + width + 2, top: baseY - 106, bottom: headlineBottom + 14, role: "headline" };
+        if (caption.actHeader) {
+          const pEye = clamp(dt / 0.32);
+          type(caption.actHeader, x, baseY - 72 + rise, 19, {
+            color: tagCol, alpha: alpha * 0.94, family: "JetBrains Mono", weight: 600,
+            letterSpacing: "0.06em", align, maxWidth: width,
+            progress: pEye,
+          });
+        }
         headlineLines.forEach((copy, lineIndex) => {
+          const pLine = clamp((dt - (0.12 + lineIndex * 0.30)) / 0.42);
           type(copy, x, baseY + lineIndex * lineHeight + rise, size, {
             color: deepInk, alpha, family: "Inter", weight: 500,
             letterSpacing: "-0.012em", align, maxWidth: width,
             focusTerm: caption.focusTerm || null, focusColor: tagCol,
-            progress: 1,
+            progress: pLine,
+            caret: pLine > 0.01 && pLine < 0.995,
+            caretColor: tagCol,
           });
         });
 
-        const noteSize = 40;
+        const noteSize = 38;
         const noteWidth = align === "center" ? Math.min(width, 1250) : width;
         const noteLeft = align === "center" ? x - noteWidth / 2 : x;
         const noteLeading = noteSize * 1.45;
-        const sourceNotes = index === 4 || index === 8 ? [] : caption.notes || (caption.note ? [caption.note] : []);
+        const sourceNotes = caption.notes || (caption.note ? [caption.note] : []);
         const notes = align === "center"
           ? sourceNotes.flatMap((copy) => wrapFilmCopy(copy, noteWidth, noteSize))
           : wrapFilmCopy(sourceNotes.join(" "), noteWidth, noteSize);
-        const noteY = Math.min(placement.noteY || headlineBottom + 68, 944, 1006 - (notes.length - 1) * noteLeading);
+        const noteY = Math.min(caption.noteY || headlineBottom + 64, 944, 1006 - (notes.length - 1) * noteLeading);
+        const noteBaseDelay = 0.12 + headlineLines.length * 0.28 + 0.10;
         textRegion = { left: noteLeft - 2, right: noteLeft + noteWidth + 2, top: noteY - noteSize, bottom: noteY + (notes.length - 1) * noteLeading + 12, role: "notes" };
         notes.forEach((copy, lineIndex) => {
+          const pNote = clamp((dt - (noteBaseDelay + lineIndex * 0.28)) / 0.40);
           type(copy, x, noteY + lineIndex * noteLeading + rise, noteSize, {
             color: bodyCopyCol, alpha: alpha * 0.96, family: "Inter", weight: 400,
-            align, maxWidth: noteWidth, progress: 1,
+            align, maxWidth: noteWidth,
+            progress: pNote,
+            caret: pNote > 0.01 && pNote < 0.995,
+            caretColor: tagCol,
           });
         });
         textRegion = null;
@@ -3794,27 +5891,49 @@ function inquiryAnimation({
 
   function sectionTitle(t) {
     if (!isTrailer || diagramOnly) return;
-    const scene = (video.scenes || []).find(item => t >= item.start && t < item.start + 2.2);
+    const scene = (video.scenes || []).find((item) => t >= item.start && t < item.start + 1.95);
     if (!scene) return;
     const elapsed = t - scene.start;
-    const shade = 1 - smooth(1.65, 2.2, elapsed);
-    const titleAlpha = 1 - smooth(1.5, 2.05, elapsed);
+    const shade = smooth(0, 0.22, elapsed) * (1 - smooth(1.38, 1.92, elapsed));
+    const titleAlpha = smooth(0.05, 0.28, elapsed) * (1 - smooth(1.32, 1.85, elapsed));
+    if (titleAlpha <= 0.005) return;
+
+    // Translucent theme-aware radial glass veil so the live architectural geometry remains visible underneath!
     ctx.save();
-    ctx.globalAlpha = shade;
-    ctx.fillStyle = "#040706";
+    ctx.globalAlpha = shade * 0.78;
+    const veil = ctx.createRadialGradient(960, 520, 40, 960, 520, 920);
+    if (isLight) {
+      veil.addColorStop(0, "rgba(246, 250, 248, 0.94)");
+      veil.addColorStop(0.65, "rgba(239, 246, 242, 0.78)");
+      veil.addColorStop(1, "rgba(239, 246, 242, 0.32)");
+    } else {
+      veil.addColorStop(0, "rgba(4, 9, 7, 0.92)");
+      veil.addColorStop(0.65, "rgba(4, 8, 7, 0.74)");
+      veil.addColorStop(1, "rgba(2, 4, 3, 0.28)");
+    }
+    ctx.fillStyle = veil;
     ctx.fillRect(0, 0, W, H);
     ctx.restore();
-    if (shade > 0.999) textBounds.length = 0;
+
+    // Expanding concentric architectural ring around the section title
+    const ringR = mix(148, 286, smooth(0, 1.85, elapsed));
+    circle(960, 520, ringR, emerald, titleAlpha * 0.34, 1.4, [5, 8]);
+    circle(960, 520, ringR * 0.76, warmGold, titleAlpha * 0.24, 1.1, [2, 6]);
+
+    if (elapsed < 1.68) textBounds.length = 0;
     const raw = scene.actHeader.replace(/^\d+\s*\/\/\s*/, "").toLowerCase();
     const title = raw.charAt(0).toUpperCase() + raw.slice(1);
     const lines = wrapFilmCopy(title, 1450, 72, 500);
     const startY = 552 - (lines.length - 1) * 46;
+    const pSec = clamp(elapsed / 0.36);
+    const pTitle = clamp((elapsed - 0.12) / 0.58);
     textRegion = { left: 160, right: 1760, top: 280, bottom: 820, role: "section title" };
     type(`Section ${String(scene.number).padStart(2, "0")}`, 960, startY - 112, 22, {
-      color: "#91a89e", alpha: titleAlpha, family: "Inter", weight: 500, align: "center", letterSpacing: "0px",
+      color: emerald, alpha: titleAlpha, family: "Inter", weight: 500, align: "center", letterSpacing: "0px", progress: pSec,
     });
     lines.forEach((copy, index) => type(copy, 960, startY + index * 92, 72, {
-      color: "#edf3f0", alpha: titleAlpha, family: "Inter", weight: 500, align: "center", maxWidth: 1450, letterSpacing: "-0.012em",
+      color: deepInk, alpha: titleAlpha, family: "Inter", weight: 500, align: "center", maxWidth: 1450, letterSpacing: "-0.012em",
+      progress: pTitle, caret: pTitle > 0.01 && pTitle < 0.995, caretColor: warmGold,
     }));
     textRegion = null;
   }
@@ -3826,7 +5945,6 @@ function inquiryAnimation({
     background(t);
     project(t);
     if (!markOnly && !diagramOnly) captions(t);
-    sectionTitle(t);
     ctx.restore();
     if (!targetCanvas && typeof window !== "undefined") {
       window.inquiryTextBounds = textBounds.map((entry) => ({ ...entry }));
@@ -3845,7 +5963,7 @@ function inquiryAnimation({
   };
   // Canvas-only text does not request a face until it is drawn. Load the film's
   // actual weights before its first exported frame instead of accepting fallback.
-  const filmFaces = isTrailer ? ['400 40px "Inter"', '500 64px "Inter"']
+  const filmFaces = isTrailer ? ['400 40px "Inter"', '500 64px "Inter"', '600 20px "JetBrains Mono"']
     : ['400 40px "Inter"', '700 64px "Inter"', '700 20px "JetBrains Mono"'];
   window.inquiryReady = Promise.all([document.fonts.ready, ...filmFaces.map(face => document.fonts.load(face))]).then(() => {
     renderFrame(0);

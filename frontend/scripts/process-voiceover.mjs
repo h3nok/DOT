@@ -67,7 +67,7 @@ export async function detectRecordingScenes(inputPath, expectedCount, {
 }
 
 export function findSceneRecording(files, number) {
-  const pattern = new RegExp(`^(?:(?:raw-scene-|raw-|take-|scene-)?0?)${number}\\.(?:m4a|wav|mp3|aac|ogg|flac|mp4)$`, "i");
+  const pattern = new RegExp(`^(?:(?:raw-scene-|raw-|take-|scene-|voice[\\s_-]*)?0*)${number}\\.(?:m4a|wav|mp3|aac|ogg|flac|mp4)$`, "i");
   const matches = files.filter((file) => pattern.test(file));
   if (matches.length !== 1) {
     throw new Error(
