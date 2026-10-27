@@ -1,171 +1,133 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import FilmsPage from "./FilmsPage";
 import { PublicPageTestProvider } from "../../test/PublicPageTestProvider";
 import filmsData from "../../content/films.json";
-import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
-import { INQUIRY_VIDEOS } from "../../../scripts/channel-inquiry-video.mjs";
+import { doctrineNodes } from "../../content/doctrine/doctrineData";
+import { CONCEPT_MOTIFS } from "./conceptFilms";
 
-const renderFilmsPage = (initialEntry = "/films") =>
-  render(
+const renderFilmsPage = (initialEntry = "/academy/films") => {
+  window.history.replaceState(null, "", initialEntry);
+  return render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <FilmsPage />
     </MemoryRouter>,
     { wrapper: PublicPageTestProvider },
   );
+};
+
+afterEach(() => {
+  window.history.replaceState(null, "", "/");
+});
 
 describe("FilmsPage", () => {
-  it("renders the Screening Room, film selector tabs, and marks Films current in primary nav", () => {
-    renderFilmsPage("/films");
+  it("opens the screening room on the first concept's film and marks Academy current in primary nav", () => {
+    renderFilmsPage();
 
+    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
     expect(
       within(screen.getByRole("navigation", { name: "Primary" })).getByRole(
         "link",
-        { name: "Films" },
+        { name: "Academy" },
       ),
     ).toHaveAttribute("aria-current", "page");
+    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
 
+    expect(screen.getByRole("heading", { level: 1, name: filmsData.title })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 1, name: filmsData.title }),
+      screen.getByRole("heading", { level: 2, name: "A short film for each concept" }),
     ).toBeInTheDocument();
-
-    const tablist = screen.getByRole("tablist", {
-      name: "Select film to screen",
-    });
-    const tabs = within(tablist).getAllByRole("tab");
-    expect(tabs).toHaveLength(3);
-    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
-    expect(tabs[0]).toHaveTextContent(
-      filmsData.screeningFilms[0].title,
-    );
-
-    // Switch to FILM 02 (30s Identity Film)
-    fireEvent.click(tabs[1]);
-    expect(tabs[1]).toHaveAttribute("aria-selected", "true");
-    expect(
-      screen.getByRole("heading", {
-        level: 3,
-        name: "Consciousness: A Digital Organism",
-      }),
-    ).toBeInTheDocument();
+    const first = doctrineNodes[0];
+    expect(screen.getByRole("heading", { level: 3, name: first.title })).toBeInTheDocument();
+    expect(screen.getByText(first.oneLine.split(" ")[0])).toBeInTheDocument();
   });
 
-  it("enforces Law 9: loads zero third-party iframes and offers YouTube only as a link while no film is uploaded", () => {
-    const { container } = renderFilmsPage("/films");
+  it("offers one film for every concept in the concept map, in the map's order", () => {
+    renderFilmsPage();
+
+    const index = screen.getByRole("navigation", { name: "Concept films" });
+    const items = within(index).getAllByRole("button");
+    expect(items).toHaveLength(doctrineNodes.length);
+    doctrineNodes.forEach((node, position) => {
+      expect(items[position]).toHaveTextContent(node.title);
+      expect(CONCEPT_MOTIFS[node.id]).toBeDefined();
+    });
+    expect(items[0]).toHaveAttribute("aria-current", "true");
+
+    fireEvent.click(items[9]);
+    expect(items[9]).toHaveAttribute("aria-current", "true");
+    expect(items[0]).not.toHaveAttribute("aria-current");
+    expect(
+      screen.getByRole("heading", { level: 3, name: doctrineNodes[9].title }),
+    ).toBeInTheDocument();
+    expect(window.location.search).toBe(`?concept=${doctrineNodes[9].id}`);
+  });
+
+  it("opens the film a link asks for and leads from it into the book and the concept map", () => {
+    renderFilmsPage("/academy/films?concept=big-c");
+
+    const bigC = doctrineNodes.find((node) => node.id === "big-c")!;
+    expect(screen.getByRole("heading", { level: 3, name: bigC.title })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: CONCEPT_MOTIFS["big-c"].description }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: `Read the passage · ${bigC.source.sectionTitle}` }),
+    ).toHaveAttribute("href", bigC.source.href);
+    expect(screen.getByRole("link", { name: "Open in the concept map" }))
+      .toHaveAttribute("href", "/doctrine/big-c");
+
+    fireEvent.click(screen.getByRole("button", { name: `Next film: ${doctrineNodes[3].title}` }));
+    expect(screen.getByRole("heading", { level: 3, name: doctrineNodes[3].title })).toBeInTheDocument();
+  });
+
+  it("keeps every film silent: no media elements, no sound or voiceover controls", () => {
+    const { container } = renderFilmsPage();
+
+    expect(container.querySelector("audio, video, iframe")).toBeNull();
+    expect(screen.queryByRole("button", { name: /voiceover|mute|unmute/i })).toBeNull();
+    expect(screen.getByText("Silent")).toBeInTheDocument();
+    expect(container.querySelector(".films-play-hero-btn")).toBeInTheDocument();
+  });
+
+  it("starts a film only when asked, and the film never moves on by itself", () => {
+    const { container } = renderFilmsPage();
+    const first = doctrineNodes[0];
+
+    expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: `Play the ${first.title} film (0:16, silent)` }));
+    expect(screen.getByRole("button", { name: "Pause film" })).toBeInTheDocument();
+    expect(container.querySelector(".films-play-hero-btn")).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("slider", { name: "Seek timeline in seconds" }), {
+      target: { value: "16" },
+    });
+    expect(screen.getByRole("heading", { level: 3, name: first.title })).toBeInTheDocument();
+  });
+
+  it("enforces Law 9: loads zero third-party iframes and offers YouTube only as a link", () => {
+    const { container } = renderFilmsPage();
 
     expect(container.querySelector("iframe")).toBeNull();
     expect(screen.getByText(filmsData.privacyNote)).toBeInTheDocument();
-    // The privacy-mode embed is reachable only from a film with a YouTube upload.
-    expect(screen.queryByRole("button", { name: "YouTube" })).toBeNull();
     expect(
       screen.getByRole("link", { name: /@dotheory on YouTube/ }),
     ).toHaveAttribute("href", "https://www.youtube.com/@dotheory");
   });
 
-  it("lets a phone reader choose a scene without starting playback", () => {
-    renderFilmsPage("/films");
-    const scenes = screen.getByRole("combobox", { name: "Jump to trailer scene" });
-    fireEvent.change(scenes, { target: { value: "scene-11" } });
+  it("lets each series episode open its concept's film", () => {
+    renderFilmsPage();
 
-    expect(scenes).toHaveValue("scene-11");
-    expect(screen.getByRole("button", { name: "Play film" })).toBeInTheDocument();
-    expect(screen.getByRole("button", {
-      name: "Jump to Scene 11: 11 // LOVE, RESPONSIBILITY, AND REPAIR",
-    })).toHaveAttribute("data-active", "true");
-    expect(screen.getByRole("slider", { name: "Seek timeline in seconds" }))
-      .toHaveAttribute("aria-valuetext", expect.stringContaining(`of ${filmsData.screeningFilms[0].duration.padStart(5, "0")}`));
-  });
-
-  it("connects every trailer act to its timestamp and Book One chapter, and exposes the synchronized transcript", () => {
-    renderFilmsPage("/films");
-
-    const actsList = screen.getByRole("list", {
-      name: "Film acts and chapter timestamps",
-    });
-    const actItems = within(actsList).getAllByRole("listitem");
-    expect(actItems).toHaveLength(4);
-
+    fireEvent.click(screen.getByRole("button", { name: "Watch the film: Limits and Unpaid Debts" }));
     expect(
-      within(actsList).getByRole("link", {
-        name: "Chapter 1 · The Digital Organism",
-      }),
-    ).toHaveAttribute(
-      "href",
-      "/book/digital-organism-theory/the-digital-organism",
-    );
-    expect(
-      within(actsList).getByRole("link", {
-        name: "Chapter 6 · The Painting",
-      }),
-    ).toHaveAttribute("href", "/book/digital-organism-theory/the-painting");
-
-    const transcriptSummary = screen.getByText("Read the transcript");
-    fireEvent.click(transcriptSummary);
-    const transcript = screen.getByRole("list", { name: "Film transcript" });
-    const trailer = INQUIRY_VIDEOS.find((video) => video.name === "inquiry-trailer")!;
-    expect(within(transcript).getAllByRole("listitem")).toHaveLength(trailer.captions.length);
-    for (const caption of trailer.captions) {
-      expect(within(transcript).getByText(caption.primaryStatement!)).toBeInTheDocument();
-    }
-    expect(
-      screen.getByRole("button", {
-        name: "Jump to Scene 11: 11 // LOVE, RESPONSIBILITY, AND REPAIR",
-      }),
+      screen.getByRole("heading", { level: 3, name: "Limits and Unpaid Debts" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", {
-        name: "Disable synchronized voiceover",
-      }),
-    ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("keeps claim levels available in a closed disclosure", () => {
-    renderFilmsPage("/films");
-    const summary = screen.getByText("About this film’s claims");
-    const disclosure = summary.closest("details");
-    expect(disclosure).not.toHaveAttribute("open");
-    fireEvent.click(summary);
-    expect(disclosure).toHaveAttribute("open");
-    expect(disclosure).toHaveTextContent(filmsData.screeningFilms[0].claimLevels.join(" · "));
-    fireEvent.click(summary);
-    expect(disclosure).not.toHaveAttribute("open");
-  });
-
-  it("shows spoken caption words independently of narration and clears them after the final cue", () => {
-    const { container } = renderFilmsPage("/films");
-    fireEvent.click(screen.getByRole("button", { name: "Show synchronized caption bar" }));
-    fireEvent.click(screen.getByRole("button", { name: "Disable synchronized voiceover" }));
-    const timeline = screen.getByRole("slider", { name: "Seek timeline in seconds" });
-    const first = spokenTrailerCaptions[0];
-    fireEvent.change(timeline, { target: { value: String(first.startSeconds + 0.05) } });
-    const caption = container.querySelector(".films-live-caption-lines");
-    expect(caption).toHaveTextContent(first.text.replace(/\s+/g, " "));
-    expect(screen.getByRole("button", { name: "Enable synchronized voiceover" })).toBeInTheDocument();
-
-    const final = spokenTrailerCaptions[spokenTrailerCaptions.length - 1];
-    fireEvent.change(timeline, { target: { value: String(final.endSeconds + 0.1) } });
-    expect(caption).toBeEmptyDOMElement();
-  });
-
-  it("retains the identity film’s caption text and notes when no narration paragraph exists", () => {
-    renderFilmsPage("/films");
-    const tabs = within(screen.getByRole("tablist", { name: "Select film to screen" })).getAllByRole("tab");
-    fireEvent.click(tabs[1]);
-    fireEvent.click(screen.getByText("Read the transcript"));
-    const transcript = screen.getByRole("list", { name: "Film transcript" });
-    const intro = INQUIRY_VIDEOS.find((video) => video.name === "inquiry-intro")!;
-    for (const caption of intro.captions) {
-      expect(within(transcript).getByText(caption.lines.join(" "))).toBeInTheDocument();
-      for (const note of caption.notes ?? (caption.note ? [caption.note] : [])) {
-        expect(within(transcript).getByText(note)).toBeInTheDocument();
-      }
-    }
   });
 
   it("presents the 3 finite @dotheory channel streams and ends with a finite completion boundary (Law 3)", () => {
-    renderFilmsPage("/films");
+    renderFilmsPage();
 
     for (const stream of filmsData.streams) {
       expect(
@@ -174,27 +136,5 @@ describe("FilmsPage", () => {
     }
 
     expect(screen.getByText(filmsData.completionNote)).toBeInTheDocument();
-  });
-
-  it("keeps the player chrome to the transport: no edition or source switches, acts listed once on the page", () => {
-    renderFilmsPage("/films");
-
-    expect(
-      screen.queryByRole("group", { name: "Film colour edition" }),
-    ).toBeNull();
-    expect(screen.queryByRole("group", { name: "Playback source" })).toBeNull();
-    // The page lists the acts with their chapters, so the player does not repeat them.
-    expect(
-      screen.queryByRole("group", { name: "Jump to film act" }),
-    ).toBeNull();
-
-    const captionToggle = screen.getByRole("button", {
-      name: "Show synchronized caption bar",
-    });
-    expect(captionToggle).toHaveAttribute("aria-pressed", "false");
-    fireEvent.click(captionToggle);
-    expect(
-      screen.getByRole("button", { name: "Hide synchronized caption bar" }),
-    ).toHaveAttribute("aria-pressed", "true");
   });
 });

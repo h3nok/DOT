@@ -16,6 +16,7 @@ import identity from "../../content/identity.json";
 import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
 import {
   INQUIRY_VIDEOS,
+  TRAILER_VOICE_OFFSET_SECONDS,
   inquiryTypeTicks,
   mountInquiryCanvas,
   type InquiryVideoSpec,
@@ -99,6 +100,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   const [muted, setMuted] = useState(false);
   const [voiceoverEnabled, setVoiceoverEnabled] = useState(true);
   const [voiceoverUnavailable, setVoiceoverUnavailable] = useState(false);
+  const [bufferingVoiceover, setBufferingVoiceover] = useState(false);
   const [showCaptionsBar, setShowCaptionsBar] = useState(
     () => typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia("(max-width: 639px)").matches,
   );
@@ -142,7 +144,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     if (!audioEngineRef.current) {
       const engine = new TrailerAudioEngine(setVoiceoverUnavailable, {
         narrationOnly,
-        voiceOffsetSeconds: narrationOnly ? 0.18 : 0,
+        voiceOffsetSeconds: narrationOnly ? TRAILER_VOICE_OFFSET_SECONDS : 0,
       });
       engine.setMuted(muted);
       engine.setVoiceoverEnabled(voiceoverEnabled);
@@ -223,25 +225,28 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     const engine = audioEngineRef.current;
     if (!playing || sourceMode !== "native") {
       engine?.pause();
+      setBufferingVoiceover(false);
       lastSceneIdRef.current = null;
       return;
     }
     const liveEngine = getAudioEngine();
     liveEngine.start();
-    if (activeScene) {
-      const sceneIdx = Math.max(0, activeScene.number - 1);
+    // Load the first narration during the opening splash, after the reader starts.
+    const scene = activeScene ?? (narrationOnly ? scenes[0] : null);
+    if (scene) {
+      const sceneIdx = Math.max(0, scene.number - 1);
       liveEngine.updateScene(
         sceneIdx,
         timeRef.current,
         videoSpec.duration,
-        activeScene.primaryStatement,
-        activeScene.start,
+        scene.primaryStatement,
+        scene.start,
       );
-      lastSceneIdRef.current = activeScene.id;
+      lastSceneIdRef.current = scene.id;
     } else {
       liveEngine.clearScene();
     }
-  }, [playing, sourceMode, activeScene, currentTime, videoSpec.duration, getAudioEngine]);
+  }, [playing, sourceMode, activeScene, currentTime, videoSpec.duration, getAudioEngine, narrationOnly, scenes]);
 
   const playKeystrokeTick = useCallback(
     (index: number, atTime: number) => {
@@ -260,6 +265,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     (seconds: number) => {
       const clamped = Math.max(0, Math.min(videoSpec.duration, seconds));
       timeRef.current = clamped;
+      audioEngineRef.current?.requestVoiceoverSeek();
       setCurrentTime(clamped);
       controllerRef.current?.seek(clamped);
       lastSceneIdRef.current = null;
@@ -291,8 +297,14 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     let prev = performance.now();
 
     const step = (now: number) => {
-      const dt = Math.min(0.1, (now - prev) / 1000);
+      const dt = Math.max(0, (now - prev) / 1000);
       prev = now;
+      const waiting = audioEngineRef.current?.waitingForVoiceover ?? false;
+      setBufferingVoiceover(waiting);
+      if (waiting) {
+        raf = window.requestAnimationFrame(step);
+        return;
+      }
       const nextTime = timeRef.current + dt;
 
       for (let i = lastTickIndexRef.current + 1; i < ticks.length; i++) {
@@ -442,28 +454,26 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               onClick={togglePlay}
             />
 
-            {!playing && (
+            {!playing && !hasStarted && (
               <button
                 type="button"
                 className="films-play-hero-btn"
                 onClick={togglePlay}
-                aria-label={
-                  !hasStarted
-                    ? `Play ${film.title} (${film.duration})`
-                    : `Resume ${film.title}`
-                }
+                aria-label={`Play ${film.title} (${film.duration})`}
               >
                 <span className="films-play-hero-icon" aria-hidden="true">
                   <Play className="h-4 w-4 fill-current" />
                 </span>
                 <span className="films-play-hero-label">
-                  {!hasStarted
-                    ? `Play · ${film.duration}`
-                    : timeRef.current >= videoSpec.duration - 0.05
-                      ? "Replay"
-                      : "Resume"}
+                  Play · {film.duration}
                 </span>
               </button>
+            )}
+
+            {bufferingVoiceover && (
+              <p className="films-buffering-status" role="status">
+                Loading narration…
+              </p>
             )}
 
             {/* Short-film text retains its live readout. The spoken trailer’s
@@ -656,24 +666,26 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               </button>
             )}
 
-            <button
-              type="button"
-              className="films-transport-btn"
-              aria-pressed={voiceoverEnabled}
-              onClick={toggleVoiceover}
-              aria-label={
-                voiceoverEnabled
-                  ? "Disable synchronized voiceover"
-                  : "Enable synchronized voiceover"
-              }
-              title={voiceoverEnabled ? "Voiceover On" : "Voiceover Off"}
-            >
-              {voiceoverEnabled ? (
-                <Mic className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <MicOff className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
+            {scenes.length > 0 && (
+              <button
+                type="button"
+                className="films-transport-btn"
+                aria-pressed={voiceoverEnabled}
+                onClick={toggleVoiceover}
+                aria-label={
+                  voiceoverEnabled
+                    ? "Disable synchronized voiceover"
+                    : "Enable synchronized voiceover"
+                }
+                title={voiceoverEnabled ? "Voiceover On" : "Voiceover Off"}
+              >
+                {voiceoverEnabled ? (
+                  <Mic className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <MicOff className="h-4 w-4" aria-hidden="true" />
+                )}
+              </button>
+            )}
 
             <button
               type="button"

@@ -1,126 +1,94 @@
-import { useEffect } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BookOpen, Compass, ShieldAlert } from "lucide-react";
+import { ArrowRight, Compass, HelpCircle, MessageCircle } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-import { AcademyGovernance } from "./AcademyGovernance";
-import { SiteColophon } from "../../shared/SiteColophon";
-import { PageHeader } from "../../shared/PageShell";
-import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
+import { READING_PATHS } from "../../attention-os/reader/readingPaths";
 import landing from "../../content/academy/landing.json";
-import "./academy.css";
+import { PageHeader, PageShell } from "../../shared/PageShell";
+import { SiteColophon } from "../../shared/SiteColophon";
+import "./academy-hub.css";
+
+const BOOK = "/book/digital-organism-theory";
+
+const INQUIRY_LINKS = [
+  {
+    to: "/doctrine",
+    title: "Explore the concept map",
+    description: "Trace the terms and relationships in the model.",
+    Icon: Compass,
+  },
+  {
+    to: "/applied",
+    title: "Review open questions",
+    description: "Examine the claims, their limits, and what could test them.",
+    Icon: HelpCircle,
+  },
+  {
+    to: "/contact?purpose=writing",
+    title: "Bring a question to the conversation",
+    description: "Share an experience or a thoughtful question with Henok.",
+    Icon: MessageCircle,
+  },
+];
 
 export default function AcademyPage() {
-  const reducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    document.title = landing.title;
-  }, []);
-
   return (
-    <div className="academy-page min-h-screen">
-      <a
-        href="#academy-main"
-        className="sr-only z-[60] rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to the Academy
-      </a>
+    <PageShell
+      wide
+      className="academy-hub"
+      header={<PageHeader />}
+      footer={<SiteColophon />}
+    >
+      <Helmet>
+        <title>{landing.title}</title>
+        <meta name="description" content={landing.description} />
+      </Helmet>
 
-      <PageHeader />
+      <header className="academy-hub-masthead">
+        <p className="dot-label">DOT Academy</p>
+        <h1 className="dot-page-heading">{landing.heading}</h1>
+        <p className="academy-hub-introduction">{landing.introduction}</p>
+      </header>
 
-      <main id="academy-main">
-        {/* ── The Academy's purpose and its starting point ───────────────── */}
-        <section className="academy-hero" aria-labelledby="academy-title">
-          <div className="academy-hero__inner dot-page-container dot-page-wide">
-            <motion.div
-              initial={reducedMotion ? false : { y: 10 }}
-              animate={{ y: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.55 }}
-              className="academy-hero__copy"
-            >
-              <div className="academy-hero__status-badge">
-                <span className="dot-mark" aria-hidden="true" />
-                <span className="dot-label">DOT Academy · In development</span>
-              </div>
-
-              <h1 id="academy-title" className="academy-title">
-                <span>{landing.heading[0]}</span>{" "}
-                <span>{landing.heading[1]}</span>
-              </h1>
-
-              <p className="academy-hero__lede">
-                {landing.introduction}
-              </p>
-
-              <FocusNav
-                className="academy-hero__actions"
-                label="Begin exploring the Academy"
-                primary={{
-                  to: landing.start.href,
-                  label: landing.start.label,
-                  description: landing.start.description,
-                  icon: <BookOpen />,
-                }}
-                secondary={[
-                  { to: "/doctrine", label: "Explore the concept map", icon: <Compass /> },
-                  { to: "/applied", label: "Review open questions", icon: <ShieldAlert /> },
-                ]}
-              />
-            </motion.div>
-
-            <motion.aside
-              initial={reducedMotion ? false : { y: 8 }}
-              animate={{ y: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.6, delay: 0.12 }}
-              className="academy-manifesto-card"
-              aria-label="DOT’s working hypothesis"
-            >
-              <span className="academy-manifesto-card__tag dot-label">
-                {landing.hypothesis.label}
-              </span>
-              <h2>{landing.hypothesis.heading}</h2>
-              <p>
-                {landing.hypothesis.body}
-              </p>
-              <div className="academy-manifesto-card__foot">
-                <span>Trace the claim</span>
-                <Link to={landing.hypothesis.sourceHref} className="academy-text-link">
-                  {landing.hypothesis.sourceLabel}
-                  <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-                </Link>
-              </div>
-            </motion.aside>
-          </div>
-        </section>
-
-        {/* ── The Fixed Canon ───────────────────────────────────────────── */}
-        <motion.section
-          className="academy-section academy-book-section"
-          aria-labelledby="academy-book-title"
-        >
-          <div className="academy-book dot-page-container dot-page-wide">
-            <div className="academy-book__mark" aria-hidden="true">
-              <span>DOT</span>
-              <i />
-              <span>01</span>
-            </div>
-            <div className="academy-book__copy">
-              <p className="dot-label">Publication · Fixed edition</p>
-              <h2 id="academy-book-title">{landing.publication.heading}</h2>
-              <p>
-                {landing.publication.body}
-              </p>
-              <Link to="/book/digital-organism-theory" className="academy-book__action">
-                Open the released edition
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      <section id="academy-read" className="academy-hub-section" aria-labelledby="academy-read-title">
+        <header className="academy-hub-section-heading">
+          <p className="dot-label">Read · Book One</p>
+          <h2 id="academy-read-title">Choose a way into the book.</h2>
+          <p>Begin with your own life or follow the argument from its foundations. Both paths read the same fixed edition.</p>
+          <Link className="academy-hub-edition" to={BOOK}>View Book One and its contents <ArrowRight aria-hidden="true" /></Link>
+        </header>
+        <ol className="academy-hub-paths" aria-label="Reading paths">
+          {READING_PATHS.map((path, index) => (
+            <li key={path.id}>
+              <Link to={`${BOOK}/${path.steps[0].slug}?path=${path.id}`} className="academy-hub-path">
+                <span className="academy-hub-path-number" aria-hidden="true">0{index + 1}</span>
+                <div>
+                  <h3>{path.label}</h3>
+                  <p>{path.purpose}</p>
+                </div>
+                <ArrowRight className="academy-hub-path-arrow" aria-hidden="true" />
               </Link>
-            </div>
-          </div>
-        </motion.section>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-        <AcademyGovernance />
-      </main>
-      <SiteColophon />
-    </div>
+      <section className="academy-hub-section academy-hub-inquiry" aria-labelledby="academy-inquiry-title">
+        <header className="academy-hub-section-heading">
+          <p className="dot-label">Explore · Question · Discuss</p>
+          <h2 id="academy-inquiry-title">Follow your questions.</h2>
+          <p>Look closely at the model. Bring it back to something you have experienced. Leave room to change your mind.</p>
+        </header>
+        <nav aria-label="Continue the inquiry" className="academy-hub-tools">
+          {INQUIRY_LINKS.map(({ to, title, description, Icon }) => (
+            <Link key={to} to={to} className="academy-hub-tool">
+              <Icon className="academy-hub-tool-icon" aria-hidden="true" />
+              <span><strong>{title}</strong><span>{description}</span></span>
+              <ArrowRight className="academy-hub-tool-arrow" aria-hidden="true" />
+            </Link>
+          ))}
+        </nav>
+      </section>
+    </PageShell>
   );
 }

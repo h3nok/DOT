@@ -23,11 +23,10 @@ describe("SiteColophon", () => {
     expect(screen.getByText(/Written by Henok Ghebrechristos/)).toBeInTheDocument();
     expect(siteLinks()).toEqual([
       ["About", "/about"],
-      ["Blog", "/blog"],
-      ["Films", "/films"],
+      ["Writing", "/blog"],
+      ["Academy", "/academy"],
       ["AMM", "/amm"],
       ["Contact", "/contact"],
-      ["Community", "/community"],
       ["Books", "/publications"],
       ["Reader list", "/readers"],
       ["Privacy", "/privacy"],
@@ -60,11 +59,10 @@ describe("SiteColophon", () => {
 
     expect(siteLinks()).toEqual([
       ["About", "/about"],
-      ["Blog", "/blog"],
-      ["Films", "/films"],
+      ["Writing", "/blog"],
+      ["Academy", "/academy"],
       ["AMM", "/amm"],
       ["Contact", "/contact"],
-      ["Community", "/community"],
       ["Books", "/publications"],
       ["RSS", "/feed.xml"],
       ["Reader list", "/readers"],

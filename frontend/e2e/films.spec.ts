@@ -1,31 +1,53 @@
 import { expect, test } from "@playwright/test";
-import { INQUIRY_VIDEOS } from "../scripts/channel-inquiry-video.mjs";
 
-test("film claims stay optional and the complete transcript can seek the paused film", async ({ page }) => {
-  await page.goto("/films");
-  const claims = page.locator("details.films-claims");
-  const summary = claims.locator("summary");
-  await expect(summary).toHaveText("About this film’s claims");
-  await expect(claims).not.toHaveAttribute("open");
-  await summary.focus();
-  await page.keyboard.press("Enter");
-  await expect(claims).toHaveAttribute("open");
-  await expect(claims.locator(".films-claims-copy")).toBeVisible();
-  await page.keyboard.press("Space");
-  await expect(claims).not.toHaveAttribute("open");
+type SoundProbeWindow = Window & { filmSoundProbe: { audio: number; contexts: number } };
 
-  await page.getByText("Read the transcript", { exact: true }).click();
-  const transcript = page.getByRole("list", { name: "Film transcript" });
-  const trailer = INQUIRY_VIDEOS.find((video) => video.name === "inquiry-trailer")!;
-  const passages = transcript.locator(".films-transcript-line");
-  await expect(passages).toHaveCount(trailer.captions.length);
-  for (const [index, caption] of trailer.captions.entries()) {
-    await expect(passages.nth(index)).toHaveText(caption.primaryStatement!);
-  }
+test("concept films play silently, only when asked, and stop on their last frame", async ({ page }) => {
+  await page.addInitScript(() => {
+    const probe = { audio: 0, contexts: 0 };
+    (window as SoundProbeWindow).filmSoundProbe = probe;
+    const NativeAudio = window.Audio;
+    window.Audio = function (src?: string) {
+      probe.audio += 1;
+      return new NativeAudio(src);
+    } as typeof Audio;
+    const NativeContext = window.AudioContext;
+    window.AudioContext = class extends NativeContext {
+      constructor(options?: AudioContextOptions) {
+        super(options);
+        probe.contexts += 1;
+      }
+    };
+  });
 
-  // Reading the transcript does not start the film. A timestamp explicitly does.
-  await expect(page.getByRole("button", { name: "Play film", exact: true })).toBeVisible();
-  await transcript.getByRole("button").first().click();
+  await page.goto("/academy/films?concept=experience-loop#screening-room");
+  const film = page.locator(".concept-film");
+  await expect(film.getByRole("heading", { level: 3, name: "The Experience Loop" })).toBeVisible();
+  await expect(page.locator("audio, video, iframe")).toHaveCount(0);
+
+  const timeline = page.getByRole("slider", { name: "Seek timeline in seconds" });
+  await expect(timeline).toHaveValue("0");
+  await page.getByRole("button", { name: "Play film", exact: true }).click();
   await expect(page.getByRole("button", { name: "Pause film", exact: true })).toBeVisible();
+  await expect.poll(async () => Number(await timeline.inputValue())).toBeGreaterThan(0.5);
+
+  // Jump near the end: the film finishes on its own frame and stays on this concept.
   await page.getByRole("button", { name: "Pause film", exact: true }).click();
+  await timeline.fill("15.5");
+  await page.getByRole("button", { name: "Play film", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Play film", exact: true })).toBeVisible({ timeout: 5000 });
+  await expect(timeline).toHaveValue("16");
+  await expect(film.getByRole("heading", { level: 3, name: "The Experience Loop" })).toBeVisible();
+
+  const probe = await page.evaluate(() => (window as SoundProbeWindow).filmSoundProbe);
+  expect(probe).toEqual({ audio: 0, contexts: 0 });
+});
+
+test("the concept index switches films and keeps the choice in the address", async ({ page }) => {
+  await page.goto("/academy/films");
+  const index = page.getByRole("navigation", { name: "Concept films" });
+  await index.getByRole("button", { name: /The Fear-Gating Principle/ }).click();
+  await expect(page.locator(".concept-film").getByRole("heading", { level: 3, name: "The Fear-Gating Principle" })).toBeVisible();
+  await expect(page).toHaveURL(/[?&]concept=fear-gating/);
+  await expect(page.locator(".concept-film")).toBeInViewport();
 });

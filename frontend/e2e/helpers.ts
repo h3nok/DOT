@@ -7,7 +7,6 @@ export const PUBLIC_ROUTES = [
   { path: "/doctrine", name: "doctrine" },
   { path: "/applied", name: "applied" },
   { path: "/join", name: "join" },
-  { path: "/community", name: "community" },
   { path: "/support", name: "support" },
   { path: "/studio", name: "studio" },
   { path: "/book/digital-organism-theory", name: "book landing" },

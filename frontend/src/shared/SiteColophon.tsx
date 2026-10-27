@@ -15,7 +15,8 @@ const LINK =
  * the few places a reader can go next. Plain text links in a fixed order —
  * nothing counted, nothing ranked, and no funding ask (ADR-0022).
  *
- * Blog is the common writing archive. RSS carries writing released here.
+ * Writing is the common archive. Academy holds films and living theory work.
+ * RSS carries writing released here.
  */
 export function SiteColophon({
   essaysPublished = ESSAYS_PUBLISHED,
@@ -43,11 +44,10 @@ export function SiteColophon({
           <Link to="/about" className={LINK}>
             About
           </Link>
-          <Link to="/blog" className={LINK}>Blog</Link>
-          <Link to="/films" className={LINK}>Films</Link>
+          <Link to="/blog" className={LINK}>Writing</Link>
+          <Link to="/academy" className={LINK}>Academy</Link>
           <Link to="/amm" className={LINK}>AMM</Link>
           <Link to="/contact" className={LINK}>Contact</Link>
-          <Link to="/community" className={LINK}>Community</Link>
           <Link to="/publications" className={LINK}>Books</Link>
           {essaysPublished && (
             <a href={FEED_URL} className={LINK}>

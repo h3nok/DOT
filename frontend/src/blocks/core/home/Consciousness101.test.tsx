@@ -17,5 +17,7 @@ describe("Consciousness101", () => {
       .toHaveAttribute("href", "#possibility-field");
     expect(within(purpose).getByRole("link", { name: "Book One · The Culture Inside You" }))
       .toHaveAttribute("href", "/book/digital-organism-theory/the-painting#the-culture-inside-you");
+    expect(within(purpose).getByRole("link", { name: "Continue in The American Millennial Manifesto" }))
+      .toHaveAttribute("href", "/amm");
   });
 });

@@ -1,0 +1,275 @@
+/* A finite learning hub: two reading paths and room for inquiry. */
+.academy-hub {
+  --academy-hub-ink: var(--appearance-page-ink, var(--foreground));
+  --academy-hub-muted: var(--muted-foreground);
+  --academy-hub-line: color-mix(in oklab, var(--academy-hub-ink) 17%, transparent);
+  --academy-hub-accent: var(--organism-accent-strong);
+  --academy-hub-interface: "Inter", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --academy-hub-reading: var(--identity-reading-font, var(--font-serif, Georgia, serif));
+  max-width: 64rem;
+  color: var(--academy-hub-ink);
+  font-family: var(--academy-hub-interface);
+}
+
+.academy-hub .dot-label {
+  margin: 0;
+  color: var(--academy-hub-muted);
+  font-family: var(--academy-hub-interface);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .025em;
+  line-height: 1.5;
+  text-transform: none;
+}
+
+.academy-hub-masthead {
+  max-width: 46rem;
+  margin-bottom: 2.5rem;
+}
+
+.academy-hub-masthead h1 {
+  max-width: 22ch;
+  margin: .875rem 0 0;
+  font-family: var(--academy-hub-reading);
+  font-size: clamp(2.25rem, 3.5vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.academy-hub-introduction {
+  max-width: 58ch;
+  margin: 1rem 0 0;
+  color: var(--academy-hub-muted);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.academy-hub a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.academy-hub a:focus-visible {
+  outline: 2px solid var(--academy-hub-ink);
+  outline-offset: 6px;
+}
+
+.academy-hub-section-heading h2 {
+  margin: .5rem 0 0;
+  font-family: var(--academy-hub-reading);
+  font-size: clamp(1.625rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.academy-hub-section-heading > p:not(.dot-label) {
+  max-width: 62ch;
+  margin: .75rem 0 0;
+  color: var(--academy-hub-muted);
+  font-size: 1rem;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.academy-hub-edition {
+  display: inline-flex;
+  min-height: var(--touch-target, 2.75rem);
+  align-items: center;
+  gap: .75rem;
+  margin-top: .625rem;
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-decoration-color: var(--academy-hub-line);
+  text-underline-offset: .35em;
+}
+
+.academy-hub .academy-hub-edition {
+  text-decoration: underline;
+  text-decoration-color: var(--academy-hub-line);
+  text-underline-offset: .35em;
+}
+
+.academy-hub-edition svg,
+.academy-hub-path-arrow,
+.academy-hub-tool-arrow {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: none;
+  stroke-width: 1.5;
+}
+
+.academy-hub-section {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.academy-hub-section-heading {
+  max-width: 44rem;
+  margin-bottom: 1.25rem;
+}
+
+.academy-hub-paths {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--academy-hub-line);
+}
+
+.academy-hub-path {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 1.125rem;
+  align-items: start;
+  gap: 1rem;
+  min-height: var(--touch-target, 2.75rem);
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--academy-hub-line);
+}
+
+.academy-hub-path-number {
+  padding-top: .2rem;
+  color: var(--academy-hub-muted);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.academy-hub-path h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -.015em;
+  line-height: 1.5;
+}
+
+.academy-hub-path p {
+  max-width: 62ch;
+  margin: .375rem 0 0;
+  color: var(--academy-hub-muted);
+  font-size: .9375rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.academy-hub-path-arrow {
+  margin-top: .25rem;
+}
+
+.academy-hub-tools {
+  border-top: 1px solid var(--academy-hub-line);
+}
+
+.academy-hub-tool {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  min-height: var(--touch-target, 2.75rem);
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--academy-hub-line);
+}
+
+.academy-hub-tool-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+  margin-top: .15rem;
+  color: var(--academy-hub-muted);
+  stroke-width: 1.5;
+}
+
+.academy-hub-tool > span {
+  display: grid;
+  min-width: 0;
+  gap: .375rem;
+}
+
+.academy-hub-tool strong {
+  font-size: .9375rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.academy-hub-tool > span > span {
+  max-width: 62ch;
+  color: var(--academy-hub-muted);
+  font-size: .875rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.academy-hub-tool-arrow {
+  margin-top: .25rem;
+  margin-left: auto;
+}
+
+.academy-hub .academy-hub-edition:hover {
+  color: var(--academy-hub-accent);
+  text-decoration-color: currentColor;
+}
+
+.academy-hub :is(.academy-hub-path:hover, .academy-hub-path:focus-visible) h3,
+.academy-hub :is(.academy-hub-tool:hover, .academy-hub-tool:focus-visible) strong {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .3em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .academy-hub :is(.academy-hub-path-arrow, .academy-hub-tool-arrow) {
+    transition: transform 180ms ease;
+  }
+
+  html:not([data-motion="still"]) .academy-hub :is(.academy-hub-path:hover, .academy-hub-path:focus-visible) .academy-hub-path-arrow,
+  html:not([data-motion="still"]) .academy-hub :is(.academy-hub-tool:hover, .academy-hub-tool:focus-visible) .academy-hub-tool-arrow {
+    transform: translateX(3px);
+  }
+}
+
+html[data-contrast="high"] .academy-hub {
+  --academy-hub-line: var(--foreground);
+  --academy-hub-accent: var(--foreground);
+}
+
+@media (max-width: 639px) {
+  .academy-hub {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+
+  .academy-hub-masthead {
+    margin-bottom: 1.75rem;
+  }
+
+  .academy-hub-masthead h1 {
+    font-size: 2rem;
+    line-height: 1.16;
+  }
+
+  .academy-hub-introduction {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .academy-hub-path {
+    grid-template-columns: 1.5rem minmax(0, 1fr) 1rem;
+    gap: .625rem;
+    padding-block: 1.25rem;
+  }
+
+  .academy-hub-path h3 {
+    font-size: 1rem;
+  }
+
+  .academy-hub-tool {
+    gap: .75rem;
+  }
+
+  .academy-hub-tool-arrow {
+    width: 1rem;
+  }
+}

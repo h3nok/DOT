@@ -8,7 +8,10 @@ import {
 } from "../../films/ScreeningRoomPlayer";
 import "../../films/films.css";
 
-const TRAILER = (filmsData.screeningFilms as ScreeningFilmMeta[])[0];
+// The homepage plays the short film without narration; the narrated film lives in the Academy.
+const INTRO_FILM = (filmsData.screeningFilms as ScreeningFilmMeta[]).find(
+  (film) => film.id === "inquiry-intro",
+);
 
 const INNER_LOOP_CARDS = [
   {
@@ -36,12 +39,12 @@ const INNER_LOOP_CARDS = [
     tone: "big-c",
     body: "A pause can make room for curiosity, a boundary, or a more honest reply. In DOT, Love names the condition in which Fear no longer governs those choices.",
     linkLabel: "Full Screening Room & Series",
-    linkTo: "/films",
+    linkTo: "/academy/films",
   },
 ] as const;
 
 export function HomeFilmSection() {
-  if (!TRAILER) return null;
+  if (!INTRO_FILM) return null;
 
   return (
     <section
@@ -52,13 +55,13 @@ export function HomeFilmSection() {
       <div className="dot-page-container dot-page-wide home-film-layout">
         <header className="home-film-heading">
           <div>
-            <p className="dot-label">Visual inquiry · {TRAILER.duration}</p>
-            <h2 id="visual-inquiry-title">{TRAILER.title}</h2>
+            <p className="dot-label">Academy · Visual inquiry · {INTRO_FILM.duration}</p>
+            <h2 id="visual-inquiry-title">{INTRO_FILM.title}</h2>
           </div>
-          <Link to="/films">All films <ArrowRight aria-hidden="true" /></Link>
+          <Link to="/academy/films">Films in the Academy <ArrowRight aria-hidden="true" /></Link>
         </header>
         <div className="home-film-stage">
-          <ScreeningRoomPlayer film={TRAILER} compact />
+          <ScreeningRoomPlayer film={INTRO_FILM} compact />
         </div>
 
         {/* Inner Loop & Canvas Entropy bridge */}

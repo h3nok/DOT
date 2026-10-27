@@ -21,8 +21,7 @@ import AmmMovedGuide from "./blocks/amm/AmmMovedGuide";
 function canonicalPathname(pathname: string, search: string): string {
   const clean = pathname.replace(/\/+$/, "") || "/";
   if (clean === "/essays") return "/blog";
-  if (clean === "/videos") return "/films";
-  if (clean === "/academy") return "/book/digital-organism-theory";
+  if (clean === "/videos" || clean === "/films") return "/academy/films";
   if (clean === "/amm/capital" || clean === "/amm/money" || clean.startsWith("/amm/money/")) {
     return "/amm";
   }
@@ -44,6 +43,12 @@ function RouteCanonical() {
     link.href = `${import.meta.env.VITE_SITE_URL || "https://dotheory.org"}${path === "/" ? "" : path}`;
   }, [pathname, search]);
   return null;
+}
+
+/** Keep shared film links intact while moving the screening room into the Academy. */
+function AcademyFilmsRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={{ pathname: "/academy/films", search, hash }} replace />;
 }
 
 const PageCopyStudio = React.lazy(() => import("./blocks/publication/PageCopyStudio"));
@@ -82,11 +87,11 @@ const JoinPage = React.lazy(() => import("./blocks/core/support/JoinPage"));
 // to hear again, and what the site keeps.
 const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
 const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
-const CommunityPage = React.lazy(() => import("./blocks/community/CommunityPage"));
 const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const FilmsPage = React.lazy(() => import("./blocks/films/FilmsPage"));
+const AcademyPage = React.lazy(() => import("./blocks/academy/AcademyPage"));
 const AmmPublicationPage = React.lazy(() => import("./blocks/amm/AmmPublicationPage"));
 const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
 const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
@@ -156,7 +161,7 @@ const RouteScrollManager: React.FC = () => {
   return null;
 };
 
-/** Book and blog surfaces own this control in their sticky reading chrome. */
+/** Reading and Academy surfaces own this control in their page chrome. */
 const FloatingAppearanceControl: React.FC = () => {
   const { pathname } = useLocation();
 
@@ -167,7 +172,7 @@ const FloatingAppearanceControl: React.FC = () => {
     return null;
   }
   if (pathname.startsWith("/read/")) return null;
-  if (pathname === "/" || /^\/(blog|films|videos)\/?$/.test(pathname)) return null;
+  if (pathname === "/" || /^\/(blog|films|videos)\/?$/.test(pathname) || /^\/academy(\/|$)/.test(pathname)) return null;
   return <div className="app-floating-appearance" key={pathname}><AppearanceControl /></div>;
 };
 
@@ -228,7 +233,8 @@ const App: React.FC = () => {
             <RouteLoadingBoundary>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/academy" element={<Navigate to="/book/digital-organism-theory" replace />} />
+                <Route path="/academy" element={<AcademyPage />} />
+                <Route path="/academy/films" element={<FilmsPage />} />
                 <Route path="/doctrine" element={<DoctrinePage />} />
                 <Route path="/doctrine/:nodeId" element={<DoctrinePage />} />
                 <Route path="/applied" element={<AppliedPage />} />
@@ -236,10 +242,10 @@ const App: React.FC = () => {
                 <Route path="/join" element={<JoinPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/community" element={<Navigate to="/contact" replace />} />
                 <Route path="/blog" element={<BlogPage />} />
-                <Route path="/films" element={<FilmsPage />} />
-                <Route path="/videos" element={<Navigate to="/films" replace />} />
+                <Route path="/films" element={<AcademyFilmsRedirect />} />
+                <Route path="/videos" element={<AcademyFilmsRedirect />} />
                 <Route path="/amm" element={<AmmPage />} />
                 <Route path="/amm/power" element={<AmmPowerPage />} />
                 <Route path="/amm/capital" element={<AmmMovedGuide />} />

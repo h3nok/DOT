@@ -14,27 +14,41 @@ test.beforeEach(async ({ page, isMobile }) => {
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
 });
 
-test("phone navigation opens deliberately, dismisses, routes, and yields to desktop navigation", async ({ page }) => {
+test("Explore opens deliberately, routes, and stays usable across viewport sizes", async ({ page }) => {
   await page.goto("/blog");
-  const menu = page.getByRole("button", { name: "Menu", exact: true });
+  const menu = page.getByRole("button", { name: "Explore the site", exact: true });
   await thumbControl(menu);
-  await menu.click();
-  const panel = page.getByRole("dialog", { name: "Site navigation" });
+  await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toHaveCount(0);
+  await menu.focus();
+  await page.keyboard.press("Enter");
+  const panel = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
   await expect(panel).toBeVisible();
-  await expect(panel.getByRole("link")).toHaveCount(8);
-  await expect(panel.getByRole("link", { name: "Community", exact: true })).toHaveAttribute("href", "/community");
-  await expect(panel.getByRole("link", { name: "Films", exact: true })).toHaveAttribute("href", "/films");
-  await expect(panel.getByRole("link", { name: "Blog", exact: true })).toHaveAttribute("aria-current", "page");
+  const primary = panel.getByRole("navigation", { name: "Primary", exact: true });
+  const destinations = ["Home", "Book One", "Academy", "Writing", "About", "Contact"];
+  await expect(primary.getByRole("link")).toHaveCount(destinations.length);
+  for (const [index, destination] of destinations.entries()) {
+    await expect(primary.getByRole("link").nth(index)).toHaveAccessibleName(destination);
+  }
+  await expect(panel.getByRole("navigation")).toHaveCount(2);
+  await expect(panel.getByRole("link")).toHaveCount(7);
+  await expect(panel.getByRole("link", { name: "Community", exact: true })).toHaveCount(0);
+  await expect(panel.getByRole("link", { name: "Academy", exact: true })).toHaveAttribute("href", "/academy");
+  await expect(panel.getByRole("link", { name: "Writing", exact: true })).toHaveAttribute("aria-current", "page");
+  await expect(primary.getByRole("link", { name: "Community", exact: true })).toHaveCount(0);
+  await expect(primary.getByRole("link", { name: "Reader list", exact: true })).toHaveCount(0);
   for (const link of await panel.getByRole("link").all()) {
     await link.scrollIntoViewIfNeeded();
     await thumbControl(link);
   }
-  await expect(panel.getByRole("button", { name: "Close menu", exact: true })).toBeInViewport({ ratio: 1 });
+  const close = panel.getByRole("button", { name: "Close navigation", exact: true });
+  await thumbControl(close);
+  await expect(close).toBeInViewport({ ratio: 1 });
   await page.keyboard.press("Escape");
   await expect(panel).toHaveCount(0);
   await expect(menu).toBeFocused();
   await menu.click();
-  await panel.getByRole("link", { name: "Home", exact: true }).click();
+  await panel.getByRole("link", { name: "Home", exact: true }).focus();
+  await page.keyboard.press("Enter");
   await expect(page).toHaveURL("/");
   await expect(page.getByRole("heading", { name: "Trust your experience.", exact: true })).toBeVisible();
   await expect(panel).toHaveCount(0);
@@ -51,10 +65,63 @@ test("phone navigation opens deliberately, dismisses, routes, and yields to desk
   await menu.click();
   await expect(panel.getByRole("link", { name: "About", exact: true })).toHaveAttribute("href", "/about");
   await page.setViewportSize({ width: 844, height: 390 });
+  await expect(panel).toBeVisible();
+  await expect(primary.getByRole("link", { name: "Contact", exact: true })).toHaveAttribute("aria-current", "page");
+  await expect(close).toBeInViewport({ ratio: 1 });
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await expect(panel).toBeVisible();
+  await page.setViewportSize({ width: 320, height: 360 });
+  const finalDestination = panel.getByRole("link", { name: "Reader list", exact: true });
+  await finalDestination.scrollIntoViewIfNeeded();
+  await expect(finalDestination).toBeInViewport({ ratio: 1 });
+  await expect(close).toBeInViewport({ ratio: 1 });
+  await page.keyboard.press("Escape");
   await expect(panel).toHaveCount(0);
-  await expect(menu).toBeHidden();
-  await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Contact", exact: true })).toBeVisible();
+  await expect(menu).toBeFocused();
+  await thumbControl(menu);
   await expectNoHorizontalOverflow(page);
+});
+
+test("Explore stays at the lower-left edge while the header center remains clear", async ({ page }) => {
+  for (const width of [320, 430, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of ["/", "/about"]) {
+      await page.goto(route);
+      await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toHaveCount(0);
+      const explore = page.getByRole("button", { name: "Explore the site", exact: true });
+      await expect(explore).toHaveCount(1);
+      await expect(explore).toHaveText("Explore");
+      const appearance = page.getByRole("button", { name: "Appearance settings", exact: true });
+      const brand = page.getByRole("link", { name: "DOT — Home", exact: true });
+      await expect(brand).toBeVisible();
+      await expect(appearance).toBeVisible();
+      const brandBox = (await brand.boundingBox())!;
+      const appearanceBox = (await appearance.boundingBox())!;
+      await thumbControl(explore);
+      expect(Math.abs(appearanceBox.y + appearanceBox.height / 2 - brandBox.y - brandBox.height / 2))
+        .toBeLessThanOrEqual(1);
+      expect(brandBox.x + brandBox.width, "The signature and appearance must have separate targets")
+        .toBeLessThan(appearanceBox.x);
+      const centerOccupied = await page.evaluate(centerY => [.4, .5, .6].some(ratio =>
+        !!document.elementFromPoint(innerWidth * ratio, centerY)?.closest('a, button, [role="button"], .site-nav'),
+      ), brandBox.y + brandBox.height / 2);
+      expect(centerOccupied, "The central part of the top bar must remain free of navigation controls").toBe(false);
+
+      const exploreBox = (await explore.boundingBox())!;
+      expect(exploreBox.x, "Explore must stay at the left viewport edge").toBeGreaterThanOrEqual(0);
+      expect(exploreBox.x).toBeLessThanOrEqual(48);
+      expect(exploreBox.y, "Explore belongs near the bottom, outside the top bar").toBeGreaterThan(900 * .65);
+      expect(exploreBox.y + exploreBox.height).toBeGreaterThanOrEqual(900 - 80);
+      expect(exploreBox.y + exploreBox.height).toBeLessThanOrEqual(900);
+      await expect(explore).toBeInViewport({ ratio: 1 });
+      await explore.click();
+      const panel = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
+      await expect(panel.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link")).toHaveCount(6);
+      await page.keyboard.press("Escape");
+      await expect(explore).toBeFocused();
+      await expectNoHorizontalOverflow(page);
+    }
+  }
 });
 
 test("phone intake uses a native purpose selector and preserves the draft when purpose changes", async ({ page }) => {
@@ -200,12 +267,7 @@ test("phone panels follow keyboard viewport events without resizing for pinch zo
   await expect(panel).toHaveCount(0);
 });
 
-test("phone diagram destinations and footer links have distinct touch targets", async ({ page }) => {
-  await page.goto("/");
-  const map = page.getByRole("navigation", { name: "Read the diagram" });
-  for (const link of await map.getByRole("link").all()) await thumbControl(link);
-  await map.getByRole("link", { name: "Big C", exact: true }).click();
-  await expect(page.locator("#big-c")).toBeInViewport();
+test("phone footer links have distinct touch targets", async ({ page }) => {
   await page.goto("/about");
   const footer = page.getByRole("contentinfo");
   for (const link of await footer.getByRole("link").all()) await thumbControl(link);

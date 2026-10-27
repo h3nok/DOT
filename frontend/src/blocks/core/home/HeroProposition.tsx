@@ -1,6 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import { FocusNav } from "../../../attention-os/focus-nav/FocusNav";
 import HOME from "../../../content/home.json";
@@ -12,7 +11,7 @@ import { HeroConceptSlideshow } from "./HeroConceptSlideshow";
 interface HeroPropositionProps {
   inquiry?: ReactNode;
   reducedMotion?: boolean;
-  /** The proposed architecture accompanies the reading invitation. */
+  /** The proposed architecture is the centre of the opening composition. */
   stage?: ReactNode;
 }
 
@@ -51,25 +50,28 @@ export function HeroProposition({
             </p>
           </div>
 
-          <FocusNav
-            className="home-hero-entry"
-            label="Begin exploring DOT"
-            primary={{
-              to: "/book/digital-organism-theory/preface?path=start-where-you-live",
-              label: HOME.primaryAction,
-              icon: <BookOpen strokeWidth={1.5} />,
-            }}
-          />
+          <div className="home-hero-entrances">
+            <FocusNav
+              className="home-hero-entry"
+              label="Begin exploring DOT"
+              primary={{
+                to: "/book/digital-organism-theory/preface?path=start-where-you-live",
+                label: HOME.primaryAction,
+                icon: <BookOpen strokeWidth={1.5} />,
+              }}
+            />
 
-          <nav className="home-entry-links" aria-label="More ways to explore">
-            <a href="#visual-inquiry">{HOME.explore.filmLabel}</a>
-            <Link to="/community">{HOME.explore.communityLabel}</Link>
-          </nav>
-
-          <HeroConceptSlideshow reducedMotion={reducedMotion} />
+            <nav className="home-entry-links" aria-label="More ways to explore">
+              <a href="#visual-inquiry">{HOME.explore.filmLabel}</a>
+            </nav>
+          </div>
         </div>
 
         {stage}
+      </div>
+
+      <div className="home-hero-concepts">
+        <HeroConceptSlideshow reducedMotion={reducedMotion} />
       </div>
 
       {inquiry && (

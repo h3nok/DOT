@@ -89,3 +89,54 @@ growth in readership or contribution volume.
 | Turn the site into a conventional article portal | Familiar and quick to populate | Produces a feed, weak provenance, and attention competition | Rejected |
 | Continuously update one online “book” | Always current | Destroys edition stability and makes citation unreliable | Rejected |
 | Living Academy with fixed publications | Supports development and criticism while preserving canon | Requires strict metadata and boundary design | **Chosen** |
+
+## Amendment — 2026-10-26: Films and learning share the Academy
+
+The founder requested one Academy destination for films and learning. Restore
+`/academy` as the public learning entry, with the existing introduction films,
+the two finite Book One reading paths, the edition-bound concept map, and open
+questions. The page presents materials that are available now; it does not
+claim courses, accreditation, assessment, or a learning account system.
+
+The screening room lives at `/academy/films`. The earlier `/films` and
+`/videos` addresses redirect there while preserving query parameters and
+fragment anchors. Runtime canonical links, static HTML, structured data, and
+the sitemap use the same hierarchy. Both earlier addresses remain built as
+canonical aliases, so shared links also have a useful destination without
+JavaScript. Navigation names the Academy as the common entry.
+
+The public site offers one **Explore** observer point at the lower-left edge,
+leaving the centre of the top bar clear. Its trigger is portalled outside the
+headers so their backdrop filters cannot change its viewport position. It
+opens a full-screen navigation field, with six named destinations arranged
+around the current location on wide screens and along a curved reading path
+on smaller screens. Conversation and the reader list remain quiet links.
+Keyboard focus stays in the open field, Escape closes it, and focus returns to
+the control. Short screens scroll within the field; reduced-motion and
+stillness preferences suppress the entrance animation.
+
+Book One remains a separate fixed publication at
+`/book/digital-organism-theory`. Reading paths reuse the reader's existing
+registry and change the encounter order without changing the sealed text.
+Films retain their claim-level disclosures, source links, explicit playback,
+and finite ending. Nothing starts automatically when a reader opens a link.
+
+Serves L1 (predictable navigation), L2 (finite materials), L7 (working shared
+links and honest availability), L10 (one learning entry), and L12
+(reader-directed study). Violates no manifesto laws.
+
+## Amendment — 2026-10-27: One short silent film per concept
+
+At the founder's request, the Academy entry no longer screens a film; it opens
+with the reading paths, the concept map, and open questions. The screening
+room at `/academy/films` now holds one short silent film for each concept in
+the concept map, in the map's order. Each film draws its concept for sixteen
+seconds and shows the concept map's own name and definition. Films have no
+sound, start only when asked, end on their final frame, and never advance to
+the next film. A link can name one film with `?concept=`. The narrated
+inquiry film is no longer screened on the site; its renders stay in the
+YouTube kit. The homepage plays the short introduction without narration.
+
+Serves L1 (calm, silent motion), L3 (no autoplay or chaining), and L7 (text
+taken from the concept map, links to the source passage). Violates no
+manifesto laws.
