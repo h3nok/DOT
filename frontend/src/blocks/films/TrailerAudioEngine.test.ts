@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SHORT_FILM_CUES, TrailerAudioEngine } from "./TrailerAudioEngine";
+import { TrailerAudioEngine } from "./TrailerAudioEngine";
 
 class RecordedScene extends EventTarget {
   static instances: RecordedScene[] = [];
@@ -22,52 +22,6 @@ class RecordedScene extends EventTarget {
   }
 }
 
-class FakeParam {
-  value = 0;
-  setValueAtTime = vi.fn((value: number) => { this.value = value; });
-  linearRampToValueAtTime = vi.fn();
-  exponentialRampToValueAtTime = vi.fn();
-  cancelScheduledValues = vi.fn();
-}
-
-class FakeNode {
-  gain = new FakeParam();
-  frequency = new FakeParam();
-  Q = new FakeParam();
-  type = "";
-  buffer: unknown = null;
-  connect = vi.fn();
-}
-
-class FakeOscillator extends FakeNode {
-  started = false;
-  stopAt: number | null = null;
-  start = vi.fn(() => { this.started = true; });
-  stop = vi.fn((at: number) => { this.stopAt = at; });
-}
-
-class FakeAudioContext {
-  static oscillators: FakeOscillator[] = [];
-  currentTime = 0;
-  sampleRate = 8000;
-  state = "running";
-  destination = new FakeNode();
-  createGain = () => new FakeNode();
-  createBiquadFilter = () => new FakeNode();
-  createConvolver = () => new FakeNode();
-  createBufferSource = () => Object.assign(new FakeNode(), { start: vi.fn(), stop: vi.fn() });
-  createBuffer = (_channels: number, length: number) => ({
-    getChannelData: () => new Float32Array(length),
-  });
-  createOscillator = () => {
-    const osc = new FakeOscillator();
-    FakeAudioContext.oscillators.push(osc);
-    return osc;
-  };
-  resume = () => Promise.resolve();
-  close = () => Promise.resolve();
-}
-
 function createEngine() {
   const onError = vi.fn();
   const engine = new TrailerAudioEngine(onError);
@@ -84,16 +38,14 @@ beforeEach(() => {
 afterEach(() => { vi.unstubAllGlobals(); });
 
 describe("recorded trailer narration", () => {
-  it("plays and synchronizes narration without creating a sound graph in narration-only mode", async () => {
+  it("plays and synchronizes narration without creating a sound graph", async () => {
     const audioContext = vi.fn(function () { throw new Error("Procedural audio must stay off"); });
     vi.stubGlobal("AudioContext", audioContext);
     const engine = new TrailerAudioEngine(() => {}, {
-      narrationOnly: true,
       voiceOffsetSeconds: 0.18,
     });
     engine.setVoiceoverEnabled(true);
     engine.start();
-    engine.playKeystrokeTick(1);
     // The Love scene also used to create an additional resolution chime.
     engine.updateScene(10, 420, "Recorded narration", 420);
     engine.updateScene(10, 420.1, "Recorded narration", 420);
@@ -145,7 +97,6 @@ describe("recorded trailer narration", () => {
 
   it("loads narration during the section title without playing it when metadata arrives early", async () => {
     const engine = new TrailerAudioEngine(() => {}, {
-      narrationOnly: true,
       voiceOffsetSeconds: 2.4,
     });
     engine.setVoiceoverEnabled(true);
@@ -294,48 +245,6 @@ describe("recorded trailer narration", () => {
     expect(onError.mock.calls.some(([failed]) => failed)).toBe(false);
     expect(audio.paused).toBe(false);
     expect(audio.currentTime).toBe(2);
-    engine.destroy();
-  });
-});
-
-describe("short film score", () => {
-  beforeEach(() => {
-    FakeAudioContext.oscillators = [];
-    vi.stubGlobal("AudioContext", FakeAudioContext);
-  });
-
-  it("holds no tone while playing, so nothing hums between beats", () => {
-    const engine = new TrailerAudioEngine();
-    engine.start();
-    expect(FakeAudioContext.oscillators).toHaveLength(0);
-    engine.destroy();
-  });
-
-  it("marks each beat with mid-register tones that end by themselves", () => {
-    const engine = new TrailerAudioEngine();
-    engine.start();
-    SHORT_FILM_CUES.forEach((_, beat) => engine.playCue(beat));
-
-    const tones = FakeAudioContext.oscillators;
-    expect(tones.length).toBeGreaterThan(0);
-    for (const tone of tones) {
-      expect(tone.frequency.value).toBeGreaterThanOrEqual(200);
-      expect(tone.started).toBe(true);
-      expect(tone.stopAt).not.toBeNull();
-      expect(tone.stopAt!).toBeLessThanOrEqual(6);
-    }
-    engine.destroy();
-  });
-
-  it("stays silent when muted or paused", () => {
-    const engine = new TrailerAudioEngine();
-    engine.setMuted(true);
-    engine.start();
-    engine.playCue(0);
-    engine.setMuted(false);
-    engine.pause();
-    engine.playCue(1);
-    expect(FakeAudioContext.oscillators).toHaveLength(0);
     engine.destroy();
   });
 });
