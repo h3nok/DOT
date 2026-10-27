@@ -17,7 +17,6 @@ import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
 import {
   INQUIRY_VIDEOS,
   TRAILER_VOICE_OFFSET_SECONDS,
-  inquiryTypeTicks,
   mountInquiryCanvas,
   type InquiryVideoSpec,
   type TrailerSceneSpec,
@@ -60,13 +59,6 @@ function formatTimecode(seconds: number): string {
   const mins = String(Math.floor(clamped / 60)).padStart(2, "0");
   const secs = String(clamped % 60).padStart(2, "0");
   return `${mins}:${secs}`;
-}
-
-/** Index of the last time at or before `seconds`, or -1 when none has passed. */
-function lastIndexAtOrBefore(times: readonly number[], seconds: number): number {
-  let index = -1;
-  while (index + 1 < times.length && times[index + 1] <= seconds) index += 1;
-  return index;
 }
 
 function detectSiteTheme(): "dark" | "light" {
@@ -121,8 +113,6 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
   const timeRef = useRef<number>(film.posterSeconds);
   const audioEngineRef = useRef<TrailerAudioEngine | null>(null);
   const lastSceneIdRef = useRef<string | null>(null);
-  const lastTickIndexRef = useRef<number>(-1);
-  const lastCueIndexRef = useRef<number>(-1);
 
   useEffect(() => {
     setFullscreenAvailable(
@@ -142,29 +132,20 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     () => videoSpec.scenes ?? [],
     [videoSpec.scenes],
   );
+  // Only the spoken film has sound; every short film plays in silence.
   const narrationOnly = videoSpec.name === "inquiry-trailer";
-  const ticks = useMemo(
-    () => narrationOnly ? [] : inquiryTypeTicks(videoSpec),
-    [narrationOnly, videoSpec],
-  );
-  // A short film's score marks each beat once, as its text arrives.
-  const cues = useMemo(
-    () => narrationOnly ? [] : videoSpec.captions.map((caption) => caption.start),
-    [narrationOnly, videoSpec],
-  );
 
   const getAudioEngine = useCallback(() => {
     if (!audioEngineRef.current) {
       const engine = new TrailerAudioEngine(setVoiceoverUnavailable, {
-        narrationOnly,
-        voiceOffsetSeconds: narrationOnly ? TRAILER_VOICE_OFFSET_SECONDS : 0,
+        voiceOffsetSeconds: TRAILER_VOICE_OFFSET_SECONDS,
       });
       engine.setMuted(muted);
       engine.setVoiceoverEnabled(voiceoverEnabled);
       audioEngineRef.current = engine;
     }
     return audioEngineRef.current;
-  }, [muted, voiceoverEnabled, narrationOnly]);
+  }, [muted, voiceoverEnabled]);
 
   // Observe site theme changes (DOT Daylight / DOT Night) so the player stays in lockstep
   // with AppearanceControl.
@@ -191,8 +172,6 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     setVoiceoverUnavailable(false);
     timeRef.current = film.posterSeconds;
     setCurrentTime(film.posterSeconds);
-    lastTickIndexRef.current = -1;
-    lastCueIndexRef.current = -1;
     lastSceneIdRef.current = null;
     audioEngineRef.current?.destroy();
     audioEngineRef.current = null;
@@ -234,10 +213,10 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     );
   }, [scenes, currentTime]);
 
-  // Keep recorded narration on the film clock; short films get their beat tones instead.
+  // Keep recorded narration on the film clock; silent films never start an engine.
   useEffect(() => {
     const engine = audioEngineRef.current;
-    if (!playing || sourceMode !== "native") {
+    if (!narrationOnly || !playing || sourceMode !== "native") {
       engine?.pause();
       setBufferingVoiceover(false);
       lastSceneIdRef.current = null;
@@ -246,7 +225,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     const liveEngine = getAudioEngine();
     liveEngine.start();
     // Load the first narration during the opening splash, after the reader starts.
-    const scene = activeScene ?? (narrationOnly ? scenes[0] : null);
+    const scene = activeScene ?? scenes[0];
     if (scene) {
       const sceneIdx = Math.max(0, scene.number - 1);
       liveEngine.updateScene(
@@ -261,19 +240,6 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     }
   }, [playing, sourceMode, activeScene, currentTime, getAudioEngine, narrationOnly, scenes]);
 
-  const playKeystrokeTick = useCallback(
-    (index: number, atTime: number) => {
-      if (muted || typeof window === "undefined") return;
-      // Only trigger typewriter ticks during the first 2.5s of each scene's text reveal
-      if (scenes.length > 0) {
-        const sc = scenes.find((s) => atTime >= s.start && atTime < s.end);
-        if (sc && atTime - sc.start > 2.5) return;
-      }
-      getAudioEngine().playKeystrokeTick(index);
-    },
-    [muted, scenes, getAudioEngine],
-  );
-
   const seekTo = useCallback(
     (seconds: number) => {
       const clamped = Math.max(0, Math.min(videoSpec.duration, seconds));
@@ -282,11 +248,8 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       setCurrentTime(clamped);
       controllerRef.current?.seek(clamped);
       lastSceneIdRef.current = null;
-      // Seeking never strikes a beat; only playing through one does.
-      lastTickIndexRef.current = lastIndexAtOrBefore(ticks, clamped);
-      lastCueIndexRef.current = lastIndexAtOrBefore(cues, clamped);
     },
-    [ticks, cues, videoSpec.duration],
+    [videoSpec.duration],
   );
 
   // Handle external seek requests (e.g. clicking an Act card or Transcript beat).
@@ -317,22 +280,6 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
       }
       const nextTime = timeRef.current + dt;
 
-      for (let i = lastTickIndexRef.current + 1; i < ticks.length; i++) {
-        if (ticks[i] <= nextTime) {
-          if (ticks[i] >= timeRef.current - 0.05) {
-            playKeystrokeTick(i, ticks[i]);
-          }
-          lastTickIndexRef.current = i;
-        } else {
-          break;
-        }
-      }
-
-      for (let i = lastCueIndexRef.current + 1; i < cues.length && cues[i] <= nextTime; i++) {
-        if (cues[i] >= timeRef.current - 0.05) audioEngineRef.current?.playCue(i);
-        lastCueIndexRef.current = i;
-      }
-
       if (nextTime >= videoSpec.duration) {
         timeRef.current = videoSpec.duration;
         setCurrentTime(videoSpec.duration);
@@ -349,7 +296,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
 
     raf = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(raf);
-  }, [playing, sourceMode, ticks, cues, videoSpec.duration, playKeystrokeTick]);
+  }, [playing, sourceMode, videoSpec.duration]);
 
   // Cleanup AudioEngine on unmount.
   useEffect(() => {
@@ -702,23 +649,27 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               </button>
             )}
 
-            <button
-              type="button"
-              className="films-transport-btn"
-              onClick={toggleMute}
-              aria-label={
-                muted
-                  ? "Unmute film audio"
-                  : "Mute film audio"
-              }
-              title={muted ? "Unmute audio" : "Mute audio"}
-            >
-              {muted ? (
-                <VolumeX className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Volume2 className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
+            {narrationOnly ? (
+              <button
+                type="button"
+                className="films-transport-btn"
+                onClick={toggleMute}
+                aria-label={
+                  muted
+                    ? "Unmute film audio"
+                    : "Mute film audio"
+                }
+                title={muted ? "Unmute audio" : "Mute audio"}
+              >
+                {muted ? (
+                  <VolumeX className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Volume2 className="h-4 w-4" aria-hidden="true" />
+                )}
+              </button>
+            ) : (
+              <span className="films-transport-silent">Silent</span>
+            )}
 
             {film.youtubeId && (
               <button

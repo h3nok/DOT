@@ -630,6 +630,18 @@ html:has(.films-page) .organism-membrane {
   white-space: nowrap;
 }
 
+.films-transport-silent {
+  flex-shrink: 0;
+  align-self: center;
+  justify-self: center;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  color: var(--films-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
 .films-scrubber-wrap {
   position: relative;
   flex: 1;
