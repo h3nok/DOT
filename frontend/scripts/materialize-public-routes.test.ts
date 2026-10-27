@@ -26,8 +26,8 @@ import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
 import AMM from "../src/content/amm.json";
-import COMMUNITY from "../src/content/community.json";
-import BLOG from "../src/content/blog.json";
+import ACADEMY from "../src/content/academy/landing.json";
+import { READING_PATHS } from "../src/attention-os/reader/readingPaths";
 
 interface PublicRoute {
   route: string;
@@ -49,21 +49,13 @@ const nodeOfType = (route: PublicRoute, type: string) =>
   route.structuredData["@graph"].find((node) => node["@type"] === type);
 
 describe("public route metadata", () => {
-  it("makes the community invitation readable and shareable without JavaScript", () => {
+  it("points the retired Community address to Contact, out of search", () => {
     const community = routes.find(route => route.route === "/community")!;
-    const html = community.prerender!;
-    const text = document.createElement("div");
-    text.innerHTML = html;
-    expect(text.querySelector("h1")?.textContent).toBe(COMMUNITY.heading);
-    expect(text.textContent).toContain(BLOG.startingPoint.quote);
-    expect(text.textContent).toContain(COMMUNITY.status);
-    expect(text.textContent).toContain(COMMUNITY.supportDescription);
-    expect(text.querySelector('a[href="/contact?purpose=writing"]')?.textContent).toBe(COMMUNITY.conversationAction);
-    expect(text.querySelector('a[href="/support?purpose=author"]')?.textContent).toBe(COMMUNITY.supportAction);
-    expect(text.querySelector('a[href="/readers"]')).not.toBeNull();
-    expect(text.querySelector('a[href="/join"]')).not.toBeNull();
-    expect(nodeOfType(community, "WebPage")?.description).toBe(COMMUNITY.description);
-    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("https://dotheory.org/community/");
+    expect(community.canonicalRoute).toBe("/contact");
+    expect(community.noindex).toBe(true);
+    expect(community.prerender).toContain('href="/contact"');
+    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("https://dotheory.org/community/");
+    expect(rootDocument(shell, manifest)).not.toContain('href="/community"');
   });
   it("keeps how power works built for its address but hidden: out of search, unlinked, old addresses home", async () => {
     const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: {
@@ -245,7 +237,7 @@ describe("public route metadata", () => {
     expect(feed).not.toContain("<item>");
   });
   it("carries the concept map's real names, not a copy that has drifted", () => {
-    // The script cannot import TypeScript, so it restates the concept map. If
+    // The concept module has Vite-resolved imports, so the script restates it. If
     // a concept is renamed or reworded in the book's data and not here, every
     // shared concept link would keep describing the old idea.
     expect(
@@ -293,27 +285,72 @@ describe("public route metadata", () => {
     }
   });
 
-  it("keeps the hidden Academy address as a book alias without advertising it", () => {
-    const route = routes.find((candidate) => candidate.route === "/academy")!;
-    expect(route.canonicalRoute).toBe("/book/digital-organism-theory");
-    expect(route.prerender).toContain('href="/book/digital-organism-theory">Read Book One</a>');
-    expect(route.prerender).not.toContain("DOT Academy");
-    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("/academy");
-    expect(rootDocument(shell, manifest)).not.toContain('href="/academy"');
-    expect(rootDocument(shell, manifest)).not.toContain('"name":"DOT Academy"');
+  it("keeps the static main destinations in the same order as the shared menu", () => {
+    const text = document.createElement("div");
+    text.innerHTML = rootDocument(shell, manifest);
+    const destinations = Array.from(text.querySelectorAll('nav[aria-label="Site"] a'))
+      .slice(0, 6)
+      .map(destination => [destination.getAttribute("href"), destination.textContent]);
+    expect(destinations).toEqual([
+      ["/", "Home"],
+      ["/book/digital-organism-theory", "Book One"],
+      ["/academy", "Academy"],
+      ["/blog", "Writing"],
+      ["/about", "About"],
+      ["/contact", "Contact"],
+    ]);
   });
 
-  it("materializes the Films screening room and keeps /videos as a canonical alias", () => {
-    const films = routes.find((candidate) => candidate.route === "/films")!;
+  it("materializes the Academy with real reading paths and a separate fixed book edition", () => {
+    const route = routes.find((candidate) => candidate.route === "/academy")!;
+    expect(route.canonicalRoute).toBeUndefined();
+    expect(route.title).toBe(ACADEMY.title);
+    expect(route.description).toBe(ACADEMY.description);
+    const text = document.createElement("div");
+    text.innerHTML = route.prerender!;
+    expect(text.querySelector("h1")?.textContent).toBe(ACADEMY.heading);
+    expect(text.textContent).toContain(ACADEMY.introduction);
+    expect(text.querySelector('a[href^="/academy/films"]')).toBeNull();
+    for (const readingPath of READING_PATHS) {
+      const destination = "/book/digital-organism-theory/" + readingPath.steps[0].slug + "?path=" + readingPath.id;
+      expect(text.querySelector('a[href="' + destination + '"]')?.textContent).toContain(readingPath.label);
+      expect(text.textContent).toContain(readingPath.purpose);
+    }
+    expect(text.querySelector('a[href="/book/digital-organism-theory"]')).not.toBeNull();
+    expect(text.textContent).toContain("fixed, citable edition");
+    expect(text.querySelector('a[href="/doctrine"]')).not.toBeNull();
+    expect(text.querySelector('a[href="/applied"]')).not.toBeNull();
+    expect(text.querySelector('section a[href="/contact?purpose=writing"]')).not.toBeNull();
+    expect(nodeOfType(route, "CollectionPage")).toBeDefined();
+    expect(nodeOfType(route, "Course")).toBeUndefined();
+    expect(nodeOfType(route, "EducationalOrganization")).toBeUndefined();
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("<loc>https://dotheory.org/academy/</loc>");
+    expect(rootDocument(shell, manifest)).toContain('href="/academy">Academy</a>');
+    expect(renderRoute(shell, route)).toContain('<link rel="canonical" href="https://dotheory.org/academy/"');
+  });
+
+  it("materializes films under the Academy and preserves both legacy film addresses as aliases", () => {
+    const films = routes.find((candidate) => candidate.route === "/academy/films")!;
     expect(films).toBeDefined();
-    expect(films.prerender).toContain("You, the Observer, Belong in the Inquiry");
+    for (const concept of DOCTRINE_CONCEPTS as { id: string; name: string }[]) {
+      expect(films.prerender).toContain(`<h3>${concept.name}</h3>`);
+      expect(films.prerender).toContain(`href="/academy/films?concept=${concept.id}#screening-room"`);
+    }
+    expect(films.prerender).not.toContain("You, the Observer, Belong in the Inquiry");
     expect(films.prerender).toContain("https://www.youtube.com/@dotheory");
     expect(films.prerender).toContain("/book/digital-organism-theory/the-digital-organism");
 
-    const videos = routes.find((candidate) => candidate.route === "/videos")!;
-    expect(videos.canonicalRoute).toBe("/films");
-    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("<loc>https://dotheory.org/films/</loc>");
-    expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("<loc>https://dotheory.org/videos/</loc>");
+    const trail = nodeOfType(films, "BreadcrumbList")?.itemListElement as { name: string; item: string }[];
+    expect(trail.map(entry => entry.name)).toEqual(["DOT", "Academy", "Films"]);
+    expect(trail[1].item).toBe(SITE_URL + "/academy/");
+    for (const legacyRoute of ["/films", "/videos"]) {
+      const alias = routes.find((candidate) => candidate.route === legacyRoute)!;
+      expect(alias.canonicalRoute).toBe("/academy/films");
+      expect(alias.prerender).toContain('href="/academy/films"');
+      expect(renderRoute(shell, alias)).toContain('<link rel="canonical" href="https://dotheory.org/academy/films/"');
+      expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("<loc>https://dotheory.org" + legacyRoute + "/</loc>");
+    }
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("<loc>https://dotheory.org/academy/films/</loc>");
   });
 
   it("gives the Book One landing its own share image", () => {
@@ -585,6 +622,7 @@ describe("page text for readers without JavaScript", () => {
     expect(rootDocument(shell, manifest)).toContain("Love is the condition in which Fear no longer governs you.");
     expect(rootDocument(shell, manifest)).toContain("<h2>A society can be productive and still be lost.</h2>");
     expect(rootDocument(shell, manifest)).toContain('href="/book/digital-organism-theory/the-painting#the-culture-inside-you"');
+    expect(rootDocument(shell, manifest)).toContain('<a href="/amm">Continue in The American Millennial Manifesto</a>');
     expect(rootDocument(shell, manifest)).not.toContain("What happens when you feel challenged?");
     expect(rootDocument(shell, manifest)).not.toContain("Read. Inquire. Open up.");
     expect(rootDocument(shell, manifest)).not.toContain("Henok’s account begins with lived experience.");

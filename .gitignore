@@ -144,3 +144,8 @@ docs/blueprint/amm/*
 # The videos are published on YouTube; index.html inlines every image and runs ~45 MB.
 design/youtube/*.mp4
 design/youtube/index.html
+
+# Voice replication profile & raw sample staging
+frontend/public/audio/.voice-profile.json
+frontend/public/audio/.samples/
+frontend/public/audio/.tmp*

@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { existsSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { copyFile, mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
 import { NOTE, writeDigitalScore } from "./channel-digital-audio.mjs";
+import { mixVoiceover } from "./remux-channel-inquiry.mjs";
 import { buildInquiryDocument, INQUIRY_CONTEXT, INQUIRY_VIDEOS, inquirySubtitles, inquiryTypeTicks } from "./channel-inquiry-video.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -17,6 +18,13 @@ const ASSETS_DIR = path.join(OUTPUT, "assets");
 const FFMPEG = process.env.DOT_FFMPEG || (existsSync("/tmp/dot-channel-video-tools/ffmpeg") ? "/tmp/dot-channel-video-tools/ffmpeg" : "ffmpeg");
 const FPS = 30;
 const stillsOnly = process.argv.includes("--stills");
+const onlyArg = process.argv.find((a) => a.startsWith("--only="))?.split("=")[1] || null;
+const encoder = process.argv.find((a) => a.startsWith("--encoder="))?.split("=")[1] || "libx264";
+const resolution = process.argv.find((a) => a.startsWith("--resolution="))?.split("=")[1] || "4k";
+assert.ok(["libx264", "h264_nvenc"].includes(encoder), "--encoder must be libx264 or h264_nvenc");
+assert.ok(["4k", "1080p"].includes(resolution), "--resolution must be 4k or 1080p");
+const outputWidth = resolution === "4k" ? 3840 : 1920;
+const outputHeight = resolution === "4k" ? 2160 : 1080;
 
 async function fonts() {
   const declarations = [];
@@ -26,7 +34,9 @@ async function fonts() {
     ["inter", "Inter", 600, "normal"],
     ["inter", "Inter", 700, "normal"],
     ["inter", "Inter", 400, "italic"],
+    ["space-grotesk", "Space Grotesk", 400, "normal"],
     ["space-grotesk", "Space Grotesk", 500, "normal"],
+    ["space-grotesk", "Space Grotesk", 600, "normal"],
     ["space-grotesk", "Space Grotesk", 700, "normal"],
     ["source-serif-4", "Source Serif 4", 400, "normal"],
     ["source-serif-4", "Source Serif 4", 600, "normal"],
@@ -50,6 +60,7 @@ async function fonts() {
 async function run(command, args) {
   const child = spawn(command, args, { stdio: ["ignore", "ignore", "pipe"] });
   let log = "";
+  child.stdin?.on("error", () => {});
   child.stderr.on("data", (chunk) => {
     log += chunk;
   });
@@ -79,19 +90,26 @@ function score(video) {
       peak: 0.12,
       cinematicSilence: true,
       ticks: inquiryTypeTicks(video),
-      // Quiet, non-musical frame-advance micro-pulses only (no bells or meditation pads)
+      // Opening 5s DOT Emergence Splash chords + scene transition cues across all 12 trailer scenes
       events: [
-        { t: 9.6, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 18.0, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 26.4, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 34.8, freq: NOTE.A1, amp: 0.15, kind: "thump" },
-        { t: 46.6, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 58.4, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 70.2, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 81.6, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 93.0, freq: NOTE.A1, amp: 0.14, kind: "thump" },
-        { t: 104.4, freq: NOTE.A1, amp: 0.12, kind: "thump" },
-        { t: 115.0, freq: NOTE.A1, amp: 0.12, kind: "thump" },
+        { t: 0.16, freq: NOTE.A2, amp: 0.14, pan: -0.1, kind: "thump" },
+        { t: 1.42, freq: NOTE.E2, amp: 0.12, pan: 0.1, kind: "thump" },
+        { t: 2.92, freq: NOTE.A2, amp: 0.14, pan: 0, kind: "thump" },
+        ...(video.scenes || []).map((sc, idx) => ({
+          t: sc.start,
+          freq:
+            idx === 9
+              ? 116.54
+              : idx === 10 || idx === 11
+                ? NOTE.A2
+                : idx % 3 === 1
+                  ? (NOTE.D3 ?? 146.83)
+                  : idx % 3 === 2
+                    ? (NOTE.E3 ?? 164.81)
+                    : NOTE.A2,
+          amp: idx === 10 ? 0.16 : 0.13,
+          kind: "thump",
+        })),
       ],
     };
   }
@@ -111,20 +129,27 @@ function score(video) {
 async function verifyForegroundMotion(page, video, outName) {
   const baseName = video.baseName || video.name.replace(/-light$/, "");
   const centered = baseName !== "inquiry-trailer";
-  const difference = await page.evaluate((isCentered) => {
+  // Check a meaningful loop progression, rather than old absolute timestamps
+  // that can fall in a settled scene after narration is retimed.
+  const loopScene = video.scenes?.find((scene) => scene.number === 9);
+  const times = centered ? [0.9, 2.1] : [loopScene.start + 5, loopScene.start + 18];
+  const difference = await page.evaluate(([first, second]) => {
     const canvas = document.querySelector("canvas");
     const s = canvas.width / 1920;
     const ctx = canvas.getContext("2d");
-    window.seekInquiry(isCentered ? 0.9 : 38.0);
-    const a = ctx.getImageData((isCentered ? 670 : 1080) * s, 160 * s, 580 * s, 480 * s).data;
-    window.seekInquiry(isCentered ? 2.1 : 41.2);
-    const b = ctx.getImageData((isCentered ? 670 : 1080) * s, 160 * s, 580 * s, 480 * s).data;
+    window.seekInquiry(first);
+    const focus = window.inquiryVisualFocus || { x: 960, y: 400 };
+    const x = Math.max(0, Math.min(1340, focus.x - 290));
+    const y = Math.max(0, Math.min(600, focus.y - 240));
+    const a = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
+    window.seekInquiry(second);
+    const b = ctx.getImageData(x * s, y * s, 580 * s, 480 * s).data;
     let total = 0;
     for (let i = 0; i < a.length; i += 4) {
       total += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
     }
     return total / ((a.length / 4) * 3);
-  }, centered);
+  }, times);
   assert.ok(difference > 0.35, `Foreground is too static (${outName}): ${difference}`);
   console.log(`${outName}: moving foreground verified (${difference.toFixed(2)} mean pixel change)`);
 }
@@ -132,24 +157,34 @@ async function verifyForegroundMotion(page, video, outName) {
 async function render(page, video, identity, embeddedFonts, temporary, theme = "dark") {
   const isLight = theme === "light";
   const outName = isLight ? `${video.name}-light` : video.name;
-  // Render ALL videos at native 4K UHD (3840x2160, scale: 2) so YouTube uses its 4K VP9/AV1 high-bitrate tier and text/lines are razor-sharp.
-  const is4k = true;
+  // Poster and layout QA use the full 4K canvas independently of delivery size.
+  const is4k = resolution === "4k";
   const document = buildInquiryDocument({ video, identity, fonts: embeddedFonts, scale: 2, theme });
   await page.setContent(document);
   await page.evaluate(() => window.inquiryReady);
   await verifyForegroundMotion(page, video, outName);
-  const thumbs = [];
-  for (const t of video.samples) {
-    const bounds = await page.evaluate((sampleTime) => {
-      window.seekInquiry(sampleTime);
-      return window.inquiryTextBounds;
-    }, t);
-    if (video.name === "inquiry-trailer" && t >= 9.5 && t < 125) {
-      const leftCaptionBounds = bounds.filter((b) => b.left < 200 && b.top > 250 && b.bottom < 900);
-      for (const b of leftCaptionBounds) {
-        assert.ok(b.right < 968, `Left caption crosses grid divider at ${t}s (${outName}): ${b.text} (right=${b.right})`);
+  if (video.name === "inquiry-trailer") {
+    // Check every scene, including early text emergence and the final lockup.
+    const times = video.scenes.flatMap((scene) => [scene.start + 0.4, scene.start + 3, (scene.start + scene.end) / 2]);
+    for (const t of times) {
+      const bounds = await page.evaluate((time) => {
+        window.seekInquiry(time);
+        return window.inquiryTextBounds.filter((bound) => bound.region);
+      }, t);
+      for (const bound of bounds) {
+        const { region } = bound;
+        assert.ok(bound.left >= region.left && bound.right <= region.right && bound.top >= region.top && bound.bottom <= region.bottom,
+          `Caption leaves its ${region.role} placement at ${t}s (${outName}): ${bound.text}`);
+        assert.ok(bound.left >= 64 && bound.right <= 1856 && bound.top >= 64 && bound.bottom <= 1024,
+          `Caption leaves the safe frame at ${t}s (${outName}): ${bound.text}`);
       }
     }
+  }
+  const thumbs = [];
+  for (const t of video.samples) {
+    await page.evaluate((sampleTime) => {
+      window.seekInquiry(sampleTime);
+    }, t);
     const image = await page.evaluate(() => {
       const thumb = document.createElement("canvas");
       thumb.width = 640;
@@ -160,7 +195,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     thumbs.push({ t, image });
   }
 
-  await page.evaluate((t) => window.seekInquiry(t), video.samples.at(-1));
+  const posterTime = video.name === "inquiry-trailer" ? (video.posterSeconds || 140.0) : video.samples.at(-1);
+  await page.evaluate((t) => window.seekInquiry(t), posterTime);
   const posterBase64 = await page.evaluate(() => document.querySelector("canvas").toDataURL("image/png").split(",")[1]);
   const posterPath = path.join(ASSETS_DIR, `${outName}-poster.png`);
   await writeFile(posterPath, Buffer.from(posterBase64, "base64"));
@@ -185,18 +221,46 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   });
   await page.screenshot({ path: path.join(ASSETS_DIR, `${outName}-storyboard.png`) });
   await page.setViewportSize({ width: 1920, height: 1080 });
-  if (!isLight && video.captions.length) {
+  if (!isLight && video.captions.length && video.name !== "inquiry-trailer") {
     await writeFile(path.join(ASSETS_DIR, `${video.name}.srt`), inquirySubtitles(video));
   }
   if (stillsOnly) return;
 
-  // Use 1920x1080 canvas capture piped into multi-threaded FFmpeg Lanczos 4K (3840x2160) H.264 High@L5.1 encoder for fast 4K UHD output
+  // Capture deterministic frames; optional NVENC keeps the same audio and timing.
   const streamDoc = buildInquiryDocument({ video, identity, fonts: embeddedFonts, scale: 1, theme });
   await page.setContent(streamDoc);
   await page.evaluate(() => window.inquiryReady);
+  const extraPages = [];
+  if (video.duration > 60) {
+    for (let i = 0; i < 3; i++) {
+      const p = await page.context().browser().newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+      await p.setContent(streamDoc);
+      await p.evaluate(() => window.inquiryReady);
+      extraPages.push(p);
+    }
+  }
+  const workerPages = [page, ...extraPages];
 
   const wavPath = path.join(temporary, `${outName}.wav`);
-  await writeDigitalScore({ ...score(video), wavPath });
+  if (video.name === "inquiry-trailer") {
+    await mixVoiceover({
+      scenes: video.scenes,
+      masterDir: path.join(ROOT, "artifacts/voiceover/masters"),
+      outputPath: wavPath,
+      durationSeconds: video.duration,
+    });
+    // The closing community card is a visual invitation. Check the actual mix
+    // so a longer regenerated scene cannot accidentally narrate over it.
+    const quietTail = await run(FFMPEG, [
+      "-hide_banner", "-ss", String(video.duration - 7.2), "-i", wavPath,
+      "-af", "volumedetect", "-vn", "-f", "null", "-",
+    ]);
+    const quietPeakText = quietTail.match(/max_volume:\s*(-inf|[-\d.]+) dB/)?.[1];
+    const quietPeak = quietPeakText === "-inf" ? -Infinity : Number(quietPeakText);
+    assert.ok(quietPeak <= -70, `The final community card must be silent (${outName}): ${quietPeak} dBFS`);
+  } else {
+    await writeDigitalScore({ ...score(video), wavPath });
+  }
   const file = path.join(temporary, `${outName}.mp4`);
   const child = spawn(
     FFMPEG,
@@ -216,19 +280,18 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
       "-i",
       wavPath,
       "-vf",
-      "scale=3840:2160:flags=lanczos+accurate_rnd",
+      `scale=${outputWidth}:${outputHeight}:flags=lanczos+accurate_rnd`,
       "-c:v",
-      "libx264",
+      encoder,
       "-profile:v",
       "high",
       "-level:v",
-      "5.1",
+      is4k ? "5.1" : "4.2",
       "-threads",
       "0",
-      "-preset",
-      "superfast",
-      "-crf",
-      "11",
+      ...(encoder === "h264_nvenc"
+        ? ["-preset", "p6", "-tune", "hq", "-rc", "vbr", "-cq", "18", "-b:v", "0"]
+        : ["-preset", "superfast", "-crf", "17"]),
       "-pix_fmt",
       "yuv420p",
       "-color_primaries",
@@ -243,6 +306,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
       "192k",
       "-ar",
       "48000",
+      "-ac",
+      "2",
       "-t",
       String(video.duration),
       "-movflags",
@@ -252,19 +317,29 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     { stdio: ["pipe", "ignore", "pipe"] },
   );
   let log = "";
+  child.stdin?.on("error", () => {});
   child.stderr.on("data", (chunk) => {
     log += chunk;
   });
   const done = once(child, "close");
   done.catch(() => {});
+  const totalFrames = video.duration * FPS;
+  const batchSize = workerPages.length;
   try {
-    for (let frame = 0; frame < video.duration * FPS; frame++) {
-      const base64 = await page.evaluate((t) => {
-        window.seekInquiry(t);
-        return document.querySelector("canvas").toDataURL("image/jpeg", 0.96).split(",")[1];
-      }, frame / FPS);
-      if (!child.stdin.write(Buffer.from(base64, "base64"))) await once(child.stdin, "drain");
-      if (frame % (FPS * 12) === 0) console.log(`${outName}: ${frame / FPS}/${video.duration}s`);
+    for (let frame = 0; frame < totalFrames; frame += batchSize) {
+      const count = Math.min(batchSize, totalFrames - frame);
+      const base64List = await Promise.all(
+        Array.from({ length: count }, (_, idx) =>
+          workerPages[idx].evaluate((t) => {
+            window.seekInquiry(t);
+            return document.querySelector("canvas").toDataURL("image/jpeg", 0.96).split(",")[1];
+          }, (frame + idx) / FPS),
+        ),
+      );
+      for (let idx = 0; idx < count; idx++) {
+        if (!child.stdin.write(Buffer.from(base64List[idx], "base64"))) await once(child.stdin, "drain");
+        if ((frame + idx) % (FPS * 12) === 0) console.log(`${outName}: ${(frame + idx) / FPS}/${video.duration}s`);
+      }
     }
     child.stdin.end();
     const [code] = await done;
@@ -272,6 +347,8 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   } catch (error) {
     child.kill();
     throw error;
+  } finally {
+    await Promise.all(extraPages.map((p) => p.close().catch(() => {})));
   }
   const decoded = await run(FFMPEG, ["-hide_banner", "-i", file, "-f", "null", "-"]);
   assert.match(decoded, /Video: h264/);
@@ -281,7 +358,7 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
   assert.match(decoded, new RegExp(`frame=\\s*${video.duration * FPS}\\b`));
   const mins = String(Math.floor(video.duration / 60)).padStart(2, "0");
   const secs = String(video.duration % 60).padStart(2, "0");
-  assert.ok(decoded.includes(`Duration: 00:${mins}:${secs}.00`));
+  assert.match(decoded, new RegExp(`Duration: 00:${mins}:${secs}\\.\\d{2}`));
   const loudness = await run(FFMPEG, ["-hide_banner", "-i", file, "-af", "volumedetect", "-vn", "-f", "null", "-"]);
   const maximum = Number(loudness.match(/max_volume: ([-\d.]+) dB/)?.[1]);
   assert.ok(maximum < -1, `Audio peak needs headroom: ${maximum}`);
@@ -290,17 +367,21 @@ async function render(page, video, identity, embeddedFonts, temporary, theme = "
     name: outName,
     theme,
     file: `${outName}.mp4`,
-    width: is4k ? 3840 : 1920,
-    height: is4k ? 2160 : 1080,
+    width: outputWidth,
+    height: outputHeight,
+    encoder,
     fps: FPS,
     frames: video.duration * FPS,
     codec: "H.264",
     audio: "AAC stereo 48 kHz",
     max_volume_dbfs: maximum,
-    style: "Precision architectural plates, dual-theme studio lighting (Dark Obsidian & Light Archival), Big C and Little c mathematical loops, and canonical DOT mark.",
+    style: "Open cinematic typography, variable scene compositions, full-stage and offset DOT geometry, and the canonical DOT mark in dark and light editions.",
     context: INQUIRY_CONTEXT,
     render_sha256: createHash("sha256").update(document).digest("hex"),
-    video_sha256: createHash("sha256").update(await readFile(file)).digest("hex"),
+    video_sha256: await new Promise((resolve, reject) => {
+      const hash = createHash("sha256");
+      createReadStream(file).on("data", (c) => hash.update(c)).on("end", () => resolve(hash.digest("hex"))).on("error", reject);
+    }),
   };
   const readyFile = path.join(OUTPUT, `.${outName}.ready.mp4`);
   await copyFile(file, readyFile);
@@ -313,14 +394,15 @@ function preview(embeddedFonts, identity) {
   const videos = INQUIRY_VIDEOS.map(({ name, duration, title, captions }) => {
     const label = name === "mark-splash" ? "MARK-ONLY SPLASH" : name.endsWith("intro") ? "FILM 2 · THE DOT IDENTITY FILM" : "FILM 1 · OFFICIAL DOT TRAILER";
     const srtLink = captions.length ? `<a download href="assets/${name}.srt">Captions (.srt)</a>` : "";
+    const spokenTrack = name === "inquiry-trailer" ? `<track kind="captions" src="assets/inquiry-trailer.vtt" srclang="en" label="English">` : "";
     return `<article>
-      <div class="meta"><span>${label}</span><span>${duration} SECONDS · 4K UHD (3840×2160) · 30 FPS · DARK &amp; LIGHT EDITIONS</span></div>
+      <div class="meta"><span>${label}</span><span>${duration} SECONDS · ${resolution === "4k" ? "4K UHD" : "1080p"} (${outputWidth}×${outputHeight}) · 30 FPS · DARK &amp; LIGHT EDITIONS</span></div>
       <h2>${duration}-second ${name === "mark-splash" ? "mark-only splash" : name.endsWith("intro") ? "identity film" : "cinematic trailer"} — ${title}</h2>
       <div class="edition-grid">
         <div class="edition-card">
           <div class="edition-tag">DARK STUDIO EDITION (OBSIDIAN BLACK)</div>
           <div class="video-stage">
-            <video controls playsinline preload="metadata" poster="assets/${name}-poster.png"><source src="${name}.mp4" type="video/mp4"></video>
+            <video controls playsinline preload="metadata" poster="assets/${name}-poster.png"><source src="${name}.mp4" type="video/mp4">${spokenTrack}</video>
             <a class="video-cta-overlay" href="https://dotheory.org" target="_blank" rel="noopener noreferrer" title="Visit dotheory.org">dotheory.org ↗</a>
           </div>
           <p class="links"><a download href="${name}.mp4">Download Dark MP4</a>${srtLink}<a href="assets/${name}-storyboard.png">Dark Storyboard</a><a href="assets/${name}-poster.png">Dark Poster</a><a href="https://dotheory.org" target="_blank" rel="noopener noreferrer">dotheory.org ↗</a></p>
@@ -328,7 +410,7 @@ function preview(embeddedFonts, identity) {
         <div class="edition-card light-card">
           <div class="edition-tag">LIGHT ARCHIVAL EDITION (ALABASTER)</div>
           <div class="video-stage">
-            <video controls playsinline preload="metadata" poster="assets/${name}-light-poster.png"><source src="${name}-light.mp4" type="video/mp4"></video>
+            <video controls playsinline preload="metadata" poster="assets/${name}-light-poster.png"><source src="${name}-light.mp4" type="video/mp4">${spokenTrack}</video>
             <a class="video-cta-overlay" href="https://dotheory.org" target="_blank" rel="noopener noreferrer" title="Visit dotheory.org">dotheory.org ↗</a>
           </div>
           <p class="links"><a download href="${name}-light.mp4">Download Light MP4</a>${srtLink}<a href="assets/${name}-light-storyboard.png">Light Storyboard</a><a href="assets/${name}-light-poster.png">Light Poster</a><a href="https://dotheory.org" target="_blank" rel="noopener noreferrer">dotheory.org ↗</a></p>
@@ -338,8 +420,8 @@ function preview(embeddedFonts, identity) {
   }).join("");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DOT · The Observer Belongs in the Inquiry (Dark &amp; Light Suite)</title><style>${embeddedFonts}
   *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#0b1a15 0%,#030605 62%,#010202 100%);color:#f4f8f6;font:18px/1.65 "Space Grotesk",sans-serif}main{max-width:1360px;margin:auto;padding:56px 28px}header{max-width:880px;margin-bottom:44px}.eyebrow,.meta,.edition-tag{font:700 13px/1.6 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#54d19f}.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:8px}h1{font-size:clamp(30px,5vw,58px);font-weight:700;line-height:1.08;letter-spacing:-1.6px;margin:10px 0 18px;color:#f4f8f6}h2{font-weight:700;font-size:clamp(21px,2.8vw,28px);letter-spacing:-.02em;margin:0 0 20px;color:#f4f8f6}p{color:#b4c8bf}.lead{font:600 clamp(18px,2.2vw,22px)/1.58 "Source Serif 4",Georgia,serif;color:#d6e6df}article{margin:0 0 48px;padding:28px;border-radius:18px;background:rgba(7,13,11,.92);border:1.5px solid ${identity.dark.border};box-shadow:0 18px 44px rgba(0,0,0,.55)}.edition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.edition-card{padding:18px;border-radius:14px;background:rgba(3,6,5,.92);border:1px solid ${identity.dark.border}}.edition-card.light-card{background:#f6faf8;color:#0d1f19;border-color:#d4e2dc}.edition-card.light-card .edition-tag{color:#146c4e}.edition-card.light-card a{color:#146c4e}.edition-tag{margin-bottom:10px}.video-stage{position:relative}.video-cta-overlay{position:absolute;top:14px;right:14px;z-index:2;padding:6px 12px;border-radius:999px;background:rgba(2,4,3,.78);border:1px solid rgba(84,209,159,.38);color:#6ee2b4;font:600 12px/1.2 "JetBrains Mono",monospace;text-decoration:none;backdrop-filter:blur(8px);transition:border-color .18s ease,background .18s ease}.video-cta-overlay:hover{background:rgba(12,28,22,.92);border-color:#54d19f}.light-card .video-cta-overlay{background:rgba(246,250,248,.88);border-color:rgba(20,108,78,.32);color:#146c4e}video{display:block;width:100%;aspect-ratio:16/9;background:#020303;border-radius:10px;border:1px solid ${identity.dark.border}}.light-card video{background:#f6faf8;border-color:#d4e2dc}a{color:#6ee2b4;font-weight:600;text-underline-offset:4px}.links{display:flex;flex-wrap:wrap;gap:12px 20px;margin:14px 0 0;font-size:15px}footer{border-top:1.5px solid ${identity.dark.border};padding-top:24px;font-size:15px}summary{cursor:pointer;font-weight:700;color:#f4f8f6}img{max-width:100%}@media(max-width:960px){.edition-grid{grid-template-columns:1fr}}@media(max-width:720px){main{padding:24px 14px 40px}header{margin-bottom:28px}article{padding:16px 14px;margin-bottom:28px;border-radius:14px}video{border-radius:8px}.links{gap:10px 16px;font-size:15px}}</style></head><body><main>
-  <header><p class="eyebrow">DIGITAL ORGANISM THEORY · DARK STUDIO &amp; LIGHT ARCHIVAL FILM SUITE</p><h1>The Observer Belongs<br>in the Inquiry.</h1><p class="lead">Pitting Digital Organism Theory against the blind spot of reductive materialism and unexamined dogma—before unfolding the Big C and Little c mathematical loops, RF₀, the Canvas and the Painting, and the observer’s return in near-silence. Rendered in both Dark Studio (Obsidian) and Light Archival (Ivory Monograph) editions.</p></header>${videos}
-  <footer><p>Current-events context: <a href="${INQUIRY_CONTEXT.source.url}">${INQUIRY_CONTEXT.source.title}</a> · ${INQUIRY_CONTEXT.source.publisher}, 23 September 2026. Context checked 22 October 2026.</p><p>DOT's consciousness model remains a proposed, falsifiable model: <em>“The model must permit criticism that it cannot reinterpret as pathology.”</em></p><details><summary>Read the verbatim narration &amp; on-screen lines</summary>${INQUIRY_VIDEOS.filter((v) => v.captions.length).map((v) => `<h3>${v.duration}-second ${v.name.endsWith("intro") ? "DOT Identity Film" : "Official DOT Trailer"}</h3><p>${v.captions.map((c) => { const noteText = c.notes ? c.notes.join(" ") : c.note; return `<strong>${c.lines.join(" ")}</strong>${noteText ? ` — <em>${noteText}</em>` : ""}`; }).join("<br>")}</p>`).join("")}</details></footer>
+  <header><p class="eyebrow">DIGITAL ORGANISM THEORY · DARK STUDIO &amp; LIGHT ARCHIVAL FILM SUITE</p><h1>The Observer Belongs<br>in the Inquiry.</h1><p class="lead">An invitation to explore your own experience: a short message, a map, the patterns you carry, and the possibility of a different response. The film introduces DOT through familiar moments and leaves its larger hypotheses open to questions and evidence. Available in Dark Studio and Light Archival editions.</p></header>${videos}
+  <footer><p>Current-events context: <a href="${INQUIRY_CONTEXT.source.url}">${INQUIRY_CONTEXT.source.title}</a> · ${INQUIRY_CONTEXT.source.publisher}, 23 September 2026. Context checked 22 October 2026.</p><p>DOT's consciousness model remains a proposed, falsifiable model: <em>“The model must permit criticism that it cannot reinterpret as pathology.”</em></p><details><summary>Read the verbatim narration &amp; on-screen lines</summary>${INQUIRY_VIDEOS.filter((v) => v.captions.length).map((v) => `<h3>${v.duration}-second ${v.name.endsWith("intro") ? "DOT Identity Film" : "Official DOT Trailer"}</h3><p>${v.captions.map((c) => { const noteText = c.notes ? c.notes.join(" ") : c.note; return c.primaryStatement ? c.primaryStatement : `<strong>${c.lines.join(" ")}</strong>${noteText ? ` — <em>${noteText}</em>` : ""}`; }).join("<br>")}</p>`).join("")}</details></footer>
   </main></body></html>`;
 }
 
@@ -347,9 +429,14 @@ await mkdir(OUTPUT, { recursive: true });
 await mkdir(ASSETS_DIR, { recursive: true });
 const identity = JSON.parse(await readFile(path.join(ROOT, "frontend/src/content/identity.json"), "utf8"));
 const embeddedFonts = await fonts();
+if (process.argv.includes("--preview-only")) {
+  await writeFile(path.join(OUTPUT, "inquiry-preview.html"), preview(embeddedFonts, identity));
+  console.log(`Preview: ${path.join(OUTPUT, "inquiry-preview.html")}`);
+  process.exit(0);
+}
 if (!stillsOnly) await run(FFMPEG, ["-version"]);
 const browser = await chromium.launch({ ...(process.env.DOT_CHROME ? { executablePath: process.env.DOT_CHROME } : {}) });
-const temporary = await mkdtemp(path.join(os.tmpdir(), "dot-inquiry-"));
+const temporary = await mkdtemp(path.join(OUTPUT, ".tmp-inquiry-"));
 try {
   const darkPage = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   const lightPage = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
@@ -360,6 +447,7 @@ try {
     throw error;
   });
   for (const video of INQUIRY_VIDEOS) {
+    if (onlyArg && video.name !== onlyArg) continue;
     await Promise.all([
       render(darkPage, video, identity, embeddedFonts, temporary, "dark"),
       render(lightPage, video, identity, embeddedFonts, temporary, "light"),

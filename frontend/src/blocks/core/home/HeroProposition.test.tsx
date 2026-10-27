@@ -121,7 +121,7 @@ describe("HeroProposition", () => {
     expect(screen.queryByText("Book One’s preface · Free to read")).not.toBeInTheDocument();
   });
 
-  it("lets readers begin before the concepts or diagram", () => {
+  it("keeps reading immediate, then presents the architecture before its concepts", () => {
     render(
       <MemoryRouter>
         <HeroProposition stage={<figure aria-label="Proposed architecture" />} />
@@ -136,6 +136,7 @@ describe("HeroProposition", () => {
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(diagram.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("keeps the question tools behind a reader-controlled disclosure", () => {

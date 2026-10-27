@@ -8,43 +8,43 @@ import {
 } from "../../films/ScreeningRoomPlayer";
 import "../../films/films.css";
 
-const TRAILER = (filmsData.screeningFilms as ScreeningFilmMeta[])[0];
+// The homepage plays the short film without narration; the narrated film lives in the Academy.
+const INTRO_FILM = (filmsData.screeningFilms as ScreeningFilmMeta[]).find(
+  (film) => film.id === "inquiry-intro",
+);
 
 const INNER_LOOP_CARDS = [
   {
     step: "01",
-    formula: "Experience → Canvas → Painting",
-    title: "The Inner Loop of Little c",
-    status: "Model · Ch. 5–6",
+    title: "What a short reply can stir up",
+    status: "Experience & interpretation",
     tone: "local",
-    body: "Every consequential action in RF₀ returns feedback to Little c. That feedback etches the Canvas; what accumulates there becomes the Painting — the interpretive lens that colours the next moment before deliberate thought begins.",
+    body: "Someone replies ‘Okay.’ One person hears irritation; another hears a busy day. The message is shared. The interpretation carries a history.",
     linkLabel: "Chapter 5 · The Canvas",
     linkTo: "/book/digital-organism-theory/the-canvas",
   },
   {
     step: "02",
-    formula: "E_C ↑ → Fragmented Intent",
-    title: "Fear: High Canvas Entropy",
-    status: "Model · Defensive State",
+    title: "When protection becomes a pattern",
+    status: "Fear & choice",
     tone: "rf",
-    body: "When the Canvas is turbulent and unexamined, high entropy governs. Perception narrows around defence, urgency, and control, and Little c mistakes its inherited Painting for the whole of reality.",
+    body: "An old argument can make a new question sound like an attack. Noticing that familiar reaction gives you a place to pause and ask what is happening now.",
     linkLabel: "Chapter 6 · The Painting",
     linkTo: "/book/digital-organism-theory/the-painting",
   },
   {
     step: "03",
-    formula: "E_C ↓ → Coherent Intent",
-    title: "Love: Low Canvas Entropy",
-    status: "Model · Stabilized State",
+    title: "Room for a different response",
+    status: "Love & development",
     tone: "big-c",
-    body: "Because Little c is an undifferentiated local process of awareness, being Love means Canvas entropy is low. Distortion settles, agency widens, and Intent aligns with truth and care rather than defence.",
+    body: "A pause can make room for curiosity, a boundary, or a more honest reply. In DOT, Love names the condition in which Fear no longer governs those choices.",
     linkLabel: "Full Screening Room & Series",
-    linkTo: "/films",
+    linkTo: "/academy/films",
   },
 ] as const;
 
 export function HomeFilmSection() {
-  if (!TRAILER) return null;
+  if (!INTRO_FILM) return null;
 
   return (
     <section
@@ -53,12 +53,15 @@ export function HomeFilmSection() {
       className="home-environment home-film-environment"
     >
       <div className="dot-page-container dot-page-wide home-film-layout">
-        {/* The film alone: no header, no tabs, just the trailer */}
-        <h2 id="visual-inquiry-title" className="sr-only">
-          Visual inquiry
-        </h2>
+        <header className="home-film-heading">
+          <div>
+            <p className="dot-label">Academy · Visual inquiry · {INTRO_FILM.duration}</p>
+            <h2 id="visual-inquiry-title">{INTRO_FILM.title}</h2>
+          </div>
+          <Link to="/academy/films">Films in the Academy <ArrowRight aria-hidden="true" /></Link>
+        </header>
         <div className="home-film-stage">
-          <ScreeningRoomPlayer film={TRAILER} compact />
+          <ScreeningRoomPlayer film={INTRO_FILM} compact />
         </div>
 
         {/* Inner Loop & Canvas Entropy bridge */}
@@ -69,13 +72,12 @@ export function HomeFilmSection() {
           <div className="home-film-inner-loop__intro">
             <span className="home-film-inner-loop__kicker">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Inside Little c · The Experience Loop</span>
+              <span>An invitation to personal exploration</span>
             </span>
             <p className="home-film-inner-loop__summary">
-              Why does the architecture matter for how you live? Because{" "}
-              <strong>Little c</strong> is an undifferentiated conscious process
-              whose state is governed by the entropy of its{" "}
-              <strong>Canvas</strong>.
+              Begin with an ordinary moment. Notice what happened, what it
+              meant to you, and what you chose next. Explore the concepts
+              through your own experience.
             </p>
           </div>
 
@@ -90,9 +92,6 @@ export function HomeFilmSection() {
                   <span className="home-film-loop-card__step">
                     {card.step} · {card.status}
                   </span>
-                  <code className="home-film-loop-card__formula">
-                    {card.formula}
-                  </code>
                 </div>
                 <h3 className="home-film-loop-card__title">{card.title}</h3>
                 <p className="home-film-loop-card__body">{card.body}</p>

@@ -132,7 +132,9 @@ test("Pause and Play work with pointer focus, and manual paging stays paused", a
   await expect(concepts.getByRole("group", { name: `2 of ${TOTAL}` })).toBeVisible();
   await concepts.getByRole("button", { name: "Play concept introduction" }).click();
   await concepts.scrollIntoViewIfNeeded();
-  await page.getByRole("navigation", { name: "Begin exploring DOT" }).getByRole("link", { name: "Read Book One" }).hover();
+  // Leave the controls without scrolling the architecture-first opening back
+  // into view: the concept surface must stay visible for playback to advance.
+  await page.mouse.move(0, 0);
   await expect(concepts).toHaveAttribute("data-playback", "playing");
   await page.clock.fastForward(8_100);
   await expect(concepts.getByRole("group", { name: `3 of ${TOTAL}` })).toBeVisible();

@@ -1,5 +1,61 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
+
+async function expectCenteredHeroLayout(page: Page) {
+  const layout = await page.locator(".home-hero-opening").evaluate((opening) => {
+    const header = opening.querySelector(".home-hero-margin");
+    const heading = opening.querySelector(".home-hero-title");
+    const diagram = opening.querySelector(".home-hero-architecture__svg");
+    const origin = diagram?.querySelector(".home-architecture-origin-boundary");
+    const reading = opening.querySelector(".home-hero-entry .dot-focus-nav__primary");
+    const concepts = document.querySelector(".home-hero-concepts");
+    if (!header || !heading || !diagram || !origin || !reading || !concepts) {
+      throw new Error("The centered opening is incomplete");
+    }
+    const geometry = (element: Element) => {
+      const box = element.getBoundingClientRect();
+      return { center: box.left + box.width / 2, top: box.top, bottom: box.bottom };
+    };
+    const readingBox = reading.getBoundingClientRect();
+    return {
+      axis: document.documentElement.clientWidth / 2,
+      viewportHeight: window.innerHeight,
+      header: geometry(header),
+      heading: geometry(heading),
+      diagram: geometry(diagram),
+      originBottom: origin.getBoundingClientRect().bottom,
+      reading: geometry(reading),
+      concepts: geometry(concepts),
+      readingUnobstructed: reading.contains(document.elementFromPoint(
+        readingBox.left + readingBox.width / 2,
+        readingBox.top + readingBox.height / 2,
+      )),
+      textAlign: getComputedStyle(heading).textAlign,
+      readingBeforeDiagram: !!(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING),
+      diagramBeforeConcepts: !!(diagram.compareDocumentPosition(concepts) & Node.DOCUMENT_POSITION_FOLLOWING),
+    };
+  });
+
+  for (const part of ["header", "heading", "diagram", "concepts"] as const) {
+    expect(Math.abs(layout[part].center - layout.axis), `${part} must share the page's central axis`)
+      .toBeLessThanOrEqual(2);
+  }
+  expect(layout.textAlign).toBe("center");
+  expect(layout.readingBeforeDiagram, "Reading must precede the diagram in reading order").toBe(true);
+  expect(layout.diagramBeforeConcepts, "The architecture must precede its concept explanations").toBe(true);
+  expect(layout.reading.top).toBeGreaterThanOrEqual(0);
+  expect(layout.reading.bottom, "Reading must be immediately available without scrolling")
+    .toBeLessThanOrEqual(layout.viewportHeight);
+  expect(layout.readingUnobstructed, "Reading must be reachable before exploring the diagram").toBe(true);
+  expect(layout.reading.bottom).toBeLessThan(layout.diagram.top);
+  expect(layout.header.bottom, "The compact header must sit above the diagram").toBeLessThan(layout.diagram.top);
+  expect(layout.diagram.bottom, "Concept explanations must sit below the entire diagram")
+    .toBeLessThanOrEqual(layout.concepts.top);
+  if ((page.viewportSize()?.width ?? 0) >= 1024) {
+    expect(layout.originBottom, "The complete outer ring must fit on a desktop screen")
+      .toBeLessThanOrEqual(layout.viewportHeight + 1);
+  }
+}
 
 test("Big C emerges before every Reality Frame, then Little c and its relations", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -88,6 +144,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
+    await expectCenteredHeroLayout(page);
 
     const substrate = await page.locator("#threshold").evaluate(node => {
       const style = getComputedStyle(node, "::before");
@@ -122,7 +179,6 @@ for (const colorScheme of ["light", "dark"] as const) {
       const labels = [...node.querySelectorAll(".home-architecture-ring-label text")];
       const boxes = labels.map((label) => label.getBoundingClientRect());
       const caption = node.closest("figure")?.querySelector("figcaption");
-      const explanation = document.querySelector(".home-concept-slideshow");
       const background = getComputedStyle(document.body).backgroundColor;
       const canvas = document.createElement("canvas");
       canvas.width = canvas.height = 1;
@@ -167,9 +223,8 @@ for (const colorScheme of ["light", "dark"] as const) {
       const heading = document.querySelector(".home-hero-title");
       const life = document.querySelector(".home-concept-slideshow-content .home-concept-slideshow-explanation");
       const kicker = document.querySelector(".home-hero-kicker");
-      const masthead = document.querySelector(".home-hero-masthead");
       const read = document.querySelector(".home-hero-entry .dot-focus-nav__primary");
-      if (!heading || !life || !kicker || !masthead || !read) {
+      if (!heading || !life || !kicker || !read) {
         throw new Error("Illustrated opening is missing");
       }
       const headingStyle = getComputedStyle(heading);
@@ -179,8 +234,6 @@ for (const colorScheme of ["light", "dark"] as const) {
 
       return {
         width: node.getBoundingClientRect().width,
-        top: node.getBoundingClientRect().top,
-        originBottom: node.querySelector(".home-architecture-origin-boundary")?.getBoundingClientRect().bottom,
         fonts: labels.map((label) => ({
           layer: label.closest("[data-layer]")?.getAttribute("data-layer"),
           pixels: parseFloat(getComputedStyle(label).fontSize) * scale,
@@ -201,14 +254,11 @@ for (const colorScheme of ["light", "dark"] as const) {
           headingWidth: heading.getBoundingClientRect().width,
           lifeWidth: life.getBoundingClientRect().width,
           questionBeforeDiagram: !!(heading.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING),
-          noteLeft: masthead.getBoundingClientRect().left,
-          noteTop: masthead.getBoundingClientRect().top,
           kickerCase: getComputedStyle(kicker).textTransform,
           readingUnobstructed: read.contains(document.elementFromPoint(
             read.getBoundingClientRect().left + read.getBoundingClientRect().width / 2,
             read.getBoundingClientRect().top + read.getBoundingClientRect().height / 2,
           )),
-          readingTop: read.getBoundingClientRect().top,
           readingBottom: read.getBoundingClientRect().bottom,
           readingHeight: read.getBoundingClientRect().height,
           readingRadius: parseFloat(readingStyle.borderTopLeftRadius),
@@ -232,9 +282,20 @@ for (const colorScheme of ["light", "dark"] as const) {
           traceFilters: [...node.querySelectorAll(".home-architecture-causal-trace path")]
             .map(path => getComputedStyle(path).filter),
         },
-        captionVisible: !!caption && getComputedStyle(caption).position !== "absolute",
-        explanationBeforeDiagram: !!explanation &&
-          !!(explanation.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING),
+        captionPresent: !!caption,
+        surfaces: [node.closest(".home-hero-stage"), node.closest("figure"), node].map((surface) => {
+          if (!surface) throw new Error("The architecture surface is missing");
+          const style = getComputedStyle(surface);
+          context.clearRect(0, 0, 1, 1);
+          context.fillStyle = style.backgroundColor;
+          context.fillRect(0, 0, 1, 1);
+          return {
+            backgroundAlpha: context.getImageData(0, 0, 1, 1).data[3],
+            backgroundImage: style.backgroundImage,
+            borderWidths: [style.borderTopWidth, style.borderRightWidth, style.borderBottomWidth, style.borderLeftWidth],
+            shadow: style.boxShadow,
+          };
+        }),
       };
     });
 
@@ -253,8 +314,18 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.lighting.figureFilter).toBe("none");
     expect(presentation.lighting.labelFilters.every(filter => filter === "none")).toBe(true);
     expect(presentation.lighting.traceFilters.every(filter => filter === "none")).toBe(true);
-    expect(presentation.captionVisible).toBe(true);
-    expect(presentation.explanationBeforeDiagram).toBe(true);
+    expect(presentation.captionPresent).toBe(false);
+    await expect(svg).toHaveAccessibleName("DOT diagram");
+    await expect(svg).toHaveAccessibleDescription("");
+    await expect(page.locator(".home-hero-architecture")
+      .locator('figcaption, details, nav, dl, [class*="legend"], [class*="transcription"]'))
+      .toHaveCount(0);
+    for (const surface of presentation.surfaces) {
+      expect(surface.backgroundAlpha, "The diagram must sit in the page field without a card").toBe(0);
+      expect(surface.backgroundImage).toBe("none");
+      expect(surface.borderWidths).toEqual(["0px", "0px", "0px", "0px"]);
+      expect(surface.shadow).toBe("none");
+    }
     expect(presentation.opening.family).toContain("Source Serif 4");
     expect(presentation.opening.style).toBe("normal");
     expect(presentation.opening.nativeSemiboldLoaded).toBe(true);
@@ -264,8 +335,8 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.headingContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifeContrast).toBeGreaterThanOrEqual(4.5);
     expect(presentation.opening.lifePixels).toBeGreaterThanOrEqual(14);
-    expect(presentation.opening.headingWidth).toBeLessThanOrEqual(600);
-    expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(600);
+    expect(presentation.opening.headingWidth).toBeLessThanOrEqual(672);
+    expect(presentation.opening.lifeWidth).toBeLessThanOrEqual(672);
     expect(presentation.opening.questionBeforeDiagram).toBe(true);
     // A compact, thumb-sized action: well above the 44px target, not a band.
     expect(presentation.opening.readingHeight).toBeGreaterThanOrEqual(48);
@@ -287,15 +358,9 @@ for (const colorScheme of ["light", "dark"] as const) {
       expect(font.contrast, `${font.layer} painted label contrast`).toBeGreaterThanOrEqual(4.5);
     }
     if ((page.viewportSize()?.width ?? 0) >= 1024) {
-      expect(presentation.opening.headingWidth).toBeGreaterThanOrEqual(512);
-      expect(presentation.width).toBeGreaterThanOrEqual(480);
-      expect(presentation.width).toBeLessThanOrEqual(600);
-      expect(presentation.top).toBeLessThan(300);
-      expect(presentation.originBottom).toBeDefined();
-      expect(presentation.originBottom).toBeLessThanOrEqual((page.viewportSize()?.height ?? 0) + 1);
-      expect(presentation.opening.noteLeft + presentation.opening.headingWidth).toBeLessThan((await svg.boundingBox())!.x);
-    } else {
-      expect(presentation.opening.readingBottom).toBeLessThan(presentation.top);
+      expect(presentation.width, "The central diagram must remain the dominant illustration")
+        .toBeGreaterThanOrEqual(600);
+      expect(presentation.width).toBeLessThanOrEqual(680);
     }
     await expect(svg.locator("image")).toHaveCount(0);
     await expectNoHorizontalOverflow(page);
@@ -308,6 +373,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
+    await expectCenteredHeroLayout(page);
 
     const pixels = await svg.evaluate((node) => {
       if (!(node instanceof SVGSVGElement)) throw new Error("Expected an SVG diagram");
@@ -365,6 +431,7 @@ for (const viewport of [
   { width: 640, height: 960 },
   { width: 768, height: 1024 },
   { width: 1024, height: 768 },
+  { width: 1366, height: 768 },
 ]) {
   test(`the illustrated opening fits a ${viewport.width}x${viewport.height} reading surface`, async ({ page }) => {
     await page.setViewportSize(viewport);
@@ -378,15 +445,7 @@ for (const viewport of [
     await expect(reading).toBeInViewport({ ratio: 1 });
     await expect(reading).toHaveAccessibleDescription("");
 
-    const diagram = await svg.boundingBox();
-    const question = await page.locator(".home-hero-title").boundingBox();
-    expect(diagram).not.toBeNull();
-    expect(question).not.toBeNull();
-    if (viewport.width >= 1100) {
-      expect(question!.x + question!.width).toBeLessThanOrEqual(diagram!.x);
-    } else {
-      expect(question!.y + question!.height).toBeLessThan(diagram!.y);
-    }
+    await expectCenteredHeroLayout(page);
 
     const labels = await svg.evaluate((node) => {
       if (!(node instanceof SVGSVGElement)) throw new Error("Expected an SVG diagram");
@@ -424,22 +483,6 @@ test("the reading invitation opens the lived-experience path from the keyboard",
   await next.click();
   await expect(page).toHaveURL(/\/book\/digital-organism-theory\/the-canvas\?path=start-where-you-live$/);
   await expect(page.getByRole("heading", { level: 1, name: "The Canvas" })).toBeVisible();
-});
-
-test("readers can reveal and close the model guide from the keyboard", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  const guide = page.locator(".home-architecture-guide");
-  const summary = guide.locator("summary");
-  await expect(guide.locator("dl")).not.toBeVisible();
-  await summary.focus();
-  await page.keyboard.press("Enter");
-  await expect(guide.locator("dl")).toBeVisible();
-  await expect(guide.getByText(/You, the local experiencer/)).toBeVisible();
-  await summary.focus();
-  await page.keyboard.press("Enter");
-  await expect(guide.locator("dl")).not.toBeVisible();
-  await expectNoHorizontalOverflow(page);
 });
 
 test("diagram layers remain keyboard-accessible reading paths", async ({ page }) => {

@@ -27,10 +27,12 @@ test("a shared piece has an end and a way back to its archive", async ({ page })
 
   await page.goto("/writing/launch-letter/releases/1");
   await expect(page.getByRole("heading", { name: delivery.manifest.title })).toBeVisible();
-  const menu = page.getByRole("button", { name: "Menu", exact: true });
-  if (await menu.isVisible()) await menu.click();
-  await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Blog" })).toHaveAttribute("aria-current", "page");
-  if (await menu.isVisible()) await page.keyboard.press("Escape");
+  const menu = page.getByRole("button", { name: "Explore the site", exact: true });
+  await menu.click();
+  const navigation = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
+  await expect(navigation.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Writing" })).toHaveAttribute("aria-current", "page");
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeFocused();
   await expect(page.getByText("End of piece")).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-organism-reading", "true");
   await expect(page.getByRole("button", { name: "Export sharing text" })).toHaveCount(0);

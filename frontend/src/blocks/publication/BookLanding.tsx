@@ -156,7 +156,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
               >
                 <Film className="h-3.5 w-3.5" aria-hidden="true" />
-                2-minute visual trailer
+                Visual introduction
               </Link>
             </div>
             {!savedPath && (

@@ -240,7 +240,7 @@ html:has(.films-page) .organism-membrane {
 .films-tabs {
   display: grid;
   gap: 0.85rem;
-  max-width: 52rem;
+  max-width: 62rem;
   margin-inline: auto;
   margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
@@ -306,26 +306,45 @@ html:has(.films-page) .organism-membrane {
 /* ── Player shell (Smaller, Clean Window with Relative Lift) ──────────── */
 
 .films-screening-shell {
+  --bg-primary: #f4f3ef;
+  --text-primary: #1c1e1d;
+  --text-muted: #6e7571;
+  --accent-sage: #4a6b5d;
+  --accent-rust: #b85d43;
+  --accent-gold: #c89d54;
+  --grid-line: rgba(28, 30, 29, 0.12);
+
   container-type: inline-size;
   width: 100%;
-  max-width: 52rem;
+  max-width: 62rem;
   margin-inline: auto;
   border: 1px solid var(--films-border-strong);
   border-radius: 1.1rem;
   background: var(--films-chrome);
   overflow: hidden;
   box-shadow: var(--films-shadow-stage);
+  min-width: 0;
+}
+
+.films-screening-shell[data-edition="dark"] {
+  --bg-primary: #0c110f;
+  --text-primary: #edefe9;
+  --text-muted: #8e9a94;
+  --accent-sage: #629e86;
+  --accent-rust: #d66e50;
+  --accent-gold: #e0b264;
+  --grid-line: rgba(237, 239, 233, 0.12);
 }
 
 .films-screening-shell--compact {
-  max-width: 46rem;
+  max-width: 54rem;
 }
 
 .films-stage-viewport {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--background);
+  background: var(--bg-primary, var(--background));
   overflow: hidden;
 }
 
@@ -335,6 +354,120 @@ html:has(.films-page) .organism-membrane {
   height: 100%;
   object-fit: contain;
   cursor: pointer;
+}
+
+.films-buffering-status {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  width: fit-content;
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--films-chrome);
+  color: var(--foreground);
+  font: 0.875rem/1.4 var(--films-sans);
+  pointer-events: none;
+}
+
+/* 45% / 55% Split Stage for the 90-Second General-Audience Trailer */
+.films-trailer-split-stage {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 4.5%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+@keyframes films-narrative-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.films-narrative-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.75rem, 1.8cqi, 1.35rem);
+  height: 76%;
+  padding-right: clamp(1rem, 2.6cqi, 2rem);
+  border-right: 1px solid var(--grid-line);
+  animation: films-narrative-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.films-narrative-act-header {
+  margin: 0;
+  color: var(--accent-sage);
+  transition: color 240ms ease;
+}
+
+.films-narrative-panel[data-mode="high_entropy"] .films-narrative-act-header {
+  color: var(--accent-rust);
+}
+
+.films-narrative-panel[data-mode="coherence"] .films-narrative-act-header,
+.films-narrative-panel[data-mode="finale"] .films-narrative-act-header {
+  color: var(--accent-gold);
+}
+
+.films-narrative-statement {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.films-narrative-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.92em;
+  margin-left: 0.2em;
+  vertical-align: -0.1em;
+  background: var(--accent-gold);
+}
+
+.films-narrative-subtle-tag {
+  margin: 0;
+  color: var(--text-muted);
+  transition: color 240ms ease;
+}
+
+.films-narrative-panel[data-mode="high_entropy"] .films-narrative-subtle-tag {
+  color: var(--accent-rust);
+}
+
+.films-narrative-panel[data-mode="coherence"] .films-narrative-subtle-tag,
+.films-narrative-panel[data-mode="finale"] .films-narrative-subtle-tag {
+  color: var(--accent-gold);
+}
+
+.films-architecture-canvas-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-left: clamp(0.5rem, 1.5cqi, 1.25rem);
+}
+
+.films-stage-canvas--diagram {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* One solid button in the corner, so the poster frame reads clean. */
@@ -381,6 +514,9 @@ html:has(.films-page) .organism-membrane {
 }
 
 .films-live-caption-lines {
+  max-width: 72ch;
+  min-height: 1.5em;
+  margin-inline: auto;
   line-height: 1.5;
   color: var(--foreground);
 }
@@ -456,8 +592,8 @@ html:has(.films-page) .organism-membrane {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border: 1px solid transparent;
   border-radius: 0.5rem;
   background: none;
@@ -500,7 +636,7 @@ html:has(.films-page) .organism-membrane {
   display: flex;
   align-items: center;
   min-width: 4rem;
-  height: 1.5rem;
+  height: 2.75rem;
 }
 
 .films-scrubber-progress {
@@ -524,29 +660,167 @@ html:has(.films-page) .organism-membrane {
   pointer-events: none;
 }
 
+.films-scrubber-scene-marker {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 0.5rem;
+  height: 0.85rem;
+  padding: 0;
+  margin-left: -0.25rem;
+  border: 1px solid var(--films-chrome);
+  border-radius: 999px;
+  background: var(--accent-sage);
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease;
+}
+
+.films-scrubber-scene-marker[data-mode="high_entropy"] {
+  background: var(--accent-rust);
+}
+
+.films-scrubber-scene-marker[data-mode="coherence"],
+.films-scrubber-scene-marker[data-mode="finale"] {
+  background: var(--accent-gold);
+}
+
+.films-scrubber-scene-marker:hover,
+.films-scrubber-scene-marker[data-active="true"] {
+  transform: translateY(-50%) scale(1.25);
+}
+
 .films-transport-slider {
   width: 100%;
-  height: 0.3rem;
-  border-radius: 999px;
-  background: var(--films-border);
+  height: 2.75rem;
+  margin: 0;
+  appearance: none;
+  background: transparent;
   accent-color: var(--films-accent);
   cursor: pointer;
 }
 
-@media (max-width: 639px) {
+.films-transport-slider::-webkit-slider-runnable-track {
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--films-border);
+}
+
+.films-transport-slider::-moz-range-track {
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--films-border);
+}
+
+.films-transport-slider::-webkit-slider-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: -0.4rem;
+  appearance: none;
+  border: 2px solid var(--films-chrome);
+  border-radius: 50%;
+  background: var(--films-accent);
+  box-shadow: 0 0 0 1px var(--films-accent);
+}
+
+.films-transport-slider::-moz-range-thumb {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid var(--films-chrome);
+  border-radius: 50%;
+  background: var(--films-accent);
+}
+
+.films-scene-jump {
+  display: none;
+}
+
+.films-screening-shell :is(button, a, input, select):focus-visible {
+  outline: 2px solid var(--films-accent);
+  outline-offset: 3px;
+}
+
+/* Follow the available player width, including when it sits beside copy. */
+@container (max-width: 680px) {
   .films-transport-bar {
-    flex-wrap: wrap;
-    row-gap: 0.35rem;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.1rem;
+    padding-top: 0.2rem;
   }
 
   .films-scrubber-wrap {
     order: -1;
-    flex-basis: 100%;
+    grid-column: 1 / -1;
   }
 
   .films-transport-time {
-    margin-right: auto;
+    order: -2;
+    grid-column: 1 / -1;
+    justify-self: end;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
   }
+
+  .films-transport-btn { justify-self: center; }
+  .films-transport-btn--text { grid-column: 1 / -1; }
+
+  .films-scrubber-scene-marker {
+    display: none;
+  }
+
+  .films-scene-jump {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.8rem;
+    border-top: 1px solid var(--films-border);
+    color: var(--films-muted);
+    font: 0.75rem/1.4 var(--films-sans);
+  }
+
+  .films-scene-jump select {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.5rem;
+    border: 1px solid var(--films-border);
+    border-radius: 0.45rem;
+    background: var(--films-surface);
+    color: var(--foreground);
+    font: 1rem/1.4 var(--films-sans);
+  }
+}
+
+@container (max-width: 350px) {
+  .films-transport-time { min-width: 0; font-size: 0.7rem; }
+  .films-transport-bar { column-gap: 0; padding-inline: 0.4rem; }
+  .films-scene-jump { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
+}
+
+/* Fullscreen keeps the complete player available, including captions and exit. */
+.films-screening-shell:fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: none;
+  height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow-y: auto;
+}
+
+.films-screening-shell:fullscreen .films-stage-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+.films-screening-shell:fullscreen :is(.films-transport-shell, .films-live-caption-bar) {
+  flex: 0 0 auto;
 }
 
 /* Act buttons under the scrubber, where a page does not list the acts itself. */
@@ -576,6 +850,7 @@ html:has(.films-page) .organism-membrane {
   align-items: center;
   justify-content: space-between;
   gap: 0.45rem;
+  min-height: 2.75rem;
   padding: 0.4rem 0.65rem;
   border: 1px solid var(--films-border);
   border-radius: 0.5rem;
@@ -618,7 +893,7 @@ html:has(.films-page) .organism-membrane {
 .films-detail {
   display: grid;
   gap: clamp(1.75rem, 3.5vw, 2.5rem);
-  max-width: 52rem;
+  max-width: 62rem;
   margin-inline: auto;
   margin-top: clamp(2rem, 4vw, 2.75rem);
 }
@@ -663,6 +938,23 @@ html:has(.films-page) .organism-membrane {
   color: var(--foreground);
 }
 
+.films-claims-summary {
+  min-height: 2.75rem;
+  width: fit-content;
+  padding-block: 0.65rem;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.films-claims-summary:focus-visible {
+  outline: 2px solid var(--films-accent);
+  outline-offset: 3px;
+}
+
+.films-claims-copy {
+  margin-top: 0.35rem;
+}
+
 .films-detail-copy .films-text-link {
   margin-top: 1rem;
 }
@@ -703,7 +995,7 @@ html:has(.films-page) .organism-membrane {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  min-height: 2rem;
+  min-height: 2.75rem;
   padding: 0.2rem 0.6rem;
   border: 1px solid var(--films-border);
   border-radius: 999px;
@@ -1089,6 +1381,43 @@ html:has(.films-page) .organism-membrane {
   letter-spacing: 0.06em;
 }
 
+.films-narrative-act-header,
+.films-narrative-subtle-tag {
+  font-family: var(--films-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.films-narrative-statement {
+  font-family: var(--films-sans);
+  font-size: clamp(1.05rem, 2.35cqi, 1.55rem);
+  font-weight: 500;
+}
+
+@media (max-width: 639px) {
+  .films-masthead { min-height: 0; }
+  .films-hero-grid { gap: 1.25rem; padding-block: 1.75rem 2rem; }
+  .films-page .films-hero-title { font-size: clamp(2.75rem, 11vw, 3.75rem); }
+  .films-hero-actions { gap: 0.35rem 1.25rem; margin-top: 1.25rem; }
+  .films-hero-actions .films-btn-primary { padding-inline: 0.85rem; font-size: 0.8125rem; }
+  .films-hero-actions .films-text-link { font-size: 0.8125rem; }
+  .films-privacy-line { margin-top: 1.25rem; }
+  .films-section { margin-top: 0; padding-top: 2.5rem; }
+  .films-section-head { margin-bottom: 1.5rem; }
+  .films-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4rem; margin-bottom: 1rem; }
+  .films-tab { gap: 0.4rem; min-width: 0; padding: 0.75rem 0.6rem; border-radius: 0.65rem; }
+  .films-tab-meta { font-size: 0.625rem; letter-spacing: 0.04em; }
+  .films-tab-title { font-size: 0.9375rem; line-height: 1.3; overflow-wrap: anywhere; }
+  .films-live-caption-bar { padding: 0.85rem 1rem; }
+  .films-live-caption-lines { font-size: 0.9375rem; line-height: 1.65; }
+  .films-act { grid-template-columns: 4rem minmax(0, 1fr); gap: 0.75rem; padding: 1rem; }
+  .films-transcript-item { grid-template-columns: 4rem minmax(0, 1fr); gap: 0.75rem; }
+  .films-transcript-line { overflow-wrap: anywhere; }
+  .films-play-hero-btn { min-height: 2.75rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .films-tab,
   .films-act,
@@ -1096,8 +1425,10 @@ html:has(.films-page) .organism-membrane {
   .films-transcript-summary::before,
   .films-play-hero-btn,
   .films-text-link,
-  .films-btn-primary {
+  .films-btn-primary,
+  .films-narrative-panel {
     transition: none;
+    animation: none;
   }
 
   .films-tab:hover,

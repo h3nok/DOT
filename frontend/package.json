@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "channel:inquiry": "node scripts/render-channel-inquiry.mjs",
+    "voiceover:process": "node scripts/process-voiceover.mjs",
+    "voiceover:generate": "node scripts/replicate-and-render-voiceover.mjs",
     "post:new": "node scripts/posts.mjs new",
     "post:check": "node scripts/posts.mjs check",
     "post:preview": "vite --host 127.0.0.1 --open /_preview/essays",

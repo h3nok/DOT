@@ -25,6 +25,7 @@ import { HomeFilmSection } from "./HomeFilmSection";
 import { TheoryLayerJourney } from "./TheoryLayerJourney";
 import { Consciousness101 } from "./Consciousness101";
 import "./home.css";
+import "./home-editorial.css";
 
 export default function HomePage() {
   const { isOwner, logout } = useAuth();
@@ -179,8 +180,8 @@ export default function HomePage() {
           }}
           secondary={[
             {
-              to: "/films",
-              label: "Enter the Screening Room",
+              to: "/academy",
+              label: "Explore the Academy",
             },
             {
               to: "/doctrine",
@@ -188,7 +189,7 @@ export default function HomePage() {
             },
             {
               to: "/amm",
-              label: "Inspect the Autonomous Moral Agent (AMM)",
+              label: "Read the American Millennial Manifesto",
             },
           ]}
         />
@@ -210,13 +211,12 @@ export default function HomePage() {
           </p>          {/* One quiet door: the readers' list (ADR-0025). Funding is asked
               deeper in, at the book's access page, never here (ADR-0022). */}
           <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-            <Link to="/films" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Films</Link>
+            <Link to="/academy" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Academy</Link>
             <Link to="/doctrine" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Doctrine</Link>
             <Link to="/blog" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Essays</Link>
             <Link to="/amm" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">AMM</Link>
             <Link to="/about" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">About</Link>
             <Link to="/contact" className="text-muted-foreground underline-offset-4 hover:underline">Contact Henok</Link>
-            <Link to="/community" className="text-muted-foreground underline-offset-4 hover:underline">Community</Link>
             <Link
               to="/readers"
               className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"

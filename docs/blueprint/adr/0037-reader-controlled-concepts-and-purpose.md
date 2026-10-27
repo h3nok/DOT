@@ -166,6 +166,28 @@ reader-controlled. Runtime and generated public HTML share the cultural critique
 This is introductory UI, not a revision of the fixed manuscript or a claimed
 scientific intervention. Serves L1, L7, L8, L10, and L12; violates no law.
 
+### Amendment — 2026-10-26 (architecture as the visual centre)
+
+The founder requested a different homepage composition focused on the architecture.
+Replace the split hero with one centred sequence: a compact opening and immediate
+reading action, the large diagram, then the concept browser. Preserve the opening
+words, secondary film and community links, shared background field, diagram
+geometry, and diagram-label reading paths. The figure stays open and unboxed.
+
+Size the stage to the available screen height while keeping its labels readable;
+short screens can scroll rather than reducing labels below their existing size
+requirements. Keep the diagram and concepts inside their shared focus context.
+The twenty-concept sequence still starts with lived experience, and its finite
+playback, suspension rules, controls, and stillness behavior remain unchanged.
+The cultural critique and detailed architecture sections keep their existing order.
+
+Use the author's confirmed definitions in the source concept and T/E introduction:
+T is primordial Time or continuity; E is the raw fabric of unformed information.
+Big C emerged within their interaction. The fixed manuscript is unchanged.
+
+This serves L1 (calm presentation), L7 (faithful model definitions), and L10
+(one clear visual focus). It adds no autoplay exception or manifesto violation.
+
 Positive: concepts can be learned one at a time, colour clarifies the existing
 system, and the architecture leads into its human purpose without replacing
 the established page.

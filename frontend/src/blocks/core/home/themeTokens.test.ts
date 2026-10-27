@@ -208,22 +208,17 @@ describe("home entry theme compatibility", () => {
     expect(architecture).not.toContain("PEER_FRAMES");
     expect(architecture).not.toContain('data-depth={depth}');
     expect(architecture).not.toContain("home-architecture-frame-horizon");
-    // Coupling semantics remain in the transcription and optional guide.
-    expect(architecture).toContain("constraint and consequence");
   });
 
   it("states the theory's epistemic status without overclaiming the ontology", () => {
     const architecture = readArchitecture();
 
-    // The figure stays named while its detailed guide is reader-controlled.
-    expect(architecture).toContain("DOT’s proposed architecture");
+    // The unboxed diagram keeps a concise name and its conventional labels.
+    expect(architecture).toContain("DOT diagram");
     expect(architecture).toContain("T × E");
     expect(architecture).toContain("Big C");
     expect(architecture).toContain("RF₀");
     expect(architecture).toContain("Little c");
-    expect(architecture).toContain("Big C emerges within T and E and maintains itself");
-    expect(architecture).toMatch(/Conceptual\s+rings,\s+not\s+spatial\s+boundaries/);
-    expect(architecture).toContain("Intent and embodied action");
     expect(architecture).not.toContain("possibility within Big C");
     expect(architecture).not.toContain("ONE OF MANY");
     expect(architecture).not.toContain("RFᵢ");
@@ -241,8 +236,6 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain('relation: "pressure"');
     expect(architecture).toContain('orient="auto-start-reverse"');
     expect(architecture).toContain("markerStart={`url(#${couplingArrowId})`}");
-    expect(architecture).toContain("meet only through RF₀");
-    expect(architecture).toContain("will is free");
     expect(architecture).toContain("home-architecture-peer-centre");
     expect(architecture).toContain("home-architecture-awareness-brightening");
     expect(architecture).not.toContain("toward Love");
@@ -264,8 +257,6 @@ describe("home entry theme compatibility", () => {
       expect(architecture).toContain(`index: "${index}"`);
     }
     expect(architecture).toContain("home-architecture-peer-label");
-    expect(architecture).toContain("not a conscious process");
-    expect(architecture).toContain("indexed c₁, c₂, c₃");
   });
 
   it("labels the rings through protected gaps and keys each layer by colour", () => {

@@ -4,6 +4,13 @@
    fallback. Never float another button over a page's fields or reading. */
 body:has(.site-page-header [data-appearance-control]) .app-floating-appearance { display: none; }
 
+.site-page-header { border-bottom-color: color-mix(in oklab, var(--border) 55%, transparent); }
+.site-page-header-inner { column-gap: 1rem; }
+.site-page-header-brand { flex-shrink: 0; max-width: 100%; }
+.site-page-header-controls { flex-shrink: 0; }
+.site-page-header-context { min-width: 0; }
+.site-page-header [data-appearance-control] > button { min-width: var(--touch-target); min-height: var(--touch-target); }
+
 @media (pointer: coarse), (max-width: 639px) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
   textarea, select { font-size: max(1rem, 16px); }
@@ -30,7 +37,11 @@ body:has(.site-page-header [data-appearance-control]) .app-floating-appearance {
 @media (max-width: 639px) {
   .dot-page-container { padding-left: max(1.25rem, var(--safe-left)); padding-right: max(1.25rem, var(--safe-right)); }
   .site-page-header { padding-top: var(--safe-top); }
-  .site-page-header-inner { gap: .25rem .75rem; padding-block: .375rem; }
+  .site-page-header-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: .25rem .5rem; min-height: 4rem; padding-block: .5rem; }
+  .site-page-header-brand { grid-column: 1; grid-row: 1; justify-self: start; }
+  .site-page-header .site-nav { grid-column: 2; grid-row: 1; margin-inline-start: 0; }
+  .site-page-header-controls { grid-column: 3; grid-row: 1; }
+  .site-page-header-context { grid-column: 1 / -1; grid-row: 2; padding-top: .25rem; border-top: 1px solid var(--border); }
   .site-page-main { padding-top: 2rem; padding-bottom: max(4rem, calc(var(--safe-bottom) + 3rem)); }
   .site-page-header nav[aria-label="Page context"] { flex-wrap: wrap; }
   .site-page-header nav[aria-label="Page context"] a { min-height: var(--touch-target); min-width: var(--touch-target); }

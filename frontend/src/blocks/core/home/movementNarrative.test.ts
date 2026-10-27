@@ -52,7 +52,7 @@ describe("homepage inquiry narrative", () => {
     expect(guidedArgument).toContain("What remains unproven");
     expect(layers).toContain("home-theory-layer-human-stakes");
     expect(layers).toContain("home-theory-layer-memory");
-    expect(layers).toContain("Continuity carries. Possibility opens.");
+    expect(layers).toContain("Continuity carries. Information takes form.");
     expect(layers).toContain("Consciousness persists, develops, and generates.");
     expect(layers).toContain("Live, explore, and develop through real consequence.");
     expect(layers).toContain("DOT proposes RF₀ as an incubator for Little c");
@@ -108,12 +108,13 @@ describe("homepage inquiry narrative", () => {
     }
   });
 
-  it("closes with the released book while Academy is hidden", () => {
+  it("keeps the released book primary and offers the Academy for further exploration", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
 
     expect(home).not.toContain("HOME.invitationTitle");
     expect(home).not.toContain("An invitation to inquire");
-    expect(home).not.toContain('to: "/academy"');
+    expect(home).toContain('to: "/academy"');
+    expect(home).toContain("Explore the Academy");
     expect(home).toContain("Read Book One");
     expect(home).toContain("Complete and free · Fixed edition");
     expect(home).not.toContain("Request an invitation to the circle");

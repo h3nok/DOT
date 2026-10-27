@@ -47,7 +47,7 @@ export function HeroArchitectureLabels() {
   return (
     <g className="home-architecture-ring-labels">
       <g className="home-architecture-ring-label" data-layer="origin">
-        <a href="#possibility-field" aria-label="T × E — read about the source: continuity and possibility">
+        <a href="#possibility-field" aria-label="T × E — read about primordial Time and unformed information">
           {LABEL_TEXT.origin}
         </a>
       </g>

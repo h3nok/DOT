@@ -28,6 +28,7 @@ import type {
   ReaderReference,
 } from "./readerTypes";
 import "katex/dist/katex.min.css";
+import "./reader.css";
 
 function nodeText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -238,7 +239,7 @@ function ReaderSheet({
             <Dialog.Close asChild>
               <button
                 type="button"
-                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border/40 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
+                className="book-reference-sheet__close inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border/40 text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
                 aria-label={`Close ${isReference ? "source" : "definition"}`}
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -459,7 +460,7 @@ export function BookMarkdown({
               return <img src={attached?.src ?? src} alt={alt ?? ""} title={variant === "post" ? undefined : title} width={attached?.width} height={attached?.height} loading="lazy" decoding="async" />;
             },
             table: ({ children }) => (
-              <div className="book-table-scroll" tabIndex={0}>
+              <div className="book-table-scroll" role="region" aria-label="Scrollable table" tabIndex={0}>
                 <table>{children}</table>
               </div>
             ),

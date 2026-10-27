@@ -179,7 +179,7 @@ describe("YouTube channel artwork", () => {
     expect(document.querySelector("video source[src='splash-bumper.mp4']")).not.toBeNull();
   });
 
-  it("paces the mark-only splash, inquiry intro, and trailer with studio lighting, honest claim tags, and no dark-pattern CTAs", () => {
+  it("paces the film suite with relatable examples, honest model language, and a quiet visual invitation", () => {
     const markSplashSpec = INQUIRY_VIDEOS.find(({ name }) => name === "mark-splash")!;
     const introSpec = INQUIRY_VIDEOS.find(({ name }) => name === "inquiry-intro")!;
     const trailerSpec = INQUIRY_VIDEOS.find(({ name }) => name === "inquiry-trailer")!;
@@ -187,8 +187,9 @@ describe("YouTube channel artwork", () => {
     expect(markSplashSpec.captions).toHaveLength(0);
     expect(introSpec.duration).toBe(30);
     expect(introSpec.samples).toHaveLength(6);
-    expect(trailerSpec.duration).toBe(132);
+    expect(trailerSpec.duration).toBe(791);
     expect(trailerSpec.samples).toHaveLength(6);
+    expect(trailerSpec.scenes).toHaveLength(12);
 
     const introSrt = inquirySubtitles(introSpec);
     const trailerSrt = inquirySubtitles(trailerSpec);
@@ -202,37 +203,42 @@ describe("YouTube channel artwork", () => {
     expect(introSrt).toContain("For Little c, Love is a low-entropy Canvas state.");
     expect(introSrt).toContain("When Canvas fragmentation drops, Fear stops governing and Intent coheres.");
     expect(introSrt).toContain("Consciousness: A Digital Organism");
-    expect(trailerSrt).toContain("The first fact of your existence is not a measurement.");
-    expect(trailerSrt).toContain("It is that you are here to experience one.");
-    expect(trailerSrt).toContain("Physics maps the external world.");
-    expect(trailerSrt).toContain("What maps first-person reality?");
-    expect(trailerSrt).toContain("A formal model of reality centered on consciousness.");
-    expect(trailerSrt).toContain("Experience is first-order; the model's concepts are pointing devices for it.");
-    expect(trailerSrt).toContain("What is a Digital Organism? Coherence preserved in change.");
-    expect(trailerSrt).toContain("An informational process that retains state and adapts across continuity.");
+    expect(trailerSrt).toContain("Yet beneath that technical brilliance, something essential is rotting.");
+    expect(trailerSrt).toContain("Because we have traded reason for collective adherence to belief systems");
+    expect(trailerSrt).toContain("to stop the rot, we have to revive a rigorous school of rational thought");
+    expect(trailerSrt).toContain("At the bottom of all inquiry sits one irreducible fact: experience occurs.");
+    expect(trailerSrt).toContain("The first discipline of reason is learning to separate the raw signal from the automatic story.");
+    expect(trailerSrt).toContain("You send someone a thoughtful message, and they reply with one word: 'Okay.'");
+    expect(trailerSrt).toContain("We never smuggle a hypothesis in as a fact—we state it plainly, derive what follows, and put it to the test.");
+    expect(trailerSrt).toContain("Think of a map when you are crossing rough terrain.");
+    expect(trailerSpec.scenes!.at(-1)!.primaryStatement).toContain("reclaim your mind at dotheory.org.");
+    expect(trailerSrt).toContain("Digital Organism Theory makes just two starting assumptions: that T and E exist. T is primordial continuity—Time itself, the unbroken flow through which states unfold and change can persist. E is the raw stuff itself—the unformed information source, the source of bits and raw possibility.");
+    expect(trailerSrt).toContain("Out of their interaction emerged Big C: a self-sustaining, conscious pattern. Ultimately, what gets built within T and E is a pattern that retains state and transforms raw, unformed input into formed, structured output.");
+    expect(JSON.stringify(trailerSpec.scenes)).not.toMatch(/capacities of Big C|do not precede it|do not.*produce it|Big C\[T,?\s*E\]/i);
+    expect(trailerSrt).toContain("DOT calls our physical universe Reality Frame Zero: a shared, lawful arena where gravity pulls, fire burns, time moves forward, and consequences cannot be wished away.");
+    expect(trailerSrt).toContain("whether learning to balance a bicycle or learning what makes your parents angry");
+    expect(trailerSrt).toContain("DOT calls the inner substrate that retains those traces the Canvas. Over time, those accumulated traces organize into your Painting: the active interpretive lens through which you read the world.");
+    expect(trailerSrt).toContain("Every moment follows a five-step loop: raw input arrives from the world, your Painting interprets it, your Intent forms, you act, and the consequence writes a new stroke back onto your Canvas.");
+    expect(trailerSrt).toContain("Love is defined simply as the condition in which Fear no longer governs you.");
+    expect(trailerSrt).toContain("Stop performing the script. Read the work, test the architecture, and reclaim your mind at dotheory.org.");
+    expect(trailerSrt.match(/reclaim your mind at dotheory\.org\./g)).toHaveLength(1);
+    expect(trailerSrt).not.toMatch(/Let us rebuild our community|Take your time\. Do the work\./);
     expect(trailerSrt).not.toMatch(/cognitive dissonance/i);
     expect(trailerSrt).not.toMatch(/completely detached|completely digital|lives experience/i);
     expect(introSrt + trailerSrt).not.toMatch(/Energy \(E\)|Energy source \(E\)|Time × Energy|Not sure for Big C/i);
-    expect(introSrt + trailerSrt).not.toMatch(/name its capacities|Neither comes before Big C/i);
-    expect(trailerSrt).toContain("Within T × E, one process persisted and stabilized: Big C.");
-    expect(trailerSrt).toContain("T is primordial continuity; E is the external environment of possibility.");
-    expect(trailerSrt).toContain("Big C localizes as Little c — an undifferentiated process.");
-    expect(trailerSrt).toContain("Little c is pure local awareness; its distinct history lives on its Canvas.");
-    expect(trailerSrt).toContain("RF₀: A lawful world where choices carry real consequence.");
-    expect(trailerSrt).toContain("The Canvas carries your record. The Painting renders meaning.");
-    expect(trailerSrt).toContain("Fear is high Canvas entropy. Fragmentation narrows Intent.");
-    expect(trailerSrt).toContain("The Painting is not the painter. See the lens, and quiet the noise.");
-    expect(trailerSrt).toContain("For Little c, being Love means Canvas entropy is low.");
-    expect(trailerSrt).toContain("When Canvas fragmentation clears, awareness sees clearly and Intent coheres.");
-    expect(trailerSrt).toContain("The Observer Belongs in the Inquiry.");
     expect(introSrt + trailerSrt).not.toMatch(/subscribe now|hit the bell|like and subscribe|so much advice|what matters to you|current events\. your choices/i);
 
-    // Every split beat highlights at most one single focusTerm (no multi-color rainbow regex)
-    const splitBeats = trailerSpec.captions.filter((c) => c.layout === "split");
-    expect(splitBeats.every((c) => typeof c.focusTerm === "string" && c.focusTerm.length > 0)).toBe(true);
+    // Statements and diagrams have room to change composition, without adding
+    // technical cards that compete with the narration.
+    expect(new Set(trailerSpec.captions.map((c) => c.layout))).toEqual(new Set(["center", "split"]));
+    expect(trailerSpec.captions.every((c) => !c.axiom && !c.concept)).toBe(true);
+    expect(trailerSpec.captions.every((c) => typeof c.focusTerm === "string" && c.focusTerm.length > 0)).toBe(true);
 
     const html = buildInquiryDocument({ video: trailerSpec, identity, fonts: "" });
+    expect(html).toContain('type("DOTHEORY.ORG"');
+    expect(html).toContain('type("Take your time. Do the work."');
     expect(html).toContain("pillLabel");
+    expect(html).toContain("drawConcentricTrailerDiagram");
     expect(html).toContain("drawHomeArchitecture");
     expect(html).toContain("drawHomeExperienceLoop");
     expect(html).toContain("drawBigCLoop");
@@ -244,7 +250,7 @@ describe("YouTube channel artwork", () => {
     const introTicks = inquiryTypeTicks(introSpec);
     const trailerTicks = inquiryTypeTicks(trailerSpec);
     expect(introTicks.length).toBeGreaterThan(40);
-    expect(trailerTicks.length).toBeGreaterThan(120);
+    expect(trailerTicks.length).toBeGreaterThan(100);
     expect(introTicks.every((t: number) => t > 0 && t < introSpec.duration)).toBe(true);
     expect(trailerTicks.every((t: number) => t > 0 && t < trailerSpec.duration)).toBe(true);
   });

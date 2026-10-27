@@ -24,7 +24,6 @@ describe("architecture surface lighting", () => {
       expect(distance - r).toBeGreaterThan(R.frame + 8);
       expect(distance + r).toBeLessThan(R.bigC - 8);
     }
-    expect(container.textContent).toContain("follow their own rules");
   });
 
   it("preserves the shared geometry and each concept's focus", () => {

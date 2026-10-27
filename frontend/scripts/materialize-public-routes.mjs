@@ -15,6 +15,7 @@ import { parseEvidenceChart } from "../src/attention-os/reader/evidenceChart.js"
 import { ESSAYS_ROUTE, readEssays } from "./essays.mjs";
 import { resolveAmmCopy } from "../src/content/editable/ammCopy.js";
 import { resolveSupportMethods } from "../src/content/supportMethods.js";
+import { READING_PATHS } from "../src/attention-os/reader/readingPaths.ts";
 
 const SITE_URL = "https://dotheory.org";
 
@@ -35,7 +36,8 @@ const PRIVACY_ROUTE = "/privacy";
 const TERMS_ROUTE = "/terms";
 const PUBLICATIONS_ROUTE = "/publications";
 const BLOG_ROUTE = "/blog";
-const FILMS_ROUTE = "/films";
+const FILMS_ROUTE = "/academy/films";
+const LEGACY_FILMS_ROUTE = "/films";
 const VIDEOS_ROUTE = "/videos";
 const WRITING_ROUTE = "/writing";
 
@@ -47,7 +49,6 @@ const HOME = JSON.parse(readFileSync(path.join(CONTENT_DIR, "home.json"), "utf8"
 const BOOK_LANDING = JSON.parse(readFileSync(path.join(CONTENT_DIR, "publications", "bookLanding.json"), "utf8"));
 const READERS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "readers.json"), "utf8"));
 const CONTACT = JSON.parse(readFileSync(path.join(CONTENT_DIR, "contact.json"), "utf8"));
-const COMMUNITY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "community.json"), "utf8"));
 const SUPPORT_METHODS = resolveSupportMethods(JSON.parse(readFileSync(path.join(CONTENT_DIR, "support.json"), "utf8")));
 const BUILDER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "builder.json"), "utf8"));
 const CAREER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "career.json"), "utf8"));
@@ -65,6 +66,7 @@ const OTHER_BUILDER_PROJECTS = BUILDER.otherProjects.map((slug) => {
 const NEWSLETTER = JSON.parse(readFileSync(path.join(CONTENT_DIR, "newsletter.json"), "utf8"));
 const BLOG = JSON.parse(readFileSync(path.join(CONTENT_DIR, "blog.json"), "utf8"));
 const FILMS = JSON.parse(readFileSync(path.join(CONTENT_DIR, "films.json"), "utf8"));
+const ACADEMY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "academy", "landing.json"), "utf8"));
 const AMM = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm.json"), "utf8"));
 const AMM_MEDIA = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-media.json"), "utf8"));
 const AMM_CAPITAL = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-capital.json"), "utf8"));
@@ -90,9 +92,8 @@ const BOOK_DESCRIPTION = BOOK_LANDING.description;
 const STATIC_ROUTES = [
   {
     route: ACADEMY_ROUTE,
-    title: "Book One — Digital Organism Theory",
-    description: BOOK_DESCRIPTION,
-    canonicalRoute: BOOK_ROUTE,
+    title: ACADEMY.title,
+    description: ACADEMY.description,
   },
   {
     route: "/applied",
@@ -132,7 +133,7 @@ const STATIC_ROUTES = [
  * The concept map's public identities.
  *
  * Duplicated from `src/content/doctrine/doctrineData.ts` because this script
- * runs on plain Node against the built bundle and cannot import TypeScript;
+ * runs on plain Node without the concept module's Vite-resolved imports;
  * the test keeps the two in step. The names have to be here: without them all
  * seventeen concept URLs share one title and one description, so a shared
  * concept link and a search result cannot say which concept they lead to.
@@ -622,15 +623,12 @@ function siteNav(essaysPublished) {
   const entries = [
     ["/", "Home"],
     [BOOK_ROUTE, "Book One"],
-    ["/doctrine", "Concept map"],
-    ["/applied", "Open questions"],
-    [BLOG_ROUTE, "Blog"],
-    [FILMS_ROUTE, "Films"],
-    [PUBLICATIONS_ROUTE, "Books"],
-    ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
+    [ACADEMY_ROUTE, "Academy"],
+    [BLOG_ROUTE, "Writing"],
     [ABOUT_ROUTE, "About"],
     [CONTACT_ROUTE, "Contact"],
-    [COMMUNITY_ROUTE, "Community"],
+    [PUBLICATIONS_ROUTE, "Books"],
+    ...(essaysPublished ? [["/feed.xml", "RSS"]] : []),
     [READERS_ROUTE, "Reader list"],
     [PRIVACY_ROUTE, "Privacy"],
     [TERMS_ROUTE, "Terms"],
@@ -869,8 +867,15 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     if (route.route === ACADEMY_ROUTE) {
       return {
         ...route,
-        structuredData: graph(webPageNode(route), breadcrumb([home, book])),
-        prerender: page(`<h1>Book One</h1><p>${link(BOOK_ROUTE, "Read Book One")}</p>`),
+        structuredData: graph(
+          { ...webPageNode(route), "@type": "CollectionPage" },
+          breadcrumb([home, { name: "Academy", route: ACADEMY_ROUTE }]),
+        ),
+        prerender: page([
+          `<header><p>DOT Academy</p><h1>${escapeHtml(ACADEMY.heading)}</h1><p>${escapeHtml(ACADEMY.introduction)}</p></header>`,
+          `<section><h2>Choose a way into the book.</h2><p>Book One is a fixed, citable edition. These reading paths change the order of the encounter without changing the book.</p><ol>${READING_PATHS.map(readingPath => `<li><h3>${escapeHtml(readingPath.label)}</h3><p>${escapeHtml(readingPath.purpose)}</p><p>${link(`${BOOK_ROUTE}/${readingPath.steps[0].slug}?path=${readingPath.id}`, `Begin: ${readingPath.label}`)}</p></li>`).join("")}</ol><p>${link(BOOK_ROUTE, "View Book One and its contents")}</p></section>`,
+          `<section><h2>Follow your questions.</h2><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")} · ${link(`${CONTACT_ROUTE}?purpose=writing`, "Bring a question to the conversation")}</p></section>`,
+        ].join("")),
       };
     }
     return {
@@ -1247,25 +1252,15 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     structuredData: graph(webPageNode({ route: `${ESSAYS_ROUTE}/${slug}`, title: move.title, description: `${move.title} is now a section of a chapter.` })),
     prerender: prerenderAmm(`<h1>${escapeHtml(move.title)}</h1><p>This section now appears in ${link(`${move.route}#${move.anchor}`, essays.find(essay => `${ESSAYS_ROUTE}/${essay.slug}` === move.route)?.title ?? "its chapter")}.</p>`),
   }));
+  // The Community page was retired; its address points to Contact, where conversations start.
   const communityRoute = {
     route: COMMUNITY_ROUTE,
-    title: `${COMMUNITY.title} — ${AUTHOR.name}`,
-    description: COMMUNITY.description,
-    image: "/og/henok-writing.png",
-    imageAlt: `Writing and inquiry by ${AUTHOR.name}`,
-    structuredData: graph(
-      webPageNode({ route: COMMUNITY_ROUTE, title: `${COMMUNITY.title} — ${AUTHOR.name}`, description: COMMUNITY.description }),
-      breadcrumb([home, { name: COMMUNITY.title, route: COMMUNITY_ROUTE }]),
-    ),
-    prerender: page([
-      `<header><p>${escapeHtml(COMMUNITY.title)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h1>${escapeHtml(COMMUNITY.heading)}</h1><p>${escapeHtml(COMMUNITY.description)}</p><p>${escapeHtml(COMMUNITY.invitation)}</p></header>`,
-      `<section><p>${escapeHtml(BLOG.startingPoint.label)}</p><h2>${escapeHtml(BLOG.startingPoint.title)}</h2><p>${escapeHtml(BLOG.startingPoint.description)}</p><blockquote><p>“${escapeHtml(BLOG.startingPoint.quote)}”</p><cite>${escapeHtml(BLOG.startingPoint.sourceLabel)}</cite></blockquote><p>${link(BLOG.startingPoint.to, BLOG.startingPoint.linkLabel)}</p></section>`,
-      `<section><h2>${escapeHtml(COMMUNITY.conversationTitle)}</h2><p>${escapeHtml(COMMUNITY.conversationDescription)}</p><p>${link(`${CONTACT_ROUTE}?purpose=writing`, COMMUNITY.conversationAction)}</p><p>${escapeHtml(COMMUNITY.status)}</p><p>${link("/join", "Request an invitation")}</p></section>`,
-      `<section><h2>${escapeHtml(COMMUNITY.principlesTitle)}</h2><dl>${COMMUNITY.principles.map(principle => `<dt>${escapeHtml(principle.title)}</dt><dd>${escapeHtml(principle.description)}</dd>`).join("")}</dl></section>`,
-      `<section><h2>${escapeHtml(COMMUNITY.followTitle)}</h2><p>${escapeHtml(COMMUNITY.followDescription)}</p><p>${link(READERS_ROUTE, "Open the reader list")} · ${link("/feed.xml", "Follow with RSS")}</p></section>`,
-      `<section><h2>${escapeHtml(COMMUNITY.supportTitle)}</h2><p>${escapeHtml(COMMUNITY.supportDescription)}</p><p>${link("/support?purpose=author", COMMUNITY.supportAction)}</p><p>${escapeHtml(COMMUNITY.supportNote)}</p></section>`,
-      `<p>There is no need to sign up to keep reading. ${link(BLOG_ROUTE, "Explore the writing")}</p>`,
-    ].join("")),
+    canonicalRoute: CONTACT_ROUTE,
+    noindex: true,
+    title: `Contact — ${AUTHOR.name}`,
+    description: `Start a conversation with ${AUTHOR.name}.`,
+    structuredData: graph(webPageNode({ route: CONTACT_ROUTE, title: `Contact — ${AUTHOR.name}`, description: `Start a conversation with ${AUTHOR.name}.` })),
+    prerender: page(`<h1>Contact ${escapeHtml(AUTHOR.name)}</h1><p>${link(CONTACT_ROUTE, "Start a conversation")}</p>`),
   };
 
   const filmsRoute = {
@@ -1278,7 +1273,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         "@type": "CollectionPage",
         author: { "@id": PERSON_ID },
       },
-      breadcrumb([home, { name: "Films", route: FILMS_ROUTE }]),
+      breadcrumb([home, { name: "Academy", route: ACADEMY_ROUTE }, { name: "Films", route: FILMS_ROUTE }]),
     ),
     prerender: page(
       [
@@ -1287,14 +1282,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         `<p>${escapeHtml(FILMS.subtitle)}</p>`,
         `<p>${link(FILMS.channelUrl, `${FILMS.channelHandle} on YouTube`)}</p>`,
         `<p>${escapeHtml(FILMS.privacyNote)}</p></header>`,
-        `<section id="screening-room"><h2>Featured Films</h2><ol>${FILMS.screeningFilms.map((film) => [
-          `<li><h3>${escapeHtml(film.number)}: ${escapeHtml(film.title)} (${escapeHtml(film.duration)})</h3>`,
-          `<p>${escapeHtml(film.summary)}</p>`,
-          `<p>Claims: ${film.claimLevels.map(escapeHtml).join(" · ")} · ${link(film.companion.to, film.companion.label)}</p>`,
-          film.acts.length > 0
-            ? `<ol>${film.acts.map((act) => `<li><strong>${escapeHtml(act.code)} (${escapeHtml(act.timestamp)}) — ${escapeHtml(act.title)}</strong> (${link(act.readingTo, act.readingLabel)})</li>`).join("")}</ol>`
-            : "",
-          "</li>",
+        `<section id="screening-room"><h2>A short film for each concept</h2><p>${escapeHtml(FILMS.conceptFilmsNote)}</p><ol>${DOCTRINE_CONCEPTS.map((concept) => [
+          `<li><h3>${escapeHtml(concept.name)}</h3>`,
+          `<p>${escapeHtml(concept.oneLine)}</p>`,
+          `<p>${link(`${FILMS_ROUTE}?concept=${concept.id}#screening-room`, "Watch the film")} · ${link(`/doctrine/${concept.id}`, "Open in the concept map")}</p></li>`,
         ].join("")).join("")}</ol></section>`,
         `<section id="channel-streams"><h2>Series on ${escapeHtml(FILMS.channelHandle)}</h2><p>${escapeHtml(FILMS.seriesNote)}</p>${FILMS.streams.map((stream) => [
           `<section><h3>${escapeHtml(stream.number)}: ${escapeHtml(stream.title)}</h3><p>${escapeHtml(stream.description)}</p>`,
@@ -1304,16 +1295,16 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     ),
   };
 
-  const videosAliasRoute = {
-    route: VIDEOS_ROUTE,
+  const filmAliasRoutes = [LEGACY_FILMS_ROUTE, VIDEOS_ROUTE].map(route => ({
+    route,
     canonicalRoute: FILMS_ROUTE,
     title: `${FILMS.eyebrow} — ${AUTHOR.name}`,
     description: FILMS.description,
     structuredData: graph(webPageNode({ route: FILMS_ROUTE, title: `${FILMS.eyebrow} — ${AUTHOR.name}`, description: FILMS.description })),
     prerender: page(`<h1>${escapeHtml(FILMS.title)}</h1><p>${escapeHtml(FILMS.description)}</p><p>${link(FILMS_ROUTE, "Open the Films & Screening Room")}</p>`),
-  };
+  }));
 
-  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, videosAliasRoute, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
+  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, ...filmAliasRoutes, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */
@@ -1403,7 +1394,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     `<p>${description}</p>`,
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
-    `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.sourcePath, HOME.culture.sourceLabel)}</p></section>`,
+    `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.sourcePath, HOME.culture.sourceLabel)} · ${link(HOME.culture.ammPath, HOME.culture.ammLabel)}</p></section>`,
     `<h2>Questions for inquiry</h2>${HOME.critiques.map(concept => `<h3>${escapeHtml(concept.term)}</h3><p>${escapeHtml(concept.text)}</p><p>${concept.rejected ? "DOT rejects" : "Outside perspective"} · Model</p>${concept.source ? `<cite>${concept.sourceHref ? link(concept.sourceHref, concept.source) : escapeHtml(concept.source)}</cite>` : ""}`).join("")}`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0

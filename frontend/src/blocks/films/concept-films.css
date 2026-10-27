@@ -1,0 +1,294 @@
+/* Concept films: one square motion study beside the concept's own words.
+   The film owns the screen it sits on; everything else on the page waits below it. */
+
+.concept-film {
+  --cf-stage: color-mix(in oklab, var(--card) 70%, var(--background));
+  --cf-ink: var(--foreground);
+  --cf-muted: var(--muted-foreground);
+  --cf-line: color-mix(in oklab, var(--foreground) 22%, transparent);
+  --cf-origin: color-mix(in oklab, var(--identity-origin, var(--foreground)) 62%, var(--muted-foreground));
+  --cf-big-c: var(--identity-emerald, var(--organism-accent-strong));
+  --cf-rf: var(--films-gold);
+  --cf-local: var(--films-accent);
+  --cf-fear: color-mix(in oklab, #b0503a 82%, var(--foreground));
+  max-width: 72rem;
+}
+
+html.dark .concept-film {
+  --cf-fear: color-mix(in oklab, #d4765d 86%, var(--foreground));
+}
+
+.concept-film-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  background: var(--cf-stage);
+  cursor: pointer;
+}
+
+.concept-film-motif {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.concept-film-copy {
+  min-width: 0;
+  padding: 0.25rem 1.25rem 5rem;
+  cursor: auto;
+}
+
+.concept-film-eyebrow {
+  margin: 0;
+  color: var(--cf-muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.concept-film-name {
+  margin: 0.5rem 0 0;
+  color: var(--cf-ink);
+  font-family: var(--identity-reading-font, var(--font-serif, Georgia, serif));
+  font-size: clamp(1.75rem, 5cqi, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: pretty;
+}
+
+.concept-film-definition {
+  max-width: 34ch;
+  margin: 1.1rem 0 0;
+  color: var(--cf-ink);
+  font-size: clamp(1.125rem, 2.4cqi, 1.5rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.concept-film-definition span {
+  display: inline-block;
+}
+
+.concept-film-source {
+  margin: 1.25rem 0 0;
+  color: var(--cf-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.concept-film-silent {
+  flex-shrink: 0;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  color: var(--films-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+@container (min-width: 44rem) {
+  .concept-film-stage {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .concept-film-motif {
+    max-height: min(72svh, 44rem);
+  }
+
+  .concept-film-copy {
+    padding: clamp(1.5rem, 4cqi, 3rem) clamp(1.5rem, 5cqi, 4rem) clamp(5rem, 9cqi, 6rem) 0;
+  }
+}
+
+@container (max-width: 350px) {
+  .concept-film-silent {
+    display: none;
+  }
+}
+
+.concept-film:fullscreen {
+  max-width: none;
+}
+
+.concept-film:fullscreen .concept-film-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.concept-film:fullscreen .concept-film-motif {
+  max-height: calc(100dvh - 6rem);
+}
+
+/* Drawing vocabulary: a stroke or a fill, toned by the layer it belongs to. */
+.concept-film-motif .cm-s {
+  fill: none;
+  stroke: var(--cm, var(--cf-ink));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.concept-film-motif .cm-f {
+  fill: var(--cm, var(--cf-ink));
+  stroke: none;
+}
+
+.concept-film-motif .cm-hollow,
+.concept-film-motif .cm-ground {
+  fill: var(--cf-stage);
+}
+
+.concept-film-motif .cm-ink { --cm: var(--cf-ink); }
+.concept-film-motif .cm-muted { --cm: var(--cf-muted); }
+.concept-film-motif .cm-line { --cm: var(--cf-line); }
+.concept-film-motif .cm-origin { --cm: var(--cf-origin); }
+.concept-film-motif .cm-big-c { --cm: var(--cf-big-c); }
+.concept-film-motif .cm-rf { --cm: var(--cf-rf); }
+.concept-film-motif .cm-local { --cm: var(--cf-local); }
+.concept-film-motif .cm-fear { --cm: var(--cf-fear); }
+
+.concept-film-motif .cm-label {
+  fill: var(--cf-muted);
+  font-family: "Inter", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+  stroke: var(--cf-stage);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+
+.concept-film-motif .cm-label--strong {
+  fill: var(--cf-ink);
+  font-weight: 600;
+}
+
+/* ── The film index and the actions under the player ──────────────── */
+
+.concept-film-detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  max-width: 72rem;
+  margin: 1.25rem auto 0;
+}
+
+.concept-film-links,
+.concept-film-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+}
+
+.concept-film-step-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--films-border);
+  border-radius: 999px;
+  background: none;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 140ms ease;
+}
+
+.concept-film-step-btn:hover:not(:disabled) {
+  border-color: var(--films-accent);
+}
+
+.concept-film-step-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.concept-film-position {
+  color: var(--films-muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.concept-film-index {
+  max-width: 72rem;
+  margin: clamp(2.5rem, 6vw, 4rem) auto 0;
+}
+
+.concept-film-index ol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--films-border);
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .concept-film-index ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .concept-film-index ol {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.concept-film-index button {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.9rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--films-border);
+  background: none;
+  color: var(--foreground);
+  text-align: left;
+  cursor: pointer;
+}
+
+.concept-film-index-number {
+  color: var(--films-muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.concept-film-index-name {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.concept-film-index-level {
+  grid-column: 2;
+  color: var(--films-muted);
+  font-size: 0.8125rem;
+}
+
+.concept-film-index button:hover .concept-film-index-name {
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+.concept-film-index button[aria-current="true"] .concept-film-index-number,
+.concept-film-index button[aria-current="true"] .concept-film-index-name {
+  color: var(--films-accent);
+}
+
+.concept-film-index button:focus-visible,
+.concept-film-step-btn:focus-visible {
+  outline: 2px solid var(--films-accent);
+  outline-offset: 3px;
+}

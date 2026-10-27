@@ -53,9 +53,9 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expectNoHorizontalOverflow(page);
   await pageNav.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeInViewport();
-  const menu = page.getByRole("button", { name: "Menu", exact: true });
-  if (await menu.isVisible()) await menu.click();
-  const book = page.getByRole("navigation", { name: "Primary", exact: true })
+  await page.getByRole("button", { name: "Explore the site", exact: true }).click();
+  const book = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true })
+    .getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Book One", exact: true });
   await expect(book).toBeVisible();
   await expect(book).toHaveAttribute("href", "/book/digital-organism-theory");
@@ -145,10 +145,11 @@ test("while the list is closed, navigation offers the book and no header signup"
 
   const header = page.locator('header[aria-label="Site Header"]');
   await expect(header).toBeVisible();
-  const menu = header.getByRole("button", { name: "Menu", exact: true });
-  if (await menu.isVisible()) await menu.click();
-  await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Book One", exact: true }))
+  await page.getByRole("button", { name: "Explore the site", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Follow your curiosity.", exact: true })
+    .getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
+  await page.keyboard.press("Escape");
   await expect(header.getByRole("link", { name: "Readers’ list", exact: true })).toHaveCount(0);
   await expect(header.getByRole("button", { name: "Sign in" })).toHaveCount(0);
 });

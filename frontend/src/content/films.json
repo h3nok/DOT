@@ -1,24 +1,25 @@
 {
   "eyebrow": "Films & Visual Inquiry",
   "title": "The Observer in Motion.",
-  "subtitle": "Architectural films and visual essays on Digital Organism Theory, epistemic method, and applied systems analysis.",
-  "description": "Browse the Digital Organism Theory films and @dotheory YouTube series. Watch in the native theme-synced screening room or open episodes on YouTube with zero third-party tracking on page load.",
+  "subtitle": "Films on experience, the patterns that shape us, and the choices we can explore.",
+  "description": "Short silent films, one for each concept in Book One, and the @dotheory YouTube series. The films play in your browser, with no third-party tracking on page load.",
   "channelHandle": "@dotheory",
   "channelUrl": "https://www.youtube.com/@dotheory",
-  "privacyNote": "No trackers or cookies load on this page. The films play here, in your browser, and YouTube loads only if you ask for it.",
+  "privacyNote": "No trackers or cookies load on this page. The films play here, in your browser, without sound.",
+  "conceptFilmsNote": "One silent film for each concept in the Book One concept map, in the map’s order. Each runs sixteen seconds and shows the map’s own definition. Nothing plays until you press play, and no film moves on to the next by itself.",
   "seriesNote": "The episodes are in production. The reading behind each one is open now.",
   "completionNote": "That is every film and series stream in the catalogue. New episodes appear on @dotheory without schedules, streaks, or notifications.",
   "screeningFilms": [
     {
       "id": "inquiry-trailer",
       "number": "FILM 01",
-      "badge": "Official Scientific Trailer · 4 Acts",
+      "badge": "An invitation to explore · 12 scenes",
       "title": "You, the Observer, Belong in the Inquiry",
-      "duration": "2:12",
-      "durationSeconds": 132,
-      "posterSeconds": 64.0,
+      "duration": "13:11",
+      "durationSeconds": 791,
+      "posterSeconds": 155,
       "resolution": "4K UHD · Dark & Light Editions",
-      "summary": "A four-act visual introduction to Digital Organism Theory: from the first-order fact of lived experience, through the source conditions T × E, Big C, Little c, and Reality Frame Zero (RF₀), to the Canvas, the Painting, and Love as a low-entropy Canvas state.",
+      "summary": "A personal introduction to Book One through familiar moments: a short message, learning a skill, and the marks experience leaves behind. Explore the Canvas, the Painting, Fear, Love, and the possibility of a different response. DOT’s larger claims about consciousness and physical reality remain hypotheses to test.",
       "claimLevels": [
         "Observation",
         "External model",
@@ -35,40 +36,40 @@
         {
           "id": "act-1",
           "code": "ACT I",
-          "title": "First-Person Observation & Emergent Principles",
-          "timestamp": "0:01",
-          "seconds": 1.4,
-          "summary": "Why first-person experience is the starting evidence of every science, and how DOT defines a Digital Organism.",
+          "title": "Start with an ordinary moment",
+          "timestamp": "0:00",
+          "seconds": 0,
+          "summary": "Begin with a familiar moment: a one-word reply can carry more than one meaning. The feeling is real; understanding it takes questions, comparison, and a willingness to revise.",
           "readingLabel": "Chapter 1 · The Digital Organism",
           "readingTo": "/book/digital-organism-theory/the-digital-organism"
         },
         {
           "id": "act-2",
           "code": "ACT II",
-          "title": "Architecture of Continuity (T × E → Big C → Little c → RF₀)",
-          "timestamp": "0:35",
-          "seconds": 34.8,
-          "summary": "Primordial Continuity (T) and External Environment (E) as the source conditions within which Big C emerged, undifferentiated Little c, and lawful RF₀.",
+          "title": "Explore the model",
+          "timestamp": "5:35",
+          "seconds": 335,
+          "summary": "Explore DOT’s proposed architecture: Big C emerged within T × E—primordial Time and the raw fabric of unformed information. The model’s starting assumptions invite prediction, evidence, and correction.",
           "readingLabel": "Chapter 3 · Architecture of Continuity",
           "readingTo": "/book/digital-organism-theory/architecture-of-continuity"
         },
         {
           "id": "act-3",
           "code": "ACT III",
-          "title": "The Canvas, The Painting & Canvas Entropy",
-          "timestamp": "1:10",
-          "seconds": 70.2,
-          "summary": "How lived encounters record on the Canvas (C), render through the Painting (P), and divide Intent under high Canvas entropy (Fear).",
+          "title": "Notice what experience leaves behind",
+          "timestamp": "7:44",
+          "seconds": 464,
+          "summary": "Learning a skill changes what you can do even after practice ends. Explore the Canvas as what carries change forward, and the Painting as the patterns through which you meet the next moment.",
           "readingLabel": "Chapter 5 · The Canvas",
           "readingTo": "/book/digital-organism-theory/the-canvas"
         },
         {
           "id": "act-4",
           "code": "ACT IV",
-          "title": "Seeing the Painting & Love as Low Canvas Entropy",
-          "timestamp": "1:44",
-          "seconds": 104.4,
-          "summary": "Why the Painting is not the painter, and how reducing Canvas fragmentation allows coherent Intent (Love) to emerge.",
+          "title": "Make room for a different response",
+          "timestamp": "9:57",
+          "seconds": 597,
+          "summary": "Notice when an old defense shapes a new conversation. In DOT, Love names the condition in which Fear no longer governs you, making room for truth, care, boundaries, and a different response.",
           "readingLabel": "Chapter 6 · The Painting",
           "readingTo": "/book/digital-organism-theory/the-painting"
         }
@@ -182,8 +183,7 @@
           ],
           "readingLabel": "Read Chapter 1: The Digital Organism",
           "readingTo": "/book/digital-organism-theory/the-digital-organism",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 26.4
+          "conceptFilmId": "digital-organism"
         },
         {
           "id": "canvas-painting-character",
@@ -201,8 +201,7 @@
           ],
           "readingLabel": "Read Chapter 5: The Canvas",
           "readingTo": "/book/digital-organism-theory/the-canvas",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 70.2
+          "conceptFilmId": "canvas"
         },
         {
           "id": "when-fear-governs-the-loop",
@@ -219,8 +218,7 @@
           ],
           "readingLabel": "Read Chapter 6: The Painting",
           "readingTo": "/book/digital-organism-theory/the-painting",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 81.6
+          "conceptFilmId": "fear-gating"
         }
       ]
     },
@@ -248,8 +246,7 @@
           ],
           "readingLabel": "Explore Open Questions & Falsifiers",
           "readingTo": "/applied",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 18.0
+          "conceptFilmId": "limits-and-debts"
         }
       ]
     },
@@ -276,8 +273,7 @@
           ],
           "readingLabel": "Explore The American Millennial Manifesto",
           "readingTo": "/amm",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 93.0
+          "conceptFilmId": "canvas"
         },
         {
           "id": "dependence-extraction-power",
@@ -294,8 +290,7 @@
           ],
           "readingLabel": "Read Chapter One: The Leech",
           "readingTo": "/essays/amm-chapter-one-the-leech",
-          "screeningFilmId": "inquiry-trailer",
-          "screeningSeconds": 115.0
+          "conceptFilmId": "fear-gating"
         }
       ]
     }

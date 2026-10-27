@@ -25,7 +25,10 @@ export function Consciousness101() {
               <p>{HOME.loveDefinition}</p>
             </blockquote>
             <p className="home-culture-body">{HOME.culture.reflection}</p>
-            <TextLink className="home-culture-source" to={HOME.culture.sourcePath}>{HOME.culture.sourceLabel}</TextLink>
+            <div className="home-culture-sources">
+              <TextLink className="home-culture-source" to={HOME.culture.sourcePath}>{HOME.culture.sourceLabel}</TextLink>
+              <TextLink className="home-culture-source" to={HOME.culture.ammPath}>{HOME.culture.ammLabel}</TextLink>
+            </div>
           </div>
           <TextLink href="#possibility-field" className="home-culture-next" icon={<ArrowDown />}>Explore the proposed architecture</TextLink>
         </div>

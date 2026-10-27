@@ -1,0 +1,106 @@
+/* Existing writing and films sit in an open editorial composition. */
+.home-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.5rem;
+  max-width: var(--home-hero-measure);
+  margin: 0;
+}
+
+.home-entry-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  font-size: .8125rem;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: .35em;
+}
+
+.home-entry-links a:hover { color: var(--foreground); }
+.home-entry-links a:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 5px;
+}
+
+/* Claim boundaries remain readable without becoming a bank of colored keys. */
+.home-concept-slideshow-eyebrow > span[data-level] {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted-foreground);
+  font-family: var(--home-public-display-font);
+  letter-spacing: 0;
+}
+.home-concept-slideshow-eyebrow > span[data-level]::before { display: inline; margin-right: .25rem; content: "·"; }
+
+.home-journey .home-theory-layer-environment .home-theory-layer-card {
+  border-radius: 0;
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 95%, transparent);
+  box-shadow: none;
+}
+
+.home-journey .home-film-loop-card {
+  padding-inline: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.home-film-loop-card__step { font-size: .75rem; letter-spacing: .025em; }
+
+.home-film-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: .75rem 2rem;
+  max-width: 64rem;
+  margin: 0 auto 1.5rem;
+}
+
+.home-film-heading h2 {
+  max-width: 25ch;
+  margin-top: .75rem;
+  font-family: var(--home-public-reading-font);
+  font-size: clamp(1.75rem, 3vw, 2.6rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.home-film-heading > a {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: var(--touch-target);
+  font-size: .8125rem;
+  text-decoration: underline;
+  text-underline-offset: .3em;
+}
+.home-film-heading > a svg { width: 1rem; height: 1rem; }
+
+@media (max-width: 639px) {
+  .home-concept-slideshow-movement { flex-direction: column; gap: .15rem; padding-inline: .35rem; font-size: .6875rem; }
+  .home-concept-slideshow-explanation { line-height: 1.5; }
+  .home-concept-slideshow { padding-top: 1rem; }
+  .home-entry-links { column-gap: 1.25rem; }
+  .home-entry-links a { font-size: .75rem; }
+  .home-film-environment { padding-block: 2.5rem; }
+  .home-film-inner-loop { margin-top: 2rem; padding-top: 1.75rem; }
+}
+
+/* The central diagram sits directly in the page field. */
+.home-hero-stage,
+.home-hero-architecture,
+.home-hero-architecture__svg {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}

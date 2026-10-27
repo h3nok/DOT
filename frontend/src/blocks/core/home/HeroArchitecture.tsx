@@ -1,7 +1,6 @@
 import { useId, useRef } from "react";
 import { useInView } from "framer-motion";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
-import { Disclosure } from "../../../shared/Disclosure";
 
 import { ARCHITECTURE_RADII as R, C1_TRANSFORM } from "./architectureGeometry";
 import { useArchitectureFocus } from "./architectureFocus";
@@ -134,16 +133,16 @@ export function HeroArchitecture() {
   const {
     gridId, fieldWashId, frameWashId, frameClipId, surfacePrefix,
   } = ids;
-  const captionId = `${instanceId}-hero-architecture-caption`;
-  const descriptionId = `${instanceId}-hero-architecture-description`;
+  const titleId = `${instanceId}-hero-architecture-title`;
   const { focus, request } = useArchitectureFocus();
 
   return (
-    <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} aria-labelledby={captionId} aria-describedby={descriptionId}>
+    <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} aria-labelledby={titleId}>
       {/* Pointer shortcut only: the concept slideshow names each part for every reader. */}
       <svg
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
+        aria-labelledby={titleId}
         focusable="false"
         data-focus={focus ?? undefined}
         onClick={(event) => {
@@ -153,6 +152,7 @@ export function HeroArchitecture() {
           if (part) request(part);
         }}
       >
+        <title id={titleId}>DOT diagram</title>
         <HeroArchitectureDefs ids={ids} />
 
         <g data-part="te">
@@ -357,65 +357,7 @@ export function HeroArchitecture() {
         <HeroArchitectureLabels />
       </svg>
 
-      <figcaption className="home-architecture-caption">
-        <span id={captionId} className="sr-only">DOT’s proposed architecture</span>
-        <span id={descriptionId} className="sr-only">
-          Big C emerges within T and E and maintains itself; it develops Reality
-          Frames. RF₀, our physical universe, is one of them, governed by physics:
-          structure rather than a conscious process. Other Reality Frames, RF₁,
-          RF₂ and onward to RFₙ, follow their own rules; DOT proposes that a
-          Little c who stabilizes its own consciousness can explore them,
-          expanding its decision space. RF₀ hosts many Little c, indexed c₁, c₂, c₃
-          and onward; c₁ is you. Each Little c is a downstream, local
-          implementation of Big C’s own process. RF₀ presses on
-          you through constraint and consequence and offers options to your
-          awareness. Little c meet only through RF₀ and press on one another;
-          you cooperate with c₂, which widens both your awareness. The rings
-          are conceptual, not spatial. DOT proposes this environment as a
-          setting for Little c to live, explore possibilities, and develop.
-        </span>
-        <nav className="home-architecture-touch-nav" aria-label="Read the diagram">
-          <a href="#possibility-field">T × E</a>
-          <a href="#big-c">Big C</a>
-          <a href="#reality-frame">RF₀</a>
-          <a href="#little-c">Little c</a>
-        </nav>
-        <Disclosure className="home-architecture-guide" summary="About the diagram">
-          <p>
-            Conceptual rings, not spatial boundaries. Shading adds visual depth,
-            not physical scale. The page-wide curved field suggests continuity and
-            possibility, not measured structure outside our universe.
-          </p>
-          <p>
-            Two kinds of process, drawn two ways. Bronze rings are Reality
-            Frames: RF₀, the interaction environment, is structure and law,
-            not a conscious process, so it is drawn flat and centred on no
-            experiencer. The accent marks conscious processes: Big C, each
-            Little c, awareness, and Intent.
-          </p>
-          <dl>
-            <div><dt>T × E</dt><dd>The source: continuity and possibility, within which Big C is proposed to have emerged.</dd></div>
-            <div><dt>Awareness</dt><dd>Proposed as a fundamental, undifferentiated process emerging within T × E, not yet anyone’s. It may be a capacity of Big C; each Little c’s awareness radius is its local share.</dd></div>
-            <div><dt>Big C</dt><dd>Primordial consciousness. It emerged within T × E, began maintaining itself, and develops Reality Frames, our world among them.</dd></div>
-            <div><dt>RF₁, RF₂ … RFₙ</dt><dd>RFₙ generalizes: any Reality Frame Big C develops, each under its own rules. DOT proposes that a Little c who stabilizes its consciousness can explore them, expanding its decision space. Drawn small and dashed because, unlike RF₀, they cannot be measured from here; their interiors only mark that the rules differ.</dd></div>
-            <div><dt>RF₀</dt><dd>The physical universe: structure and law, not a conscious process, and the one Reality Frame we can measure. Proposed as Big C’s developmental environment for us, hosting many Little c. Generated does not mean unreal; consequences remain real.</dd></div>
-            <div><dt>Little c</dt><dd>You, the local experiencer c₁, one among many (c₂, c₃ … cₙ): a downstream, local implementation of Big C’s own process, so it is drawn in Big C’s living material. Noticing, choosing, and living with what follows.</dd></div>
-            <div><dt>Loops</dt><dd>Two dashed arcs running in distinct inks: emerald-jade for Big C’s outer loop, warm gold for each Little c’s inner loop, each with one arrow for its direction of travel. The Process concept brings them fully forward. Under T × E, coherence is never free: work maintains a process, effort develops it, and rest lets it consolidate.</dd></div>
-            <div><dt>Solid graphite wedges</dt><dd>RF₀’s constraint and consequence, pressing on you directly.</dd></div>
-            <div><dt>Open graphite chevrons</dt><dd>Options RF₀ offers, arriving at your awareness radius: the options you can perceive.</dd></div>
-            <div><dt>Dotted double arrows</dt><dd>Mutual pressure between Little c. They meet only through RF₀, and each presses on the other.</dd></div>
-            <div><dt>Solid accent link</dt><dd>Cooperation, which widens the awareness of both. cₙ lies beyond your awareness for now.</dd></div>
-          </dl>
-          <p>
-            DOT proposes that Big C’s aim is for Little c to cooperate so that
-            each can reach its potential. RF₀ does not impose this: will is free.
-            It is a high-fidelity, difficult environment in which uplifting one
-            another works better than condescension. You choose, act through
-            Intent and embodied action, and the world returns constraint and
-            consequence.
-          </p>
-        </Disclosure>
-      </figcaption>
+
     </figure>
   );
 }

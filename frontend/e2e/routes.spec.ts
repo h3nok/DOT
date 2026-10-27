@@ -42,11 +42,8 @@ test.describe("hero", () => {
     expect((await inquiry.boundingBox())?.width).toBeGreaterThanOrEqual(120);
     await expect(page.locator(".home-journey-nav ol")).toHaveCount(0);
 
-    const diagram = hero.getByRole("figure", { name: "DOT’s proposed architecture" });
-    await expect(diagram).toHaveAccessibleDescription(/The rings are conceptual, not spatial/);
-    const guide = diagram.locator("details");
-    await expect(guide).not.toHaveAttribute("open");
-    await expect(guide.locator("dl")).not.toBeVisible();
+    const diagram = hero.getByRole("figure", { name: "DOT diagram" });
+    await expect(diagram).toBeVisible();
   });
 
   test("renders a short proposition, the architecture figure and one reading action", async ({
@@ -201,12 +198,38 @@ test.describe("hero", () => {
   });
 });
 
-test("the hidden Academy address opens Book One", async ({ page }) => {
+test("the Academy opens learning materials while keeping Book One a separate edition", async ({ page }) => {
   await page.goto("/academy");
-  await expect(page).toHaveURL("/book/digital-organism-theory");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator('a[href="/academy"]')).toHaveCount(0);
+  await expect(page).toHaveURL("/academy");
+  await expect(page.getByRole("heading", {
+    level: 1,
+    name: "Become a student of your own experience.",
+  })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/academy\/?$/);
+  await expect(page.locator('main a[href^="/academy/films"]')).toHaveCount(0);
+  await expect(page.locator('main a[href="/book/digital-organism-theory"]').first()).toBeVisible();
+  await expect(page.locator('main a[href="/doctrine"]').first()).toBeVisible();
+  await expect(page.locator('main a[href="/applied"]').first()).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+
+  const writtenOrder = page.locator('a[href="/book/digital-organism-theory/preface?path=start-with-the-architecture"]').first();
+  await expect(writtenOrder).toBeVisible();
+  await writtenOrder.click();
+  await expect(page).toHaveURL("/book/digital-organism-theory/preface?path=start-with-the-architecture");
+  await expect(page.locator(".book-prose").first()).toBeVisible();
 });
+
+for (const legacyRoute of ["/films", "/videos"]) {
+  test(legacyRoute + " keeps shared query parameters and scene anchors when opening Academy films", async ({ page }) => {
+    await page.goto(legacyRoute + "?source=shared&mode=read#screening-room");
+    await expect(page).toHaveURL("/academy/films?source=shared&mode=read#screening-room");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator("#screening-room")).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/academy\/films\/?$/);
+    await expect(page.locator(".films-play-hero-btn")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+  });
+}
 
 test.describe("book reader", () => {
   test("renders prose and lets a reader move to the next section", async ({ page }) => {
