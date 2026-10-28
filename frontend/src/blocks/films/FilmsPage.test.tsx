@@ -41,7 +41,7 @@ describe("FilmsPage", () => {
     ).toBeInTheDocument();
     const first = doctrineNodes[0];
     expect(screen.getByRole("heading", { level: 3, name: first.title })).toBeInTheDocument();
-    expect(screen.getByText(first.oneLine.split(" ")[0])).toBeInTheDocument();
+    expect(screen.getByText(first.oneLine, { selector: ".sr-only" })).toBeInTheDocument();
   });
 
   it("offers one film for every concept in the concept map, in the map's order", () => {

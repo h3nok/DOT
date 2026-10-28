@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Maximize2, Pause, Play, RotateCcw } from "lucide-react";
+import { Maximize2, Pause, Play, RotateCcw, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 
 import { formatDuration, formatTimecode } from "./filmTime";
+import { TypewriterSound, keystrokesBetween, type Keystroke } from "./TypewriterSound";
 import "./concept-films.css";
 
-interface SilentFilmPlayerProps {
+interface DrawnFilmPlayerProps {
   duration: number;
   /** The frame shown before the reader presses Play. */
   posterTime: number;
@@ -15,36 +16,47 @@ interface SilentFilmPlayerProps {
   className?: string;
   /** Film seconds marked on the timeline, such as where each part begins. */
   notches?: readonly number[];
+  /** Where each part begins, for stepping between parts, and what a part is called. */
+  chapters?: { starts: readonly number[]; noun: string };
   /** Spoken position for the timeline, e.g. the part playing at that second. */
   describeTime?: (seconds: number) => string;
+  /** Typewriter keys to sound as the film plays. Without them the film is silent. */
+  keystrokes?: readonly Keystroke[];
   dataAttributes?: Record<`data-${string}`, string>;
   /** Draws the stage at a film second. */
   children: (frame: number) => ReactNode;
 }
 
 /**
- * A silent film drawn from code. Nothing plays until the reader asks; before that
- * the stage holds the poster frame. The film stops at its end and never moves on
- * by itself (L3).
+ * A film drawn from code. Nothing plays, and nothing sounds, until the reader asks; before
+ * that the stage holds the poster frame. The film stops at its end and never moves on by
+ * itself, and it pauses when the reader scrolls it out of view (L3).
  */
-export function SilentFilmPlayer({
+export function DrawnFilmPlayer({
   duration,
   posterTime,
   playLabel,
   resetKey,
   className = "",
   notches = [],
+  chapters,
   describeTime,
+  keystrokes,
   dataAttributes,
   children,
-}: SilentFilmPlayerProps) {
+}: DrawnFilmPlayerProps) {
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
   const [fullscreenAvailable, setFullscreenAvailable] = useState(false);
   const timeRef = useRef(0);
   const playerRef = useRef<HTMLDivElement | null>(null);
+  const soundRef = useRef<TypewriterSound | null>(null);
+  const soundOnRef = useRef(true);
+  const keystrokesRef = useRef(keystrokes);
 
+  const hasSound = Boolean(keystrokes?.length);
   const frame = hasStarted ? time : posterTime;
   const durationLabel = formatDuration(duration);
 
@@ -53,7 +65,15 @@ export function SilentFilmPlayer({
       typeof playerRef.current?.requestFullscreen === "function" &&
       document.fullscreenEnabled !== false,
     );
+    return () => {
+      soundRef.current?.dispose();
+      soundRef.current = null;
+    };
   }, []);
+
+  useEffect(() => {
+    keystrokesRef.current = keystrokes;
+  }, [keystrokes]);
 
   useEffect(() => {
     setPlaying(false);
@@ -70,9 +90,13 @@ export function SilentFilmPlayer({
       // A hidden tab pauses frames; resume where the film was rather than jumping ahead.
       const dt = Math.min(0.25, Math.max(0, (now - prev) / 1000));
       prev = now;
-      const next = Math.min(duration, timeRef.current + dt);
+      const from = timeRef.current;
+      const next = Math.min(duration, from + dt);
       timeRef.current = next;
       setTime(next);
+      if (soundOnRef.current && keystrokesRef.current) {
+        for (const key of keystrokesBetween(keystrokesRef.current, from, next)) soundRef.current?.strike(key.kind);
+      }
       if (next >= duration) {
         setPlaying(false);
         return;
@@ -83,26 +107,82 @@ export function SilentFilmPlayer({
     return () => window.cancelAnimationFrame(raf);
   }, [playing, duration]);
 
+  // A film nobody can see is not being watched: pause it when it leaves the screen.
+  useEffect(() => {
+    const el = playerRef.current;
+    if (!playing || !el || typeof IntersectionObserver === "undefined") return;
+    // A page still settling can shift the film for a moment; pause only once it has stayed out of sight.
+    let away = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      window.clearTimeout(away);
+      if (entry && !entry.isIntersecting && !document.fullscreenElement) {
+        away = window.setTimeout(() => setPlaying(false), 600);
+      }
+    });
+    observer.observe(el);
+    return () => {
+      window.clearTimeout(away);
+      observer.disconnect();
+    };
+  }, [playing]);
+
   const seekTo = (seconds: number) => {
     const clamped = Math.max(0, Math.min(duration, seconds));
     timeRef.current = clamped;
     setTime(clamped);
   };
 
+  /** Plays from where the film is, opening the sound inside the reader's click. */
+  const play = () => {
+    if (hasSound && soundOnRef.current) {
+      soundRef.current ??= new TypewriterSound();
+      soundRef.current.start();
+    }
+    setHasStarted(true);
+    setPlaying(true);
+  };
+
   const togglePlay = () => {
     if (!hasStarted || timeRef.current >= duration - 0.05) {
-      setHasStarted(true);
       seekTo(0);
-      setPlaying(true);
+      play();
       return;
     }
-    setPlaying((prev) => !prev);
+    if (playing) setPlaying(false);
+    else play();
   };
 
   const restart = () => {
-    setHasStarted(true);
     seekTo(0);
-    setPlaying(true);
+    play();
+  };
+
+  let chapterIndex = -1;
+  chapters?.starts.forEach((start, index) => {
+    if (start <= time + 0.01) chapterIndex = index;
+  });
+  const previousChapter = () => {
+    if (!chapters) return;
+    const current = chapters.starts[chapterIndex] ?? 0;
+    const target = time - current > 1.5 ? current : (chapters.starts[chapterIndex - 1] ?? 0);
+    seekTo(target);
+    play();
+  };
+  const nextChapter = () => {
+    const target = chapters?.starts[chapterIndex + 1];
+    if (target === undefined) return;
+    seekTo(target);
+    play();
+  };
+
+  const toggleSound = () => {
+    const on = !soundOnRef.current;
+    soundOnRef.current = on;
+    setSoundOn(on);
+    if (on && playing) {
+      soundRef.current ??= new TypewriterSound();
+      soundRef.current.start();
+    }
   };
 
   const toggleFullscreen = () => {
@@ -160,9 +240,33 @@ export function SilentFilmPlayer({
             )}
           </button>
 
+          {chapters && (
+            <>
+              <button
+                type="button"
+                className="films-transport-btn films-transport-btn--previous"
+                onClick={previousChapter}
+                aria-label={`Previous ${chapters.noun}`}
+                title={`Previous ${chapters.noun}`}
+              >
+                <SkipBack className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="films-transport-btn films-transport-btn--next"
+                onClick={nextChapter}
+                disabled={chapterIndex >= chapters.starts.length - 1}
+                aria-label={`Next ${chapters.noun}`}
+                title={`Next ${chapters.noun}`}
+              >
+                <SkipForward className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </>
+          )}
+
           <button
             type="button"
-            className="films-transport-btn"
+            className="films-transport-btn films-transport-btn--restart"
             onClick={restart}
             aria-label="Restart film from 0:00"
             title="Restart from 0:00"
@@ -200,12 +304,25 @@ export function SilentFilmPlayer({
             />
           </div>
 
-          <span className="concept-film-silent">Silent</span>
+          {hasSound ? (
+            <button
+              type="button"
+              className="films-transport-btn films-transport-btn--sound"
+              onClick={toggleSound}
+              aria-pressed={soundOn}
+              aria-label="Typewriter sound"
+              title={soundOn ? "Typewriter sound on" : "Typewriter sound off"}
+            >
+              {soundOn ? <Volume2 className="h-4 w-4" aria-hidden="true" /> : <VolumeX className="h-4 w-4" aria-hidden="true" />}
+            </button>
+          ) : (
+            <span className="concept-film-silent">Silent</span>
+          )}
 
           {fullscreenAvailable && (
             <button
               type="button"
-              className="films-transport-btn"
+              className="films-transport-btn films-transport-btn--fullscreen"
               onClick={toggleFullscreen}
               aria-label="Toggle fullscreen"
               title="Fullscreen"

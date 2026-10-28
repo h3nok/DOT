@@ -4981,10 +4981,11 @@ html[data-field="off"] .home-hero-stage::before {
   margin-inline: auto;
 }
 
-/* The trailer alone, sized as a focused compact screening window. */
+/* The film owns the screen: as wide as the reading frame allows while it still fits the
+   viewport's height (its picture is a little over half its width). */
 .home-film-stage {
   width: 100%;
-  max-width: min(46rem, max(20rem, calc((100svh - 18rem) * 16 / 9)));
+  max-width: min(72rem, max(20rem, calc((100svh - 10rem) * 1.9)));
   margin-inline: auto;
 }
 

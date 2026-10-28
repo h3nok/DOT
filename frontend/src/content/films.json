@@ -9,17 +9,57 @@
   "conceptFilmsNote": "One silent film for each concept in the Book One concept map, in the map’s order. Each runs sixteen seconds and shows the map’s own definition. Nothing plays until you press play, and no film moves on to the next by itself.",
   "conceptTour": {
     "title": "Book One, concept by concept",
-    "label": "Academy · Silent film",
-    "opening": {
-      "eyebrow": "Digital Organism Theory · Book One",
-      "line": "The most immediate fact of your existence is not a measurement.",
-      "note": "It is that you are here to experience one.",
-      "source": "Book One · Preface"
-    },
+    "label": "Academy · Typed film",
+    "scenes": [
+      {
+        "id": "struggle",
+        "name": "The struggle",
+        "seconds": 11,
+        "eyebrow": "The struggle",
+        "title": "“Work hard, play by the rules, and you will get ahead.”",
+        "note": "Distress is individualized while the architecture producing it is preserved.",
+        "source": "The American Millennial Manifesto · Chapter Two",
+        "description": "A person stands at the centre while six cultural messages press in: Your worth is what you earn. Do not risk your place. If it pays, it must be progress. Protect what is yours. Everyone does it. You have no choice. Rings of pain pulse outward from the person."
+      },
+      {
+        "id": "cultural-trap",
+        "name": "The cultural trap",
+        "seconds": 12,
+        "eyebrow": "The cultural trap",
+        "title": "“How we do things” begins to feel identical to “how things are.”",
+        "note": "The Western civilization many of us inherited is neither sacred nor identical to reality. It is a historical Painting.",
+        "source": "Book One · Architecture of Continuity · The Painting",
+        "description": "The view pulls back as a ring closes around the whole scene and locks: a cultural trap. Around the trap: time as money, attention as inventory, nature as raw material, human beings as units of production."
+      },
+      {
+        "id": "setup",
+        "name": "The setup",
+        "seconds": 12,
+        "eyebrow": "The setup",
+        "title": "Frames turn continuity into curriculum.",
+        "note": "Learning requires enough stability for actions to have legible consequences and enough freedom for more than one response to remain possible.",
+        "source": "Book One · Architecture of Continuity · Reality Frames",
+        "description": "The trap turns out to be one of several cultures inside a larger ruled frame, RF₀, marked stable rules, legible consequences, and more than one response."
+      },
+      {
+        "id": "turn",
+        "name": "The turn",
+        "seconds": 7,
+        "eyebrow": "Digital Organism Theory · Book One",
+        "title": "Understand what shapes you.",
+        "note": "Transcend your culture.",
+        "source": "",
+        "description": "The lock springs open, the trap opens, and the person rises out through the opening."
+      }
+    ],
     "closing": {
       "eyebrow": "Digital Organism Theory",
       "title": "Consciousness: A Digital Organism",
-      "source": "Book One · dotheory.org"
+      "source": "Book One · dotheory.org",
+      "links": [
+        { "label": "Read Book One", "to": "/book/digital-organism-theory" },
+        { "label": "Explore the Concept Map", "to": "/doctrine" }
+      ]
     }
   },
   "seriesNote": "The episodes are in production. The reading behind each one is open now.",
@@ -223,7 +263,7 @@
           "id": "when-fear-governs-the-loop",
           "code": "EPISODE 03",
           "title": "When Fear Governs the Loop — Canvas Entropy & Love",
-          "subtitle": "Why unresolved Fear fragments the Canvas (high Canvas entropy) and why Love is a low-entropy Canvas state for Little c.",
+          "subtitle": "As fragmentation on the Canvas increases, Intent becomes less steady. Love is the condition in which Fear no longer governs you.",
           "artwork": "agency",
           "status": "In production · Read the chapters now",
           "youtubeId": "",

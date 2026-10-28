@@ -1,4 +1,4 @@
-/* Concept films: one square motion study beside the concept's own words.
+/* Concept films: one square picture beside the concept's own words, typed as it plays.
    The film owns the screen it sits on; everything else on the page waits below it. */
 
 .concept-film {
@@ -35,24 +35,25 @@ html.dark .concept-film {
 
 .concept-film-copy {
   min-width: 0;
-  padding: 0.25rem 1.25rem 5rem;
+  padding: 0.5rem 1.25rem 1.5rem;
   cursor: auto;
 }
 
 .concept-film-eyebrow {
   margin: 0;
   color: var(--cf-muted);
-  font-size: 0.8125rem;
+  font-family: var(--films-mono);
+  font-size: clamp(0.8125rem, 1.35cqi, 1rem);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.5;
 }
 
 .concept-film-name {
-  margin: 0.5rem 0 0;
+  margin: 0.45rem 0 0;
   color: var(--cf-ink);
   font-family: var(--identity-reading-font, var(--font-serif, Georgia, serif));
-  font-size: clamp(1.75rem, 5cqi, 3.25rem);
+  font-size: clamp(1.6rem, 4.6cqi, 3.5rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -60,23 +61,68 @@ html.dark .concept-film {
 }
 
 .concept-film-definition {
-  max-width: 34ch;
-  margin: 1.1rem 0 0;
+  max-width: 36ch;
+  margin: 1rem 0 0;
   color: var(--cf-ink);
-  font-size: clamp(1.125rem, 2.4cqi, 1.5rem);
-  line-height: 1.5;
+  font-size: clamp(1.0625rem, 2.3cqi, 1.625rem);
+  line-height: 1.45;
   text-wrap: pretty;
 }
 
-.concept-film-definition span {
-  display: inline-block;
+/* The familiar picture, set apart from the definition it illustrates. */
+.concept-film-analogy {
+  max-width: 40ch;
+  margin: 1.1rem 0 0;
+  padding-left: 0.85em;
+  border-left: 3px solid var(--cf-big-c);
+  color: color-mix(in oklab, var(--cf-ink) 82%, var(--cf-muted));
+  font-family: var(--identity-reading-font, var(--font-serif, Georgia, serif));
+  font-size: clamp(0.9375rem, 1.95cqi, 1.375rem);
+  font-style: italic;
+  line-height: 1.45;
+  text-wrap: pretty;
 }
 
 .concept-film-source {
-  margin: 1.25rem 0 0;
+  margin: 1.1rem 0 0;
   color: var(--cf-muted);
-  font-size: 0.875rem;
+  font-size: clamp(0.875rem, 1.3cqi, 1rem);
   line-height: 1.5;
+}
+
+/* Typing: the words not yet typed keep their place unseen, and the caret takes no room. */
+.concept-film-untyped {
+  visibility: hidden;
+}
+
+.concept-film-caret {
+  position: relative;
+}
+
+.concept-film-caret::after {
+  content: "";
+  position: absolute;
+  top: 0.12em;
+  left: 0.04em;
+  width: 0.09em;
+  min-width: 2px;
+  height: 1em;
+  border-radius: 1px;
+  background: var(--cf-big-c);
+}
+
+.concept-film-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 1.4rem 0 0;
+  font-size: clamp(0.9375rem, 1.5cqi, 1.0625rem);
+}
+
+.concept-film-links a {
+  color: var(--cf-big-c);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
 }
 
 .concept-film-silent {
@@ -87,6 +133,25 @@ html.dark .concept-film {
   color: var(--films-muted);
   font-size: 0.75rem;
   line-height: 1.5;
+}
+
+/* The poster's Play button sits on the picture, clear of the words. */
+.concept-film .films-play-hero-btn {
+  top: min(50cqi, 17svh);
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.concept-film .films-play-hero-btn:hover {
+  transform: translate(-50%, calc(-50% - 1px));
+}
+
+/* On a phone the picture and its words share one screen. */
+@container (max-width: 43.99rem) {
+  .concept-film-motif {
+    max-height: 34svh;
+  }
 }
 
 @container (min-width: 44rem) {
@@ -100,8 +165,24 @@ html.dark .concept-film {
   }
 
   .concept-film-copy {
-    padding: clamp(1.5rem, 4cqi, 3rem) clamp(1.5rem, 5cqi, 4rem) clamp(5rem, 9cqi, 6rem) 0;
+    padding: clamp(1.5rem, 4cqi, 3rem) clamp(1.5rem, 5cqi, 4rem) clamp(1.5rem, 4cqi, 3rem) 0;
   }
+
+  .concept-film .films-play-hero-btn {
+    top: 50%;
+    left: calc(50% * 1.1 / 2.1);
+  }
+}
+
+/* On a phone, Play sits mid-row: the site's Explore button keeps the lower-left corner. */
+@container (max-width: 680px) {
+  .concept-film .films-transport-btn--restart { order: 1; }
+  .concept-film .films-transport-btn--previous { order: 2; }
+  .concept-film .films-transport-btn--primary { order: 3; }
+  .concept-film .films-transport-btn--next { order: 4; }
+  .concept-film .films-transport-btn--sound,
+  .concept-film .concept-film-silent { order: 5; }
+  .concept-film .films-transport-btn--fullscreen { order: 6; }
 }
 
 @container (max-width: 350px) {
@@ -153,7 +234,7 @@ html.dark .concept-film {
 .concept-film-motif .cm-label {
   fill: var(--cf-muted);
   font-family: "Inter", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 500;
   letter-spacing: 0.01em;
   paint-order: stroke;
@@ -291,6 +372,11 @@ html.dark .concept-film {
 .concept-film-step-btn:focus-visible {
   outline: 2px solid var(--films-accent);
   outline-offset: 3px;
+}
+
+/* The homepage tour owns its screen, wider than the screening room's player. */
+.films-screening-shell.concept-tour {
+  max-width: 72rem;
 }
 
 /* The concept tour keeps one height while its parts change: every part's words sit,
