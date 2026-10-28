@@ -1394,21 +1394,40 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
         <clipPath id={clipId}>
           <circle cx={ARCH_LENS[0]} cy={ARCH_LENS[1]} r={ARCH_LENS_R} />
         </clipPath>
+        <radialGradient id={`${clipId}-sphere`} cx="42%" cy="38%" r="68%">
+          <stop offset="0%" style={{ stopColor: "var(--cf-big-c)", stopOpacity: 0.08 }} />
+          <stop offset="70%" style={{ stopColor: "var(--cf-big-c)", stopOpacity: 0.18 }} />
+          <stop offset="100%" style={{ stopColor: "var(--cf-big-c)", stopOpacity: 0.32 }} />
+        </radialGradient>
       </defs>
       <circle cx={ARCH_LENS[0]} cy={ARCH_LENS[1]} r={ARCH_LENS_R} className="cm-s cm-line" strokeWidth={2} opacity={view.scale > 1 ? ease : 0} />
       <g clipPath={`url(#${clipId})`}>
-      {/* T × E: the field Big C emerged within, outside it. */}
-      <circle cx={centre[0]} cy={centre[1]} r={ARCH_FIELD_R * scale} className="cm-s cm-origin" strokeWidth={2} strokeDasharray="3 9" opacity={drawIn(0)} />
-      {/* Big C. */}
-      <circle cx={centre[0]} cy={centre[1]} r={ARCH_BIG_C_R * scale} className="cm-f cm-big-c" opacity={0.06 + 0.06 * lit("big-c")} />
-      <circle
-        cx={centre[0]}
-        cy={centre[1]}
-        r={ARCH_BIG_C_R * scale}
-        className={`cm-s ${lit("big-c") > 0.5 || layer === "all" ? "cm-big-c" : "cm-line"}`}
-        strokeWidth={2 + 1.6 * lit("big-c")}
-        opacity={drawIn(0.4)}
-      />
+      {/* T × E: the field Big C emerged within, outside it, as the homepage draws it. */}
+      <g opacity={drawIn(0)}>
+        <circle cx={centre[0]} cy={centre[1]} r={ARCH_FIELD_R * scale} className="cm-s cm-origin" strokeWidth={2} strokeDasharray="3 9" />
+        <circle cx={centre[0]} cy={centre[1]} r={(ARCH_FIELD_R - 12) * scale} className="cm-s cm-line" strokeWidth={1.4} strokeDasharray="1 7" />
+        {[-150, -110, -70, -30, 30, 70, 110, 150].map((angle) => {
+          const from = polar(centre[0], centre[1], (ARCH_FIELD_R - 6) * scale, angle - 90);
+          const to = polar(centre[0], centre[1], (ARCH_FIELD_R + 8) * scale, angle - 90);
+          return <line key={angle} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} className="cm-s cm-origin" strokeWidth={2} />;
+        })}
+      </g>
+      {/* Big C: a living sphere with a membrane, lit from within. */}
+      <circle cx={centre[0]} cy={centre[1]} r={ARCH_BIG_C_R * scale} fill={`url(#${clipId}-sphere)`} opacity={drawIn(0.4) * (0.75 + 0.25 * lit("big-c"))} />
+      <g opacity={drawIn(0.4)}>
+        <circle
+          cx={centre[0]}
+          cy={centre[1]}
+          r={ARCH_BIG_C_R * scale}
+          className={`cm-s ${lit("big-c") > 0.5 || layer === "all" ? "cm-big-c" : "cm-line"}`}
+          strokeWidth={2.4 + 1.6 * lit("big-c")}
+        />
+        <circle cx={centre[0]} cy={centre[1]} r={(ARCH_BIG_C_R - 10) * scale} className="cm-s cm-big-c" strokeWidth={1.4} strokeDasharray="5 8" opacity={0.55} />
+        {[-116, -72, -28, 18, 64, 112, 158, 204].map((angle) => {
+          const node = polar(centre[0], centre[1], ARCH_BIG_C_R * scale, angle);
+          return <circle key={angle} cx={node[0]} cy={node[1]} r={3.2} className="cm-f cm-big-c" />;
+        })}
+      </g>
       {/* RF₀, a lawful world inside Big C. */}
       <g opacity={drawIn(0.9)}>
         <circle cx={rf[0]} cy={rf[1]} r={ARCH_RF_R * scale} className="cm-f cm-rf" opacity={0.08 + 0.08 * rfLit} />
@@ -1427,6 +1446,11 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
           className={`cm-s ${rfLit > 0.5 || layer === "all" ? "cm-rf" : "cm-line"}`}
           strokeWidth={2 + 1.6 * rfLit}
         />
+        {[0, 90, 180, 270].map((angle) => {
+          const from = polar(rf[0], rf[1], (ARCH_RF_R - 6) * scale, angle);
+          const to = polar(rf[0], rf[1], (ARCH_RF_R + 6) * scale, angle);
+          return <line key={angle} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} className="cm-s cm-rf" strokeWidth={2} />;
+        })}
       </g>
       {/* The Reality Stream: what reaches Little c from within the Frame. */}
       {layer === "reality-stream" &&
@@ -1527,5 +1551,21 @@ export function HumanCharacter({ t }: MotifProps) {
       <Label x={300} y={508} anchor="start" show={span(t, 8.3, 8.9)}>the gatekeeper</Label>
       <Label x={470} y={386} show={span(t, 9, 9.6)}>new strokes</Label>
     </g>
+  );
+}
+
+/** The architecture in miniature, lit where a concept sits: a locator beside its place in the film. */
+export function ArchitectureGlyph({ layer }: { layer: ArchitectureLayer }) {
+  const on = (part: ArchitectureLayer) => layer === part || (layer === "reality-stream" && (part === "reality-frame" || part === "little-c"));
+  return (
+    <svg className="concept-film-glyph" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx={24} cy={24} r={22} className="cm-s cm-origin" strokeWidth={1.4} strokeDasharray="1.5 3.5" />
+      <circle cx={24} cy={24} r={18} className={on("big-c") ? "cm-f cm-big-c" : "cm-f cm-line"} opacity={on("big-c") ? 0.35 : 0.5} />
+      <circle cx={24} cy={24} r={18} className={on("big-c") ? "cm-s cm-big-c" : "cm-s cm-muted"} strokeWidth={on("big-c") ? 2.4 : 1.2} />
+      <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-f cm-rf" : "cm-f cm-hollow"} opacity={on("reality-frame") ? 0.55 : 1} />
+      <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-s cm-rf" : "cm-s cm-muted"} strokeWidth={on("reality-frame") ? 2.2 : 1.2} />
+      {on("little-c") && <circle cx={29.2} cy={18.8} r={4.8} className="cm-s cm-hollow cm-local" strokeWidth={2} />}
+      <circle cx={29.2} cy={18.8} r={on("little-c") ? 2.2 : 1.6} className={on("little-c") ? "cm-f cm-local" : "cm-f cm-muted"} />
+    </svg>
   );
 }

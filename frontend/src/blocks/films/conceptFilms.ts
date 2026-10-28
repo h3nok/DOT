@@ -19,6 +19,7 @@ import {
   RealityStream,
   SubjectiveData,
   WorldInvariants,
+  type ArchitectureLayer,
   type MotifProps,
 } from "./ConceptFilmMotifs";
 import { typeInSequence } from "./filmTime";
@@ -68,6 +69,8 @@ export interface ConceptMotif {
    * are its words; the rest restate the book's own relationships and claim nothing more.
    */
   analogy: string;
+  /** Where the concept sits in the architecture, lit on the locator beside its place. */
+  layer: ArchitectureLayer;
 }
 
 export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
@@ -75,86 +78,103 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
     Motif: SubjectiveData,
     description: "A knot is drawn at the centre and pulses. Around it, possible readings appear: danger, memory, anticipation, conflict, hunger, illness. A magnifying lens passes over them without settling on one.",
     analogy: "A knot in the stomach is real. Its reality does not settle which interpretation is correct.",
+    layer: "little-c",
   },
   "digital-organism": {
     Motif: DigitalOrganism,
     description: "A living cell takes in nourishment, turns a threat away at its boundary, opens a breach and repairs it, while its inner state keeps what it took in.",
     analogy: "Like a living cell: it tells nourishment from threat, repairs damage, and keeps its boundary.",
+    layer: "all",
   },
   "big-c": {
     Motif: BigC,
     description: "Flowing lines of continuity, T, and scattered raw information, E, fill the field. Within it a membrane, Big C, forms, and inside Big C a Reality Frame, RF₀, and points of local experience appear.",
     analogy: "Big C emerged within T × E: T is primordial continuity—Time; E is the raw information source.",
+    layer: "big-c",
   },
   "little-c": {
     Motif: LittleC,
     description: "A larger organism fills with cells. One cell, Little c, receives signals from only a few neighbours, then sends a pulse that reaches the whole organism.",
     analogy: "Like a cell within a larger organism: it receives a narrow range of signals and still contributes to the whole.",
+    layer: "little-c",
   },
   "decoupling-principle": {
     Motif: Decoupling,
     description: "A musician plays a harp and notes drift away. Two strings snap and the music thins, while the musician stays whole.",
     analogy: "Damage a musician's instrument and the music changes. That alone does not show the instrument made the musician.",
+    layer: "little-c",
   },
   "reality-frame": {
     Motif: RealityFrame,
     description: "Inside a ruled frame, a participant throws a ball. Each throw arcs and lands where the frame's rules take it, and the landing stays.",
     analogy: "Like throwing a ball: the throw is yours, and where it lands follows the rules of the world.",
+    layer: "reality-frame",
   },
   "world-invariants": {
     Motif: WorldInvariants,
     description: "A pendulum swings inside RF₀. Its positions are measured point by point and fitted with a curve. A dashed arrow from the frame marks that the rhythm is still to be derived from it.",
     analogy: "Like timing a pendulum: physics describes its rhythm exactly; DOT must still derive where the rhythm comes from.",
+    layer: "reality-frame",
   },
   "reality-stream": {
     Motif: RealityStream,
     description: "One shared reality: a river between two banks. Two people below it each receive their own stream from it. One builds half a bridge from the left bank, the other half from the right, and both streams carry each change. Together they set the keystone, and someone crosses where no one could before. Reality evolves with us.",
     analogy: "Like two people building one bridge from opposite banks: each sees it from their own side, and together they make a crossing neither could make alone.",
+    layer: "reality-stream",
   },
   intent: {
     Motif: Intent,
     description: "Drafts appear around an experiencer: Leave. Stay and be polite. Tell the truth. Do not disturb the group. Check the phone. Focus. One, Tell the truth, crosses a threshold and becomes Intent; the others fade.",
     analogy: "Many are never chosen. Intent is the movement from proposal to commitment.",
+    layer: "little-c",
   },
   "experience-loop": {
     Motif: ExperienceLoop,
     description: "Around a hot stove, a pulse travels one loop: Reality Stream, heat; Painting, danger; Intent, pull back; Canvas, remembered.",
     analogy: "Like a hand near a hot stove: the heat is read as danger, the hand pulls back, and the lesson is carried forward.",
+    layer: "little-c",
   },
   canvas: {
     Motif: Canvas,
     description: "Drops fall onto a canvas on an easel. Each leaves a stroke that stays: tendencies, expectations, skills, learned responses. The layers are carried forward.",
     analogy: "Its current state retains the effects of experience: tendencies, associations, expectations, skills, and learned responses.",
+    layer: "little-c",
   },
   painting: {
     Motif: Painting,
     description: "One reply, Okay, travels to two people and passes through each one's Painting, a lens of layered strokes. One hears irritation; the other hears a busy day.",
     analogy: "Someone replies ‘Okay.’ One person hears irritation; another hears a busy day.",
+    layer: "little-c",
   },
   character: {
     Motif: Character,
     description: "Repeated walks cross a lawn from the same starting point. They converge, the grass wears away, and one path becomes visible, labeled Character.",
     analogy: "Like a path worn across a lawn: repeated steps make the route visible.",
+    layer: "little-c",
   },
   "fear-gating": {
     Motif: FearGating,
     description: "A fan of responses opens from an experiencer. As Fear closes in from both sides, fewer responses remain available.",
     analogy: "Fear contracts the decision-space around anticipated harm.",
+    layer: "little-c",
   },
   love: {
     Motif: Love,
     description: "A narrowed fan of responses widens again as the closing walls of Fear withdraw, while a trace of fear is still felt at its centre.",
     analogy: "A person can love while frightened; courage often acts in fear’s presence.",
+    layer: "little-c",
   },
   "conscious-authorship": {
     Motif: ConsciousAuthorship,
     description: "In three steps, the Painting is seen, the pause before Intent widens, and one direction is chosen and reinforced.",
     analogy: "There is a narrow interval in which the inherited Painting feels identical to reality. Can you see it?",
+    layer: "little-c",
   },
   "limits-and-debts": {
     Motif: LimitsAndDebts,
     description: "Claims fall into a ledger of four rows: observed, modeled, hypothesized, and speculative. The ledger's edge stays open, leaving the framework open to criticism.",
     analogy: "Like a living ledger: every major claim is entered with its level, so it can be checked and corrected.",
+    layer: "all",
   },
 };
 

@@ -49,14 +49,21 @@ afterEach(() => {
 });
 
 describe("HomeFilmSection", () => {
-  it("offers one typed film through every concept, opening on the struggle it answers", () => {
+  it("offers one typed film through every concept behind a cover, opening on the struggle it answers", () => {
     renderSection();
 
     const region = screen.getByRole("region", { name: tour.title });
-    expect(within(region).getByText(`${tour.label} · ${length}`)).toBeInTheDocument();
-    expect(within(region).getByRole("heading", { level: 3, name: tour.scenes[0].title })).toBeInTheDocument();
-    expect(within(region).getByRole("button", { name: `Play ${tour.title} (${length})` })).toBeInTheDocument();
+    expect(within(region).getAllByText(`${tour.label} · ${length}`).length).toBeGreaterThan(0);
+    // Before Play: the cover, with the book's title over its architecture and the film's path.
+    expect(within(region).getByRole("heading", { level: 3, name: tour.closing.title })).toBeInTheDocument();
+    expect(within(region).getByRole("img", { name: /The architecture of Digital Organism Theory/ })).toBeInTheDocument();
+    expect(within(within(region).getByRole("list", { name: "The film passes through" })).getAllByRole("listitem")).toHaveLength(4);
+    expect(within(region).queryByRole("heading", { level: 3, name: tour.scenes[0].title })).not.toBeInTheDocument();
     expect(within(region).queryByRole("button", { name: /voiceover/i })).not.toBeInTheDocument();
+
+    fireEvent.click(within(region).getByRole("button", { name: `Play ${tour.title} (${length})` }));
+    expect(within(region).getByRole("heading", { level: 3, name: tour.scenes[0].title })).toBeInTheDocument();
+    expect(within(region).queryByRole("list", { name: "The film passes through" })).not.toBeInTheDocument();
   });
 
   it("makes no sound until Play, and its typewriter sound can be turned off", () => {
