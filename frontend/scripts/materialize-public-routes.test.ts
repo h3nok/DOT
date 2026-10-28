@@ -57,6 +57,18 @@ describe("public route metadata", () => {
     expect(sitemapXml(routes, manifest.release.updated_at)).not.toContain("https://dotheory.org/community/");
     expect(rootDocument(shell, manifest)).not.toContain('href="/community"');
   });
+  it("gives the homepage film an address of its own, with its own preview and words", () => {
+    const film = routes.find(route => route.route === "/film")!;
+    expect(film.canonicalRoute).toBeUndefined();
+    expect(film.noindex).toBeFalsy();
+    expect(film.image).toBe("/og/film.png");
+    expect(film.description).toMatch(/seventeen concepts/);
+    for (const concept of DOCTRINE_CONCEPTS as { id: string }[]) {
+      expect(film.prerender).toContain(`href="/doctrine/${concept.id}"`);
+    }
+    expect(film.prerender).toContain('href="/book/digital-organism-theory"');
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain("https://dotheory.org/film/");
+  });
   it("keeps how power works built for its address but hidden: out of search, unlinked, old addresses home", async () => {
     const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: {
       "amm.money.examples.borrowing.mechanic": "<strong>Owner’s debt explanation</strong>",

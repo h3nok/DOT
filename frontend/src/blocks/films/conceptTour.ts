@@ -1,5 +1,5 @@
 import filmsData from "../../content/films.json";
-import { CONCEPT_FILMS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
+import { CONCEPT_FILMS, CONCEPT_MOTIFS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
 import { typeInSequence, type TypedLine } from "./filmTime";
 import type { Keystroke } from "./TypewriterSound";
 
@@ -10,8 +10,14 @@ export type TourScene = (typeof TOUR.scenes)[number];
 
 /** The opening's four scenes: the struggle, the cultural trap, the setup, the turn. */
 export const TOUR_OPENING_SECONDS = TOUR.scenes.reduce((total, scene) => total + scene.seconds, 0);
-/** Each concept's share of the film: its picture, its definition, and its analogy. */
-export const TOUR_CONCEPT_SECONDS = 13;
+/** How long the opening's drawing (TourOpening) spends on each scene, on its own clock. */
+export const TOUR_OPENING_DRAWN_SECONDS = [11, 12, 12, 7] as const;
+/** How fast a first-time reader reads, in characters a second. */
+export const TOUR_READING_CPS = 20;
+/** Time to look at a concept's picture once its words are read, and to pass to the next. */
+export const TOUR_LOOK_SECONDS = 4;
+/** No concept is shorter than its picture's motion. */
+export const TOUR_MIN_CONCEPT_SECONDS = 13;
 /** The closing title. */
 export const TOUR_CLOSING_SECONDS = 6;
 /** How long one part takes to give way to the next. */
@@ -19,8 +25,8 @@ export const TOUR_CROSSFADE_SECONDS = 0.5;
 /** How far a part rises as it arrives and leaves, in pixels. */
 const TOUR_DRIFT_PX = 14;
 /**
- * Each motif plays its sixteen-second study a little faster inside a thirteen-second
- * part. Every motif's motion settles by about 12.5 seconds, so it finishes with time to look.
+ * Each motif plays its sixteen-second study a little faster, so its motion settles by about
+ * 12.5 seconds, within even the shortest part.
  */
 export const TOUR_MOTIF_SPEED = 1.25;
 
@@ -36,6 +42,15 @@ export type TourPart =
   | { kind: "concept"; start: number; end: number; film: ConceptFilm; position: number }
   | { kind: "closing"; start: number; end: number };
 
+/**
+ * A concept's share of the film: long enough for a first-time reader to read its title,
+ * definition, and analogy, and then look at its picture.
+ */
+export function tourConceptSeconds(film: ConceptFilm): number {
+  const words = film.node.title.length + film.node.oneLine.length + CONCEPT_MOTIFS[film.id].analogy.length;
+  return Math.max(TOUR_MIN_CONCEPT_SECONDS, Math.ceil(words / TOUR_READING_CPS + TOUR_LOOK_SECONDS));
+}
+
 function buildTour(): TourPart[] {
   const parts: TourPart[] = [];
   let at = 0;
@@ -44,11 +59,11 @@ function buildTour(): TourPart[] {
     at += scene.seconds;
   });
   CONCEPT_FILMS.forEach((film, index) => {
-    const start = TOUR_OPENING_SECONDS + index * TOUR_CONCEPT_SECONDS;
-    parts.push({ kind: "concept", start, end: start + TOUR_CONCEPT_SECONDS, film, position: index + 1 });
+    const seconds = tourConceptSeconds(film);
+    parts.push({ kind: "concept", start: at, end: at + seconds, film, position: index + 1 });
+    at += seconds;
   });
-  const closingStart = TOUR_OPENING_SECONDS + CONCEPT_FILMS.length * TOUR_CONCEPT_SECONDS;
-  parts.push({ kind: "closing", start: closingStart, end: closingStart + TOUR_CLOSING_SECONDS });
+  parts.push({ kind: "closing", start: at, end: at + TOUR_CLOSING_SECONDS });
   return parts;
 }
 
@@ -72,6 +87,25 @@ export const tourPlace = (position: number) => `Concept ${position} of ${CONCEPT
 
 /** The frame shown before Play: the struggle, fully drawn, with its words typed. */
 export const TOUR_POSTER_SECONDS = TOUR.scenes[0].seconds - 0.6;
+
+/**
+ * The opening's drawing keeps its own clock, scene by scene; each scene's stretch of it
+ * plays at the pace that fills the scene.
+ */
+export function openingDrawingTime(seconds: number): number {
+  let sceneStart = 0;
+  let drawnStart = 0;
+  for (let i = 0; i < TOUR.scenes.length; i++) {
+    const length = TOUR.scenes[i].seconds;
+    const drawn = TOUR_OPENING_DRAWN_SECONDS[i];
+    if (seconds < sceneStart + length || i === TOUR.scenes.length - 1) {
+      return drawnStart + Math.min(length, Math.max(0, seconds - sceneStart)) * (drawn / length);
+    }
+    sceneStart += length;
+    drawnStart += drawn;
+  }
+  return drawnStart;
+}
 
 /** A scene's words, typed on the scene's own clock. */
 export function sceneTyping(scene: TourScene) {

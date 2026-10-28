@@ -38,6 +38,7 @@ const PUBLICATIONS_ROUTE = "/publications";
 const BLOG_ROUTE = "/blog";
 const FILMS_ROUTE = "/academy/films";
 const LEGACY_FILMS_ROUTE = "/films";
+const FILM_ROUTE = "/film";
 const VIDEOS_ROUTE = "/videos";
 const WRITING_ROUTE = "/writing";
 
@@ -1295,6 +1296,28 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     ),
   };
 
+  // The homepage film at an address of its own, so a shared link opens on the film.
+  const tour = FILMS.conceptTour;
+  const filmRoute = {
+    route: FILM_ROUTE,
+    title: `${tour.title} — ${AUTHOR.name}`,
+    description: tour.description,
+    image: "/og/film.png",
+    imageAlt: "Six cultural messages press in on one person beside the words “Work hard, play by the rules, and you will get ahead.”",
+    structuredData: graph(
+      webPageNode({ route: FILM_ROUTE, title: `${tour.title} — ${AUTHOR.name}`, description: tour.description }),
+      breadcrumb([home, { name: tour.title, route: FILM_ROUTE }]),
+    ),
+    prerender: page(
+      [
+        `<header><p>${escapeHtml(tour.label)} · By ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h1>${escapeHtml(tour.title)}</h1><p>${escapeHtml(tour.description)}</p></header>`,
+        `<section><h2>Opening</h2><ol>${tour.scenes.map((scene) => `<li><h3>${escapeHtml(scene.name)}</h3><p>${escapeHtml(scene.title)}</p><p>${escapeHtml(scene.note)}</p>${scene.source ? `<cite>${escapeHtml(scene.source)}</cite>` : ""}</li>`).join("")}</ol></section>`,
+        `<section><h2>The concepts</h2><ol>${DOCTRINE_CONCEPTS.map((concept) => `<li><h3>${link(`/doctrine/${concept.id}`, concept.name)}</h3><p>${escapeHtml(concept.oneLine)}</p></li>`).join("")}</ol></section>`,
+        `<p>${tour.closing.links.map((item) => link(item.to, item.label)).join(" · ")}</p>`,
+      ].join(""),
+    ),
+  };
+
   const filmAliasRoutes = [LEGACY_FILMS_ROUTE, VIDEOS_ROUTE].map(route => ({
     route,
     canonicalRoute: FILMS_ROUTE,
@@ -1304,7 +1327,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     prerender: page(`<h1>${escapeHtml(FILMS.title)}</h1><p>${escapeHtml(FILMS.description)}</p><p>${link(FILMS_ROUTE, "Open the Films & Screening Room")}</p>`),
   }));
 
-  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, ...filmAliasRoutes, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
+  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, filmRoute, ...filmAliasRoutes, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */

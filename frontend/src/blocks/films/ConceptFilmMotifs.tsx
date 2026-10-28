@@ -43,7 +43,13 @@ const cubicPath = (p0: Point, p1: Point, p2: Point, p3: Point) =>
   `M${p0[0]} ${p0[1]} C${p1[0].toFixed(1)} ${p1[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)} ${p3[0]} ${p3[1]}`;
 
 /** Reveals a stroke along its length. */
-const drawn = (u: number) => ({ pathLength: 1, strokeDasharray: "1 1", strokeDashoffset: 1 - clamp01(u) });
+// An undrawn stroke is hidden outright: a zero-length dash would still paint its round cap as a dot.
+const drawn = (u: number) => ({
+  pathLength: 1,
+  strokeDasharray: "1 1",
+  strokeDashoffset: 1 - clamp01(u),
+  ...(u <= 0 ? { visibility: "hidden" as const } : {}),
+});
 
 function Label({
   x,
@@ -75,20 +81,29 @@ function Label({
 }
 
 /** A short line of words in a rounded card, centred on (x, y). */
-function Pill({ x, y, text, show, tone = "cm-line", strong = false }: {
+function Pill({ x, y, text, show, tone = "cm-line", strong = false, size = 1 }: {
   x: number;
   y: number;
   text: string;
   show: number;
   tone?: string;
   strong?: boolean;
+  /** Scales the card and its words together, for a picture that holds many of them. */
+  size?: number;
 }) {
   if (show <= 0.001) return null;
-  const width = text.length * 11.2 + 34;
+  const width = (text.length * 11.2 + 34) * size;
+  const height = 42 * size;
   return (
     <g opacity={show}>
-      <rect x={x - width / 2} y={y - 21} width={width} height={42} rx={21} className={`cm-s cm-hollow ${tone}`} strokeWidth={2} />
-      <text x={x} y={y + 7.5} textAnchor="middle" className={strong ? "cm-label cm-label--strong" : "cm-label"}>
+      <rect x={x - width / 2} y={y - height / 2} width={width} height={height} rx={height / 2} className={`cm-s cm-hollow ${tone}`} strokeWidth={2} />
+      <text
+        x={x}
+        y={y + 7.5 * size}
+        textAnchor="middle"
+        className={strong ? "cm-label cm-label--strong" : "cm-label"}
+        style={size === 1 ? undefined : { fontSize: `${22 * size}px` }}
+      >
         {text}
       </text>
     </g>
@@ -1159,17 +1174,20 @@ export function LimitsAndDebts({ t }: MotifProps) {
    One continuous drawing on the film's own clock. The camera pulls back twice: the struggle
    sits inside a ring that closes and locks, a cultural trap, and the trap is one of several
    cultures inside a ruled frame. Then the lock springs, the ring opens, and the person
-   rises out of it. */
+   rises out of it. Its clock gives the scenes 11, 12, 12, and 7 seconds
+   (TOUR_OPENING_DRAWN_SECONDS); the tour stretches each to fill its scene. */
 
-// The six cultural messages the American Millennial Manifesto examines.
+// The six cultural messages the American Millennial Manifesto examines, set around the
+// person with clear space between each message and the pain at the centre.
 const PRESSURES = [
-  { text: "Your worth is what you earn.", at: [300, 84] as Point },
-  { text: "If it pays, it must be progress.", at: [300, 150] as Point },
-  { text: "Everyone does it.", at: [128, 300] as Point },
-  { text: "You have no choice.", at: [470, 300] as Point },
-  { text: "Do not risk your place.", at: [300, 452] as Point },
-  { text: "Protect what is yours.", at: [300, 518] as Point },
+  { text: "Your worth is what you earn.", at: [300, 66] as Point },
+  { text: "Everyone does it.", at: [170, 162] as Point },
+  { text: "You have no choice.", at: [432, 162] as Point },
+  { text: "Do not risk your place.", at: [432, 438] as Point },
+  { text: "Protect what is yours.", at: [170, 438] as Point },
+  { text: "If it pays, it must be progress.", at: [300, 534] as Point },
 ];
+const PRESSURE_SIZE = 0.86;
 // The book's words for what the trap makes ordinary.
 const TRAP_TERMS = [
   { text: "time as money", y: 70 },
@@ -1280,7 +1298,7 @@ export function TourOpening({ t }: MotifProps) {
           {[0, 1, 2].map((n) => {
             const phase = (((t - 4 - n * 0.8) % 2.4) + 2.4) % 2.4 / 2.4;
             return (
-              <circle key={n} cx={300} cy={300} r={30 + 62 * phase} className="cm-s cm-fear" strokeWidth={2.6} opacity={(1 - phase) * 0.75 * span(t, 4, 5)} />
+              <circle key={n} cx={300} cy={300} r={30 + 42 * phase} className="cm-s cm-fear" strokeWidth={2.6} opacity={(1 - phase) * 0.75 * span(t, 4, 5)} />
             );
           })}
           <Participant at={[300, 300]} r={22} show={span(t, 0.1, 0.8)} />
@@ -1292,6 +1310,7 @@ export function TourOpening({ t }: MotifProps) {
               text={text}
               show={span(t, 0.6 + k * 0.55, 1.2 + k * 0.55)}
               tone="cm-fear"
+              size={PRESSURE_SIZE}
             />
           ))}
         </g>
