@@ -60,6 +60,12 @@ html.dark .concept-film {
   text-wrap: pretty;
 }
 
+/* A sentence-length title, such as the human character's, one size down so the film keeps its height. */
+.concept-film-name--sentence {
+  font-size: clamp(1.375rem, 3.2cqi, 2.375rem);
+  line-height: 1.15;
+}
+
 .concept-film-definition {
   max-width: 36ch;
   margin: 1rem 0 0;
