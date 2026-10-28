@@ -10,7 +10,7 @@
   "conceptTour": {
     "title": "Book One, concept by concept",
     "label": "Academy · Typed film",
-    "description": "A five-minute typed film through the seventeen concepts of Digital Organism Theory, Book One, each with a picture and an analogy. It plays only when you press Play.",
+    "description": "A typed film through the seventeen concepts of Digital Organism Theory, Book One, each with a picture and an analogy. It plays only when you press Play.",
     "scenes": [
       {
         "id": "struggle",
@@ -51,6 +51,18 @@
         "note": "Transcend your culture.",
         "source": "",
         "description": "The lock springs open, the trap opens, and the person rises out through the opening."
+      }
+    ],
+    "interludes": [
+      {
+        "id": "human-character",
+        "after": "fear-gating",
+        "name": "The human character",
+        "eyebrow": "The human character",
+        "title": "Ego defends the Character Little c has learned to call itself.",
+        "note": "To protect its fears and untrue beliefs, Little c paints Ego, and Ego becomes their protector. In time, Ego hardens into Arrogance: a gatekeeper that keeps the Canvas from changing. Believing only in the physical, obvious world, people take themselves to be the body and nothing more.",
+        "source": "Book One · The Painting · with a note from the author",
+        "description": "On the Canvas, Little c sits in one corner inside a ring of fear, beside an untrue belief. To protect them, it paints Ego around itself in the shape of a body: Ego, the protector. The outline hardens, and Arrogance stands at its edge as a gatekeeper, turning new strokes away. A bubble reads: I am my body. That is all. The rest of the Canvas stays open and unreached."
       }
     ],
     "closing": {

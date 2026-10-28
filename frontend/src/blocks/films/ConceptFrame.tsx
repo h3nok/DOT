@@ -1,3 +1,4 @@
+import { ArchitectureGlyph, ArchitectureMap, type ArchitectureLayer } from "./ConceptFilmMotifs";
 import { CONCEPT_MOTIFS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
 import { reveal, type TypedLine } from "./filmTime";
 
@@ -35,24 +36,42 @@ interface ConceptFrameProps {
   drift?: number;
   /** The concept's place, such as "Concept 7 of 17"; the claim level follows it. */
   place?: string;
+  /** Opens on the architecture, at this layer, for this many seconds before the concept's picture. */
+  lead?: { layer: ArchitectureLayer; seconds: number };
 }
 
 /** One concept as a film frame: its picture beside the Concept Map's own words and an analogy. */
-export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, drift = 0, place }: ConceptFrameProps) {
-  const { Motif, description } = CONCEPT_MOTIFS[film.id];
+export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, drift = 0, place, lead }: ConceptFrameProps) {
+  const { Motif, description, layer } = CONCEPT_MOTIFS[film.id];
   const typing = conceptTyping(film, beats, place ?? `Concept ${film.number}`);
   const frameStyle =
     opacity < 1 || drift !== 0 ? { opacity, transform: drift ? `translateY(${drift.toFixed(1)}px)` : undefined } : undefined;
 
   return (
     <>
-      <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={description} style={frameStyle}>
-        <Motif t={motifTime} />
+      <svg
+        className="concept-film-motif"
+        viewBox="0 0 600 600"
+        role="img"
+        aria-label={lead ? `Where ${film.node.title} sits in the architecture, then: ${description}` : description}
+        style={frameStyle}
+      >
+        {lead && copyTime < lead.seconds ? (
+          <g opacity={1 - reveal(copyTime, lead.seconds - 0.5, 0.5)}>
+            <ArchitectureMap t={copyTime} layer={lead.layer} />
+          </g>
+        ) : null}
+        <g opacity={lead ? reveal(copyTime, lead.seconds - 0.5, 0.5) : 1}>
+          <Motif t={motifTime} />
+        </g>
       </svg>
 
       <div className="concept-film-copy" style={frameStyle}>
         <p className="concept-film-eyebrow">
-          <TypedText line={typing.eyebrow} time={copyTime} caret={false} />
+          <ArchitectureGlyph layer={layer} />
+          <span>
+            <TypedText line={typing.eyebrow} time={copyTime} caret={false} />
+          </span>
         </p>
         <h3 className="concept-film-name">
           <TypedText line={typing.name} time={copyTime} />

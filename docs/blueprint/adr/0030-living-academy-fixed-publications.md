@@ -149,8 +149,15 @@ Reality Frames), and the homepage's own line, "Understand what shapes you.
 Transcend your culture." Then comes each concept with its words typed as it
 plays, held long enough for a first-time reader (about 20 characters a
 second) to read them and then look at the picture, 13 to 18 seconds each.
-The book's title closes it, about five minutes
-in all, ending on links into the book and the concept map. It is the
+Big C, Little c, the Reality Frame, and the Reality Stream first show, for
+three seconds, where they sit in the architecture the homepage draws (T × E
+outside, Big C within it, RF₀ inside Big C, Little c within RF₀). After
+the Fear-Gating Principle comes the human character: the book's "Ego defends
+the Character Little c has learned to call itself" with the author's note on
+Ego as the protector of fears and untrue beliefs, hardening into Arrogance,
+credited as such, over a picture of Little c walled into a corner of its
+Canvas. The whole architecture and the book's title close it,
+under six minutes in all, ending on links into the book and the concept map. It is the
 only film with sound: soft typewriter keys, which start only when the reader
 presses Play and can be turned off in the player. With reduced motion it
 shows each part finished and makes no sound. It pauses when scrolled out of

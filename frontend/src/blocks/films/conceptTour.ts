@@ -1,5 +1,6 @@
 import filmsData from "../../content/films.json";
 import { CONCEPT_FILMS, CONCEPT_MOTIFS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
+import type { ArchitectureLayer } from "./ConceptFilmMotifs";
 import { typeInSequence, type TypedLine } from "./filmTime";
 import type { Keystroke } from "./TypewriterSound";
 
@@ -7,6 +8,8 @@ const TOUR = filmsData.conceptTour;
 
 /** One scene of the opening, before the first concept. */
 export type TourScene = (typeof TOUR.scenes)[number];
+/** A part between concepts that is not itself a Concept Map entry, such as the human character. */
+export type TourInterlude = (typeof TOUR.interludes)[number];
 
 /** The opening's four scenes: the struggle, the cultural trap, the setup, the turn. */
 export const TOUR_OPENING_SECONDS = TOUR.scenes.reduce((total, scene) => total + scene.seconds, 0);
@@ -18,6 +21,18 @@ export const TOUR_READING_CPS = 20;
 export const TOUR_LOOK_SECONDS = 4;
 /** No concept is shorter than its picture's motion. */
 export const TOUR_MIN_CONCEPT_SECONDS = 13;
+/**
+ * The concepts that first show where they sit in the architecture (T × E, Big C, RF₀,
+ * Little c), as the homepage draws it, before their own picture.
+ */
+export const TOUR_ARCHITECTURE: Readonly<Record<string, ArchitectureLayer>> = {
+  "big-c": "big-c",
+  "little-c": "little-c",
+  "reality-frame": "reality-frame",
+  "reality-stream": "reality-stream",
+};
+/** How long the architecture shows before a concept's own picture. */
+export const TOUR_MAP_SECONDS = 3;
 /** The closing title. */
 export const TOUR_CLOSING_SECONDS = 6;
 /** How long one part takes to give way to the next. */
@@ -40,7 +55,12 @@ export const TOUR_CONCEPT_BEATS: ConceptTextBeats = {
 export type TourPart =
   | { kind: "scene"; start: number; end: number; scene: TourScene; index: number }
   | { kind: "concept"; start: number; end: number; film: ConceptFilm; position: number }
+  | { kind: "interlude"; start: number; end: number; interlude: TourInterlude }
   | { kind: "closing"; start: number; end: number };
+
+/** Long enough for a first-time reader to read the words, then look at the picture. */
+const readingSeconds = (characters: number) =>
+  Math.max(TOUR_MIN_CONCEPT_SECONDS, Math.ceil(characters / TOUR_READING_CPS + TOUR_LOOK_SECONDS));
 
 /**
  * A concept's share of the film: long enough for a first-time reader to read its title,
@@ -48,8 +68,12 @@ export type TourPart =
  */
 export function tourConceptSeconds(film: ConceptFilm): number {
   const words = film.node.title.length + film.node.oneLine.length + CONCEPT_MOTIFS[film.id].analogy.length;
-  return Math.max(TOUR_MIN_CONCEPT_SECONDS, Math.ceil(words / TOUR_READING_CPS + TOUR_LOOK_SECONDS));
+  return readingSeconds(words) + (TOUR_ARCHITECTURE[film.id] ? TOUR_MAP_SECONDS : 0);
 }
+
+/** An interlude's share of the film, by the same reading measure as a concept. */
+export const tourInterludeSeconds = (interlude: TourInterlude) =>
+  readingSeconds(interlude.title.length + interlude.note.length);
 
 function buildTour(): TourPart[] {
   const parts: TourPart[] = [];
@@ -62,6 +86,11 @@ function buildTour(): TourPart[] {
     const seconds = tourConceptSeconds(film);
     parts.push({ kind: "concept", start: at, end: at + seconds, film, position: index + 1 });
     at += seconds;
+    for (const interlude of TOUR.interludes.filter((item) => item.after === film.id)) {
+      const length = tourInterludeSeconds(interlude);
+      parts.push({ kind: "interlude", start: at, end: at + length, interlude });
+      at += length;
+    }
   });
   parts.push({ kind: "closing", start: at, end: at + TOUR_CLOSING_SECONDS });
   return parts;
@@ -108,7 +137,7 @@ export function openingDrawingTime(seconds: number): number {
 }
 
 /** A scene's words, typed on the scene's own clock. */
-export function sceneTyping(scene: TourScene) {
+export function sceneTyping(scene: Pick<TourScene, "eyebrow" | "title" | "note">) {
   const [eyebrow, title, note] = typeInSequence(
     [
       { text: scene.eyebrow, charsPerSecond: 68 },
@@ -172,6 +201,7 @@ export function tourPartDrift(part: TourPart, seconds: number): number {
 export function describeTourTime(seconds: number): string {
   const part = tourPartAt(seconds);
   if (part.kind === "scene") return `Opening: ${part.scene.name}`;
+  if (part.kind === "interlude") return part.interlude.name;
   if (part.kind === "closing") return "Closing title";
   return `${tourPlace(part.position)}: ${part.film.node.title}`;
 }
@@ -187,8 +217,8 @@ function buildKeystrokes(): Keystroke[] {
     }
   };
   for (const part of CONCEPT_TOUR) {
-    if (part.kind === "scene") {
-      const typing = sceneTyping(part.scene);
+    if (part.kind === "scene" || part.kind === "interlude") {
+      const typing = sceneTyping(part.kind === "scene" ? part.scene : part.interlude);
       type([typing.eyebrow, typing.title, typing.note], part.start);
       keys.push({ at: part.start + typing.note.end + 0.1, kind: "bell" });
     } else if (part.kind === "closing") {
