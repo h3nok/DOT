@@ -88,7 +88,8 @@ body:has(.site-page-header [data-appearance-control]) .app-floating-appearance {
   .book-contents-dialog > div:first-child { flex-shrink: 0; margin-bottom: 1rem; padding-bottom: 1rem; }
   .book-contents-scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 
-  [data-appearance-control]:not([data-inline="true"]) { left: max(1rem, var(--safe-left)); bottom: max(1rem, var(--safe-bottom)); }
+  /* Floating appearance stacks just above Explore, in the same lower-left column. */
+  [data-appearance-control]:not([data-inline="true"]) { left: calc(max(.5rem, var(--safe-left)) + .375rem); bottom: calc(max(.5rem, var(--safe-bottom)) + 4.5rem); }
   .appearance-panel { max-height: min(41rem, calc(var(--visible-height) - var(--safe-top) - var(--safe-bottom) - 6rem)); }
   [data-appearance-control][data-inline="true"] .appearance-panel { top: calc(var(--visible-top) + 4.25rem + var(--safe-top)); left: max(1rem, var(--safe-left)); right: max(1rem, var(--safe-right)); }
   .appearance-scroll, .bloom-body { overscroll-behavior: contain; }

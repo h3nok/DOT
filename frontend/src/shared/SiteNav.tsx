@@ -1,8 +1,8 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import "./site-nav.css";
 
 const PRIMARY_NAV: ReadonlyArray<readonly [string, string]> = [
@@ -34,7 +34,19 @@ function isCurrentDestination(pathname: string, to: string) {
     (to === "/academy" && /^\/(films|videos)(\/|$)/.test(pathname));
 }
 
-/** One deliberate opening into a finite map of the work, at every screen size. */
+/** The DOT mark: an observer, three rings around one point. It marks where you are. */
+function ObserverMark({ large = false }: { large?: boolean }) {
+  return (
+    <svg className={large ? "site-nav-mark site-nav-mark--large" : "site-nav-mark"} viewBox="-24 -24 48 48" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle r="21" strokeWidth={large ? 0.6 : 1.4} opacity={large ? 0.45 : 0.55} />
+      <circle r="14" strokeWidth={large ? 0.8 : 1.6} opacity={large ? 0.7 : 0.8} />
+      <circle r="7.5" strokeWidth={large ? 1 : 1.8} />
+      <circle r="2.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** One deliberate opening into a finite, ordered index of the work, at every screen size. */
 export function SiteNav({ className = "" }: { className?: string }) {
   const location = useLocation();
   const { pathname } = location;
@@ -91,41 +103,42 @@ export function SiteNav({ className = "" }: { className?: string }) {
               </button>
             </Dialog.Close>
           </div>
-          <nav aria-label="Primary" className="site-nav-panel-scroll">
-            <svg className="site-nav-route-line" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M100 60 C210 -20 330 -15 420 20 S730 40 720 140 S760 290 660 350 S430 455 340 410 S20 400 60 280" fill="none" />
-            </svg>
-            <div className="site-nav-observer" aria-hidden="true">
-              <svg viewBox="-150 -150 300 300" fill="none" stroke="currentColor">
-                <circle cx="0" cy="0" r="78" />
-                <circle cx="0" cy="0" r="108" />
-                <circle cx="0" cy="0" r="138" />
-                <circle cx="0" cy="0" r="5" fill="currentColor" stroke="none" />
-              </svg>
-              <span>You are here</span>
-              <strong>{currentDestination?.[1] ?? "DOT"}</strong>
-            </div>
-            <ul className="site-nav-links">
-              {PRIMARY_NAV.map(([to, label], index) => (
-                <li key={to}>
-                  <Link
-                    to={to}
-                    aria-label={label}
-                    aria-describedby={`${descriptionPrefix}-${index}`}
-                    aria-current={isCurrentDestination(pathname, to) ? "page" : undefined}
-                    onClick={() => setOpen(false)}
-                  >
-                    <span className="site-nav-link-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                    <span className="site-nav-link-copy">
-                      <span className="site-nav-link-title">{label}</span>
-                      <span id={`${descriptionPrefix}-${index}`} className="site-nav-description">{DESTINATION_DESCRIPTIONS[to]}</span>
-                    </span>
-                    <ArrowUpRight className="site-nav-link-arrow" aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className="site-nav-body">
+            <nav aria-label="Primary" className="site-nav-index">
+              <ol className="site-nav-links">
+                {PRIMARY_NAV.map(([to, label], index) => {
+                  const current = isCurrentDestination(pathname, to);
+                  return (
+                    <li key={to} style={{ "--site-nav-order": index } as CSSProperties}>
+                      <Link
+                        to={to}
+                        aria-label={label}
+                        aria-describedby={`${descriptionPrefix}-${index}`}
+                        aria-current={current ? "page" : undefined}
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className="site-nav-link-marker" aria-hidden="true">
+                          {current ? <ObserverMark /> : String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="site-nav-link-copy">
+                          <span className="site-nav-link-title">{label}</span>
+                          <span id={`${descriptionPrefix}-${index}`} className="site-nav-description">{DESTINATION_DESCRIPTIONS[to]}</span>
+                        </span>
+                        {current && <span className="site-nav-here-tag" aria-hidden="true">You are here</span>}
+                        <ArrowRight className="site-nav-link-arrow" aria-hidden="true" />
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+            <aside className="site-nav-here" aria-label="Where you are">
+              <ObserverMark large />
+              <span className="site-nav-here-kicker">You are here</span>
+              <strong className="site-nav-here-title">{currentDestination?.[1] ?? "DOT"}</strong>
+              {currentDestination && <p className="site-nav-here-line">{DESTINATION_DESCRIPTIONS[currentDestination[0]]}</p>}
+            </aside>
+          </div>
           <div className="site-nav-panel-footer">
             <p>Take your time. Choose your own way in.</p>
             <nav aria-label="Conversation and updates">

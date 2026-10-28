@@ -42,6 +42,7 @@ import {
 import { bookConceptsForSection, conceptMapHref } from "../../content/publications/dotBookConcepts";
 import { AppearanceControl } from "../../organism";
 import { DoWordmark } from "../../shared/DoWordmark";
+import { SiteNav } from "../../shared/SiteNav";
 import BookCitation from "./BookCitation";
 import { ReaderListForm } from "../../dot/ReaderListForm";
 import BookLanding from "./BookLanding";
@@ -728,21 +729,31 @@ export default function BookOnePage() {
       >
         Skip to book
       </a>
+      <SiteNav />
       {section ? (
         <header className="appearance-ui-chrome book-chrome book-focus-hidden sticky top-0 z-30 print:hidden">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
-            <Link
-              to={DOT_BOOK_ONE_ROUTE}
-              className="book-dot-link group inline-flex min-w-0 items-center gap-2.5 text-xs font-medium transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-x-0.5" />
-              <span className="book-dot-link-mark" aria-hidden="true" />
-              <span className="truncate">Book One</span>
+            {/* A trail home: DOT, then Book One, then the chapter being read. */}
+            <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2 text-xs font-medium">
+              <Link
+                to="/"
+                aria-label="DOT — Home"
+                className="do-wordmark-link book-dot-link inline-flex min-h-11 shrink-0 items-center rounded-full px-1 transition-colors"
+              >
+                <DoWordmark compact />
+              </Link>
+              <span className="text-[var(--book-hairline)]" aria-hidden="true">/</span>
+              <Link
+                to={DOT_BOOK_ONE_ROUTE}
+                className="book-dot-link inline-flex min-h-11 min-w-0 items-center transition-colors"
+              >
+                <span className="truncate">Book One</span>
+              </Link>
               <span className="hidden text-[var(--book-hairline)] sm:inline" aria-hidden="true">/</span>
-              <span className="hidden max-w-52 truncate text-muted-foreground sm:inline lg:max-w-72">
+              <span aria-current="page" className="hidden max-w-52 truncate text-muted-foreground sm:inline lg:max-w-72">
                 {section.title}
               </span>
-            </Link>
+            </nav>
             <div className="flex shrink-0 items-center gap-1 sm:gap-2">
               {isOwner && (
                 <Link
