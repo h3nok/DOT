@@ -59,6 +59,9 @@ test("Explore opens deliberately, routes, and stays usable across viewport sizes
   await menu.click();
   await panel.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page).toHaveURL("/contact");
+  // The URL changes before the lazy page renders; until then the previous page's
+  // Explore control is still on screen and would open with a stale location.
+  await expect(page.getByRole("heading", { name: "Let’s talk.", level: 1 })).toBeVisible();
   await expect(panel).toHaveCount(0);
   await page.setViewportSize({ width: 640, height: 844 });
   await expect(menu).toBeVisible();
