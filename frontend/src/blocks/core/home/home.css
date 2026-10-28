@@ -552,18 +552,15 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
-.home-hero-proposition,
-.home-concept-slideshow {
+.home-hero-proposition {
   --home-critical-ink: color-mix(in oklab, var(--public-copper) 75%, var(--foreground));
 }
 
-.dark .home-hero-proposition,
-.dark .home-concept-slideshow {
+.dark .home-hero-proposition {
   --home-critical-ink: var(--public-sand);
 }
 
-html[data-contrast="high"] .home-hero-proposition,
-html[data-contrast="high"] .home-concept-slideshow {
+html[data-contrast="high"] .home-hero-proposition {
   --home-critical-ink: var(--foreground);
 }
 
@@ -619,272 +616,6 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   transition: opacity 180ms ease;
 }
 
-/* The finite explanation follows the figure at a comfortable reading measure. */
-.home-hero-concepts {
-  width: 100%;
-  max-width: 42rem;
-  margin: 2rem auto 0;
-}
-
-.home-concept-slideshow {
-  max-width: 42rem;
-  margin: 0 auto;
-  padding-top: 1.5rem;
-  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
-  text-align: left;
-}
-
-.home-concept-slideshow-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 0 0.625rem;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
-
-.home-concept-slideshow-eyebrow > span + span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid color-mix(in oklab, var(--organism-accent-strong) 38%, transparent);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--organism-accent-strong) 8%, transparent);
-  color: color-mix(in oklab, var(--organism-accent-strong) 78%, var(--foreground));
-  font-family: var(--home-public-annotate-font);
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-box: trim-both cap alphabetic;
-}
-
-.home-concept-slideshow-eyebrow > span[data-level="model"] {
-  border-color: color-mix(in oklab, var(--theory-rf) 42%, transparent);
-  background: color-mix(in oklab, var(--theory-rf) 9%, transparent);
-  color: color-mix(in oklab, var(--theory-rf) 82%, var(--foreground));
-}
-
-.home-concept-slideshow-eyebrow > span[data-level="hypothesis"] {
-  border-color: color-mix(in oklab, var(--theory-origin) 42%, transparent);
-  background: color-mix(in oklab, var(--theory-origin) 9%, transparent);
-  color: color-mix(in oklab, var(--theory-origin) 82%, var(--foreground));
-}
-
-.home-concept-slideshow-eyebrow > span + span::before {
-  content: none;
-}
-
-.home-concept-slideshow-body {
-  display: grid;
-}
-
-.home-concept-slideshow-size,
-.home-concept-slideshow-content {
-  grid-area: 1 / 1;
-  min-width: 0;
-}
-
-/* The sizing copies draw their text from data-ghost, and the visual label is
-   repeated for screen readers inside the slide; neither enters a selection, so
-   copied text reads once, in order. */
-.home-concept-slideshow-size [data-ghost]::before {
-  content: attr(data-ghost);
-}
-
-.home-concept-slideshow-eyebrow {
-  user-select: none;
-}
-
-.home-concept-slideshow-size {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.home-concept-slideshow-term {
-  display: block;
-  margin: 0;
-  color: var(--foreground);
-  font-family: var(--home-public-reading-font);
-  font-size: 1.3125rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.3;
-}
-
-.home-concept-slideshow-content [data-typing="true"]::after {
-  color: var(--organism-accent-strong);
-  content: "|";
-  margin-left: 0.15em;
-}
-
-.home-concept-slideshow-untyped {
-  color: transparent;
-}
-
-/* Zero-width caret: the reserved words must not shift as it moves. */
-.home-concept-slideshow-explanation [data-typing="true"]::after {
-  position: absolute;
-  margin-left: 0.05em;
-}
-
-/* Reading prose takes the reading face and ink, like the subtitle above it. */
-.home-concept-slideshow-explanation {
-  max-width: 65ch;
-  margin: 0.375rem 0 0;
-  color: color-mix(in oklab, var(--foreground) 80%, var(--background));
-  font-family: var(--home-public-reading-font);
-  font-size: 1rem;
-  line-height: 1.6;
-  text-wrap: pretty;
-}
-
-.home-concept-slideshow-footer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
-  margin-top: 0.5rem;
-}
-
-/* ── Frames ──────────────────────────────────────────────────────────────
-   Outside perspectives and rejected assumptions take copper; DOT's response
-   takes the organism's accent. Explicit labels carry the distinction in
-   high contrast too. DOT concepts keep the page's own ink. */
-.home-concept-slideshow {
-  --home-frame-status-quo: var(--home-critical-ink);
-  --home-frame-status-quo-rule: color-mix(in oklab, var(--home-frame-status-quo) 70%, transparent);
-  --home-frame-reply: color-mix(in oklab, var(--foreground) 28%, var(--organism-accent-strong));
-  --home-frame-reply-rule: color-mix(in oklab, var(--organism-accent-strong) 70%, transparent);
-}
-
-.home-concept-slideshow [data-frame="status-quo"] {
-  --home-frame-ink: var(--home-frame-status-quo);
-  --home-frame-rule: var(--home-frame-status-quo-rule);
-}
-
-.home-concept-slideshow [data-frame="reply"] {
-  --home-frame-ink: var(--home-frame-reply);
-  --home-frame-rule: var(--home-frame-reply-rule);
-}
-
-.home-concept-slideshow-size[data-frame],
-.home-concept-slideshow-content[data-frame] {
-  padding-left: 0.875rem;
-  border-left: 2px solid var(--home-frame-rule);
-}
-
-.home-concept-slideshow-eyebrow[data-frame] > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid color-mix(in oklab, var(--home-frame-ink) 55%, transparent);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--home-frame-ink) 9%, transparent);
-  color: var(--home-frame-ink);
-  text-box: trim-both cap alphabetic;
-}
-
-.home-concept-slideshow-content[data-frame] .home-concept-slideshow-term {
-  color: var(--home-frame-ink);
-}
-
-.home-concept-slideshow-source {
-  display: block;
-  margin-top: 0.5rem;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.6875rem;
-  font-style: normal;
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
-.home-concept-slideshow-source a {
-  text-decoration: underline;
-  text-underline-offset: .2em;
-}
-
-.home-concept-slideshow-source a:focus-visible {
-  outline: 2px solid var(--foreground);
-  outline-offset: 4px;
-}
-
-html[data-contrast="high"] .home-concept-slideshow {
-  --home-frame-status-quo: var(--foreground);
-  --home-frame-status-quo-rule: var(--foreground);
-  --home-frame-reply: var(--foreground);
-  --home-frame-reply-rule: var(--foreground);
-}
-
-html[data-contrast="high"] .home-concept-slideshow-content[data-frame="reply"] {
-  border-left-style: double;
-  border-left-width: 4px;
-}
-
-html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:first-child {
-  background: var(--background);
-  border-color: var(--foreground);
-}
-
-/* Position in a finite sequence, as a quiet count rather than a moving bar. */
-.home-concept-slideshow-count {
-  margin: 0;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-}
-
-.home-concept-slideshow-count > span {
-  color: var(--foreground);
-}
-
-.home-concept-slideshow-controls {
-  display: flex;
-  align-items: center;
-  flex: none;
-  margin-inline-end: -0.75rem;
-}
-
-.home-concept-slideshow-controls button {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--muted-foreground);
-  cursor: pointer;
-}
-
-.home-concept-slideshow-controls button:hover:not(:disabled) {
-  background: color-mix(in oklab, var(--foreground) 6%, transparent);
-  color: var(--foreground);
-}
-
-.home-concept-slideshow-controls button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.home-concept-slideshow-controls .home-concept-slideshow-playback:disabled {
-  opacity: 0.6;
-}
-
-.home-concept-slideshow-controls button:focus-visible {
-  outline: 2px solid var(--organism-accent-strong);
-  outline-offset: -2px;
-}
-
-.home-concept-slideshow-controls svg {
-  width: 0.9375rem;
-  height: 0.9375rem;
-}
-
 .home-hero-ask:focus-within {
   opacity: 1;
 }
@@ -933,43 +664,19 @@ html[data-contrast="high"] .home-concept-slideshow-eyebrow[data-frame] > span:fi
 
 
 
-/* The concept slideshow names a part; the diagram brings it forward and nothing moves. */
+/* Each part opens the section that explains it; nothing moves. */
 .home-hero-architecture__svg [data-part] {
   cursor: pointer;
-  transition: opacity 260ms ease;
 }
 
-.home-hero-architecture__svg[data-focus] [data-part] {
-  opacity: 0.24;
-}
-
-.home-hero-architecture__svg[data-focus="te"] [data-part="te"],
-.home-hero-architecture__svg[data-focus="awareness"] [data-part="te"],
-.home-hero-architecture__svg[data-focus="awareness"] [data-part="big-c"],
-.home-hero-architecture__svg[data-focus="big-c"] [data-part="big-c"],
-.home-hero-architecture__svg[data-focus="big-c"] [data-part="little-c"],
-.home-hero-architecture__svg[data-focus="rf0"] [data-part="rf0"],
-.home-hero-architecture__svg[data-focus="rf0"] [data-part="little-c"],
-.home-hero-architecture__svg[data-focus="rfn"] [data-part="rfn"],
-.home-hero-architecture__svg[data-focus="rfn"] [data-part="rf0"],
-.home-hero-architecture__svg[data-focus="little-c"] [data-part="little-c"],
-.home-hero-architecture__svg[data-focus="process"] [data-part="big-c"],
-.home-hero-architecture__svg[data-focus="process"] [data-part="little-c"] {
-  opacity: 1;
-}
-
-/* Process loops follow their owning process's entrance; Process Rules brings
-   them fully forward. Their existing dash flow never controls reveal order. */
+/* Process loops follow their owning process's entrance. Their existing dash
+   flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
   opacity: 0.84;
   pointer-events: none;
   stroke-linecap: round;
   transition: opacity 360ms ease;
-}
-
-.home-hero-architecture__svg[data-focus="process"] .home-architecture-process-loops {
-  opacity: 1;
 }
 
 .home-architecture-process-loop {
@@ -1012,7 +719,6 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-hero-architecture__svg [data-part],
   .home-architecture-process-loops {
     transition: none;
   }
@@ -2185,14 +1891,6 @@ html[data-contrast="high"] .home-hero-kicker {
 
   .home-hero-entry .dot-button__copy > span {
     letter-spacing: 0.1em;
-  }
-
-  .home-hero-concepts {
-    margin-top: 1.5rem;
-  }
-
-  .home-concept-slideshow-explanation {
-    font-size: 0.9375rem;
   }
 
   /* Keep the complete concentric model readable. At 320px the 700-unit SVG is
@@ -4917,57 +4615,6 @@ html[data-field="off"] .home-hero-stage::before {
 @media (max-width: 639px) {
   .home-hero-byline { flex-direction: column; }
   .home-author-line::before { display: none; }
-}
-
-/* ── Concept Slideshow Movement Jump Pills ────────────────────────── */
-.home-concept-slideshow-movements {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.75rem;
-}
-
-.home-concept-slideshow-movement {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  min-height: var(--touch-target);
-  gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
-  background: color-mix(in oklab, var(--card) 55%, transparent);
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  cursor: pointer;
-  transition:
-    color 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease;
-}
-
-.home-concept-slideshow-movement:hover {
-  color: var(--foreground);
-  border-color: color-mix(in oklab, var(--organism-accent-strong) 42%, transparent);
-}
-
-.home-concept-slideshow-movement[data-active="true"] {
-  border-color: color-mix(in oklab, var(--organism-accent-strong) 58%, transparent);
-  background: color-mix(in oklab, var(--organism-accent-strong) 12%, var(--card));
-  color: var(--foreground);
-}
-
-.home-concept-slideshow-movement__numeral {
-  font-family: var(--home-public-annotate-font);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--organism-accent-strong);
 }
 
 /* ── Home Visual Inquiry & Inner Experience Loop Section ──────────── */

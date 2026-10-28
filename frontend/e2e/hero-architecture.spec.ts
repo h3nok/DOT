@@ -8,8 +8,7 @@ async function expectCenteredHeroLayout(page: Page) {
     const diagram = opening.querySelector(".home-hero-architecture__svg");
     const origin = diagram?.querySelector(".home-architecture-origin-boundary");
     const reading = opening.querySelector(".home-hero-entry .dot-focus-nav__primary");
-    const concepts = document.querySelector(".home-hero-concepts");
-    if (!header || !heading || !diagram || !origin || !reading || !concepts) {
+    if (!header || !heading || !diagram || !origin || !reading) {
       throw new Error("The centered opening is incomplete");
     }
     const geometry = (element: Element) => {
@@ -25,32 +24,27 @@ async function expectCenteredHeroLayout(page: Page) {
       diagram: geometry(diagram),
       originBottom: origin.getBoundingClientRect().bottom,
       reading: geometry(reading),
-      concepts: geometry(concepts),
       readingUnobstructed: reading.contains(document.elementFromPoint(
         readingBox.left + readingBox.width / 2,
         readingBox.top + readingBox.height / 2,
       )),
       textAlign: getComputedStyle(heading).textAlign,
       readingBeforeDiagram: !!(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING),
-      diagramBeforeConcepts: !!(diagram.compareDocumentPosition(concepts) & Node.DOCUMENT_POSITION_FOLLOWING),
     };
   });
 
-  for (const part of ["header", "heading", "diagram", "concepts"] as const) {
+  for (const part of ["header", "heading", "diagram"] as const) {
     expect(Math.abs(layout[part].center - layout.axis), `${part} must share the page's central axis`)
       .toBeLessThanOrEqual(2);
   }
   expect(layout.textAlign).toBe("center");
   expect(layout.readingBeforeDiagram, "Reading must precede the diagram in reading order").toBe(true);
-  expect(layout.diagramBeforeConcepts, "The architecture must precede its concept explanations").toBe(true);
   expect(layout.reading.top).toBeGreaterThanOrEqual(0);
   expect(layout.reading.bottom, "Reading must be immediately available without scrolling")
     .toBeLessThanOrEqual(layout.viewportHeight);
   expect(layout.readingUnobstructed, "Reading must be reachable before exploring the diagram").toBe(true);
   expect(layout.reading.bottom).toBeLessThan(layout.diagram.top);
   expect(layout.header.bottom, "The compact header must sit above the diagram").toBeLessThan(layout.diagram.top);
-  expect(layout.diagram.bottom, "Concept explanations must sit below the entire diagram")
-    .toBeLessThanOrEqual(layout.concepts.top);
   if ((page.viewportSize()?.width ?? 0) >= 1024) {
     expect(layout.originBottom, "The complete outer ring must fit on a desktop screen")
       .toBeLessThanOrEqual(layout.viewportHeight + 1);
@@ -129,11 +123,9 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
   expect(local.intentDrawn).toBe(false);
   const complete = await sample(6000);
   expect(complete.intentDrawn).toBe(true);
-  // The entrance must not freeze the opacity that concept selection controls.
+  // Choosing a part of the figure opens the section that explains it (ADR-0055).
   await page.locator(".home-architecture-other-frame-label").first().click();
-  await expect(svg).toHaveAttribute("data-focus", "rfn");
-  await expect.poll(() => page.locator('[data-part="little-c"]').evaluate((node) =>
-    Number(getComputedStyle(node).opacity))).toBeCloseTo(.24, 2);
+  await expect(page.locator("#reality-frame")).toBeInViewport();
   await expectNoHorizontalOverflow(page);
 });
 
@@ -221,7 +213,7 @@ for (const colorScheme of ["light", "dark"] as const) {
           (Math.min(foregroundLuminance, surfaceLuminance) + 0.05);
       };
       const heading = document.querySelector(".home-hero-title");
-      const life = document.querySelector(".home-concept-slideshow-content .home-concept-slideshow-explanation");
+      const life = document.querySelector(".home-hero-subtitle");
       const kicker = document.querySelector(".home-hero-kicker");
       const read = document.querySelector(".home-hero-entry .dot-focus-nav__primary");
       if (!heading || !life || !kicker || !read) {
@@ -346,7 +338,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.opening.hasReadingSubtitle).toBe(false);
     expect(presentation.opening.readingUnobstructed, "The reading action must remain reachable")
       .toBe(true);
-    await expect(page.getByRole("region", { name: "Key concepts and questions" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Key concepts and questions" })).toHaveCount(0);
     const inquiry = page.getByRole("textbox", { name: "Ask a question about Digital Organism Theory" });
     await expect(inquiry).toHaveCount(0);
     await expect(page.getByRole("navigation", { name: "Begin exploring DOT" })
