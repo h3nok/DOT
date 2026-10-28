@@ -23,8 +23,13 @@ interface DrawnFilmPlayerProps {
   /** Typewriter keys to sound as the film plays. Without them the film is silent. */
   keystrokes?: readonly Keystroke[];
   dataAttributes?: Record<`data-${string}`, string>;
-  /** Draws the stage at a film second. */
-  children: (frame: number) => ReactNode;
+  /**
+   * A designed cover, shown until the reader first plays or seeks, in place of the poster
+   * frame and its Play button. It receives the function that starts the film.
+   */
+  cover?: (play: () => void) => ReactNode;
+  /** Draws the stage at a film second; `started` is false while a cover is showing. */
+  children: (frame: number, started: boolean) => ReactNode;
 }
 
 /**
@@ -43,6 +48,7 @@ export function DrawnFilmPlayer({
   describeTime,
   keystrokes,
   dataAttributes,
+  cover,
   children,
 }: DrawnFilmPlayerProps) {
   const [time, setTime] = useState(0);
@@ -205,9 +211,11 @@ export function DrawnFilmPlayer({
       {...dataAttributes}
     >
       <div className="concept-film-stage" onClick={togglePlay}>
-        {children(frame)}
+        {children(frame, hasStarted)}
 
-        {!hasStarted && (
+        {!hasStarted && cover?.(togglePlay)}
+
+        {!hasStarted && !cover && (
           <button
             type="button"
             className="films-play-hero-btn"

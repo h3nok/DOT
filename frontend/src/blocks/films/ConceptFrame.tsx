@@ -1,4 +1,4 @@
-import { ArchitectureMap, type ArchitectureLayer } from "./ConceptFilmMotifs";
+import { ArchitectureGlyph, ArchitectureMap, type ArchitectureLayer } from "./ConceptFilmMotifs";
 import { CONCEPT_MOTIFS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
 import { reveal, type TypedLine } from "./filmTime";
 
@@ -42,7 +42,7 @@ interface ConceptFrameProps {
 
 /** One concept as a film frame: its picture beside the Concept Map's own words and an analogy. */
 export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, drift = 0, place, lead }: ConceptFrameProps) {
-  const { Motif, description } = CONCEPT_MOTIFS[film.id];
+  const { Motif, description, layer } = CONCEPT_MOTIFS[film.id];
   const typing = conceptTyping(film, beats, place ?? `Concept ${film.number}`);
   const frameStyle =
     opacity < 1 || drift !== 0 ? { opacity, transform: drift ? `translateY(${drift.toFixed(1)}px)` : undefined } : undefined;
@@ -68,7 +68,10 @@ export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, dr
 
       <div className="concept-film-copy" style={frameStyle}>
         <p className="concept-film-eyebrow">
-          <TypedText line={typing.eyebrow} time={copyTime} caret={false} />
+          <ArchitectureGlyph layer={layer} />
+          <span>
+            <TypedText line={typing.eyebrow} time={copyTime} caret={false} />
+          </span>
         </p>
         <h3 className="concept-film-name">
           <TypedText line={typing.name} time={copyTime} />

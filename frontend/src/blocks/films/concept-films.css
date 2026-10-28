@@ -40,6 +40,10 @@ html.dark .concept-film {
 }
 
 .concept-film-eyebrow {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.625rem;
   margin: 0;
   color: var(--cf-muted);
   font-family: var(--films-mono);
@@ -47,6 +51,118 @@ html.dark .concept-film {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
   line-height: 1.5;
+}
+
+/* The architecture in miniature, lit where the concept sits. */
+.concept-film-glyph {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  overflow: visible;
+}
+
+/* ── The cover, shown until the reader first plays ───────────────────── */
+.concept-film-cover {
+  display: grid;
+  align-content: center;
+  gap: 0;
+}
+
+.concept-film-cover .concept-film-name { max-width: 16ch; }
+
+.concept-film-cover-line {
+  max-width: 40ch;
+  margin: 0.875rem 0 0;
+  color: var(--cf-ink);
+  font-family: var(--identity-reading-font, var(--font-serif, Georgia, serif));
+  font-size: clamp(1rem, 1.9cqi, 1.3125rem);
+  line-height: 1.5;
+}
+
+.concept-film-cover-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  color: var(--cf-muted);
+  font-family: var(--films-mono);
+  font-size: clamp(0.6875rem, 1.1cqi, 0.8125rem);
+  letter-spacing: 0.05em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.concept-film-cover-path li:not(:last-child)::after {
+  margin-inline: 0.6rem;
+  color: color-mix(in oklab, var(--cf-muted) 60%, transparent);
+  content: "→";
+}
+
+.concept-film-cover-play {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1.5rem;
+  padding: 0.5rem 1.375rem 0.5rem 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cf-local);
+  color: var(--cf-stage);
+  cursor: pointer;
+  font-family: var(--films-sans, inherit);
+  font-size: clamp(1rem, 1.6cqi, 1.125rem);
+  font-weight: 600;
+  box-shadow: 0 14px 34px -18px color-mix(in oklab, var(--cf-local) 80%, transparent);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.concept-film-cover-play:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px -16px color-mix(in oklab, var(--cf-local) 85%, transparent);
+}
+
+.concept-film-cover-play:focus-visible {
+  outline: 2px solid var(--cf-local);
+  outline-offset: 4px;
+}
+
+.concept-film-cover-play-icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--cf-stage) 18%, transparent);
+}
+
+.concept-film-cover-play-icon svg { width: 1.125rem; height: 1.125rem; fill: currentColor; }
+
+.concept-film-cover-length {
+  padding-left: 0.875rem;
+  border-left: 1px solid color-mix(in oklab, var(--cf-stage) 40%, transparent);
+  font-family: var(--films-mono);
+  font-size: 0.875em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.concept-film-cover-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  color: var(--cf-muted);
+  font-size: clamp(0.8125rem, 1.2cqi, 0.9375rem);
+}
+
+.concept-film-cover-note svg { width: 1rem; height: 1rem; flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .concept-film-cover-play { transition: none; }
+  .concept-film-cover-play:hover { transform: none; }
 }
 
 .concept-film-name {
@@ -213,33 +329,33 @@ html.dark .concept-film {
 }
 
 /* Drawing vocabulary: a stroke or a fill, toned by the layer it belongs to. */
-.concept-film-motif .cm-s {
+:is(.concept-film-motif, .concept-film-glyph) .cm-s {
   fill: none;
   stroke: var(--cm, var(--cf-ink));
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.concept-film-motif .cm-f {
+:is(.concept-film-motif, .concept-film-glyph) .cm-f {
   fill: var(--cm, var(--cf-ink));
   stroke: none;
 }
 
-.concept-film-motif .cm-hollow,
-.concept-film-motif .cm-ground {
+:is(.concept-film-motif, .concept-film-glyph) .cm-hollow,
+:is(.concept-film-motif, .concept-film-glyph) .cm-ground {
   fill: var(--cf-stage);
 }
 
-.concept-film-motif .cm-ink { --cm: var(--cf-ink); }
-.concept-film-motif .cm-muted { --cm: var(--cf-muted); }
-.concept-film-motif .cm-line { --cm: var(--cf-line); }
-.concept-film-motif .cm-origin { --cm: var(--cf-origin); }
-.concept-film-motif .cm-big-c { --cm: var(--cf-big-c); }
-.concept-film-motif .cm-rf { --cm: var(--cf-rf); }
-.concept-film-motif .cm-local { --cm: var(--cf-local); }
-.concept-film-motif .cm-fear { --cm: var(--cf-fear); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-ink { --cm: var(--cf-ink); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-muted { --cm: var(--cf-muted); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-line { --cm: var(--cf-line); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-origin { --cm: var(--cf-origin); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-big-c { --cm: var(--cf-big-c); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-rf { --cm: var(--cf-rf); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-local { --cm: var(--cf-local); }
+:is(.concept-film-motif, .concept-film-glyph) .cm-fear { --cm: var(--cf-fear); }
 
-.concept-film-motif .cm-label {
+:is(.concept-film-motif, .concept-film-glyph) .cm-label {
   fill: var(--cf-muted);
   font-family: "Inter", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   font-size: 22px;
@@ -251,7 +367,7 @@ html.dark .concept-film {
   stroke-linejoin: round;
 }
 
-.concept-film-motif .cm-label--strong {
+:is(.concept-film-motif, .concept-film-glyph) .cm-label--strong {
   fill: var(--cf-ink);
   font-weight: 600;
 }

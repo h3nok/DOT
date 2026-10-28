@@ -1,10 +1,11 @@
 import { useMemo, type ReactNode } from "react";
+import { Play, Volume2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import filmsData from "../../content/films.json";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
-import { ArchitectureMap, HumanCharacter, TourOpening } from "./ConceptFilmMotifs";
-import { CONCEPT_FILM_SECONDS, conceptTyping } from "./conceptFilms";
+import { ArchitectureGlyph, ArchitectureMap, HumanCharacter, TourOpening, type ArchitectureLayer } from "./ConceptFilmMotifs";
+import { CONCEPT_FILMS, CONCEPT_FILM_SECONDS, conceptTyping } from "./conceptFilms";
 import { ConceptFrame, TypedText } from "./ConceptFrame";
 import {
   CLOSING_TYPING,
@@ -48,9 +49,11 @@ interface TitleFrameProps {
   description: string;
   /** Sets a long, sentence-length title a size smaller, so the film keeps its height. */
   sentence?: boolean;
+  /** Where the part sits in the architecture, lit on the locator beside its eyebrow. */
+  layer?: ArchitectureLayer;
 }
 
-function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description, sentence = false }: TitleFrameProps) {
+function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description, sentence = false, layer }: TitleFrameProps) {
   const style = { opacity, transform: drift ? `translateY(${drift.toFixed(1)}px)` : undefined };
   return (
     <>
@@ -58,7 +61,10 @@ function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title
         {picture}
       </svg>
       <div className="concept-film-copy" style={style}>
-        <p className="concept-film-eyebrow"><TypedText line={eyebrow} time={t} caret={false} /></p>
+        <p className="concept-film-eyebrow">
+          {layer && <ArchitectureGlyph layer={layer} />}
+          <span><TypedText line={eyebrow} time={t} caret={false} /></span>
+        </p>
         <h3 className={sentence ? "concept-film-name concept-film-name--sentence" : "concept-film-name"}><TypedText line={title} time={t} /></h3>
         {note && (
           <p className="concept-film-definition"><TypedText line={note} time={t} /></p>
@@ -121,6 +127,58 @@ function TourSizers() {
   );
 }
 
+const COVER_DESCRIPTION =
+  "The architecture of Digital Organism Theory: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.";
+
+/** What the film passes through, in order, for the cover. */
+const COVER_PATH = [TOUR.scenes[0].name, TOUR.scenes[1].name, `${CONCEPT_FILMS.length} concepts`, "The architecture"];
+
+/**
+ * The film's cover, shown until the reader first plays or seeks: the book's title over its
+ * architecture, what the film passes through, one way to start it, and what it will sound like.
+ */
+function TourCover({ playLabel, onPlay, still }: { playLabel: string; onPlay: () => void; still: boolean }) {
+  return (
+    <>
+      <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={COVER_DESCRIPTION}>
+        <ArchitectureMap t={4} layer="all" />
+      </svg>
+      <div className="concept-film-copy concept-film-cover">
+        <p className="concept-film-eyebrow">
+          <span>{TOUR.label} · {formatDuration(CONCEPT_TOUR_SECONDS)}</span>
+        </p>
+        <h3 className="concept-film-name">{TOUR.closing.title}</h3>
+        <p className="concept-film-cover-line">{TOUR.description}</p>
+        <ol className="concept-film-cover-path" aria-label="The film passes through">
+          {COVER_PATH.map((step) => <li key={step}>{step}</li>)}
+        </ol>
+        <button
+          type="button"
+          className="concept-film-cover-play"
+          aria-label={playLabel}
+          onClick={(event) => {
+            event.stopPropagation();
+            onPlay();
+          }}
+        >
+          <span className="concept-film-cover-play-icon" aria-hidden="true"><Play /></span>
+          <span>Play the film</span>
+          <span className="concept-film-cover-length" aria-hidden="true">{formatDuration(CONCEPT_TOUR_SECONDS)}</span>
+        </button>
+        <p className="concept-film-cover-note">
+          {still ? (
+            "Reduced motion is on, so each part is shown finished, without sound."
+          ) : (
+            <>
+              <Volume2 aria-hidden="true" /> Soft typewriter sound while it types. One click turns it off.
+            </>
+          )}
+        </p>
+      </div>
+    </>
+  );
+}
+
 function TourFrame({ frame, still }: { frame: number; still: boolean }) {
   const part = tourPartAt(frame);
   const opacity = tourPartOpacity(part, frame);
@@ -163,6 +221,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         sourceAt={typing.source}
         description={part.interlude.description}
         sentence
+        layer="little-c"
       />
     );
   }
@@ -212,23 +271,25 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
 export function ConceptTourPlayer() {
   const still = useReducedMotion();
   const sizers = useMemo(() => <TourSizers />, []);
+  const playLabel = `Play ${TOUR.title} (${formatDuration(CONCEPT_TOUR_SECONDS)})`;
 
   return (
     <DrawnFilmPlayer
       duration={CONCEPT_TOUR_SECONDS}
       posterTime={TOUR_POSTER_SECONDS}
-      playLabel={`Play ${TOUR.title} (${formatDuration(CONCEPT_TOUR_SECONDS)})`}
+      playLabel={playLabel}
       resetKey="concept-tour"
       className="concept-tour"
       notches={CONCEPT_TOUR_NOTCHES}
       chapters={{ starts: CONCEPT_TOUR_STARTS, noun: "concept" }}
       describeTime={describeTourTime}
       keystrokes={still ? undefined : CONCEPT_TOUR_KEYSTROKES}
+      cover={(play) => <TourCover playLabel={playLabel} onPlay={play} still={still} />}
     >
-      {(frame) => (
+      {(frame, started) => (
         <>
           {sizers}
-          <TourFrame frame={frame} still={still} />
+          {started && <TourFrame frame={frame} still={still} />}
         </>
       )}
     </DrawnFilmPlayer>
