@@ -67,7 +67,7 @@ test.describe("stillness is honoured", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
 
-    const thesis = page.locator(".home-concept-slideshow");
+    const thesis = page.locator(".home-hero-proposition");
     await expect(thesis).toBeVisible();
     await expect.poll(() => htmlAttribute(page, "data-motion")).toBe("still");
 

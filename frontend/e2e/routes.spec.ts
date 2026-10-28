@@ -51,7 +51,7 @@ test.describe("hero", () => {
   }) => {
     await page.goto("/");
 
-    await expect(page.locator(".home-concept-slideshow")).toBeVisible();
+    await expect(page.locator(".home-hero-subtitle")).toBeVisible();
     await page.locator(".home-hero-architecture").scrollIntoViewIfNeeded();
     await expect(page.locator(".home-hero-architecture__svg")).toBeVisible();
 
