@@ -1337,3 +1337,193 @@ export function TourOpening({ t }: MotifProps) {
     </g>
   );
 }
+
+/* ── The architecture, as the homepage draws it ─────────────────────────
+   T × E outside, Big C emerged within it, RF₀ inside Big C, and Little c within RF₀.
+   The camera moves in to the layer a concept belongs to, so each concept is first seen
+   where it sits. */
+
+export type ArchitectureLayer = "all" | "big-c" | "reality-frame" | "reality-stream" | "little-c";
+
+const ARCH_CENTRE: Point = [300, 320];
+const ARCH_FIELD_R = 262;
+const ARCH_BIG_C_R = 222;
+const ARCH_RF: Point = [394, 236];
+const ARCH_RF_R = 74;
+const ARCH_LITTLE_C: Point = [384, 248];
+const ARCH_LITTLE_C_R = 13;
+const ARCH_VIEWS: Record<ArchitectureLayer, { focus: Point; scale: number }> = {
+  all: { focus: ARCH_CENTRE, scale: 1 },
+  "big-c": { focus: ARCH_CENTRE, scale: 1 },
+  "reality-frame": { focus: ARCH_RF, scale: 2.3 },
+  "reality-stream": { focus: ARCH_RF, scale: 2.3 },
+  "little-c": { focus: ARCH_LITTLE_C, scale: 5 },
+};
+
+// The map is seen through a round lens, so moving in never shows the picture's square edge.
+const ARCH_LENS: Point = [300, 316];
+const ARCH_LENS_R = 284;
+
+export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLayer }) {
+  const clipId = `architecture-lens-${useId().replace(/[^\w-]/g, "")}`;
+  const move = span(t, 0.6, 2.2);
+  const ease = move * move * (3 - 2 * move);
+  const view = ARCH_VIEWS[layer];
+  const scale = lerp(1, view.scale, ease);
+  const focus = lerpPoint(ARCH_CENTRE, view.focus, ease);
+  const at = (p: Point): Point => [ARCH_CENTRE[0] + (p[0] - focus[0]) * scale, ARCH_CENTRE[1] + (p[1] - focus[1]) * scale];
+  const within = ([x, y]: Point) => Math.hypot(x - ARCH_LENS[0], y - ARCH_LENS[1]) < ARCH_LENS_R - 24;
+  const lit = (part: ArchitectureLayer) => (layer === "all" ? 1 : span(t, 0.9, 1.6) * (part === layer ? 1 : 0));
+  const drawIn = (from: number) => (layer === "all" ? span(t, from, from + 1) : span(t, 0, 0.5));
+
+  const centre = at(ARCH_CENTRE);
+  const rf = at(ARCH_RF);
+  const littleC = at(ARCH_LITTLE_C);
+  const rfLit = Math.max(lit("reality-frame"), lit("reality-stream"));
+  const littleLit = Math.max(lit("little-c"), lit("reality-stream"));
+  const labels: { text: string; p: Point; show: number; strong: boolean }[] = [
+    { text: "T × E", p: [centre[0], centre[1] - ARCH_FIELD_R * scale - 14], show: drawIn(0), strong: false },
+    { text: "Big C", p: [centre[0] - 120 * scale, centre[1] - 150 * scale], show: drawIn(0.4), strong: lit("big-c") > 0.5 },
+    { text: "RF₀", p: [rf[0] - 54 * scale, rf[1] - 56 * scale], show: drawIn(0.9), strong: rfLit > 0.5 },
+    { text: "Little c", p: [littleC[0], littleC[1] + ARCH_LITTLE_C_R * scale + 32], show: drawIn(1.4), strong: littleLit > 0.5 },
+  ];
+
+  return (
+    <g>
+      <defs>
+        <clipPath id={clipId}>
+          <circle cx={ARCH_LENS[0]} cy={ARCH_LENS[1]} r={ARCH_LENS_R} />
+        </clipPath>
+      </defs>
+      <circle cx={ARCH_LENS[0]} cy={ARCH_LENS[1]} r={ARCH_LENS_R} className="cm-s cm-line" strokeWidth={2} opacity={view.scale > 1 ? ease : 0} />
+      <g clipPath={`url(#${clipId})`}>
+      {/* T × E: the field Big C emerged within, outside it. */}
+      <circle cx={centre[0]} cy={centre[1]} r={ARCH_FIELD_R * scale} className="cm-s cm-origin" strokeWidth={2} strokeDasharray="3 9" opacity={drawIn(0)} />
+      {/* Big C. */}
+      <circle cx={centre[0]} cy={centre[1]} r={ARCH_BIG_C_R * scale} className="cm-f cm-big-c" opacity={0.06 + 0.06 * lit("big-c")} />
+      <circle
+        cx={centre[0]}
+        cy={centre[1]}
+        r={ARCH_BIG_C_R * scale}
+        className={`cm-s ${lit("big-c") > 0.5 || layer === "all" ? "cm-big-c" : "cm-line"}`}
+        strokeWidth={2 + 1.6 * lit("big-c")}
+        opacity={drawIn(0.4)}
+      />
+      {/* RF₀, a lawful world inside Big C. */}
+      <g opacity={drawIn(0.9)}>
+        <circle cx={rf[0]} cy={rf[1]} r={ARCH_RF_R * scale} className="cm-f cm-rf" opacity={0.08 + 0.08 * rfLit} />
+        {[-2, -1, 0, 1, 2].flatMap((i) =>
+          [-2, -1, 0, 1, 2].map((j) => {
+            const p: Point = [ARCH_RF[0] + i * 24, ARCH_RF[1] + j * 24];
+            if (Math.hypot(i * 24, j * 24) > ARCH_RF_R - 10) return null;
+            const q = at(p);
+            return <circle key={`${i}${j}`} cx={q[0]} cy={q[1]} r={1.8} className="cm-f cm-rf" opacity={0.6} />;
+          }),
+        )}
+        <circle
+          cx={rf[0]}
+          cy={rf[1]}
+          r={ARCH_RF_R * scale}
+          className={`cm-s ${rfLit > 0.5 || layer === "all" ? "cm-rf" : "cm-line"}`}
+          strokeWidth={2 + 1.6 * rfLit}
+        />
+      </g>
+      {/* The Reality Stream: what reaches Little c from within the Frame. */}
+      {layer === "reality-stream" &&
+        [0, 1, 2, 3, 4, 5].map((k) => {
+          const phase = (((t - 1.4 + k * 0.38) % 2.2) + 2.2) % 2.2 / 2.2;
+          const angle = -150 + k * 52;
+          const from = polar(ARCH_RF[0], ARCH_RF[1], ARCH_RF_R - 6, angle);
+          const p = at(lerpPoint(from, ARCH_LITTLE_C, phase));
+          return <circle key={k} cx={p[0]} cy={p[1]} r={5} className="cm-f cm-local" opacity={span(t, 1.4, 2) * (1 - phase) * 0.9} />;
+        })}
+      {/* Little c. */}
+      <g opacity={drawIn(1.4)}>
+        <circle cx={littleC[0]} cy={littleC[1]} r={ARCH_LITTLE_C_R * scale} className="cm-s cm-hollow cm-local" strokeWidth={2 + 1.4 * littleLit} />
+        <circle cx={littleC[0]} cy={littleC[1]} r={Math.max(3.5, 4 * Math.sqrt(scale))} className="cm-f cm-local" />
+      </g>
+      </g>
+      {labels.map(({ text, p, show, strong }) =>
+        within(p) ? (
+          <Label key={text} x={p[0]} y={p[1]} show={show} strong={strong}>
+            {text}
+          </Label>
+        ) : null,
+      )}
+    </g>
+  );
+}
+
+/* ── The human character: Ego, and Arrogance at its gate ────────────────
+   Little c, in one corner of its Canvas, paints Ego around itself in the shape of a body
+   to protect a fear and an untrue belief. The outline hardens; Arrogance stands at its
+   edge and turns new strokes away, so the rest of the Canvas is never reached. */
+
+const EGO_OUTLINE = "M80 556 L80 446 C82 384 102 344 142 332 L208 332 C248 344 268 384 270 446 L270 556";
+const EGO_HEAD: Point = [175, 274];
+const EGO_GATE: Point = [271, 420];
+const OPEN_STROKES = [
+  { d: "M330 96 C370 80 420 112 470 92", tone: "cm-big-c", at: 0.3 },
+  { d: "M362 140 C410 124 452 160 520 140", tone: "cm-rf", at: 0.6 },
+  { d: "M420 300 C452 284 488 312 528 296", tone: "cm-origin", at: 0.9 },
+  { d: "M380 520 C420 504 470 532 528 516", tone: "cm-big-c", at: 1.2 },
+];
+
+export function HumanCharacter({ t }: MotifProps) {
+  const painted = span(t, 2, 5);
+  const hardened = span(t, 6.2, 7.6);
+  const gate = span(t, 7.4, 8.2);
+  return (
+    <g>
+      {/* The Canvas, most of it open. */}
+      <rect x={40} y={40} width={520} height={520} rx={18} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 0, 0.6)} />
+      <Label x={60} y={74} anchor="start" show={span(t, 0.2, 0.8)}>the Canvas</Label>
+      {OPEN_STROKES.map(({ d, tone, at }) => (
+        <path key={d} d={d} className={`cm-s ${tone}`} strokeWidth={5} opacity={0.45 * span(t, at, at + 0.8)} {...drawn(span(t, at, at + 1.2))} />
+      ))}
+
+      {/* In one corner: Little c, with what it protects. */}
+      <Participant at={[175, 430]} r={18} show={span(t, 0.4, 1)} />
+      <path d="M118 488 q10 -14 22 0 t22 0" className="cm-s cm-fear" strokeWidth={4} opacity={span(t, 1, 1.6)} />
+      <path d="M190 492 l14 -14 l12 12 l14 -14" className="cm-s cm-fear" strokeWidth={4} opacity={span(t, 1.3, 1.9)} />
+      <Label x={175} y={590} show={span(t, 1.4, 2)}>a fear · an untrue belief</Label>
+
+      {/* Ego, painted around it in the shape of a body, then hardening. */}
+      <path
+        d={EGO_OUTLINE}
+        className={hardened > 0.5 ? "cm-s cm-ink" : "cm-s cm-muted"}
+        strokeWidth={lerp(4, 9, hardened)}
+        {...drawn(painted)}
+      />
+      <circle
+        cx={EGO_HEAD[0]}
+        cy={EGO_HEAD[1]}
+        r={40}
+        className={hardened > 0.5 ? "cm-s cm-ink" : "cm-s cm-muted"}
+        strokeWidth={lerp(4, 9, hardened)}
+        {...drawn(span(painted, 0.5, 1))}
+      />
+      <Label x={175} y={212} show={span(t, 4.2, 4.8)} strong>Ego</Label>
+      <Pill x={384} y={222} text="I am my body. That is all." show={span(t, 9.4, 10)} size={0.86} />
+      <line x1={250} y1={250} x2={268} y2={238} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 9.4, 10)} />
+
+      {/* Arrogance at the gate: new strokes are turned away. */}
+      {[0, 1, 2].map((k) => {
+        const start = 8.6 + k * 1.5;
+        const go = span(t, start, start + 0.7);
+        const back = span(t, start + 0.7, start + 1.3);
+        const last = k === 2;
+        if (go <= 0 || (back >= 1 && !last)) return null;
+        const x = back > 0 ? lerp(EGO_GATE[0] + 26, 470, back) : lerp(520, EGO_GATE[0] + 26, go);
+        const y = EGO_GATE[1] + (k - 1) * 10;
+        return <line key={k} x1={x} y1={y} x2={x + 48} y2={y} className="cm-s cm-big-c" strokeWidth={5} opacity={last ? 1 - 0.4 * back : 1 - back} />;
+      })}
+      <g opacity={gate} transform={`translate(${EGO_GATE[0]} ${EGO_GATE[1]}) scale(${lerp(1.3, 1, gate).toFixed(3)})`}>
+        <path d="M0 -26 L20 -18 L20 4 C20 18 10 26 0 32 C-10 26 -20 18 -20 4 L-20 -18 Z" className="cm-f cm-fear" />
+      </g>
+      <Label x={300} y={480} anchor="start" show={span(t, 8, 8.6)} strong>Arrogance</Label>
+      <Label x={300} y={508} anchor="start" show={span(t, 8.3, 8.9)}>the gatekeeper</Label>
+      <Label x={470} y={386} show={span(t, 9, 9.6)}>new strokes</Label>
+    </g>
+  );
+}

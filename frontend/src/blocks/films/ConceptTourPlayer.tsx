@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import filmsData from "../../content/films.json";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
-import { TourOpening } from "./ConceptFilmMotifs";
+import { ArchitectureMap, HumanCharacter, TourOpening } from "./ConceptFilmMotifs";
 import { CONCEPT_FILM_SECONDS, conceptTyping } from "./conceptFilms";
 import { ConceptFrame, TypedText } from "./ConceptFrame";
 import {
@@ -13,7 +13,9 @@ import {
   CONCEPT_TOUR_NOTCHES,
   CONCEPT_TOUR_SECONDS,
   CONCEPT_TOUR_STARTS,
+  TOUR_ARCHITECTURE,
   TOUR_CONCEPT_BEATS,
+  TOUR_MAP_SECONDS,
   TOUR_MOTIF_SPEED,
   TOUR_POSTER_SECONDS,
   describeTourTime,
@@ -30,32 +32,9 @@ import { formatDuration, reveal, type TypedLine } from "./filmTime";
 
 const TOUR = filmsData.conceptTour;
 
-/** Quiet rings opening around a point: the observer the film ends with. */
-function ObserverMark({ t }: { t: number }) {
-  return (
-    <g>
-      {[64, 128, 192, 256].map((radius, index) => {
-        const open = reveal(t, 0.4 + index * 0.45, 1.2);
-        return (
-          <circle
-            key={radius}
-            className="cm-s cm-line"
-            cx={300}
-            cy={300}
-            r={radius * (0.7 + 0.3 * open)}
-            strokeWidth={2}
-            opacity={open}
-          />
-        );
-      })}
-      <circle className="cm-f cm-origin" cx={300} cy={300} r={10} opacity={reveal(t, 0.1, 0.8)} />
-    </g>
-  );
-}
-
 interface TitleFrameProps {
   t: number;
-  /** The picture: the opening's continuous drawing, or the closing rings. */
+  /** The picture: the opening's continuous drawing, an interlude's, or the closing architecture. */
   picture: ReactNode;
   pictureOpacity: number;
   opacity: number;
@@ -106,8 +85,9 @@ function TourSizers() {
     <>
       {CONCEPT_TOUR.map((part) => {
         let lines: (string | null)[];
-        if (part.kind === "scene") {
-          lines = [part.scene.eyebrow, part.scene.title, part.scene.note, null, part.scene.source || null];
+        if (part.kind === "scene" || part.kind === "interlude") {
+          const words = part.kind === "scene" ? part.scene : part.interlude;
+          lines = [words.eyebrow, words.title, words.note, null, words.source || null];
         } else if (part.kind === "closing") {
           lines = [TOUR.closing.eyebrow, TOUR.closing.title, null, null, TOUR.closing.source];
         } else {
@@ -165,11 +145,29 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
       />
     );
   }
+  if (part.kind === "interlude") {
+    const typing = sceneTyping(part.interlude);
+    return (
+      <TitleFrame
+        t={local}
+        picture={<HumanCharacter t={still ? CONCEPT_FILM_SECONDS : Math.min(CONCEPT_FILM_SECONDS, local * TOUR_MOTIF_SPEED)} />}
+        pictureOpacity={opacity}
+        opacity={opacity}
+        drift={drift}
+        eyebrow={typing.eyebrow}
+        title={typing.title}
+        note={typing.note}
+        source={part.interlude.source}
+        sourceAt={typing.source}
+        description={part.interlude.description}
+      />
+    );
+  }
   if (part.kind === "closing") {
     return (
       <TitleFrame
         t={local}
-        picture={<ObserverMark t={local} />}
+        picture={<ArchitectureMap t={still ? 4 : local} layer="all" />}
         pictureOpacity={opacity}
         opacity={opacity}
         drift={drift}
@@ -178,14 +176,18 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={TOUR.closing.source}
         sourceAt={CLOSING_TYPING.source}
         links={{ at: CLOSING_TYPING.links, items: TOUR.closing.links }}
-        description="Rings settle around a single point."
+        description="The whole architecture: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀."
       />
     );
   }
+  // Some concepts first show where they sit in the architecture; their picture follows.
+  const layer = still ? undefined : TOUR_ARCHITECTURE[part.film.id];
+  const pictureClock = layer ? Math.max(0, local - TOUR_MAP_SECONDS) : local;
   return (
     <ConceptFrame
       film={part.film}
-      motifTime={still ? CONCEPT_FILM_SECONDS : Math.min(CONCEPT_FILM_SECONDS, local * TOUR_MOTIF_SPEED)}
+      lead={layer ? { layer, seconds: TOUR_MAP_SECONDS } : undefined}
+      motifTime={still ? CONCEPT_FILM_SECONDS : Math.min(CONCEPT_FILM_SECONDS, pictureClock * TOUR_MOTIF_SPEED)}
       copyTime={local}
       beats={TOUR_CONCEPT_BEATS}
       opacity={opacity}
@@ -198,9 +200,11 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
 /**
  * One film through every concept in the Concept Map, in the map's order. It opens on the
  * struggle the American Millennial Manifesto describes, pulls back to the cultural trap and the
- * Frame that hold it, then types each concept's picture, definition, and analogy, and ends
- * on the book's title. It plays only when asked and stops at its end (L3); its typewriter
- * sound starts with Play and can be turned off.
+ * Frame that hold it, then types each concept's picture, definition, and analogy. Big C,
+ * Little c, the Reality Frame, and the Reality Stream first show where they sit in the
+ * architecture; the human character follows Character; and the film ends on the whole
+ * architecture and the book's title. It plays only when asked and stops at its end (L3); its
+ * typewriter sound starts with Play and can be turned off.
  */
 export function ConceptTourPlayer() {
   const still = useReducedMotion();
