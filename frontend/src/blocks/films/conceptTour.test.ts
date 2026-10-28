@@ -103,10 +103,10 @@ describe("concept tour", () => {
     }
   });
 
-  it("sets the human character right after Character, in the book's words and the author's", () => {
+  it("sets the human character right after the Fear-Gating Principle, in the book's words and the author's", () => {
     const at = CONCEPT_TOUR.findIndex((part) => part.kind === "interlude");
     const before = CONCEPT_TOUR[at - 1];
-    expect(before.kind === "concept" && before.film.id).toBe("character");
+    expect(before.kind === "concept" && before.film.id).toBe("fear-gating");
     const part = CONCEPT_TOUR[at];
     expect(part.kind === "interlude" && part.interlude.title).toBe("Ego defends the Character Little c has learned to call itself.");
     expect(describeTourTime((part.start + part.end) / 2)).toBe("The human character");

@@ -56,13 +56,13 @@
     "interludes": [
       {
         "id": "human-character",
-        "after": "character",
+        "after": "fear-gating",
         "name": "The human character",
         "eyebrow": "The human character",
         "title": "Ego defends the Character Little c has learned to call itself.",
-        "note": "To protect untrue beliefs and fears, Little c paints Ego. Long after, Ego hardens into Arrogance, a gatekeeper that keeps the Canvas from changing. Believing only in the physical, obvious world, people think they are the body and nothing more.",
+        "note": "To protect its fears and untrue beliefs, Little c paints Ego, and Ego becomes their protector. In time, Ego hardens into Arrogance: a gatekeeper that keeps the Canvas from changing. Believing only in the physical, obvious world, people take themselves to be the body and nothing more.",
         "source": "Book One · The Painting · with a note from the author",
-        "description": "On the Canvas, Little c sits in one corner. To protect a fear and an untrue belief, it paints Ego around itself in the shape of a body. The outline hardens, and Arrogance stands at its edge as a gatekeeper, turning new strokes away. A bubble reads: I am my body. That is all. The rest of the Canvas stays open and unreached."
+        "description": "On the Canvas, Little c sits in one corner inside a ring of fear, beside an untrue belief. To protect them, it paints Ego around itself in the shape of a body: Ego, the protector. The outline hardens, and Arrogance stands at its edge as a gatekeeper, turning new strokes away. A bubble reads: I am my body. That is all. The rest of the Canvas stays open and unreached."
       }
     ],
     "closing": {

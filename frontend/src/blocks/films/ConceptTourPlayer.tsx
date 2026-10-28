@@ -202,7 +202,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
  * struggle the American Millennial Manifesto describes, pulls back to the cultural trap and the
  * Frame that hold it, then types each concept's picture, definition, and analogy. Big C,
  * Little c, the Reality Frame, and the Reality Stream first show where they sit in the
- * architecture; the human character follows Character; and the film ends on the whole
+ * architecture; the human character follows the Fear-Gating Principle; and the film ends on the whole
  * architecture and the book's title. It plays only when asked and stops at its end (L3); its
  * typewriter sound starts with Play and can be turned off.
  */

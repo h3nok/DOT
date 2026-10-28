@@ -1454,10 +1454,11 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
   );
 }
 
-/* ── The human character: Ego, and Arrogance at its gate ────────────────
-   Little c, in one corner of its Canvas, paints Ego around itself in the shape of a body
-   to protect a fear and an untrue belief. The outline hardens; Arrogance stands at its
-   edge and turns new strokes away, so the rest of the Canvas is never reached. */
+/* ── The human character: Ego the protector, and Arrogance at its gate ──
+   It follows the Fear-Gating Principle. Little c, in one corner of its Canvas, sits inside
+   the same ring of fear beside an untrue belief, and paints Ego around itself in the shape of
+   a body to protect them. The outline hardens; Arrogance stands at its edge and turns new
+   strokes away, so the rest of the Canvas is never reached. */
 
 const EGO_OUTLINE = "M80 556 L80 446 C82 384 102 344 142 332 L208 332 C248 344 268 384 270 446 L270 556";
 const EGO_HEAD: Point = [175, 274];
@@ -1465,7 +1466,7 @@ const EGO_GATE: Point = [271, 420];
 const OPEN_STROKES = [
   { d: "M330 96 C370 80 420 112 470 92", tone: "cm-big-c", at: 0.3 },
   { d: "M362 140 C410 124 452 160 520 140", tone: "cm-rf", at: 0.6 },
-  { d: "M420 300 C452 284 488 312 528 296", tone: "cm-origin", at: 0.9 },
+  { d: "M392 232 C424 218 460 244 500 230", tone: "cm-origin", at: 0.9 },
   { d: "M380 520 C420 504 470 532 528 516", tone: "cm-big-c", at: 1.2 },
 ];
 
@@ -1483,10 +1484,11 @@ export function HumanCharacter({ t }: MotifProps) {
       ))}
 
       {/* In one corner: Little c, with what it protects. */}
+      {/* The ring of fear from the Fear-Gating Principle, held close. */}
+      <circle cx={175} cy={430} r={34 + 3 * Math.sin(t * 2.4)} className="cm-s cm-fear" strokeWidth={2.6} opacity={0.75 * span(t, 0.8, 1.4)} />
       <Participant at={[175, 430]} r={18} show={span(t, 0.4, 1)} />
-      <path d="M118 488 q10 -14 22 0 t22 0" className="cm-s cm-fear" strokeWidth={4} opacity={span(t, 1, 1.6)} />
-      <path d="M190 492 l14 -14 l12 12 l14 -14" className="cm-s cm-fear" strokeWidth={4} opacity={span(t, 1.3, 1.9)} />
-      <Label x={175} y={590} show={span(t, 1.4, 2)}>a fear · an untrue belief</Label>
+      <path d="M150 500 l14 -14 l12 12 l14 -14" className="cm-s cm-fear" strokeWidth={4} opacity={span(t, 1.3, 1.9)} />
+      <Label x={175} y={590} show={span(t, 1.4, 2)}>fear · an untrue belief</Label>
 
       {/* Ego, painted around it in the shape of a body, then hardening. */}
       <path
@@ -1503,9 +1505,9 @@ export function HumanCharacter({ t }: MotifProps) {
         strokeWidth={lerp(4, 9, hardened)}
         {...drawn(span(painted, 0.5, 1))}
       />
-      <Label x={175} y={212} show={span(t, 4.2, 4.8)} strong>Ego</Label>
-      <Pill x={384} y={222} text="I am my body. That is all." show={span(t, 9.4, 10)} size={0.86} />
-      <line x1={250} y1={250} x2={268} y2={238} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 9.4, 10)} />
+      <Label x={175} y={212} show={span(t, 4.2, 4.8)} strong>Ego, the protector</Label>
+      <Pill x={392} y={300} text="I am my body. That is all." show={span(t, 9.4, 10)} size={0.86} />
+      <line x1={220} y1={288} x2={252} y2={298} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 9.4, 10)} />
 
       {/* Arrogance at the gate: new strokes are turned away. */}
       {[0, 1, 2].map((k) => {
