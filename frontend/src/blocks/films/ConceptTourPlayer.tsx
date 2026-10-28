@@ -15,9 +15,9 @@ import {
   CONCEPT_TOUR_STARTS,
   TOUR_CONCEPT_BEATS,
   TOUR_MOTIF_SPEED,
-  TOUR_OPENING_SECONDS,
   TOUR_POSTER_SECONDS,
   describeTourTime,
+  openingDrawingTime,
   sceneTyping,
   tourPartAt,
   tourPartDrift,
@@ -148,7 +148,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
   if (part.kind === "scene") {
     const typing = sceneTyping(part.scene);
     // Still frames show each scene's drawing as it stands at the scene's end.
-    const pictureTime = still ? Math.min(part.end, TOUR_OPENING_SECONDS) - 0.6 : frame;
+    const pictureTime = openingDrawingTime(still ? part.end - 0.6 : frame);
     return (
       <TitleFrame
         t={local}

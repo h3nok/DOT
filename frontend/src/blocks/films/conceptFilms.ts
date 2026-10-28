@@ -144,7 +144,7 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   love: {
     Motif: Love,
     description: "A narrowed fan of responses widens again as the closing walls of Fear withdraw, while a trace of fear is still felt at its centre.",
-    analogy: "A person can act with Love while frightened.",
+    analogy: "A person can love while frightened; courage often acts in fear’s presence.",
   },
   "conscious-authorship": {
     Motif: ConsciousAuthorship,

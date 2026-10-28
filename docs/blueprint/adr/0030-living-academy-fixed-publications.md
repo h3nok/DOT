@@ -146,8 +146,10 @@ published words: the struggle the American Millennial Manifesto describes,
 the cultural trap that makes it feel like how things are (Book One, The
 Painting), the Frame that turns continuity into curriculum (Book One,
 Reality Frames), and the homepage's own line, "Understand what shapes you.
-Transcend your culture." Then come thirteen seconds per concept with its
-words typed as it plays, and the book's title, about four and a half minutes
+Transcend your culture." Then comes each concept with its words typed as it
+plays, held long enough for a first-time reader (about 20 characters a
+second) to read them and then look at the picture, 13 to 18 seconds each.
+The book's title closes it, about five minutes
 in all, ending on links into the book and the concept map. It is the
 only film with sound: soft typewriter keys, which start only when the reader
 presses Play and can be turned off in the player. With reduced motion it

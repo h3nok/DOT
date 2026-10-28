@@ -10,11 +10,12 @@
   "conceptTour": {
     "title": "Book One, concept by concept",
     "label": "Academy · Typed film",
+    "description": "A five-minute typed film through the seventeen concepts of Digital Organism Theory, Book One, each with a picture and an analogy. It plays only when you press Play.",
     "scenes": [
       {
         "id": "struggle",
         "name": "The struggle",
-        "seconds": 11,
+        "seconds": 14,
         "eyebrow": "The struggle",
         "title": "“Work hard, play by the rules, and you will get ahead.”",
         "note": "Distress is individualized while the architecture producing it is preserved.",
@@ -24,7 +25,7 @@
       {
         "id": "cultural-trap",
         "name": "The cultural trap",
-        "seconds": 12,
+        "seconds": 14,
         "eyebrow": "The cultural trap",
         "title": "“How we do things” begins to feel identical to “how things are.”",
         "note": "The Western civilization many of us inherited is neither sacred nor identical to reality. It is a historical Painting.",
@@ -34,7 +35,7 @@
       {
         "id": "setup",
         "name": "The setup",
-        "seconds": 12,
+        "seconds": 13,
         "eyebrow": "The setup",
         "title": "Frames turn continuity into curriculum.",
         "note": "Learning requires enough stability for actions to have legible consequences and enough freedom for more than one response to remain possible.",

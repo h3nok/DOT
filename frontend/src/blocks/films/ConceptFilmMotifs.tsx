@@ -43,7 +43,13 @@ const cubicPath = (p0: Point, p1: Point, p2: Point, p3: Point) =>
   `M${p0[0]} ${p0[1]} C${p1[0].toFixed(1)} ${p1[1].toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)} ${p3[0]} ${p3[1]}`;
 
 /** Reveals a stroke along its length. */
-const drawn = (u: number) => ({ pathLength: 1, strokeDasharray: "1 1", strokeDashoffset: 1 - clamp01(u) });
+// An undrawn stroke is hidden outright: a zero-length dash would still paint its round cap as a dot.
+const drawn = (u: number) => ({
+  pathLength: 1,
+  strokeDasharray: "1 1",
+  strokeDashoffset: 1 - clamp01(u),
+  ...(u <= 0 ? { visibility: "hidden" as const } : {}),
+});
 
 function Label({
   x,
@@ -1159,7 +1165,8 @@ export function LimitsAndDebts({ t }: MotifProps) {
    One continuous drawing on the film's own clock. The camera pulls back twice: the struggle
    sits inside a ring that closes and locks, a cultural trap, and the trap is one of several
    cultures inside a ruled frame. Then the lock springs, the ring opens, and the person
-   rises out of it. */
+   rises out of it. Its clock gives the scenes 11, 12, 12, and 7 seconds
+   (TOUR_OPENING_DRAWN_SECONDS); the tour stretches each to fill its scene. */
 
 // The six cultural messages the American Millennial Manifesto examines.
 const PRESSURES = [

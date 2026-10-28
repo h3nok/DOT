@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import filmsData from "../../content/films.json";
 import { doctrineNodes } from "../../content/doctrine/doctrineData";
-import { conceptTyping } from "./conceptFilms";
+import { CONCEPT_MOTIFS, conceptTyping } from "./conceptFilms";
 import {
   CLOSING_TYPING,
   CONCEPT_TOUR,
@@ -11,9 +11,12 @@ import {
   CONCEPT_TOUR_SECONDS,
   TOUR_OPENING_SECONDS,
   TOUR_CONCEPT_BEATS,
-  TOUR_CONCEPT_SECONDS,
   TOUR_CROSSFADE_SECONDS,
+  TOUR_MIN_CONCEPT_SECONDS,
+  TOUR_OPENING_DRAWN_SECONDS,
+  TOUR_READING_CPS,
   describeTourTime,
+  openingDrawingTime,
   sceneTyping,
   tourPartAt,
   tourPartDrift,
@@ -42,12 +45,12 @@ describe("concept tour", () => {
     });
     expect(CONCEPT_TOUR[0].start).toBe(0);
     expect(CONCEPT_TOUR_SECONDS).toBe(CONCEPT_TOUR.at(-1)!.end);
-    expect(CONCEPT_TOUR_SECONDS).toBeLessThan(5 * 60);
+    expect(CONCEPT_TOUR_SECONDS).toBeLessThan(6 * 60);
   });
 
   it("names the part at any second and passes between parts through a fade", () => {
     const bigC = CONCEPT_TOUR.find((part) => part.kind === "concept" && part.film.id === "big-c")!;
-    const middle = bigC.start + TOUR_CONCEPT_SECONDS / 2;
+    const middle = (bigC.start + bigC.end) / 2;
     expect(tourPartAt(middle)).toBe(bigC);
     expect(describeTourTime(middle)).toBe(`Concept 3 of ${doctrineNodes.length}: The Big C Hypothesis`);
     expect(tourPartOpacity(bigC, middle)).toBe(1);
@@ -69,9 +72,9 @@ describe("concept tour", () => {
   });
 
   it("finishes typing every part's words with time left to read them", () => {
-    const fadeOut = TOUR_CONCEPT_SECONDS - TOUR_CROSSFADE_SECONDS;
     for (const part of CONCEPT_TOUR) {
       if (part.kind !== "concept") continue;
+      const fadeOut = part.end - part.start - TOUR_CROSSFADE_SECONDS;
       const typing = conceptTyping(part.film, TOUR_CONCEPT_BEATS, tourPlace(part.position));
       expect(typing.definition.text).toBe(part.film.node.oneLine);
       expect(fadeOut - typing.analogy.end, part.film.id).toBeGreaterThanOrEqual(2.5);
@@ -80,6 +83,31 @@ describe("concept tour", () => {
       expect(scene.seconds - TOUR_CROSSFADE_SECONDS - sceneTyping(scene).note.end, scene.id).toBeGreaterThanOrEqual(2.5);
     }
     expect(CLOSING_TYPING.links).toBeLessThan(CONCEPT_TOUR.at(-1)!.end - CONCEPT_TOUR.at(-1)!.start);
+  });
+
+  it("gives a first-time reader time to read each concept and then look at its picture", () => {
+    for (const part of CONCEPT_TOUR) {
+      if (part.kind !== "concept") continue;
+      const words = part.film.node.title.length + part.film.node.oneLine.length + CONCEPT_MOTIFS[part.film.id].analogy.length;
+      const seconds = part.end - part.start;
+      expect(seconds, part.film.id).toBeGreaterThanOrEqual(TOUR_MIN_CONCEPT_SECONDS);
+      expect(seconds - words / TOUR_READING_CPS, part.film.id).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("stretches the opening's drawing to its scenes without breaking it", () => {
+    expect(TOUR_OPENING_DRAWN_SECONDS).toHaveLength(scenes.length);
+    let sceneStart = 0;
+    let drawnStart = 0;
+    scenes.forEach((scene, index) => {
+      expect(openingDrawingTime(sceneStart), scene.id).toBeCloseTo(drawnStart);
+      sceneStart += scene.seconds;
+      drawnStart += TOUR_OPENING_DRAWN_SECONDS[index];
+    });
+    expect(openingDrawingTime(TOUR_OPENING_SECONDS)).toBeCloseTo(drawnStart);
+    for (let second = 0.25; second <= TOUR_OPENING_SECONDS; second += 0.25) {
+      expect(openingDrawingTime(second)).toBeGreaterThan(openingDrawingTime(second - 0.25));
+    }
   });
 
   it("types in time with the words: keys only while words are typed, one bell as each concept's words end", () => {
