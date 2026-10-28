@@ -40,9 +40,11 @@
     "loveLabel": "Beyond the inherited script",
     "loveIntro": "DOT’s criticism starts here: adapting to a culture is not the same as understanding yourself. Its proposed direction is Love.",
     "reflection": "The inquiry turns inward, too. The culture we question also lives in our fears, ambitions, and borrowed certainties.",
-    "sourceLabel": "Book One · The Culture Inside You",
+    "sourceKicker": "Book One",
+    "sourceTitle": "The Culture Inside You",
     "sourcePath": "/book/digital-organism-theory/the-painting#the-culture-inside-you",
-    "ammLabel": "Continue in The American Millennial Manifesto",
+    "ammKicker": "Continue in",
+    "ammTitle": "The American Millennial Manifesto",
     "ammPath": "/amm"
   }
 }
