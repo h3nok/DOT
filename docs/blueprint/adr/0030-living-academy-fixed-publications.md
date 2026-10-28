@@ -135,11 +135,26 @@ seconds and shows the concept map's own name and definition. Films have no
 sound, start only when asked, end on their final frame, and never advance to
 the next film. A link can name one film with `?concept=`. The narrated
 inquiry film is no longer screened on the site; its renders stay in the
-YouTube kit. The homepage plays one silent film through every concept in the
-same order, built from the same motion studies: the preface's opening line,
-ten seconds per concept, and the book's title, about three minutes in all.
-Short films have no sound of any kind.
+YouTube kit. Each concept is drawn as a familiar picture where one carries it,
+taken from the book where the book offers one, and its film adds one analogy
+line beside the definition: the book's words where it has them, otherwise a
+restatement of the book's own relationships that claims nothing more.
 
-Serves L1 (calm, silent motion), L3 (no autoplay or chaining), and L7 (text
-taken from the concept map, links to the source passage). Violates no
-manifesto laws.
+The homepage plays one film through every concept in the same order, built
+from the same drawings. It opens on four short scenes in the author's
+published words: the struggle the American Millennial Manifesto describes,
+the cultural trap that makes it feel like how things are (Book One, The
+Painting), the Frame that turns continuity into curriculum (Book One,
+Reality Frames), and the homepage's own line, "Understand what shapes you.
+Transcend your culture." Then come thirteen seconds per concept with its
+words typed as it plays, and the book's title, about four and a half minutes
+in all, ending on links into the book and the concept map. It is the
+only film with sound: soft typewriter keys, which start only when the reader
+presses Play and can be turned off in the player. With reduced motion it
+shows each part finished and makes no sound. It pauses when scrolled out of
+view. The concept films in the screening room stay silent.
+
+Serves L1 (calm motion; the only sound is the typing the reader chose to
+start), L3 (no autoplay or chaining; it pauses when unseen), and L7 (text
+taken from the concept map and the book, links to the source passage; the
+sound is one click to turn off). Violates no manifesto laws.
