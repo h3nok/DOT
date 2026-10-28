@@ -53,6 +53,18 @@
         "description": "The lock springs open, the trap opens, and the person rises out through the opening."
       }
     ],
+    "interludes": [
+      {
+        "id": "human-character",
+        "after": "character",
+        "name": "The human character",
+        "eyebrow": "The human character",
+        "title": "Ego defends the Character Little c has learned to call itself.",
+        "note": "To protect untrue beliefs and fears, Little c paints Ego. Long after, Ego hardens into Arrogance, a gatekeeper that keeps the Canvas from changing. Believing only in the physical, obvious world, people think they are the body and nothing more.",
+        "source": "Book One · The Painting · with a note from the author",
+        "description": "On the Canvas, Little c sits in one corner. To protect a fear and an untrue belief, it paints Ego around itself in the shape of a body. The outline hardens, and Arrogance stands at its edge as a gatekeeper, turning new strokes away. A bubble reads: I am my body. That is all. The rest of the Canvas stays open and unreached."
+      }
+    ],
     "closing": {
       "eyebrow": "Digital Organism Theory",
       "title": "Consciousness: A Digital Organism",

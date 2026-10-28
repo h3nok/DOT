@@ -1,3 +1,4 @@
+import { ArchitectureMap, type ArchitectureLayer } from "./ConceptFilmMotifs";
 import { CONCEPT_MOTIFS, conceptTyping, type ConceptFilm, type ConceptTextBeats } from "./conceptFilms";
 import { reveal, type TypedLine } from "./filmTime";
 
@@ -35,10 +36,12 @@ interface ConceptFrameProps {
   drift?: number;
   /** The concept's place, such as "Concept 7 of 17"; the claim level follows it. */
   place?: string;
+  /** Opens on the architecture, at this layer, for this many seconds before the concept's picture. */
+  lead?: { layer: ArchitectureLayer; seconds: number };
 }
 
 /** One concept as a film frame: its picture beside the Concept Map's own words and an analogy. */
-export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, drift = 0, place }: ConceptFrameProps) {
+export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, drift = 0, place, lead }: ConceptFrameProps) {
   const { Motif, description } = CONCEPT_MOTIFS[film.id];
   const typing = conceptTyping(film, beats, place ?? `Concept ${film.number}`);
   const frameStyle =
@@ -46,8 +49,21 @@ export function ConceptFrame({ film, motifTime, copyTime, beats, opacity = 1, dr
 
   return (
     <>
-      <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={description} style={frameStyle}>
-        <Motif t={motifTime} />
+      <svg
+        className="concept-film-motif"
+        viewBox="0 0 600 600"
+        role="img"
+        aria-label={lead ? `Where ${film.node.title} sits in the architecture, then: ${description}` : description}
+        style={frameStyle}
+      >
+        {lead && copyTime < lead.seconds ? (
+          <g opacity={1 - reveal(copyTime, lead.seconds - 0.5, 0.5)}>
+            <ArchitectureMap t={copyTime} layer={lead.layer} />
+          </g>
+        ) : null}
+        <g opacity={lead ? reveal(copyTime, lead.seconds - 0.5, 0.5) : 1}>
+          <Motif t={motifTime} />
+        </g>
       </svg>
 
       <div className="concept-film-copy" style={frameStyle}>

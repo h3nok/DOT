@@ -12,6 +12,8 @@ import {
   TOUR_OPENING_SECONDS,
   TOUR_CONCEPT_BEATS,
   TOUR_CROSSFADE_SECONDS,
+  TOUR_ARCHITECTURE,
+  TOUR_MAP_SECONDS,
   TOUR_MIN_CONCEPT_SECONDS,
   TOUR_OPENING_DRAWN_SECONDS,
   TOUR_READING_CPS,
@@ -26,6 +28,7 @@ import {
 } from "./conceptTour";
 
 const scenes = filmsData.conceptTour.scenes;
+const interludes = filmsData.conceptTour.interludes;
 
 describe("concept tour", () => {
   it("opens on four scenes, then passes through every concept once, in the Concept Map's order, to a close", () => {
@@ -82,6 +85,11 @@ describe("concept tour", () => {
     for (const scene of scenes) {
       expect(scene.seconds - TOUR_CROSSFADE_SECONDS - sceneTyping(scene).note.end, scene.id).toBeGreaterThanOrEqual(2.5);
     }
+    for (const part of CONCEPT_TOUR) {
+      if (part.kind !== "interlude") continue;
+      const typing = sceneTyping(part.interlude);
+      expect(part.end - part.start - TOUR_CROSSFADE_SECONDS - typing.note.end, part.interlude.id).toBeGreaterThanOrEqual(2.5);
+    }
     expect(CLOSING_TYPING.links).toBeLessThan(CONCEPT_TOUR.at(-1)!.end - CONCEPT_TOUR.at(-1)!.start);
   });
 
@@ -92,6 +100,25 @@ describe("concept tour", () => {
       const seconds = part.end - part.start;
       expect(seconds, part.film.id).toBeGreaterThanOrEqual(TOUR_MIN_CONCEPT_SECONDS);
       expect(seconds - words / TOUR_READING_CPS, part.film.id).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("sets the human character right after Character, in the book's words and the author's", () => {
+    const at = CONCEPT_TOUR.findIndex((part) => part.kind === "interlude");
+    const before = CONCEPT_TOUR[at - 1];
+    expect(before.kind === "concept" && before.film.id).toBe("character");
+    const part = CONCEPT_TOUR[at];
+    expect(part.kind === "interlude" && part.interlude.title).toBe("Ego defends the Character Little c has learned to call itself.");
+    expect(describeTourTime((part.start + part.end) / 2)).toBe("The human character");
+  });
+
+  it("first shows Big C, Little c, the Frame, and the Stream where they sit in the architecture", () => {
+    expect(Object.keys(TOUR_ARCHITECTURE).sort()).toEqual(["big-c", "little-c", "reality-frame", "reality-stream"]);
+    for (const part of CONCEPT_TOUR) {
+      if (part.kind !== "concept" || !TOUR_ARCHITECTURE[part.film.id]) continue;
+      const words = part.film.node.title.length + part.film.node.oneLine.length + CONCEPT_MOTIFS[part.film.id].analogy.length;
+      // The map is added to the reading time, not taken from it.
+      expect(part.end - part.start - TOUR_MAP_SECONDS - words / TOUR_READING_CPS, part.film.id).toBeGreaterThanOrEqual(3);
     }
   });
 
@@ -116,7 +143,7 @@ describe("concept tour", () => {
     expect(times[0]).toBeGreaterThan(0);
     expect(times.at(-1)!).toBeLessThan(CONCEPT_TOUR_SECONDS);
     const bells = CONCEPT_TOUR_KEYSTROKES.filter((key) => key.kind === "bell");
-    expect(bells).toHaveLength(scenes.length + doctrineNodes.length + 1);
+    expect(bells).toHaveLength(scenes.length + doctrineNodes.length + interludes.length + 1);
 
     // The last stretch of each concept, after its words are done, is quiet.
     for (const part of CONCEPT_TOUR) {
