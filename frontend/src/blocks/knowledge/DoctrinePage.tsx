@@ -22,6 +22,7 @@ import { useTheme } from "../../shared/contexts/SimpleThemeContext";
 import { useSignalAccent } from "../../shared/hooks/useSignalAccent";
 import { useOwnerMode } from "../../dot/useOwnerMode";
 import OrchestratorNodeTools from "./OrchestratorNodeTools";
+import { SiteNav } from "../../shared/SiteNav";
 
 // Book One concept map — conforms to
 // docs/blueprint/08-DOCTRINE-AND-COHERENCE-SURFACE.md
@@ -361,6 +362,7 @@ const DoctrinePage = () => {
       style={surfaceStyle}
     >
       <h1 className="sr-only">DOT Book One Concept Map — {focusNode.title}</h1>
+      <SiteNav />
 
       {/* Reading progress */}
       <div
