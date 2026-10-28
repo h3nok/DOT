@@ -46,9 +46,11 @@ interface TitleFrameProps {
   sourceAt: number;
   links?: { at: number; items: readonly { label: string; to: string }[] };
   description: string;
+  /** Sets a long, sentence-length title a size smaller, so the film keeps its height. */
+  sentence?: boolean;
 }
 
-function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description }: TitleFrameProps) {
+function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description, sentence = false }: TitleFrameProps) {
   const style = { opacity, transform: drift ? `translateY(${drift.toFixed(1)}px)` : undefined };
   return (
     <>
@@ -57,7 +59,7 @@ function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title
       </svg>
       <div className="concept-film-copy" style={style}>
         <p className="concept-film-eyebrow"><TypedText line={eyebrow} time={t} caret={false} /></p>
-        <h3 className="concept-film-name"><TypedText line={title} time={t} /></h3>
+        <h3 className={sentence ? "concept-film-name concept-film-name--sentence" : "concept-film-name"}><TypedText line={title} time={t} /></h3>
         {note && (
           <p className="concept-film-definition"><TypedText line={note} time={t} /></p>
         )}
@@ -103,7 +105,7 @@ function TourSizers() {
         return (
           <div key={part.start} className="concept-film-copy concept-tour-sizer" aria-hidden="true">
             <p className="concept-film-eyebrow">{lines[0]}</p>
-            <p className="concept-film-name">{lines[1]}</p>
+            <p className={part.kind === "interlude" ? "concept-film-name concept-film-name--sentence" : "concept-film-name"}>{lines[1]}</p>
             {lines[2] && <p className="concept-film-definition">{lines[2]}</p>}
             {lines[3] && <p className="concept-film-analogy">{lines[3]}</p>}
             {lines[4] && <p className="concept-film-source">{lines[4]}</p>}
@@ -160,6 +162,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={part.interlude.source}
         sourceAt={typing.source}
         description={part.interlude.description}
+        sentence
       />
     );
   }
