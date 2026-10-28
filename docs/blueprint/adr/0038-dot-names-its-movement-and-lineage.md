@@ -4,6 +4,7 @@
 - **Date:** 2026-10-05
 - **Deciders:** Founder
 - **Amends:** ADR-0022 ("Movement" is not used as a status claim), ADR-0026 (hero lede)
+- **Superseded in part by:** [ADR-0055](0055-hero-without-concept-slideshow.md) (the hero concept slideshow is retired)
 
 ## Context
 

@@ -134,7 +134,6 @@ export default function HomePage() {
       >
         <div className="home-hero-layout dot-page-container dot-page-wide">
           <HeroProposition
-            reducedMotion={reducedMotion}
             inquiry={<HeroAsk className="home-hero-ask" onAsk={askFromHero} />}
             stage={
               <div className="home-hero-stage">

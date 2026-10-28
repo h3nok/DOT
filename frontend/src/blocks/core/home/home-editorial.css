@@ -27,17 +27,6 @@
   outline-offset: 5px;
 }
 
-/* Claim boundaries remain readable without becoming a bank of colored keys. */
-.home-concept-slideshow-eyebrow > span[data-level] {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--muted-foreground);
-  font-family: var(--home-public-display-font);
-  letter-spacing: 0;
-}
-.home-concept-slideshow-eyebrow > span[data-level]::before { display: inline; margin-right: .25rem; content: "·"; }
-
 .home-journey .home-theory-layer-environment .home-theory-layer-card {
   border-radius: 0;
   background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 95%, transparent);
@@ -86,9 +75,6 @@
 .home-film-heading > a svg { width: 1rem; height: 1rem; }
 
 @media (max-width: 639px) {
-  .home-concept-slideshow-movement { flex-direction: column; gap: .15rem; padding-inline: .35rem; font-size: .6875rem; }
-  .home-concept-slideshow-explanation { line-height: 1.5; }
-  .home-concept-slideshow { padding-top: 1rem; }
   .home-entry-links { column-gap: 1.25rem; }
   .home-entry-links a { font-size: .75rem; }
   .home-film-environment { padding-block: 2.5rem; }

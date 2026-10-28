@@ -1,53 +1,46 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { HeroArchitecture } from "./HeroArchitecture";
 import { HeroProposition } from "./HeroProposition";
 
-describe("the concept slideshow and the architecture stay one explanation", () => {
+describe("the hero architecture opens the section that explains each part", () => {
   const renderLinked = () => render(
     <MemoryRouter>
-      <HeroProposition reducedMotion stage={<HeroArchitecture />} />
+      <HeroProposition stage={<HeroArchitecture />} />
     </MemoryRouter>,
   );
-  const concepts = () => screen.getByRole("region", { name: "Key concepts and questions" });
-  const focus = () => document.querySelector(".home-hero-architecture__svg")?.getAttribute("data-focus");
 
-  it("brings forward the part each architecture concept explains, and only then", () => {
+  it("scrolls to the matching homepage section when a part is chosen", () => {
     renderLinked();
-    expect(focus()).toBeNull();
-    const next = within(concepts()).getByRole("button", { name: "Next concept" });
-    while (!within(concepts()).queryByRole("heading", { name: "T × E: The Source" })) fireEvent.click(next);
-    expect(focus()).toBe("te");
-    fireEvent.click(next);
-    expect(focus()).toBe("awareness");
-    fireEvent.click(next);
-    expect(within(concepts()).getByRole("heading", { name: "Big C: Primordial Consciousness" })).toBeVisible();
-    expect(focus()).toBe("big-c");
-  });
-
-  it("turns to a part's concept when it is chosen in the diagram", () => {
-    renderLinked();
+    const sections = ["possibility-field", "big-c", "reality-frame", "little-c"].map((id) => {
+      const section = document.createElement("section");
+      section.id = id;
+      section.scrollIntoView = vi.fn();
+      document.body.append(section);
+      return section;
+    });
+    const [origin, bigC, frame, little] = sections;
+    fireEvent.click(document.querySelector('[data-part="te"] .home-architecture-origin-boundary')!);
+    expect(origin.scrollIntoView).toHaveBeenCalledTimes(1);
     fireEvent.click(document.querySelector('[data-part="rfn"] .home-architecture-other-frame-zone')!);
-    expect(within(concepts()).getByRole("heading", { name: "RFₙ: Every Reality Frame" })).toBeVisible();
-    expect(focus()).toBe("rfn");
     fireEvent.click(document.querySelector('[data-part="rf0"] .home-architecture-frame-zone')!);
-    expect(within(concepts()).getByRole("heading", { name: "RF₀: Where Physics Governs" })).toBeVisible();
-    expect(focus()).toBe("rf0");
+    expect(frame.scrollIntoView).toHaveBeenCalledTimes(2);
+    expect(bigC.scrollIntoView).not.toHaveBeenCalled();
+    expect(little.scrollIntoView).not.toHaveBeenCalled();
+    sections.forEach((section) => section.remove());
   });
 
-  it("shows Big C's outer loop and c₁'s inner loop only with Process Rules", () => {
+  it("keeps the explanation of the concepts out of the hero", () => {
     renderLinked();
-    const loops = document.querySelector(".home-architecture-process-loops")!;
-    expect(loops.querySelectorAll("path[marker-end]")).toHaveLength(2);
-    const next = within(concepts()).getByRole("button", { name: "Next concept" });
-    while (!within(concepts()).queryByRole("heading", { name: "Awareness: The Undifferentiated Process" })) fireEvent.click(next);
-    expect(focus()).toBe("awareness");
-    while (!within(concepts()).queryByRole("heading", { name: "Process Rules" })) fireEvent.click(next);
-    expect(focus()).toBe("process");
-    expect(within(concepts()).getByRole("group", { name: /of \d+$/ }))
-      .toHaveTextContent(/work maintains you, effort develops you, rest lets the loop consolidate/);
+    expect(screen.queryByRole("region", { name: "Key concepts and questions" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/In DOT, you are the conscious process/)).not.toBeInTheDocument();
+    const more = screen.getByRole("navigation", { name: "More ways to explore" });
+    expect(within(more).getByRole("link", { name: "Explore the architecture" }))
+      .toHaveAttribute("href", "#possibility-field");
+    expect(within(more).getByRole("link", { name: "Watch the concepts" }))
+      .toHaveAttribute("href", "#visual-inquiry");
   });
 });
 
@@ -55,11 +48,11 @@ describe("HeroProposition", () => {
   const renderProposition = () =>
     render(
       <MemoryRouter>
-        <HeroProposition reducedMotion />
+        <HeroProposition />
       </MemoryRouter>,
     );
 
-  it("keeps the opening question still while concepts have their own controls", () => {
+  it("keeps the opening question still", () => {
     renderProposition();
 
     expect(
@@ -91,23 +84,6 @@ describe("HeroProposition", () => {
     expect(document.querySelector(".home-hero-dossier")).toBeNull();
   });
 
-  it("begins with inherited experience before introducing DOT's proposal", () => {
-    renderProposition();
-
-    expect(screen.queryByText(/greater awareness can support/)).not.toBeInTheDocument();
-    const concepts = screen.getByRole("region", { name: "Key concepts and questions" });
-    expect(within(concepts).getByRole("heading", { name: "What you inherited" })).toBeVisible();
-    const first = within(concepts).getByRole("group", { name: /^1 of \d+$/ });
-    expect(first).toHaveTextContent(/Family, culture, and early experience/);
-    expect(first).toHaveAttribute("data-epistemic-status", "observation");
-    const next = within(concepts).getByRole("button", { name: "Next concept" });
-    for (let index = 0; index < 4; index++) fireEvent.click(next);
-    const proposal = within(concepts).getByRole("group", { name: /^5 of \d+$/ });
-    expect(proposal).toHaveTextContent(/In DOT, you are the conscious process/);
-    expect(proposal).toHaveAttribute("data-epistemic-status", "hypothesis");
-    expect(screen.queryByText("Held as hypothesis · Open to challenge")).not.toBeInTheDocument();
-  });
-
   it("offers one reading action and nothing beside it", () => {
     renderProposition();
 
@@ -121,7 +97,7 @@ describe("HeroProposition", () => {
     expect(screen.queryByText("Book One’s preface · Free to read")).not.toBeInTheDocument();
   });
 
-  it("keeps reading immediate, then presents the architecture before its concepts", () => {
+  it("keeps reading immediate, then presents the architecture", () => {
     render(
       <MemoryRouter>
         <HeroProposition stage={<figure aria-label="Proposed architecture" />} />
@@ -131,12 +107,8 @@ describe("HeroProposition", () => {
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
     const heading = screen.getByRole("heading", { name: "Trust your experience." });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
-    const explanation = screen.getByRole("region", { name: "Key concepts and questions" });
-    expect(heading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(reading.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(diagram.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("keeps the question tools behind a reader-controlled disclosure", () => {

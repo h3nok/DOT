@@ -20,7 +20,6 @@ import { describe, expect, it } from "vitest";
 const HERO_FILES = [
   "HomePage.tsx",
   "EmergenceMark.tsx",
-  "HeroConcepts.tsx",
   "HeroAsk.tsx",
   "HeroArchitecture.tsx",
   "HeroArchitectureDefs.tsx",
@@ -29,7 +28,6 @@ const HERO_FILES = [
   "ArchitectureSurfaceDefs.tsx",
   "ConceptArchitecture.tsx",
   "HeroProposition.tsx",
-  "HeroConceptSlideshow.tsx",
   "Consciousness101.tsx",
   "TheoryLayerJourney.tsx",
   "HomeFilmSection.tsx",
@@ -103,12 +101,10 @@ describe("home entry theme compatibility", () => {
   it("composes hero controls from the shared Appearance contracts", () => {
     const home = readFileSync(join(HERE, "HomePage.tsx"), "utf8");
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
-    const slideshow = readFileSync(join(HERE, "HeroConceptSlideshow.tsx"), "utf8");
     const styles = readFileSync(join(HERE, "home.css"), "utf8");
 
     expect(proposition).toContain("<FocusNav");
     expect(proposition).toContain("<Disclosure");
-    expect(slideshow).toContain("data-epistemic-status={concept.level}");
     expect(proposition).not.toContain("<ul");
     expect(home).toContain("<HeroAsk");
     expect(home).toContain("<TwinSurface");

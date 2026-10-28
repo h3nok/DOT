@@ -5,6 +5,7 @@
 - **Deciders:** Founder (explicitly approved finite public-hero autoplay with explanations, Pause/Play, and no looping)
 - **Amends:** ADR-0026's vocabulary presentation, not its architecture sequence
 - **Scoped exception:** L2's autoplay restriction for this finite public introduction only; ADR-0004's member-interior ban remains unchanged
+- **Superseded in part by:** [ADR-0055](0055-hero-without-concept-slideshow.md) (the hero concept slideshow is retired)
 
 ## Context
 

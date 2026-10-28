@@ -632,8 +632,7 @@ describe("page text for readers without JavaScript", () => {
     expect(rootDocument(shell, manifest)).not.toContain("Build something useful.");
     expect(rootDocument(shell, manifest)).not.toContain("Follow an idea.");
     expect(rootDocument(shell, manifest)).not.toContain("Book One’s preface · Free to read");
-    expect(rootDocument(shell, manifest)).toContain("<h2>Questions for inquiry</h2>");
-    expect(rootDocument(shell, manifest)).toContain("<h3>Secular Humanism</h3>");
+    expect(rootDocument(shell, manifest)).not.toContain("Questions for inquiry");
   });
 
   it("keeps the leave page out of search engines", () => {

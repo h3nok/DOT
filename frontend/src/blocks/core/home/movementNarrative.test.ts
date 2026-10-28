@@ -32,6 +32,9 @@ describe("homepage inquiry narrative", () => {
     expect(layers).toContain("It forms intent, acts within RF₀");
     expect(layers).toContain("You can examine how the world appears in your own experience");
     expect(layers).toContain("awareness can loosen its identification with the body");
+    expect(layers).toContain("Big C: the Digital Organism that persisted");
+    expect(layers).toContain("T—primordial continuity, Time,");
+    expect(layers).toContain("E, the raw information source");
     expect(layers).toContain("DOT needs a repeatable way to distinguish those explanations");
     expect(layers).not.toContain("its generation of Reality Frames have not been publicly measured");
     expect(layers).not.toContain("Neither is an external substance, container, or predecessor");
@@ -134,9 +137,8 @@ describe("homepage inquiry narrative", () => {
     const proposition = readFileSync(join(HERE, "HeroProposition.tsx"), "utf8");
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
-    const slideshow = readFileSync(join(HERE, "HeroConceptSlideshow.tsx"), "utf8");
-    expect(proposition).toContain("<HeroConceptSlideshow");
-    expect(slideshow).toContain("data-epistemic-status={concept.level}");
+    // The hero repeats no concept explanations; the four layers carry their claim levels (ADR-0055).
+    expect(proposition).not.toContain("Slideshow");
     expect(layers.match(/status:/g) ?? []).toHaveLength(4);
     expect(home).not.toContain("SUPPORT_PAYMENT_LINK");
     expect(home).not.toContain("Support the work");
@@ -147,7 +149,7 @@ describe("homepage inquiry narrative", () => {
     const layers = readFileSync(join(HERE, "TheoryLayerJourney.tsx"), "utf8");
 
     // The standalone boundary section is retired; each panel carries its own
-    // test boundary and the concept slides retain their claim levels.
+    // test boundary and its claim level.
     expect(home).not.toContain('id="epistemic-boundary"');
     expect(home).not.toContain("Publicly grounded");
     expect(layers.match(/boundary:/g) ?? []).toHaveLength(4);

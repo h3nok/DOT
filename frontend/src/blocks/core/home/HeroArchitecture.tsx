@@ -3,14 +3,23 @@ import { useInView } from "framer-motion";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 
 import { ARCHITECTURE_RADII as R, C1_TRANSFORM } from "./architectureGeometry";
-import { useArchitectureFocus } from "./architectureFocus";
-import type { ArchitecturePartId } from "./heroData";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
 const BIG_C_RINGS = [R.bigC, R.membrane] as const;
+
+/** Each part of the figure opens the homepage section that explains it. */
+const ARCHITECTURE_SECTIONS = {
+  te: "possibility-field",
+  "big-c": "big-c",
+  rf0: "reality-frame",
+  rfn: "reality-frame",
+  "little-c": "little-c",
+} as const;
+
+type ArchitecturePartId = keyof typeof ARCHITECTURE_SECTIONS;
 
 const FIELD_CONTOURS = [R.origin + 8, R.origin + 20] as const;
 /* The top-centre stays open for the T × E label. */
@@ -134,22 +143,22 @@ export function HeroArchitecture() {
     gridId, fieldWashId, frameWashId, frameClipId, surfacePrefix,
   } = ids;
   const titleId = `${instanceId}-hero-architecture-title`;
-  const { focus, request } = useArchitectureFocus();
+  const partAt = (target: EventTarget) =>
+    ((target as Element).closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null) ?? null;
 
   return (
     <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} aria-labelledby={titleId}>
-      {/* Pointer shortcut only: the concept slideshow names each part for every reader. */}
+      {/* Pointer shortcut only: the hero's "Explore the architecture" link and the
+          page map reach the same sections from the keyboard. */}
       <svg
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
         aria-labelledby={titleId}
         focusable="false"
-        data-focus={focus ?? undefined}
         onClick={(event) => {
-          const target = event.target as Element;
-          if (target.closest("a")) return;
-          const part = target.closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null;
-          if (part) request(part);
+          if ((event.target as Element).closest("a")) return;
+          const part = partAt(event.target);
+          if (part) document.getElementById(ARCHITECTURE_SECTIONS[part])?.scrollIntoView({ block: "start" });
         }}
       >
         <title id={titleId}>DOT diagram</title>
