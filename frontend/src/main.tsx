@@ -41,7 +41,6 @@ import "./organism/organism.css";
 import "./organism/identity.css";
 import "./shared/design-system/tokens.css";
 import "./shared/design-system/mobile.css";
-import { AppProviders } from "./shared/contexts";
 import { ThemeProvider } from "./shared/contexts/SimpleThemeContext";
 
 // Aggregate readership only, and only when a domain is configured (ADR-0024).
@@ -59,13 +58,11 @@ if (typeof window !== "undefined" && "serviceWorker" in navigator && import.meta
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HelmetProvider>
-      <AppProviders>
-        <ThemeProvider>
-          <OrganismProvider>
-            <App />
-          </OrganismProvider>
-        </ThemeProvider>
-      </AppProviders>
+      <ThemeProvider>
+        <OrganismProvider>
+          <App />
+        </OrganismProvider>
+      </ThemeProvider>
     </HelmetProvider>
   </StrictMode>,
 );

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useReading } from "../shared/contexts";
 import { useOrganism } from "./OrganismContext";
 
 /**
@@ -41,13 +40,11 @@ const READING_ROUTES = [
 
 export const OrganismReadingProbe: React.FC = () => {
   const { pathname } = useLocation();
-  const { state } = useReading();
   const { vitals, config } = useOrganism();
 
   const onReadingRoute = READING_ROUTES.some(
     (r) => pathname === r || pathname.startsWith(`${r}/`),
   );
-  const hasOpenArticle = state.reading.currentArticle != null;
 
   useEffect(() => {
     if (!config.enabled) {
@@ -56,13 +53,12 @@ export const OrganismReadingProbe: React.FC = () => {
       return;
     }
     // Route is the authoritative gate: leaving a reading surface always
-    // restores life, even if a page left `currentArticle` set. On a reading
-    // route, an open article deepens the stillness to full.
-    const target = onReadingRoute ? (hasOpenArticle ? 1 : 0.88) : 0;
+    // restores life; on a reading route, the organism eases into stillness.
+    const target = onReadingRoute ? 0.88 : 0;
     vitals.current.calmTarget = target;
     document.documentElement.dataset.organismReading =
       target > 0.5 ? "true" : "false";
-  }, [vitals, config.enabled, onReadingRoute, hasOpenArticle]);
+  }, [vitals, config.enabled, onReadingRoute]);
 
   return null;
 };
