@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { author, authorContact } from "../../content/author";
 import { leaveReaderList } from "../../dot/useReaderList";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { SiteColophon } from "../../shared/SiteColophon";
 import { AmmShell } from "../amm/AmmIdentity";
 
 const LINK =
@@ -96,5 +97,5 @@ export default function ReaderLeavePage() {
         )}
       </div>
   );
-  return publication === "amm" ? <AmmShell reading>{body}</AmmShell> : <PageShell header={<PageHeader />}>{body}</PageShell>;
+  return publication === "amm" ? <AmmShell reading>{body}</AmmShell> : <PageShell header={<PageHeader />} footer={<SiteColophon />}>{body}</PageShell>;
 }
