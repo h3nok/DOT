@@ -57,7 +57,7 @@ describe("HeroProposition", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Trust your experience.",
+        name: "Your life deserves your attention.",
       }),
     ).toBeVisible();
     expect(document.querySelector(".home-hero-typewriter-cursor")).toBeNull();
@@ -68,7 +68,7 @@ describe("HeroProposition", () => {
     renderProposition();
 
     const heading = screen.getByRole("heading", {
-      name: "Trust your experience.",
+      name: "Your life deserves your attention.",
     });
     expect(heading.querySelector("em")).toBeNull();
     expect(screen.getByText("Digital Organism Theory")).toBeVisible();
@@ -105,7 +105,7 @@ describe("HeroProposition", () => {
     );
 
     const diagram = screen.getByRole("figure", { name: "Proposed architecture" });
-    const heading = screen.getByRole("heading", { name: "Trust your experience." });
+    const heading = screen.getByRole("heading", { name: "Your life deserves your attention." });
     const reading = screen.getByRole("navigation", { name: "Begin exploring DOT" });
     expect(heading.compareDocumentPosition(reading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(reading.compareDocumentPosition(diagram) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

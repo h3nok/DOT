@@ -115,6 +115,7 @@ export function HeroArchitecture({ embedded = false }: {
 } = {}) {
   const figure = useRef<HTMLElement>(null);
   const inView = useInView(figure, { once: true, amount: 0.3 });
+  const processVisible = useInView(figure, { amount: 0.15 });
   const visible = embedded || inView;
   const homeFieldAnchor = useOrganismFieldAnchor({
     kind: "architecture",
@@ -147,7 +148,7 @@ export function HeroArchitecture({ embedded = false }: {
     ((target as Element).closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null) ?? null;
 
   return (
-    <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} aria-labelledby={titleId}>
+    <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} data-process-visible={!embedded && processVisible ? "true" : undefined} aria-labelledby={titleId}>
       {/* Pointer shortcut only: the hero's "Explore the architecture" link and the
           page map reach the same sections from the keyboard. */}
       <svg
@@ -332,7 +333,7 @@ export function HeroArchitecture({ embedded = false }: {
           </g>
         </g>
 
-        {/* Shown with the Process concept: Big C's outer loop and c₁'s inner one. */}
+        {/* Broken arrows flow gently to distinguish ongoing process from a fixed boundary. */}
         <g className="home-architecture-process-loops" aria-hidden="true">
           {/* A halo under each loop lifts it off the ring it travels along. */}
           <g className="home-architecture-process-loop-stage" data-loop="outer">

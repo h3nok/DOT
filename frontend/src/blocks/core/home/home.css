@@ -10,10 +10,11 @@
    · Colour names the paths and theory layers; theme ink keeps it readable.
      The organism accent is Little c's and remains controlled by Appearance.
    · One diagram grammar: hairline strokes, dashed = proposed/potential,
-     solid = claimed structure, filled dot = an experiencer.
+     solid = claimed structure, filled dot = an experiencer. Broken process
+     arrows flow gently to distinguish them from fixed boundaries.
    · Marks: .dot-mark is the brand atom; layer doors reshape it per section.
-   · Motion: arrives once, settles, never loops (splash + hero emergence
-     honour reduced motion and the Appearance stillness switch).
+   · Motion: the entrance arrives once and settles; small process indicators
+     flow while visible. Honour reduced motion and the Appearance stillness switch.
 
    Every colour derives from the active theme, so changing Appearance changes
    the atmosphere without breaking the sequence.
@@ -669,8 +670,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   cursor: pointer;
 }
 
-/* Process loops follow their owning process's entrance. Their existing dash
-   flow never controls reveal order. */
+/* Process loops follow their owning process's entrance. Flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
   opacity: 0.84;
@@ -679,10 +679,11 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   transition: opacity 360ms ease;
 }
 
-/* Each process is one solid loop with its arrowhead: Big C's outer loop, Little c's inner one. */
+/* Clearly broken process arrows: Big C's outer loop, Little c's inner one. */
 .home-architecture-process-loop {
   stroke: var(--loop-ink);
   stroke-width: 2.6;
+  stroke-dasharray: 14 10;
 }
 
 .home-architecture-process-loop.home-architecture-process-loop--outer {
@@ -712,8 +713,21 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   fill: var(--architecture-loop-inner);
 }
 
-/* The loops hold still: each arrowhead shows the direction of its process, and nothing
-   circles continuously in the reader's eye. */
+/* The broken lines advance one short segment every eight seconds; arrowheads stay fixed. */
+@keyframes home-process-flow {
+  to { stroke-dashoffset: -24; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-architecture-process-loop {
+    animation: home-process-flow 8s linear infinite;
+    animation-play-state: paused;
+  }
+
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-process-visible="true"] .home-architecture-process-loop {
+    animation-play-state: running;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .home-architecture-process-loops {
