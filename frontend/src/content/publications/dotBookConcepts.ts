@@ -26,6 +26,8 @@ const aliasesByConcept: Readonly<Record<string, readonly string[]>> = {
   "fear-gating": ["Fear-Gating Principle", "Fear"],
   love: ["Love"],
   "conscious-authorship": ["Conscious Authorship"],
+  "world-invariants": ["World Invariants", "Physical Sciences as Frame Derivations"],
+  "limits-and-debts": ["Limits and Unpaid Debts", "Derivation Contract"],
 };
 
 const conceptIdsBySection: Readonly<Record<string, readonly string[]>> = {
@@ -56,6 +58,7 @@ const conceptIdsBySection: Readonly<Record<string, readonly string[]>> = {
   ],
   "reality-frames": [
     "reality-frame",
+    "world-invariants",
     "reality-stream",
     "little-c",
     "painting",
@@ -78,6 +81,22 @@ const conceptIdsBySection: Readonly<Record<string, readonly string[]>> = {
     "fear-gating",
     "love",
     "intent",
+  ],
+  "the-research-program": [
+    "limits-and-debts",
+    "world-invariants",
+    "decoupling-principle",
+    "rendering-latency",
+    "digital-organism",
+    "subjective-data",
+  ],
+  coda: [
+    "conscious-authorship",
+    "little-c",
+    "painting",
+    "canvas",
+    "intent",
+    "love",
   ],
 };
 

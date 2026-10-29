@@ -38,6 +38,9 @@ import BookSubstrate from "./BookSubstrate";
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
   if (section.kind === "preface") return "Preface";
+  if (section.kind === "coda") return "Coda";
+  if (section.kind === "appendix") return "Appendix";
+  if (section.kind === "glossary") return "Glossary";
   return "Sources";
 }
 
@@ -152,7 +155,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 Free PDF edition
               </Link>
               <Link
-                to="/films"
+                to="/academy/films"
                 className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
               >
                 <Film className="h-3.5 w-3.5" aria-hidden="true" />
@@ -293,7 +296,13 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                             ? String(section.number).padStart(2, "0")
                             : section.kind === "preface"
                               ? "P"
-                              : "S"}
+                              : section.kind === "coda"
+                                ? "C"
+                                : section.kind === "appendix"
+                                  ? "A"
+                                  : section.kind === "glossary"
+                                    ? "G"
+                                    : "S"}
                         </span>
                         <span className="min-w-0">
                           <span className="book-reading-heading block text-lg font-medium leading-snug text-[var(--book-ink)] transition-colors group-hover:text-[var(--book-cinnabar)] sm:text-xl">

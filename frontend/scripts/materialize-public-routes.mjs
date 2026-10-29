@@ -150,73 +150,73 @@ export const DOCTRINE_CONCEPTS = [
     id: "digital-organism",
     name: "Digital Organism",
     oneLine:
-      "A state-bearing, information-sensitive process that works to preserve or develop its coherence across change.",
+      "A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.",
   },
   {
     id: "big-c",
     name: "The Big C Hypothesis",
     oneLine:
-      "Consciousness is fundamental: the persistent process from which Reality Frames and local experience arise.",
+      "Consciousness is fundamental: the larger living awareness—emerged within T × E—from which worlds and individual minds arise.",
   },
   {
     id: "little-c",
     name: "Little c",
     oneLine:
-      "The hypothesized local experiencer that receives experience, forms Intent, participates through a body, and changes through consequence.",
+      "You as an individual center of awareness: experiencing the world through a body, choosing, and growing through what happens next.",
   },
   {
     id: "decoupling-principle",
     name: "The Decoupling Principle",
     oneLine:
-      "Awareness and its bodily rendering may be tightly coupled without being identical.",
+      "Your awareness and your body work closely together—without your body being all that you are.",
   },
   {
     id: "reality-frame",
     name: "Reality Frame",
     oneLine:
-      "A rule-bound experiential environment in which action meets consequence.",
+      "A shared world with stable rules where actions have real, learnable consequences.",
   },
   {
     id: "world-invariants",
     name: "Physical Sciences as Frame Derivations",
     oneLine:
-      "Physical sciences formalize RF₀'s generated regularities; DOT must derive those regularities from the Frame architecture.",
+      "Physics measures the reliable rules of our world (RF₀); DOT asks why a world for learning needs rules that hold.",
   },
   {
     id: "reality-stream",
     name: "Reality Stream",
     oneLine:
-      "The situated sequence of experience delivered to a particular participant within a Reality Frame.",
+      "Your personal stream of moments: how our shared world reaches you from where you stand.",
   },
   {
     id: "intent",
     name: "Intent",
     oneLine:
-      "The threshold at which a pre-Intent possibility becomes committed direction for action.",
+      "The inner turning point where one passing thought becomes what you actually commit to do.",
   },
   {
     id: "experience-loop",
     name: "The Experience Loop",
     oneLine:
-      "Reality Stream is interpreted through the Painting; Intent becomes action; consequence updates the Canvas.",
+      "A moment arrives, your past lens interprets it, you choose an action, and the result reshapes you for next time.",
   },
   {
     id: "canvas",
     name: "Canvas",
     oneLine:
-      "The persistent capacity to carry forward and update through the consequences of experience.",
+      "The deep inner record that holds every mark experience leaves on you across your life.",
   },
   {
     id: "painting",
     name: "Painting",
     oneLine:
-      "The organized content carried by the Canvas through which a present moment is interpreted.",
+      "The lens of beliefs, fears, and expectations you have built so far—coloring every new moment before you think.",
   },
   {
     id: "character",
     name: "Character",
     oneLine:
-      "The action policy made visible through repeated interpretation, commitment, and behavior.",
+      "The automatic version of you that runs on habit when you repeat the same reactions over and over.",
   },
   {
     id: "fear-gating",
@@ -239,7 +239,7 @@ export const DOCTRINE_CONCEPTS = [
     id: "limits-and-debts",
     name: "Limits and Unpaid Debts",
     oneLine:
-      "The book separates what is observed, modeled, hypothesized, and still speculative so the framework can be criticized without becoming self-sealing.",
+      "Every claim is labeled—observed, modeled, hypothesized, or speculative—so this never becomes a blind belief system.",
   },
 ];
 

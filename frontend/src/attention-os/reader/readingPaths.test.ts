@@ -8,7 +8,7 @@ import {
   READING_PATHS,
 } from "./readingPaths";
 
-/** Slugs released in the v1 manifest. A path may not point outside the canon. */
+/** Slugs released in the v4 manifest. A path may not point outside the canon. */
 const CANON_SLUGS = new Set([
   "preface",
   "the-digital-organism",
@@ -17,6 +17,10 @@ const CANON_SLUGS = new Set([
   "reality-frames",
   "the-canvas",
   "the-painting",
+  "the-research-program",
+  "coda",
+  "equation-guide",
+  "glossary",
   "references",
 ]);
 
@@ -69,6 +73,8 @@ describe("reading paths", () => {
       "reality-frames",
       "the-canvas",
       "the-painting",
+      "the-research-program",
+      "coda",
       "references",
     ]);
   });

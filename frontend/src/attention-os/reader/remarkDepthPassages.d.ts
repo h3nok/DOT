@@ -11,5 +11,8 @@ export interface DepthNode {
 
 export declare const DEPTH_FALLBACK_LABEL: string;
 export declare function foldDepthPassages(children: DepthNode[]): DepthNode[];
+export declare const ESSENTIAL_EQUATIONS: readonly string[];
+export declare const FORMAL_NOTE_LABEL: string;
+export declare function foldFormalNotes(children: DepthNode[], essential?: readonly string[]): DepthNode[];
 export declare function remarkDepthPassages(): (tree: { children: DepthNode[] }) => void;
 export default remarkDepthPassages;
