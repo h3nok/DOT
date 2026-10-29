@@ -679,11 +679,16 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   transition: opacity 360ms ease;
 }
 
+/* Each process is one solid loop with its arrowhead: Big C's outer loop, Little c's inner one. */
 .home-architecture-process-loop {
   stroke: var(--loop-ink);
-  stroke-width: 2.2;
-  stroke-dasharray: 7 7;
+  stroke-width: 2.6;
 }
+
+.home-architecture-process-loop.home-architecture-process-loop--outer {
+  stroke-width: 3.4;
+}
+
 
 .home-architecture-process-loop-halo {
   stroke: var(--background);
@@ -707,24 +712,12 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   fill: var(--architecture-loop-inner);
 }
 
-/* Dashes travel clockwise, the way the arcs are drawn; one period per cycle keeps it seamless. */
-@keyframes home-architecture-loop-flow {
-  to {
-    stroke-dashoffset: -14;
-  }
-}
-
-html:not([data-motion="still"]) .home-architecture-process-loop {
-  animation: home-architecture-loop-flow 1.8s linear infinite;
-}
+/* The loops hold still: each arrowhead shows the direction of its process, and nothing
+   circles continuously in the reader's eye. */
 
 @media (prefers-reduced-motion: reduce) {
   .home-architecture-process-loops {
     transition: none;
-  }
-
-  .home-architecture-process-loop {
-    animation: none !important;
   }
 }
 
@@ -862,13 +855,14 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   opacity: var(--architecture-wash-opacity);
 }
 
+/* T × E's edge is a quiet hairline: the field is felt in its wash and rays, and the one
+   strong ring outside Big C is Big C's own process. */
 .home-architecture-origin-boundary {
   fill: none;
   stroke: var(--architecture-origin);
-  stroke-dasharray: 2 6;
   stroke-linecap: round;
-  stroke-width: 1.5;
-  opacity: 0.9;
+  stroke-width: 1;
+  opacity: 0.45;
 }
 
 .home-architecture-field-contours {
@@ -908,23 +902,6 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-big-c circle[data-contour="2"] {
   --contour-opacity: 0.58;
   stroke-width: 1.05;
-}
-
-.home-architecture-organism-inner-membrane {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 54%, transparent);
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  stroke-width: 1.05;
-}
-
-.home-architecture-membrane-bands {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 72%, transparent);
-  stroke-dasharray: 2 4.5;
-  stroke-linecap: round;
-  stroke-width: 0.95;
-  opacity: 0.86;
 }
 
 .home-architecture-organism-node line {
@@ -1027,14 +1004,6 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-gridpoint {
   fill: var(--architecture-quiet);
   opacity: 0.88;
-}
-
-.home-architecture-frame-contours {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-rf) 48%, transparent);
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  stroke-width: 0.95;
 }
 
 .home-architecture-coordinate-axis line {

@@ -28,6 +28,9 @@ import {
   tourPictureOpacity,
   tourPlace,
 } from "./conceptTour";
+import { HeroArchitecture } from "../core/home/HeroArchitecture";
+// The closing draws the homepage's own architecture, so its styles come with it on /film too.
+import "../core/home/home.css";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import { formatDuration, reveal, type TypedLine } from "./filmTime";
 
@@ -51,15 +54,32 @@ interface TitleFrameProps {
   sentence?: boolean;
   /** Where the part sits in the architecture, lit on the locator beside its eyebrow. */
   layer?: ArchitectureLayer;
+  /** Opens on the architecture, at this layer, before crossfading into the scene's picture. */
+  lead?: { layer: ArchitectureLayer; seconds: number };
+  /** A picture drawn as HTML rather than inside the frame's own SVG, such as the homepage's diagram. */
+  figure?: ReactNode;
 }
 
-function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description, sentence = false, layer }: TitleFrameProps) {
+function TitleFrame({ t, picture, pictureOpacity, opacity, drift, eyebrow, title, note, source, sourceAt, links, description, sentence = false, layer, lead, figure }: TitleFrameProps) {
   const style = { opacity, transform: drift ? `translateY(${drift.toFixed(1)}px)` : undefined };
   return (
     <>
+      {figure ? (
+        <div className="concept-film-motif concept-film-figure" role="img" aria-label={description} style={{ opacity: pictureOpacity }}>
+          {figure}
+        </div>
+      ) : (
       <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={description} style={{ opacity: pictureOpacity }}>
-        {picture}
+        {lead && t < lead.seconds ? (
+          <g opacity={1 - reveal(t, lead.seconds - 0.5, 0.5)}>
+            <ArchitectureMap t={t} layer={lead.layer} />
+          </g>
+        ) : null}
+        <g opacity={lead ? reveal(t, lead.seconds - 0.5, 0.5) : 1}>
+          {picture}
+        </g>
       </svg>
+      )}
       <div className="concept-film-copy" style={style}>
         <p className="concept-film-eyebrow">
           {layer && <ArchitectureGlyph layer={layer} />}
@@ -97,7 +117,7 @@ function TourSizers() {
           const words = part.kind === "scene" ? part.scene : part.interlude;
           lines = [words.eyebrow, words.title, words.note, null, words.source || null];
         } else if (part.kind === "closing") {
-          lines = [TOUR.closing.eyebrow, TOUR.closing.title, null, null, TOUR.closing.source];
+          lines = [TOUR.closing.eyebrow, TOUR.closing.title, null, null, TOUR.closing.source || null];
         } else {
           const typing = conceptTyping(part.film, TOUR_CONCEPT_BEATS, tourPlace(part.position));
           lines = [
@@ -202,6 +222,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={part.scene.source}
         sourceAt={typing.source}
         description={part.scene.description}
+        lead={!still && part.index === 0 ? { layer: "little-c", seconds: 2.6 } : undefined}
       />
     );
   }
@@ -229,7 +250,14 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
     return (
       <TitleFrame
         t={local}
-        picture={<ArchitectureMap t={still ? 4 : local} layer="all" />}
+        picture={null}
+        figure={
+          // The homepage's own architecture, emerging as it does there; the film's words carry
+          // its meaning for screen readers, so the drawing itself is inert.
+          <div className="home-hero-environment concept-film-architecture" data-hero-motion={still ? "still" : "full"} inert>
+            <HeroArchitecture embedded />
+          </div>
+        }
         pictureOpacity={opacity}
         opacity={opacity}
         drift={drift}
@@ -238,7 +266,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={TOUR.closing.source}
         sourceAt={CLOSING_TYPING.source}
         links={{ at: CLOSING_TYPING.links, items: TOUR.closing.links }}
-        description="The whole architecture: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀."
+        description="The architecture of Digital Organism Theory: T × E outside; Big C within it, its outer process circling; RF₀ inside Big C; and Little c within RF₀, with its own inner process."
       />
     );
   }

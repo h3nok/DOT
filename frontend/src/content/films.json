@@ -11,6 +11,10 @@
     "title": "Book One, concept by concept",
     "label": "Academy · Typed film",
     "description": "A typed film through the seventeen concepts of Digital Organism Theory, Book One, each with a picture and an analogy. It plays only when you press Play.",
+    "youtubeId": "p2j_Aj8QhyY",
+    "youtubeIdLight": "",
+    "youtubeUrl": "https://youtu.be/p2j_Aj8QhyY",
+    "youtubeUrlLight": "https://www.youtube.com/@dotheory",
     "scenes": [
       {
         "id": "struggle",
@@ -60,16 +64,17 @@
         "name": "The human character",
         "eyebrow": "The human character",
         "title": "Ego defends the Character Little c has learned to call itself.",
-        "note": "To protect its fears and untrue beliefs, Little c paints Ego, and Ego becomes their protector. In time, Ego hardens into Arrogance: a gatekeeper that keeps the Canvas from changing. Believing only in the physical, obvious world, people take themselves to be the body and nothing more.",
-        "source": "Book One · The Painting · with a note from the author",
-        "description": "On the Canvas, Little c sits in one corner inside a ring of fear, beside an untrue belief. To protect them, it paints Ego around itself in the shape of a body: Ego, the protector. The outline hardens, and Arrogance stands at its edge as a gatekeeper, turning new strokes away. A bubble reads: I am my body. That is all. The rest of the Canvas stays open and unreached."
+        "note": "To protect its fears, Little c paints Ego around the body—and when Ego hardens into Arrogance, it blocks new experience from changing the Canvas.",
+        "source": "Book One · The Painting",
+        "description": "On the Canvas, Little c sits in one corner inside a ring of fear. It paints Ego around itself in the shape of a body, which hardens as Arrogance stands at its edge and turns new strokes away."
       }
     ],
     "closing": {
       "eyebrow": "Digital Organism Theory",
-      "title": "Consciousness: A Digital Organism",
-      "source": "Book One · dotheory.org",
+      "title": "Become a student of your own experience.",
+      "source": "",
       "links": [
+        { "label": "Enter the Academy", "to": "/academy" },
         { "label": "Read Book One", "to": "/book/digital-organism-theory" },
         { "label": "Explore the Concept Map", "to": "/doctrine" }
       ]
@@ -95,7 +100,9 @@
         "Speculative extension"
       ],
       "youtubeId": "",
+      "youtubeIdLight": "",
       "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "youtubeUrlLight": "https://www.youtube.com/@dotheory",
       "companion": {
         "label": "Read Book One",
         "to": "/book/digital-organism-theory"
@@ -159,7 +166,9 @@
         "Hypothesis"
       ],
       "youtubeId": "",
+      "youtubeIdLight": "",
       "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "youtubeUrlLight": "https://www.youtube.com/@dotheory",
       "companion": {
         "label": "Explore the Concept Map",
         "to": "/doctrine"
@@ -221,7 +230,9 @@
         "DOT derivation"
       ],
       "youtubeId": "",
+      "youtubeIdLight": "",
       "youtubeUrl": "https://www.youtube.com/@dotheory",
+      "youtubeUrlLight": "https://www.youtube.com/@dotheory",
       "companion": {
         "label": "About the Author",
         "to": "/about"

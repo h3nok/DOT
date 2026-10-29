@@ -549,3 +549,40 @@ html.dark .concept-film {
   margin-top: 1.5rem;
   font-size: 0.9375rem;
 }
+
+/* The closing's picture is the homepage's own architecture, sized to the picture's cell. */
+.concept-film-figure {
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+.concept-film-architecture.home-hero-environment {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  min-height: 0;
+  aspect-ratio: 1;
+  overflow: visible;
+  padding: 0;
+  background: none;
+}
+
+.concept-film-architecture.home-hero-environment::before,
+.concept-film-architecture.home-hero-environment::after {
+  content: none;
+}
+
+/* Inset a little, so T × E above the field is never clipped by the stage's edge. */
+.concept-film-architecture .home-hero-architecture {
+  width: 92%;
+  height: 92%;
+  margin: 4%;
+}
+
+.concept-film-architecture .home-hero-architecture__svg {
+  width: 100%;
+  height: 100%;
+  background: none;
+}

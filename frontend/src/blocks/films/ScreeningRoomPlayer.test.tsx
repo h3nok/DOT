@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import filmsData from "../../content/films.json";
 import spokenTrailerCaptions from "../../content/inquiry-trailer-captions.json";
-import { ScreeningRoomPlayer, type ScreeningFilmMeta } from "./ScreeningRoomPlayer";
+import {
+  ScreeningRoomPlayer,
+  type ScreeningFilmMeta,
+} from "./ScreeningRoomPlayer";
 
 const trailer = (filmsData.screeningFilms as ScreeningFilmMeta[]).find(
   (film) => film.id === "inquiry-trailer",
@@ -40,5 +43,39 @@ describe("ScreeningRoomPlayer with the narrated film", () => {
     const final = spokenTrailerCaptions[spokenTrailerCaptions.length - 1];
     fireEvent.change(timeline, { target: { value: String(final.endSeconds + 0.1) } });
     expect(caption).toBeEmptyDOMElement();
+  });
+
+  it("resolves theme-matched Dark and Light YouTube video IDs and URLs", () => {
+    const dualFilm = {
+      ...trailer,
+      youtubeId: "darkVideo123",
+      youtubeIdLight: "lightVideo456",
+      youtubeUrl: "https://www.youtube.com/@dotheory",
+      youtubeUrlLight: "https://www.youtube.com/@dotheory",
+    };
+
+    document.documentElement.setAttribute("data-theme", "dark");
+    const darkView = render(<ScreeningRoomPlayer film={dualFilm} />);
+    fireEvent.click(screen.getByRole("button", { name: "YouTube" }));
+    expect(screen.getByRole("link", { name: /Open @dotheory on YouTube/i })).toHaveAttribute(
+      "href",
+      "https://www.youtube.com/watch?v=darkVideo123",
+    );
+    darkView.unmount();
+
+    document.documentElement.setAttribute("data-theme", "light");
+    const lightView = render(<ScreeningRoomPlayer film={dualFilm} />);
+    fireEvent.click(screen.getByRole("button", { name: "YouTube" }));
+    expect(screen.getByRole("link", { name: /Open @dotheory on YouTube/i })).toHaveAttribute(
+      "href",
+      "https://www.youtube.com/watch?v=lightVideo456",
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Load YouTube Player/i }));
+    expect(screen.getByTitle(/YouTube \(Privacy-Enhanced Mode\)/i)).toHaveAttribute(
+      "src",
+      "https://www.youtube-nocookie.com/embed/lightVideo456?rel=0",
+    );
+    lightView.unmount();
+    document.documentElement.removeAttribute("data-theme");
   });
 });

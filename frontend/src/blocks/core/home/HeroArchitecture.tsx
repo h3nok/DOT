@@ -8,7 +8,8 @@ import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
-const BIG_C_RINGS = [R.bigC, R.membrane] as const;
+/* Big C's edge is a single rim; its process loop circles just outside it. */
+const BIG_C_RINGS = [R.bigC] as const;
 
 /** Each part of the figure opens the homepage section that explains it. */
 const ARCHITECTURE_SECTIONS = {
@@ -21,11 +22,7 @@ const ARCHITECTURE_SECTIONS = {
 
 type ArchitecturePartId = keyof typeof ARCHITECTURE_SECTIONS;
 
-const FIELD_CONTOURS = [R.origin + 8, R.origin + 20] as const;
-/* The top-centre stays open for the T × E label. */
-const FIELD_ARCS = [[202, 256], [284, 338]] as const;
 const FIELD_RAYS = [-142, -108, -74, -40, 34, 68, 102, 136] as const;
-const MEMBRANE_BANDS = [R.bigC - 28, R.bigC - 16] as const;
 /* Big C's inner membrane, just inside its edge. */
 const INNER_MEMBRANE = R.bigC - 8;
 
@@ -90,12 +87,6 @@ const polar = (radius: number, angleDeg: number) => ({
   y: 352 + Math.sin((angleDeg * Math.PI) / 180) * radius,
 });
 
-const arcPath = (radius: number, startDeg: number, endDeg: number) => {
-  const start = polar(radius, startDeg);
-  const end = polar(radius, endDeg);
-  return `M${start.x} ${start.y}A${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
-};
-
 /** A long clockwise arc (over 180°), used for the process loops. */
 const loopPath = (radius: number, startDeg: number, endDeg: number) => {
   const start = polar(radius, startDeg);
@@ -115,13 +106,22 @@ const INNER_LOOP = loopPath(52, 70, 350);
  * Sharing either drawing would make a future editorial change to one silently
  * alter the meaning of the other.
  */
-export function HeroArchitecture() {
+export function HeroArchitecture({ embedded = false }: {
+  /**
+   * Drawn inside another surface, such as the film's closing: it emerges at once and leaves
+   * the living background anchored to the homepage's own diagram.
+   */
+  embedded?: boolean;
+} = {}) {
   const figure = useRef<HTMLElement>(null);
-  const visible = useInView(figure, { once: true, amount: 0.3 });
-  const fieldAnchor = useOrganismFieldAnchor({
+  const inView = useInView(figure, { once: true, amount: 0.3 });
+  const visible = embedded || inView;
+  const homeFieldAnchor = useOrganismFieldAnchor({
     kind: "architecture",
     coreRatio: R.core / R.origin,
   });
+  // An embedded copy leaves the living background anchored to the homepage's own diagram.
+  const fieldAnchor = embedded ? undefined : homeFieldAnchor;
   const instanceId = useId().replaceAll(":", "");
   const ids: HeroArchitectureIds = {
     gridId: `${instanceId}-hero-rf-grid`,
@@ -176,9 +176,6 @@ export function HeroArchitecture() {
         <circle ref={fieldAnchor} className="home-architecture-origin-boundary" cx="348" cy="352" r={R.origin} />
 
         <g className="home-architecture-field-contours" aria-hidden="true">
-          {FIELD_CONTOURS.flatMap((radius) => FIELD_ARCS.map(([start, end]) => (
-            <path key={`${radius}-${start}`} d={arcPath(radius, start, end)} />
-          )))}
           {FIELD_RAYS.map((angle) => {
             const start = polar(R.origin + 2, angle);
             const end = polar(R.origin + 18, angle);
@@ -211,17 +208,6 @@ export function HeroArchitecture() {
         </g>
 
         <g className="home-architecture-organism-membrane" aria-hidden="true">
-          <g className="home-architecture-membrane-bands">
-            {MEMBRANE_BANDS.map((radius) => (
-              <path key={radius} d={arcPath(radius, 38, 142)} />
-            ))}
-          </g>
-          <circle
-            className="home-architecture-organism-inner-membrane"
-            cx="348"
-            cy="352"
-            r={INNER_MEMBRANE}
-          />
           {BIG_C_MEMBRANE_NODES.map(({ angle, radius, x1, y1, x2, y2 }) => (
             <g key={angle} className="home-architecture-organism-node">
               <line x1={x1} y1={y1} x2={x2} y2={y2} />
@@ -271,10 +257,6 @@ export function HeroArchitecture() {
             fill={`url(#${gridId})`}
             clipPath={`url(#${frameClipId})`}
           />
-          <g className="home-architecture-frame-contours" clipPath={`url(#${frameClipId})`}>
-            <circle cx="348" cy="352" r="154" />
-            <circle cx="348" cy="352" r="128" />
-          </g>
           <circle
             className="home-architecture-frame-boundary"
             cx="348"
