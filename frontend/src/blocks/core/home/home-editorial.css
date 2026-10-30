@@ -14,7 +14,7 @@
   min-height: var(--touch-target);
   color: var(--muted-foreground);
   font-family: var(--home-public-display-font);
-  font-size: .8125rem;
+  font-size: .875rem;
   line-height: 1.5;
   text-decoration: underline;
   text-decoration-color: var(--border);

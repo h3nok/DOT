@@ -10,10 +10,11 @@
    · Colour names the paths and theory layers; theme ink keeps it readable.
      The organism accent is Little c's and remains controlled by Appearance.
    · One diagram grammar: hairline strokes, dashed = proposed/potential,
-     solid = claimed structure, filled dot = an experiencer.
+     solid = claimed structure, filled dot = an experiencer. Broken process
+     arrows flow gently to distinguish them from fixed boundaries.
    · Marks: .dot-mark is the brand atom; layer doors reshape it per section.
-   · Motion: arrives once, settles, never loops (splash + hero emergence
-     honour reduced motion and the Appearance stillness switch).
+   · Motion: the entrance arrives once and settles; small process indicators
+     flow while visible. Honour reduced motion and the Appearance stillness switch.
 
    Every colour derives from the active theme, so changing Appearance changes
    the atmosphere without breaking the sequence.
@@ -355,7 +356,7 @@ html:has(.home-journey) {
   position: absolute;
   z-index: -1;
   inset: -4.5rem -5.5rem;
-  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 80%, transparent);
+  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 94%, transparent);
   content: "";
   -webkit-mask-image:
     linear-gradient(to right, var(--home-hero-fade)),
@@ -380,7 +381,7 @@ html:has(.home-journey) {
   align-items: center;
   justify-content: center;
   gap: .25rem 1.5rem;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
 
 .home-hero-entry {
@@ -401,12 +402,26 @@ html:has(.home-journey) {
   white-space: normal;
 }
 
-/* The primary invitation uses the shared paper button, with three dots that
+/* The primary invitation fills the shared button with theme-derived forest ink; three dots
    appear from left to right when the reader hovers or focuses it. */
 .home-hero-entry .dot-focus-nav__primary.dot-button {
+  --dot-button-paper: color-mix(in oklab, var(--organism-accent-strong) 50%, var(--foreground));
+  --dot-button-edge: color-mix(in oklab, var(--dot-button-paper) 82%, var(--foreground));
+  --dot-button-edge-strong: var(--dot-button-paper);
   min-height: 3.25rem;
   gap: 0.875rem;
   padding: 0.75rem 0.875rem 0.75rem 1rem;
+  color: var(--background);
+}
+
+.dark .home-hero-entry .dot-focus-nav__primary.dot-button {
+  --dot-button-paper: color-mix(in oklab, var(--organism-accent-strong) 72%, var(--foreground));
+}
+
+html[data-contrast="high"] .home-hero-entry .dot-focus-nav__primary.dot-button {
+  --dot-button-paper: var(--foreground);
+  --dot-button-edge: var(--foreground);
+  --dot-button-edge-strong: var(--foreground);
 }
 
 .home-hero-entry .dot-button__icon {
@@ -461,7 +476,7 @@ html:has(.home-journey) {
 }
 
 .home-hero-entry .dot-button__end-icon {
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 28%, transparent);
 }
 
 .home-hero-entry .dot-focus-nav__primary:focus-visible .dot-button__copy strong::after {
@@ -469,9 +484,9 @@ html:has(.home-journey) {
 }
 
 .home-hero-entry .dot-focus-nav__primary:not(:disabled):focus-visible .dot-button__end-icon {
-  background: var(--organism-accent-strong);
+  background: var(--background);
   box-shadow: none;
-  color: var(--background);
+  color: var(--dot-button-paper);
 }
 
 @media (hover: hover) {
@@ -480,9 +495,9 @@ html:has(.home-journey) {
   }
 
   .home-hero-entry .dot-focus-nav__primary:not(:disabled):hover .dot-button__end-icon {
-    background: var(--organism-accent-strong);
+    background: var(--background);
     box-shadow: none;
-    color: var(--background);
+    color: var(--dot-button-paper);
   }
 }
 
@@ -566,17 +581,17 @@ html[data-contrast="high"] .home-hero-proposition {
 
 .home-hero-subtitle {
   max-width: var(--home-hero-measure);
-  margin: .5rem auto 0;
-  color: color-mix(in oklab, var(--foreground) 88%, var(--background));
+  margin: .875rem auto 0;
+  color: color-mix(in oklab, var(--foreground) 82%, var(--background));
   font-family: var(--home-public-reading-font);
   font-size: clamp(1rem, 1.2vw, 1.125rem);
   line-height: 1.6;
   text-wrap: pretty;
 }
 
-/* Light paper takes near-full ink; dark keeps its softer step. */
+/* The supporting line stays readable while giving the headline priority. */
 html:not(.dark) .home-hero-subtitle {
-  color: color-mix(in oklab, var(--foreground) 95%, var(--background));
+  color: color-mix(in oklab, var(--foreground) 84%, var(--background));
 }
 
 .home-hero-subtitle > span {
@@ -669,8 +684,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   cursor: pointer;
 }
 
-/* Process loops follow their owning process's entrance. Their existing dash
-   flow never controls reveal order. */
+/* Process loops follow their owning process's entrance. Flow never controls reveal order. */
 .home-architecture-process-loops {
   fill: none;
   opacity: 0.84;
@@ -679,11 +693,17 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   transition: opacity 360ms ease;
 }
 
+/* Clearly broken process arrows: Big C's outer loop, Little c's inner one. */
 .home-architecture-process-loop {
   stroke: var(--loop-ink);
-  stroke-width: 2.2;
-  stroke-dasharray: 7 7;
+  stroke-width: 2.6;
+  stroke-dasharray: 14 10;
 }
+
+.home-architecture-process-loop.home-architecture-process-loop--outer {
+  stroke-width: 3.4;
+}
+
 
 .home-architecture-process-loop-halo {
   stroke: var(--background);
@@ -707,24 +727,25 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   fill: var(--architecture-loop-inner);
 }
 
-/* Dashes travel clockwise, the way the arcs are drawn; one period per cycle keeps it seamless. */
-@keyframes home-architecture-loop-flow {
-  to {
-    stroke-dashoffset: -14;
-  }
+/* The broken lines advance one short segment every eight seconds; arrowheads stay fixed. */
+@keyframes home-process-flow {
+  to { stroke-dashoffset: -24; }
 }
 
-html:not([data-motion="still"]) .home-architecture-process-loop {
-  animation: home-architecture-loop-flow 1.8s linear infinite;
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-architecture-process-loop {
+    animation: home-process-flow 8s linear infinite;
+    animation-play-state: paused;
+  }
+
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-process-visible="true"] .home-architecture-process-loop {
+    animation-play-state: running;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .home-architecture-process-loops {
     transition: none;
-  }
-
-  .home-architecture-process-loop {
-    animation: none !important;
   }
 }
 
@@ -763,7 +784,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 /* Survey furniture on the plate edge — part of the one canonical rendering. */
 .home-architecture-measure-marks {
   fill: none;
-  stroke: var(--architecture-label);
+  stroke: color-mix(in oklch, var(--architecture-label) 58%, transparent);
   stroke-width: 0.95;
   opacity: 0.86;
   pointer-events: none;
@@ -862,13 +883,14 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   opacity: var(--architecture-wash-opacity);
 }
 
+/* T × E's edge is a quiet hairline: the field is felt in its wash and rays, and the one
+   strong ring outside Big C is Big C's own process. */
 .home-architecture-origin-boundary {
   fill: none;
   stroke: var(--architecture-origin);
-  stroke-dasharray: 2 6;
   stroke-linecap: round;
-  stroke-width: 1.5;
-  opacity: 0.9;
+  stroke-width: 1;
+  opacity: 0.45;
 }
 
 .home-architecture-field-contours {
@@ -908,23 +930,6 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-big-c circle[data-contour="2"] {
   --contour-opacity: 0.58;
   stroke-width: 1.05;
-}
-
-.home-architecture-organism-inner-membrane {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 54%, transparent);
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  stroke-width: 1.05;
-}
-
-.home-architecture-membrane-bands {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-big-c) 72%, transparent);
-  stroke-dasharray: 2 4.5;
-  stroke-linecap: round;
-  stroke-width: 0.95;
-  opacity: 0.86;
 }
 
 .home-architecture-organism-node line {
@@ -989,7 +994,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .home-architecture-grid {
-  opacity: var(--architecture-grid-opacity);
+  opacity: calc(var(--architecture-grid-opacity) * 0.65);
 }
 
 /* Other Reality Frames: built like RF₀, but hypothesized, so their edge is dashed. */
@@ -1029,20 +1034,12 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
   opacity: 0.88;
 }
 
-.home-architecture-frame-contours {
-  fill: none;
-  stroke: color-mix(in oklch, var(--architecture-rf) 48%, transparent);
-  stroke-dasharray: 2 5;
-  stroke-linecap: round;
-  stroke-width: 0.95;
-}
-
 .home-architecture-coordinate-axis line {
   stroke: var(--architecture-line);
   stroke-dasharray: 2 8;
   stroke-linecap: round;
   stroke-width: 1.1;
-  opacity: 0.52;
+  opacity: 0.36;
 }
 
 .home-architecture-frame-origin {
@@ -1070,13 +1067,13 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-polar-scale line {
   stroke: var(--architecture-line);
   stroke-width: 1.15;
-  opacity: 0.76;
+  opacity: 0.42;
 }
 
 .home-architecture-polar-scale line[data-major="true"] {
   stroke: var(--architecture-live);
   stroke-width: 1.75;
-  opacity: 1;
+  opacity: 0.7;
 }
 
 .home-architecture-cardinal-labels text {
@@ -1091,7 +1088,7 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 .home-architecture-reticle line {
   stroke: var(--architecture-line);
   stroke-width: 1.35;
-  opacity: 0.94;
+  opacity: 0.58;
 }
 
 .home-architecture-frame-options line {
@@ -1452,15 +1449,15 @@ html:not([data-motion="still"]) .home-architecture-process-loop {
 }
 
 .dark .home-architecture-coordinate-axis line {
-  opacity: 0.56;
+  opacity: 0.4;
 }
 
 .dark .home-architecture-polar-scale line {
-  opacity: 0.78;
+  opacity: 0.45;
 }
 
 .dark .home-architecture-polar-scale line[data-major="true"] {
-  opacity: 1;
+  opacity: 0.74;
 }
 
 html[data-contrast="high"] .home-hero-stage {

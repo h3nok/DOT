@@ -19,7 +19,6 @@ import { describe, expect, it } from "vitest";
 
 const HERO_FILES = [
   "HomePage.tsx",
-  "EmergenceMark.tsx",
   "HeroAsk.tsx",
   "HeroArchitecture.tsx",
   "HeroArchitectureDefs.tsx",
@@ -32,8 +31,6 @@ const HERO_FILES = [
   "TheoryLayerJourney.tsx",
   "HomeFilmSection.tsx",
   "HomeJourneyNav.tsx",
-  "ArchitectureDiagram.tsx",
-  "StepOneUnlearning.tsx",
 ] as const;
 
 const HERE = join(process.cwd(), "src", "blocks", "core", "home");

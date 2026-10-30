@@ -46,12 +46,34 @@ export interface ScreeningFilmMeta {
   summary: string;
   claimLevels: string[];
   youtubeId?: string;
+  youtubeIdLight?: string;
   youtubeUrl: string;
+  youtubeUrlLight?: string;
   companion: {
     label: string;
     to: string;
   };
   acts: ScreeningAct[];
+}
+
+function resolveEditionYoutube(
+  film: Pick<ScreeningFilmMeta, "youtubeId" | "youtubeIdLight" | "youtubeUrl" | "youtubeUrlLight">,
+  edition: "dark" | "light",
+): { youtubeId: string; youtubeUrl: string } {
+  const youtubeId =
+    (edition === "light"
+      ? film.youtubeIdLight || film.youtubeId
+      : film.youtubeId || film.youtubeIdLight) || "";
+  const configuredUrl =
+    edition === "light"
+      ? film.youtubeUrlLight || film.youtubeUrl
+      : film.youtubeUrl || film.youtubeUrlLight;
+  const isChannelFallback = !configuredUrl || configuredUrl === "https://www.youtube.com/@dotheory";
+  const youtubeUrl =
+    youtubeId && isChannelFallback
+      ? `https://www.youtube.com/watch?v=${youtubeId}`
+      : configuredUrl || "https://www.youtube.com/@dotheory";
+  return { youtubeId, youtubeUrl };
 }
 
 function formatTimecode(seconds: number): string {
@@ -92,6 +114,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
 }) => {
   // The film's edition is the site's theme: the Appearance control is the one switch.
   const [edition, setEdition] = useState<"dark" | "light">(detectSiteTheme);
+  const activeYoutube = useMemo(() => resolveEditionYoutube(film, edition), [film, edition]);
 
   const [sourceMode, setSourceMode] = useState<"native" | "youtube">("native");
   const [youtubeConsented, setYoutubeConsented] = useState(false);
@@ -448,10 +471,10 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
           </>
         ) : (
           <div className="films-youtube-privacy-stage">
-            {film.youtubeId && youtubeConsented ? (
+            {activeYoutube.youtubeId && youtubeConsented ? (
               <iframe
                 className="films-youtube-iframe"
-                src={`https://www.youtube-nocookie.com/embed/${film.youtubeId}?rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${activeYoutube.youtubeId}?rel=0`}
                 title={`${film.title} — YouTube (Privacy-Enhanced Mode)`}
                 allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
@@ -483,7 +506,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
                     <Play className="h-4 w-4 fill-current" aria-hidden="true" />
                     <span>Play in Native Screening Room</span>
                   </button>
-                  {film.youtubeId && (
+                  {activeYoutube.youtubeId && (
                     <button
                       type="button"
                       className="films-btn-secondary"
@@ -493,7 +516,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
                     </button>
                   )}
                   <a
-                    href={film.youtubeUrl}
+                    href={activeYoutube.youtubeUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="films-btn-secondary"
@@ -671,7 +694,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
               <span className="films-transport-silent">Silent</span>
             )}
 
-            {film.youtubeId && (
+            {activeYoutube.youtubeId && (
               <button
                 type="button"
                 className="films-transport-btn films-transport-btn--text"

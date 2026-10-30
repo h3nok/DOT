@@ -33,8 +33,8 @@ export const TOUR_ARCHITECTURE: Readonly<Record<string, ArchitectureLayer>> = {
 };
 /** How long the architecture shows before a concept's own picture. */
 export const TOUR_MAP_SECONDS = 3;
-/** The closing title. */
-export const TOUR_CLOSING_SECONDS = 6;
+/** The closing: the whole architecture as the homepage draws it, and the way into the school. */
+export const TOUR_CLOSING_SECONDS = 12;
 /** How long one part takes to give way to the next. */
 export const TOUR_CROSSFADE_SECONDS = 0.5;
 /** How far a part rises as it arrives and leaves, in pixels. */

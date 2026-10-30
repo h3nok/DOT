@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,10 @@ import { JoinSurface } from "../../../dot/JoinSurface";
 export default function JoinPage() {
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion() ?? false;
+
+  useEffect(() => {
+    document.title = "Join the Work — Digital Organism Theory";
+  }, []);
 
   return (
     <JoinSurface

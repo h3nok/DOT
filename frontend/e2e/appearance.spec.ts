@@ -56,7 +56,7 @@ test.describe("appearance controls change the rendered document", () => {
     }
   });
 
-  test("the reading action keeps DOT's warm paper and forest shades", async ({ page }) => {
+  test("the reading action keeps DOT's forest fill in both themes", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");
     const action = page.locator("#threshold").getByRole("link", { name: "Read Book One", exact: true });
@@ -65,16 +65,16 @@ test.describe("appearance controls change the rendered document", () => {
     for (const colorScheme of ["light", "dark"] as const) {
       await page.emulateMedia({ colorScheme });
       await expect.poll(() => htmlAttribute(page, "data-theme")).toBe(colorScheme);
-      const [red, green, blue] = await action.evaluate((node) => {
+      const [red, green] = await action.evaluate((node) => {
         const context = document.createElement("canvas").getContext("2d");
         if (!context) throw new Error("Cannot inspect the painted reading action");
         context.fillStyle = getComputedStyle(node).backgroundColor;
         context.fillRect(0, 0, 1, 1);
         return [...context.getImageData(0, 0, 1, 1).data].slice(0, 3);
       });
-      // Warm paper retains more red than blue; forest retains more green
-      // than red. The old missing-hue blend painted teal and maroon instead.
-      expect(colorScheme === "light" ? red - blue : green - red,
+      // Forest retains more green than red in both its deep daylight and
+      // lighter night-time treatment. Text contrast is checked with the hero.
+      expect(green - red,
         `${colorScheme} reading action hue`,
       ).toBeGreaterThanOrEqual(4);
     }

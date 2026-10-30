@@ -80,9 +80,19 @@ test("closed support does not block the free download", async ({ page }) => {
 
 test("released equations render in the reader without page overflow", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  // Rendering Latency's definitions sit in the core reading line.
+  // Formal notes are folded in the digital edition (ADR-0036). Open them
+  // through their reader controls before checking rendered equations.
   await page.goto("/book/digital-organism-theory/the-decoupling-principle");
-  await expect(page.locator(".katex-display").first()).toBeVisible();
+  const equations = page.locator(".katex-display");
+  await expect(equations.first()).toBeAttached();
+  for (const note of await page.locator("details.book-depth").all()) {
+    if (!(await note.evaluate((element: HTMLDetailsElement) => element.open))) {
+      await note.locator(":scope > summary").click();
+    }
+  }
+  for (const equation of await equations.all()) {
+    await expect(equation).toBeVisible();
+  }
   await expect(page.locator(".katex-error")).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
 });

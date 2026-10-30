@@ -53,6 +53,9 @@ import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
   if (section.kind === "preface") return "Preface";
+  if (section.kind === "coda") return "Coda";
+  if (section.kind === "appendix") return "Appendix";
+  if (section.kind === "glossary") return "Glossary";
   return "Notes and sources";
 }
 

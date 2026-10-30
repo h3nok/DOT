@@ -162,19 +162,27 @@ const RouteScrollManager: React.FC = () => {
   return null;
 };
 
-/** Reading and Academy surfaces own this control in their page chrome. */
+/**
+ * Almost every surface now owns AppearanceControl inside its page header
+ * (`PageHeader`, `AmmHeader`, `DoctrinePage`, `BookOnePage`, `HomePage`).
+ * Only standalone threshold/support surfaces (`/support`, `/join`, and
+ * `/book/digital-organism-theory/copy`) rely on the floating dock.
+ */
 const FloatingAppearanceControl: React.FC = () => {
   const { pathname } = useLocation();
 
   if (
-    pathname.startsWith("/book/digital-organism-theory") &&
-    !pathname.endsWith("/copy")
+    pathname === "/support" ||
+    pathname === "/join" ||
+    pathname === "/book/digital-organism-theory/copy"
   ) {
-    return null;
+    return (
+      <div className="app-floating-appearance" key={pathname}>
+        <AppearanceControl />
+      </div>
+    );
   }
-  if (pathname.startsWith("/read/")) return null;
-  if (pathname === "/" || /^\/(blog|films|videos)\/?$/.test(pathname) || /^\/academy(\/|$)/.test(pathname)) return null;
-  return <div className="app-floating-appearance" key={pathname}><AppearanceControl /></div>;
+  return null;
 };
 
 class ErrorBoundary extends React.Component<

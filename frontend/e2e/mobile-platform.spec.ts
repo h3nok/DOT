@@ -50,7 +50,7 @@ test("Explore opens deliberately, routes, and stays usable across viewport sizes
   await panel.getByRole("link", { name: "Home", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL("/");
-  await expect(page.getByRole("heading", { name: "Trust your experience.", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Give your own life attention.", exact: true })).toBeVisible();
   await expect(panel).toHaveCount(0);
   await menu.click();
   await expect(panel.locator('[aria-current="page"]')).toHaveCount(1);

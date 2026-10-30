@@ -15,10 +15,14 @@
 import { DOT_BOOK_ONE_ROUTE } from "../publications/dotBookOne";
 
 /** The fixed edition these source passages come from. */
-export const OPEN_SEAMS_EDITION = 3;
+export const OPEN_SEAMS_EDITION = 4;
 
 /** The book's four levels, in the order the reader contract lists them. */
-export type ClaimLevel = "Observation" | "Model" | "Hypothesis" | "Speculation";
+export type ClaimLevel =
+  | "Observation"
+  | "External model"
+  | "DOT derivation"
+  | "Speculative extension";
 
 export type WorkKind = "study" | "replication" | "implementation" | "practice";
 
@@ -97,7 +101,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "frame-to-physics-derivation",
     title: "The Frame generator has not yet yielded measured physics",
-    claimLevel: "Hypothesis",
+    claimLevel: "DOT derivation",
     notEstablished:
       "Book One specifies the minimum architecture of a Reality Frame and places physical law downstream of it. It does not yet derive the measured equations, constants, symmetries, or quantum statistics of RF₀ from that generator.",
     accountToRecover:
@@ -114,7 +118,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "physics-to-biology-derivation",
     title: "The bridge from physical invariants to living interfaces is incomplete",
-    claimLevel: "Hypothesis",
+    claimLevel: "DOT derivation",
     notEstablished:
       "Book One locates chemistry, biology, bodies, and nervous systems within one derivation, but it does not yet show how RF₀'s physical regularities yield self-preserving biological organization or the specific interface used by Little c.",
     accountToRecover:
@@ -131,7 +135,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "rendering-latency-measure",
     title: "Rendering Latency has no operational measure",
-    claimLevel: "Hypothesis",
+    claimLevel: "DOT derivation",
     notEstablished:
       "Readiness-potential timing records that brain preparation can precede a reported decision. It does not identify the origin of authorship, and it does not establish DOT's preferred causal order either.",
     accountToRecover:
@@ -148,7 +152,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "intent-and-quantum-statistics",
     title: "Intent affecting quantum statistics is unspecified",
-    claimLevel: "Speculation",
+    claimLevel: "Speculative extension",
     notEstablished:
       "Double-slit and delayed-choice experiments show that measurement context matters to the statistics that appear. They do not show that private Intent selects physical outcomes, and classical-wave models reproduce important quantum-eraser statistics under postselection.",
     wouldSettleIt:
@@ -156,14 +160,14 @@ export const openSeams: OpenSeam[] = [
     source: source(
       "the-decoupling-principle",
       "The Decoupling Principle",
-      "what-quantum-experiments-do-and-do-not-show",
+      "quantum-context-evidence-without-a-shortcut",
     ),
     work: [],
   },
   {
     id: "sentience-criterion",
     title: "Sentience has no accepted external measure",
-    claimLevel: "Model",
+    claimLevel: "DOT derivation",
     notEstablished:
       "DOT locates sentience at consequential difference becoming present to the continuing process itself. The framework does not yet provide an accepted way for an external observer to detect that inward presence.",
     wouldSettleIt:
@@ -178,7 +182,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "canvas-persistence",
     title: "Persistence of the Canvas beyond biological death",
-    claimLevel: "Speculation",
+    claimLevel: "Speculative extension",
     notEstablished:
       "Book One lists this among the claims that remain speculative until they can be operationalized or distinguished from alternatives.",
     accountToRecover:
@@ -195,7 +199,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "multiple-reality-frames",
     title: "The existence of multiple Reality Frames",
-    claimLevel: "Speculation",
+    claimLevel: "Speculative extension",
     notEstablished:
       "RF₀ — the physical universe we inhabit — is the only Reality Frame the book can point at. The developmental history of Big C and the nature of the External Environment are listed as speculative alongside it.",
     wouldSettleIt:
@@ -210,7 +214,7 @@ export const openSeams: OpenSeam[] = [
   {
     id: "operational-measures",
     title: "Most DOT variables have no accepted operational measure",
-    claimLevel: "Model",
+    claimLevel: "DOT derivation",
     notEstablished:
       "The equations formalize dependencies and measured orderings. They are not discovered laws, and the quantities they relate mostly cannot yet be measured by anyone other than the person reporting them.",
     wouldSettleIt:

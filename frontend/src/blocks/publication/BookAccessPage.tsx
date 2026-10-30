@@ -7,6 +7,7 @@ import {
   HeartHandshake,
   Linkedin,
 } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -17,6 +18,10 @@ import { siteConfig } from "../../content/site.config";
 import BookOneCover from "./BookOneCover";
 
 export default function BookAccessPage() {
+  useEffect(() => {
+    document.title = "Digital Edition — Consciousness: A Digital Organism";
+  }, []);
+
   return (
     <main className="book-surface min-h-[100svh] bg-background px-5 pb-20 pt-6 text-foreground sm:px-8">
       <header className="mx-auto flex max-w-5xl items-center justify-between">

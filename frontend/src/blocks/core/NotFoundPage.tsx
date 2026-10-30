@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { author } from "../../content/author";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { SiteColophon } from "../../shared/SiteColophon";
 
 /** A finite dead end with two honest ways back into the public work. */
 export default function NotFoundPage() {
@@ -12,7 +13,7 @@ export default function NotFoundPage() {
   }, []);
 
   return (
-    <PageShell header={<PageHeader />} className="flex min-h-[70svh] items-center">
+    <PageShell header={<PageHeader />} footer={<SiteColophon />} className="flex min-h-[70svh] items-center">
       <section className="w-full max-w-2xl" aria-labelledby="not-found-title">
         <p className="dot-label text-[color:var(--organism-accent-strong)]">
           404 · No page here

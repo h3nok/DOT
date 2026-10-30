@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -19,6 +20,10 @@ export default function SupportPage() {
   const [query] = useSearchParams();
   const authorSupport = query.get("purpose") === "author";
   const fromAmm = authorSupport && rememberedAmmOrigin(query);
+
+  useEffect(() => {
+    document.title = "Support the Work — Digital Organism Theory";
+  }, []);
 
   return (
     <SupportSurface

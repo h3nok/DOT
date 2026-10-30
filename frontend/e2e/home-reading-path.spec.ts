@@ -4,7 +4,7 @@ test("home keeps direct reading routes without the closing invitation copy", asy
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const opening = page.locator("#threshold");
-  await expect(opening.getByRole("heading", { level: 1, name: "Trust your experience." })).toBeVisible();
+  await expect(opening.getByRole("heading", { level: 1, name: "Give your own life attention." })).toBeVisible();
   await expect(opening.getByRole("link", { name: "Read Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory/preface?path=start-where-you-live");
   await expect(page.locator("#personal-platform")).toHaveCount(0);

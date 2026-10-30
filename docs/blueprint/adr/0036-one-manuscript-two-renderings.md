@@ -78,3 +78,27 @@ Keep **one** Word manuscript for both editions.
 | One manuscript, depth folded in digital | No drift; full text available; calm by default | Requires bookmarks to survive Word editing | **Chosen** |
 | Separate abridged digital text | Shortest digital read | Two texts to maintain; digital falls behind; cuts are invisible to readers | Rejected |
 | Same full text in both, no layering | Simplest | Digital stays as dense as the specialist edition; fails "for everyone" | Rejected |
+
+## Amendment, 2026-10-28: formal detail is optional in the digital edition
+
+The author: "This book is not about formalizing." Not every equation has the
+author's approval yet, so the free digital edition must not lead with them.
+
+- Every equation in the main text is now folded too, not only those marked as
+  depth passages. Each folds into a closed **Formal note**, labelled with its
+  equation number. The fold takes along the sentence that introduces the
+  equation (one ending in a colon) and the paragraphs that explain its
+  symbols (those that open with a symbol or a notation cue, or that cite an
+  equation by number). A paragraph that only names notation folds on its own.
+- Prose that merely mentions a symbol stays in the reading line, so the
+  argument is never hidden.
+- Only the few equations that show a key relationship stay in the reading
+  line, with the sentences that explain them: `ESSENTIAL_EQUATIONS` in
+  `remarkDepthPassages.js`, currently 2.5, 5.7, 5.8, and 6.1. The author
+  decides this list; changing it touches no prose.
+- This is a rendering choice, so released text is unchanged (ADR-0018). The
+  Complete Edition still prints everything inline. The static page text uses
+  the same plugin, so readers without JavaScript see the same folds.
+
+Serves L1 (a calm, accessible reading line) and L7 (nothing is removed; every
+formal note opens on request). Violates none.

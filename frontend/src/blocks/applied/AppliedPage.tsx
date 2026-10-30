@@ -8,6 +8,7 @@ import {
   Map,
 } from "lucide-react";
 import { PageHeader, PageShell } from "../../shared/PageShell";
+import { SiteColophon } from "../../shared/SiteColophon";
 import { EpistemicBadge, type EpistemicStatus } from "../../shared/EpistemicBadge";
 import {
   OPEN_SEAMS_EDITION,
@@ -35,9 +36,9 @@ import {
 
 const CLAIM_STATUS: Record<ClaimLevel, EpistemicStatus> = {
   Observation: "observation",
-  Model: "model",
-  Hypothesis: "hypothesis",
-  Speculation: "speculation",
+  "External model": "model",
+  "DOT derivation": "hypothesis",
+  "Speculative extension": "speculation",
 };
 
 const OUTCOME_LABEL: Record<AppliedWork["outcome"], string> = {
@@ -176,7 +177,7 @@ export default function AppliedPage() {
   // Each seam is citable on its own; the app's route scroll manager lands
   // /applied#seam-id on the seam rather than the top of the register.
   useEffect(() => {
-    document.title = "Open Seams — Digital Organism Theory";
+    document.title = "Open Questions — Digital Organism Theory";
   }, []);
 
   const recorded = openSeams.reduce(
@@ -187,6 +188,7 @@ export default function AppliedPage() {
   return (
     <PageShell
       skipLink={false}
+      footer={<SiteColophon />}
       header={
         <>
           <a

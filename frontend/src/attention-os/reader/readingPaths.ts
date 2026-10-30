@@ -32,7 +32,7 @@ export const READING_PATHS: ReadingPath[] = [
     label: "Begin with lived experience",
     purpose:
       "Meet your conditioning first, then trace the architecture beneath it.",
-    minutes: 78,
+    minutes: 147,
     steps: [
       {
         slug: "preface",
@@ -63,6 +63,14 @@ export const READING_PATHS: ReadingPath[] = [
         why: "The frame you are reading inside, and its rules.",
       },
       {
+        slug: "the-research-program",
+        why: "How the framework becomes six testable research programs and a ledger of claims.",
+      },
+      {
+        slug: "coda",
+        why: "The theory returns to one life — yours.",
+      },
+      {
         slug: "references",
         why: "The scholarly trail. A theory that cannot be checked is a story.",
       },
@@ -73,7 +81,7 @@ export const READING_PATHS: ReadingPath[] = [
     label: "Read in written order",
     purpose:
       "Build the theory from its foundations before returning to lived experience.",
-    minutes: 101,
+    minutes: 147,
     steps: [
       { slug: "preface", why: "The method, and the claim levels that govern the book." },
       { slug: "the-digital-organism", why: "The model, and the limits of its metaphors." },
@@ -82,6 +90,8 @@ export const READING_PATHS: ReadingPath[] = [
       { slug: "reality-frames", why: "Rule-bound experiential environments." },
       { slug: "the-canvas", why: "The persistent inner substrate." },
       { slug: "the-painting", why: "What accumulated on it, and how to repaint." },
+      { slug: "the-research-program", why: "The six research programs and what would falsify them." },
+      { slug: "coda", why: "Where the model ends and your own authorship begins." },
       { slug: "references", why: "Sources, intact." },
     ],
   },
