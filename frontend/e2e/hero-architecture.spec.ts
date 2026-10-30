@@ -395,7 +395,7 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
     await page.goto("/");
     const hero = page.locator("#threshold");
     await expect(hero.getByRole("heading", {
-      name: "Your life deserves your attention.",
+      name: "Give your own life attention.",
     })).toBeVisible();
     const read = hero.getByRole("link", { name: "Read Book One", exact: true });
     await expect(read).toBeInViewport();
