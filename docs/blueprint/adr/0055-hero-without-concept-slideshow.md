@@ -1,8 +1,8 @@
 # ADR-0055: The Hero Retires Its Concept Slideshow
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-10-28
-- **Deciders:** Founder (chose removal on 2026-10-28 after a concept-by-concept review)
+- **Deciders:** Founder (chose removal and accepted this record on 2026-10-28 after a concept-by-concept review)
 - **Supersedes in part:** ADR-0037 (the finite hero concept introduction and its
   2026-10-10 critique amendment) and ADR-0038 (the hero's first concept)
 - **Keeps:** ADR-0026's architecture order, ADR-0037's architecture colours and

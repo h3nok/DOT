@@ -76,4 +76,4 @@ Docs marked *annex* or *superseded* are retained for history and detail.
 | [0037](adr/0037-reader-controlled-concepts-and-purpose.md)          | Founder-approved finite explained hero introduction, restrained architecture distinction, and Consciousness 101 | Accepted |
 | [0038](adr/0038-dot-names-its-movement-and-lineage.md)              | Hero carries no lede; the first concept states DOT's proposal; the ending names the movement and its lineage without implying endorsement | Proposed |
 | [0039](adr/0039-owned-publication-native-newsletters-and-distribution.md) | Owned native publication and newsletter archive; separate approved email delivery and optional outward distribution | Proposed |
-| [0055](adr/0055-hero-without-concept-slideshow.md)                | Hero retires its concept slideshow; the figure opens its sections; homepage concepts follow Book One | Proposed |
+| [0055](adr/0055-hero-without-concept-slideshow.md)                | Hero retires its concept slideshow; the figure opens its sections; homepage concepts follow Book One | Accepted |
