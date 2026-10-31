@@ -7,9 +7,17 @@
  * decided once instead of per hook.
  */
 
+/**
+ * Local development talks to a local orchestrator. A production build without
+ * VITE_ORCHESTRATOR_URL is a static release: it never reaches for localhost from a
+ * visitor's browser, and the calls below report the service as unavailable.
+ */
 export const ORCHESTRATOR_BASE = (
-  import.meta.env.VITE_ORCHESTRATOR_URL || "http://127.0.0.1:8000"
+  import.meta.env.VITE_ORCHESTRATOR_URL || (import.meta.env.DEV ? "http://127.0.0.1:8000" : "")
 ).replace(/\/$/, "");
+
+/** False on a static release built without a backend: no request is sent at all. */
+export const ORCHESTRATOR_CONFIGURED = ORCHESTRATOR_BASE !== "";
 
 /** The profile whose graph this deployment publishes at the root URL. */
 export const PROFILE_OWNER_ID = import.meta.env.VITE_PROFILE_OWNER_ID || "henok";
@@ -37,6 +45,7 @@ export async function api<T>(
   options: ApiOptions = {},
 ): Promise<ApiResult<T>> {
   const { method = "GET", body, signal, headers = {} } = options;
+  if (!ORCHESTRATOR_CONFIGURED) return { ok: false, status: 0, error: "The service is unreachable." };
   try {
     const res = await fetch(`${ORCHESTRATOR_BASE}${path}`, {
       method,

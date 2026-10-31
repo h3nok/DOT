@@ -40,7 +40,7 @@ export class TypewriterSound {
     if (!this.context) {
       const context = new window.AudioContext();
       const output = context.createGain();
-      output.gain.value = 0.3;
+      output.gain.value = 0.62;
       output.connect(context.destination);
       const length = Math.floor(context.sampleRate * 0.06);
       const click = context.createBuffer(1, length, context.sampleRate);
@@ -95,7 +95,7 @@ export class TypewriterSound {
   }
 
   private bell(context: AudioContext, output: GainNode, now: number) {
-    for (const [frequency, level] of [[2093, 0.06], [3136, 0.018], [4186, 0.022]] as const) {
+    for (const [frequency, level] of [[2093, 0.09], [3136, 0.03], [4186, 0.035]] as const) {
       const tone = context.createOscillator();
       tone.type = "sine";
       tone.frequency.value = frequency;

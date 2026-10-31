@@ -5,7 +5,7 @@
   "description": "Short silent films, one for each concept in Book One, and the @dotheory YouTube series. The films play in your browser, with no third-party tracking on page load.",
   "channelHandle": "@dotheory",
   "channelUrl": "https://www.youtube.com/@dotheory",
-  "privacyNote": "No trackers or cookies load on this page. The films play here, in your browser, without sound.",
+  "privacyNote": "No cookies or advertising trackers load on this page. The films play here, in your browser, without sound.",
   "conceptFilmsNote": "One silent film for each concept in the Book One concept map, in the map’s order. Each runs sixteen seconds and shows the map’s own definition. Nothing plays until you press play, and no film moves on to the next by itself.",
   "conceptTour": {
     "title": "Book One, concept by concept",
@@ -79,6 +79,66 @@
         { "label": "Explore the Concept Map", "to": "/doctrine" }
       ]
     }
+  },
+  "trailer": {
+    "title": "Digital Organism Theory",
+    "subtitle": "A pragmatic, testable framework for experience.",
+    "note": "The opening of the film: nine shots, one idea each. Every line is a plain observation, a quoted view, or labelled as DOT’s proposal.",
+    "shots": [
+      {
+        "kind": "body", "label": "Observation", "design": 7, "lead": 3.6,
+        "description": "A single line draws a full-height human figure in the dark. It breathes once, and a heartbeat glows at its chest.",
+        "lines": ["Every observation begins as an experience."]
+      },
+      {
+        "kind": "senses", "label": "Perception", "design": 8, "lead": 2.2,
+        "description": "Five streams — sight, sound, smell, touch, and taste — pour in from the edges and build a glowing world around the figure.",
+        "lines": ["Your perception is formed from sensory data.", "The sensory apparatus is not the whole story."]
+      },
+      {
+        "kind": "design", "label": "DOT’s proposal", "design": 8, "lead": 2.8, "voice": "dot",
+        "description": "The view pulls back: the figure is an avatar at the edge of a living sphere, Little c, whose inner loop turns. Intent travels out to the body and experience travels back.",
+        "lines": ["You are Little c.", "The body is your interface."]
+      },
+      {
+        "kind": "mistake", "label": "The prevailing view", "design": 9, "lead": 2.8,
+        "description": "The sphere dims. A hard measuring grid snaps shut around the figure, and cause-and-effect arrows press in from outside. The prevailing view is quoted: “You’re nothing but a pack of neurons” — Francis Crick, 1994.",
+        "lines": [
+          { "text": "“You’re nothing but a pack of neurons.”", "voice": "prevailing", "cite": "Francis Crick, The Astonishing Hypothesis, 1994" },
+          "Yet experience itself stays outside the equations."
+        ]
+      },
+      {
+        "kind": "pain", "label": "Who fills the gap", "design": 10, "lead": 2.6,
+        "description": "The view pulls far back to a lattice of boxed figures, each with a ring of stress. Strings tug each figure from the hand of another figure above, who is boxed too.",
+        "lines": ["We map the world in detail; ourselves, far less.", "Others fill the gap: markets, platforms, ideologies."]
+      },
+      {
+        "kind": "nudge", "label": "The body’s signal", "design": 7, "lead": 1.4,
+        "description": "Each ring of stress pulses toward a small jade opening above its figure: a signal to change course. Suppressed, the openings close, the boxes thicken, and every figure across the lattice dims and shrinks as the costs compound.",
+        "lines": [
+          "The body protests: stress, anxiety, burnout.",
+          "We treat the signal more than its source.",
+          "The costs compound: division, despair, conflict.",
+          "At root, this is a problem of knowledge."
+        ]
+      },
+      {
+        "kind": "pause", "label": "Attention", "design": 8, "lead": 2.8, "linger": 1.6,
+        "description": "Everything stops. In one figure a jade point lights at the chest: Little c, noticed. Its box dissolves.",
+        "lines": ["Notice who is experiencing.", "Test this against your own experience."]
+      },
+      {
+        "kind": "architecture", "label": "The architecture", "design": 12, "lead": 12.6,
+        "description": "The jade point becomes Little c₁ in DOT’s architecture. The view pulls back through RF₀ and Big C to the T × E field that Big C emerged within.",
+        "lines": []
+      },
+      {
+        "kind": "title", "label": "Digital Organism Theory", "design": 9, "lead": 1.4, "linger": 1.2,
+        "description": "The architecture rises above the title: Digital Organism Theory. A pragmatic, testable framework for experience.",
+        "lines": ["Digital Organism Theory", "A pragmatic, testable framework for experience."]
+      }
+    ]
   },
   "seriesNote": "The episodes are in production. The reading behind each one is open now.",
   "completionNote": "That is every film and series stream in the catalogue. New episodes appear on @dotheory without schedules, streaks, or notifications.",

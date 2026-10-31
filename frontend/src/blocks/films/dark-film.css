@@ -1,0 +1,273 @@
+/* The DOT film, drawn in its own dark palette in either site theme. L1: calm motion; L2: finite; L10: one visual focus.
+   Every animation is a function of film time so a paused/exported frame is stable. */
+.dark-film-scope {
+  --df-stage: #081912;
+  --df-ink: #f2f0e8;
+  --df-muted: #a7bcb0;
+  --df-jade: #8ad6b9;
+  --df-clay: #cd917b;
+  --background: var(--df-stage);
+  --foreground: var(--df-ink);
+  --muted-foreground: var(--df-muted);
+  --card: #10231b;
+  --border: #34483c;
+  --identity-emerald: #5ee0ae;
+  --identity-lumen: #68e6b5;
+  --identity-origin: var(--df-jade);
+  --identity-rf: #e6bc78;
+  --organism-accent-strong: var(--df-jade);
+  --organism-accent: var(--df-jade);
+  --organism-accent-soft: #355d48;
+  --identity-display-font: "Space Grotesk", sans-serif;
+  --identity-reading-font: "Source Serif 4", Georgia, serif;
+  --cf-stage: var(--df-stage);
+  --cf-ink: var(--df-ink);
+  --cf-muted: var(--df-muted);
+}
+
+/* The development preview page (and the exporter) around the film. */
+.dark-film-preview {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  padding: clamp(1rem, 4vw, 4rem);
+  color: var(--df-ink);
+  background: #050e0b;
+  font-family: var(--identity-display-font, "Space Grotesk", sans-serif);
+}
+
+body:has(.dark-film-preview) .organism-membrane,
+body:has(.dark-film-preview) .organism-hud { display: none; }
+
+.dark-film-preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 100rem;
+  margin: 0 auto 2rem;
+}
+.dark-film-preview-heading p { margin: .5rem 0; color: var(--df-muted); font-size: .875rem; }
+.dark-film-preview-heading h1 { font-family: "Source Serif 4", Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.5rem); }
+.dark-film-preview-heading a { flex: none; text-decoration: underline; text-underline-offset: .25em; font-size: .875rem; }
+
+.dark-film-scope .films-screening-shell {
+  --cf-stage: var(--df-stage);
+  --cf-ink: var(--df-ink);
+  --cf-muted: var(--df-muted);
+  --cf-line: #3b5245;
+  --cf-origin: var(--df-jade);
+  --cf-big-c: #5ee0ae;
+  --cf-rf: #e6bc78;
+  --cf-local: var(--df-jade);
+  --cf-fear: var(--df-clay);
+  --films-mono: "JetBrains Mono", monospace;
+  --films-sans: "Space Grotesk", sans-serif;
+  max-width: 100rem;
+  margin-inline: auto;
+  border: 1px solid #23392d;
+  border-radius: 0;
+  box-shadow: none;
+  container-type: inline-size;
+}
+.dark-film-player .concept-film-stage { display: block; }
+.dark-film-frame {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(ellipse at 28% 50%, #112b20 0%, var(--df-stage) 53%, #07150f 100%);
+}
+.dark-film-frame *, .dark-film-frame *::before, .dark-film-frame *::after {
+  animation: none !important;
+  transition: none !important;
+}
+.dark-film-signature, .dark-film-colophon {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  color: var(--df-muted);
+  font-size: clamp(.65rem, 1cqi, 1.125rem);
+  letter-spacing: .035em;
+}
+.dark-film-signature { top: 5.2%; left: 5%; gap: 1.25em; }
+.dark-film-signature .do-wordmark { font-size: 1.3em; }
+.dark-film-colophon { inset: auto 5% 4.3%; justify-content: flex-end; font-size: clamp(.6rem, .82cqi, 1rem); opacity: .75; }
+
+/* The progress line, drawn into the frame: the film's structure and the section now playing. */
+.dark-film-progress {
+  position: absolute;
+  z-index: 3;
+  inset: auto 5% 2.6%;
+  width: auto;
+  gap: .6em;
+  font-size: clamp(.55rem, .72cqi, .9rem);
+}
+.dark-film-progress .film-progress-label { font-size: 1em; letter-spacing: .1em; opacity: .8; }
+.dark-film-progress .film-progress-line { gap: 4px; height: 10px; }
+.dark-film-frame--trailer .dark-film-colophon { visibility: hidden; }
+
+/* ── The opening trailer: full-frame picture, one short line at a time. ── */
+.dark-film-frame--trailer {
+  background: radial-gradient(ellipse at 50% 46%, #0f281d 0%, #081912 48%, #040b08 100%);
+}
+.dark-film-frame--trailer .dark-film-signature,
+.dark-film-frame--trailer .dark-film-colophon { visibility: hidden; }
+.dark-trailer { position: absolute; inset: 0; }
+.dark-trailer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgb(2 7 5 / .62) 100%);
+}
+.dark-trailer-drawing { display: block; width: 100%; height: 100%; overflow: visible; }
+/* The picture keeps above the caption band, so words never sit on a figure. */
+.dark-trailer-stage {
+  position: absolute;
+  inset: 0 0 18%;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 80%, transparent);
+}
+
+.dark-trailer-arch {
+  position: absolute;
+}
+.dark-trailer-arch-camera { position: absolute; }
+.dark-trailer-arch-figure.home-hero-environment {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+  background: none;
+}
+.dark-trailer-arch-figure.home-hero-environment::before,
+.dark-trailer-arch-figure.home-hero-environment::after { content: none; }
+.dark-trailer-arch .home-hero-architecture { width: 100%; height: 100%; margin: 0; }
+.dark-trailer-arch .home-hero-architecture__svg { width: 100%; height: 100%; background: none; }
+/* The pull-back reveals each layer on film time, outward from Little c₁. */
+.dark-trailer-arch [data-part="little-c"],
+.dark-trailer-arch .home-architecture-process-loop-stage[data-loop="inner"],
+.dark-trailer-arch .home-architecture-ring-label[data-layer="little-c"],
+.dark-trailer-arch .home-architecture-ring-label[data-layer="awareness-radius"] { opacity: var(--lc); }
+.dark-trailer-arch [data-part="rf0"],
+.dark-trailer-arch .home-architecture-ring-label[data-layer="reality-frame"] { opacity: var(--rf); }
+.dark-trailer-arch .home-architecture-other-frames { opacity: var(--rfn); }
+.dark-trailer-arch [data-part="big-c"],
+.dark-trailer-arch .home-architecture-process-loop-stage[data-loop="outer"],
+.dark-trailer-arch .home-architecture-ring-label[data-layer="big-c"] { opacity: var(--big-c); }
+.dark-trailer-arch [data-part="te"],
+.dark-trailer-arch .home-architecture-ring-label[data-layer="origin"] { opacity: var(--te); }
+.dark-trailer-arch .home-architecture-ring-labels { opacity: var(--labels); }
+
+.dark-trailer-words { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.dark-trailer-line {
+  position: absolute;
+  right: 6%;
+  bottom: 7.5%;
+  left: 6%;
+  margin: 0;
+  color: var(--df-ink);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: clamp(1.4rem, 3.1cqi, 3.9rem);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 2px 28px rgb(2 7 5 / .85);
+}
+/* Whose claim a line is: DOT's proposal in jade, the prevailing view in the lens's clay. */
+.dark-trailer-voice {
+  display: block;
+  margin-bottom: .55em;
+  font-family: "JetBrains Mono", monospace;
+  font-size: .42em;
+  font-style: normal;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--df-jade);
+}
+.dark-trailer-voice--prevailing { color: #d4876d; }
+.dark-trailer-line--prevailing { color: #e7b9a8; font-style: italic; }
+/* A quotation's source: small, upright, beneath the words it attributes. */
+.dark-trailer-cite {
+  display: block;
+  margin-top: .6em;
+  color: #c79a8a;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: .34em;
+  font-style: normal;
+  letter-spacing: .04em;
+}
+
+.dark-trailer-title {
+  position: absolute;
+  top: 58%;
+  right: 6%;
+  left: 6%;
+  margin: 0;
+  color: var(--df-ink);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: clamp(2.5rem, 6.4cqi, 8rem);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow: 0 2px 36px rgb(2 7 5 / .9);
+}
+.dark-trailer-subtitle {
+  position: absolute;
+  top: 72%;
+  right: 6%;
+  left: 6%;
+  margin: 0;
+  color: var(--df-jade);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: clamp(1.1rem, 2.3cqi, 2.8rem);
+  text-align: center;
+  text-shadow: 0 2px 24px rgb(2 7 5 / .9);
+}
+
+.dark-film-lesson { position: absolute; inset: 12% 4% 10%; display: grid; grid-template-columns: 48% 52%; align-items: center; }
+.dark-film-lesson .concept-film-motif { grid-row: 1; grid-column: 1; max-height: 100%; }
+.dark-film-lesson .concept-film-copy { grid-row: 1; grid-column: 2; padding: 0 8% 0 5%; }
+.dark-film-lesson .concept-film-name { font-weight: 400; font-size: clamp(1.6rem, 3.5cqi, 4.25rem); line-height: 1.1; }
+.dark-film-lesson .concept-film-name--sentence { font-size: clamp(1.5rem, 2.7cqi, 3.25rem); }
+.dark-film-lesson .concept-film-definition { font-size: clamp(1rem, 1.7cqi, 2rem); line-height: 1.45; }
+.dark-film-lesson .concept-film-analogy { font-size: clamp(.9rem, 1.5cqi, 1.8rem); }
+.dark-film-lesson .concept-film-source { font-size: clamp(.7rem, 1cqi, 1.125rem); }
+.dark-film-lesson .concept-film-architecture { background: transparent; min-height: 0; }
+.dark-film-lesson .home-hero-architecture { opacity: 1; transform: none; }
+
+.dark-film-preview--render { width: 100vw; height: 100vh; min-height: 0; padding: 0; }
+.dark-film-preview--render .films-screening-shell { width: 100%; max-width: none; border: 0; }
+
+@media (max-width: 639px) {
+  .dark-film-preview { padding: 1rem .75rem 3rem; }
+  .dark-film-preview-heading { align-items: start; gap: 1rem; }
+  .dark-film-preview-heading a { font-size: .75rem; }
+  .dark-film-frame { aspect-ratio: auto; min-height: 45rem; }
+  .dark-film-signature { top: 1.25rem; left: 1.25rem; font-size: .65rem; gap: .75rem; }
+  .dark-film-colophon { inset: auto 1.25rem 1.25rem; font-size: .56rem; }
+  .dark-trailer-arch { height: auto; width: 92%; }
+  .dark-trailer-line { bottom: 9%; font-size: 1.6rem; white-space: normal; }
+  .dark-trailer-title { font-size: 2.6rem; }
+  .dark-trailer-subtitle { top: 58%; font-size: 1.15rem; }
+  .dark-film-lesson { inset: 3.5rem 1.1rem 3rem; grid-template-columns: 1fr; grid-template-rows: 17rem 1fr; align-items: start; }
+  .dark-film-lesson .concept-film-motif { grid-row: 1; grid-column: 1; height: 17rem; max-width: 100%; }
+  .dark-film-lesson .concept-film-copy { grid-row: 2; grid-column: 1; padding: .5rem .25rem 0; }
+  .dark-film-lesson .concept-film-eyebrow { font-size: .65rem; min-height: 2rem; }
+  .dark-film-lesson .concept-film-glyph { width: 1.75rem; height: 1.75rem; }
+  .dark-film-lesson .concept-film-name { font-size: 1.65rem; }
+  .dark-film-lesson .concept-film-name--sentence { font-size: 1.5rem; }
+  .dark-film-lesson .concept-film-definition { margin-top: .75rem; font-size: .98rem; }
+  .dark-film-lesson .concept-film-analogy { margin-top: .75rem; font-size: .9rem; }
+  .dark-film-lesson .concept-film-source { margin-top: .75rem; font-size: .65rem; }
+}
