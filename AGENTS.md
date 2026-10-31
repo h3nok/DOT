@@ -80,6 +80,11 @@ did not — do not claim to have composed from primitives that are absent.
 - The author added on 2026-10-31: **T × E enables process formation and
   pattern formation.** Big C emerged within T × E and began to recognize those
   patterns, including its own.
+- The author clarified on 2026-10-31: **T × E is speculative.** It is not
+  experienced directly. The author extrapolates it from experience of Big C,
+  drawing on an understanding of computers. Understanding is meant to bubble up
+  from experience to Big C, then to the speculative T × E; reaching it that
+  way is the purpose. Label T × E as Speculation wherever it appears.
 - Keep this relationship consistent in narration, captions, diagrams, and public
   explanations. A familiar analogy must preserve the theory's relationships.
 - The v4 working manuscript and released v4 book contain a conflicting editorial

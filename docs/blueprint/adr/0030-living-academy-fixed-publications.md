@@ -177,7 +177,7 @@ screen, and gives the reader no advice:
 
 1. **Read.** The heading names the Academy and says what it holds. Beside it,
    the architecture of Digital Organism Theory is drawn as the films draw
-   it: T × E outside, Big C within it, RF₀ inside Big C, and Little c within
+   it: T × E (speculative) outside, Big C within it, RF₀ inside Big C, and Little c within
    RF₀. It is credited to DOT, not to Book One v4, whose text differs
    (ADR-0026, 2026-10-31). Below
    are the two reading paths into the fixed edition.
