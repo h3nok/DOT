@@ -34,7 +34,7 @@ export default function InvitePage() {
     body = <>
       <h1 className="dot-page-heading">This invitation is no longer open</h1>
       <p className="dot-lede mt-4">It may have been used, revoked, or expired. Everything public stays free to read without an account.</p>
-      <p className="mt-6"><Link to="/join" className="underline underline-offset-4">Ask to join</Link></p>
+      <p className="mt-6"><Link to="/join" className="underline underline-offset-4">Request an invitation</Link></p>
     </>;
   } else if (user) {
     body = <>

@@ -108,8 +108,8 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
 
   if (loading || returnState === "checking") {
     return (
-      <BloomSurface {...common} kicker="support" title="Checking with Stripe"
-        description="Confirming the checkout without treating a redirect as proof of payment." size="sm">
+      <BloomSurface {...common} kicker="support" title="Checking payment status"
+        description="Confirming the payment with Stripe." size="sm">
         <div className="flex justify-center py-8">
           <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" aria-hidden="true" />
         </div>
@@ -120,20 +120,20 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
   if (returnState === "paid" || returnState === "processing" || returnState === "expired" || returnState === "failed") {
     const content = {
       paid: {
-        kicker: "thank you", title: "You helped build it",
-        description: "Stripe confirmed your contribution. DOT will record only the verified facts.",
+        kicker: "support", title: "Payment confirmed",
+        description: "Stripe confirmed the payment and issues the receipt.",
       },
       processing: {
-        kicker: "support", title: "Still settling",
-        description: "Stripe has the checkout. Confirmation may take a moment, so DOT is not counting it yet.",
+        kicker: "support", title: "Payment pending",
+        description: "Stripe has not confirmed the payment yet. This can take a few minutes.",
       },
       expired: {
         kicker: "support", title: "Checkout expired",
-        description: "You can begin again whenever it feels right.",
+        description: "No payment was made.",
       },
       failed: {
-        kicker: "support", title: "Could not confirm the contribution",
-        description: "Do not pay again just to check. Use the Stripe receipt or contact the author if a payment needs clarification.",
+        kicker: "support", title: "Payment status unavailable",
+        description: "Do not pay again. Check the Stripe receipt, or contact the author.",
       },
     }[returnState];
     return (
@@ -141,7 +141,7 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
         <div className="flex flex-col items-center gap-4 py-7 text-center">
           {returnState === "paid" && <Check className="h-7 w-7 text-[color:var(--organism-accent-strong)]" aria-hidden="true" />}
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Support never changes access, visibility, or standing inside DOT.
+            Payments do not affect access or what is shown.
             {" "}{stillFree}.
           </p>
           {error && <p role="alert" className="text-xs text-destructive">{error}</p>}
@@ -152,8 +152,8 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
 
   if (!available && SUPPORT_PAYMENT_LINK && !authorSupport) {
     return (
-      <BloomSurface {...common} kicker="independent work" title="Support the work"
-        description="DOT sells no advertising and no attention, so it is funded by the people who find it worth funding." size="sm"
+      <BloomSurface {...common} kicker="support" title="Support the work"
+        description="DOT carries no advertising. It is funded by voluntary contributions." size="sm"
         footer={
           <a href={SUPPORT_PAYMENT_LINK} target="_blank" rel="noopener noreferrer"
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color:var(--organism-accent-soft)] bg-foreground/[0.06] px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.1]">
@@ -162,9 +162,9 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
           </a>
         }>
         <div className="flex flex-col gap-4 py-1 text-sm leading-relaxed text-muted-foreground">
-          <p>Contributions pay for the time this takes: making Minty reliable, deepening the Book One reader, and keeping the whole thing running as a careful public release.</p>
-          <p>Support never changes what reaches you. It buys no access, no standing, and no position in anything you are shown — reading stays free and complete either way.</p>
-          <p className="dot-meta leading-5 text-muted-foreground/80">Stripe hosts the checkout, sets the amount, and issues the receipt. There is no recurring charge and no public list of who gave. <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a></p>
+          <p>Contributions fund Minty, the Book One reader, and hosting.</p>
+          <p>Contributions do not grant access or affect what is shown. Reading remains free.</p>
+          <p className="dot-meta leading-5 text-muted-foreground/80">Stripe processes the payment and issues the receipt. Payments are one-time, and no list of contributors is published. <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a></p>
         </div>
       </BloomSurface>
     );
@@ -172,12 +172,11 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
 
   if (!available) {
     return (
-      <BloomSurface {...common} kicker="support" title="Not open yet"
-        description="Card checkout opens here once Stripe payments and receipts are set up." size="sm">
+      <BloomSurface {...common} kicker="support" title="Card payments unavailable"
+        description="Card checkout is not set up yet." size="sm">
         <p className="pt-4 text-sm leading-relaxed text-muted-foreground">
-          This page will take optional, one-time payments to the author, for an amount
-          you choose. A payment is not a charitable donation and buys no access: the
-          book and PDF are free now and stay free.
+          This page will accept optional, one-time payments to the author. A payment is
+          not a charitable donation and grants no access. The book and PDF remain free.
         </p>
         <p className="py-4 text-xs leading-relaxed text-muted-foreground">
           <a href="/terms" className="underline underline-offset-4 hover:text-foreground">Terms and refunds</a>
@@ -188,11 +187,11 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
   }
 
   return (
-    <BloomSurface {...common} kicker="independent work"
+    <BloomSurface {...common} kicker="support"
       title={authorSupport ? "Support the author" : "Support the work"}
       description={authorSupport
         ? `A voluntary contribution supports independent writing and research. ${stillFree}, with no account required.`
-        : "A voluntary, one-time payment to the author. It pays for making Minty reliable, deepening the Book One reader, and keeping DOT running. It is not a charitable donation."}
+        : "A voluntary, one-time payment to the author. It funds Minty, the Book One reader, and hosting. It is not a charitable donation."}
       size="md"
       footer={
         <div>
@@ -206,7 +205,7 @@ const StripeSupportSurface: React.FC<SupportSurfaceProps & { onDirectSupport?: (
         {directChoice}
         </div>
       }>
-      {returnState === "cancelled" && <p className="mb-4 border-y border-border/40 py-3 text-xs text-muted-foreground">Checkout was closed. You can still read and download freely.</p>}
+      {returnState === "cancelled" && <p className="mb-4 border-y border-border/40 py-3 text-xs text-muted-foreground">Checkout was cancelled. No payment was made.</p>}
       {options && <SupportChoices options={options} reducedMotion={reducedMotion}
         authorSupport={authorSupport} selectedPurpose={selectedPurpose} onPurposeChange={setSelectedPurpose}
         selectedTier={selectedTier} onTierChange={setSelectedTier} customAmount={customAmount} onAmountChange={setCustomAmount} />}

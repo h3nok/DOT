@@ -184,7 +184,7 @@ export default function HomePage() {
             },
             {
               to: "/doctrine",
-              label: "Explore the interactive Doctrine",
+              label: "Explore the concept map",
             },
             {
               to: "/amm",
@@ -211,7 +211,7 @@ export default function HomePage() {
               deeper in, at the book's access page, never here (ADR-0022). */}
           <nav aria-label="Quiet links" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
             <Link to="/academy" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Academy</Link>
-            <Link to="/doctrine" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Doctrine</Link>
+            <Link to="/doctrine" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Concept map</Link>
             <Link to="/blog" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Essays</Link>
             <Link to="/amm" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">AMM</Link>
             <Link to="/about" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">About</Link>

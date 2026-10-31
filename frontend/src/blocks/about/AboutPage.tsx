@@ -253,17 +253,17 @@ export default function AboutPage() {
       </section>
 
       <Surface as="section" aria-labelledby="about-contact" className="about-section about-contact" tone="blue">
-        <SectionHeading id="about-contact" eyebrow="Have something in mind?" title="Contact" />
+        <SectionHeading id="about-contact" eyebrow="Projects and inquiries" title="Contact" />
         <div>
           <p className="about-contact-intro">{builder.contactIntro}</p>
-          <TextLink to="/contact">Start a conversation</TextLink>
+          <TextLink to="/contact">Contact form</TextLink>
           <a href={contact.href} className="about-contact-address">{contact.label}<ArrowUpRight aria-hidden="true" /></a>
           <p className="about-profiles">
             {authorProfiles().map((profile) => (
               <TextLink key={profile.href} href={profile.href} rel="noreferrer me">{profile.label}</TextLink>
             ))}
           </p>
-          <p className="about-contact-note">Also for writing, research, interviews, and requests about your data.</p>
+          <p className="about-contact-note">Also for writing, research, interviews, and data requests.</p>
         </div>
       </Surface>
     </PageShell>

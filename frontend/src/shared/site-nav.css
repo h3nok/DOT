@@ -107,42 +107,23 @@ html[data-ui-style] .site-nav-panel[role="dialog"] {
 
 .site-nav-panel-heading {
   display: flex;
-  width: min(100%, 68rem);
+  width: min(100%, 46rem);
   flex: none;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
   padding-bottom: 1.25rem;
   margin: 0 auto;
 }
 
-.site-nav-heading-copy { min-width: 0; }
-html[data-ui-style] .site-nav-panel .dot-label {
+.site-nav-title {
   margin: 0;
   color: var(--muted-foreground);
-  font-family: inherit;
-  font-size: .6875rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: .75rem;
   font-weight: 500;
-  letter-spacing: .06em;
-  line-height: 1.5;
-  text-transform: none;
-}
-
-.site-nav-title {
-  margin: .5rem 0 0;
-  font-family: var(--identity-reading-font, "Source Serif 4", Georgia, serif);
-  font-size: clamp(1.75rem, 3.25vw, 2.5rem);
-  font-weight: 600;
-  letter-spacing: -.025em;
-  line-height: 1.15;
-  text-wrap: balance;
-}
-
-.site-nav-introduction {
-  margin: .625rem 0 0;
-  color: var(--muted-foreground);
-  font-size: .8125rem;
-  line-height: 1.6;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .site-nav-close {
@@ -163,10 +144,10 @@ html[data-ui-style] .site-nav-panel .dot-label {
 .site-nav-close:hover { border-color: var(--foreground); }
 .site-nav-close svg { width: 1rem; height: 1rem; }
 
-/* The body: an ordered index of the work, and where you are within it. */
+/* The body: an ordered list of the main pages, the current one marked. */
 .site-nav-body {
   display: grid;
-  width: min(100%, 68rem);
+  width: min(100%, 46rem);
   min-height: 0;
   flex: 1;
   align-content: start;
@@ -206,7 +187,7 @@ html[data-ui-style] .site-nav-panel .dot-label {
   position: relative;
   display: grid;
   min-height: 4.5rem;
-  grid-template-columns: 2.5rem minmax(0, 1fr) auto auto;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
   align-items: center;
   gap: 0 1.125rem;
   padding: .75rem .75rem .75rem 0;
@@ -262,22 +243,10 @@ html[data-ui-style] .site-nav-panel .dot-label {
   line-height: 1.5;
 }
 
-.site-nav-here-tag {
-  padding: .25rem .5rem;
-  border: 1px solid color-mix(in oklab, var(--site-map-accent) 45%, transparent);
-  border-radius: 999px;
-  color: var(--site-map-accent);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: .6875rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
 .site-nav-link-arrow {
   width: 1.125rem;
   height: 1.125rem;
-  grid-column: 4;
+  grid-column: 3;
   color: var(--muted-foreground);
   stroke-width: 1.25;
 }
@@ -288,25 +257,16 @@ html[data-ui-style] .site-nav-panel .dot-label {
 .site-nav-links a:is(:hover, :focus-visible) .site-nav-link-marker { border-color: var(--site-map-accent); color: var(--foreground); }
 .site-nav-links a:is(:hover, :focus-visible) .site-nav-link-arrow { color: var(--site-map-accent); }
 
-/* Where you are, set apart beside the index when there is room for it. */
-.site-nav-here { display: none; }
-
 .site-nav-panel-footer {
   display: flex;
-  width: min(100%, 68rem);
+  width: min(100%, 46rem);
   flex: none;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: .25rem 1.25rem;
   padding-top: 1rem;
   margin: 0 auto;
-}
-.site-nav-panel-footer p {
-  margin: 0;
-  color: var(--muted-foreground);
-  font-size: .6875rem;
-  line-height: 1.6;
 }
 .site-nav-panel-footer nav { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
 .site-nav-extra {
@@ -323,18 +283,16 @@ html[data-ui-style] .site-nav-panel .dot-label {
 }
 .site-nav-extra svg { width: .875rem; height: .875rem; flex: none; stroke-width: 1.5; }
 
-/* With room, the index sits beside where you are. */
+/* With room, the list sits centred and larger. */
 @media (min-width: 960px) and (min-height: 640px) {
   .site-nav-panel { padding-top: 2.5rem; padding-bottom: 2rem; }
   .site-nav-body {
-    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
     align-content: center;
-    gap: clamp(3rem, 6vw, 6rem);
     padding-block: 1.5rem;
   }
   .site-nav-links a {
     min-height: 5rem;
-    grid-template-columns: 2.75rem minmax(0, 1fr) auto auto;
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
     gap: 0 1.5rem;
     padding-block: .875rem;
   }
@@ -342,38 +300,6 @@ html[data-ui-style] .site-nav-panel .dot-label {
   .site-nav-links::before { left: calc(1.375rem - .5px); top: 2.5rem; bottom: 2.5rem; }
   .site-nav-link-title { font-size: clamp(1.625rem, 2.3vw, 2.125rem); }
   .site-nav-description { font-size: .875rem; }
-  .site-nav-here-tag { display: none; }
-  .site-nav-here {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .5rem;
-    padding-left: clamp(2rem, 4vw, 3rem);
-    border-left: 1px solid var(--site-map-line);
-  }
-  .site-nav-mark--large { width: 9rem; height: 9rem; margin-bottom: 1rem; }
-  .site-nav-here-kicker {
-    color: var(--muted-foreground);
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: .6875rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-  .site-nav-here-title {
-    color: var(--foreground);
-    font-family: var(--identity-reading-font, "Source Serif 4", Georgia, serif);
-    font-size: clamp(2rem, 3vw, 2.75rem);
-    font-weight: 600;
-    letter-spacing: -.025em;
-    line-height: 1.1;
-  }
-  .site-nav-here-line {
-    max-width: 22ch;
-    margin: 0;
-    color: var(--muted-foreground);
-    font-size: .9375rem;
-    line-height: 1.55;
-  }
   .site-nav-panel-footer { padding-top: 0; }
 }
 
@@ -383,14 +309,12 @@ html[data-ui-style] .site-nav-panel .dot-label {
     animation: site-map-row 360ms cubic-bezier(.2, .7, .2, 1) both;
     animation-delay: calc(80ms + var(--site-nav-order, 0) * 45ms);
   }
-  html:not([data-motion="still"]) .site-nav-mark--large circle:nth-child(1) { animation: site-map-breathe 5.6s ease-in-out infinite; transform-origin: center; }
   html:not([data-motion="still"]) .site-nav-trigger-mark { transition: border-color 160ms ease, color 160ms ease; }
   html:not([data-motion="still"]) .site-nav-links a { transition: background-color 160ms ease; }
   html:not([data-motion="still"]) .site-nav-link-arrow { transition: transform 180ms ease, color 160ms ease; }
   html:not([data-motion="still"]) .site-nav-links a:is(:hover, :focus-visible) .site-nav-link-arrow { transform: translateX(4px); }
 }
 @keyframes site-map-row { from { opacity: 0; transform: translateY(.625rem); } }
-@keyframes site-map-breathe { 50% { transform: scale(1.06); opacity: .25; } }
 @keyframes site-map-arrive { from { opacity: 0; transform: translateY(.5rem); } }
 
 html[data-contrast="high"] .site-nav-panel[role="dialog"] {
@@ -398,7 +322,6 @@ html[data-contrast="high"] .site-nav-panel[role="dialog"] {
   --site-map-accent: var(--foreground);
 }
 html[data-contrast="high"] .site-nav-panel::before { display: none; }
-html[data-contrast="high"] .site-nav-panel .dot-label { color: var(--foreground); }
 
 @media (forced-colors: active) {
   .site-nav-links a[aria-current="page"] .site-nav-link-marker { border: 2px solid currentColor; }
@@ -408,21 +331,16 @@ html[data-contrast="high"] .site-nav-panel .dot-label { color: var(--foreground)
   .site-nav { left: max(.5rem, env(safe-area-inset-left)); bottom: max(.5rem, env(safe-area-inset-bottom)); }
   .site-nav-trigger { width: 3.5rem; min-height: 4rem; }
   .site-nav-panel-heading { gap: .75rem; }
-  .site-nav-title { font-size: 1.75rem; }
   .site-nav-close { padding-inline: .5rem; }
   .site-nav-close > span { display: none; }
   .site-nav-link-title { font-size: 1.3125rem; }
   .site-nav-links a { gap: 0 .875rem; padding-right: .375rem; }
-  .site-nav-here-tag { grid-column: 2; grid-row: 2; justify-self: start; margin-top: .375rem; }
   .site-nav-description { font-size: .75rem; }
   .site-nav-panel-footer { padding-top: .75rem; }
 }
 @media (max-height: 560px) {
   .site-nav-panel { padding-block: .75rem; }
   .site-nav-panel-heading { padding-bottom: .75rem; }
-  .site-nav-panel-footer p,
-  .site-nav-introduction { display: none; }
-  .site-nav-title { margin-top: .25rem; font-size: 1.5rem; }
   .site-nav-panel-footer { padding-top: .5rem; }
 }
 @media print { .site-nav, .site-nav-panel, .site-nav-overlay { display: none !important; } }

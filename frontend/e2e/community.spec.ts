@@ -15,10 +15,10 @@ test("the retired Community address opens Contact", async ({ page }) => {
 test("the Academy's conversation link opens a private writing conversation", async ({ page }) => {
   await page.route("**/v1/contact/status", route => route.fulfill({ json: { available: true } }));
   await page.goto("/academy");
-  await page.getByRole("link", { name: /Bring a question to the conversation/ }).click();
+  await page.getByRole("link", { name: /Ask a question/ }).click();
   await expect(page).toHaveURL("/contact?purpose=writing");
   await expect(page.getByRole("button", { name: "Send message", exact: true })).toBeVisible();
-  const purpose = page.getByRole("combobox", { name: "What brings you here?" });
+  const purpose = page.getByRole("combobox", { name: "Purpose" });
   if (await purpose.isVisible()) await expect(purpose).toHaveValue("writing");
-  else await expect(page.getByRole("radio", { name: /Writing & inquiry/ })).toBeChecked();
+  else await expect(page.getByRole("radio", { name: /Writing and research/ })).toBeChecked();
 });

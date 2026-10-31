@@ -16,14 +16,13 @@ export default function NotFoundPage() {
     <PageShell header={<PageHeader />} footer={<SiteColophon />} className="flex min-h-[70svh] items-center">
       <section className="w-full max-w-2xl" aria-labelledby="not-found-title">
         <p className="dot-label text-[color:var(--organism-accent-strong)]">
-          404 · No page here
+          404
         </p>
         <h1 id="not-found-title" className="dot-page-heading mt-4 text-balance">
-          This path ends here.
+          Page not found
         </h1>
         <p className="dot-lede mt-5 max-w-xl">
-          The address may have changed, or it may point beyond the current
-          edition. Nothing else will open automatically.
+          The address may have changed or may be incorrect.
         </p>
 
         <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">

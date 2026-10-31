@@ -201,12 +201,11 @@ test.describe("hero", () => {
 test("the Academy opens learning materials while keeping Book One a separate edition", async ({ page }) => {
   await page.goto("/academy");
   await expect(page).toHaveURL("/academy");
-  await expect(page.getByRole("heading", {
-    level: 1,
-    name: "Become a student of your own experience.",
-  })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "DOT Academy" })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/academy\/?$/);
-  await expect(page.locator('main a[href^="/academy/films"]')).toHaveCount(0);
+  // It names the films and plays none of them (ADR-0030).
+  await expect(page.locator('main a[href="/academy/films"]')).toBeVisible();
+  await expect(page.locator("main video, main audio, main iframe, main canvas")).toHaveCount(0);
   await expect(page.locator('main a[href="/book/digital-organism-theory"]').first()).toBeVisible();
   await expect(page.locator('main a[href="/doctrine"]').first()).toBeVisible();
   await expect(page.locator('main a[href="/applied"]').first()).toBeVisible();

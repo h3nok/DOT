@@ -3,7 +3,8 @@
    so nothing else lets the field show through it. */
 
 .films-page,
-.films-screening-shell {
+.films-screening-shell,
+.films-palette {
   --films-accent: var(--organism-accent-strong, var(--identity-lumen));
   --films-gold: var(--identity-rf, var(--organism-accent));
   --films-surface: color-mix(in oklab, var(--card) 82%, var(--background));
@@ -1244,7 +1245,8 @@ html:has(.films-page) .organism-membrane {
    their own, so every section on the page reads in the same voice. */
 
 .films-page,
-.films-screening-shell {
+.films-screening-shell,
+.films-palette {
   --films-serif: var(--font-serif, "Source Serif 4", Georgia, serif);
   --films-sans: var(--font-sans, "Space Grotesk", system-ui, sans-serif);
   --films-mono: var(--font-mono, "JetBrains Mono", monospace);

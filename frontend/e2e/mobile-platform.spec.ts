@@ -14,14 +14,14 @@ test.beforeEach(async ({ page, isMobile }) => {
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
 });
 
-test("Explore opens deliberately, routes, and stays usable across viewport sizes", async ({ page }) => {
+test("The menu opens deliberately, routes, and stays usable across viewport sizes", async ({ page }) => {
   await page.goto("/blog");
-  const menu = page.getByRole("button", { name: "Explore the site", exact: true });
+  const menu = page.getByRole("button", { name: "Open menu", exact: true });
   await thumbControl(menu);
   await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toHaveCount(0);
   await menu.focus();
   await page.keyboard.press("Enter");
-  const panel = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
+  const panel = page.getByRole("dialog", { name: "Menu", exact: true });
   await expect(panel).toBeVisible();
   const primary = panel.getByRole("navigation", { name: "Primary", exact: true });
   const destinations = ["Home", "Book One", "Academy", "Writing", "About", "Contact"];
@@ -40,7 +40,7 @@ test("Explore opens deliberately, routes, and stays usable across viewport sizes
     await link.scrollIntoViewIfNeeded();
     await thumbControl(link);
   }
-  const close = panel.getByRole("button", { name: "Close navigation", exact: true });
+  const close = panel.getByRole("button", { name: "Close menu", exact: true });
   await thumbControl(close);
   await expect(close).toBeInViewport({ ratio: 1 });
   await page.keyboard.press("Escape");
@@ -60,8 +60,8 @@ test("Explore opens deliberately, routes, and stays usable across viewport sizes
   await panel.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page).toHaveURL("/contact");
   // The URL changes before the lazy page renders; until then the previous page's
-  // Explore control is still on screen and would open with a stale location.
-  await expect(page.getByRole("heading", { name: "Let’s talk.", level: 1 })).toBeVisible();
+  // The menu control is still on screen and would open with a stale location.
+  await expect(page.getByRole("heading", { name: "Contact", level: 1 })).toBeVisible();
   await expect(panel).toHaveCount(0);
   await page.setViewportSize({ width: 640, height: 844 });
   await expect(menu).toBeVisible();
@@ -85,15 +85,15 @@ test("Explore opens deliberately, routes, and stays usable across viewport sizes
   await expectNoHorizontalOverflow(page);
 });
 
-test("Explore stays at the lower-left edge while the header center remains clear", async ({ page }) => {
+test("The menu control stays at the lower-left edge while the header center remains clear", async ({ page }) => {
   for (const width of [320, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const route of ["/", "/about"]) {
       await page.goto(route);
       await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toHaveCount(0);
-      const explore = page.getByRole("button", { name: "Explore the site", exact: true });
+      const explore = page.getByRole("button", { name: "Open menu", exact: true });
       await expect(explore).toHaveCount(1);
-      await expect(explore).toHaveText("Explore");
+      await expect(explore).toHaveText("Menu");
       const appearance = page.getByRole("button", { name: "Appearance settings", exact: true });
       const brand = page.getByRole("link", { name: "DOT — Home", exact: true });
       await expect(brand).toBeVisible();
@@ -111,14 +111,14 @@ test("Explore stays at the lower-left edge while the header center remains clear
       expect(centerOccupied, "The central part of the top bar must remain free of navigation controls").toBe(false);
 
       const exploreBox = (await explore.boundingBox())!;
-      expect(exploreBox.x, "Explore must stay at the left viewport edge").toBeGreaterThanOrEqual(0);
+      expect(exploreBox.x, "The menu control must stay at the left viewport edge").toBeGreaterThanOrEqual(0);
       expect(exploreBox.x).toBeLessThanOrEqual(48);
-      expect(exploreBox.y, "Explore belongs near the bottom, outside the top bar").toBeGreaterThan(900 * .65);
+      expect(exploreBox.y, "The menu control belongs near the bottom, outside the top bar").toBeGreaterThan(900 * .65);
       expect(exploreBox.y + exploreBox.height).toBeGreaterThanOrEqual(900 - 80);
       expect(exploreBox.y + exploreBox.height).toBeLessThanOrEqual(900);
       await expect(explore).toBeInViewport({ ratio: 1 });
       await explore.click();
-      const panel = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
+      const panel = page.getByRole("dialog", { name: "Menu", exact: true });
       await expect(panel.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link")).toHaveCount(6);
       await page.keyboard.press("Escape");
       await expect(explore).toBeFocused();
@@ -130,12 +130,12 @@ test("Explore stays at the lower-left edge while the header center remains clear
 test("phone intake uses a native purpose selector and preserves the draft when purpose changes", async ({ page }) => {
   await page.route("**/v1/contact/status", route => route.fulfill({ json: { available: true } }));
   await page.goto("/contact?purpose=project");
-  const purpose = page.getByRole("combobox", { name: "What brings you here?" });
+  const purpose = page.getByRole("combobox", { name: "Purpose" });
   await expect(purpose).toHaveValue("project");
-  const name = page.getByRole("textbox", { name: "Your name" });
+  const name = page.getByRole("textbox", { name: "Name" });
   await expect(name).toBeInViewport();
   await name.fill("Example builder");
-  const message = page.getByRole("textbox", { name: "Your message" });
+  const message = page.getByRole("textbox", { name: "Message" });
   await message.fill("A draft that should survive a change of purpose.");
   await purpose.selectOption("writing");
   await expect(page.getByRole("textbox", { name: "Timeline" })).toHaveCount(0);
@@ -163,7 +163,7 @@ test("Book One starts above the phone fold and its contents remain usable on a s
   for (const button of await toolbar.getByRole("button").all()) await thumbControl(button);
   await toolbar.getByRole("button", { name: "Open book contents" }).click();
   await page.setViewportSize({ width: 320, height: 400 });
-  const contents = page.getByRole("dialog", { name: "The argument" });
+  const contents = page.getByRole("dialog", { name: "Contents" });
   const close = contents.getByRole("button", { name: "Close contents" });
   await thumbControl(close);
   const finalSection = contents.locator('a[href*="/references"]').last();

@@ -21,9 +21,9 @@ describe("NativeWritingPage", () => {
     expect(screen.getByRole("link", { name: "https://dotheory.org/writing/work-1/releases/2/" })).toBeInTheDocument();
     expect(screen.getByText("End of piece")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute("href", "/blog");
-    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
     expect(within(screen.getByRole("navigation", { name: "Primary" })).getByRole("link", { name: "Writing" })).toHaveAttribute("aria-current", "page");
-    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
   });
 
   it("keeps the withdrawal record without rendering the withdrawn body", async () => {

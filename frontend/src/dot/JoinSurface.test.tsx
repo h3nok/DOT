@@ -41,7 +41,7 @@ describe("JoinSurface", () => {
 
     render(<JoinSurface onClose={vi.fn()} reducedMotion />);
 
-    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Requests are not open" })).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe("JoinSurface", () => {
     fireEvent.change(screen.getByLabelText("Your email address"), {
       target: { value: "reader@example.com" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Ask to join" }));
+    fireEvent.click(screen.getByRole("button", { name: "Request an invitation" }));
 
     await waitFor(() =>
       expect(screen.getByRole("heading", { name: "Confirm your address" })).toBeInTheDocument(),
@@ -108,7 +108,7 @@ describe("JoinSurface", () => {
     fireEvent.change(screen.getByLabelText("Your email address"), {
       target: { value: "reader@example.com" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Ask to join" }));
+    fireEvent.click(screen.getByRole("button", { name: "Request an invitation" }));
     await waitFor(() => screen.getByLabelText("Six-digit code"));
 
     fireEvent.change(screen.getByLabelText("Six-digit code"), {
@@ -131,6 +131,6 @@ describe("JoinSurface", () => {
     expect(
       screen.queryByText(/\d+ (?:people|others) (?:ahead|waiting)|spots? left|closing soon/i),
     ).not.toBeInTheDocument();
-    expect(screen.getByText(/no queue position to\s+watch/i)).toBeInTheDocument();
+    expect(screen.getByText(/never published or sold/i)).toBeInTheDocument();
   });
 });

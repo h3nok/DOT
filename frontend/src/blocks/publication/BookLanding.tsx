@@ -164,7 +164,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             </div>
             {!savedPath && (
               <p className="book-volume-written-order book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
-                Prefer to build the theory from its foundations?{" "}
+                Alternative path:{" "}
                 <Link
                   to={writtenOrderHref}
                   className="text-[var(--book-ink)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
@@ -202,16 +202,16 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           aria-labelledby="volume-guide-title"
         >
           <div>
-            <p className="dot-label text-[var(--book-cinnabar)]">Reader contract</p>
+            <p className="dot-label text-[var(--book-cinnabar)]">Claim levels</p>
             <h2
               id="volume-guide-title"
               className="book-reading-heading mt-4 text-3xl font-medium leading-tight text-[var(--book-ink)] sm:text-4xl"
             >
-              Read the claim at the level it earns.
+              How claims are labelled
             </h2>
             <p className="book-reading-copy mt-5 text-base leading-relaxed text-[var(--book-muted)]">
               {manifest.reader_contract.claim_levels.join(", ").replace(/, ([^,]*)$/, ", and $1")}{" "}
-              remain visibly distinct throughout the edition.
+              are labelled throughout the edition.
             </p>
             <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
               <Link
@@ -257,14 +257,13 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
         >
           <div className="grid gap-8 md:grid-cols-[0.72fr_1.28fr] lg:gap-20">
             <div>
-              <p className="dot-label text-[var(--book-cinnabar)]">The complete argument</p>
+              <p className="dot-label text-[var(--book-cinnabar)]">Book One</p>
               <h2 id="book-contents-title" className="book-reading-heading mt-4 text-4xl font-medium leading-tight text-[var(--book-ink)] sm:text-5xl">
-                A finite sequence.
+                Contents
               </h2>
               <p className="book-reading-copy mt-5 max-w-sm text-base leading-relaxed text-[var(--book-muted)]">
-                Preface, seven chapters, a coda, and the notes and sources.
-                Technical passages stay folded until you open them. Nothing
-                autoplays; every section has an end.
+                Preface, seven chapters, a coda, notes, and sources.
+                Technical passages are collapsed by default.
               </p>
               <p className="dot-label mt-6 text-[var(--book-muted)]">
                 {manifest.extent.chapters} chapters · {manifest.extent.references} sources
@@ -336,7 +335,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               id="book.care_note"
               as="p"
               multiline
-              text="Some of this touches difficult ground — how fear narrows a life, what conditioning costs, and how little of ourselves we chose. Read at your own pace, and set it down when you need to."
+              text="Some chapters discuss fear, conditioning, and personal history."
               className="book-reading-copy mt-4 block max-w-md text-base italic leading-relaxed text-[var(--book-muted)]"
             />
           </div>
@@ -351,7 +350,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             <div>
               <p className="dot-label text-[var(--book-cinnabar)]">Book One</p>
               <h2 id="book-landing-end-title" className="book-reading-heading mt-3 max-w-xl text-3xl font-medium leading-tight text-[var(--book-ink)] sm:text-4xl">
-                Begin where the observer enters.
+                Start reading
               </h2>
             </div>
             <Link

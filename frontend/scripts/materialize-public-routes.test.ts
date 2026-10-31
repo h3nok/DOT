@@ -322,10 +322,16 @@ describe("public route metadata", () => {
     text.innerHTML = route.prerender!;
     expect(text.querySelector("h1")?.textContent).toBe(ACADEMY.heading);
     expect(text.textContent).toContain(ACADEMY.introduction);
-    expect(text.querySelector('a[href^="/academy/films"]')).toBeNull();
+    // The Academy names its films but never plays one (ADR-0030, 2026-10-27).
+    expect(text.querySelector('a[href="/academy/films"]')).not.toBeNull();
+    expect(text.querySelector('a[href="/film"]')).not.toBeNull();
+    expect(text.querySelector("video, audio, iframe, canvas")).toBeNull();
+    for (const concept of DOCTRINE_CONCEPTS as { id: string; name: string }[]) {
+      expect(text.querySelector(`a[href="/doctrine/${concept.id}"]`)?.textContent).toBe(concept.name);
+    }
     for (const readingPath of READING_PATHS) {
       const destination = "/book/digital-organism-theory/" + readingPath.steps[0].slug + "?path=" + readingPath.id;
-      expect(text.querySelector('a[href="' + destination + '"]')?.textContent).toContain(readingPath.label);
+      expect(text.querySelector('a[href="' + destination + '"]')?.textContent).toBe(readingPath.label);
       expect(text.textContent).toContain(readingPath.purpose);
     }
     expect(text.querySelector('a[href="/book/digital-organism-theory"]')).not.toBeNull();
@@ -702,7 +708,7 @@ describe("essays", () => {
     const blog = routes.find((route) => route.route === "/blog")!;
     expect(blog.title).toBe(`Writing & ideas — ${AUTHOR.name}`);
     expect(blog.description).toContain("AI, digital products, consciousness");
-    expect(blog.prerender).toContain('href="/about#about-products">Explore the work</a>');
+    expect(blog.prerender).toContain('href="/about#about-products">View projects</a>');
     expect(blog.prerender).toContain('href="/book/digital-organism-theory">Read Book One</a>');
     expect(blog.prerender).toContain(`href="${SITE_URL}/feed.xml">Follow with RSS</a>`);
     expect(blog.prerender).toContain('href="/readers">Open the reader list</a>');

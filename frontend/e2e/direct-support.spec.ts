@@ -28,7 +28,7 @@ test("a reader can return to direct support when card checkout is unavailable", 
   await page.route("**/v1/support/options", route => route.fulfill({ json: { available: false, tiers: [], purposes: [], min_custom_minor: 200, max_custom_minor: 500000, currency: "usd" } }));
   await page.goto("/support?purpose=author");
   await page.getByRole("button", { name: "Use card checkout instead" }).click();
-  await expect(page.getByRole("heading", { name: "Not open yet" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Card payments unavailable" })).toBeVisible();
   await page.getByRole("button", { name: "Back to direct support methods" }).click();
   await expect(page.getByText("author@example.com", { exact: true })).toBeVisible();
 });

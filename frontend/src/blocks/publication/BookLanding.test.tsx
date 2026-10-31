@@ -91,12 +91,12 @@ describe("BookLanding", () => {
     expect(
       screen.queryByText("A life is shaped, acts, and is shaped again."),
     ).not.toBeInTheDocument();
-    expect(screen.getByText("Read the claim at the level it earns.")).toBeInTheDocument();
+    expect(screen.getByText("How claims are labelled")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open the concept map/ })).toHaveAttribute(
       "href",
       "/doctrine",
     );
-    expect(screen.getByText("A finite sequence.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Contents" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Entrances/i })).not.toBeInTheDocument();
   });
 
