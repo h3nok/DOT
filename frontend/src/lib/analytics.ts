@@ -79,6 +79,8 @@ function initializePlausible(win: AnalyticsWindow | null): void {
 export function initAnalytics(doc: Document | undefined = globalThis.document): boolean {
   if (!ANALYTICS_DOMAIN || !doc) return false;
   if (!SRC.startsWith("https://")) return false;
+  // The invitation page holds a secret in its URL, and Plausible reports the URL.
+  if (/^\/invite\/?$/.test(doc.location?.pathname ?? "")) return false;
   if (doc.querySelector(`script[${MARKER}]`)) return false;
 
   const script = doc.createElement("script");

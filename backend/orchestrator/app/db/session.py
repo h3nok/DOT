@@ -7,6 +7,7 @@ import sqlalchemy.ext.asyncio
 
 import app.auth.dependencies
 import app.core.tenancy
+import app.db.models
 import app.settings
 
 settings: app.settings.Settings = app.settings.get_settings()
@@ -24,6 +25,30 @@ async def get_session() -> collections.abc.AsyncGenerator[
 ]:
     async with AsyncSessionLocal() as session:
         yield session
+
+
+async def flag_suspended_session(
+    request: fastapi.Request,
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(get_session),
+) -> None:
+    """Make suspension reach sessions already issued, which last seven days.
+
+    Runs before every route. Requests with no session, and the steward's own, do
+    not touch the database. The read transaction ends here so a route that binds a
+    tenant starts clean.
+    """
+
+    context = app.auth.dependencies.resolve_session_optional(request)
+    if context is None or context.role != "member":
+        return
+    status = await session.scalar(
+        sqlalchemy.select(app.db.models.Member.status).where(
+            app.db.models.Member.id == context.owner_id
+        )
+    )
+    await session.rollback()
+    if status == "suspended":
+        request.state.session_suspended = True
 
 
 async def get_tenant_session(
