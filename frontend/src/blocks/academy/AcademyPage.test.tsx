@@ -23,7 +23,7 @@ describe("AcademyPage", () => {
     renderPage();
 
     expect(screen.getByRole("heading", { level: 1, name: "DOT Academy" })).toBeVisible();
-    expect(screen.getByRole("img", { name: /T × E outside, Big C within it/ })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /T × E \(speculative\) outside, Big C within it/ })).toBeInTheDocument();
     const sections = screen.getByRole("main").querySelectorAll("section");
     expect(sections[0]).toContainElement(screen.getByRole("list", { name: "Reading paths" }));
     expect(screen.getByRole("main").querySelector("video, audio, iframe, canvas")).toBeNull();

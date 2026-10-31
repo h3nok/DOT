@@ -140,3 +140,14 @@ T and E are capacities of Big C; its corrected edition is where the author's
 wording of this relationship enters the book, and from there the concept map
 and films. Until then, public explanations may say that Big C emerged within
 T × E, and must not attribute that account to Book One v4.
+
+The author then clarified the evidence level: "T × E are speculative. I don't
+experience them directly. I am extending that from my experience of Big C.
+Extrapolating my understanding of computers here. This is literally the purpose
+… to bubble up to this understanding."
+
+T × E is therefore a speculative extension, inferred upward from experience of
+Big C rather than observed. Every public account labels it as Speculation; the
+homepage's "starting assumption" boundary is consistent with this. The
+computing analogy is the author's route to the inference, not public copy
+until the author approves its wording.

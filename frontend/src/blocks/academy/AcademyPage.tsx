@@ -94,10 +94,10 @@ export default function AcademyPage() {
             </nav>
           </header>
           <figure className="academy-hub-figure">
-            <Still label="The architecture of Digital Organism Theory: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.">
+            <Still label="The architecture of Digital Organism Theory: T × E (speculative) outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.">
               <ArchitectureMap t={CONCEPT_FILM_SECONDS} layer="all" />
             </Still>
-            <figcaption>The architecture of Digital Organism Theory: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.</figcaption>
+            <figcaption>The architecture of Digital Organism Theory: T × E (speculative) outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.</figcaption>
           </figure>
         </div>
         <ol className="academy-hub-grid academy-hub-grid--two" aria-label="Reading paths">
