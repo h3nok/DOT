@@ -904,6 +904,8 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     imageAlt: `${AUTHOR.name} — work, writing and conversation`,
   };
   const authorRoutes = [
+    { route: "/invite", title: "Your invitation", description: "Accept a private invitation.", noindex: true, prerender: page("<h1>Your invitation</h1><p>This page requires JavaScript to open your invitation.</p>") },
+    { route: "/studio/people", title: "People — Private workspace", description: "Private people desk.", noindex: true, prerender: page("<h1>People</h1><p>Sign in to open the private workspace.</p>") },
     { route: "/studio/pages/amm", title: "Edit AMM’s pages", description: "Private page editor.", noindex: true, prerender: page("<h1>Edit AMM’s pages</h1><p>Sign in to open your saved page copy.</p>") },
     { route: "/studio/newsletter", title: "AMM newsletter — Private workspace", description: "Private newsletter desk.", noindex: true, prerender: page("<h1>AMM newsletter</h1><p>Sign in to open the private workspace.</p>") },
     {

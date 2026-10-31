@@ -8,16 +8,23 @@ interface SignInProps {
   origin?: { x: number; y: number };
   reducedMotion?: boolean;
   onClose: () => void;
+  /** Present when someone arrives through an invitation link. */
+  inviteToken?: string;
+  /** Where to go once signed in. Defaults to reloading the current page. */
+  onSignedIn?: () => void;
 }
 
 export const SignIn: React.FC<SignInProps> = ({
   origin,
   reducedMotion = false,
   onClose,
+  inviteToken,
+  onSignedIn,
 }) => {
   const { requestCode, verifyCode } = useAuth();
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +35,7 @@ export const SignIn: React.FC<SignInProps> = ({
     if (!email.trim() || busy) return;
     setBusy(true);
     setError(null);
-    const result = await requestCode(email.trim());
+    const result = await requestCode(email.trim(), inviteToken);
     setBusy(false);
     if (!result.ok) {
       setError(result.error ?? "Could not send code.");
@@ -45,7 +52,7 @@ export const SignIn: React.FC<SignInProps> = ({
     if (!code.trim() || busy) return;
     setBusy(true);
     setError(null);
-    const result = await verifyCode(email.trim(), code.trim());
+    const result = await verifyCode(email.trim(), code.trim(), displayName.trim() || undefined, inviteToken);
     setBusy(false);
     if (!result.ok) {
       setError(result.error ?? "Could not verify.");
@@ -56,7 +63,8 @@ export const SignIn: React.FC<SignInProps> = ({
       return;
     }
     // Signed in — reload so every provider picks up the session.
-    window.location.reload();
+    if (onSignedIn) onSignedIn();
+    else window.location.reload();
   };
 
   const inputClass =
@@ -67,7 +75,7 @@ export const SignIn: React.FC<SignInProps> = ({
   return (
     <BloomSurface
       kicker="private membership"
-      title={step === "email" ? "Sign in" : "Enter your code"}
+      title={step === "code" ? "Enter your code" : inviteToken ? "Accept your invitation" : "Sign in"}
       description={
         step === "email"
           ? "A one-time code will be sent to your email."
@@ -80,7 +88,25 @@ export const SignIn: React.FC<SignInProps> = ({
       onClose={onClose}
     >
       {step === "email" ? (
-        <form onSubmit={handleRequestCode}>
+        // The keys keep each step's DOM separate. Reusing a button across steps would
+        // turn "Use a different email" into a submit button in the middle of its click.
+        <form key="email" onSubmit={handleRequestCode}>
+          {inviteToken && (
+            <>
+              <label className="mb-1.5 block text-xs text-muted-foreground" htmlFor="signin-name">
+                Your name (optional)
+              </label>
+              <input
+                id="signin-name"
+                type="text"
+                autoComplete="name"
+                maxLength={128}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className={`${inputClass} mb-3`}
+              />
+            </>
+          )}
           <label className="sr-only" htmlFor="signin-email">
             Email address
           </label>
@@ -105,7 +131,7 @@ export const SignIn: React.FC<SignInProps> = ({
           </button>
         </form>
       ) : (
-        <form onSubmit={handleVerifyCode}>
+        <form key="code" onSubmit={handleVerifyCode}>
           <label className="sr-only" htmlFor="signin-code">
             One-time code
           </label>

@@ -89,6 +89,8 @@ const AboutPage = React.lazy(() => import("./blocks/about/AboutPage"));
 const ContactPage = React.lazy(() => import("./blocks/contact/ContactPage"));
 const FilmPage = React.lazy(() => import("./blocks/films/FilmPage"));
 const ContactInboxPage = React.lazy(() => import("./blocks/contact/ContactInboxPage"));
+const PeoplePage = React.lazy(() => import("./blocks/people/PeoplePage"));
+const InvitePage = React.lazy(() => import("./blocks/people/InvitePage"));
 const EssaysPage = React.lazy(() => import("./blocks/essays/EssaysPage"));
 const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const FilmsPage = React.lazy(() => import("./blocks/films/FilmsPage"));
@@ -249,6 +251,7 @@ const App: React.FC = () => {
                 <Route path="/applied" element={<AppliedPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/join" element={<JoinPage />} />
+                <Route path="/invite" element={<InvitePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/community" element={<Navigate to="/contact" replace />} />
@@ -285,6 +288,7 @@ const App: React.FC = () => {
                   element={<StudioAuthGate ownerOnly><WritingStudioPage /></StudioAuthGate>}
                 />
                 <Route path="/studio/inbox" element={<StudioAuthGate ownerOnly title="Contact inbox"><ContactInboxPage /></StudioAuthGate>} />
+                <Route path="/studio/people" element={<StudioAuthGate ownerOnly title="People"><PeoplePage /></StudioAuthGate>} />
                 <Route path="/studio/pages/amm" element={<StudioAuthGate ownerOnly title="Edit AMM’s pages"><PageCopyStudio /></StudioAuthGate>} />
                 <Route path="/studio/newsletter" element={<StudioAuthGate ownerOnly title="AMM newsletter"><AmmStudioPage /></StudioAuthGate>} />
                 <Route

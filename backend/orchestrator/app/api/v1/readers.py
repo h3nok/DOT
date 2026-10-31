@@ -87,10 +87,22 @@ async def unsubscribe(
     return schemas.ReaderUnsubscribed()
 
 
+@router.delete("/{reader_id}", status_code=204)
+async def remove_reader(
+    reader_id: str,
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> None:
+    if not await readers_service.remove_reader(session, reader_id):
+        raise fastapi.HTTPException(status_code=404, detail="That subscription no longer exists.")
+
+
 @router.get("", response_model=schemas.ReaderList)
 async def read_list(
-    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
-        app.auth.dependencies.require_owner
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
     ),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.ReaderList:
@@ -100,6 +112,5 @@ async def read_list(
     the owner write scope rather than mere membership — the same bar the join
     queue sets.
     """
-    app.auth.dependencies.ensure_owner_write_scope(owner)
     rows = await readers_service.list_readers(session)
     return schemas.ReaderList(readers=[schemas.ReaderOut(**row) for row in rows])

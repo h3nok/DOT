@@ -45,6 +45,17 @@ describe("analytics", () => {
     expect(script!.src).toBe("https://plausible.io/js/script.js");
   });
 
+  it("never loads on the invitation page, whose URL holds a secret", async () => {
+    const { initAnalytics } = await loadAnalytics({ VITE_PLAUSIBLE_DOMAIN: "dotheory.org" });
+    window.history.pushState({}, "", "/invite#a-secret-token");
+    try {
+      expect(initAnalytics(document)).toBe(false);
+      expect(document.head.querySelector("script[data-dot-analytics]")).toBeNull();
+    } finally {
+      window.history.pushState({}, "", "/");
+    }
+  });
+
   it("does not count a pageview twice when init runs again", async () => {
     const { initAnalytics } = await loadAnalytics({
       VITE_PLAUSIBLE_DOMAIN: "dotheory.org",

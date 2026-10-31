@@ -84,9 +84,12 @@ export function useAuth() {
   }, [refresh]);
 
   const requestCode = useCallback(
-    async (email: string): Promise<RequestResult> => {
+    async (email: string, inviteToken?: string): Promise<RequestResult> => {
       try {
-        const { res, payload } = await post("/otp/request", { email });
+        const { res, payload } = await post("/otp/request", {
+          email,
+          invite_token: inviteToken,
+        });
         if (!res.ok) {
           return {
             ok: false,
@@ -109,12 +112,14 @@ export function useAuth() {
       email: string,
       code: string,
       displayName?: string,
+      inviteToken?: string,
     ): Promise<VerifyResult> => {
       try {
         const { res, payload } = await post("/otp/verify", {
           email,
           code,
           display_name: displayName,
+          invite_token: inviteToken,
         });
         if (!res.ok) {
           return {
@@ -169,11 +174,12 @@ export function useAuth() {
         return { ok: false, error: "The invitation response was incomplete." };
       }
 
+      // The token stays in the fragment, which never reaches the static host.
       const url = new URL(
-        import.meta.env.BASE_URL || "/",
+        `${import.meta.env.BASE_URL || "/"}invite`,
         window.location.origin,
       );
-      url.searchParams.set("invite", token);
+      url.hash = token;
 
       return {
         ok: true,

@@ -59,10 +59,38 @@ async def verify_request(
     return schemas.JoinVerified()
 
 
+@router.post("/requests/{request_id}/invite", response_model=schemas.JoinInvited)
+@_limiter.limit("30/hour")
+async def invite_requester(
+    request: fastapi.Request,
+    request_id: str,
+    steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.JoinInvited:
+    result = await join_service.invite_requester(session, request_id, steward.owner_id)
+    if not result["ok"]:
+        _fail(result)
+    return schemas.JoinInvited(dev_link=result.get("dev_link"))
+
+
+@router.delete("/requests/{request_id}", status_code=204)
+async def decline_request(
+    request_id: str,
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> None:
+    if not await join_service.decline_request(session, request_id):
+        raise fastapi.HTTPException(status_code=404, detail="That request is no longer open.")
+
+
 @router.get("/requests", response_model=schemas.JoinQueue)
 async def read_queue(
-    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
-        app.auth.dependencies.require_owner
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
     ),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.JoinQueue:
@@ -71,6 +99,5 @@ async def read_queue(
     Unsealing addresses is the single most sensitive read in the service, so it
     requires the owner write scope rather than mere membership.
     """
-    app.auth.dependencies.ensure_owner_write_scope(owner)
     rows = await join_service.list_requests(session)
     return schemas.JoinQueue(requests=[schemas.JoinRequestOut(**row) for row in rows])
