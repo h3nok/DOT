@@ -123,3 +123,20 @@ released Book One no longer make the same claims.
 | Pair the RF₀ rings with open branches from Big C | Makes non-sequential multiplicity explicit | Crowds the hero and competes with the primary architecture | Rejected |
 | State multiplicity in the RF₀ teaching panel | Keeps the hero legible while preserving the claim and evidence boundary | Readers encounter the wider possibility after the hero | **Chosen** |
 | Ring labels plus outside-to-inside teaching sections | One visual grammar; explicit claim limits; finite reading path | Longer page and some deliberate repetition | **Chosen** |
+
+## Amendment — 2026-10-31: What T × E makes possible, and what Big C began to do
+
+The author stated: "Big C emerged within T × E. We assume T × E enables
+process formation, and pattern formation. Big C emerged and started to
+recognize them. The patterns and including its own."
+
+The architecture is unchanged: T × E lies outside Big C, and Big C emerged
+within it. Two points are now explicit. T × E is assumed to enable the forming
+of processes and patterns. Big C, once emerged, began to recognize those
+patterns, including its own pattern.
+
+Released editions are not edited to match (ADR-0018). Book One v4 states that
+T and E are capacities of Big C; its corrected edition is where the author's
+wording of this relationship enters the book, and from there the concept map
+and films. Until then, public explanations may say that Big C emerged within
+T × E, and must not attribute that account to Book One v4.

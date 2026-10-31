@@ -167,3 +167,44 @@ Serves L1 (calm motion; the only sound is the typing the reader chose to
 start), L3 (no autoplay or chaining; it pauses when unseen), and L7 (text
 taken from the concept map and the book, links to the source passage; the
 sound is one click to turn off). Violates no manifesto laws.
+
+## Amendment — 2026-10-30: The Academy entry shows what it holds
+
+The founder found the Academy entry basic: a heading of advice, two reading
+paths, and three links, with none of the theory or films that the navigation
+promises. The entry is now an index that shows its contents, one part per
+screen, and gives the reader no advice:
+
+1. **Read.** The heading names the Academy and says what it holds. Beside it,
+   the architecture of Digital Organism Theory is drawn as the films draw
+   it: T × E outside, Big C within it, RF₀ inside Big C, and Little c within
+   RF₀. It is credited to DOT, not to Book One v4, whose text differs
+   (ADR-0026, 2026-10-31). Below
+   are the two reading paths into the fixed edition.
+2. **Concepts.** Every concept in the concept map's order, each with its
+   drawing, claim level, definition, and the analogy its film gives. Each
+   links to its own page, and the page links to the whole map.
+3. **Films.** The introduction at `/film` and the screening room at
+   `/academy/films`, each shown by stills of its own drawings.
+4. **Open questions.** Book One's open seams, each linked to its entry, and the
+   full register.
+
+The entry still plays no film (2026-10-27). Its drawings are the films' own
+motion studies, which are pure functions of time, held on a finished frame:
+nothing moves, and the drawings and words render from the same data as the
+films and the concept map, so the entry cannot drift from them. It claims no
+course, assessment, or enrolment. The concept map's way back leads to the
+Academy, which now indexes it, and the homepage calls it the concept map
+rather than the Doctrine.
+
+At the founder's request, the Academy entry and the site menu use neutral,
+professional language: plain section headings, factual descriptions, and no
+slogans. The menu control is labelled **Menu**, replacing **Explore** above. Its
+panel is a single list of the main pages with a one-line description each; the
+current page is marked by the observer symbol. The "Follow your curiosity."
+heading, its subtitle, the separate "You are here" panel, and the footer line
+are removed.
+
+Serves L1 (one legible index), L2 (finite lists), L3 (no playback or chaining),
+L7 (only materials that exist, with honest claim levels), and L10 (one part per
+screen). Violates no manifesto law. No new Attention OS primitive is claimed.

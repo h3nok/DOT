@@ -376,15 +376,15 @@ const DoctrinePage = () => {
         aria-hidden="true"
       />
 
-      {/* Back to the home page */}
+      {/* Back to the Academy, which indexes every concept */}
       <Link
-        to="/"
+        to="/academy"
         className="organism-alive fixed left-4 top-4 z-40 inline-flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent pl-2.5 pr-3.5 text-sm font-semibold text-[color:var(--surface-muted)] backdrop-blur-md transition-colors hover:text-[color:var(--surface-fg)]"
-        aria-label="DOT — Home"
-        title="DOT — Home"
+        aria-label="DOT Academy"
+        title="DOT Academy"
       >
         <ArrowLeft className="h-4 w-4 shrink-0" />
-        <span>Home</span>
+        <span>Academy</span>
       </Link>
 
       <Link

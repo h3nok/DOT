@@ -107,13 +107,13 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
       return (
         <BloomSurface
           kicker="join"
-          title="Not open yet"
-          description="Invitations are not being requested here until there is somewhere for a request to land."
+          title="Requests are not open"
+          description="Invitation requests are not being accepted at the moment."
           {...shell}
         >
           <p className="py-4 text-sm italic leading-relaxed text-muted-foreground">
-            Reading stays free and complete in the meantime. Book One, the concept map, and the
-            register of open questions need no account and never will.
+            Book One, the concept map, and the open questions remain free to read without an
+            account.
           </p>
         </BloomSurface>
       );
@@ -121,8 +121,8 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
     return (
       <BloomSurface
         kicker="invite-only"
-        title="Ask to join"
-        description="DOT grows one trusted invitation at a time, which is the reason it can refuse advertising and engagement ranking."
+        title="Request an invitation"
+        description="Membership is by invitation. Requests are reviewed individually."
         {...shell}
         footer={
           <a
@@ -140,18 +140,13 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
         }
       >
         <div className="flex flex-col gap-4 py-1 text-sm leading-relaxed text-muted-foreground">
+          <p>Include a short note on your background and interest.</p>
           <p>
-            Tell me who you are and what you would want to do here. Disagreeing with the book is
-            a perfectly good reason — the register of open questions exists because the argument
-            is meant to be pushed on.
-          </p>
-          <p>
-            Requests are read by one person, so an answer can take a while, and there is no
-            guarantee of one. Nothing about reading changes either way.
+            Requests are reviewed by Henok. A reply is not guaranteed. Reading remains free
+            either way.
           </p>
           <p className="dot-meta leading-5 text-muted-foreground/80">
-            There is no queue position and no waiting list to watch. Your request is not
-            published anywhere.
+            Requests are not published.
           </p>
         </div>
       </BloomSurface>
@@ -161,16 +156,16 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
   if (stage === "done") {
     return (
       <BloomSurface
-        kicker="thank you"
+        kicker="request received"
         title="Your address is confirmed"
-        description="The request is on the list. It will be read by a person, not sorted by a score."
+        description="Your request will be reviewed."
         {...shell}
       >
         <div className="flex flex-col items-center gap-4 py-7 text-center">
           <Check className="h-7 w-7 text-[color:var(--organism-accent-strong)]" />
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-            There is nothing to check back on and nothing to watch. If an invitation is right,
-            it arrives at this address. Reading stays free and complete either way.
+            If an invitation is issued, it will be sent to this address. Reading remains free
+            either way.
           </p>
         </div>
       </BloomSurface>
@@ -182,7 +177,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
       <BloomSurface
         kicker="invite-only"
         title="Confirm your address"
-        description={`A six-digit code is on its way to ${email}. It confirms the address is yours — nothing more.`}
+        description={`A six-digit code was sent to ${email}.`}
         {...shell}
         footer={
           <button type="submit" form="join-verify" disabled={busy} className={ACTION}>
@@ -223,8 +218,8 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
   return (
     <BloomSurface
       kicker="invite-only"
-      title="Ask to join"
-      description="DOT grows one trusted invitation at a time, which is the reason it can refuse advertising and engagement ranking."
+      title="Request an invitation"
+      description="Membership is by invitation. Requests are reviewed individually."
       {...shell}
       footer={
         <button
@@ -234,7 +229,7 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
           className={ACTION}
         >
           {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          Ask to join
+          Request an invitation
         </button>
       }
     >
@@ -261,13 +256,12 @@ export const JoinSurface: React.FC<JoinSurfaceProps> = ({
           onChange={(event) => setReason(event.target.value)}
           rows={3}
           maxLength={600}
-          placeholder="What would you want to do here? Disagreeing with the book counts."
+          placeholder="Background and interest (optional)"
           className={`${FIELD} resize-none`}
         />
         <p className="dot-meta leading-5 text-muted-foreground/80">
-          Your address is confirmed by a code, then stored encrypted so it can be answered and
-          nothing else. It is never published, never sold, and there is no queue position to
-          watch.
+          Your address is confirmed by a code and stored encrypted. It is used only to answer
+          this request and is never published or sold.
         </p>
         {error && (
           <p role="alert" className="text-xs text-destructive">

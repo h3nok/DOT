@@ -40,7 +40,7 @@ describe("InvitePage", () => {
     open("#used-token");
 
     expect(await screen.findByRole("heading", { name: "This invitation is no longer open" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Ask to join" })).toHaveAttribute("href", "/join");
+    expect(screen.getByRole("link", { name: "Request an invitation" })).toHaveAttribute("href", "/join");
   });
 
   it("does not ask the server about a link with no token", async () => {

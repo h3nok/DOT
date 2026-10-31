@@ -26,14 +26,14 @@ describe("FilmsPage", () => {
   it("opens the screening room on the first concept's film and marks Academy current in primary nav", () => {
     renderFilmsPage();
 
-    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
     expect(
       within(screen.getByRole("navigation", { name: "Primary" })).getByRole(
         "link",
         { name: "Academy" },
       ),
     ).toHaveAttribute("aria-current", "page");
-    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
 
     expect(screen.getByRole("heading", { level: 1, name: filmsData.title })).toBeInTheDocument();
     expect(

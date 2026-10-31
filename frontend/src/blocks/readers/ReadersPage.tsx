@@ -51,17 +51,17 @@ export default function ReadersPage() {
             source="front"
             fallback={<ListNotOpen />}
             unavailableFallback={<ListUnavailable />}
-            loadingFallback={<Surface className={LIST_STATE}><p role="status">Checking whether the list is open…</p></Surface>}
+            loadingFallback={<Surface className={LIST_STATE}><p role="status">Checking availability…</p></Surface>}
           />
           <div className="readers-commitments">
-            <p className="readers-commitment-heading"><ShieldCheck aria-hidden="true" />Your address, respected.</p>
+            <p className="readers-commitment-heading"><ShieldCheck aria-hidden="true" />Privacy</p>
             <ul>{READERS.commitments.map((commitment) => <li key={commitment}>{commitment}</li>)}</ul>
-            <TextLink to="/privacy" icon={null}>How addresses are kept</TextLink>
+            <TextLink to="/privacy" icon={null}>Privacy policy</TextLink>
           </div>
         </div>
       </div>
-      <p className="readers-browse">Looking for The American Millennial Manifesto? <TextLink to="/amm/editions#amm-subscribe">Subscribe to AMM separately</TextLink></p>
-      <p className="readers-browse">Prefer to read here? <TextLink to="/blog">Browse the writing</TextLink></p>
+      <p className="readers-browse">The American Millennial Manifesto has its own list. <TextLink to="/amm/editions#amm-subscribe">Subscribe to AMM</TextLink></p>
+      <p className="readers-browse"><TextLink to="/blog">Browse all writing</TextLink></p>
     </PageShell>
   );
 }
@@ -69,7 +69,7 @@ export default function ReadersPage() {
 function ListNotOpen() {
   return (
     <Surface as="section" className={LIST_STATE}>
-      <h2 className="font-serif text-xl text-foreground">The list is not open yet.</h2>
+      <h2 className="font-serif text-xl text-foreground">The reader list is not available yet.</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {ESSAYS_PUBLISHED ? (
           <>

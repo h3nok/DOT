@@ -77,6 +77,9 @@ did not — do not claim to have composed from primitives that are absent.
   the source of bits and unformed possibility. Big C is the living, conscious
   pattern that emerged within these prerequisites, retains state, responds to
   change, and transforms raw input into coherent, structured output.
+- The author added on 2026-10-31: **T × E enables process formation and
+  pattern formation.** Big C emerged within T × E and began to recognize those
+  patterns, including its own.
 - Keep this relationship consistent in narration, captions, diagrams, and public
   explanations. A familiar analogy must preserve the theory's relationships.
 - The v4 working manuscript and released v4 book contain a conflicting editorial

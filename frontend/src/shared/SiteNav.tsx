@@ -19,13 +19,12 @@ const EXTRA_NAV: ReadonlyArray<readonly [string, string]> = [
 ];
 
 const DESTINATION_DESCRIPTIONS: Readonly<Record<string, string>> = {
-  "/": "Begin with the inquiry",
-  "/about": "The person and the work",
-  "/blog": "Read essays, notes, and questions",
-  "/academy": "Watch films and explore the theory",
-  "/book/digital-organism-theory": "Read the complete, free edition",
-  "/contact": "Start a conversation",
-  "/readers": "New writing, by email",
+  "/": "Overview",
+  "/book/digital-organism-theory": "Complete edition, free to read",
+  "/academy": "Concepts, films, and open questions",
+  "/blog": "Essays and notes",
+  "/about": "Background and projects",
+  "/contact": "Projects, speaking, and general inquiries",
 };
 
 function isCurrentDestination(pathname: string, to: string) {
@@ -34,26 +33,25 @@ function isCurrentDestination(pathname: string, to: string) {
     (to === "/academy" && /^\/(films|videos)(\/|$)/.test(pathname));
 }
 
-/** The DOT mark: an observer, three rings around one point. It marks where you are. */
-function ObserverMark({ large = false }: { large?: boolean }) {
+/** The DOT mark: an observer, three rings around one point. It marks the current page. */
+function ObserverMark() {
   return (
-    <svg className={large ? "site-nav-mark site-nav-mark--large" : "site-nav-mark"} viewBox="-24 -24 48 48" fill="none" stroke="currentColor" aria-hidden="true">
-      <circle r="21" strokeWidth={large ? 0.6 : 1.4} opacity={large ? 0.45 : 0.55} />
-      <circle r="14" strokeWidth={large ? 0.8 : 1.6} opacity={large ? 0.7 : 0.8} />
-      <circle r="7.5" strokeWidth={large ? 1 : 1.8} />
+    <svg className="site-nav-mark" viewBox="-24 -24 48 48" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle r="21" strokeWidth={1.4} opacity={0.55} />
+      <circle r="14" strokeWidth={1.6} opacity={0.8} />
+      <circle r="7.5" strokeWidth={1.8} />
       <circle r="2.6" fill="currentColor" stroke="none" />
     </svg>
   );
 }
 
-/** One deliberate opening into a finite, ordered index of the work, at every screen size. */
+/** The site menu: a finite, ordered list of the main pages, at every screen size. */
 export function SiteNav({ className = "" }: { className?: string }) {
   const location = useLocation();
   const { pathname } = location;
   const [open, setOpen] = useState(false);
   const descriptionPrefix = useId();
   const panel = useRef<HTMLDivElement>(null);
-  const currentDestination = [...PRIMARY_NAV, ...EXTRA_NAV].find(([to]) => isCurrentDestination(pathname, to));
 
   useEffect(() => {
     setOpen(false);
@@ -66,13 +64,13 @@ export function SiteNav({ className = "" }: { className?: string }) {
         // this viewport control outside them while preserving Dialog context.
         <div className={`site-nav ${className}`}>
           <Dialog.Trigger asChild>
-            <button type="button" className="site-nav-trigger" aria-label="Explore the site">
+            <button type="button" className="site-nav-trigger" aria-label="Open menu">
               <svg className="site-nav-trigger-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true">
                 <circle cx="12" cy="12" r="9" />
                 <circle cx="12" cy="12" r="5" />
                 <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
               </svg>
-              <span>Explore</span>
+              <span>Menu</span>
             </button>
           </Dialog.Trigger>
         </div>,
@@ -83,6 +81,7 @@ export function SiteNav({ className = "" }: { className?: string }) {
         <Dialog.Content
           ref={panel}
           className="site-nav-panel"
+          aria-describedby={undefined}
           onOpenAutoFocus={(event) => {
             const destination = panel.current?.querySelector<HTMLAnchorElement>('a[aria-current="page"]') ??
               panel.current?.querySelector<HTMLAnchorElement>("a");
@@ -92,13 +91,9 @@ export function SiteNav({ className = "" }: { className?: string }) {
           }}
         >
           <div className="site-nav-panel-heading">
-            <div className="site-nav-heading-copy">
-              <span className="dot-label">Digital Organism Theory</span>
-              <Dialog.Title className="site-nav-title">Follow your curiosity.</Dialog.Title>
-              <Dialog.Description className="site-nav-introduction">A few clear paths into the work.</Dialog.Description>
-            </div>
+            <Dialog.Title className="site-nav-title">Menu</Dialog.Title>
             <Dialog.Close asChild>
-              <button type="button" className="site-nav-close" aria-label="Close navigation">
+              <button type="button" className="site-nav-close" aria-label="Close menu">
                 <span>Close</span><X aria-hidden="true" />
               </button>
             </Dialog.Close>
@@ -124,7 +119,6 @@ export function SiteNav({ className = "" }: { className?: string }) {
                           <span className="site-nav-link-title">{label}</span>
                           <span id={`${descriptionPrefix}-${index}`} className="site-nav-description">{DESTINATION_DESCRIPTIONS[to]}</span>
                         </span>
-                        {current && <span className="site-nav-here-tag" aria-hidden="true">You are here</span>}
                         <ArrowRight className="site-nav-link-arrow" aria-hidden="true" />
                       </Link>
                     </li>
@@ -132,16 +126,9 @@ export function SiteNav({ className = "" }: { className?: string }) {
                 })}
               </ol>
             </nav>
-            <aside className="site-nav-here" aria-label="Where you are">
-              <ObserverMark large />
-              <span className="site-nav-here-kicker">You are here</span>
-              <strong className="site-nav-here-title">{currentDestination?.[1] ?? "DOT"}</strong>
-              {currentDestination && <p className="site-nav-here-line">{DESTINATION_DESCRIPTIONS[currentDestination[0]]}</p>}
-            </aside>
           </div>
           <div className="site-nav-panel-footer">
-            <p>Take your time. Choose your own way in.</p>
-            <nav aria-label="Conversation and updates">
+            <nav aria-label="More">
               {EXTRA_NAV.map(([to, label]) => (
                 <Link
                   key={to}

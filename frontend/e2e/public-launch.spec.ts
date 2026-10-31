@@ -53,8 +53,8 @@ test("About offers products, résumé, project inquiries, and named book navigat
   await expectNoHorizontalOverflow(page);
   await pageNav.getByRole("link", { name: "Contact", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeInViewport();
-  await page.getByRole("button", { name: "Explore the site", exact: true }).click();
-  const book = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true })
+  await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  const book = page.getByRole("dialog", { name: "Menu", exact: true })
     .getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Book One", exact: true });
   await expect(book).toBeVisible();
@@ -101,7 +101,7 @@ test("a closed reader list does not ask for an address", async ({ page }) => {
   }));
   await page.goto("/readers");
 
-  await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The reader list is not available yet." })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
   await expect(page.getByRole("alert")).toHaveCount(0);
   // A published introduction now makes RSS the signup-free alternative.
@@ -118,7 +118,7 @@ test("the homepage readers’ list link opens subscription rather than membershi
   await page.getByRole("link", { name: "Join the readers’ list", exact: true }).click();
 
   await expect(page).toHaveURL("/readers");
-  await expect(page.getByRole("heading", { name: "The list is not open yet." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The reader list is not available yet." })).toBeVisible();
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 
@@ -145,8 +145,8 @@ test("while the list is closed, navigation offers the book and no header signup"
 
   const header = page.locator('header[aria-label="Site Header"]');
   await expect(header).toBeVisible();
-  await page.getByRole("button", { name: "Explore the site", exact: true }).click();
-  await expect(page.getByRole("dialog", { name: "Follow your curiosity.", exact: true })
+  await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Menu", exact: true })
     .getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Book One", exact: true }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
   await page.keyboard.press("Escape");
@@ -162,7 +162,7 @@ test("a reader-list outage is not presented as a closed list", async ({ page }) 
   await expect(error).toContainText("The reader list could not be reached.");
   await expect(error.getByRole("link", { name: CONTACT.label, exact: true }))
     .toHaveAttribute("href", CONTACT.href);
-  await expect(page.getByRole("heading", { name: "The list is not open yet." })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "The reader list is not available yet." })).toHaveCount(0);
   await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
 });
@@ -192,7 +192,7 @@ test("reader signup requires a correct code and never requests membership", asyn
   const code = page.getByRole("textbox", { name: "Confirmation code" });
   await expect(code).toBeVisible();
   await expect(page.getByRole("heading", { name: "You’re on the reader list." })).toHaveCount(0);
-  await expect(page.getByRole("main")).toContainText("Technical work, essays, and books");
+  await expect(page.getByRole("main")).toContainText("new technical writing, essays, or book editions");
   await code.fill("000000");
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await expect(page.getByRole("alert")).toHaveText("Incorrect code. 4 attempts left.");

@@ -24,8 +24,8 @@ const renderNav = (initialEntry = "/", nextRoute?: string) => render(
 );
 
 const openNavigation = () => {
-  fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
-  return within(screen.getByRole("dialog", { name: "Follow your curiosity." }));
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+  return within(screen.getByRole("dialog", { name: "Menu" }));
 };
 
 describe("SiteNav", () => {
@@ -37,28 +37,28 @@ describe("SiteNav", () => {
     );
 
     const header = screen.getByRole("banner");
-    const wrapper = screen.getByRole("button", { name: "Explore the site" }).closest(".site-nav");
+    const wrapper = screen.getByRole("button", { name: "Open menu" }).closest(".site-nav");
     expect(header).toBeEmptyDOMElement();
     expect(wrapper).toHaveClass("custom-navigation");
     expect(wrapper?.parentElement).toBe(document.body);
   });
 
-  it.each([320, 768, 1440])("offers one deliberate Explore control at %spx", (width) => {
+  it.each([320, 768, 1440])("offers one menu control at %spx", (width) => {
     resizeViewport(width);
     renderNav("/academy/films");
 
-    expect(screen.getAllByRole("button", { name: "Explore the site" })).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(1);
     expect(screen.queryByText("Academy")).not.toBeInTheDocument();
-    expect(screen.queryByText("You are here")).not.toBeInTheDocument();
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     const panel = openNavigation();
     expect(panel.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
-    expect(screen.getByRole("dialog")).toHaveAccessibleDescription("A few clear paths into the work.");
+    expect(screen.getByRole("dialog")).toHaveAccessibleDescription("");
+    expect(panel.queryByText(/curiosity|your own way|you are here/i)).toBeNull();
     // The same sheet remains open when a phone becomes a desktop viewport.
     resizeViewport(width === 320 ? 1440 : 320);
-    expect(screen.getByRole("dialog", { name: "Follow your curiosity." })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Menu" })).toBeInTheDocument();
   });
 
   it("offers ordered paths with descriptions and keeps conversation links apart from the primary work", () => {
@@ -75,10 +75,10 @@ describe("SiteNav", () => {
       ["Contact", "/contact"],
     ]);
     expect(primary.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
-    expect(primary.getByRole("link", { name: "Academy" })).toHaveAccessibleDescription("Watch films and explore the theory");
-    expect(primary.getByRole("link", { name: "Book One" })).toHaveAccessibleDescription("Read the complete, free edition");
-    expect(primary.getByText("Watch films and explore the theory")).toBeVisible();
-    const extras = within(panel.getByRole("navigation", { name: "Conversation and updates" }));
+    expect(primary.getByRole("link", { name: "Academy" })).toHaveAccessibleDescription("Concepts, films, and open questions");
+    expect(primary.getByRole("link", { name: "Book One" })).toHaveAccessibleDescription("Complete edition, free to read");
+    expect(primary.getByText("Concepts, films, and open questions")).toBeVisible();
+    const extras = within(panel.getByRole("navigation", { name: "More" }));
     expect(extras.queryByRole("link", { name: "Community" })).toBeNull();
     expect(extras.getByRole("link", { name: "Reader list" })).toHaveAttribute("href", "/readers");
   });
@@ -103,7 +103,7 @@ describe("SiteNav", () => {
     },
   );
 
-  it("focuses the current destination on opening and returns to Explore after Escape", async () => {
+  it("focuses the current destination on opening and returns to the menu control after Escape", async () => {
     renderNav("/academy/films");
     const panel = openNavigation();
     await waitFor(() => expect(panel.getByRole("link", { name: "Academy" })).toHaveFocus());
@@ -111,23 +111,23 @@ describe("SiteNav", () => {
     fireEvent.keyDown(document, { key: "Escape" });
 
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByRole("button", { name: "Explore the site" })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Open menu" })).toHaveFocus());
   });
 
-  it("provides an explicit Close control that restores focus to Explore", async () => {
+  it("provides an explicit Close control that restores focus to the menu control", async () => {
     renderNav();
-    fireEvent.click(openNavigation().getByRole("button", { name: "Close navigation" }));
+    fireEvent.click(openNavigation().getByRole("button", { name: "Close menu" }));
 
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByRole("button", { name: "Explore the site" })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Open menu" })).toHaveFocus());
   });
 
-  it("closes after choosing a destination and keeps Explore available on the new route", async () => {
+  it("closes after choosing a destination and keeps the menu available on the new route", async () => {
     renderNav("/academy/films");
     fireEvent.click(openNavigation().getByRole("link", { name: "Writing" }));
 
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByRole("button", { name: "Explore the site" })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Open menu" })).toHaveFocus());
     expect(openNavigation().getByRole("link", { name: "Writing" })).toHaveAttribute("aria-current", "page");
   });
 

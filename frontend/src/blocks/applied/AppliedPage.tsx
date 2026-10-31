@@ -84,8 +84,7 @@ function RecordedWork({ seam }: { seam: OpenSeam }) {
           aria-hidden="true"
         />
         <p className="text-xs leading-relaxed text-muted-foreground">
-          No work recorded against this seam yet. That is the current state of
-          the register, not a gap in this page.
+          No work recorded yet.
         </p>
       </div>
     );
@@ -223,18 +222,15 @@ export default function AppliedPage() {
       <div id="applied-main">
         <p className="dot-label">Open seams · Edition v{OPEN_SEAMS_EDITION}</p>
         <h1 className="dot-page-heading mt-4 max-w-2xl">
-          What Book One does not establish
+          Open questions
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          A framework that displays the places it is weakest can be argued with.
-          One that hides them can only be believed or refused. This register
-          lists what the book says it still owes — in its own words, with the
-          claim level it currently carries and what would have to be shown to
-          move it.
+          What Book One does not establish, in its own words, with the claim
+          level each carries and what would settle it.
         </p>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Nothing here is a critic's framing. Every entry is drawn from a passage
-          in the released edition and links back to it.
+          Every entry is drawn from a passage in the released edition and links
+          to it.
         </p>
 
         <dl className="mt-10 grid border-y border-border/70 sm:grid-cols-3 sm:divide-x sm:divide-border/70">
@@ -262,27 +258,22 @@ export default function AppliedPage() {
 
         <section className="mt-14 border-t border-border/60 pt-8">
           <h2 className="text-lg font-semibold text-foreground">
-            That is the whole register.
+            End of register
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {openSeams.length} seams, all open. When work is recorded against
-            one it appears beneath that seam with its claim level and its
-            outcome — including outcomes that do not support the claim, which
-            stay in the register permanently rather than being retired once they
-            become inconvenient.
+            {openSeams.length} open questions. Recorded work appears under its
+            question with a claim level and outcome. Outcomes that do not support
+            the claim remain listed.
           </p>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Work is recorded by stewards, never ranked. There are no scores, no
-            leaderboards, and no reputation attached to contribution here, and
-            there will not be. The intake path for work from outside the project
-            is not open yet; when it is, it will run through the same release
-            pipeline as the book, with the same provenance and versioning.
+            Recorded work is not ranked or scored. Submissions from outside the
+            project are not open yet.
           </p>
           <Link
             to="/doctrine/limits-and-debts"
             className="mt-6 inline-flex items-center gap-2 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[color:var(--organism-accent-strong)]"
           >
-            See how the book states its limits in the concept map
+            Limits and Unpaid Debts in the concept map
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </section>

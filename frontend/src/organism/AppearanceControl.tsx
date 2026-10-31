@@ -247,7 +247,7 @@ export const AppearanceControl: React.FC<{
       className={
         inline
           ? "relative z-50 transition-opacity"
-          : // Stacked just above Explore, so the lower-left corner holds the site's controls in one column.
+          : // Stacked just above the menu control, so the lower-left corner holds the site's controls in one column.
             "fixed bottom-20 left-2 z-50 flex flex-col-reverse items-start transition-opacity sm:bottom-[5.75rem] sm:left-6"
       }
     >

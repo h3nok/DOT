@@ -108,8 +108,8 @@ const STATIC_ROUTES = [
   },
   {
     route: "/join",
-    title: "Join the Work — Digital Organism Theory",
-    description: "Ask to take part in the careful reading, practice, and development of Digital Organism Theory.",
+    title: "Request an invitation — Digital Organism Theory",
+    description: "Request an invitation to Digital Organism Theory. Membership is by invitation.",
   },
   {
     route: "/support",
@@ -873,9 +873,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
           breadcrumb([home, { name: "Academy", route: ACADEMY_ROUTE }]),
         ),
         prerender: page([
-          `<header><p>DOT Academy</p><h1>${escapeHtml(ACADEMY.heading)}</h1><p>${escapeHtml(ACADEMY.introduction)}</p></header>`,
-          `<section><h2>Choose a way into the book.</h2><p>Book One is a fixed, citable edition. These reading paths change the order of the encounter without changing the book.</p><ol>${READING_PATHS.map(readingPath => `<li><h3>${escapeHtml(readingPath.label)}</h3><p>${escapeHtml(readingPath.purpose)}</p><p>${link(`${BOOK_ROUTE}/${readingPath.steps[0].slug}?path=${readingPath.id}`, `Begin: ${readingPath.label}`)}</p></li>`).join("")}</ol><p>${link(BOOK_ROUTE, "View Book One and its contents")}</p></section>`,
-          `<section><h2>Follow your questions.</h2><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")} · ${link(`${CONTACT_ROUTE}?purpose=writing`, "Bring a question to the conversation")}</p></section>`,
+          `<section id="academy-read"><header><p>Digital Organism Theory</p><h1>${escapeHtml(ACADEMY.heading)}</h1><p>${escapeHtml(ACADEMY.introduction)}</p></header><ol>${READING_PATHS.map(readingPath => `<li><h2>${link(`${BOOK_ROUTE}/${readingPath.steps[0].slug}?path=${readingPath.id}`, readingPath.label)}</h2><p>${escapeHtml(readingPath.purpose)}</p></li>`).join("")}</ol><p>Both paths use the same fixed, citable edition. ${link(BOOK_ROUTE, "View Book One and its contents")}</p></section>`,
+          `<section id="academy-concepts"><h2>Concepts</h2><p>The ${DOCTRINE_CONCEPTS.length} concepts of Book One in concept map order, with claim level, definition, and analogy. ${link("/doctrine", "Open the concept map")}</p><ol>${DOCTRINE_CONCEPTS.map((concept) => `<li><h3>${link(`/doctrine/${concept.id}`, concept.name)}</h3><p>${escapeHtml(concept.oneLine)}</p></li>`).join("")}</ol></section>`,
+          `<section id="academy-films"><h2>Films</h2><p>Films play only when started and stop at the end.</p><ul><li>${link("/film", FILMS.conceptTour.title)}: an introduction to every concept in Book One, with on-screen text.</li><li>${link(FILMS_ROUTE, "Concept films")}: a 16-second silent film for each concept, in concept map order.</li></ul></section>`,
+          `<section id="academy-questions"><h2>Open questions</h2><p>Questions Book One identifies as unresolved, each with what would settle it. ${link("/applied", "View all open questions")} · ${link(`${CONTACT_ROUTE}?purpose=writing`, "Ask a question")}</p></section>`,
         ].join("")),
       };
     }
@@ -993,9 +994,9 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
           `<p>${link(BOOK_ROUTE, "Read Book One")} · ${link(BLOG_ROUTE, "Essays and letters")}</p>`,
           `<details><summary>Where the work comes from</summary>${renderMarkdown(aboutText)}<p>From the ${link(`${BOOK_ROUTE}/preface`, "preface to Book One")}.</p><p>${link("/doctrine", "The concept map")} · ${link("/applied", "Open seams")}</p></details>`,
           '<h2 id="about-contact">Contact</h2>',
-          `<p>${escapeHtml(BUILDER.contactIntro)}</p><p>${link(CONTACT_ROUTE, "Start a conversation")} · ${authorContactLink()}</p>`,
+          `<p>${escapeHtml(BUILDER.contactIntro)}</p><p>${link(CONTACT_ROUTE, "Contact form")} · ${authorContactLink()}</p>`,
           `<p>${link(AUTHOR.links.linkedin, "LinkedIn")} · ${link(AUTHOR.links.github, "GitHub")}</p>`,
-          "<p>Also for writing, research, interviews, and requests about your data.</p>",
+          "<p>Also for writing, research, interviews, and data requests.</p>",
         ].join(""),
       ),
     },
@@ -1005,13 +1006,13 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
       description: CONTACT.description,
       image: "/og/henok-platform.png",
       imageAlt: `${AUTHOR.name} — work, writing and conversation`,
-      body: `<h1>${escapeHtml(CONTACT.title)}</h1><p>${escapeHtml(CONTACT.description)}</p><h2>What brings you here?</h2><ul>${CONTACT.purposes.map(purpose => `<li><h3>${escapeHtml(purpose.title)}</h3><p>${escapeHtml(purpose.description)}</p></li>`).join("")}</ul><p>The contact form needs JavaScript. You can also email ${authorContactLink()} directly.</p><h2>What happens next</h2><p>${escapeHtml(CONTACT.next)}</p><p>${escapeHtml(CONTACT.privacy)} ${link(PRIVACY_ROUTE, "Read the privacy page.")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
+      body: `<h1>${escapeHtml(CONTACT.title)}</h1><p>${escapeHtml(CONTACT.description)}</p><h2>Purpose</h2><ul>${CONTACT.purposes.map(purpose => `<li><h3>${escapeHtml(purpose.title)}</h3><p>${escapeHtml(purpose.description)}</p></li>`).join("")}</ul><p>The contact form needs JavaScript. You can also email ${authorContactLink()} directly.</p><h2>Next steps</h2><p>${escapeHtml(CONTACT.next)}</p><p>${escapeHtml(CONTACT.privacy)} ${link(PRIVACY_ROUTE, "Read the privacy page.")}</p><p>${link(`${ABOUT_ROUTE}#about-resume`, "Background & résumé")}</p>`,
     },
     {
       route: READERS_ROUTE,
       title: `${READERS.title} — ${AUTHOR.name}`,
       description: READERS.description,
-      body: `<p>${escapeHtml(READERS.title)}</p><h1>${escapeHtml(READERS.heading)}</h1><p>${escapeHtml(READERS.description)}</p><ul>${READERS.topics.map(topic => `<li><h2>${escapeHtml(topic.label)}</h2><p>${escapeHtml(topic.description)}</p></li>`).join("")}</ul><h2>${escapeHtml(READERS.formTitle)}</h2><p>${escapeHtml(READERS.formDescription)}</p><p>The signup form needs JavaScript. Everything published remains available without joining.</p><ul>${READERS.commitments.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul><p>${link(PRIVACY_ROUTE, "How addresses are kept")} · ${link(BLOG_ROUTE, "Browse the writing")} · ${link(AMM.route + "/editions#amm-subscribe", "Subscribe to AMM separately")}</p>`,
+      body: `<p>${escapeHtml(READERS.title)}</p><h1>${escapeHtml(READERS.heading)}</h1><p>${escapeHtml(READERS.description)}</p><ul>${READERS.topics.map(topic => `<li><h2>${escapeHtml(topic.label)}</h2><p>${escapeHtml(topic.description)}</p></li>`).join("")}</ul><h2>${escapeHtml(READERS.formTitle)}</h2><p>${escapeHtml(READERS.formDescription)}</p><p>The signup form needs JavaScript. Everything published remains available without joining.</p><ul>${READERS.commitments.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul><p>${link(PRIVACY_ROUTE, "Privacy policy")} · ${link(BLOG_ROUTE, "Browse all writing")} · ${link(AMM.route + "/editions#amm-subscribe", "Subscribe to AMM")}</p>`,
     },
     {
       route: `${READERS_ROUTE}/leave`,
@@ -1188,10 +1189,10 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         "</section></div>",
         "<h2>Latest writing</h2><p>Newest first</p>",
         blogPosts.length > 0
-          ? `<ol>${blogPosts.map((post) => `<li>${post.cover ? `<img src="${escapeHtml(post.cover.src)}" alt="" width="160" loading="lazy" />` : ""}${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>That is everything posted here so far.</p>`
+          ? `<ol>${blogPosts.map((post) => `<li>${post.cover ? `<img src="${escapeHtml(post.cover.src)}" alt="" width="160" loading="lazy" />` : ""}${link(post.href, post.title)} (<time datetime="${post.date}">${post.date}</time>)${post.summary ? `: ${escapeHtml(post.summary)}` : ""}</li>`).join("")}</ol><p>End of list.</p>`
           : `<p>${escapeHtml(BLOG.emptyTitle)}</p><p>${escapeHtml(BLOG.emptyDescription)}</p>`,
-        `<h2>Read at your pace.</h2><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
-        `<p>AI &amp; digital products</p><h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-products`, "Explore the work")}</p>`,
+        `<h2>Follow</h2><p>${link(FEED_URL, "Follow with RSS")} · ${link(READERS_ROUTE, "Open the reader list")}</p>`,
+        `<p>AI &amp; digital products</p><h2>${escapeHtml(BLOG.contactTitle)}</h2><p>${link(`${CONTACT_ROUTE}?purpose=project`, "Discuss a project")}</p><p>${link(`${ABOUT_ROUTE}#about-products`, "View projects")}</p>`,
       ].join(""),
     ),
   };
@@ -1261,9 +1262,9 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     canonicalRoute: CONTACT_ROUTE,
     noindex: true,
     title: `Contact — ${AUTHOR.name}`,
-    description: `Start a conversation with ${AUTHOR.name}.`,
-    structuredData: graph(webPageNode({ route: CONTACT_ROUTE, title: `Contact — ${AUTHOR.name}`, description: `Start a conversation with ${AUTHOR.name}.` })),
-    prerender: page(`<h1>Contact ${escapeHtml(AUTHOR.name)}</h1><p>${link(CONTACT_ROUTE, "Start a conversation")}</p>`),
+    description: `Contact ${AUTHOR.name}.`,
+    structuredData: graph(webPageNode({ route: CONTACT_ROUTE, title: `Contact — ${AUTHOR.name}`, description: `Contact ${AUTHOR.name}.` })),
+    prerender: page(`<h1>Contact ${escapeHtml(AUTHOR.name)}</h1><p>${link(CONTACT_ROUTE, "Contact form")}</p>`),
   };
 
   const filmsRoute = {

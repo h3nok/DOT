@@ -27,9 +27,9 @@ test("a shared piece has an end and a way back to its archive", async ({ page })
 
   await page.goto("/writing/launch-letter/releases/1");
   await expect(page.getByRole("heading", { name: delivery.manifest.title })).toBeVisible();
-  const menu = page.getByRole("button", { name: "Explore the site", exact: true });
+  const menu = page.getByRole("button", { name: "Open menu", exact: true });
   await menu.click();
-  const navigation = page.getByRole("dialog", { name: "Follow your curiosity.", exact: true });
+  const navigation = page.getByRole("dialog", { name: "Menu", exact: true });
   await expect(navigation.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: "Writing" })).toHaveAttribute("aria-current", "page");
   await page.keyboard.press("Escape");
   await expect(menu).toBeFocused();
@@ -40,7 +40,7 @@ test("a shared piece has an end and a way back to its archive", async ({ page })
   await page.getByRole("link", { name: "All writing", exact: true }).click();
   await expect(page).toHaveURL(/\/blog$/);
   await expect(page.getByRole("link", { name: delivery.manifest.title })).toBeVisible();
-  await expect(page.getByText(/That is everything posted here so far/)).toBeVisible();
+  await expect(page.getByText(/End of list/)).toBeVisible();
 });
 
 test("old essay archive links resolve to the common blog", async ({ page }) => {
@@ -49,7 +49,7 @@ test("old essay archive links resolve to the common blog", async ({ page }) => {
   await page.goto("/essays");
   await expect(page).toHaveURL(/\/blog$/);
   await expect(page.getByRole("heading", { name: /On struggle.*On being human/ })).toBeVisible();
-  await expect(page.getByText("The archive starts here.")).toBeVisible();
+  await expect(page.getByText("No posts yet.")).toBeVisible();
   await page.getByText("Read a letter", { exact: true }).click();
   await expect(page.getByRole("list", { name: "Letters on LinkedIn" }).getByRole("link")).toHaveAttribute("href", /^https:\/\/www\.linkedin\.com\/pulse\//);
   await expect(page.getByRole("navigation", { name: "Blog pages" })).toHaveCount(0);

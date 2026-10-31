@@ -31,8 +31,8 @@ for (const scheme of ["light", "dark"] as const) {
 
     // Unmounting the diagram releases its anchor. A cached return registers
     // it again without leaving a loading mark or a stale viewport origin.
-    await page.getByRole("button", { name: "Explore the site", exact: true }).click();
-    await page.getByRole("dialog", { name: "Follow your curiosity.", exact: true })
+    await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    await page.getByRole("dialog", { name: "Menu", exact: true })
       .getByRole("navigation", { name: "Primary", exact: true })
       .getByRole("link", { name: "About", exact: true }).click();
     await expect(page).toHaveURL(/\/about$/);

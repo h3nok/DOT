@@ -18,7 +18,7 @@
       "title": "AI & digital products",
       "description": "Systems architecture, agents, and the work of turning an idea into a useful product.",
       "to": "/about#about-products",
-      "linkLabel": "Explore the work"
+      "linkLabel": "View projects"
     },
     {
       "id": "inquiry",
@@ -31,8 +31,8 @@
   ],
   "seriesDescription": "Letters on technology, culture, and society, through the lens of Digital Organism Theory.",
   "followDescription": "Read new pieces in your own RSS reader, or open the reader list for email updates.",
-  "contactTitle": "Have something to build?",
+  "contactTitle": "Project work",
   "contactDescription": "Independent project work in AI, web and mobile applications, and systems architecture.",
-  "emptyTitle": "The archive starts here.",
-  "emptyDescription": "New writing will appear here as it is published. For now, explore Book One and the letters in The American Millennial Manifesto."
+  "emptyTitle": "No posts yet.",
+  "emptyDescription": "Book One and The American Millennial Manifesto are available now."
 }

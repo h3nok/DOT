@@ -887,11 +887,8 @@ export default function BookOnePage() {
                   id="book-contents-title"
                   className="book-reading-heading mt-2 text-3xl font-medium text-foreground"
                 >
-                  The argument
+                  Contents
                 </h2>
-                <p className="book-reading-copy mt-2 text-sm text-muted-foreground">
-                  A finite edition. Choose a section deliberately.
-                </p>
               </div>
               <button
                 type="button"

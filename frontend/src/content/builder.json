@@ -23,5 +23,5 @@
   "otherProjects": ["hki"],
   "inquirySubject": "Project inquiry",
   "inquiryBody": "Hi Henok,\n\nI'd like to discuss a project.\n\nWhat I'd like to build:\nWho it's for:\nCurrent stage:\nTarget timeline:\nBudget range (if known):\n\nThanks!",
-  "contactIntro": "Bring an idea, an existing product, or a workflow that needs better tools. A short note about the problem, the people it serves, and your timeline is enough to start."
+  "contactIntro": "For new products, existing systems, and workflow tools. Include the problem, the intended users, and the timeline."
 }

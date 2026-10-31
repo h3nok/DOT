@@ -13,7 +13,7 @@ export default function JoinPage() {
   const reducedMotion = useReducedMotion() ?? false;
 
   useEffect(() => {
-    document.title = "Join the Work — Digital Organism Theory";
+    document.title = "Request an invitation — Digital Organism Theory";
   }, []);
 
   return (
