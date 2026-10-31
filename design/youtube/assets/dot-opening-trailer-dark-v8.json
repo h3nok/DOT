@@ -1,0 +1,29 @@
+{
+  "programs": [],
+  "stream_groups": [],
+  "streams": [
+    {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30/1",
+      "nb_frames": "4680"
+    },
+    {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "r_frame_rate": "0/0",
+      "nb_frames": "7314"
+    }
+  ],
+  "format": {
+    "duration": "156.000000"
+  },
+  "sha256": "29a29122811174211850d208b9e03981ad553e1a1eaca613c3f19126a2dd12ed",
+  "file": "/tmp/dot-film-trailer-v8/dot-opening-trailer-dark-v8.mp4",
+  "startSeconds": 0,
+  "duration": 156,
+  "frames": 4680,
+  "decode": "passed"
+}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Maximize2, Pause, Play, RotateCcw, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 
 import { formatDuration, formatTimecode } from "./filmTime";
+import { FilmProgress } from "./FilmProgress";
 import { TypewriterSound, keystrokesBetween, type Keystroke } from "./TypewriterSound";
 import "./concept-films.css";
 
@@ -16,6 +17,10 @@ interface DrawnFilmPlayerProps {
   className?: string;
   /** Film seconds marked on the timeline, such as where each part begins. */
   notches?: readonly number[];
+  /** Where each segment of the progress line begins; defaults to the chapters or notches. */
+  sections?: readonly number[];
+  /** Segments that begin before this second are drawn warm, such as an opening. */
+  warmUntil?: number;
   /** Where each part begins, for stepping between parts, and what a part is called. */
   chapters?: { starts: readonly number[]; noun: string };
   /** Spoken position for the timeline, e.g. the part playing at that second. */
@@ -44,6 +49,8 @@ export function DrawnFilmPlayer({
   resetKey,
   className = "",
   notches = [],
+  sections,
+  warmUntil,
   chapters,
   describeTime,
   keystrokes,
@@ -201,7 +208,6 @@ export function DrawnFilmPlayer({
     }
   };
 
-  const progressPercent = Math.min(100, (time / duration) * 100);
   const spokenTime = `${formatTimecode(time)} of ${formatTimecode(duration)}`;
 
   return (
@@ -286,16 +292,13 @@ export function DrawnFilmPlayer({
             {formatTimecode(time)} <span aria-hidden="true">/</span> {formatTimecode(duration)}
           </span>
 
-          <div className="films-scrubber-wrap">
-            <div className="films-scrubber-progress" style={{ width: `${progressPercent}%` }} aria-hidden="true" />
-            {notches.map((seconds) => (
-              <span
-                key={seconds}
-                className="films-scrubber-notch"
-                style={{ left: `${(seconds / duration) * 100}%` }}
-                aria-hidden="true"
-              />
-            ))}
+          <div className="films-scrubber-wrap films-scrubber-wrap--structured">
+            <FilmProgress
+              seconds={time}
+              duration={duration}
+              sections={sections ?? chapters?.starts ?? [0, ...notches]}
+              warmUntil={warmUntil}
+            />
             <input
               type="range"
               min={0}

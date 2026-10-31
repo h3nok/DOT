@@ -156,8 +156,9 @@ export interface OrchestratorReadiness {
   checks: Record<string, string>;
 }
 
+// Local development only; a static release without a backend never targets localhost.
 export const ORCHESTRATOR_URL =
-  import.meta.env.VITE_ORCHESTRATOR_URL || "http://127.0.0.1:8000";
+  import.meta.env.VITE_ORCHESTRATOR_URL || (import.meta.env.DEV ? "http://127.0.0.1:8000" : "");
 
 export const PROFILE_DELIVERY_OWNER_ID =
   import.meta.env.VITE_PROFILE_DELIVERY_OWNER_ID || "henok";

@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { ORCHESTRATOR_BASE, ORCHESTRATOR_CONFIGURED } from "./orchestrator";
+
 // All auth routes now live in the orchestrator at /v1/auth/*.
 // The Flask /api/otp/* routes are no longer used.
-const ORCHESTRATOR_BASE = (
-  import.meta.env.VITE_ORCHESTRATOR_URL || "http://127.0.0.1:8000"
-).replace(/\/$/, "");
-
 const AUTH_BASE = `${ORCHESTRATOR_BASE}/v1/auth`;
 
 export interface AuthUser {
@@ -38,6 +36,8 @@ interface InviteResult {
 }
 
 async function post(path: string, body?: unknown) {
+  // Callers already treat a thrown request as "the service is unreachable".
+  if (!ORCHESTRATOR_CONFIGURED) throw new Error("No orchestrator is configured for this release.");
   const res = await fetch(`${AUTH_BASE}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -65,6 +65,12 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
+    // A static release has no backend: nobody is signed in, and nothing is requested.
+    if (!ORCHESTRATOR_CONFIGURED) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
     try {
       const res = await fetch(`${AUTH_BASE}/session`, {
         credentials: "include",

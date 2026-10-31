@@ -1,4 +1,4 @@
-import { api, ORCHESTRATOR_BASE, PROFILE_OWNER_ID } from "./orchestrator";
+import { api, ORCHESTRATOR_BASE, ORCHESTRATOR_CONFIGURED, PROFILE_OWNER_ID } from "./orchestrator";
 import type { AgentCitation, AgentLens } from "./agent";
 import {
   answerFromBook,
@@ -208,6 +208,8 @@ export async function sendMessageStream(
   reading?: ReadingPosition | null,
   onRetrieval?: (sources: string[]) => void,
 ): Promise<SendOutcome | null> {
+  // A static release has no backend; the caller's non-streaming path reports it.
+  if (!ORCHESTRATOR_CONFIGURED) return null;
   let response: Response;
   try {
     response = await fetch(`${ORCHESTRATOR_BASE}/v1/twin/public/ask/stream`, {

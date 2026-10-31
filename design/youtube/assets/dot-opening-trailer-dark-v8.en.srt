@@ -1,0 +1,67 @@
+1
+00:00:03,600 --> 00:00:09,890
+Every observation begins as an experience.
+
+2
+00:00:13,090 --> 00:00:19,603
+Your perception is formed from sensory data.
+
+3
+00:00:20,703 --> 00:00:27,328
+The sensory apparatus is not the whole story.
+
+4
+00:00:31,128 --> 00:00:34,862
+[DOT proposes] You are Little c.
+
+5
+00:00:35,962 --> 00:00:40,577
+[DOT proposes] The body is your interface.
+
+6
+00:00:44,377 --> 00:00:51,932
+[The prevailing view] “You’re nothing but a pack of neurons.” — Francis Crick, The Astonishing Hypothesis, 1994
+
+7
+00:00:53,032 --> 00:01:00,215
+Yet experience itself stays outside the equations.
+
+8
+00:01:03,815 --> 00:01:10,775
+We map the world in detail; ourselves, far less.
+
+9
+00:01:11,875 --> 00:01:19,282
+Others fill the gap: markets, platforms, ideologies.
+
+10
+00:01:21,682 --> 00:01:28,195
+The body protests: stress, anxiety, burnout.
+
+11
+00:01:29,295 --> 00:01:35,473
+We treat the signal more than its source.
+
+12
+00:01:36,573 --> 00:01:43,533
+The costs compound: division, despair, conflict.
+
+13
+00:01:44,633 --> 00:01:50,700
+At root, this is a problem of knowledge.
+
+14
+00:01:54,500 --> 00:01:59,115
+Notice who is experiencing.
+
+15
+00:02:00,215 --> 00:02:06,058
+Test this against your own experience.
+
+16
+00:02:23,658 --> 00:02:36,000
+Digital Organism Theory
+
+17
+00:02:26,292 --> 00:02:36,000
+A pragmatic, testable framework for experience.

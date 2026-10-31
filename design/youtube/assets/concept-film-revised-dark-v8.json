@@ -1,0 +1,97 @@
+{
+  "draft": true,
+  "duration": 453,
+  "openingSeconds": 156,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "frames": 13590,
+  "audio": {
+    "sampleRate": 48000,
+    "soundedKeys": 2094,
+    "openingSoundedKeys": 672,
+    "scored": true,
+    "peak": 0.5,
+    "openingPeak": 0.5
+  },
+  "reusedBody": null,
+  "excerpt": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "4680"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "7314"
+      }
+    ],
+    "format": {
+      "duration": "156.000000"
+    },
+    "sha256": "29a29122811174211850d208b9e03981ad553e1a1eaca613c3f19126a2dd12ed",
+    "file": "/tmp/dot-film-trailer-v8/dot-opening-trailer-dark-v8.mp4",
+    "startSeconds": 0,
+    "duration": 156,
+    "frames": 4680,
+    "decode": "passed"
+  },
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "13590"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "21236"
+      }
+    ],
+    "format": {
+      "duration": "453.000000"
+    },
+    "sha256": "118a2c44b120d2358680e93a6099eaf2f42f326a66538d9c522c0529e848afb6"
+  },
+  "opening": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "4680"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "7314"
+      }
+    ],
+    "format": {
+      "duration": "156.000000"
+    },
+    "sha256": "52cbd6d66f8f28de4d1d51956a836c8a23c3d5af4b6698cd238d2ab60fee64dd"
+  },
+  "full": "/tmp/dot-film-trailer-v8/concept-film-full-16x9-revised-dark-v8.mp4",
+  "openingFile": "/tmp/dot-film-trailer-v8/concept-film-opening-16x9-revised-dark-v8.mp4"
+}

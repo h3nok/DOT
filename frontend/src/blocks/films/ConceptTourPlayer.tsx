@@ -199,7 +199,7 @@ function TourCover({ playLabel, onPlay, still }: { playLabel: string; onPlay: ()
   );
 }
 
-function TourFrame({ frame, still }: { frame: number; still: boolean }) {
+export function ConceptTourFrame({ frame, still }: { frame: number; still: boolean }) {
   const part = tourPartAt(frame);
   const opacity = tourPartOpacity(part, frame);
   const drift = still ? 0 : tourPartDrift(part, frame);
@@ -317,7 +317,7 @@ export function ConceptTourPlayer() {
       {(frame, started) => (
         <>
           {sizers}
-          {started && <TourFrame frame={frame} still={still} />}
+          {started && <ConceptTourFrame frame={frame} still={still} />}
         </>
       )}
     </DrawnFilmPlayer>

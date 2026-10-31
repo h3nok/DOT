@@ -213,6 +213,12 @@ html.dark .concept-film {
 }
 
 /* Typing: the words not yet typed keep their place unseen, and the caret takes no room. */
+.concept-film .sr-only,
+.concept-film-untyped {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .concept-film-untyped {
   visibility: hidden;
 }
@@ -372,6 +378,73 @@ html.dark .concept-film {
   font-weight: 600;
 }
 
+/* ── The progress line: the film's structure, one fine segment per section ── */
+.film-progress {
+  --fp-track: color-mix(in oklab, var(--cf-ink, currentColor) 16%, transparent);
+  --fp-fill: color-mix(in oklab, var(--cf-big-c, #5ee0ae) 72%, transparent);
+  --fp-warm: color-mix(in oklab, var(--cf-rf, #e6bc78) 72%, transparent);
+  --fp-point: var(--cf-big-c, #5ee0ae);
+  display: grid;
+  gap: .45rem;
+  width: 100%;
+  pointer-events: none;
+}
+.film-progress-label {
+  overflow: hidden;
+  color: var(--cf-muted, currentColor);
+  font-family: var(--films-mono, "JetBrains Mono", monospace);
+  font-size: .6875rem;
+  letter-spacing: .08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.film-progress-line { display: flex; align-items: center; gap: 3px; height: 9px; }
+.film-progress-segment {
+  position: relative;
+  flex-basis: 0;
+  min-width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--fp-track);
+}
+.film-progress-segment[data-current] { height: 3px; }
+.film-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--fp-fill);
+}
+.film-progress-segment[data-played] .film-progress-fill { opacity: .55; }
+.film-progress-segment[data-warm] .film-progress-fill { background: var(--fp-warm); }
+.film-progress-point {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fp-point);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--fp-point) 18%, transparent), inset 0 0 0 2px var(--fp-point);
+  transform: translate(-50%, -50%);
+}
+.film-progress-point::after {
+  content: "";
+  position: absolute;
+  inset: 2.5px;
+  border-radius: 50%;
+  background: var(--cf-stage, #081912);
+}
+
+/* In the player, the line replaces the slider's track; the slider stays on top for input. */
+.films-scrubber-wrap--structured .film-progress { position: absolute; inset: 50% 0 auto; transform: translateY(-50%); }
+.films-scrubber-wrap--structured .film-progress-label { display: none; }
+.films-scrubber-wrap--structured .films-transport-slider { position: relative; z-index: 1; opacity: 0; }
+.films-scrubber-wrap--structured:has(.films-transport-slider:focus-visible) {
+  outline: 2px solid var(--films-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* ── The film index and the actions under the player ──────────────── */
 
 .concept-film-detail {
@@ -518,6 +591,8 @@ html.dark .concept-film {
 .concept-tour-sizer {
   visibility: hidden;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 @container (min-width: 44rem) {
