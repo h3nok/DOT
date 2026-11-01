@@ -43,10 +43,6 @@ def _now() -> datetime.datetime:
     return datetime.datetime.now(datetime.UTC)
 
 
-def _as_utc(value: datetime.datetime) -> datetime.datetime:
-    return value if value.tzinfo else value.replace(tzinfo=datetime.UTC)
-
-
 def _purpose(publication: str, include_all: bool) -> str:
     # The OTP is bound to the consent shown before sending it. It cannot be
     # replayed to broaden a subscription, sign in, or request membership.
@@ -92,7 +88,7 @@ async def subscribe(
         .limit(1)
     )
     if recent:
-        elapsed = (now - _as_utc(recent.created_at)).total_seconds()
+        elapsed = (now - app.domains.auth.service.as_utc(recent.created_at)).total_seconds()
         if elapsed < _RESEND_COOLDOWN_SECONDS:
             wait = int(_RESEND_COOLDOWN_SECONDS - elapsed)
             return {
@@ -269,6 +265,19 @@ async def unsubscribe(
             row.unsubscribed_at = _now()
         await session.commit()
     return {"ok": True}
+
+
+async def remove_reader(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    reader_id: str,
+) -> bool:
+    """The steward takes one subscription off the list, as the reader's own link would."""
+    row = await session.get(app.db.models.ReaderSubscription, reader_id)
+    if row is None:
+        return False
+    row.unsubscribed_at = row.unsubscribed_at or _now()
+    await session.commit()
+    return True
 
 
 async def list_readers(

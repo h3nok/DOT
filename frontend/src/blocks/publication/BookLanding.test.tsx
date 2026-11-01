@@ -92,13 +92,13 @@ describe("BookLanding", () => {
     expect(
       screen.queryByText("A life is shaped, acts, and is shaped again."),
     ).not.toBeInTheDocument();
-    expect(screen.getByText("Read the claim at the level it earns.")).toBeInTheDocument();
+    expect(screen.getByText("How claims are labelled")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open the concept map/ })).toHaveAttribute(
       "href",
       "/doctrine",
     );
-    const contents = screen.getByRole("heading", { name: "Choose a place to begin." });
-    const guide = screen.getByRole("heading", { name: "Read the claim at the level it earns." });
+    const contents = screen.getByRole("heading", { name: "Contents" });
+    const guide = screen.getByRole("heading", { name: "How claims are labelled" });
     expect(contents.compareDocumentPosition(guide) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("link", { name: /Browse the chapters/ })).toHaveAttribute("href", "#volume-contents");
     expect(screen.queryByText(/Illustrations appear beside/)).not.toBeInTheDocument();

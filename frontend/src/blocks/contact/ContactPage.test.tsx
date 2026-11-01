@@ -11,10 +11,10 @@ beforeEach(() => { vi.resetAllMocks(); vi.mocked(fetchContactStatus).mockResolve
 const open = (path = "/contact") => render(<MemoryRouter initialEntries={[path]}><ContactPage /></MemoryRouter>, { wrapper: PublicPageTestProvider });
 async function fill() {
   // The form is laid out at once and enabled when the inbox reports it is open.
-  await waitFor(() => expect(screen.getByRole("textbox", { name: "Your name" })).toBeEnabled());
-  fireEvent.change(screen.getByRole("textbox", { name: "Your name" }), { target: { value: "Visitor" } });
+  await waitFor(() => expect(screen.getByRole("textbox", { name: "Name" })).toBeEnabled());
+  fireEvent.change(screen.getByRole("textbox", { name: "Name" }), { target: { value: "Visitor" } });
   fireEvent.change(screen.getByRole("textbox", { name: "Email address" }), { target: { value: "visitor@example.org" } });
-  fireEvent.change(screen.getByRole("textbox", { name: "Your message" }), { target: { value: "I'd like to build a useful digital product." } });
+  fireEvent.change(screen.getByRole("textbox", { name: "Message" }), { target: { value: "I'd like to build a useful digital product." } });
   fireEvent.click(screen.getByRole("checkbox"));
 }
 
@@ -24,19 +24,19 @@ describe("ContactPage", () => {
     vi.mocked(fetchContactStatus).mockReturnValue(new Promise(resolve => { answer = resolve; }));
     open();
     expect(screen.getByRole("status")).toHaveTextContent("Checking contact availability…");
-    expect(screen.getByRole("textbox", { name: "Your name" })).toBeDisabled();
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeDisabled();
     expect(screen.getByRole("button", { name: /Send message/ })).toBeDisabled();
     expect(screen.getByRole("complementary", { name: "Direct contact and next steps" })).toBeVisible();
     answer({ available: true });
-    await waitFor(() => expect(screen.getByRole("textbox", { name: "Your name" })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole("textbox", { name: "Name" })).toBeEnabled());
     expect(screen.queryByText("Checking contact availability…")).toBeNull();
   });
 
   it("opens the selected purpose and only asks project details for projects", async () => {
     open("/contact?purpose=writing");
-    expect(await screen.findByRole("radio", { name: /Writing & inquiry/ })).toBeChecked();
+    expect(await screen.findByRole("radio", { name: /Writing and research/ })).toBeChecked();
     expect(screen.queryByRole("textbox", { name: /Budget range/ })).toBeNull();
-    fireEvent.click(screen.getByRole("radio", { name: /Discuss a project/ }));
+    fireEvent.click(screen.getByRole("radio", { name: /^Project/ }));
     expect(screen.getByRole("textbox", { name: /Budget range/ })).toBeVisible();
     expect(screen.getByRole("link", { name: "henok@sullix.com" })).toHaveAttribute("href", "mailto:henok@sullix.com");
   });
@@ -46,28 +46,28 @@ describe("ContactPage", () => {
     open(); await fill();
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Please try again.");
-    expect(screen.getByRole("textbox", { name: "Your message" })).toHaveValue("I'd like to build a useful digital product.");
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue("I'd like to build a useful digital product.");
     const first = vi.mocked(sendContactMessage).mock.calls[0];
     fireEvent.click(screen.getByRole("button", { name: "Send message" }));
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Your message was received." })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Message received." })).toHaveFocus());
     expect(vi.mocked(sendContactMessage).mock.calls[1][1]).toBe(first[1]);
     expect(screen.getByText("inq_receipt")).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "Write another message" }));
-    expect(screen.getByRole("textbox", { name: "Your message" })).toHaveValue("");
+    fireEvent.click(screen.getByRole("button", { name: "Send another message" }));
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue("");
     expect(screen.getByRole("checkbox")).not.toBeChecked();
   });
   it("does not announce receipt when an acknowledgment is malformed", async () => {
     vi.mocked(sendContactMessage).mockResolvedValue({ status: "received", reference: "" });
     open(); await fill(); fireEvent.click(screen.getByRole("button", { name: "Send message" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Receipt could not be confirmed");
-    expect(screen.queryByRole("heading", { name: "Your message was received." })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Message received." })).toBeNull();
   });
   it("fails closed with direct email and recovers on explicit retry", async () => {
     vi.mocked(fetchContactStatus).mockRejectedValueOnce(new Error("down")).mockResolvedValueOnce({ available: true });
-    open(); expect(await screen.findByText("The form could not be reached.")).toBeVisible();
+    open(); expect(await screen.findByText("The contact form could not be reached.")).toBeVisible();
     expect(screen.queryByRole("textbox")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Try the form again" }));
-    await waitFor(() => expect(screen.getByRole("textbox", { name: "Your name" })).toBeVisible());
+    await waitFor(() => expect(screen.getByRole("textbox", { name: "Name" })).toBeVisible());
     expect(sendContactMessage).not.toHaveBeenCalled();
   });
 });

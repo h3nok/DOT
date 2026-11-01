@@ -8,18 +8,18 @@ test("native project intake keeps a failed draft and receives a retry once", asy
     return route.fulfill(submissions.length === 1 ? { status: 503, json: { detail: "Please try again. Your message is still here." } } : { status: 201, json: { status: "received", reference: "inq_browser_test" } });
   });
   await page.goto("/contact?purpose=project");
-  const purpose = page.getByRole("combobox", { name: "What brings you here?" });
+  const purpose = page.getByRole("combobox", { name: "Purpose" });
   if (page.viewportSize()!.width < 640) await expect(purpose).toHaveValue("project");
-  else await expect(page.getByRole("radio", { name: /Discuss a project/ })).toBeChecked();
-  await page.getByRole("textbox", { name: "Your name" }).fill("Example visitor");
+  else await expect(page.getByRole("radio", { name: /^Project/ })).toBeChecked();
+  await page.getByRole("textbox", { name: "Name" }).fill("Example visitor");
   await page.getByRole("textbox", { name: "Email address" }).fill("visitor@example.org");
-  await page.getByRole("textbox", { name: "Your message" }).fill("I would like to discuss building a digital product.");
+  await page.getByRole("textbox", { name: "Message" }).fill("I would like to discuss building a digital product.");
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Send message" }).click();
   await expect(page.getByRole("alert")).toContainText("Your message is still here");
-  await expect(page.getByRole("textbox", { name: "Your message" })).toHaveValue("I would like to discuss building a digital product.");
+  await expect(page.getByRole("textbox", { name: "Message" })).toHaveValue("I would like to discuss building a digital product.");
   await page.getByRole("button", { name: "Send message" }).click();
-  await expect(page.getByRole("heading", { name: "Your message was received." })).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Message received." })).toBeFocused();
   expect(submissions).toHaveLength(2);
   expect(submissions[0].key).toBe(submissions[1].key);
   expect(submissions[1].body.purpose).toBe("project");
@@ -30,7 +30,7 @@ test("native project intake keeps a failed draft and receives a retry once", asy
 test("contact failure offers email without collecting details", async ({ page }) => {
   await page.route("**/v1/contact/status", route => route.fulfill({ json: { available: false } }));
   await page.goto("/contact?purpose=privacy");
-  await expect(page.getByRole("heading", { name: "Please use email for now." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The contact form is unavailable." })).toBeVisible();
   await expect(page.getByRole("link", { name: "henok@sullix.com" })).toHaveAttribute("href", "mailto:henok@sullix.com");
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });

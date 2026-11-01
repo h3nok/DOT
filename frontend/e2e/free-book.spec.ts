@@ -72,7 +72,7 @@ test("closed support does not block the free download", async ({ page }) => {
     json: { tiers: [], purposes: [], currency: "usd", min_custom_minor: 200, max_custom_minor: 500_000, available: false },
   }));
   await page.goto("/support?purpose=author");
-  await expect(page.getByRole("heading", { name: "Not open yet" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Card payments unavailable" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Continue to Stripe" })).toHaveCount(0);
   await page.getByRole("button", { name: "Close", exact: true }).last().click();
   await expect(page.getByRole("link", { name: /Download the free PDF/ })).toBeVisible();

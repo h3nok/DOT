@@ -20,19 +20,8 @@ router = fastapi.APIRouter(prefix="/v1/site-content", tags=["site-content"])
 _limiter = app.core.security.make_limiter()
 
 
-async def require_steward(
-    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
-        app.auth.dependencies.require_owner
-    ),
-) -> app.auth.dependencies.OwnerContext:
-    """Only the site steward may change public copy."""
-
-    if owner.role not in {"owner", "admin"}:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_403_FORBIDDEN,
-            detail="Only the site steward may edit public copy.",
-        )
-    return owner
+# Only the site steward may change public copy.
+require_steward = app.auth.dependencies.require_steward
 
 
 @public_router.get("", response_model=schemas.SiteContentPublic)

@@ -13,7 +13,6 @@ import httpx
 import sqlalchemy as sa
 import sqlalchemy.ext.asyncio as sqlasync
 
-import app.auth.dependencies as auth
 import app.core.contact as sealing
 import app.core.tenancy
 import app.domains.contact.models as models
@@ -48,16 +47,6 @@ async def bind(session: sqlasync.AsyncSession) -> str:
     owner_id = app.settings.get_settings().CONTACT_OWNER_ID
     await app.core.tenancy.bind_tenant(session, owner_id)
     return owner_id
-
-
-def require_steward(owner: auth.OwnerContext) -> None:
-    settings = app.settings.get_settings()
-    if settings.AUTH_MODE == "local_header" and owner.owner_id == settings.CONTACT_OWNER_ID:
-        return
-    if owner.role not in {"owner", "admin"}:
-        raise fastapi.HTTPException(403, "This inbox belongs to the site owner.")
-    if owner.role != "admin" and "owner:write" not in owner.scopes:
-        raise fastapi.HTTPException(403, "Owner permission is required.")
 
 
 def fingerprint(content: str) -> str:

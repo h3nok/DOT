@@ -51,7 +51,7 @@ describe("SupportSurface", () => {
     expect(screen.getByText("author@example.com")).toBeInTheDocument();
     expect(mockedUseSupport).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Use card checkout instead" }));
-    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Card payments unavailable" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Back to direct support methods" }));
     expect(screen.getByText("author@example.com")).toBeInTheDocument();
   });
@@ -62,7 +62,7 @@ describe("SupportSurface", () => {
     const getCheckoutStatus = vi.fn().mockResolvedValue("paid");
     mockedUseSupport.mockReturnValue({ ...closedPlane, getCheckoutStatus });
     render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
-    expect(await screen.findByRole("heading", { name: "You helped build it" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Payment confirmed" })).toBeInTheDocument();
     expect(getCheckoutStatus).toHaveBeenCalledWith("cs_example");
     expect(screen.queryByText("author@example.com")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Back to direct support methods" }));
@@ -74,7 +74,7 @@ describe("SupportSurface", () => {
 
     render(<SupportSurface onClose={vi.fn()} reducedMotion />);
 
-    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Card payments unavailable" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /continue/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /continue/i })).not.toBeInTheDocument();
     // A payment processor's reviewer reads this state: it must say what a
@@ -99,7 +99,7 @@ describe("SupportSurface", () => {
     // Stripe owns the amount on this path: the client must not be able to name
     // a price, and support must still buy no advantage (ADR-0012, ADR-0015).
     expect(screen.queryByRole("spinbutton")).not.toBeInTheDocument();
-    expect(screen.getByText(/buys no access/i)).toBeInTheDocument();
+    expect(screen.getByText(/do not grant access/i)).toBeInTheDocument();
     // No social proof, no urgency, no subscription trap (L5, L6).
     expect(
       screen.queryByText(/\d+ supporters|people have given|join \d|monthly/i),
@@ -218,16 +218,16 @@ describe("SupportSurface", () => {
       getCheckoutStatus: vi.fn().mockRejectedValue(new Error("Verification unavailable.")),
     });
     render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
-    expect(await screen.findByRole("heading", { name: "Could not confirm the contribution" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Payment status unavailable" })).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("Verification unavailable.");
-    expect(screen.queryByText("You helped build it")).not.toBeInTheDocument();
+    expect(screen.queryByText("Payment confirmed")).not.toBeInTheDocument();
   });
 
   it("does not misdirect author support to a generic hosted-link fallback", () => {
     paymentLink.current = "https://buy.stripe.com/test_link";
     mockedUseSupport.mockReturnValue(closedPlane);
     render(<SupportSurface initialPurpose="author" onClose={vi.fn()} reducedMotion />);
-    expect(screen.getByRole("heading", { name: "Not open yet" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Card payments unavailable" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Continue to Stripe" })).not.toBeInTheDocument();
   });
 });

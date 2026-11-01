@@ -170,8 +170,6 @@ _STATUS_BY_EVENT: dict[str, str] = {
     "payment_intent.succeeded": "succeeded",
     "payment_intent.payment_failed": "failed",
     "charge.refunded": "refunded",
-    "customer.subscription.deleted": "cancelled",
-    "invoice.payment_succeeded": "succeeded",
 }
 
 

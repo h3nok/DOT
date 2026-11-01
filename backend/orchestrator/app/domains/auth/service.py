@@ -43,6 +43,11 @@ def _now_utc() -> datetime.datetime:
     return datetime.datetime.now(datetime.UTC)
 
 
+def as_utc(value: datetime.datetime) -> datetime.datetime:
+    """SQLite returns naive datetimes; every stored time is UTC."""
+    return value if value.tzinfo else value.replace(tzinfo=datetime.UTC)
+
+
 def owner_emails() -> set[str]:
     """Addresses treated as the steward on sign-in (``DOT_OWNER_EMAILS``)."""
     return {
@@ -64,12 +69,14 @@ async def _can_sign_in(
     """Restrict production/staging sign-in to owners, existing members, or invite holders."""
     if _is_owner_email(email):
         return True
-    if os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development") not in {"production", "staging"}:
-        return True
     email_hash = _hash_email(email)
     existing: app.db.models.Member | None = await session.scalar(
         sqlalchemy.select(app.db.models.Member).where(app.db.models.Member.email_hash == email_hash)
     )
+    if existing is not None and existing.status == "suspended":
+        return False
+    if os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development") not in {"production", "staging"}:
+        return True
     if existing is not None:
         return True
     if invite_token:
@@ -347,15 +354,135 @@ async def issue_invite(
     token_hash: str = _hash_token(raw_token)
     expires_at: datetime.datetime = _now_utc() + datetime.timedelta(seconds=_INVITE_TTL_SECONDS)
 
-    session.add(
-        app.db.models.InviteCode(
-            token_hash=token_hash,
-            issued_by=issued_by_id,
-            expires_at=expires_at,
+    invite = app.db.models.InviteCode(
+        token_hash=token_hash,
+        issued_by=issued_by_id,
+        expires_at=expires_at,
+    )
+    session.add(invite)
+    await session.flush()
+    invite_id: str = invite.id
+    await session.commit()
+    return {"id": invite_id, "token": raw_token, "expires_at": expires_at.isoformat()}
+
+
+def invite_url(raw_token: str) -> str:
+    """The link an invited person opens. The token stays in the fragment, so it is
+    never sent to the static host or written to its logs."""
+    site: str = app.settings.get_settings().FRONTEND_URL.rstrip("/")
+    return f"{site}/invite#{raw_token}"
+
+
+def _invite_status(invite: app.db.models.InviteCode) -> str:
+    if invite.accepted_at:
+        return "accepted"
+    if invite.revoked_at:
+        return "revoked"
+    return "open" if as_utc(invite.expires_at) > _now_utc() else "expired"
+
+
+async def list_invites(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    issued_by_id: str,
+) -> list[dict]:
+    """The invitations this member issued. The tokens themselves were never kept."""
+
+    rows = await session.execute(
+        sqlalchemy.select(app.db.models.InviteCode, app.db.models.Member.display_name)
+        .outerjoin(
+            app.db.models.Member, app.db.models.Member.id == app.db.models.InviteCode.accepted_by
+        )
+        .where(app.db.models.InviteCode.issued_by == issued_by_id)
+        .order_by(app.db.models.InviteCode.created_at.desc())
+    )
+    return [
+        {
+            "id": invite.id,
+            "status": _invite_status(invite),
+            "accepted_by": accepted_by,
+            "created_at": invite.created_at,
+            "expires_at": invite.expires_at,
+        }
+        for invite, accepted_by in rows.all()
+    ]
+
+
+async def revoke_invite(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    invite_id: str,
+    issued_by_id: str,
+) -> bool:
+    """Close an open invitation. Only its issuer may, and only before it is used."""
+
+    invite: app.db.models.InviteCode | None = await session.scalar(
+        sqlalchemy.select(app.db.models.InviteCode).where(
+            app.db.models.InviteCode.id == invite_id,
+            app.db.models.InviteCode.issued_by == issued_by_id,
+            app.db.models.InviteCode.accepted_at.is_(None),
         )
     )
+    if invite is None:
+        return False
+    invite.revoked_at = invite.revoked_at or _now_utc()
     await session.commit()
-    return {"token": raw_token, "expires_at": expires_at.isoformat()}
+    return True
+
+
+# ── The steward's view of members ─────────────────────────────────────────────
+
+
+async def list_members(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    *,
+    email: str | None = None,
+) -> list[dict]:
+    """Who holds an account, or the one holding this address.
+
+    Addresses are stored only as a blind index, so a member can be found by someone
+    who already knows theirs and can never be listed by it. Sign-in times are left
+    out: when someone was last here is not the steward's to watch (L9).
+    """
+
+    query = sqlalchemy.select(app.db.models.Member).order_by(app.db.models.Member.created_at.asc())
+    if email is not None:
+        query = query.where(app.db.models.Member.email_hash == _hash_email(email))
+    members = (await session.scalars(query)).all()
+
+    inviter_ids = {member.invited_by for member in members if member.invited_by}
+    inviters = await session.execute(
+        sqlalchemy.select(app.db.models.Member.id, app.db.models.Member.display_name).where(
+            app.db.models.Member.id.in_(inviter_ids)
+        )
+    )
+    inviter_names: dict[str, str | None] = {row.id: row.display_name for row in inviters.all()}
+    return [
+        {
+            "id": member.id,
+            "display_name": member.display_name,
+            "role": member.role,
+            "status": member.status,
+            "invited_by": inviter_names.get(member.invited_by or ""),
+            "joined_at": member.created_at,
+        }
+        for member in members
+    ]
+
+
+async def set_member_status(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    member_id: str,
+    status: str,
+) -> dict:
+    """Suspend or restore. Reversible, and it keeps everything the member owns."""
+
+    member: app.db.models.Member | None = await session.get(app.db.models.Member, member_id)
+    if member is None:
+        return {"ok": False, "error": "That member no longer exists.", "status": 404}
+    if member.role != "member":
+        return {"ok": False, "error": "The site owner cannot be suspended.", "status": 409}
+    member.status = status
+    await session.commit()
+    return {"ok": True, "status": status}
 
 
 async def accept_invite(
@@ -377,6 +504,9 @@ async def accept_invite(
         return False
     invite.accepted_by = member_id
     invite.accepted_at = now
+    member: app.db.models.Member | None = await session.get(app.db.models.Member, member_id)
+    if member is not None and member.invited_by is None and member.id != invite.issued_by:
+        member.invited_by = invite.issued_by
     await session.commit()
     return True
 

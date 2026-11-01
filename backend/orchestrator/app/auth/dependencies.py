@@ -125,6 +125,10 @@ def resolve_session_optional(request: fastapi.Request) -> OwnerContext | None:
     settings: app.settings.Settings = app.settings.get_settings()
     if not settings.AUTH_ENABLED:
         return OwnerContext(owner_id="dev-owner", actor_id="dev-owner", role="admin")
+    # Set by `app.db.session.flag_suspended_session`. A suspended member reads the
+    # public site like anyone else; only their private access ends.
+    if getattr(request.state, "session_suspended", False):
+        return None
 
     # Prefer session cookie (issued by /v1/auth/otp/verify).
     cookie_token: str = request.cookies.get(_SESSION_COOKIE, "")
@@ -178,6 +182,13 @@ async def require_owner(
         status_code=fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR,
         detail="Unsupported orchestrator auth mode.",
     )
+
+
+async def require_steward(owner: OwnerContext = fastapi.Depends(require_owner)) -> OwnerContext:
+    """The one gate for owner-only routes: unsealing addresses, answering people."""
+
+    ensure_owner_write_scope(owner)
+    return owner
 
 
 def ensure_write_scope(owner: OwnerContext) -> None:

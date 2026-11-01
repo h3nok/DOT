@@ -59,7 +59,7 @@ describe("pageview-only readership", () => {
     b.history.pushState({}, "", "/book/digital-organism-theory#other");
     b.history.replaceState({}, "", "/book/digital-organism-theory?path=example");
     expect(b.fetch).toHaveBeenCalledTimes(1);
-    for (const path of ["/_preview/book-v5", "/studio/writing", "/invite/private-token", "/readers/leave?token=secret"]) b.history.pushState({}, "", path);
+    for (const path of ["/_preview/book-v5", "/studio/writing", "/studio/people", "/invite/private-token", "/invite#a-secret-token", "/invite/?token=secret", "/readers/leave?token=secret"]) b.history.pushState({}, "", path);
     expect(b.fetch).toHaveBeenCalledTimes(1);
     b.history.pushState({}, "", "/book/digital-organism-theory/the-canvas");
     expect(b.fetch).toHaveBeenCalledTimes(2);
@@ -82,6 +82,17 @@ describe("pageview-only readership", () => {
       expect(initAnalytics(b.doc)).toBe(false);
       expect(b.fetch).not.toHaveBeenCalled();
       expect(b.storage.setItem).not.toHaveBeenCalled();
+    }
+  });
+
+  it("does not install measurement or send requests when an invitation is opened", async () => {
+    const { initAnalytics } = await load({ VITE_PLAUSIBLE_DOMAIN: "dotheory.org" });
+    for (const address of ["https://dotheory.org/invite#a-secret-token", "https://dotheory.org/invite/?token=secret"]) {
+      const b = browser(address);
+      expect(initAnalytics(b.doc)).toBe(false);
+      expect(b.fetch).not.toHaveBeenCalled();
+      expect(b.win.addEventListener).not.toHaveBeenCalled();
+      expect(b.history.pushState).not.toHaveBeenCalled();
     }
   });
 

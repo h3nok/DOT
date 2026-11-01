@@ -11,7 +11,7 @@ export function BlogReadingLinks() {
     <aside className="blog-reading-links" aria-label="Follow and connect">
       <section className="blog-follow" aria-labelledby="blog-follow-title">
         <Rss className="blog-support-icon" aria-hidden="true" />
-        <h2 id="blog-follow-title" className="dot-section-heading">Read at your pace.</h2>
+        <h2 id="blog-follow-title" className="dot-section-heading">Follow</h2>
         <div className="blog-support-links">
           <TextLink href={FEED_URL}>Follow with RSS</TextLink>
           <TextLink to="/readers">Open the reader list</TextLink>
@@ -23,7 +23,7 @@ export function BlogReadingLinks() {
         <h2 id="blog-contact-title" className="dot-section-heading">{blog.contactTitle}</h2>
         <div className="blog-support-links">
           <TextLink to={projectInquiryHref()}>Discuss a project</TextLink>
-          <TextLink to="/about#about-products">Explore the work</TextLink>
+          <TextLink to="/about#about-products">View projects</TextLink>
         </div>
       </section>
     </aside>

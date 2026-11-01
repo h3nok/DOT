@@ -112,7 +112,7 @@ class InviteCode(Base):
     id: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(64), primary_key=True, default=lambda: make_id("inv")
     )
-    # Cryptographically random token stored as-is; the URL carries it.
+    # SHA-256 of a random token. Only the invitation link ever carries the token.
     token_hash: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(64), unique=True, nullable=False, index=True
     )
@@ -888,7 +888,7 @@ class JoinRequest(Base, TimestampMixin):
     verified_at: sqlalchemy.orm.Mapped[datetime.datetime | None] = sqlalchemy.orm.mapped_column(
         sqlalchemy.DateTime(timezone=True)
     )
-    #: "pending" once verified, then "invited" or "declined" by the steward.
+    #: Always "pending": answering a request deletes the row (ADR-0019 retention).
     status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(16), nullable=False, default="pending"
     )

@@ -55,7 +55,7 @@ describe("ReadersPage", () => {
     server.available = false;
     inRouter(<ReadersPage />);
 
-    expect(screen.getByText("The list is not open yet.")).toBeInTheDocument();
+    expect(screen.getByText("The reader list is not available yet.")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).toBeNull();
     expect(within(screen.getByRole("main")).getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",
@@ -71,7 +71,7 @@ describe("ReadersPage", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "The reader list could not be reached.",
     );
-    expect(screen.queryByText("The list is not open yet.")).toBeNull();
+    expect(screen.queryByText("The reader list is not available yet.")).toBeNull();
     expect(screen.queryByRole("textbox")).toBeNull();
     expect(within(screen.getByRole("main")).getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",

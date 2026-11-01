@@ -2,6 +2,8 @@ fastapi>=0.115,<1.0
 uvicorn[standard]>=0.30,<1.0
 pydantic-settings>=2.4,<3.0
 email-validator>=2.0,<3.0
+# Keep email validation's DNS parser on the patched release.
+dnspython>=2.9.0,<3.0
 slowapi>=0.1.9,<1.0
 sentry-sdk[fastapi]>=2.0,<3.0
 bcrypt>=4.1,<5.0
@@ -17,7 +19,7 @@ python-dotenv>=1.0,<2.0
 cryptography>=50.0,<51.0
 httpx>=0.27,<1.0
 stripe>=10.0,<13.0
-pypdf>=6.20.1,<7.0
+pypdf>=6.21.4,<7.0
 Pillow>=13.0.0,<14.0
 markdown-it-py>=4.2.0,<5.0
 urllib3>=2.8.0,<3.0

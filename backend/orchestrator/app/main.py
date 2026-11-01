@@ -29,6 +29,7 @@ import app.core.errors as _errors
 import app.core.logging as _logging
 import app.core.middleware as _middleware
 import app.core.security as _security
+import app.db.session as _session_db
 import app.settings as _settings
 
 
@@ -73,6 +74,7 @@ def create_app() -> fastapi.FastAPI:
         redoc_url=None if public_deployment else "/redoc",
         openapi_url=None if public_deployment else "/openapi.json",
         lifespan=lifespan,
+        dependencies=[fastapi.Depends(_session_db.flag_suspended_session)],
         openapi_tags=[
             {"name": "health", "description": "Liveness and readiness probes."},
             {"name": "publications", "description": "Publication Studio workflows."},

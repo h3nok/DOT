@@ -89,9 +89,9 @@ describe("EssayPage", () => {
     );
     expect(screen.getByRole("region", { name: "Respond" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute("href", "/blog");
-    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
     expect(within(screen.getByRole("navigation", { name: "Primary" })).getByRole("link", { name: "Writing" })).toHaveAttribute("aria-current", "page");
-    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
     expect(screen.getByRole("region", { name: "Share publication" })).toBeInTheDocument();
     // No "read next": the essay ends where its text ends (L2).
     expect(screen.queryByText(/read next|you might also/i)).toBeNull();

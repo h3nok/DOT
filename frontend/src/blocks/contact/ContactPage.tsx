@@ -59,35 +59,35 @@ export default function ContactPage() {
 
   return (
     <PageShell wide className="contact-page" header={<PageHeader />} footer={<SiteColophon variant="personal" />}>
-      <PageIntro className="contact-masthead" eyebrow={`Get in touch · ${author.name}`} title={contact.title}>
+      <PageIntro className="contact-masthead" eyebrow={author.name} title={contact.title}>
         <p>{contact.description}</p>
       </PageIntro>
       <div className="contact-layout">
-        <section className="contact-intake" aria-label="Send Henok a message">
+        <section className="contact-intake" aria-label="Contact form">
           {receipt ? (
             <div className="contact-receipt">
               <span className="contact-receipt-mark" aria-hidden="true"><Check /></span>
-              <h2 ref={receiptHeading} tabIndex={-1} className="dot-section-heading">Your message was received.</h2>
-              <p>Thank you for reaching out. Henok can now review your message and reply to the email address you supplied.</p>
+              <h2 ref={receiptHeading} tabIndex={-1} className="dot-section-heading">Message received.</h2>
+              <p>Replies are sent to the email address you provided.</p>
               <p className="contact-reference">Your reference <code>{receipt}</code></p>
-              <DotButton label="Explore the work" to="/about#about-products" endIcon={<ArrowUpRight />} />
-              <button type="button" className="contact-quiet-action" onClick={() => { setReceipt(null); submission.current = null; }}>Write another message</button>
+              <DotButton label="View projects" to="/about#about-products" endIcon={<ArrowUpRight />} />
+              <button type="button" className="contact-quiet-action" onClick={() => { setReceipt(null); submission.current = null; }}>Send another message</button>
             </div>
           ) : availability === "open" || availability === "loading" ? (
             // The form is laid out while availability is checked, so it does not
             // push the direct-contact panel down when the answer arrives.
             <form onSubmit={event => { event.preventDefault(); if (!sending && availability === "open") void send(); }}>
               <fieldset disabled={sending || availability === "loading"} className="contact-form-body">
-                <IntentionPicker label="What brings you here?" options={purposes} value={draft.purpose} onChange={value => update("purpose", value)} />
+                <IntentionPicker label="Purpose" options={purposes} value={draft.purpose} onChange={value => update("purpose", value)} />
                 <div className="contact-fields">
-                  <FormField label="Your name">{props => <input {...props} name="name" autoComplete="name" required maxLength={120} value={draft.name} onChange={event => update("name", event.target.value)} />}</FormField>
-                  <FormField label="Email address" hint="The address Henok should reply to.">{props => <input {...props} name="email" type="email" autoComplete="email" required maxLength={254} value={draft.email} onChange={event => update("email", event.target.value)} />}</FormField>
+                  <FormField label="Name">{props => <input {...props} name="name" autoComplete="name" required maxLength={120} value={draft.name} onChange={event => update("name", event.target.value)} />}</FormField>
+                  <FormField label="Email address" hint="Replies are sent to this address.">{props => <input {...props} name="email" type="email" autoComplete="email" required maxLength={254} value={draft.email} onChange={event => update("email", event.target.value)} />}</FormField>
                 </div>
                 <FormField label="Organization" optional>{props => <input {...props} name="organization" autoComplete="organization" maxLength={160} value={draft.organization} onChange={event => update("organization", event.target.value)} />}</FormField>
-                <FormField label="Your message" hint={draft.purpose === "project" ? "What would you like to build, who is it for, and where are you starting?" : "Share a little context and what you would like to discuss."}>{props => <textarea {...props} name="message" required minLength={10} maxLength={6000} rows={6} value={draft.message} onChange={event => update("message", event.target.value)} />}</FormField>
+                <FormField label="Message" hint={draft.purpose === "project" ? "Goals, intended users, and current stage." : "Include any relevant context."}>{props => <textarea {...props} name="message" required minLength={10} maxLength={6000} rows={6} value={draft.message} onChange={event => update("message", event.target.value)} />}</FormField>
                 {draft.purpose === "project" && <div className="contact-fields">
-                  <FormField label="Timeline" optional>{props => <input {...props} name="timeline" placeholder="A target date, or still exploring" maxLength={120} value={draft.timeline} onChange={event => update("timeline", event.target.value)} />}</FormField>
-                  <FormField label="Budget range" optional>{props => <input {...props} name="budget" placeholder="A range, or not yet decided" maxLength={120} value={draft.budget} onChange={event => update("budget", event.target.value)} />}</FormField>
+                  <FormField label="Timeline" optional>{props => <input {...props} name="timeline" placeholder="Target date, if known" maxLength={120} value={draft.timeline} onChange={event => update("timeline", event.target.value)} />}</FormField>
+                  <FormField label="Budget range" optional>{props => <input {...props} name="budget" placeholder="Range, if known" maxLength={120} value={draft.budget} onChange={event => update("budget", event.target.value)} />}</FormField>
                 </div>}
                 <div className="contact-honeypot" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" value={draft.website} onChange={event => update("website", event.target.value)} /></label></div>
                 <label className="contact-consent"><input type="checkbox" checked={draft.consent} required onChange={event => update("consent", event.target.checked)} /><span>I agree to have my details used to respond to this message.</span></label>
@@ -98,18 +98,17 @@ export default function ContactPage() {
               </fieldset>
             </form>
           ) : <div className="contact-availability">
-            <h2 className="dot-section-heading">{availability === "error" ? "The form could not be reached." : "Please use email for now."}</h2>
-            <p>{availability === "error" ? "You can still contact Henok directly. No message has been sent." : "The contact form is temporarily unavailable. Send a note directly to the address alongside."}</p>
+            <h2 className="dot-section-heading">{availability === "error" ? "The contact form could not be reached." : "The contact form is unavailable."}</h2>
+            <p>{availability === "error" ? "No message was sent. Use the email address shown." : "Use the email address shown."}</p>
             <button className="contact-quiet-action" type="button" onClick={() => setAttempt(value => value + 1)}>Try the form again</button>
           </div>}
         </section>
         <Surface as="aside" className="contact-aside" aria-label="Direct contact and next steps">
           <div className="contact-letter-art" aria-hidden="true"><span /><span /><Mail /></div>
-          <p className="dot-label">A direct conversation</p>
-          <h2 className="dot-section-heading">Prefer email?</h2>
+          <p className="dot-label">Direct contact</p>
+          <h2 className="dot-section-heading">Email</h2>
           <a className="contact-email" href={`mailto:${author.email}`}>{author.email}<ArrowUpRight aria-hidden="true" /></a>
-          <p className="contact-aside-copy">For projects, collaboration, writing, speaking, or a simple hello.</p>
-          <div className="contact-next"><h3 className="dot-section-heading">What happens next</h3><p>{contact.next}</p></div>
+          <div className="contact-next"><h3 className="dot-section-heading">Next steps</h3><p>{contact.next}</p></div>
           <TextLink className="contact-quiet-action" to="/about#about-resume">Background &amp; résumé</TextLink>
         </Surface>
       </div>

@@ -11,6 +11,13 @@ import { CreateBookProject } from "./components/CreateBookProject";
 import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import { useAuth } from "../../dot/useAuth";
 
+const OWNER_DESTINATIONS = [
+  { to: "/studio/inbox", label: "Open your contact inbox" },
+  { to: "/studio/people", label: "Manage subscribers, members, and invitations" },
+  { to: "/studio/newsletter", label: "Open the AMM newsletter desk" },
+  { to: "/studio/pages/amm", label: "Edit AMM’s pages" },
+];
+
 export default function PublicationStudioIndexPage() {
   const { isOwner } = useAuth();
   const [projects, setProjects] = useState<PublicationProjectRead[]>([]);
@@ -49,9 +56,7 @@ export default function PublicationStudioIndexPage() {
         className="mt-8 max-w-md"
         primary={{ to: "/studio/writing", label: "Write an essay or letter", icon: <FileText /> }}
       />
-      {isOwner && <Link to="/studio/inbox" className="mt-5 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Open your contact inbox <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>}
-      {isOwner && <p><Link to="/studio/newsletter" className="mt-2 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Open the AMM newsletter desk <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></p>}
-      {isOwner && <p><Link to="/studio/pages/amm" className="mt-2 inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">Edit AMM’s pages <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></p>}
+      {isOwner && <ul className="mt-5 grid gap-1">{OWNER_DESTINATIONS.map(({ to, label }) => <li key={to}><Link to={to} className="inline-flex min-h-12 items-center gap-2 text-sm underline underline-offset-4">{label} <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link></li>)}</ul>}
 
       <details className="mt-10 border-t border-border/60">
         <summary className="min-h-12 cursor-pointer py-4 text-sm font-semibold">Book projects</summary>

@@ -241,7 +241,7 @@ export default function BlogPage() {
             )}
 
             {state.status === "ready" && state.unavailable.length === 0 && page === pages && state.posts.length > 0 && (
-              <p className="blog-completion">That is everything posted here so far.</p>
+              <p className="blog-completion">End of list.</p>
             )}
           </section>
         </div>

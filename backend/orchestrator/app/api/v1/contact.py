@@ -32,11 +32,7 @@ public_router.dependencies.append(fastapi.Depends(no_store))
 router.dependencies.append(fastapi.Depends(no_store))
 
 
-async def require_steward(owner: auth.OwnerContext = fastapi.Depends(auth.require_owner)) -> None:
-    service.require_steward(owner)
-
-
-router.dependencies.append(fastapi.Depends(require_steward))
+router.dependencies.append(fastapi.Depends(auth.require_steward))
 
 
 @public_router.get("/status")

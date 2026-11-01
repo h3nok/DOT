@@ -40,6 +40,8 @@ export function initAnalytics(doc: Document | undefined = globalThis.document): 
   if (!ANALYTICS_DOMAIN || !win || !destination || installed.has(win)) return false;
   const host = win.location.hostname.toLowerCase();
   if (win.location.protocol !== "https:" || (host !== ANALYTICS_DOMAIN && !host.endsWith(`.${ANALYTICS_DOMAIN}`)) || optedOut(win)) return false;
+  // Invitation URLs carry a private token. Do not install measurement there.
+  if (/^\/invite\/?$/.test(win.location.pathname)) return false;
   installed.add(win);
   const domain = ANALYTICS_DOMAIN;
   const referrer = referralOrigin(doc.referrer);

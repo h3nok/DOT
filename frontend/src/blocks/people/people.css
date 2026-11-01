@@ -1,0 +1,12 @@
+.people-nav { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: 2rem 0; border-bottom: 1px solid var(--border); }
+.people-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .875rem; color: var(--muted-foreground); }
+.people-nav a[aria-current="page"] { color: var(--foreground); font-weight: 600; text-decoration: underline; text-underline-offset: .4em; }
+.people-row { display: grid; gap: .35rem; padding: 1.25rem .75rem; min-width: 0; }
+.people-row strong { font-family: var(--font-serif, Georgia, serif); font-size: 1.25rem; font-weight: 500; overflow-wrap: anywhere; }
+.people-row p { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.7; }
+.people-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0 1.5rem; }
+.people-actions .contact-quiet-action { margin-top: .25rem; }
+.people-find { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin-bottom: 1.5rem; }
+.people-find .intent-field { flex: 1 1 18rem; }
+.people-link { display: block; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; font-size: .8125rem; overflow-wrap: anywhere; }
+.people-total { font-family: var(--font-serif, Georgia, serif); font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.2; }

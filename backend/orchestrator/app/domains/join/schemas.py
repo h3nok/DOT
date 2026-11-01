@@ -47,5 +47,12 @@ class JoinRequestOut(pydantic.BaseModel):
     created_at: datetime.datetime
 
 
+class JoinInvited(pydantic.BaseModel):
+    status: str = "invited"
+    #: Present only when no mail provider is configured, so local development can
+    #: complete the loop.
+    dev_link: str | None = None
+
+
 class JoinQueue(pydantic.BaseModel):
     requests: list[JoinRequestOut]

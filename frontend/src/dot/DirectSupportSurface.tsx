@@ -29,7 +29,7 @@ export function DirectSupportSurface({ methods, origin, reducedMotion, titleAs, 
   };
 
   return <BloomSurface origin={origin} reducedMotion={reducedMotion} titleAs={titleAs} zIndex={58}
-    onClose={onClose} kicker="independent writing & research" title="Support the author"
+    onClose={onClose} kicker="support" title="Support the author"
     description="A voluntary, one-time contribution. The complete book and PDF remain free, with no account required." size="md"
     footer={method.id === "cashapp"
       ? <a href={method.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-3 text-sm font-semibold"><ArrowUpRight className="h-4 w-4" aria-hidden="true" />Continue to Cash App</a>

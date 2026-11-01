@@ -129,6 +129,19 @@ async def issue_invite(
     return schemas.InviteIssueResponse(**result)
 
 
+@router.get("/invites", response_model=schemas.InviteList)
+async def list_invites(
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.InviteList:
+    """A member's own invitations. Like circles, never listed to anyone else."""
+
+    rows = await auth_service.list_invites(session, owner.owner_id)
+    return schemas.InviteList(invites=[schemas.InviteOut(**row) for row in rows])
+
+
 @router.get("/invites/check", response_model=schemas.InviteCheckResponse)
 @_limiter.limit("20/minute")
 async def check_invite(
@@ -155,6 +168,58 @@ async def accept_invite(
     if not accepted:
         raise fastapi.HTTPException(status_code=404, detail="Invite is not valid.")
     return {"accepted": True}
+
+
+@router.delete("/invites/{invite_id}", status_code=204)
+async def revoke_invite(
+    invite_id: str,
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> None:
+    if not await auth_service.revoke_invite(session, invite_id, owner.owner_id):
+        raise fastapi.HTTPException(status_code=404, detail="That invitation is no longer open.")
+
+
+@router.get("/members", response_model=schemas.MemberList)
+async def list_members(
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.MemberList:
+    rows = await auth_service.list_members(session)
+    return schemas.MemberList(members=[schemas.MemberOut(**row) for row in rows])
+
+
+@router.post("/members/find", response_model=schemas.MemberList)
+@_limiter.limit("30/hour")
+async def find_member(
+    request: fastapi.Request,
+    payload: schemas.MemberLookup,
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.MemberList:
+    rows = await auth_service.list_members(session, email=str(payload.email))
+    return schemas.MemberList(members=[schemas.MemberOut(**row) for row in rows])
+
+
+@router.patch("/members/{member_id}")
+async def set_member_status(
+    member_id: str,
+    payload: schemas.MemberStatusIn,
+    _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_steward
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> dict:
+    result = await auth_service.set_member_status(session, member_id, payload.status)
+    if not result["ok"]:
+        raise fastapi.HTTPException(status_code=result["status"], detail=result["error"])
+    return {"status": result["status"]}
 
 
 @router.get("/circle", response_model=schemas.CircleResponse)

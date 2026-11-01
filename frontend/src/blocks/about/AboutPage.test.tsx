@@ -32,13 +32,13 @@ describe("AboutPage", () => {
   it("uses one shared book link in Explore", () => {
     renderPage();
 
-    fireEvent.click(screen.getByRole("button", { name: "Explore the site" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
     const context = within(screen.getByRole("navigation", { name: "Primary" }));
     expect(context.getByRole("link", { name: "Book One" })).toHaveAttribute(
       "href",
       "/book/digital-organism-theory",
     );
-    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close menu" }));
     expect(screen.queryByRole("navigation", { name: "Page context" })).toBeNull();
     expect(screen.getByRole("link", { name: "Essays and letters" })).toHaveAttribute("href", "/blog");
   });
@@ -62,7 +62,7 @@ describe("AboutPage", () => {
     renderPage();
 
     const contact = within(screen.getByRole("region", { name: "Contact" }));
-    expect(contact.getByRole("link", { name: "Start a conversation" })).toHaveAttribute("href", "/contact");
+    expect(contact.getByRole("link", { name: "Contact form" })).toHaveAttribute("href", "/contact");
     const reach = contact.getAllByRole("link").find(link => link.getAttribute("href") === (author.email ? `mailto:${author.email}` : author.links.linkedin))!;
     expect(reach).toHaveAttribute(
       "href",

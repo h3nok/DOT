@@ -29,6 +29,8 @@ import sqlalchemy.ext.asyncio
 import app.core.contact
 import app.db.models
 import app.domains.auth.service
+import app.domains.contact.service
+import app.settings
 
 logger = logging.getLogger(__name__)
 
@@ -39,10 +41,6 @@ _MAX_ATTEMPTS = 5
 
 def _now() -> datetime.datetime:
     return datetime.datetime.now(datetime.UTC)
-
-
-def _as_utc(value: datetime.datetime) -> datetime.datetime:
-    return value if value.tzinfo else value.replace(tzinfo=datetime.UTC)
 
 
 def join_available() -> bool:
@@ -86,7 +84,7 @@ async def request_join(
         .limit(1)
     )
     if recent:
-        elapsed = (now - _as_utc(recent.created_at)).total_seconds()
+        elapsed = (now - app.domains.auth.service.as_utc(recent.created_at)).total_seconds()
         if elapsed < _RESEND_COOLDOWN_SECONDS:
             wait = int(_RESEND_COOLDOWN_SECONDS - elapsed)
             return {
@@ -101,8 +99,8 @@ async def request_join(
         )
     )
     if existing:
-        # Already answered? Then this is not a new request, and saying so would
-        # leak that the address is known. Refresh quietly and send a code.
+        # Asking again refreshes the open request. Saying so would leak that the
+        # address is known, so refresh quietly and send a code.
         existing.email_sealed = app.core.contact.seal(email)
         if reason:
             existing.reason = reason
@@ -192,6 +190,83 @@ async def verify_join(
     pending.verified_at = pending.verified_at or now
     await session.commit()
     return {"ok": True}
+
+
+async def _open_request(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    request_id: str,
+) -> app.db.models.JoinRequest | None:
+    return await session.scalar(
+        sqlalchemy.select(app.db.models.JoinRequest).where(
+            app.db.models.JoinRequest.id == request_id,
+            app.db.models.JoinRequest.verified_at.is_not(None),
+        )
+    )
+
+
+async def invite_requester(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    request_id: str,
+    issued_by_id: str,
+) -> dict:
+    """Say yes: email an invitation, then forget the address (ADR-0019 retention).
+
+    The request survives a failed send, and that attempt's invitation is revoked,
+    so no working link is left behind that nobody received.
+    """
+    row = await _open_request(session, request_id)
+    if row is None:
+        return {"ok": False, "error": "That request is no longer open.", "status": 404}
+    email = app.core.contact.open_sealed(row.email_sealed)
+    if not email:
+        return {"ok": False, "error": "This address can no longer be opened.", "status": 409}
+
+    mail_ready = app.domains.contact.service.mail_available()
+    settings = app.settings.get_settings()
+    if not mail_ready and settings.ENVIRONMENT in {"production", "staging"}:
+        return {"ok": False, "error": "Email is not available right now.", "status": 503}
+
+    invite = await app.domains.auth.service.issue_invite(session, issued_by_id)
+    link = app.domains.auth.service.invite_url(invite["token"])
+    if mail_ready:
+        delivered = await app.domains.contact.service.deliver(
+            to=email,
+            subject="Your invitation to DOT",
+            text=(
+                "You asked to join DOT, and your request has been accepted.\n\n"
+                f"Open this link to accept: {link}\n\n"
+                "The link is for you, works once, and expires in 14 days."
+            ),
+            reply_to=settings.CONTACT_EMAIL,
+            key=f"join-invite-{invite['id']}",
+        )
+        if delivered is None:
+            await app.domains.auth.service.revoke_invite(session, invite["id"], issued_by_id)
+            return {
+                "ok": False,
+                "error": "The email could not be sent. The request is still open.",
+                "status": 502,
+            }
+
+    await session.delete(row)
+    await session.commit()
+    result: dict = {"ok": True}
+    if not mail_ready:
+        result["dev_link"] = link
+    return result
+
+
+async def decline_request(
+    session: sqlalchemy.ext.asyncio.AsyncSession,
+    request_id: str,
+) -> bool:
+    """Say no by removing the request. No email goes out, and nothing is kept."""
+    row = await _open_request(session, request_id)
+    if row is None:
+        return False
+    await session.delete(row)
+    await session.commit()
+    return True
 
 
 async def list_requests(

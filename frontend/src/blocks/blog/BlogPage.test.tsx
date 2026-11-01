@@ -44,13 +44,13 @@ describe("BlogPage", () => {
     vi.mocked(fetchEssayIndex).mockResolvedValue([]);
     vi.mocked(fetchReleasedWriting).mockResolvedValue([]);
     open();
-    expect(await screen.findByText("The archive starts here.")).toBeInTheDocument();
+    expect(await screen.findByText("No posts yet.")).toBeInTheDocument();
     const startingPoint = within(screen.getByRole("region", { name: "Consciousness: A Digital Organism" }));
     expect(startingPoint.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
     fireEvent.click(startingPoint.getByText("Start with a passage"));
     expect(startingPoint.getByText("Start here · From Book One")).toBeVisible();
     expect(startingPoint.getByRole("link", { name: "Read the passage" })).toHaveAttribute("href", "/book/digital-organism-theory/the-painting#learning-to-see-from-between-paintings");
-    expect(screen.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/about#about-products");
+    expect(screen.getAllByRole("link", { name: "View projects" })[0]).toHaveAttribute("href", "/about#about-products");
     const series = within(screen.getByRole("region", { name: "The American Millennial Manifesto" }));
     expect(series.getByRole("link", { name: "Explore AMM" })).toHaveAttribute("href", "/amm");
     expect(series.getByRole("img", { name: /flag-patterned Host carries a two-headed Leech/ })).toHaveAttribute("src", "/amm/media/host2-1280.webp");
@@ -69,7 +69,7 @@ describe("BlogPage", () => {
     expect(await screen.findByRole("list", { name: "Posts, newest first" })).toBeInTheDocument();
     expect(titles()).toEqual(["Letter awork_new", "Essay old"]);
     expect(screen.getByRole("link", { name: "Letter awork_new" })).toHaveAttribute("href", "/writing/awork_new");
-    expect(screen.getByText(/That is everything posted here so far/)).toBeInTheDocument();
+    expect(screen.getByText(/End of list/)).toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: "Blog pages" })).toBeNull();
   });
 
@@ -91,12 +91,12 @@ describe("BlogPage", () => {
     open();
     expect(await screen.findByRole("alert")).toHaveTextContent("Some writing could not be loaded.");
     expect(titles()).toEqual(["Essay kept"]);
-    expect(screen.queryByText(/That is everything posted here so far/)).toBeNull();
+    expect(screen.queryByText(/End of list/)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     expect(await screen.findByRole("link", { name: "Letter recovered" })).toBeInTheDocument();
     expect(titles()).toEqual(["Letter recovered", "Essay kept"]);
     expect(screen.queryByRole("alert")).toBeNull();
-    expect(screen.getByText(/That is everything posted here so far/)).toBeInTheDocument();
+    expect(screen.getByText(/End of list/)).toBeInTheDocument();
   });
 
   it("offers a way to read when neither archive can load", async () => {
