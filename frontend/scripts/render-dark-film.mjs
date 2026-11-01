@@ -306,6 +306,15 @@ function addTrailerScore(mix, rate, count, trailer) {
     }
     mix[i] += sample;
   }
+  // The same soft open fifth under the closing mark, fading with the film's last second.
+  const closing = Math.round(trailer.closingMark * rate);
+  for (let i = closing; i < count; i++) {
+    const t = (i - closing) / rate;
+    const envelope = smooth(t, 0.1, 1.2) * (1 - smooth((count - i) / rate, 1.2, 0));
+    for (const [frequency, level] of [[146.83, 0.03], [220, 0.022], [293.66, 0.014]]) {
+      mix[i] += level * envelope * Math.sin(tau * frequency * t);
+    }
+  }
   return true;
 }
 
@@ -474,8 +483,20 @@ try {
       await publish(temporaryVideo, outputVideo);
     }
     if (!OPENING_ONLY && !reuse) {
-      await command(FFMPEG, ["-hide_banner", "-loglevel", "error", "-y", "-i", full, "-t", String(info.openingSeconds), "-frames:v", String(Math.ceil(info.openingSeconds * FPS)), "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-threads", "4", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", opening]);
-      openingMetadata = await inspect(opening, info.openingSeconds);
+      // The standalone trailer: the opening, then straight to the film's closing mark.
+      const cut = info.openingSeconds;
+      const mark = info.trailer.closingMark;
+      await command(FFMPEG, [
+        "-hide_banner", "-loglevel", "error", "-y", "-i", full,
+        "-filter_complex",
+        `[0:v]trim=0:${cut},setpts=PTS-STARTPTS[a];[0:v]trim=start=${mark},setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0[video];` +
+        `[0:a]atrim=0:${cut},asetpts=PTS-STARTPTS,afade=t=out:st=${cut - 0.6}:d=0.6[x];[0:a]atrim=start=${mark},asetpts=PTS-STARTPTS[y];[x][y]concat=n=2:v=0:a=1[audio]`,
+        "-map", "[video]", "-map", "[audio]",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-threads", "4", "-profile:v", "high", "-level:v", H264_LEVEL,
+        "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
+        "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", opening,
+      ]);
+      openingMetadata = await inspect(opening, info.openingSeconds + info.duration - info.trailer.closingMark);
     }
     if (!reuse) excerptMetadata = await exportExcerpt(opening, info.openingSeconds);
     await writeFile(path.join(OUTPUT, `concept-film-${SUFFIX}.json`), `${JSON.stringify({ draft: true, duration, openingSeconds: info.openingSeconds, width: PIXEL_WIDTH, height: PIXEL_HEIGHT, fps: FPS, frames: frameCount, audio: audioMetadata, reusedBody, excerpt: excerptMetadata, video: metadata, opening: openingMetadata, full: OPENING_ONLY ? null : full, openingFile: opening }, null, 2)}\n`);

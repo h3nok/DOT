@@ -57,13 +57,13 @@ test("the homepage film types every concept only when asked, and its sound is on
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(section.getByRole("button", { name: "Play film", exact: true })).toBeAttached();
 
-  // The film plays out and stops on its closing title, with the way into the book.
-  await timeline.fill("505");
+  // The film plays out and stops on the DOT mark, with the way into the book.
+  await timeline.fill("510");
   await section.getByRole("button", { name: "Play film", exact: true }).click();
-  await expect(timeline).toHaveValue("508", { timeout: 10_000 });
-  await expect(shown.getByRole("heading", { level: 3 })).toHaveAccessibleName("Become a student of your own experience.");
-  await expect(shown.getByRole("link", { name: "Enter the Academy" })).toHaveAttribute("href", "/academy");
-  await expect(shown.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
+  await expect(timeline).toHaveValue("513", { timeout: 10_000 });
+  await expect(section.locator(".dark-trailer-mark .do-wordmark")).toBeVisible();
+  await expect(section.getByRole("link", { name: "Enter the Academy" })).toHaveAttribute("href", "/academy");
+  await expect(section.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
   await expect(section.getByRole("button", { name: "Play film", exact: true })).toBeAttached();
 
   expect(await probe()).toEqual({ audio: 0, contexts: 1 });

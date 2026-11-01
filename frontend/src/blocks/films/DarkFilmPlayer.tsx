@@ -2,10 +2,11 @@ import { DoWordmark } from "../../shared/DoWordmark";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
 import filmsData from "../../content/films.json";
 import { ConceptTourFrame } from "./ConceptTourPlayer";
-import { DarkFilmTrailer, type FilmTone } from "./DarkFilmTrailer";
+import { DarkFilmTrailer, FilmClosingMark, type FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import { FilmProgress } from "./FilmProgress";
 import {
+  DARK_FILM_BODY_END,
   DARK_FILM_KEYSTROKES,
   DARK_FILM_SECONDS,
   DARK_FILM_SECTIONS,
@@ -32,16 +33,17 @@ export const DARK_FILM_POSTER_SECONDS = 11.5;
 export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark" }: {
   seconds: number; still: boolean; burnIn?: boolean; tone?: FilmTone;
 }) {
-  const trailer = seconds < DARK_OPENING_SECONDS;
+  const opening = seconds < DARK_OPENING_SECONDS;
+  const closing = seconds >= DARK_FILM_BODY_END;
   return (
-    <div className={`dark-film-frame${trailer ? " dark-film-frame--trailer" : ""}`} data-film-tone={tone} data-dark-film-render>
+    <div className={`dark-film-frame${opening || closing ? " dark-film-frame--trailer" : ""}`} data-film-tone={tone} data-dark-film-render>
       <div className="dark-film-signature" aria-hidden="true">
         <DoWordmark compact />
         <span>Digital Organism Theory</span>
       </div>
-      {trailer ? (
-        <DarkFilmTrailer seconds={seconds} still={still} tone={tone} />
-      ) : (
+      {opening && <DarkFilmTrailer seconds={seconds} still={still} tone={tone} />}
+      {closing && <FilmClosingMark seconds={seconds - DARK_FILM_BODY_END} still={still} tone={tone} links={!burnIn} />}
+      {!opening && !closing && (
         <div className="dark-film-lesson concept-tour">
           <ConceptTourFrame frame={originalDarkFilmTime(seconds)} still={still} />
         </div>

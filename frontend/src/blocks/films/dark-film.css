@@ -196,6 +196,15 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   translate: -50% -50%;
 }
 .dark-trailer-mark .do-wordmark { color: var(--film-ink); font-size: clamp(2.6rem, 7.4cqi, 9rem); }
+.dark-trailer-mark-links {
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  left: 5%;
+  z-index: 2;
+  justify-content: center;
+  margin: 0;
+}
 .dark-trailer-mark p {
   position: absolute;
   top: calc(100% + 22cqh);

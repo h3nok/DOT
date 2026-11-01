@@ -152,8 +152,11 @@ const BELL_AFTER = new Set(["Your living body is your interface to a Reality Fra
 
 export const DARK_OPENING_SECONDS = DARK_TRAILER_SHOTS.at(-1)!.end;
 const SHIFT = TOUR_OPENING_SECONDS - DARK_OPENING_SECONDS;
-export const DARK_FILM_SECONDS = CONCEPT_TOUR_SECONDS - SHIFT;
-export const DARK_FILM_STARTS = [0, ...CONCEPT_TOUR_STARTS.filter((at) => at >= TOUR_OPENING_SECONDS).map((at) => at - SHIFT)];
+/** Where the concepts and their closing end, and the DOT mark holds to the film's last frame. */
+export const DARK_FILM_BODY_END = CONCEPT_TOUR_SECONDS - SHIFT;
+export const DARK_CLOSING_MARK_SECONDS = 5;
+export const DARK_FILM_SECONDS = DARK_FILM_BODY_END + DARK_CLOSING_MARK_SECONDS;
+export const DARK_FILM_STARTS = [0, ...CONCEPT_TOUR_STARTS.filter((at) => at >= TOUR_OPENING_SECONDS).map((at) => at - SHIFT), DARK_FILM_BODY_END];
 /** Every section of the film for its progress line: each trailer shot, then each concept. */
 export const DARK_FILM_SECTIONS = [...DARK_TRAILER_SHOTS.map((shot) => shot.start), ...DARK_FILM_STARTS.slice(1)];
 
@@ -199,7 +202,8 @@ export const DARK_FILM_KEYSTROKES: readonly Keystroke[] = [
     .map((key) => ({ ...key, at: key.at - SHIFT })),
 ];
 
-export const originalDarkFilmTime = (seconds: number) => seconds + SHIFT;
-export const describeDarkFilmTime = (seconds: number) => seconds < DARK_OPENING_SECONDS
-  ? `Opening: ${darkTrailerShot(seconds).label}`
-  : describeTourTime(originalDarkFilmTime(seconds));
+export const originalDarkFilmTime = (seconds: number) => Math.min(CONCEPT_TOUR_SECONDS, seconds + SHIFT);
+export const describeDarkFilmTime = (seconds: number) => {
+  if (seconds < DARK_OPENING_SECONDS) return `Opening: ${darkTrailerShot(seconds).label}`;
+  return seconds < DARK_FILM_BODY_END ? describeTourTime(originalDarkFilmTime(seconds)) : "DOT";
+};

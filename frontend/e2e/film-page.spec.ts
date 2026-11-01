@@ -19,7 +19,7 @@ test("the film's own address opens on the film, waiting for Play", async ({ page
   const play = page.getByRole("button", { name: /^Play Book One, concept by concept/ });
   await expect(play).toBeVisible();
   await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveValue("0");
-  await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveAttribute("max", "508");
+  await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveAttribute("max", "513");
   await expect(page.locator('[data-trailer-shot="normal"]')).toBeVisible();
   await expect(page.getByRole("navigation", { name: "After the film" }).getByRole("link", { name: "Read Book One" }))
     .toHaveAttribute("href", "/book/digital-organism-theory");

@@ -8,6 +8,7 @@ import { DarkFilmFrame } from "./DarkFilmPlayer";
 import type { FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import {
+  DARK_FILM_BODY_END,
   DARK_FILM_KEYSTROKES,
   DARK_FILM_SECONDS,
   DARK_FILM_SECTIONS,
@@ -29,7 +30,7 @@ declare global {
       openingSeconds: number;
       keystrokes: typeof DARK_FILM_KEYSTROKES;
       /** The trailer's shots and heartbeats, so the exported score follows the picture. */
-      trailer: { shots: { kind: string; start: number; end: number }[]; heartbeats: readonly number[] };
+      trailer: { shots: { kind: string; start: number; end: number }[]; heartbeats: readonly number[]; closingMark: number };
     };
   }
 }
@@ -54,6 +55,7 @@ export default function DarkFilmPreview() {
       trailer: {
         shots: DARK_TRAILER_SHOTS.map(({ kind, start, end }) => ({ kind, start, end })),
         heartbeats: DARK_TRAILER_HEARTBEATS,
+        closingMark: DARK_FILM_BODY_END,
       },
       renderAt: async (seconds: number) => {
         if (!Number.isFinite(seconds)) throw new Error("Film time must be finite.");

@@ -1,6 +1,8 @@
 import { createContext, useContext, useId, type CSSProperties } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
+import { Link } from "react-router-dom";
+import filmsData from "../../content/films.json";
 import { DoWordmark } from "../../shared/DoWordmark";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
@@ -229,7 +231,7 @@ function TrailerMark({ seconds }: { seconds: number }) {
   const centre: Point = [800, 400];
   return (
     <>
-      <svg className="dark-trailer-field" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <svg className="dark-trailer-field dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <defs>
           <radialGradient id={`${uid}-mark`}>
             <stop offset="0" stopColor={jade} stopOpacity=".34" />
@@ -251,6 +253,32 @@ function TrailerMark({ seconds }: { seconds: number }) {
         <p style={{ opacity: smooth(seconds, 1.5, 2.3) }}>Digital Organism Theory</p>
       </div>
     </>
+  );
+}
+
+/**
+ * The film's last frames: the same mark, which holds rather than fades, and the film stops on it.
+ * On the website it also offers the ways onward; exported video shows the mark alone.
+ */
+export function FilmClosingMark({ seconds, still = false, tone = "dark", links = false }: {
+  seconds: number; still?: boolean; tone?: FilmTone; links?: boolean;
+}) {
+  const time = still ? 5 : seconds;
+  return (
+    <TrailerPalette.Provider value={PALETTES[tone]}>
+      <section className="dark-trailer" aria-label="DOT">
+        <div className="dark-trailer-scene" style={{ opacity: smooth(time, 0, 0.7) }}>
+          <TrailerMark seconds={time} />
+          {links && (
+            <nav className="dark-trailer-mark-links concept-film-links" aria-label="After the film" style={{ opacity: smooth(time, 1.8, 2.6) }}>
+              {filmsData.conceptTour.closing.links.map((link) => (
+                <Link key={link.to} to={link.to} onClick={(event) => event.stopPropagation()}>{link.label}</Link>
+              ))}
+            </nav>
+          )}
+        </div>
+      </section>
+    </TrailerPalette.Provider>
   );
 }
 

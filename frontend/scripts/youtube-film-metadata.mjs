@@ -33,7 +33,9 @@ function srt(cues) {
 // Trailer.
 const trailer = trailerCues();
 writeFileSync(path.join(OUT, `dot-opening-trailer-${VERSION}.en.srt`), srt(trailer));
-const trailerChapters = rev.DARK_TRAILER_SHOTS.map((shot) => `${clock(shot.start)} ${shot.label}`);
+// YouTube needs chapters of ten seconds or more, so the opening mark belongs to the first one.
+const trailerChapters = rev.DARK_TRAILER_SHOTS.filter((shot) => shot.kind !== "mark")
+  .map((shot, index) => `${index ? clock(shot.start) : "0:00"} ${shot.label}`);
 
 // Full film: trailer cues, then each concept's name and Concept Map definition.
 const full = [...trailer];
@@ -54,7 +56,7 @@ for (const part of tour.CONCEPT_TOUR) {
 }
 writeFileSync(path.join(OUT, `concept-film-full-16x9-${VERSION}.en.srt`), srt(full));
 
-const chapters = { trailer: { duration: clock(rev.DARK_OPENING_SECONDS), chapters: trailerChapters }, full: { duration: clock(rev.DARK_FILM_SECONDS), chapters: filmChapters } };
+const chapters = { trailer: { duration: clock(rev.DARK_OPENING_SECONDS + rev.DARK_CLOSING_MARK_SECONDS), chapters: trailerChapters }, full: { duration: clock(rev.DARK_FILM_SECONDS), chapters: filmChapters } };
 writeFileSync(path.join(OUT, `dot-films-${VERSION}-chapters.json`), `${JSON.stringify(chapters, null, 2)}\n`);
 console.log(JSON.stringify(chapters, null, 2));
 

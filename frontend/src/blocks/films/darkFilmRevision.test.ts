@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
 import { createElement } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -10,8 +11,10 @@ import {
   tourPartAt,
   type TourPart,
 } from "./conceptTour";
+import { DarkFilmFrame } from "./DarkFilmPlayer";
 import { DarkFilmTrailer } from "./DarkFilmTrailer";
 import {
+  DARK_FILM_BODY_END,
   DARK_FILM_KEYSTROKES,
   DARK_FILM_SECONDS,
   DARK_FILM_STARTS,
@@ -168,6 +171,22 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
+  it("ends by holding on the DOT mark, with its name, until the film stops", () => {
+    const frame = (seconds: number, burnIn: boolean) =>
+      createElement(MemoryRouter, null, createElement(DarkFilmFrame, { seconds, still: false, burnIn }));
+    const view = render(frame(DARK_FILM_SECONDS, true));
+    expect(view.container.querySelector(".dark-trailer-mark .do-wordmark")).not.toBeNull();
+    // Exported video shows the mark alone; the website adds the ways onward.
+    expect(view.container.querySelector(".dark-trailer-mark-links")).toBeNull();
+    view.rerender(frame(DARK_FILM_SECONDS, false));
+    expect(view.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
+    expect(view.container.querySelector(".dark-trailer-mark")).toHaveTextContent("Digital Organism Theory");
+    expect(view.container.querySelector(".dark-film-lesson")).toBeNull();
+    view.rerender(frame(DARK_FILM_BODY_END - 1, false));
+    expect(view.container.querySelector(".dark-trailer-mark")).toBeNull();
+    view.unmount();
+  });
+
   it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
     const strokes = (tone: "dark" | "light") => {
       const view = render(createElement(DarkFilmTrailer, { seconds: DARK_TRAILER_SHOTS.find((shot) => shot.kind === "turn")!.start + 1, still: true, tone }));
@@ -203,10 +222,12 @@ describe("the dark film's opening trailer", () => {
     expect(DARK_FILM_STARTS[0]).toBe(0);
     expect(DARK_FILM_STARTS[1]).toBe(DARK_OPENING_SECONDS);
 
-    const visited = DARK_FILM_STARTS.slice(1).map((at) => tourPartAt(originalDarkFilmTime(at)));
+    const body = DARK_FILM_STARTS.slice(1, -1);
+    expect(DARK_FILM_STARTS.at(-1)).toBe(DARK_FILM_BODY_END);
+    const visited = body.map((at) => tourPartAt(originalDarkFilmTime(at)));
     expect(visited.map(partIdentity)).toEqual(originalBody.map(partIdentity));
 
-    const boundaries = [...DARK_FILM_STARTS.slice(1), DARK_FILM_SECONDS];
+    const boundaries = [...body, DARK_FILM_BODY_END];
     originalBody.forEach((part, index) => {
       const start = boundaries[index];
       const end = boundaries[index + 1];
@@ -218,7 +239,7 @@ describe("the dark film's opening trailer", () => {
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
     expect(DARK_OPENING_SECONDS).toBe(211);
-    expect(DARK_FILM_SECONDS).toBe(508);
+    expect(DARK_FILM_SECONDS).toBe(513);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);
@@ -227,7 +248,8 @@ describe("the dark film's opening trailer", () => {
       expect(darkTrailerShot(shot.end - 0.001)).toBe(shot);
     });
     expect(originalDarkFilmTime(DARK_FILM_SECONDS)).toBe(CONCEPT_TOUR_SECONDS);
-    expect(describeDarkFilmTime(DARK_FILM_SECONDS)).toBe("Closing title");
+    expect(describeDarkFilmTime(DARK_FILM_BODY_END - 0.001)).toBe("Closing title");
+    expect(describeDarkFilmTime(DARK_FILM_SECONDS)).toBe("DOT");
   });
 
   it("types only the trailer's few words, rings three bells, then preserves every body keystroke", () => {

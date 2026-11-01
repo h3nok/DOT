@@ -114,9 +114,13 @@ describe("HomeFilmSection", () => {
     expect(shownTitle()).toBe(doctrineNodes[1].title);
 
     fireEvent.change(screen.getByRole("slider", { name: "Seek timeline in seconds" }), {
-      target: { value: String(DARK_FILM_SECONDS) },
+      target: { value: String(DARK_FILM_SECONDS - 6) },
     });
     expect(shownTitle()).toBe(tour.closing.title);
+    fireEvent.change(screen.getByRole("slider", { name: "Seek timeline in seconds" }), {
+      target: { value: String(DARK_FILM_SECONDS) },
+    });
+    expect(container.querySelector(".dark-trailer-mark .do-wordmark")).not.toBeNull();
     expect(screen.getByRole("button", { name: "Next part" })).toBeDisabled();
     for (const link of tour.closing.links) {
       expect(screen.getByRole("link", { name: link.label })).toHaveAttribute("href", link.to);
