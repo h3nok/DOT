@@ -116,6 +116,18 @@ describe("the dark film's opening trailer", () => {
     expect(architecture.description).not.toMatch(/capacit/i);
   });
 
+  it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
+    const strokes = (tone: "dark" | "light") => {
+      const view = render(createElement(DarkFilmTrailer, { seconds: 8, still: true, tone }));
+      const figure = view.container.querySelector(".dark-trailer-drawing g[stroke]")!;
+      const stroke = figure.getAttribute("stroke");
+      view.unmount();
+      return stroke;
+    };
+    expect(strokes("dark")).toBe("#f2f0e8");
+    expect(strokes("light")).toBe("#17271f");
+  });
+
   it("draws each shot, shows its words, and settles into a stable still frame under reduced motion", () => {
     for (const shot of DARK_TRAILER_SHOTS) {
       const view = render(createElement(DarkFilmTrailer, { seconds: shot.start + 0.01, still: true }));

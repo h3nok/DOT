@@ -15,6 +15,7 @@ const option = (name, fallback) => arguments_.find((argument) => argument.starts
 if (arguments_.includes("--help")) {
   console.log(`Usage: node scripts/render-dark-film.mjs [options]
   --url=http://127.0.0.1:5173/_preview/film-dark?render=1
+  --tone=light         Export the light version, with the page in its light theme (default: dark)
   --output=/tmp/dot-film-revised-dark
   --fps=30             Frames per second (default: 30)
   --workers=4          Concurrent browser pages (default: up to 4)
@@ -32,7 +33,13 @@ if (arguments_.includes("--help")) {
   process.exit(0);
 }
 
-const URL = option("url", "http://127.0.0.1:5173/_preview/film-dark?render=1");
+const TONE = option("tone", "dark");
+// The tone is the film's own palette and the page's theme together, so the two never disagree.
+const URL = (() => {
+  const url = new globalThis.URL(option("url", "http://127.0.0.1:5173/_preview/film-dark?render=1"));
+  url.searchParams.set("tone", TONE);
+  return url.href;
+})();
 const OUTPUT = path.resolve(option("output", "/tmp/dot-film-revised-dark"));
 const FPS = Number(option("fps", "30"));
 const WORKERS = Number(option("workers", String(Math.min(4, os.availableParallelism()))));
@@ -54,6 +61,7 @@ const EXCERPT = EXCERPT_RAW && !EXCERPT_OPENING ? EXCERPT_RAW.split(":").map(Num
 const EXCERPT_NAME = option("excerpt-name", `dot-introduction-fullscreen-${SUFFIX}`);
 const pageErrors = new WeakMap();
 assert.ok(Number.isInteger(FPS) && FPS >= 1 && FPS <= 60, "--fps must be an integer from 1 to 60");
+assert.ok(["dark", "light"].includes(TONE), "--tone must be dark or light");
 assert.ok(Number.isInteger(WORKERS) && WORKERS >= 1 && WORKERS <= 8, "--workers must be an integer from 1 to 8");
 assert.match(SUFFIX, /^[a-z0-9-]+$/, "--suffix must contain lowercase letters, numbers, or hyphens");
 assert.ok(Number.isFinite(BODY_START) && BODY_START >= 0, "--body-start must be nonnegative");
@@ -402,7 +410,7 @@ await mkdir(OUTPUT, { recursive: true });
 const temporary = await mkdtemp(path.join(os.tmpdir(), "dot-dark-film-render-"));
 const browser = await chromium.launch({ headless: true });
 try {
-  const context = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1, colorScheme: "dark", reducedMotion: "no-preference", serviceWorkers: "block" });
+  const context = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1, colorScheme: TONE, reducedMotion: "no-preference", serviceWorkers: "block" });
   const page = await preparePage(context);
   const info = await page.evaluate(() => {
     const { duration, openingSeconds, keystrokes, trailer } = window.__DOT_DARK_FILM_PREVIEW__;

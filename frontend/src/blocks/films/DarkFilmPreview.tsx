@@ -4,11 +4,9 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
-import { DoWordmark } from "../../shared/DoWordmark";
-import { ConceptTourFrame } from "./ConceptTourPlayer";
-import { DarkFilmTrailer } from "./DarkFilmTrailer";
+import { DarkFilmFrame } from "./DarkFilmPlayer";
+import type { FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
-import { FilmProgress } from "./FilmProgress";
 import {
   DARK_FILM_KEYSTROKES,
   DARK_FILM_SECONDS,
@@ -18,7 +16,6 @@ import {
   DARK_TRAILER_HEARTBEATS,
   DARK_TRAILER_SHOTS,
   describeDarkFilmTime,
-  originalDarkFilmTime,
 } from "./darkFilmRevision";
 import { formatDuration } from "./filmTime";
 import "./films.css";
@@ -37,42 +34,14 @@ declare global {
   }
 }
 
-function DarkFilmFrame({ seconds, still, burnIn = false }: { seconds: number; still: boolean; burnIn?: boolean }) {
-  const trailer = seconds < DARK_OPENING_SECONDS;
-  return (
-    <div className={`dark-film-frame${trailer ? " dark-film-frame--trailer" : ""}`} data-dark-film-render>
-      <div className="dark-film-signature" aria-hidden="true">
-        <DoWordmark compact />
-        <span>Digital Organism Theory</span>
-      </div>
-      {trailer ? (
-        <DarkFilmTrailer seconds={seconds} still={still} />
-      ) : (
-        <div className="dark-film-lesson concept-tour">
-          <ConceptTourFrame frame={originalDarkFilmTime(seconds)} still={still} />
-        </div>
-      )}
-      <div className="dark-film-colophon" aria-hidden="true">
-        <span>dotheory.org</span>
-      </div>
-      {/* The film's structure, drawn into exported video only; the player has its own line. */}
-      {burnIn && (
-        <FilmProgress
-          className="dark-film-progress"
-          seconds={seconds}
-          duration={DARK_FILM_SECONDS}
-          sections={DARK_FILM_SECTIONS}
-          warmUntil={DARK_OPENING_SECONDS}
-          label={describeDarkFilmTime(seconds).replace(": ", " · ")}
-        />
-      )}
-    </div>
-  );
-}
-
-/** Development-only review room. It reuses the released concepts without publishing a revision. */
+/**
+ * Development-only review room. It reuses the released concepts without publishing a revision.
+ * `?tone=light` shows the light version; export it with the page in its light theme.
+ */
 export default function DarkFilmPreview() {
-  const renderMode = new URLSearchParams(window.location.search).get("render") === "1";
+  const params = new URLSearchParams(window.location.search);
+  const renderMode = params.get("render") === "1";
+  const tone: FilmTone = params.get("tone") === "light" ? "light" : "dark";
   const [renderTime, setRenderTime] = useState(1.2);
   const still = useReducedMotion();
 
@@ -97,7 +66,7 @@ export default function DarkFilmPreview() {
   }, [renderMode]);
 
   return (
-    <main className={`dark-film-preview${renderMode ? " dark-film-preview--render" : ""}`}>
+    <main className={`dark-film-preview${renderMode ? " dark-film-preview--render" : ""}`} data-film-tone={tone}>
       <Helmet>
         <title>Dark film revision — DOT preview</title>
         <meta name="robots" content="noindex,nofollow" />
@@ -105,7 +74,7 @@ export default function DarkFilmPreview() {
       {!renderMode && (
         <header className="dark-film-preview-heading">
           <div>
-            <p>Dark edition · Editorial draft</p>
+            <p>{tone === "light" ? "Light" : "Dark"} edition · Editorial draft</p>
             <h1>An opening trailer, then the seventeen concepts.</h1>
             <p>A one-minute trailer introduces DOT, followed by the complete Book One concept film. {formatDuration(DARK_FILM_SECONDS)}.</p>
           </div>
@@ -114,7 +83,7 @@ export default function DarkFilmPreview() {
       )}
       {renderMode ? (
         <div className="films-screening-shell concept-film dark-film-render-shell">
-          <DarkFilmFrame seconds={renderTime} still={false} burnIn />
+          <DarkFilmFrame seconds={renderTime} still={false} burnIn tone={tone} />
         </div>
       ) : (
         <DrawnFilmPlayer
@@ -130,7 +99,7 @@ export default function DarkFilmPreview() {
           describeTime={describeDarkFilmTime}
           keystrokes={still ? undefined : DARK_FILM_KEYSTROKES}
         >
-          {(frame) => <DarkFilmFrame seconds={frame} still={still} />}
+          {(frame) => <DarkFilmFrame seconds={frame} still={still} tone={tone} />}
         </DrawnFilmPlayer>
       )}
     </main>
