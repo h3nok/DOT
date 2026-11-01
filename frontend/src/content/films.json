@@ -154,23 +154,25 @@
         "label": "What you were given",
         "design": 9,
         "lead": 1.2,
-        "description": "Rings draw around the person, one at a time, named body, language, household, fear, explanation. They soften as the person straightens and a gentle light returns at the chest.",
+        "description": "Rings draw around the person, one at a time, named body, language, household, fear, explanation. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
         "lines": [
           "You did not choose the body you were born with,",
           "your first language, first household, first fear,",
           "or first explanation of reality.",
           "No one taught you to inspect any of it.",
-          "That inheritance is not your fault."
-        ]
+          "That inheritance is not your fault.",
+          "But undoing it is your responsibility."
+        ],
+        "linger": 0.8
       },
       {
         "kind": "turn",
         "label": "The question",
         "design": 7,
         "lead": 1.2,
-        "description": "The rings clear. The person stands alone, and a heartbeat glows at the chest.",
+        "description": "The rings clear. The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat.",
         "lines": [
-          "So where does a truthful framework begin?",
+          "So where do you begin?",
           "The most immediate fact of your existence",
           "is not a measurement.",
           "It is that you are here to experience one."
@@ -200,10 +202,10 @@
         "kind": "architecture",
         "label": "The architecture",
         "design": 12,
-        "lead": 4.6,
+        "lead": 4.8,
         "description": "The view pulls back from Little c to the Avatars in RF₀, an experience laboratory for Little cs. RF₀’s boundary and its Avatars light up, then its Reality Stream travels toward Little c. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
         "lines": [
-          "RF₀ is an experience laboratory for Little cs."
+          "This world, RF₀, is an experience laboratory."
         ],
         "drawing": [
           57,

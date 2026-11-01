@@ -60,6 +60,7 @@ const END = 78;
 /** The camera: where it looks and how close, eased between held positions. */
 const CAMERA: readonly (readonly [number, number, number, number])[] = [
   [0, FIG_X, 470, 1.36],
+  [7, FIG_X, 415, 1.7],
   [15, FIG_X, 455, 1.52],
   [20.5, 825, 440, 0.95],
   [23, 825, 440, 0.95],
@@ -224,7 +225,7 @@ function Options({ open, s }: { open: number; s: number }) {
 /* The rays leave room beneath the mark for its name. */
 const MARK_RAYS = Array.from({ length: 36 }, (_, k) => (k * 360) / 36).filter((angle) => angle < 65 || angle > 115);
 
-function TrailerMark({ seconds }: { seconds: number }) {
+function TrailerMark({ seconds, name = "Digital Organism Theory" }: { seconds: number; name?: string }) {
   const uid = useId().replace(/[^\w-]/g, "");
   const { jade, ink } = useContext(TrailerPalette);
   const rise = smooth(seconds, 0.1, 1.5);
@@ -250,7 +251,7 @@ function TrailerMark({ seconds }: { seconds: number }) {
       </svg>
       <div className="dark-trailer-mark" style={{ opacity: smooth(seconds, 0.5, 1.5) }}>
         <DoWordmark />
-        <p style={{ opacity: smooth(seconds, 1.5, 2.3) }}>Digital Organism Theory</p>
+        <p style={{ opacity: smooth(seconds, 1.5, 2.3) }}>{name}</p>
       </div>
     </>
   );
@@ -268,7 +269,7 @@ export function FilmClosingMark({ seconds, still = false, tone = "dark", links =
     <TrailerPalette.Provider value={PALETTES[tone]}>
       <section className="dark-trailer" aria-label="DOT">
         <div className="dark-trailer-scene" style={{ opacity: smooth(time, 0, 0.7) }}>
-          <TrailerMark seconds={time} />
+          <TrailerMark seconds={time} name="dotheory.org" />
           {links && (
             <nav className="dark-trailer-mark-links concept-film-links" aria-label="After the film" style={{ opacity: smooth(time, 1.8, 2.6) }}>
               {filmsData.conceptTour.closing.links.map((link) => (
@@ -476,11 +477,11 @@ const BODY_POINTS = [
 ];
 const GAINS = ["CREDENTIALS", "INCOME", "APPEARANCE", "INFLUENCE", "PRODUCTIVITY"];
 const RINGS = [
-  { word: "the body", label: "BODY", r: 150 },
-  { word: "language", label: "LANGUAGE", r: 186 },
-  { word: "household", label: "HOUSEHOLD", r: 222 },
-  { word: "fear", label: "FEAR", r: 258 },
-  { word: "explanation", label: "EXPLANATION", r: 294 },
+  { word: "the body", label: "BODY", r: 140, angle: -18 },
+  { word: "language", label: "LANGUAGE", r: 180, angle: -162 },
+  { word: "household", label: "HOUSEHOLD", r: 220, angle: -26 },
+  { word: "fear", label: "FEAR", r: 260, angle: -154 },
+  { word: "explanation", label: "EXPLANATION", r: 300, angle: -34 },
 ];
 
 function personCamera(seconds: number) {
@@ -520,8 +521,8 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const health = shotOf("health");
   const unfulfilled = shotOf("unfulfilled");
   const inherited = shotOf("inherited");
-  // The person declines through the first three shots, and recovers once it is not their fault.
-  const decline = smooth(seconds, confused.start, unfulfilled.end) * (1 - smooth(seconds, wordAt("inherited", "That inheritance"), inherited.end - 1));
+  // The person declines through the first three shots, and recovers only as they take responsibility.
+  const decline = smooth(seconds, confused.start, unfulfilled.end) * (1 - smooth(seconds, wordAt("inherited", "But undoing"), inherited.end - 1));
   const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 30 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
 
   // Confusion.
@@ -544,7 +545,9 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
   const gainStart = unfulfilled.start + 1;
   const gainEnd = wordAt("unfulfilled", "A persistent") - 0.4;
-  const gains = GAINS.map((name, k) => ({ name, at: gainStart + ((gainEnd - gainStart) * k) / GAINS.length }));
+  const gainStep = (gainEnd - gainStart) / GAINS.length;
+  const gains = GAINS.map((name, k) => ({ name, at: gainStart + gainStep * k }));
+  const hold = gainStep - 0.1;
   const level = Math.max(0, ...gains.map(({ at }, k) => (seconds >= at + 1.2 ? Math.exp(-(seconds - at - 1.2) * (0.7 + 0.25 * k)) : 0))) * (1 - smooth(seconds, gainEnd, gainEnd + 1));
   const R = 44;
   // The circle sits on the chest of the figure as it now stands: shrinking settles toward the feet.
@@ -553,7 +556,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
 
   // What you were given.
   const inRings = smooth(seconds, inherited.start, inherited.start + 1.4);
-  const soften = smooth(seconds, wordAt("inherited", "That inheritance"), inherited.end - 1);
+  const soften = smooth(seconds, wordAt("inherited", "But undoing"), inherited.end - 1);
   const ringsLeave = smooth(seconds, inherited.end - 2.4, inherited.end - 0.4);
 
   return (
@@ -575,14 +578,15 @@ function TrailerPerson({ seconds }: { seconds: number }) {
         <g transform={world}>
           {inRings > 0.001 && (
             <g fill="none" opacity={inRings * (1 - 0.45 * soften) * (1 - ringsLeave)}>
-              {RINGS.map(({ word, label: name, r }) => {
+              {RINGS.map(({ word, label: name, r, angle }) => {
                 const at = wordAt("inherited", word);
                 const drawnIn = smooth(seconds, at - 0.1, at + 1.3);
                 if (drawnIn <= 0.001) return null;
+                const place = polar([FIG_X, FIG_Y - 20], r, angle);
                 return (
                   <g key={name}>
                     <circle cx={FIG_X} cy={FIG_Y - 20} r={r} stroke={ink} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(drawnIn)} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 20})`} opacity={0.62} />
-                    <text x={FIG_X} y={FIG_Y - 20 - r + 7 / s} fill={ink} opacity={smooth(seconds, at + 0.3, at + 1)} {...label}>{name}</text>
+                    <text x={place[0]} y={place[1] + 8 / s} fill={ink} opacity={smooth(seconds, at + 0.3, at + 1)} {...label}>{name}</text>
                   </g>
                 );
               })}
@@ -635,13 +639,13 @@ function TrailerPerson({ seconds }: { seconds: number }) {
               <circle cx={CHEST[0]} cy={chestY} r={R - 3} fill={gold} opacity={0.75} clipPath={`url(#${uid}-level)`} />
               {gains.map(({ name, at }) => {
                 const fall = between(seconds, at, at + 1.3);
-                if (fall <= 0 || seconds > at + 2.2) return null;
+                if (fall <= 0 || seconds > at + hold) return null;
                 const eased = fall * fall;
                 const y = lerp(chestY - 300, chestY - 10, eased);
                 return (
-                  <g key={name} opacity={smooth(seconds, at, at + 0.2) * (1 - smooth(seconds, at + 1.2, at + 1.5))}>
-                    <path d={`M${FIG_X} ${y - 13}L${FIG_X + 13} ${y}L${FIG_X} ${y + 13}L${FIG_X - 13} ${y}Z`} fill={gold} />
-                    <text x={FIG_X + 200} y={y + 8} fill={gold} {...label}>{name}</text>
+                  <g key={name}>
+                    <path d={`M${FIG_X} ${y - 13}L${FIG_X + 13} ${y}L${FIG_X} ${y + 13}L${FIG_X - 13} ${y}Z`} fill={gold} opacity={smooth(seconds, at, at + 0.2) * (1 - smooth(seconds, at + 1.2, at + 1.4))} />
+                    <text x={FIG_X + 210} y={chestY + 10} fill={gold} {...label} opacity={smooth(seconds, at, at + 0.3) * (1 - smooth(seconds, at + hold - 0.4, at + hold))}>{name}</text>
                   </g>
                 );
               })}
@@ -661,6 +665,8 @@ function TrailerDrawing({ t }: { t: number }) {
   const s = cam.s;
   const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
   const beat = heartbeat(t) * (1 - smooth(t, 6.5, 7));
+  // At the question, a light grows at the chest: the one fact no one has to teach.
+  const presence = smooth(t, 1.2, 6.8) * (t < 7 ? 1 : 0);
   const sphere = smooth(t, 16.2, 18.4) * (t < PAUSE - 1 ? 1 : 0);
   const coupling = smooth(t, 17, 19) * (t < PAUSE - 1 ? 1 : 0);
   const warmth = sphere;
@@ -726,7 +732,7 @@ function TrailerDrawing({ t }: { t: number }) {
             loosen={loosen} px={2.2} s={s} weight={diminished} press={diminished}
           />
         )}
-        <circle cx={CHEST[0]} cy={CHEST[1]} r={70} fill={`url(#${uid}-jade)`} opacity={beat * 0.9} />
+        <circle cx={CHEST[0]} cy={CHEST[1]} r={70 + 90 * presence} fill={`url(#${uid}-jade)`} opacity={Math.min(1, beat * 0.9 + 0.6 * presence)} />
         <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.3 * diminished} shrink={diminished} />
         <PainRings at={CHEST} phase={0.37} t={t} opacity={pain} s={s} />
         {/* The pause: someone is experiencing this. */}

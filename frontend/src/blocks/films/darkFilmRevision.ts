@@ -147,8 +147,8 @@ const TRAILER = buildTrailer();
 export const DARK_TRAILER_SHOTS: readonly DarkTrailerShot[] = TRAILER.shots;
 export const DARK_TRAILER_LINES: readonly TrailerLine[] = TRAILER.lines;
 
-/** Lines that finish with a soft bell: the proposal, the pause, and the hand-off. */
-const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "Freedom is participation in the creation of possibility.", "A school of thought for examining experience."]);
+/** Lines that finish with a soft bell: the proposal, the responsibility, the options, and the hand-off. */
+const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "But undoing it is your responsibility.", "Freedom is participation in the creation of possibility.", "A school of thought for examining experience."]);
 
 export const DARK_OPENING_SECONDS = DARK_TRAILER_SHOTS.at(-1)!.end;
 const SHIFT = TOUR_OPENING_SECONDS - DARK_OPENING_SECONDS;

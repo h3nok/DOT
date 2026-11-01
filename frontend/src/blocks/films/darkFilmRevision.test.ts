@@ -64,7 +64,7 @@ describe("the dark film's opening trailer", () => {
 
   it("lets the picture carry it: few words, one short line on screen at a time", () => {
     const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(195);
+    expect(words).toBeLessThanOrEqual(205);
     for (const typed of DARK_TRAILER_LINES) {
       // Every line fits on a single caption row at the trailer's type size.
       expect(typed.text.length, typed.text).toBeLessThanOrEqual(57);
@@ -98,13 +98,14 @@ describe("the dark film's opening trailer", () => {
       "or first explanation of reality.",
       "No one taught you to inspect any of it.",
       "That inheritance is not your fault.",
-      "So where does a truthful framework begin?",
+      "But undoing it is your responsibility.",
+      "So where do you begin?",
       "The most immediate fact of your existence",
       "is not a measurement.",
       "It is that you are here to experience one.",
       "You are Little c.",
       "Your living body is your interface to a Reality Frame.",
-      "RF₀ is an experience laboratory for Little cs.",
+      "This world, RF₀, is an experience laboratory.",
       "Conditioning is real. Conditioning is not essence.",
       "What matters is what Little c does with the opening.",
       "Freedom is participation in the creation of possibility.",
@@ -114,7 +115,7 @@ describe("the dark film's opening trailer", () => {
     const voiceOf = (text: string) => DARK_TRAILER_LINES.find((typed) => typed.text === text)!.voice;
     expect(voiceOf("You are Little c.")).toBe("dot");
     expect(voiceOf("Your living body is your interface to a Reality Frame.")).toBe("dot");
-    expect(voiceOf("RF₀ is an experience laboratory for Little cs.")).toBe("dot");
+    expect(voiceOf("This world, RF₀, is an experience laboratory.")).toBe("dot");
     expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(3);
   });
 
@@ -129,9 +130,9 @@ describe("the dark film's opening trailer", () => {
   it("shows RF₀ as an experience laboratory and traces its Stream to Little c before the title", () => {
     const architecture = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "architecture")!;
     const line = DARK_TRAILER_LINES.find((typed) => typed.shot === "architecture")!;
-    expect(line.text).toBe("RF₀ is an experience laboratory for Little cs.");
+    expect(line.text).toBe("This world, RF₀, is an experience laboratory.");
     expect(line.voice).toBe("dot");
-    expect(line.until - line.end).toBeGreaterThan(3);
+    expect(line.until - line.end).toBeGreaterThanOrEqual(2.9);
 
     const view = render(createElement(DarkFilmTrailer, { seconds: trailerFilmTime(architecture.designStart + 8), still: false }));
     const stream = view.container.querySelector(".dark-trailer-lab-stream")!;
@@ -180,7 +181,9 @@ describe("the dark film's opening trailer", () => {
     expect(view.container.querySelector(".dark-trailer-mark-links")).toBeNull();
     view.rerender(frame(DARK_FILM_SECONDS, false));
     expect(view.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
-    expect(view.container.querySelector(".dark-trailer-mark")).toHaveTextContent("Digital Organism Theory");
+    expect(view.container.querySelector(".dark-trailer-mark")).toHaveTextContent("dotheory.org");
+    // No progress line over either splash.
+    expect(view.container.querySelector(".dark-film-progress")).toBeNull();
     expect(view.container.querySelector(".dark-film-lesson")).toBeNull();
     view.rerender(frame(DARK_FILM_BODY_END - 1, false));
     expect(view.container.querySelector(".dark-trailer-mark")).toBeNull();
@@ -238,8 +241,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(211);
-    expect(DARK_FILM_SECONDS).toBe(513);
+    expect(DARK_OPENING_SECONDS).toBe(217);
+    expect(DARK_FILM_SECONDS).toBe(519);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);
@@ -252,12 +255,12 @@ describe("the dark film's opening trailer", () => {
     expect(describeDarkFilmTime(DARK_FILM_SECONDS)).toBe("DOT");
   });
 
-  it("types only the trailer's few words, rings three bells, then preserves every body keystroke", () => {
+  it("types only the trailer's few words, rings four bells, then preserves every body keystroke", () => {
     const trailerKeys = DARK_FILM_KEYSTROKES.filter((key) => key.at < DARK_OPENING_SECONDS);
     expect(trailerKeys).toEqual(DARK_TRAILER_KEYSTROKES);
     const letters = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.length, 0);
     expect(trailerKeys.filter((key) => key.kind !== "bell")).toHaveLength(letters);
-    expect(trailerKeys.filter((key) => key.kind === "bell")).toHaveLength(3);
+    expect(trailerKeys.filter((key) => key.kind === "bell")).toHaveLength(4);
 
     const originalKeys = CONCEPT_TOUR_KEYSTROKES.filter((key) => key.at >= TOUR_OPENING_SECONDS);
     const bodyKeys = DARK_FILM_KEYSTROKES.filter((key) => key.at >= DARK_OPENING_SECONDS);

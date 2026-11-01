@@ -12,6 +12,7 @@ import {
   DARK_FILM_SECTIONS,
   DARK_FILM_STARTS,
   DARK_OPENING_SECONDS,
+  darkTrailerShot,
   describeDarkFilmTime,
   originalDarkFilmTime,
 } from "./darkFilmRevision";
@@ -51,7 +52,7 @@ export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark" }:
       <div className="dark-film-colophon" aria-hidden="true">
         <span>dotheory.org</span>
       </div>
-      {burnIn && (
+      {burnIn && !closing && darkTrailerShot(seconds).kind !== "mark" && (
         <FilmProgress
           className="dark-film-progress"
           seconds={seconds}

@@ -238,7 +238,7 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
 /**
  * The opening trailer's score, cut to the shots the preview reports: a cold hum that builds
  * through the ordinary day (faintly dissonant from the confusion on, sagging in pitch as the person
- * declines), easing once it is not their fault, near silence with heartbeats at the question, a pad under the proposal, and a warm
+ * declines), easing as they take responsibility, near silence with heartbeats at the question, a pad under the proposal, and a warm
  * D-major chord that begins with the architecture and blooms as the box dissolves. Pure sines,
  * deterministic, finite; it ends before the concepts (L2).
  */
