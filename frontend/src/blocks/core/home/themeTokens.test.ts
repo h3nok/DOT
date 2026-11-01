@@ -276,6 +276,7 @@ describe("home entry theme compatibility", () => {
     expect(styles).not.toContain(".home-architecture-ring-label rect");
     expect(styles).toContain(".home-architecture-ring-label text");
     expect(styles).toContain("stroke: var(--background)");
+    expect(styles).toContain(".home-architecture-label-leader");
     expect(styles).toContain("--architecture-origin");
     expect(styles).toContain("--architecture-big-c");
     expect(styles).toContain("--architecture-rf");

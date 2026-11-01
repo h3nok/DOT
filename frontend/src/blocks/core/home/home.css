@@ -1459,6 +1459,12 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   stroke-width: 3px;
 }
 
+.home-architecture-label-leader {
+  display: none;
+  stroke: color-mix(in oklch, var(--architecture-local) 70%, var(--background));
+  stroke-width: 1;
+}
+
 .home-architecture-label-subscript {
   baseline-shift: sub;
   font-size: 0.65em;
@@ -1718,7 +1724,8 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-architecture-emerge 400ms ease-out 3.35s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"],
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-label-leader {
     animation: home-architecture-emerge 300ms ease-out 3.4s both;
   }
 
@@ -1944,10 +1951,18 @@ html[data-contrast="high"] .home-hero-kicker {
     font-size: 36px;
   }
 
-  /* Little c₁'s band between RF₀ and Big C is narrower than a 40-unit label. */
+  /* At 40 units Little c₁'s name is wider than the band beside its cell, so it sits in
+     Big C below RF₀, on one line, with a leader back to the cell. */
   .home-hero-architecture .home-architecture-ring-label[data-layer="little-c"] text {
-    font-size: 30px;
-    transform: translate(4px, 6px);
+    transform: translate(-128px, 96px);
+  }
+
+  .home-hero-architecture .home-architecture-ring-label[data-layer="little-c"] .home-architecture-label-you {
+    display: none;
+  }
+
+  .home-hero-architecture .home-architecture-label-leader[data-layer="little-c"] {
+    display: inline;
   }
 
   .home-architecture-measure-marks,

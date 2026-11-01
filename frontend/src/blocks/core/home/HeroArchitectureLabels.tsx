@@ -74,6 +74,8 @@ export function HeroArchitectureLabels() {
         <path className="home-architecture-awareness-callout" d="M348 427V440" />
         {LABEL_TEXT["awareness-radius"]}
       </g>
+      {/* Phones set Little c₁'s name larger than the band beside its cell, so it moves below RF₀ and this points back. */}
+      <line className="home-architecture-label-leader" data-layer="little-c" x1="564" y1="463" x2="499" y2="554" />
       <g className="home-architecture-ring-label" data-layer="little-c">
         <a href="#little-c" aria-label="Little c₁ — you, within Big C and receiving RF₀'s Reality Stream. Read about the local experiencer">
           {LABEL_TEXT["little-c"]}

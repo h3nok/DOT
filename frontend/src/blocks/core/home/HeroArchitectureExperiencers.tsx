@@ -113,7 +113,7 @@ const SOCIAL_CENTRES = [
   { index: "2", x: 413, y: 230, awareness: 15, relation: "cooperation", band: -62, label: "above" },
   { index: "3", x: 505, y: 285, awareness: 20, relation: "pressure", band: -23, label: "right" },
   { index: "4", x: 236, y: 265, awareness: 12, relation: "pressure", band: -130, label: "above" },
-  { index: "n", x: 478, y: 462, awareness: 10, relation: "none", band: 55, label: "right" },
+  { index: "n", x: 222, y: 478, awareness: 10, relation: "none", band: 135, label: "right" },
 ] as const;
 
 const PEER_CELL_RADIUS = 7;
