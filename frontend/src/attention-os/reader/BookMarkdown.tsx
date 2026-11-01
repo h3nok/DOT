@@ -20,6 +20,7 @@ import {
 } from "./editorialGrammar";
 import { headingSlug } from "./headingSlug";
 import { EvidenceChart } from "./EvidenceChart";
+import { BookFigure, type BookFigureData } from "./BookFigure";
 import { remarkStichicRuns } from "./remarkStichicRuns";
 import { remarkDepthPassages } from "./remarkDepthPassages";
 import { DepthPassage, DepthSummary } from "./DepthPassage";
@@ -193,7 +194,7 @@ function presentationStyle(presentation: ReturnType<typeof paragraphPresentation
 }
 
 type ReaderAside =
-  | { kind: "reference"; reference: ReaderReference }
+  | { kind: "reference"; reference: ReaderReference; href: string }
   | { kind: "concept"; concept: ReaderConceptDefinition };
 
 function ReaderSheet({
@@ -266,7 +267,7 @@ function ReaderSheet({
                 </ReactMarkdown>
               </div>
               <a
-                href={`/book/digital-organism-theory/references#reference-${active.reference.number}`}
+                href={active.href}
                 className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-[var(--organism-accent-strong)]"
               >
                 <span>Open in Notes and Sources</span>
@@ -326,6 +327,7 @@ export function BookMarkdown({
   variant = "chapter",
   completeEditionHref,
   images,
+  figures,
   restrictImages = false,
 }: {
   content: string;
@@ -334,6 +336,8 @@ export function BookMarkdown({
   references?: ReadonlyMap<number, ReaderReference>;
   variant?: "chapter" | "references" | "post";
   images?: Readonly<Record<string, { width: number; height: number; src?: string }>>;
+  /** Reviewed manuscript illustrations, keyed by their Markdown image URL. */
+  figures?: Readonly<Record<string, BookFigureData>>;
   /** Native posts only load artwork attached to the reviewed revision. */
   restrictImages?: boolean;
   /** Where the printed Complete Edition can be read; offered inside depth passages. */
@@ -416,6 +420,11 @@ export function BookMarkdown({
             ),
             p: ({ children, node, className: incoming, ...rest }) => {
               const child = node?.children.length === 1 ? node.children[0] : undefined;
+              if (child?.type === "element" && child.tagName === "img") {
+                const source = child.properties.src;
+                const figure = typeof source === "string" ? figures?.[source] : undefined;
+                if (figure) return <BookFigure figure={figure} />;
+              }
               if (variant === "post" && child?.type === "element" && child.tagName === "img") {
                 const caption = child.properties.title;
                 return <figure className="post-inline-image">{children}{caption && <figcaption>{String(caption)}</figcaption>}</figure>;
@@ -484,12 +493,12 @@ export function BookMarkdown({
               const reference = referenceNumber
                 ? references?.get(Number(referenceNumber))
                 : undefined;
-              if (reference) {
+              if (reference && href) {
                 return (
                   <button
                     type="button"
                     className="book-reference-marker"
-                    onClick={() => setActiveAside({ kind: "reference", reference })}
+                    onClick={() => setActiveAside({ kind: "reference", reference, href })}
                     aria-label={`Open reference ${reference.number}`}
                     title={`Preview reference ${reference.number}`}
                   >

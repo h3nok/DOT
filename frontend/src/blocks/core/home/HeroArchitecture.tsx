@@ -2,9 +2,9 @@ import { useId, useRef } from "react";
 import { useInView } from "framer-motion";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 
-import { ARCHITECTURE_RADII as R, C1_TRANSFORM } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, C1_TRANSFORM, FRAME_CENTRE as F } from "./architectureGeometry";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
-import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
+import { HeroArchitectureAvatar, HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
 import { HeroArchitectureOtherFrames } from "./HeroArchitectureOtherFrames";
 
@@ -56,29 +56,14 @@ const BIG_C_ORGANELLE_NODES = [
   };
 });
 
-/** Cardinal points of the Frame circle, where its radius meets the boundary. */
-const RETICLES = [
-  { x: 348, y: 155 },
-  { x: 545, y: 352 },
-  { x: 348, y: 549 },
-  { x: 151, y: 352 },
-] as const;
-
 const POLAR_TICKS = Array.from({ length: 24 }, (_, index) => {
-  const angle = index * 15;
-  const radians = (angle * Math.PI) / 180;
-  const major = angle % 90 === 0;
-  const intermediate = angle % 45 === 0;
-  const outerRadius = 207;
-  const innerRadius = major ? 195 : intermediate ? 198 : 201;
-
-  return {
-    angle,
-    major,
-    x1: 348 + Math.cos(radians) * innerRadius,
-    y1: 352 + Math.sin(radians) * innerRadius,
-    x2: 348 + Math.cos(radians) * outerRadius,
-    y2: 352 + Math.sin(radians) * outerRadius,
+  const angle = index * Math.PI / 12;
+  const major = index % 6 === 0;
+  const inner = R.frame + (major ? 2 : 5);
+  const outer = R.frame + 10;
+  return { angle, major,
+    x1: F.x + Math.cos(angle) * inner, y1: F.y + Math.sin(angle) * inner,
+    x2: F.x + Math.cos(angle) * outer, y2: F.y + Math.sin(angle) * outer,
   };
 });
 
@@ -96,7 +81,7 @@ const loopPath = (radius: number, startDeg: number, endDeg: number) => {
 /* Big C's outer loop runs between its membrane and T × E, open at the top for the label. */
 const OUTER_LOOP = loopPath((R.membrane + R.origin) / 2, -70, 250);
 /* c₁'s inner loop sits between its constraints and its awareness radius, open where its label and Intent leave. */
-const INNER_LOOP = loopPath(52, 70, 350);
+const INNER_LOOP = loopPath(56, 70, 350);
 
 /**
  * Code-native rendering of DOT's proposed layered architecture.
@@ -144,6 +129,7 @@ export function HeroArchitecture({ embedded = false }: {
     gridId, fieldWashId, frameWashId, frameClipId, surfacePrefix,
   } = ids;
   const titleId = `${instanceId}-hero-architecture-title`;
+  const descriptionId = `${instanceId}-hero-architecture-description`;
   const partAt = (target: EventTarget) =>
     ((target as Element).closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null) ?? null;
 
@@ -155,6 +141,7 @@ export function HeroArchitecture({ embedded = false }: {
         className="home-hero-architecture__svg"
         viewBox="0 0 700 700"
         aria-labelledby={titleId}
+        aria-describedby={descriptionId}
         focusable="false"
         onClick={(event) => {
           if ((event.target as Element).closest("a")) return;
@@ -163,6 +150,7 @@ export function HeroArchitecture({ embedded = false }: {
         }}
       >
         <title id={titleId}>DOT diagram</title>
+        <desc id={descriptionId}>DOT’s proposed relationships, not measured physical locations. T × E is Speculation: the preexisting conditions outside Big C. Big C contains RF₀ and Little c. RF₀ is an experience laboratory shared through living Avatars. Little c is outside RF₀ and embodied by an Avatar inside it. The Reality Stream runs from RF₀ to Little c. The Canvas carries and updates local state; embodied action returns through the Avatar. The dashed scope marks available access and action. Broken arrows around Big C and Little c indicate process. Other Frames are hypotheses.</desc>
         <HeroArchitectureDefs ids={ids} />
 
         <g data-part="te">
@@ -236,95 +224,32 @@ export function HeroArchitecture({ embedded = false }: {
         <HeroArchitectureOtherFrames />
 
         <g data-part="rf0">
-        <g className="home-architecture-frame">
-          {/* RF₀ is structure, not an organism: a flat plane, never the living surface material. */}
-          <circle
-            className="home-architecture-frame-zone"
-            cx="348" cy="352" r={R.frame}
-          />
-          <circle
-            className="home-architecture-frame-wash"
-            cx="348"
-            cy="352"
-            r={R.frame}
-            fill={`url(#${frameWashId})`}
-          />
-          <rect
-            className="home-architecture-grid"
-            x="151"
-            y="155"
-            width="394"
-            height="394"
-            fill={`url(#${gridId})`}
-            clipPath={`url(#${frameClipId})`}
-          />
-          <circle
-            className="home-architecture-frame-boundary"
-            cx="348"
-            cy="352"
-            r={R.frame}
-          />
-          {/* Built, not grown: a perfect machined bezel no organism carries. */}
-          <circle
-            className="home-architecture-frame-bezel"
-            cx="348"
-            cy="352"
-            r={R.frame - 3}
-          />
-          <circle
-            className="home-architecture-frame-inset"
-            cx="348"
-            cy="352"
-            r="191"
-          />
-
-          <g className="home-architecture-coordinate-axis" clipPath={`url(#${frameClipId})`}>
-            <line x1="151" y1="352" x2="545" y2="352" />
-            <line x1="348" y1="155" x2="348" y2="549" />
+          <g className="home-architecture-frame" data-entity="reality-frame">
+            <circle className="home-architecture-frame-zone" cx={F.x} cy={F.y} r={R.frame} />
+            <circle className="home-architecture-frame-wash" cx={F.x} cy={F.y} r={R.frame} fill={`url(#${frameWashId})`} />
+            <rect className="home-architecture-grid" x={F.x - R.frame} y={F.y - R.frame} width={R.frame * 2} height={R.frame * 2} fill={`url(#${gridId})`} clipPath={`url(#${frameClipId})`} />
+            <circle className="home-architecture-frame-boundary" cx={F.x} cy={F.y} r={R.frame} />
+            <circle className="home-architecture-frame-bezel" cx={F.x} cy={F.y} r={R.frame - 3} />
+            <g className="home-architecture-coordinate-axis" clipPath={`url(#${frameClipId})`}>
+              <line x1={F.x - R.frame} y1="406" x2={F.x + R.frame} y2="406" />
+              <line x1="148" y1={F.y - R.frame} x2="148" y2={F.y + R.frame} />
+              <line x1="322" y1={F.y - R.frame} x2="322" y2={F.y + R.frame} />
+            </g>
+            <g className="home-architecture-polar-scale">
+              {POLAR_TICKS.map(({ angle, major, x1, y1, x2, y2 }) => (
+                <line key={angle} data-major={major || undefined} x1={x1} y1={y1} x2={x2} y2={y2} />
+              ))}
+            </g>
+            <g data-entity="avatar" data-avatar="primary">
+              <HeroArchitectureAvatar x={235} y={385} scale={.74} />
+            </g>
+            <g data-entity="avatar" data-avatar="other">
+              <HeroArchitectureAvatar x={160} y={390} scale={.52} secondary />
+              <HeroArchitectureAvatar x={310} y={390} scale={.52} secondary />
+            </g>
+            <text className="home-architecture-detail-label" x="235" y="464" textAnchor="middle">Avatar</text>
+            <text className="home-architecture-small-label" x="235" y="496" textAnchor="middle">Living body</text>
           </g>
-
-          {/* RF₀'s own origin: no experiencer occupies it. */}
-          <g className="home-architecture-frame-origin" aria-hidden="true">
-            <line x1="340" y1="352" x2="356" y2="352" />
-            <line x1="348" y1="344" x2="348" y2="360" />
-            <circle cx="348" cy="352" r="3.5" />
-          </g>
-
-          <g className="home-architecture-projection-marks" aria-hidden="true">
-            <path d="M151 352L143 364M545 352L537 364M348 549L340 561" />
-            <circle cx="143" cy="364" r="2" />
-            <circle cx="537" cy="364" r="2" />
-            <circle cx="340" cy="561" r="2" />
-          </g>
-
-          <g className="home-architecture-polar-scale">
-            {POLAR_TICKS.map(({ angle, major, x1, y1, x2, y2 }) => (
-              <line
-                key={angle}
-                data-major={major ? "true" : undefined}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-              />
-            ))}
-          </g>
-
-          <g className="home-architecture-reticles">
-            {RETICLES.map(({ x, y }) => (
-              <g key={`${x}-${y}`} className="home-architecture-reticle">
-                <line x1={x - 4} y1={y} x2={x + 4} y2={y} />
-                <line x1={x} y1={y - 4} x2={x} y2={y + 4} />
-              </g>
-            ))}
-          </g>
-        </g>
-
-        {/* Survey furniture: the one canonical rendering's measure marks. */}
-        <g className="home-architecture-measure-marks" aria-hidden="true">
-          <path d="M151 132V142M348 132V146M545 132V142" />
-          <path d="M128 155H138M128 352H142M128 549H138" />
-        </g>
         </g>
 
         <g data-part="little-c">

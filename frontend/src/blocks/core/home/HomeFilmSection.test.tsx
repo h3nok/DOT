@@ -5,12 +5,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import filmsData from "../../../content/films.json";
 import { doctrineNodes } from "../../../content/doctrine/doctrineData";
 import { CONCEPT_MOTIFS } from "../../films/conceptFilms";
-import { CONCEPT_TOUR, CONCEPT_TOUR_SECONDS } from "../../films/conceptTour";
+import { CONCEPT_TOUR, TOUR_OPENING_SECONDS } from "../../films/conceptTour";
+import { DARK_FILM_SECONDS, DARK_OPENING_SECONDS } from "../../films/darkFilmRevision";
 import { formatDuration } from "../../films/filmTime";
 import { HomeFilmSection } from "./HomeFilmSection";
 
 const tour = filmsData.conceptTour;
-const length = formatDuration(CONCEPT_TOUR_SECONDS);
+const length = formatDuration(DARK_FILM_SECONDS);
 
 const renderSection = () =>
   render(
@@ -49,21 +50,19 @@ afterEach(() => {
 });
 
 describe("HomeFilmSection", () => {
-  it("offers one typed film through every concept behind a cover, opening on the struggle it answers", () => {
+  it("offers the revised opening before every concept and waits for Play", () => {
     renderSection();
 
     const region = screen.getByRole("region", { name: tour.title });
     expect(within(region).getAllByText(`${tour.label} · ${length}`).length).toBeGreaterThan(0);
-    // Before Play: the cover, with the book's title over its architecture and the film's path.
-    expect(within(region).getByRole("heading", { level: 3, name: tour.closing.title })).toBeInTheDocument();
-    expect(within(region).getByRole("img", { name: /The architecture of Digital Organism Theory/ })).toBeInTheDocument();
-    expect(within(within(region).getByRole("list", { name: "The film passes through" })).getAllByRole("listitem")).toHaveLength(4);
-    expect(within(region).queryByRole("heading", { level: 3, name: tour.scenes[0].title })).not.toBeInTheDocument();
+    expect(within(region).getByRole("region", { name: "Observation" })).toBeInTheDocument();
+    expect(within(region).getByText("Every observation begins as an experience.", { selector: ".sr-only" })).toBeInTheDocument();
+    expect(within(region).getByRole("slider", { name: "Seek timeline in seconds" })).toHaveValue("0");
     expect(within(region).queryByRole("button", { name: /voiceover/i })).not.toBeInTheDocument();
 
     fireEvent.click(within(region).getByRole("button", { name: `Play ${tour.title} (${length})` }));
-    expect(within(region).getByRole("heading", { level: 3, name: tour.scenes[0].title })).toBeInTheDocument();
-    expect(within(region).queryByRole("list", { name: "The film passes through" })).not.toBeInTheDocument();
+    expect(within(region).getByRole("region", { name: "Observation" })).toBeInTheDocument();
+    expect(within(region).getByRole("button", { name: "Pause film" })).toBeInTheDocument();
   });
 
   it("makes no sound until Play, and its typewriter sound can be turned off", () => {
@@ -90,7 +89,7 @@ describe("HomeFilmSection", () => {
     const node = doctrineNodes.find((item) => item.id === "love")!;
 
     fireEvent.change(screen.getByRole("slider", { name: "Seek timeline in seconds" }), {
-      target: { value: String(love.start + 11) },
+      target: { value: String(love.start + 11 + DARK_OPENING_SECONDS - TOUR_OPENING_SECONDS) },
     });
 
     expect(screen.getByRole("heading", { level: 3, name: node.title })).toBeInTheDocument();
@@ -109,16 +108,16 @@ describe("HomeFilmSection", () => {
     const shownTitle = () =>
       container.querySelector(".concept-film-copy:not(.concept-tour-sizer) .concept-film-name .sr-only")?.textContent;
 
-    fireEvent.click(screen.getByRole("button", { name: "Next concept" }));
+    fireEvent.click(screen.getByRole("button", { name: "Next part" }));
     expect(shownTitle()).toBe(doctrineNodes[0].title);
-    fireEvent.click(screen.getByRole("button", { name: "Next concept" }));
+    fireEvent.click(screen.getByRole("button", { name: "Next part" }));
     expect(shownTitle()).toBe(doctrineNodes[1].title);
 
     fireEvent.change(screen.getByRole("slider", { name: "Seek timeline in seconds" }), {
-      target: { value: String(CONCEPT_TOUR_SECONDS) },
+      target: { value: String(DARK_FILM_SECONDS) },
     });
     expect(shownTitle()).toBe(tour.closing.title);
-    expect(screen.getByRole("button", { name: "Next concept" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next part" })).toBeDisabled();
     for (const link of tour.closing.links) {
       expect(screen.getByRole("link", { name: link.label })).toHaveAttribute("href", link.to);
     }

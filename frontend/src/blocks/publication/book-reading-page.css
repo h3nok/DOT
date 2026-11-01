@@ -1,0 +1,153 @@
+/* Existing book surfaces, refined for a clear beginning and sustained reading.
+   L1, L2, L7, L8 and L10: calm, finite, open, and directed by the reader. */
+.book-volume--reading .book-volume-hero {
+  min-height: auto;
+  padding-block: clamp(6rem, 10vw, 8rem) 4.5rem;
+  background: var(--book-paper);
+}
+
+.book-volume--reading .book-volume-hero::after {
+  background: radial-gradient(ellipse at 24% 44%, color-mix(in oklch, var(--book-cinnabar) 6%, transparent), transparent 54%);
+}
+
+.book-volume--reading .book-volume-hero__layout { gap: clamp(2.5rem, 6vw, 6rem); }
+.book-volume--reading .book-volume-hero__cover .book-one-cover {
+  transform: none;
+  box-shadow: 0 1.25rem 3rem color-mix(in oklch, #000 20%, transparent);
+}
+
+.book-volume--reading .book-volume-hero__copy h1 {
+  max-width: 12ch;
+  margin-top: 1.25rem;
+  font-size: clamp(2.5rem, 4.8vw, 4.3rem);
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+
+.book-volume--reading .book-volume-kicker { line-height: 1.7; }
+.book-volume--reading .book-volume-proposition { font-style: italic; }
+.book-volume--reading .book-volume-description { max-width: 34rem; }
+.book-volume--reading .book-volume-written-order { line-height: 1.7; }
+.book-volume--reading .book-volume-actions { margin-top: 1.75rem; }
+.book-volume--reading .book-volume-author { font-size: .8125rem; }
+
+.book-volume-orientation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.book-volume-orientation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  gap: .5rem;
+  color: var(--book-muted);
+  font-size: .8125rem;
+  text-decoration: underline;
+  text-decoration-color: var(--book-hairline);
+  text-underline-offset: .3em;
+}
+
+.book-volume-orientation a:hover { color: var(--book-ink); }
+.book-volume-orientation a:focus-visible,
+.book-volume-illustrations a:focus-visible,
+.book-contents__illustration:focus-visible,
+.book-reader-offline:focus-visible { outline: 2px solid var(--book-cinnabar); outline-offset: 4px; }
+
+.book-volume--reading .book-volume-contents,
+.book-volume--reading .book-volume-guide,
+.book-volume--reading .book-volume-apparatus { padding-block: clamp(3.25rem, 7vw, 6rem); }
+.book-volume--reading .book-volume-contents { background: transparent; border-top: 0; }
+.book-volume--reading .book-volume-part + .book-volume-part { margin-top: 2.25rem; }
+.book-volume--reading .book-volume-guide { border-bottom: 1px solid var(--book-hairline); }
+.book-volume--reading .book-volume-section { padding-block: 1.2rem; }
+
+.book-volume-illustrations {
+  list-style: none;
+  margin: -.25rem 0 1rem 5rem;
+  padding: 0;
+}
+
+.book-volume-illustrations a {
+  display: flex;
+  align-items: baseline;
+  gap: .65rem;
+  min-height: 2.75rem;
+  padding-block: .6rem;
+  color: var(--book-muted);
+  font-size: .8125rem;
+  line-height: 1.5;
+}
+
+.book-volume-illustrations a:hover { color: var(--book-cinnabar); }
+.book-volume-illustrations__label { flex: none; font-size: .6875rem; }
+.book-volume-illustrations svg { align-self: center; flex: none; margin-left: auto; }
+
+.book-contents__illustration {
+  display: block;
+  margin-left: 2.25rem;
+  padding: .5rem .75rem .65rem;
+  color: var(--book-muted);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+.book-contents__illustration span { display: block; margin-bottom: .1rem; font-size: .625rem; }
+.book-contents__illustration:hover { color: var(--book-cinnabar); }
+
+.book-reader--publication .book-chapter-header--reading {
+  max-width: none;
+  padding-bottom: 2.25rem;
+  text-align: left;
+}
+.book-reader--publication .book-chapter-header--reading::after { left: 0; transform: none; }
+.book-reader--publication .book-chapter-header__meta { font-size: .6875rem; }
+.book-reader--publication .book-prose { padding-top: 2.5rem; }
+.book-reader--publication .book-figure { margin-block: 3rem; scroll-margin-top: 6rem; }
+.book-reader-offline {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  gap: .6rem;
+  margin-top: 1.5rem;
+  color: var(--book-muted);
+  font-size: .8125rem;
+  text-decoration: underline;
+  text-underline-offset: .25em;
+}
+
+@media (max-width: 1023px) {
+  .book-volume--reading .book-volume-hero__layout { max-width: 42rem; }
+  .book-volume--reading .book-volume-hero__copy h1 { margin-inline: auto; }
+  .book-volume--reading .book-volume-orientation { justify-content: center; }
+  .book-volume--reading .book-volume-hero__cover .book-one-cover { width: min(14rem, 42vw); }
+}
+
+@media (max-width: 639px) {
+  .book-volume--reading .book-volume-hero { padding-block: calc(5.25rem + var(--safe-top, 0px)) 2.5rem; }
+  .book-volume--reading .book-volume-hero__layout { gap: 1.5rem; }
+  .book-volume--reading .book-volume-hero__cover .book-one-cover { width: min(9rem, 35vw); }
+  .book-volume--reading .book-volume-hero__copy h1 { max-width: 15ch; font-size: clamp(2rem, 8vw, 2.75rem); }
+  .book-volume--reading .book-volume-proposition { margin-top: .75rem; font-size: 1.125rem; }
+  .book-volume--reading .book-volume-description { order: 2; margin-top: 1.25rem; font-size: 1rem; }
+  .book-volume--reading .book-volume-actions { order: 1; margin-top: 1.25rem; }
+  .book-volume--reading .book-volume-reading-note { order: 1; font-size: .75rem; }
+  .book-volume--reading .book-volume-written-order { order: 3; }
+  .book-volume--reading .book-volume-orientation { order: 4; }
+  .book-volume--reading .book-volume-author { order: 5; }
+  .book-volume--reading .book-volume-section { grid-template-columns: 2rem minmax(0, 1fr); }
+  .book-volume-illustrations { margin-left: 2.75rem; }
+  .book-volume-illustrations a { flex-wrap: wrap; gap: .2rem .6rem; }
+  .book-volume-illustrations__label { width: 100%; }
+  .book-reader--publication .book-chapter-header--reading { padding-bottom: 1.75rem; }
+  .book-reader--publication .book-prose { padding-top: 1.75rem; }
+  .book-reader--publication .book-figure { margin-block: 2.25rem; }
+  .book-reader--publication .book-figure__art { width: calc(100% + 1.5rem); max-width: none; margin-inline: -.75rem; }
+}
+
+@media print {
+  .book-volume-orientation,
+  .book-reader-offline { display: none; }
+  .book-reader--publication .book-figure__art { width: 100%; margin: 0; }
+}

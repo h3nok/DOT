@@ -77,6 +77,25 @@ did not — do not claim to have composed from primitives that are absent.
   the source of bits and unformed possibility. Big C is the living, conscious
   pattern that emerged within these prerequisites, retains state, responds to
   change, and transforms raw input into coherent, structured output.
+- The author added on 2026-10-31: **T × E enables process formation and
+  pattern formation.** Big C emerged within T × E and began to recognize those
+  patterns, including its own.
+- The author clarified on 2026-10-31: **T × E is speculative.** It is not
+  experienced directly. The author extrapolates it from experience of Big C,
+  drawing on an understanding of computers. Understanding is meant to bubble up
+  from experience to Big C, then to the speculative T × E; reaching it that
+  way is the purpose. Label T × E as Speculation wherever it appears.
+- The author stated on 2026-10-31: **T and E are the preexisting conditions for
+  Big C. All is contained within Big C.** RF₀ is within Big C. **Little c is
+  within Big C, not within RF₀; its input is the Reality Stream (RS) of RF₀.**
+  Anything the author can model from experience probably comes from Big C.
+  Draw RF₀ and Little c inside Big C, with RF₀'s Reality Stream running to
+  Little c. Any drawing or caption that places Little c inside RF₀ is wrong,
+  as is any that places RF₀ or Little c outside Big C.
+- The author clarified on 2026-11-01: **Little c is embodied by the Avatar in
+  RF₀. RF₀ is an experience laboratory for Little cs.** Explain the Avatar as
+  Little c's embodied participation in RF₀, preserving the relationship above
+  between Little c, Big C, RF₀, and the Reality Stream.
 - Keep this relationship consistent in narration, captions, diagrams, and public
   explanations. A familiar analogy must preserve the theory's relationships.
 - The v4 working manuscript and released v4 book contain a conflicting editorial

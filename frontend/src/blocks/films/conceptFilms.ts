@@ -88,8 +88,8 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   },
   "big-c": {
     Motif: BigC,
-    description: "Flowing lines of continuity, T, and scattered raw information, E, fill the field. Within it a membrane, Big C, forms, and inside Big C a Reality Frame, RF₀, and points of local experience appear.",
-    analogy: "Big C emerged within T × E: T is primordial continuity—Time; E is the raw information source.",
+    description: "T × E is labelled Speculation outside Big C. Within Big C, RF₀ contains the living Avatar; Little c is outside RF₀, receives its Reality Stream, and connects with a distinct Canvas.",
+    analogy: "DOT proposes Big C emerged within T × E (Speculation): primordial continuity and a raw information source.",
     layer: "big-c",
   },
   "little-c": {
@@ -101,12 +101,12 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   "decoupling-principle": {
     Motif: Decoupling,
     description: "A musician plays a harp and notes drift away. Two strings snap and the music thins, while the musician stays whole.",
-    analogy: "Damage a musician's instrument and the music changes. That alone does not show the instrument made the musician.",
+    analogy: "A musician and an instrument suggest distinct roles. The analogy does not establish that awareness exists independently of the body.",
     layer: "little-c",
   },
   "reality-frame": {
     Motif: RealityFrame,
-    description: "Inside a ruled frame, a participant throws a ball. Each throw arcs and lands where the frame's rules take it, and the landing stays.",
+    description: "Inside RF₀, an Avatar throws a ball. Each throw follows the Frame’s constraints and leaves a consequence. The body is Little c’s embodied means of participation.",
     analogy: "Like throwing a ball: the throw is yours, and where it lands follows the rules of the world.",
     layer: "reality-frame",
   },
@@ -118,7 +118,7 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   },
   "reality-stream": {
     Motif: RealityStream,
-    description: "One shared reality: a river between two banks. Two people below it each receive their own stream from it. One builds half a bridge from the left bank, the other half from the right, and both streams carry each change. Together they set the keystone, and someone crosses where no one could before. Reality evolves with us.",
+    description: "Big C contains RF₀ and two Little cs outside the Frame. Each Little c receives a Reality Stream through an Avatar inside RF₀. Action proceeds through those bodies: one builds from each bank, and together they make a crossing possible.",
     analogy: "Like two people building one bridge from opposite banks: each sees it from their own side, and together they make a crossing neither could make alone.",
     layer: "reality-stream",
   },
@@ -130,8 +130,8 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   },
   "experience-loop": {
     Motif: ExperienceLoop,
-    description: "Around a hot stove, a pulse travels one loop: Reality Stream, heat; Painting, danger; Intent, pull back; Canvas, remembered.",
-    analogy: "Like a hand near a hot stove: the heat is read as danger, the hand pulls back, and the lesson is carried forward.",
+    description: "Around a hot stove, a pulse traces the model: bodily input, interpretation through the Painting, Intent to use protection, and an update to Canvas state.",
+    analogy: "Feeling heat, you recognize a risk and choose to use a mitt. The outcome can change how you approach the stove next time.",
     layer: "little-c",
   },
   canvas: {

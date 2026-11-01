@@ -26,7 +26,7 @@ const INQUIRY_LINKS = [
   {
     to: "/contact?purpose=writing",
     title: "Bring a question to the conversation",
-    description: "Share an experience or a thoughtful question with Henok.",
+    description: landing.conversationDescription,
     Icon: MessageCircle,
   },
 ];
@@ -77,7 +77,7 @@ export default function AcademyPage() {
         <header className="academy-hub-section-heading">
           <p className="dot-label">Explore · Question · Discuss</p>
           <h2 id="academy-inquiry-title">Follow your questions.</h2>
-          <p>Look closely at the model. Bring it back to something you have experienced. Leave room to change your mind.</p>
+          <p>{landing.inquiryIntroduction}</p>
         </header>
         <nav aria-label="Continue the inquiry" className="academy-hub-tools">
           {INQUIRY_LINKS.map(({ to, title, description, Icon }) => (

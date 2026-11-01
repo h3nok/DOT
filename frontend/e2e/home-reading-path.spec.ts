@@ -49,9 +49,10 @@ test("home offers a reading path and readable theory comparisons", async ({ page
       expect(content.alignment).toBe("center");
       expect(content.offset).toBeLessThanOrEqual(1);
     }
-    // Only conscious processes carry the living surface; RF₀ is a flat plane.
+    // Only conscious processes carry the living surface; RF₀ and Canvas stay distinct.
     await expect(section.locator(".home-concept-architecture .home-architecture-surface")).toHaveCount(2);
-    await expect(section.locator(".home-concept-architecture .home-concept-frame-plane")).toHaveCount(1);
+    await expect(section.locator('.home-concept-architecture [data-entity="reality-frame"] .home-concept-frame-plane')).toHaveCount(1);
+    await expect(section.locator('.home-concept-architecture [data-entity="canvas"]')).toHaveCount(1);
     const reasoning = section.locator("summary").filter({ hasText: "Explore the reasoning" });
     const boundaryElement = section.locator('[data-step="boundary"]');
     await expect(boundaryElement).toBeVisible();

@@ -63,6 +63,10 @@ describe("public route metadata", () => {
     expect(film.noindex).toBeFalsy();
     expect(film.image).toBe("/og/film.png");
     expect(film.description).toMatch(/seventeen concepts/);
+    expect(film.prerender).toContain("Every observation begins as an experience.");
+    expect(film.prerender).toContain("DOT proposes: The Avatar is your living body.");
+    expect(film.prerender).toContain("A school of thought for examining experience.");
+    expect(film.prerender).not.toContain("<h3>The struggle</h3>");
     for (const concept of DOCTRINE_CONCEPTS as { id: string }[]) {
       expect(film.prerender).toContain(`href="/doctrine/${concept.id}"`);
     }
@@ -407,6 +411,7 @@ describe("public route metadata", () => {
     expect(book.bookEdition).toContain(String(manifest.release.version));
     expect((book.author as unknown as { name: string }).name).toBe(manifest.project.author);
     expect(book.hasPart).toHaveLength(manifest.sections.length);
+    expect(route?.prerender).toContain(`<h1>${manifest.project.title}</h1>`);
   });
 
   it("describes the PDF as free and makes the download work without JavaScript", () => {
@@ -569,7 +574,7 @@ describe("page text for readers without JavaScript", () => {
   });
   it("writes every chapter's own text into its page", () => {
     for (const section of manifest.sections) {
-      const source = readFileSync(join("public/publications/henok/digital-organism-theory/v4", section.content_path), "utf8");
+      const source = readFileSync(join("public/publications/henok/digital-organism-theory/v5", section.content_path), "utf8");
       // The first line of prose, as a crawler would quote it.
       const firstProse = source.split("\n").find((line: string) => /^[A-Z][a-z]/.test(line))!;
       const route = routeAt(`/book/digital-organism-theory/${section.slug}`);
@@ -583,6 +588,27 @@ describe("page text for readers without JavaScript", () => {
     expect(routes.some((route) => route.prerender?.includes("<script"))).toBe(false);
   });
 
+  it("keeps all eight book illustrations and their captions in the script-free pages", () => {
+    expect(manifest.figures).toHaveLength(8);
+    for (const figure of manifest.figures) {
+      const html = routeAt(`/book/digital-organism-theory/${figure.section}`).prerender ?? "";
+      const document = new DOMParser().parseFromString(html, "text/html");
+      const element = document.getElementById(`figure-${figure.id}`)!;
+      expect(element, figure.id).not.toBeNull();
+      expect(element.querySelector("img")?.getAttribute("alt")).toBe(figure.alt);
+      expect(element.querySelector("source")?.getAttribute("srcset")).toContain(figure.mobileSrc);
+      expect(element.querySelector("figcaption")?.textContent).toBe(
+        `Figure ${figure.number} · ${figure.title}. ${figure.claimLevel}. ${figure.caption}`,
+      );
+      expect(element.closest("details")).toBeNull();
+    }
+  });
+
+  it("keeps manuscript heading links usable without JavaScript", () => {
+    expect(renderMarkdown("## The Frame and the Stream\n\nA distinction."))
+      .toContain('<h2 id="the-frame-and-the-stream">');
+  });
+
   it("folds depth passages into native disclosures that work without JavaScript", () => {
     const html = renderMarkdown(
       "Core argument.\n\n::: depth Formal notation\n\nThe detail stays in the page.\n\n:::\n\nThe argument continues.\n",
@@ -594,9 +620,9 @@ describe("page text for readers without JavaScript", () => {
 
   it("puts that text inside #root, where the app replaces it", () => {
     const html = renderRoute(shell, routeAt("/privacy"));
-    expect(html).toMatch(/<div id="root"><article data-prerender><h1>Privacy<\/h1>/);
+    expect(html).toMatch(/<div id="root"><article data-prerender><h1 id="privacy">Privacy<\/h1>/);
     const terms = renderRoute(shell, routeAt("/terms"));
-    expect(terms).toMatch(/<div id="root"><article data-prerender><h1>Terms and refunds<\/h1>/);
+    expect(terms).toMatch(/<div id="root"><article data-prerender><h1 id="terms-and-refunds">Terms and refunds<\/h1>/);
     expect(renderRoute(shell, routeAt("/support"))).toContain('<a href="/terms">Terms and refunds</a>');
   });
 
@@ -632,7 +658,7 @@ describe("page text for readers without JavaScript", () => {
     }
     expect(rootDocument(shell, manifest)).toContain(`<p>${description}</p>`);
     expect(rootDocument(shell, manifest)).toContain("Love is the condition in which Fear no longer governs you.");
-    expect(rootDocument(shell, manifest)).toContain("<h2>A society can be productive and still be lost.</h2>");
+    expect(rootDocument(shell, manifest)).toContain("<h2>What shapes the way you see?</h2>");
     expect(rootDocument(shell, manifest)).toContain('href="/book/digital-organism-theory/the-painting#the-culture-inside-you"');
     expect(rootDocument(shell, manifest)).toContain('<a href="/amm">Continue in The American Millennial Manifesto</a>');
     expect(rootDocument(shell, manifest)).not.toContain("What happens when you feel challenged?");

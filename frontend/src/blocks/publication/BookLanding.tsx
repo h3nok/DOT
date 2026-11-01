@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  ArrowDown,
   ArrowRight,
   BookOpen,
   Download,
@@ -25,7 +24,7 @@ import { Editable } from "../../content/editable";
 import bookLanding from "../../content/publications/bookLanding.json";
 import BookCitation from "./BookCitation";
 import BookOneCover from "./BookOneCover";
-import BookSubstrate from "./BookSubstrate";
+import "./book-reading-page.css";
 
 /**
  * BookLanding — the frontispiece.
@@ -44,7 +43,7 @@ function sectionLabel(section: BookReleaseSection): string {
   return "Sources";
 }
 
-// Edition v4's four levels, worded as the book's own Table 1 defines them.
+// The book's four levels, worded as the book's own Table 1 defines them.
 // The v3 names stay so an older manifest still reads correctly.
 const CLAIM_DEFINITIONS: Record<string, string> = {
   observation: "What is encountered or measured without accepting DOT.",
@@ -64,6 +63,7 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
   const firstSection = manifest.sections[0];
   const claimLevels = manifest.reader_contract.claim_levels;
   const sectionGroups = groupBookSectionsByPart(manifest.sections);
+  const illustrations = manifest.figures ?? [];
   const reduceMotion = useReducedMotion();
   const [savedProgress] = useState(readReadingPathProgress);
   const savedPath = savedProgress ? findPath(savedProgress.pathId) : null;
@@ -84,20 +84,16 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
   const writtenOrderHref = writtenOrderPath
     ? readingPathHref(writtenOrderPath.id, firstSection.slug)
     : bookSectionRoute(firstSection);
+  const entrySection = savedPath && savedProgress
+    ? manifest.sections.find(section => section.slug === savedProgress.sectionSlug)
+    : firstSection;
 
   return (
-    <main id="book-main" className="book-volume w-full pb-24">
+    <main id="book-main" className="book-volume book-volume--reading w-full pb-24">
       <section
-        className="book-volume-hero e-field relative flex min-h-[100svh] items-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-24 sm:px-8"
+        className="book-volume-hero relative flex items-center overflow-hidden border-b border-[var(--book-hairline)] px-5 py-24 sm:px-8"
         aria-labelledby="book-landing-title"
       >
-        <div className="book-cover-threshold-field" aria-hidden="true">
-          <BookSubstrate />
-        </div>
-        <span className="pointer-events-none absolute left-6 top-6 z-10 flex h-9 items-center font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--book-muted)] sm:left-8 sm:top-8">
-          E<span className="hidden sm:inline"> · the field of possibility</span>
-        </span>
-
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -112,25 +108,23 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           </div>
 
           <div className="book-volume-hero__copy max-w-2xl text-left">
-            <p className="dot-label text-[var(--book-cinnabar)]">
-              Digital Organism Theory · Book One
+            <p className="dot-label book-volume-kicker text-[var(--book-cinnabar)]">
+              Book One · {manifest.release.label} · v{manifest.release.version}
             </p>
             <h1
               id="book-landing-title"
               className="book-reading-heading mt-5 text-[clamp(2.7rem,5vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.035em] text-[var(--book-ink)]"
             >
-              {bookLanding.heading}
+              {manifest.project.title}
             </h1>
-            <p className="book-volume-description book-reading-copy mt-7 max-w-xl text-lg leading-relaxed text-[var(--book-muted)] sm:text-xl">
-              {bookLanding.description}
+            <p className="book-volume-proposition book-reading-copy mt-5 max-w-xl text-xl leading-relaxed text-[var(--book-ink)]">
+              {bookLanding.heading}
             </p>
-
-            <div className="book-volume-position mt-8 grid max-w-xl grid-cols-[auto_minmax(0,1fr)] gap-4 border-y border-[var(--book-hairline)] py-5">
-              <span className="dot-label pt-1 text-[var(--book-cinnabar)]">{bookLanding.positionLabel}</span>
-              <p className="book-reading-copy text-base italic leading-relaxed text-[var(--book-ink)]">
-                {bookLanding.position}
-              </p>
-            </div>
+            <p className="book-volume-description book-reading-copy mt-4 max-w-xl text-base leading-relaxed text-[var(--book-muted)] sm:text-lg">
+              How do the body, experience, and inherited beliefs shape a life?
+              Book One develops DOT’s proposed answer, with its assumptions and
+              open questions visible.
+            </p>
 
             <div className="book-volume-actions mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
@@ -154,14 +148,11 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
                 Free PDF edition
               </Link>
-              <Link
-                to="/academy/films"
-                className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
-              >
-                <Film className="h-3.5 w-3.5" aria-hidden="true" />
-                Visual introduction
-              </Link>
             </div>
+            <p className="book-volume-reading-note mt-3 text-sm leading-relaxed text-[var(--book-muted)]">
+              Free to read · No account needed
+              {entrySection && ` · ${sectionLabel(entrySection)}, about ${entrySection.reading_time_minutes} minutes`}
+            </p>
             {!savedPath && (
               <p className="book-volume-written-order book-reading-copy mt-4 text-sm text-[var(--book-muted)]">
                 Prefer to build the theory from its foundations?{" "}
@@ -174,81 +165,17 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
               </p>
             )}
 
-            <div className="book-volume-facts mt-8 flex flex-wrap gap-x-7 gap-y-2 dot-label text-[var(--book-muted)]">
-              <span>{manifest.extent.chapters} chapters</span>
-              <span>{manifest.extent.references} sources</span>
-              <span>{manifest.project.author}</span>
-            </div>
+            <nav className="book-volume-orientation" aria-label="Explore the book">
+              <a href="#volume-contents">Browse the chapters <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></a>
+              <Link to="/academy/films"><Film className="h-3.5 w-3.5" aria-hidden="true" /> Visual introduction</Link>
+            </nav>
+            <p className="book-volume-author mt-6 text-sm text-[var(--book-muted)]">By {manifest.project.author}</p>
           </div>
         </motion.div>
 
-        <motion.a
-          href="#volume-guide"
-          initial={reduceMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: reduceMotion ? 0 : 1.2, duration: reduceMotion ? 0 : 0.8 }}
-          className="book-volume-scroll absolute bottom-7 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-2 dot-label text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
-        >
-          Read the volume
-          <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-        </motion.a>
       </section>
 
       <div className="book-volume-body">
-        <motion.section
-          id="volume-guide"
-          initial={false}
-          className="book-volume-guide relative z-10 mx-auto grid max-w-6xl scroll-mt-24 gap-10 px-6 py-20 md:grid-cols-[0.72fr_1.28fr] md:px-8 lg:gap-20 lg:py-28"
-          aria-labelledby="volume-guide-title"
-        >
-          <div>
-            <p className="dot-label text-[var(--book-cinnabar)]">Reader contract</p>
-            <h2
-              id="volume-guide-title"
-              className="book-reading-heading mt-4 text-3xl font-medium leading-tight text-[var(--book-ink)] sm:text-4xl"
-            >
-              Read the claim at the level it earns.
-            </h2>
-            <p className="book-reading-copy mt-5 text-base leading-relaxed text-[var(--book-muted)]">
-              {manifest.reader_contract.claim_levels.join(", ").replace(/, ([^,]*)$/, ", and $1")}{" "}
-              remain visibly distinct throughout the edition.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
-              <Link
-                to="/doctrine"
-                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--book-ink)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
-              >
-                <Network className="h-3.5 w-3.5" aria-hidden="true" />
-                Open the concept map
-              </Link>
-              <Link
-                to="/doctrine/limits-and-debts"
-                className="text-sm text-[var(--book-muted)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-ink)]"
-              >
-                Open questions
-              </Link>
-            </div>
-          </div>
-
-          <dl className="book-volume-claims grid border-t border-[var(--book-hairline)] sm:grid-cols-2">
-            {claimLevels.map((level, index) => (
-              <div key={level} className="book-volume-claim border-b border-[var(--book-hairline)] py-5 sm:px-5 sm:[&:nth-child(odd)]:border-r">
-                <dt className="flex items-baseline gap-3">
-                  <span className="dot-label tabular-nums text-[var(--book-cinnabar)]">
-                    0{index + 1}
-                  </span>
-                  <span className="text-sm font-semibold text-[var(--book-ink)]">
-                    {level}
-                  </span>
-                </dt>
-                <dd className="mt-2 pl-8 text-sm leading-relaxed text-[var(--book-muted)]">
-                  {CLAIM_DEFINITIONS[level.toLowerCase()] ?? "Named confidence level."}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </motion.section>
-
         <motion.section
           id="volume-contents"
           initial={false}
@@ -259,16 +186,22 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             <div>
               <p className="dot-label text-[var(--book-cinnabar)]">The complete argument</p>
               <h2 id="book-contents-title" className="book-reading-heading mt-4 text-4xl font-medium leading-tight text-[var(--book-ink)] sm:text-5xl">
-                A finite sequence.
+                Choose a place to begin.
               </h2>
               <p className="book-reading-copy mt-5 max-w-sm text-base leading-relaxed text-[var(--book-muted)]">
-                Preface, seven chapters, a coda, and the notes and sources.
-                Technical passages stay folded until you open them. Nothing
-                autoplays; every section has an end.
+                Follow the book in order, or open the question closest to your
+                life. Technical passages are available within each chapter when
+                you choose to open them.
               </p>
               <p className="dot-label mt-6 text-[var(--book-muted)]">
                 {manifest.extent.chapters} chapters · {manifest.extent.references} sources
               </p>
+              {illustrations.length > 0 && (
+                <p className="book-reading-copy mt-5 max-w-sm text-sm leading-relaxed text-[var(--book-muted)]">
+                  Illustrations appear beside the passages they explain. Open a
+                  figure directly from the chapter list.
+                </p>
+              )}
             </div>
 
             <div className="book-volume-index">
@@ -317,6 +250,19 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                         </span>
                       </Link>
+                      {illustrations.some(figure => figure.section === section.slug) && (
+                        <ul className="book-volume-illustrations" aria-label={`Illustrations in ${section.title}`}>
+                          {illustrations.filter(figure => figure.section === section.slug).map(figure => (
+                            <li key={figure.id}>
+                              <Link to={`${bookSectionRoute(section)}#figure-${figure.id}`}>
+                                <span className="book-volume-illustrations__label">Figure {figure.number}</span>{" "}
+                                <span>{figure.title}</span>
+                                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </li>
                   ))}
                 </ol>
@@ -326,12 +272,68 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
           </div>
         </motion.section>
 
+        <motion.section
+          id="volume-guide"
+          initial={false}
+          className="book-volume-guide relative z-10 mx-auto grid max-w-6xl scroll-mt-24 gap-10 px-6 py-20 md:grid-cols-[0.72fr_1.28fr] md:px-8 lg:gap-20 lg:py-28"
+          aria-labelledby="volume-guide-title"
+        >
+          <div>
+            <p className="dot-label text-[var(--book-cinnabar)]">Reader contract</p>
+            <h2
+              id="volume-guide-title"
+              className="book-reading-heading mt-4 text-3xl font-medium leading-tight text-[var(--book-ink)] sm:text-4xl"
+            >
+              Read the claim at the level it earns.
+            </h2>
+            <p className="book-reading-copy mt-5 text-base leading-relaxed text-[var(--book-muted)]">
+              {manifest.reader_contract.claim_levels.join(", ").replace(/, ([^,]*)$/, ", and $1")}{" "}
+              remain visibly distinct throughout the edition.
+            </p>
+            <p className="book-reading-copy mt-5 text-base italic leading-relaxed text-[var(--book-ink)]">{bookLanding.position}</p>
+            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3">
+              <Link
+                to="/doctrine"
+                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--book-ink)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-cinnabar)]"
+              >
+                <Network className="h-3.5 w-3.5" aria-hidden="true" />
+                Open the concept map
+              </Link>
+              <Link
+                to="/doctrine/limits-and-debts"
+                className="text-sm text-[var(--book-muted)] underline decoration-[var(--book-hairline)] underline-offset-4 transition-colors hover:text-[var(--book-ink)]"
+              >
+                Open questions
+              </Link>
+            </div>
+          </div>
+
+          <dl className="book-volume-claims grid border-t border-[var(--book-hairline)] sm:grid-cols-2">
+            {claimLevels.map((level, index) => (
+              <div key={level} className="book-volume-claim border-b border-[var(--book-hairline)] py-5 sm:px-5 sm:[&:nth-child(odd)]:border-r">
+                <dt className="flex items-baseline gap-3">
+                  <span className="dot-label tabular-nums text-[var(--book-cinnabar)]">
+                    0{index + 1}
+                  </span>
+                  <span className="text-sm font-semibold text-[var(--book-ink)]">
+                    {level}
+                  </span>
+                </dt>
+                <dd className="mt-2 pl-8 text-sm leading-relaxed text-[var(--book-muted)]">
+                  {CLAIM_DEFINITIONS[level.toLowerCase()] ?? "Named confidence level."}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </motion.section>
+
         <section
           className="book-volume-apparatus relative z-10 mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-[0.72fr_1.28fr] md:px-8 lg:gap-20 lg:py-28"
           aria-label="A note before reading, and how to cite Book One"
         >
           <div>
             <p className="dot-label text-[var(--book-cinnabar)]">A note before reading</p>
+            <p className="book-reading-copy mt-4 max-w-md text-base leading-relaxed text-[var(--book-muted)]">{bookLanding.description}</p>
             <Editable
               id="book.care_note"
               as="p"

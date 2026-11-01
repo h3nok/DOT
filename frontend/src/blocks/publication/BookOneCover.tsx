@@ -1,8 +1,15 @@
-import type { DotBookOneManifest } from "../../content/publications/dotBookOne";
+import { bookCoverAsset, type BookCoverAsset, type DotBookOneManifest } from "../../content/publications/dotBookOne";
 import { NucleusMark } from "../../dot/NucleusMark";
+import "./book-cover-artwork.css";
 
 interface BookOneCoverProps {
-  manifest?: DotBookOneManifest;
+  manifest?: {
+    project: Pick<DotBookOneManifest["project"], "series_title" | "title" | "subtitle" | "author">;
+    release: Pick<DotBookOneManifest["release"], "label" | "version">;
+    cover?: BookCoverAsset;
+  };
+  /** Resolved artwork for a local proof; published covers resolve from their edition. */
+  artwork?: BookCoverAsset;
   className?: string;
 }
 
@@ -25,8 +32,24 @@ const RELEASED_COVER = {
  */
 export default function BookOneCover({
   manifest,
+  artwork,
   className = "",
 }: BookOneCoverProps) {
+  const image = artwork ?? bookCoverAsset(manifest ?? {});
+  if (image) {
+    return (
+      <figure className={`book-one-cover book-one-cover--illustrated ${className}`}>
+        <img
+          src={image.src}
+          width={image.width}
+          height={image.height}
+          alt={image.alt}
+          decoding="async"
+          fetchPriority="high"
+        />
+      </figure>
+    );
+  }
   const cover = manifest
     ? {
         seriesTitle: manifest.project.series_title,

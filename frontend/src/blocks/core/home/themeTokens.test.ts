@@ -151,56 +151,14 @@ describe("home entry theme compatibility", () => {
     );
   });
 
-  it("keeps the two arrow vocabularies distinct and the intent trace singular", () => {
+  it("distinguishes the Reality Stream, carried state, and embodied action", () => {
     const architecture = readArchitecture();
-    const styles = readFileSync(join(HERE, "home.css"), "utf8");
-
-    // Inbound options arrive at the awareness radius; the chevron stays open.
-    expect(architecture).toContain("AWARENESS_RADIUS = 72");
-    expect(architecture).toContain("OPTION_ANGLES");
-    expect(architecture).toContain('d="M1 0L6 3L1 6"');
-    expect(architecture).toMatch(/home-architecture-option-arrow" d="M1 0L6 3L1 6"/);
-    // The chosen option sits where the merged awareness & potential trace crosses the ring.
-    expect(architecture).toContain('data-chosen="true"');
-    expect(architecture).toContain("AWARENESS_TRACE_D");
-    expect(architecture).toContain("POTENTIAL_TRACE_D");
-    expect(architecture).toContain("home-architecture-awareness-trace");
-    expect(architecture).toContain("home-architecture-potential-trace");
-    expect(architecture).not.toContain("M184 252C232 270 270 298 308 324");
-    expect(architecture).not.toContain("home-architecture-reflection");
-    expect(styles).toContain(".home-architecture-frame-options line");
-    expect(styles).toContain(".home-architecture-awareness-ring");
-    expect(styles).toContain(".home-architecture-awareness-trace");
-    expect(styles).toContain(".home-architecture-potential-trace");
-    // Potential arcs and radial expansion spoke in the free quadrant.
-    expect(architecture).toContain("AWARENESS_POTENTIAL_RADII");
-    expect(architecture).toContain("AWARENESS_ARC_SPAN");
-    expect(architecture).toContain("home-architecture-awareness-spoke");
-    expect(architecture).toContain("home-architecture-awareness-spoke-potential");
-    expect(architecture).toContain("markerEnd={`url(#${radiusArrowId})`}");
-    expect(styles).toContain(".home-architecture-awareness-potential path");
-    expect(styles).toContain(".home-architecture-awareness-spoke-potential");
-    expect(styles).toMatch(/\.home-architecture-option-arrow\s*\{[\s\S]*?fill: none;/);
-    // RF₀'s constraint is a separate, solid mark on the body, never an option.
-    expect(architecture).toContain("CONSTRAINT_ANGLES");
-    expect(architecture).toContain('d="M0 0L6 3L0 6Z"');
-    expect(styles).toContain(".home-architecture-frame-constraint line");
-    expect(styles).toMatch(/\.home-architecture-constraint-arrow\s*\{[\s\S]*?fill: var\(--architecture-rf\);/);
-    expect(styles).not.toContain(".home-architecture-reflection path");
-  });
-
-  it("uses geometry rather than a Reflection label to communicate spatial return", () => {
-    const architecture = readArchitecture();
-
-    expect(architecture).not.toContain('data-label="reflection"');
-    expect(architecture).not.toContain("home-architecture-spatial-lattice");
-    expect(architecture).not.toContain("home-architecture-rim-highlight");
-    expect(architecture).not.toContain("home-architecture-depth-shells");
-    expect(architecture).not.toContain("home-architecture-frame-depth");
-    expect(architecture).toContain("home-architecture-projection-marks");
-    expect(architecture).not.toContain("PEER_FRAMES");
-    expect(architecture).not.toContain('data-depth={depth}');
-    expect(architecture).not.toContain("home-architecture-frame-horizon");
+    expect(architecture).toContain('data-flow="reality-stream"');
+    expect(architecture).toContain('data-flow="access-update"');
+    expect(architecture).toContain('data-flow="embodied-action"');
+    expect(architecture).toContain('data-entity="avatar"');
+    expect(architecture).toContain('data-entity="canvas"');
+    expect(architecture).toContain('orient="auto-start-reverse"');
   });
 
   it("states the theory's epistemic status without overclaiming the ontology", () => {
@@ -220,36 +178,12 @@ describe("home entry theme compatibility", () => {
     expect(architecture).not.toContain("LITTLE c");
   });
 
-  it("draws mutual pressure between Little c and cooperation as a free choice", () => {
+  it("states embodiment and model boundaries in its accessible description", () => {
     const architecture = readArchitecture();
-    const styles = readFileSync(join(HERE, "home.css"), "utf8");
-
-    expect(architecture).toContain("SOCIAL_CENTRES");
-    expect(architecture).toContain('relation: "cooperation"');
-    expect(architecture).toContain('relation: "pressure"');
-    expect(architecture).toContain('orient="auto-start-reverse"');
-    expect(architecture).toContain("markerStart={`url(#${couplingArrowId})`}");
-    expect(architecture).toContain("home-architecture-peer-centre");
-    expect(architecture).toContain("home-architecture-awareness-brightening");
-    expect(architecture).not.toContain("toward Love");
-    expect(styles).toContain(".home-architecture-social-relations line");
-    expect(styles).toContain('.home-architecture-social-relations [data-relation="cooperation"] line');
-    expect(styles).toContain(".home-architecture-peer-awareness");
-    expect(styles).toContain(".home-architecture-awareness-brightening");
-  });
-
-  it("draws RF₀ as structure hosting many indexed Little c, centred on none", () => {
-    const architecture = readArchitecture();
-    const geometry = readFileSync(join(HERE, "architectureGeometry.ts"), "utf8");
-
-    expect(architecture).not.toContain("-frame)`}");
-    expect(architecture).toContain("home-architecture-frame-origin");
-    expect(geometry).toContain("C1_OFFSET");
-    expect(architecture).toContain("transform={C1_TRANSFORM}");
-    for (const index of ["2", "3", "4", "n"]) {
-      expect(architecture).toContain(`index: "${index}"`);
-    }
-    expect(architecture).toContain("home-architecture-peer-label");
+    expect(architecture).toContain("Little c is outside RF₀ and embodied by an Avatar inside it");
+    expect(architecture).toContain("The Reality Stream runs from RF₀ to Little c");
+    expect(architecture).toContain("not measured physical locations");
+    expect(architecture).toContain("T × E is Speculation");
   });
 
   it("labels the rings through protected gaps and keys each layer by colour", () => {
@@ -267,14 +201,12 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain('href="#reality-frame"');
     expect(architecture).toContain('href="#little-c"');
     expect(styles).toContain(".home-architecture-ring-label a");
-    expect(architecture).toContain("home-architecture-awareness-callout");
     expect(architecture).not.toContain('data-potential="true"');
     expect(architecture.match(/className="home-architecture-ring-label"/g) ?? []).toHaveLength(5);
     expect(architecture).not.toContain('className="home-architecture-ring-label" data-layer="origin">\n            <rect');
     expect(styles).not.toContain(".home-architecture-ring-label rect");
     expect(styles).toContain(".home-architecture-ring-label text");
     expect(styles).toContain("stroke: var(--background)");
-    expect(styles).toContain(".home-architecture-label-leader");
     expect(styles).toContain("--architecture-origin");
     expect(styles).toContain("--architecture-big-c");
     expect(styles).toContain("--architecture-rf");
@@ -291,7 +223,6 @@ describe("home entry theme compatibility", () => {
     // One personality: the drawing no longer shape-shifts with the UI style.
     expect(architecture).not.toContain("home-architecture-style--");
     expect(styles).not.toContain("data-ui-style");
-    expect(architecture).toContain("home-architecture-measure-marks");
     expect(styles).toContain(".home-architecture-measure-marks");
 
     expect(architecture).not.toContain("home-architecture-field-traces");

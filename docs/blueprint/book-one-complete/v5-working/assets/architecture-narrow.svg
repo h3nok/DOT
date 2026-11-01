@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="1220" viewBox="0 0 350 1220" role="img" aria-labelledby="architecture-title architecture-desc">
+<title id="architecture-title">The proposed architecture</title>
+<desc id="architecture-desc">T × E, labelled Speculation, sits outside Big C and names its preexisting conditions. A large Big C enclosure contains an RF zero enclosure with the living Avatar, plus Little c and a Canvas outside RF zero. A one-way arrow labelled RS, Reality Stream, runs from RF zero to Little c. Little c exchanges access and update with the Canvas. Dashed arrows indicate continuing process. All shapes describe DOT’s proposed relationships, not measured locations.</desc>
+<defs>
+<marker id="architecture-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="architecture-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="architecture-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="architecture-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="350" height="1220" fill="#ffffff"/>
+<text id="architecture-text-1" data-fit-box="5,5,345,1215" x="22" y="34" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">DOT MODEL</tspan>
+</text>
+<text id="architecture-text-2" data-fit-box="5,5,345,1215" x="22" y="72" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="27" font-weight="600" text-anchor="start">
+<tspan x="22" dy="0">The proposed</tspan>
+<tspan x="22" dy="34.56">architecture</tspan>
+</text>
+<text id="architecture-text-3" data-fit-box="5,5,345,1215" x="22" y="138" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">Relationships, not physical locations.</tspan>
+</text>
+<rect x="22" y="177" width="306" height="194" rx="14" fill="#f2f5ef" stroke="#967022" stroke-width="1.8" stroke-dasharray="6 6"/>
+<text id="architecture-text-4" data-fit-box="27,182,323,366" x="42" y="212" fill="#967022" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="600" text-anchor="start">
+<tspan x="42" dy="0">T × E · Speculation</tspan>
+</text>
+<text id="architecture-text-5" data-fit-box="27,182,323,366" x="42" y="248" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="42" dy="0">T · primordial continuity—Time</tspan>
+</text>
+<text id="architecture-text-6" data-fit-box="27,182,323,366" x="42" y="280" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="42" dy="0">E · raw information source</tspan>
+<tspan x="42" dy="19.2">the stuff itself; unformed possibility</tspan>
+</text>
+<text id="architecture-text-7" data-fit-box="27,182,323,366" x="42" y="341" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="42" dy="0">Preexisting conditions outside Big C</tspan>
+</text>
+<path d="M175 383V418" fill="none" stroke="#967022" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#architecture-arrow-gold)"/>
+<text id="architecture-text-8" data-fit-box="5,5,345,1215" x="192" y="404" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="192" dy="0">Emergence</tspan>
+</text>
+<rect x="15" y="431" width="320" height="737" rx="26" fill="#ffffff" stroke="#2f715b" stroke-width="2.5"/>
+<text id="architecture-text-9" data-fit-box="20,436,330,1163" x="38" y="472" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="30" font-weight="600" text-anchor="start">
+<tspan x="38" dy="0">Big C</tspan>
+</text>
+<text id="architecture-text-10" data-fit-box="20,436,330,1163" x="38" y="501" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="38" dy="0">Living conscious process</tspan>
+</text>
+<path d="M277 456C304 456 311 483 289 493" fill="none" stroke="#2f715b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="4 6" marker-end="url(#architecture-arrow-jade)"/>
+<path d="M281 494C257 494 251 465 271 457" fill="none" stroke="#2f715b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="4 6" marker-end="url(#architecture-arrow-jade)"/>
+<rect x="38" y="526" width="274" height="224" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="1.7"/>
+<text id="architecture-text-11" data-fit-box="43,531,307,745" x="58" y="566" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="28" font-weight="600" text-anchor="start">
+<tspan x="58" dy="0">RF₀</tspan>
+</text>
+<text id="architecture-text-12" data-fit-box="43,531,307,745" x="58" y="596" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="17" font-weight="400" text-anchor="start">
+<tspan x="58" dy="0">Our physical</tspan>
+<tspan x="58" dy="21.76">universe</tspan>
+</text>
+<g transform="translate(245 639) scale(0.31)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="8.064516129032258" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="8.064516129032258" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="8.064516129032258" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="8.064516129032258" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="8.064516129032258" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="4.838709677419355" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<text id="architecture-text-13" data-fit-box="43,531,307,745" x="58" y="707" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="58" dy="0">Avatar</tspan>
+<tspan x="58" dy="20.48">living body</tspan>
+</text>
+<path d="M175 762V839" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#architecture-arrow-jade)"/>
+<text id="architecture-text-14" data-fit-box="20,436,330,1163" x="192" y="793" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="500" text-anchor="start">
+<tspan x="192" dy="0">RS</tspan>
+<tspan x="192" dy="19.2">Reality Stream</tspan>
+</text>
+<circle cx="175" cy="908" r="63" fill="#ffffff" stroke="#2f715b" stroke-width="1.7" stroke-dasharray="5 8"/>
+<circle cx="175" cy="908" r="55" fill="#f2f5ef" stroke="#2f715b" stroke-width="2.2"/>
+<text id="architecture-text-15" data-fit-box="125,858,225,958" x="175" y="904" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="23" font-weight="600" text-anchor="middle">
+<tspan x="175" dy="0">Little c</tspan>
+</text>
+<text id="architecture-text-16" data-fit-box="125,858,225,958" x="175" y="929.39" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="16.79" font-weight="400" text-anchor="middle">
+<tspan x="175" dy="0">experiencer</tspan>
+</text>
+<path d="M175 973V997" fill="none" stroke="#2f715b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#architecture-arrow-jade)" marker-start="url(#architecture-arrow-jade)"/>
+<rect x="65" y="1009" width="220" height="108" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="1.8"/>
+<text id="architecture-text-17" data-fit-box="70,1014,280,1112" x="85" y="1040" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="23" font-weight="600" text-anchor="start">
+<tspan x="85" dy="0">Canvas</tspan>
+</text>
+<text id="architecture-text-18" data-fit-box="70,1014,280,1112" x="85" y="1066" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="85" dy="0">Capacity to carry state</tspan>
+</text>
+<g transform="translate(86 1075) scale(0.885 0.29)" opacity="1">
+<path d="M12 72C40 8 70 97 103 38S157 12 188 45" fill="none" stroke="#2f715b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M16 31C59 54 78 1 113 31S151 92 188 69" fill="none" stroke="#a6553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M21 90C54 65 69 84 99 65S148 42 185 12" fill="none" stroke="#967022" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="44" cy="50" r="5" fill="#2f715b" stroke="#2f715b" stroke-width="0"/>
+<circle cx="112" cy="31" r="5" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<circle cx="151" cy="39" r="5" fill="#967022" stroke="#967022" stroke-width="0"/>
+</g>
+<text id="architecture-text-19" data-fit-box="20,436,330,1163" x="175" y="1147" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="middle">
+<tspan x="175" dy="0">RF₀ and Little c are within Big C.</tspan>
+</text>
+<text id="architecture-text-20" data-fit-box="5,5,345,1215" x="175" y="1200" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="middle">
+<tspan x="175" dy="0">Little c is outside RF₀.</tspan>
+</text>
+</svg>

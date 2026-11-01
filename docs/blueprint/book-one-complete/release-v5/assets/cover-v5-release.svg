@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2700" viewBox="0 0 1800 2700" role="img" aria-labelledby="cover-title cover-description">
+<title id="cover-title">Consciousness: A Digital Organism · Version 5</title>
+<desc id="cover-description">Cover of Consciousness: A Digital Organism, Book One, by Henok Ghebrechristos. The theory diagram places T × E, explicitly labelled Speculation, outside Big C, the proposed conscious process. RF₀ and Little c are both within Big C. Little c is outside RF₀ and receives its Reality Stream. The living Avatar embodies Little c in RF₀. Little c, the Canvas and the Avatar remain distinct and connected. Broken arrows around Big C and Little c indicate process. Version 5.</desc>
+<defs>
+<linearGradient id="cover-ground" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1714"/><stop offset=".55" stop-color="#142f26"/><stop offset="1" stop-color="#0a1713"/></linearGradient>
+<radialGradient id="cover-organism" cx=".44" cy=".3" r=".8"><stop stop-color="#264c3b"/><stop offset=".65" stop-color="#173a2c"/><stop offset="1" stop-color="#10281f"/></radialGradient>
+<radialGradient id="cover-local" cx=".35" cy=".25" r=".85"><stop stop-color="#547b5c"/><stop offset="1" stop-color="#224a34"/></radialGradient>
+<linearGradient id="cover-rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c2ddbc"/><stop offset=".55" stop-color="#72a889"/><stop offset="1" stop-color="#416d52"/></linearGradient>
+<clipPath id="cover-frame-clip"><circle cx="704" cy="1578" r="223"/></clipPath>
+<pattern id="cover-grid" width="49" height="49" patternUnits="userSpaceOnUse"><path d="M49 0H0V49" fill="none" stroke="#769b87" stroke-width="1" opacity=".24"/></pattern>
+<marker id="cover-arrow-jade" markerWidth="17" markerHeight="17" refX="13" refY="8" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M3 2L13 8L3 14" fill="none" stroke="#91c8b1" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="cover-arrow-gold" markerWidth="17" markerHeight="17" refX="13" refY="8" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M3 2L13 8L3 14" fill="none" stroke="#cfb878" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="cover-arrow-ink" markerWidth="17" markerHeight="17" refX="13" refY="8" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M3 2L13 8L3 14" fill="none" stroke="#f2f0e8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="1800" height="2700" fill="url(#cover-ground)"/>
+<circle cx="1800" cy="1580" r="1180" fill="none" stroke="#53796a" stroke-width="1" opacity="0.14"/>
+<circle cx="1800" cy="1580" r="1320" fill="none" stroke="#53796a" stroke-width="1" opacity="0.09"/>
+<path d="M140 220H1660" fill="none" stroke="#53796a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+<text id="cover-text-1" data-fit-box="125,100,1675,2590" x="140" y="165" fill="#b0c5ba" font-family="&#x27;JetBrains Mono&#x27;, &#x27;DejaVu Sans Mono&#x27;, monospace" font-size="31" font-weight="500" text-anchor="start" letter-spacing="1.4"><tspan x="140" dy="0">DIGITAL ORGANISM THEORY</tspan></text>
+<text id="cover-text-2" data-fit-box="125,100,1675,2590" x="1660" y="165" fill="#91c8b1" font-family="&#x27;JetBrains Mono&#x27;, &#x27;DejaVu Sans Mono&#x27;, monospace" font-size="31" font-weight="500" text-anchor="end"><tspan x="1660" dy="0">BOOK ONE</tspan></text>
+<text id="cover-text-3" data-fit-box="125,250,1675,435" x="132" y="410" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="142" font-weight="500" text-anchor="start"><tspan x="132" dy="0">Consciousness:</tspan></text>
+<text id="cover-text-4" data-fit-box="125,440,1675,660" x="132" y="610" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="199" font-weight="500" text-anchor="start"><tspan x="132" dy="0">A Digital</tspan></text>
+<text id="cover-text-5" data-fit-box="125,655,1675,860" x="132" y="810" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="199" font-weight="500" text-anchor="start"><tspan x="132" dy="0">Organism</tspan></text>
+<text id="cover-text-6" data-fit-box="125,845,1675,930" x="140" y="905" fill="#b0c5ba" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="46" font-weight="500" text-anchor="start" font-style="italic"><tspan x="140" dy="0">Foundations, Agency, and Research</tspan></text>
+<circle cx="900" cy="1600" r="601" fill="none" stroke="#cfb878" stroke-width="2" opacity="0.68" stroke-dasharray="3 17"/>
+<rect x="636" y="968" width="528" height="65" rx="28" fill="#173127"/>
+<text id="cover-text-7" data-fit-box="642,970,1158,1028" x="900" y="1013" fill="#cfb878" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="39" font-weight="500" text-anchor="middle"><tspan x="900" dy="0">T × E · Speculation</tspan></text>
+<circle cx="900" cy="1600" r="513" fill="url(#cover-organism)" stroke="url(#cover-rim)" stroke-width="3.3" opacity="1"/>
+<circle cx="900" cy="1600" r="502" fill="none" stroke="#91c8b1" stroke-width="1" opacity="0.25"/>
+<path d="M1125.33 1093.90A554 554 0 1 1 710.52 1079.41" fill="none" stroke="#91c8b1" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" stroke-dasharray="13 16" marker-end="url(#cover-arrow-jade)"/>
+<circle cx="424.3546826072381" cy="1407.826817577637" r="6.2" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="598.4661655739613" cy="1184.974281885652" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="917.903441808383" cy="1087.312505739204" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="1229.7500437691947" cy="1207.0192006799643" r="6.2" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="1403.5747451086515" cy="1502.1149853718325" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="1361.0813457514728" cy="1824.8843983027966" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="1124.8843983027969" cy="2061.081345751473" r="6.2" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="793.3413026104895" cy="2101.7897191764423" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="507.01920067996434" cy="1929.7500437691947" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="387.31250573920386" cy="1617.9034418083831" r="6.2" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<circle cx="484.9742818856519" cy="1298.4661655739615" r="4.6" fill="#91c8b1" stroke="none" stroke-width="2" opacity="0.7"/>
+<text id="cover-text-8" data-fit-box="725,1100,1075,1177" x="900" y="1158" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="54" font-weight="500" text-anchor="middle"><tspan x="900" dy="0">Big C</tspan></text>
+<circle cx="704" cy="1578" r="226" fill="#102a22" stroke="#9cb6a6" stroke-width="2.4" opacity="1"/>
+<rect x="478" y="1352" width="452" height="452" fill="url(#cover-grid)" clip-path="url(#cover-frame-clip)"/>
+<circle cx="704" cy="1578" r="222" fill="none" stroke="#53796a" stroke-width="1.2" opacity="1"/>
+<text id="cover-text-9" data-fit-box="610,1370,800,1440" x="704" y="1428" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="48" font-weight="500" text-anchor="middle"><tspan x="704" dy="0">RF₀</tspan></text>
+<text id="cover-text-10" data-fit-box="540,1442,870,1490" x="704" y="1472" fill="#b0c5ba" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="29" font-weight="500" text-anchor="middle"><tspan x="704" dy="0">Reality Frame</tspan></text>
+<circle cx="1130" cy="1510" r="92" fill="url(#cover-local)" stroke="url(#cover-rim)" stroke-width="3" opacity="1"/>
+<circle cx="1130" cy="1510" r="78" fill="none" stroke="#91c8b1" stroke-width="1" opacity="0.55"/>
+<path d="M1213.98 1434.39A113 113 0 1 1 1130.00 1397.00" fill="none" stroke="#91c8b1" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="9 12" marker-end="url(#cover-arrow-jade)"/>
+<text id="cover-text-11" data-fit-box="1048,1470,1212,1540" x="1130" y="1523" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="37" font-weight="500" text-anchor="middle"><tspan x="1130" dy="0">Little c</tspan></text>
+<path d="M928 1510H1003" fill="none" stroke="#cfb878" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#cover-arrow-gold)"/>
+<text id="cover-text-12" data-fit-box="934,1438,1006,1490" x="970" y="1472" fill="#cfb878" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="30" font-weight="500" text-anchor="middle"><tspan x="970" dy="0">RS</tspan></text>
+<text id="cover-text-13" data-fit-box="960,1310,1300,1370" x="1130" y="1354" fill="#cfb878" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="middle"><tspan x="1130" dy="0">Reality Stream</tspan></text>
+<rect x="1010" y="1740" width="238" height="174" rx="20" fill="#173a2c" stroke="#91c8b1" stroke-width="2.6"/>
+<text id="cover-text-14" data-fit-box="1024,1751,1234,1802" x="1129" y="1791" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="35" font-weight="500" text-anchor="middle"><tspan x="1129" dy="0">Canvas</tspan></text>
+<path d="M1032 1871C1066 1816 1105 1897 1138 1843S1184 1830 1226 1862" fill="none" stroke="#91c8b1" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M1035 1836C1075 1861 1104 1807 1137 1845S1174 1896 1225 1875" fill="none" stroke="#d4987e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M1037 1887C1084 1859 1104 1880 1145 1853S1186 1841 1224 1824" fill="none" stroke="#cfb878" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M1130 1642V1720" fill="none" stroke="#91c8b1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#cover-arrow-jade)" marker-start="url(#cover-arrow-jade)"/>
+<g transform="translate(704 1610) scale(.48)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#f2f0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#f2f0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#f2f0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#f2f0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#f2f0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="7" fill="#d4987e" stroke="none" stroke-width="2" opacity="1"/>
+</g>
+<text id="cover-text-15" data-fit-box="616,1710,792,1770" x="704" y="1750" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="34" font-weight="500" text-anchor="middle"><tspan x="704" dy="0">Avatar</tspan></text>
+<path d="M990 1827C894 1870 771 1859 730 1816" fill="none" stroke="#91c8b1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#cover-arrow-jade)"/>
+<text id="cover-text-16" data-fit-box="250,2200,1550,2280" x="900" y="2254" fill="#b0c5ba" font-family="&#x27;JetBrains Mono&#x27;, &#x27;DejaVu Sans Mono&#x27;, monospace" font-size="30" font-weight="500" text-anchor="middle" letter-spacing="0.5"><tspan x="900" dy="0">A PROPOSED ARCHITECTURE OF EXPERIENCE</tspan></text>
+<path d="M140 2361H1660" fill="none" stroke="#53796a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+<text id="cover-text-17" data-fit-box="125,2395,1675,2490" x="140" y="2472" fill="#f2f0e8" font-family="&#x27;Space Grotesk Light&#x27;, &#x27;Space Grotesk&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="60" font-weight="500" text-anchor="start"><tspan x="140" dy="0">Henok Ghebrechristos</tspan></text>
+<text id="cover-text-18" data-fit-box="125,2500,1675,2570" x="140" y="2544" fill="#91c8b1" font-family="&#x27;JetBrains Mono&#x27;, &#x27;DejaVu Sans Mono&#x27;, monospace" font-size="29" font-weight="500" text-anchor="start"><tspan x="140" dy="0">VERSION 5</tspan></text>
+</svg>

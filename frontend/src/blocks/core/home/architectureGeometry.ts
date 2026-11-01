@@ -3,30 +3,26 @@ export const ARCHITECTURE_RADII = {
   origin: 318,
   bigC: 298,
   membrane: 306,
-  frame: 197,
-  awareness: 84,
-  local: 26,
+  frame: 150,
+  awareness: 80,
+  local: 42,
   core: 6,
 } as const;
 
-/** RF₀'s own coordinate origin. */
-export const FRAME_CENTRE = { x: 348, y: 352 } as const;
-
-/** c₁ sits off RF₀'s origin: the Frame is not centred on any experiencer. */
-export const C1_OFFSET = { x: -34, y: -20 } as const;
+/** Model relationships share one coordinate system; boundaries are not physical locations. */
+export const BIG_C_CENTRE = { x: 348, y: 352 } as const;
+export const FRAME_CENTRE = { x: 235, y: 371 } as const;
+export const LOCAL_CENTRE = { x: 490, y: 333 } as const;
+export const C1_OFFSET = { x: LOCAL_CENTRE.x - BIG_C_CENTRE.x, y: LOCAL_CENTRE.y - BIG_C_CENTRE.y } as const;
 export const C1_TRANSFORM = `translate(${C1_OFFSET.x} ${C1_OFFSET.y})`;
 
-/**
- * Other Reality Frames Big C may develop, each under its own rules. Hypothesized and
- * unobserved, so they are drawn dashed; RF₀ is drawn large only because we live in it.
- */
+/** Further Frames are hypothesized, not observed; they share Big C without enclosing Little c. */
 export const OTHER_FRAMES = [
-  { index: "1", angle: -38, rules: "lattice" },
-  { index: "2", angle: 215, rules: "polar" },
-  { index: "n", angle: 162, rules: "unknown" },
+  { index: "1", x: 186, y: 196, rules: "lattice" },
+  { index: "2", x: 348, y: 174, rules: "polar" },
+  { index: "n", x: 510, y: 196, rules: "unknown" },
 ] as const;
-export const OTHER_FRAME_ORBIT = (ARCHITECTURE_RADII.frame + ARCHITECTURE_RADII.bigC) / 2;
-export const OTHER_FRAME_RADIUS = 30;
+export const OTHER_FRAME_RADIUS = 24;
 
 /** A grown, gently irregular membrane. Organisms get this; the built Frame never does. */
 export function membranePath(

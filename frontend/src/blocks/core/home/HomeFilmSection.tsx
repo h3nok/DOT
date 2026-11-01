@@ -2,41 +2,41 @@ import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import filmsData from "../../../content/films.json";
-import { ConceptTourPlayer } from "../../films/ConceptTourPlayer";
-import { CONCEPT_TOUR_SECONDS } from "../../films/conceptTour";
+import { DarkFilmPlayer } from "../../films/DarkFilmPlayer";
+import { DARK_FILM_SECONDS } from "../../films/darkFilmRevision";
 import { formatDuration } from "../../films/filmTime";
 import "../../films/films.css";
 
-// The homepage plays one silent film through every concept in the Concept Map.
+// The revised opening leads into every concept; playback begins only on request.
 const TOUR = filmsData.conceptTour;
 
 const INNER_LOOP_CARDS = [
   {
     step: "01",
-    title: "What a short reply can stir up",
-    status: "Experience & interpretation",
+    title: "The body responds",
+    status: "An ordinary moment",
     tone: "local",
-    body: "Someone replies ‘Okay.’ One person hears irritation; another hears a busy day. The message is shared. The interpretation carries a history.",
+    body: "Someone replies ‘Okay.’ Your chest tightens; you feel dismissed. Someone else might read the same words as a busy day. The feeling is real. What the other person meant still needs to be understood.",
     linkLabel: "Chapter 5 · The Canvas",
     linkTo: "/book/digital-organism-theory/the-canvas",
   },
   {
     step: "02",
-    title: "When protection becomes a pattern",
-    status: "Fear & choice",
+    title: "A history meets the present",
+    status: "What experience leaves behind",
     tone: "rf",
-    body: "An old argument can make a new question sound like an attack. Noticing that familiar reaction gives you a place to pause and ask what is happening now.",
+    body: "If short replies have preceded rejection, the next one may already feel threatening. You answer defensively; the exchange becomes tense. What follows can reinforce that expectation or give you reason to revise it.",
     linkLabel: "Chapter 6 · The Painting",
     linkTo: "/book/digital-organism-theory/the-painting",
   },
   {
     step: "03",
-    title: "Room for a different response",
-    status: "Love & development",
+    title: "A question worth talking through",
+    status: "Choice & conversation",
     tone: "big-c",
-    body: "A pause can make room for curiosity, a boundary, or a more honest reply. In DOT, Love names the condition in which Fear no longer governs those choices.",
-    linkLabel: "Full Screening Room & Series",
-    linkTo: "/academy/films",
+    body: "‘When you said Okay, what did you mean?’ A reply may confirm your first reading or change it. There may be room for curiosity, a boundary, or a more honest response. DOT asks what you carry forward from that encounter.",
+    linkLabel: "Bring a question to Henok",
+    linkTo: "/contact?purpose=writing",
   },
 ] as const;
 
@@ -50,29 +50,30 @@ export function HomeFilmSection() {
       <div className="dot-page-container dot-page-wide home-film-layout">
         <header className="home-film-heading">
           <div>
-            <p className="dot-label">{TOUR.label} · {formatDuration(CONCEPT_TOUR_SECONDS)}</p>
+            <p className="dot-label">{TOUR.label} · {formatDuration(DARK_FILM_SECONDS)}</p>
             <h2 id="visual-inquiry-title">{TOUR.title}</h2>
           </div>
           <Link to="/academy/films">Films in the Academy <ArrowRight aria-hidden="true" /></Link>
         </header>
         <div className="home-film-stage">
-          <ConceptTourPlayer />
+          <DarkFilmPlayer />
         </div>
 
         {/* Inner Loop & Canvas Entropy bridge */}
         <div
           className="home-film-inner-loop"
-          aria-label="The inner loop of Little c: Canvas, Fear, and Love"
+          aria-label="An ordinary conversation through the lens of DOT"
         >
           <div className="home-film-inner-loop__intro">
             <span className="home-film-inner-loop__kicker">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>An invitation to personal exploration</span>
+              <span>An idea to talk through</span>
             </span>
             <p className="home-film-inner-loop__summary">
-              Begin with an ordinary moment. Notice what happened, what it
-              meant to you, and what you chose next. Explore the concepts
-              through your own experience.
+              The film offers a model. A conversation can begin with one
+              ordinary moment: what happened, what you felt, how you
+              understood it, and what followed. You can discuss that moment
+              while keeping the wider explanation open to question.
             </p>
           </div>
 

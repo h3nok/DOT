@@ -45,7 +45,7 @@ export interface DoctrineNode {
   body: string;
   weight: number; // 0..1, conceptual centrality; never derived from traffic
   status: "released";
-  version: 4;
+  version: 5;
   source: DoctrineSource;
   related: DoctrineRelation[];
 }
@@ -77,7 +77,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 1,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -103,7 +103,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.98,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -121,15 +121,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "The Big C Hypothesis",
     oneLine:
-      "Consciousness is fundamental: the larger living awareness—emerged within T × E—from which worlds and individual minds arise.",
+      "DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.",
     body: [
-      "Big C is DOT's organizing postulate: a larger conscious process that differentiates localized centers of experience and develops Reality Frames.",
-      "Its epistemic status and its architectural role are distinct. Relative to current public evidence, fundamental consciousness remains a hypothesis. Within DOT, it is the ground from which physical invariants, biological interfaces, and local experience must be derived.",
-      "The postulate earns explanatory force only if those downstream sciences can be recovered without importing a second foundation. Measurement inside RF₀ constrains whether that derivation is adequate.",
+      "Big C is DOT’s proposed living, conscious process: it retains state, recognizes patterns, responds to change, and develops Reality Frames and localized experiencers.",
+      "DOT proposes that Big C emerged within T × E (Speculation): primordial continuity—Time—and the raw information source. These prerequisites are outside Big C. The account is extrapolated from experience through a computing analogy; it is not a directly observed origin.",
+      "Within DOT, RF₀ and Little c belong within Big C. Little c is outside RF₀ and receives its Reality Stream through the Avatar. The model must account for measured physical and biological results; naming these relationships does not complete their derivation.",
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -148,15 +148,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "Little c",
     oneLine:
-      "You as an individual center of awareness: experiencing the world through a body, choosing, and growing through what happens next.",
+      "The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.",
     body: [
-      "Little c names the first-person center in DOT's architecture. The body is modeled as the local interface through which this center encounters and acts within a Reality Frame.",
-      "The distinction contains biology rather than denying it. Injury, chemistry, development, and neural activity shape experience because they are properties of the embodied interface DOT must derive and recover in full.",
-      "Little c follows from DOT's foundational architecture. Its causal handoff to the biological interface has not been independently measured, so the externally discriminating signature remains an open hypothesis.",
+      "Little c names local self-awareness in DOT’s architecture. It is within Big C and outside RF₀. The Avatar is its living body in RF₀, through which Little c receives experience and acts.",
+      "The distinction preserves the consequences of embodiment. Injury, chemistry, development, and neural activity shape what is available to experience. DOT must account for these measured relationships.",
+      "Little c is a proposed role in the architecture, not an independently detected nonphysical entity. A causal handoff to the biological interface has not been measured independently. Local scope means available access and action, not a different intrinsic kind of self-awareness.",
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-digital-organism",
       "The Digital Organism",
@@ -175,15 +175,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "The Decoupling Principle",
     oneLine:
-      "Your awareness and your body work closely together—without your body being all that you are.",
+      "DOT proposes that Little c and the living body are distinct and functionally connected.",
     body: [
       "Readiness-potential experiments establish a measured temporal order, but they do not directly observe the origin of authorship. The book separates the measurement from interpretations placed on it.",
       "DOT proposes Rendering Latency: a minimal interval between Intent in Little c and the first measurable bodily change recruited for execution. That interval is not currently measured independently.",
-      "The nervous system may account for the complete measurable execution sequence because it is the local interface. DOT's unresolved burden is to derive and measure a signature of the proposed handoff without treating a successful account of the interface as the source of the experiencer.",
+      "The nervous system may account for the complete measurable execution sequence. DOT must identify a result that distinguishes its proposed handoff from a neural account. Practical decoupling means examining identification while preserving the functional connection to embodied life.",
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-decoupling-principle",
       "The Decoupling Principle",
@@ -202,15 +202,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Reality Frame",
     oneLine:
-      "A shared world with stable rules where actions have real, learnable consequences.",
+      "A shared, rule-bound experience laboratory in which Little cs participate through their Avatars.",
     body: [
-      "A Reality Frame names the structured environment of participation: a ruleset, stable world invariants, agency mechanics, and lawful consequence.",
-      "A minimal Frame requires a state-space, local ordering or cadence, transition rules, invariants, and a delivery relation that situates each Little c within a Reality Stream.",
-      "RF₀ names our physical universe inside DOT's foundational hypothesis. The computational language identifies functional architecture; it does not imply a literal human-made computer or a designer external to Big C.",
+      "A Reality Frame names a structured environment with lawful constraints, available actions, and consequences. RF₀ names our physical universe and, within DOT, serves as an experience laboratory for Little cs.",
+      "The Frame supplies a Reality Stream to each local experiencer through its Avatar. RF₀ and Little c are within Big C; Little c is outside RF₀, while the Avatar embodies its participation within the Frame.",
+      "The laboratory metaphor does not mean that every event was assigned as a lesson or that suffering is deserved. Computational language describes proposed functional relationships; it does not establish a literal computer.",
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -229,15 +229,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "Physical Sciences as Frame Derivations",
     oneLine:
-      "Physics measures the reliable rules of our world (RF₀); DOT asks why a world for learning needs rules that hold.",
+      "Physics measures RF₀’s regularities; DOT must account for those results within its proposed Frame architecture.",
     body: [
-      "Physics maps causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law inside RF₀ with exact public methods. DOT treats those successes as descriptions of generated world invariants, not as an independent ontology.",
-      "The relationship is containment, not competition. A mature DOT must show how the Frame's state-space and transition structure yield the regularities physical science measures, and how chemistry and biology become possible within them.",
-      "Book One establishes that derivation contract but does not yet produce every measured equation, constant, or bridge principle. Known physics constrains the RF₀ generator; new consequences of the generator must remain vulnerable to measurement.",
+      "Physics develops publicly testable accounts of causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law. Within DOT, these measured regularities constrain the proposed generator of RF₀.",
+      "A mature DOT must show how its proposed Frame architecture accounts for the regularities physical science measures, and how chemistry and biology become possible under those constraints.",
+      "Book One states this research obligation; it does not complete a derivation of measured laws, constants, or biological mechanisms from Big C. Any new consequences attributed to the generator must remain open to measurement and correction.",
     ].join("\n\n"),
     weight: 0.93,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -254,15 +254,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Reality Stream",
     oneLine:
-      "Your personal stream of moments: how our shared world reaches you from where you stand.",
+      "The situated input RF₀ supplies to Little c through the Avatar.",
     body: [
-      "The Reality Frame is the lawful environment; the Reality Stream is how that environment becomes available from one embodied position.",
-      "The stream is not the whole world and not a passive copy. Body-state, location, attention, and the current Painting all shape what can be encountered and how it is interpreted.",
+      "The Reality Frame is the lawful environment. Its Reality Stream is the time-ordered input supplied to Little c through a living body in that environment.",
+      "World-state, body-state, location, and sampling constrain what arrives. The Painting is the accumulated organization through which that input is interpreted; it is not an unrestricted generator of the shared world.",
       "This distinction keeps shared reality and first-person experience in the same model without collapsing one into the other.",
     ].join("\n\n"),
     weight: 0.78,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -280,7 +280,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Intent",
     oneLine:
-      "The inner turning point where one passing thought becomes what you actually commit to do.",
+      "Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.",
     body: [
       "Thoughts, impulses, images, and rehearsals can remain drafts. Intent names the commitment that recruits the body toward action.",
       "Within the model, freedom does not require unlimited options. It appears as the capacity to notice available drafts, interrupt inherited defaults, and commit differently within real constraints.",
@@ -288,7 +288,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.86,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "reality-frames",
       "Reality Frames",
@@ -307,15 +307,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "foundation",
     title: "The Experience Loop",
     oneLine:
-      "A moment arrives, your past lens interprets it, you choose an action, and the result reshapes you for next time.",
+      "Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.",
     body: [
       "The loop joins the architecture to lived change. A present Reality Stream is interpreted through the Painting, possible responses form, Intent commits direction, the body acts, and consequence returns.",
-      "Consequential difference updates the Canvas. What the process carries forward then changes the Painting through which the next moment will be read.",
+      "Consequential difference updates Canvas state. Its accumulated organization—the Painting—then participates in how the next moment is interpreted.",
       "Every loop begins from the state left by earlier loops. This is why conditioning matters, and also why repeated truthful action can make a different response increasingly available.",
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -334,15 +334,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Canvas",
     oneLine:
-      "The deep inner record that holds every mark experience leaves on you across your life.",
+      "The capacity to carry and update state, allowing earlier experience to influence what comes next.",
     body: [
       "The Canvas is not a blank inner screen and not the same thing as its content. It is the continuing capacity that carries the effects of experience across moments.",
-      "Consequential change updates the Canvas. Associations, expectations, fears, habits, and meanings can become easier to activate because earlier loops have made them available.",
+      "Consequential change updates Canvas state. This is not a complete recording of experience: selection, retention, and later retrieval shape what remains available.",
       "The Canvas carries; the Painting interprets; Character acts. Keeping those terms separate prevents persistence, interpretation, and behavior from being treated as one undifferentiated self.",
     ].join("\n\n"),
     weight: 0.92,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -361,7 +361,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Painting",
     oneLine:
-      "The lens of beliefs, fears, and expectations you have built so far—coloring every new moment before you think.",
+      "The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.",
     body: [
       "The Painting is what has accumulated: expectations, associations, fears, habits, meanings, and learned predictions. It influences what stands out and which responses feel possible.",
       "A Painting is inherited and revised through experience; it is not an essence. Seeing it clearly allows a person to distinguish the present from the interpretation brought into the present.",
@@ -369,7 +369,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.94,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-painting",
       "The Painting",
@@ -388,7 +388,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Character",
     oneLine:
-      "The automatic version of you that runs on habit when you repeat the same reactions over and over.",
+      "The relatively stable patterns expressed through repeated interpretation and action.",
     body: [
       "Character is the Painting in motion. Repeated interpretations and actions become a person's familiar way of meeting the world.",
       "The term describes an enacted pattern, not a permanent moral substance. A familiar response may be deeply conditioned and still remain open to revision through awareness, practice, consequence, and care.",
@@ -396,7 +396,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.76,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -422,7 +422,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.82,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-canvas",
       "The Canvas",
@@ -448,7 +448,7 @@ export const doctrineNodes: DoctrineNode[] = [
     ].join("\n\n"),
     weight: 0.9,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "preface",
       "The Observer Belongs in the Inquiry",
@@ -466,15 +466,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "practice",
     title: "Conscious Authorship",
     oneLine:
-      "See the Painting, widen the pause before Intent, and choose what the next consequence will reinforce.",
+      "Notice inherited interpretation, examine available responses, and act with greater deliberation.",
     body: [
       "Authorship begins with recognition. A person learns to notice the inherited interpretation before it becomes the only available action.",
       "The pause is not escape from embodiment or consequence. It is a larger decision-space inside them: the capacity to compare a familiar draft with the present and commit direction more deliberately.",
-      "Book One calls the repeated process bootstrapping. Each truthful action creates a consequence that can update the Canvas, making future truthful action more available. The painter is formed through the acts of painting.",
+      "Book One calls the repeated process bootstrapping. Deliberate action and attention to consequence can update carried state, making a different response more available. The painter is formed through the acts of painting.",
     ].join("\n\n"),
     weight: 0.96,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-painting",
       "The Painting",
@@ -493,15 +493,15 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "question",
     title: "Limits and Unpaid Debts",
     oneLine:
-      "Every claim is labeled—observed, modeled, hypothesized, or speculative—so this never becomes a blind belief system.",
+      "Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.",
     body: [
-      "Fundamental consciousness and Big C's development of RF₀ remain hypotheses relative to current public evidence even though they function as postulates inside DOT. Multiple Reality Frames, Canvas persistence beyond embodiment, and Rendering Latency remain incompletely operationalized.",
+      "Big C and its development of RF₀ remain hypotheses. T × E (Speculation) is an extrapolation beyond direct experience. Multiple Reality Frames, Canvas persistence beyond embodiment, and Rendering Latency remain unestablished and incompletely operationalized.",
       "Its equations formalize dependencies and measured orderings. They are not discovered laws, and most DOT variables do not yet have accepted operational measures.",
-      "The framework owes bridge principles from T × E through Frame invariants, chemistry, biology, embodiment, and experience; operational measures for sentience and the body handoff; and novel constraints that can fail. Incomplete derivation is an open seam, not permission to install a downstream science as a competing foundation.",
+      "The framework owes an account linking its proposed architecture to physical invariants, chemistry, biology, and embodied experience. It also needs operational measures for the proposed handoff and predictions that could fail. The inquiry begins in experience, moves toward Big C, and extrapolates to T × E (Speculation); that order of inquiry must remain distinct from the proposed order of emergence.",
     ].join("\n\n"),
     weight: 0.88,
     status: "released",
-    version: 4,
+    version: 5,
     source: source(
       "the-digital-organism",
       "The Digital Organism",

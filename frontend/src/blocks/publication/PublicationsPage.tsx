@@ -21,7 +21,7 @@ export default function PublicationsPage() {
               </Link>
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Foundations, Agency, and Research (Edition v4). The complete web edition and PDF are free to read and keep.
+              Foundations, Agency, and Research (Edition v5). The complete web edition and PDF are free to read and keep.
             </p>
             <div className="mt-3 flex flex-wrap gap-4 text-sm">
               <Link to="/book/digital-organism-theory" className="underline">Read the web edition</Link>

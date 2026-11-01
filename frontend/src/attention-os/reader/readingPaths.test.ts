@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import book from "../../../public/publications/henok/digital-organism-theory/v5/manifest.json";
 import {
   findPath,
   isFinalStep,
@@ -8,21 +9,8 @@ import {
   READING_PATHS,
 } from "./readingPaths";
 
-/** Slugs released in the v4 manifest. A path may not point outside the canon. */
-const CANON_SLUGS = new Set([
-  "preface",
-  "the-digital-organism",
-  "the-decoupling-principle",
-  "architecture-of-continuity",
-  "reality-frames",
-  "the-canvas",
-  "the-painting",
-  "the-research-program",
-  "coda",
-  "equation-guide",
-  "glossary",
-  "references",
-]);
+/** A reading path must resolve inside the current released canon. */
+const CANON_SLUGS = new Set(book.sections.map(section => section.slug));
 
 describe("reading paths", () => {
   it("only ever points at released sections", () => {

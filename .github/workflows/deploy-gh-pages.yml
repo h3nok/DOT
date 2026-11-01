@@ -46,7 +46,7 @@ jobs:
         cd frontend
         pnpm install --frozen-lockfile
 
-    # Book One v4 is built locally (make release-book-complete) and committed:
+    # Book One v5 is sealed locally (make release-book-v5) and committed:
     # its designed PDF needs the bundled print fonts, and reading units depend on
     # the Pandoc release. Release tests below pin the committed files to the
     # Word manuscript's checksum, so a stale release cannot deploy (ADR-0036).
@@ -57,6 +57,9 @@ jobs:
         pnpm lint
         pnpm typecheck
         pnpm exec vitest run
+
+    - name: Verify immutable book release boundaries
+      run: python3 scripts/test_book_v5_release.py
         
     - name: Build
       env:
@@ -121,6 +124,8 @@ jobs:
 
     - name: Verify public route entry points
       run: |
+        test -f frontend/dist/publications/henok/digital-organism-theory/v5/manifest.json
+        test -f frontend/dist/publications/henok/digital-organism-theory/v5/digital-organism-theory-book-one.pdf
         test -f frontend/dist/book/digital-organism-theory/preface/index.html
         test -f frontend/dist/publications/index.html
         test -f frontend/dist/doctrine/subjective-data/index.html
@@ -147,6 +152,10 @@ jobs:
         grep -q 'name="robots" content="noindex"' frontend/dist/studio/writing/index.html
         grep -q 'name="robots" content="noindex"' frontend/dist/studio/newsletter/index.html
         grep -q '<article data-prerender>' frontend/dist/book/digital-organism-theory/preface/index.html
+        if grep -R -q -E '/_book-v5|/_preview/book-v5' frontend/dist/book/digital-organism-theory frontend/dist/publications/henok/digital-organism-theory/v5; then
+          echo "::error::Private proof addresses reached the public v5 build."
+          exit 1
+        fi
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3

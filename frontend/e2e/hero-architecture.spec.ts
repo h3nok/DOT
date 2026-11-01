@@ -308,7 +308,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.lighting.traceFilters.every(filter => filter === "none")).toBe(true);
     expect(presentation.captionPresent).toBe(false);
     await expect(svg).toHaveAccessibleName("DOT diagram");
-    await expect(svg).toHaveAccessibleDescription("");
+    await expect(svg).toHaveAccessibleDescription(/Little c is outside RF₀ and embodied by an Avatar inside it/);
     await expect(page.locator(".home-hero-architecture")
       .locator('figcaption, details, nav, dl, [class*="legend"], [class*="transcription"]'))
       .toHaveCount(0);

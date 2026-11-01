@@ -59,6 +59,9 @@ jobs:
       - name: Test
         run: pnpm exec vitest run
 
+      - name: Verify immutable book release boundaries
+        run: python3 ../scripts/test_book_v5_release.py
+
       - name: Build
         run: pnpm build
 

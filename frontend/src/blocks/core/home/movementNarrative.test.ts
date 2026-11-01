@@ -29,7 +29,7 @@ describe("homepage inquiry narrative", () => {
     expect(layers).toContain("RF₀ is exactly the physical universe");
     expect(layers).toContain("DOT calls this world RF₀, or Reality Frame zero");
     expect(layers).toContain("generated does not mean unreal");
-    expect(layers).toContain("It forms intent, acts within RF₀");
+    expect(layers).toContain("It forms Intent, acts through the Avatar");
     expect(layers).toContain("You can examine how the world appears in your own experience");
     expect(layers).toContain("awareness can loosen its identification with the body");
     expect(layers).toContain("Big C: the Digital Organism that persisted");
@@ -58,7 +58,7 @@ describe("homepage inquiry narrative", () => {
     expect(layers).toContain("Continuity carries. Information takes form.");
     expect(layers).toContain("Consciousness persists, develops, and generates.");
     expect(layers).toContain("Live, explore, and develop through real consequence.");
-    expect(layers).toContain("DOT proposes RF₀ as an incubator for Little c");
+    expect(layers).toContain("DOT proposes RF₀ as an experience laboratory for Little cs");
     expect(layers).toContain("its developmental purpose");
     expect(layers).toContain("not a conclusion derived from physics");
     expect(layers).toContain("You experience locally, choose through a body");
@@ -72,11 +72,11 @@ describe("homepage inquiry narrative", () => {
     expect(layers).toContain("From persistence to consequence");
     expect(layers).toContain("From consequence to choice");
     // The Little c figure reads as a loop, not only a containment diagram.
-    expect(layers).toContain("Consequence");
-    expect(layers).toContain("returns.");
+    expect(layers).toContain("meets consequence");
+    expect(layers).toContain("RF₀ supplies the Reality Stream");
     expect(layers).toContain("<GuidedArgument");
     expect(layers).toContain("<ReadingPathwayGroup");
-    expect(layers).toContain("Starting assumption");
+    expect(layers).toContain("Speculation");
     expect(layers).toContain("Proposed explanation");
     expect(layers).not.toContain("CircleAlert");
     expect(layers).not.toContain("home-theory-layer-progress");

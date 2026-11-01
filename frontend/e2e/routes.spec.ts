@@ -69,11 +69,11 @@ test.describe("hero", () => {
     const labels = svg.locator(".home-architecture-ring-label");
     await expect(labels).toHaveCount(5);
     expect(await labels.locator("text").allTextContents()).toEqual([
-      "T × E",
+      "T × E · Speculation",
       "Big C",
       "RF0",
-      "Awareness radius",
-      "Little c1— you",
+      "Little c",
+      "Scope",
     ]);
     await expect(labels.locator("rect")).toHaveCount(0);
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);
@@ -129,7 +129,7 @@ test.describe("hero", () => {
     expect(argumentOpacity.every((opacity) => opacity === "1")).toBe(true);
 
     await expect(cards.nth(0).locator(".home-theory-layer-status")).toHaveText(
-      "Starting assumption",
+      "Speculation",
     );
     await expect(cards.nth(1).locator(".home-theory-layer-status")).toHaveText(
       "Proposed explanation",
@@ -155,7 +155,7 @@ test.describe("hero", () => {
     await expect(
       realityFrame.getByRole("heading", { name: "A world to live in, learn from, and evolve within." }),
     ).toBeVisible();
-    await expect(realityFrame.getByText(/DOT proposes RF₀ as an incubator for Little c/)).toBeVisible();
+    await expect(realityFrame.getByText(/DOT proposes RF₀ as an experience laboratory for Little cs/)).toBeVisible();
     await expect(realityFrame.getByText(/not a conclusion derived from physics/)).toBeVisible();
     await realityFrame.locator("summary").filter({ hasText: "Explore the reasoning" }).click();
     await expect(realityFrame.getByText(/models tested against measurement/)).toBeVisible();

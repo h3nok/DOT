@@ -19,10 +19,10 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 FROM deps AS final
 
 COPY backend/orchestrator/ .
-COPY frontend/public/publications/henok/digital-organism-theory/v4/ \
-    /canon/digital-organism-theory/v4/
+COPY frontend/public/publications/henok/digital-organism-theory/v5/ \
+    /canon/digital-organism-theory/v5/
 
-ENV ORCHESTRATOR_CANON_ROOT=/canon/digital-organism-theory/v4
+ENV ORCHESTRATOR_CANON_ROOT=/canon/digital-organism-theory/v5
 
 # Non-root user for least-privilege execution
 RUN addgroup --system dot && adduser --system --ingroup dot dot

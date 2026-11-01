@@ -84,7 +84,7 @@ const RELEASE_MANIFEST = path.join(
   "publications",
   "henok",
   "digital-organism-theory",
-  "v4",
+  "v5",
   "manifest.json",
 );
 
@@ -156,67 +156,67 @@ export const DOCTRINE_CONCEPTS = [
     id: "big-c",
     name: "The Big C Hypothesis",
     oneLine:
-      "Consciousness is fundamental: the larger living awareness—emerged within T × E—from which worlds and individual minds arise.",
+      "DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.",
   },
   {
     id: "little-c",
     name: "Little c",
     oneLine:
-      "You as an individual center of awareness: experiencing the world through a body, choosing, and growing through what happens next.",
+      "The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.",
   },
   {
     id: "decoupling-principle",
     name: "The Decoupling Principle",
     oneLine:
-      "Your awareness and your body work closely together—without your body being all that you are.",
+      "DOT proposes that Little c and the living body are distinct and functionally connected.",
   },
   {
     id: "reality-frame",
     name: "Reality Frame",
     oneLine:
-      "A shared world with stable rules where actions have real, learnable consequences.",
+      "A shared, rule-bound experience laboratory in which Little cs participate through their Avatars.",
   },
   {
     id: "world-invariants",
     name: "Physical Sciences as Frame Derivations",
     oneLine:
-      "Physics measures the reliable rules of our world (RF₀); DOT asks why a world for learning needs rules that hold.",
+      "Physics measures RF₀’s regularities; DOT must account for those results within its proposed Frame architecture.",
   },
   {
     id: "reality-stream",
     name: "Reality Stream",
     oneLine:
-      "Your personal stream of moments: how our shared world reaches you from where you stand.",
+      "The situated input RF₀ supplies to Little c through the Avatar.",
   },
   {
     id: "intent",
     name: "Intent",
     oneLine:
-      "The inner turning point where one passing thought becomes what you actually commit to do.",
+      "Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.",
   },
   {
     id: "experience-loop",
     name: "The Experience Loop",
     oneLine:
-      "A moment arrives, your past lens interprets it, you choose an action, and the result reshapes you for next time.",
+      "Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.",
   },
   {
     id: "canvas",
     name: "Canvas",
     oneLine:
-      "The deep inner record that holds every mark experience leaves on you across your life.",
+      "The capacity to carry and update state, allowing earlier experience to influence what comes next.",
   },
   {
     id: "painting",
     name: "Painting",
     oneLine:
-      "The lens of beliefs, fears, and expectations you have built so far—coloring every new moment before you think.",
+      "The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.",
   },
   {
     id: "character",
     name: "Character",
     oneLine:
-      "The automatic version of you that runs on habit when you repeat the same reactions over and over.",
+      "The relatively stable patterns expressed through repeated interpretation and action.",
   },
   {
     id: "fear-gating",
@@ -233,13 +233,13 @@ export const DOCTRINE_CONCEPTS = [
     id: "conscious-authorship",
     name: "Conscious Authorship",
     oneLine:
-      "See the Painting, widen the pause before Intent, and choose what the next consequence will reinforce.",
+      "Notice inherited interpretation, examine available responses, and act with greater deliberation.",
   },
   {
     id: "limits-and-debts",
     name: "Limits and Unpaid Debts",
     oneLine:
-      "Every claim is labeled—observed, modeled, hypothesized, or speculative—so this never becomes a blind belief system.",
+      "Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.",
   },
 ];
 
@@ -575,7 +575,17 @@ function headingText(node) {
   return node.type === "text" ? node.value : (node.children ?? []).map(headingText).join("");
 }
 
-export function renderMarkdown(markdown, { images = {}, post = false, restrictImages = false } = {}) {
+function bookFigureElement(figure) {
+  const captionId = `figure-${figure.id}-caption`;
+  return createElement("figure", { id: `figure-${figure.id}`, "aria-labelledby": captionId },
+    createElement("picture", null,
+      figure.mobileSrc ? createElement("source", { media: "(max-width: 639px)", srcSet: figure.mobileSrc, width: figure.mobileWidth, height: figure.mobileHeight }) : null,
+      createElement("img", { src: figure.src, alt: figure.alt, width: figure.width, height: figure.height, loading: "lazy", decoding: "async" })),
+    createElement("figcaption", { id: captionId },
+      `Figure ${figure.number} · ${figure.title}. ${figure.claimLevel}. ${figure.caption}`));
+}
+
+export function renderMarkdown(markdown, { images = {}, figures = {}, post = false, restrictImages = false } = {}) {
   return renderToStaticMarkup(
     createElement(ReactMarkdown, {
       skipHtml: true,
@@ -606,7 +616,14 @@ export function renderMarkdown(markdown, { images = {}, post = false, restrictIm
             ? createElement("figure", null, children, child.properties.title ? createElement("figcaption", null, String(child.properties.title)) : null)
             : createElement("p", null, children);
         },
-      } : undefined,
+      } : {
+        ...Object.fromEntries([1, 2, 3, 4, 5, 6].map(level => [`h${level}`, ({ children, node }) => createElement(`h${level}`, { id: headingSlug(headingText(node)) }, children)])),
+        p: ({ children, node }) => {
+          const child = node?.children.length === 1 ? node.children[0] : undefined;
+          const figure = child?.type === "element" && child.tagName === "img" ? figures[child.properties.src] : undefined;
+          return figure ? bookFigureElement(figure) : createElement("p", null, children);
+        },
+      },
     }),
   );
 }
@@ -748,6 +765,11 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
   const essaysPublished = essays.length > 0;
   const page = (body) => prerenderArticle(body, essaysPublished);
   const releaseDir = path.dirname(RELEASE_MANIFEST);
+  const bookAssetRoot = `/${path.relative("public", releaseDir).split(path.sep).join("/")}`;
+  const bookFigures = Object.fromEntries((manifest.figures ?? []).map(figure => {
+    const src = `${bookAssetRoot}/${figure.src}`;
+    return [src, { ...figure, src, mobileSrc: figure.mobileSrc ? `${bookAssetRoot}/${figure.mobileSrc}` : undefined }];
+  }));
 
   // An essay's concepts become links; a misspelt id would be a dead one.
   for (const essay of essays) {
@@ -792,7 +814,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
             `<h1>${escapeHtml(section.title)}</h1>`,
             section.subtitle ? `<p>${escapeHtml(section.subtitle)}</p>` : "",
             "</header>",
-            renderMarkdown(text),
+            renderMarkdown(text, { figures: bookFigures }),
             turn ? `<p>${turn}</p>` : "",
           ].join(""),
         ),
@@ -825,7 +847,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         ogType: "book",
         structuredData: graph(bookNode(manifest), breadcrumb([home, book])),
         prerender: page(
-          `<h1>${escapeHtml(BOOK_LANDING.heading)}</h1><p>${escapeHtml(manifest.project.title)} · ${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><aside><h2>${escapeHtml(BOOK_LANDING.positionLabel)}</h2><p>${escapeHtml(BOOK_LANDING.position)}</p></aside><h2>Contents</h2>${contentsList(manifest)}`,
+          `<h1>${escapeHtml(manifest.project.title)}</h1><p>${escapeHtml(manifest.project.subtitle)} · ${link(ABOUT_ROUTE, AUTHOR.name)}</p><p>${escapeHtml(BOOK_LANDING.heading)}</p><p>${escapeHtml(BOOK_DESCRIPTION)}</p><h2>Contents</h2>${contentsList(manifest)}<aside><h2>${escapeHtml(BOOK_LANDING.positionLabel)}</h2><p>${escapeHtml(BOOK_LANDING.position)}</p></aside>`,
         ),
       };
     }
@@ -875,7 +897,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
         prerender: page([
           `<header><p>DOT Academy</p><h1>${escapeHtml(ACADEMY.heading)}</h1><p>${escapeHtml(ACADEMY.introduction)}</p></header>`,
           `<section><h2>Choose a way into the book.</h2><p>Book One is a fixed, citable edition. These reading paths change the order of the encounter without changing the book.</p><ol>${READING_PATHS.map(readingPath => `<li><h3>${escapeHtml(readingPath.label)}</h3><p>${escapeHtml(readingPath.purpose)}</p><p>${link(`${BOOK_ROUTE}/${readingPath.steps[0].slug}?path=${readingPath.id}`, `Begin: ${readingPath.label}`)}</p></li>`).join("")}</ol><p>${link(BOOK_ROUTE, "View Book One and its contents")}</p></section>`,
-          `<section><h2>Follow your questions.</h2><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")} · ${link(`${CONTACT_ROUTE}?purpose=writing`, "Bring a question to the conversation")}</p></section>`,
+          `<section><h2>Follow your questions.</h2><p>${escapeHtml(ACADEMY.inquiryIntroduction)}</p><p>${link("/doctrine", "Explore the concept map")} · ${link("/applied", "Review open questions")} · ${link(`${CONTACT_ROUTE}?purpose=writing`, "Bring a question to the conversation")}</p><p>${escapeHtml(ACADEMY.conversationDescription)}</p></section>`,
         ].join("")),
       };
     }
@@ -1311,7 +1333,12 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     prerender: page(
       [
         `<header><p>${escapeHtml(tour.label)} · By ${link(ABOUT_ROUTE, AUTHOR.name)}</p><h1>${escapeHtml(tour.title)}</h1><p>${escapeHtml(tour.description)}</p></header>`,
-        `<section><h2>Opening</h2><ol>${tour.scenes.map((scene) => `<li><h3>${escapeHtml(scene.name)}</h3><p>${escapeHtml(scene.title)}</p><p>${escapeHtml(scene.note)}</p>${scene.source ? `<cite>${escapeHtml(scene.source)}</cite>` : ""}</li>`).join("")}</ol></section>`,
+        `<section><h2>Opening</h2><ol>${FILMS.trailer.shots.map((shot) => `<li><h3>${escapeHtml(shot.label)}</h3>${shot.lines.map((entry) => {
+          const line = typeof entry === "string" ? { text: entry } : entry;
+          const voice = line.voice ?? shot.voice;
+          const attribution = voice === "dot" ? "DOT proposes: " : voice === "prevailing" ? "The prevailing view: " : "";
+          return `<p>${escapeHtml(attribution + line.text)}</p>${line.cite ? `<cite>${escapeHtml(line.cite)}</cite>` : ""}`;
+        }).join("")}</li>`).join("")}</ol></section>`,
         `<section><h2>The concepts</h2><ol>${DOCTRINE_CONCEPTS.map((concept) => `<li><h3>${link(`/doctrine/${concept.id}`, concept.name)}</h3><p>${escapeHtml(concept.oneLine)}</p></li>`).join("")}</ol></section>`,
         `<p>${tour.closing.links.map((item) => link(item.to, item.label)).join(" · ")}</p>`,
       ].join(""),
@@ -1418,6 +1445,7 @@ export function rootDocument(shell, manifest, { essays = [], headTags = [] } = {
     `<p>By ${link(ABOUT_ROUTE, AUTHOR_BYLINE)}. ${escapeHtml(AUTHOR.summary)}</p>`,
     `<p>${link(`${BOOK_ROUTE}/preface?path=start-where-you-live`, HOME.primaryAction)}</p>`,
     `<section id="consciousness-101"><p>${escapeHtml(HOME.culture.eyebrow)}</p><h2>${escapeHtml(HOME.culture.title)}</h2><p>${escapeHtml(HOME.culture.critique)}</p><p>${escapeHtml(HOME.culture.questions)}</p><p><strong>${escapeHtml(HOME.culture.challenge)}</strong></p><p>${escapeHtml(HOME.culture.loveLabel)}</p><p>${escapeHtml(HOME.culture.loveIntro)}</p><blockquote><p>${escapeHtml(HOME.loveDefinition)}</p></blockquote><p>${escapeHtml(HOME.culture.reflection)}</p><p>${link(HOME.culture.ammPath, `${HOME.culture.ammKicker} ${HOME.culture.ammTitle}`)} · ${link(HOME.culture.sourcePath, `${HOME.culture.sourceKicker} · ${HOME.culture.sourceTitle}`)}</p></section>`,
+    `<p>${link(`${CONTACT_ROUTE}?purpose=writing`, "Talk through a question with Henok")}</p>`,
     `<h2>Book One</h2>${contentsList(manifest)}`,
     latest.length > 0
       ? `<h2>Essays</h2><ol>${latest.map((essay) => `<li>${link(`${ESSAYS_ROUTE}/${essay.slug}`, essay.title)}</li>`).join("")}</ol>`

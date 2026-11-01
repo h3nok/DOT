@@ -1,0 +1,178 @@
+{
+  "edition": 5,
+  "status": "release-candidate",
+  "source": "docs/blueprint/book-one-complete/v4-working/v4.9-review/DOT-Complete-Book-One-v4.9-Review.docx",
+  "source_sha256": "ec469300676d6ac97d520fa4ae894c35a96749a22011e072d1f935dc4bb1aaa6",
+  "editorial_operations": 188,
+  "redline_sha256": "a0b2f08094b09aa57d40cd99cc9164217c28c02398bad7100c4e85781db65108",
+  "edit_manifest_sha256": "fc4ddf241c91a84645e73784331bc2b428772a60b7f945ce06bdec1704294be7",
+  "publication_label_changes": [
+    {
+      "paragraph": 7,
+      "old": "Complete Edition · Version 5 · Author Review · November 2026dotheory.org",
+      "new": "Complete Edition · Version 5 · November 2026dotheory.org",
+      "reason": "Identify the final illustrated edition consistently in the title page and colophon.",
+      "segments": [
+        "Complete Edition · Version 5 · November 2026",
+        ""
+      ]
+    },
+    {
+      "paragraph": 11,
+      "old": "Complete Edition · Version 5 · Author Review. A corrected and illustrated edition developed from the v4.9 review manuscript; prepared for author review, not yet the final publication edition.",
+      "new": "Complete Edition · Version 5 · November 2026. A corrected and illustrated edition.",
+      "reason": "Identify the final illustrated edition consistently in the title page and colophon."
+    },
+    {
+      "paragraph": 13,
+      "old": "Set in Source Serif 4 and Space Grotesk, both under the SIL Open Font License. The published digital edition is available at dotheory.org with its technical passages folded. This Version 5 author-review proof is a separate, unpublished edition.",
+      "new": "Set in Source Serif 4 and Space Grotesk, both under the SIL Open Font License. The digital edition at dotheory.org presents the same book, with technical passages available on request.",
+      "reason": "Identify the final illustrated edition consistently in the title page and colophon."
+    }
+  ],
+  "native_node_edits": 8,
+  "figures": [
+    {
+      "number": 1,
+      "id": "avatar-canvas",
+      "title": "An embodied exchange",
+      "claim": "DOT model",
+      "pdf_page": 44,
+      "printed_page": 28
+    },
+    {
+      "number": 2,
+      "id": "experience-loop",
+      "title": "One moment changes the next",
+      "claim": "Practical model",
+      "pdf_page": 53,
+      "printed_page": 37
+    },
+    {
+      "number": 3,
+      "id": "architecture",
+      "title": "The proposed architecture",
+      "claim": "DOT model · origin is Speculation",
+      "pdf_page": 67,
+      "printed_page": 51
+    },
+    {
+      "number": 4,
+      "id": "reality-stream",
+      "title": "RF₀ and the Reality Stream",
+      "claim": "DOT model",
+      "pdf_page": 84,
+      "printed_page": 68
+    },
+    {
+      "number": 5,
+      "id": "little-c-scope",
+      "title": "Little c and local scope",
+      "claim": "DOT model",
+      "pdf_page": 97,
+      "printed_page": 81
+    },
+    {
+      "number": 6,
+      "id": "canvas-painting-character",
+      "title": "Three roles in a changing life",
+      "claim": "DOT model",
+      "pdf_page": 102,
+      "printed_page": 86
+    },
+    {
+      "number": 7,
+      "id": "connection-and-identification",
+      "title": "Connection and identification",
+      "claim": "DOT model",
+      "pdf_page": 109,
+      "printed_page": 93
+    },
+    {
+      "number": 8,
+      "id": "fear-and-choice",
+      "title": "When the field of choice changes",
+      "claim": "DOT practical model",
+      "pdf_page": 134,
+      "printed_page": 118
+    }
+  ],
+  "manifesto": "Serves L7 through an honest, traceable corrected edition that preserves sealed releases; L8 through clearer, useful reading; and L10 through one coherent direction from experience to model to speculation. No manifesto law is violated. This manifest prepares an author-review proof and does not publish it.",
+  "cover": {
+    "src": "cover-v5-release-web.webp",
+    "width": 600,
+    "height": 900,
+    "alt": "Cover of Consciousness: A Digital Organism, Book One, by Henok Ghebrechristos. The theory diagram places T × E, explicitly labelled Speculation, outside Big C, the proposed conscious process. RF₀ and Little c are both within Big C. Little c is outside RF₀ and receives its Reality Stream. The living Avatar embodies Little c in RF₀. Little c, the Canvas and the Avatar remain distinct and connected. Broken arrows around Big C and Little c indicate process. Version 5."
+  },
+  "assets_sha256": {
+    "architecture-narrow.svg": "d4adeefe7fc9269842aef1ebc4ecb0bfdb26844598e98d3d0f2b68480c37757b",
+    "architecture-print.png": "c5c5d52c2855a7772d89c18abbf1dcb52e0be9f24b07fa568fe4e508c3dcd1b5",
+    "architecture-print.svg": "2622c5063c848904192c9f19dc71bd3552f823a066b9388fefea4b215a11a295",
+    "architecture.svg": "fe53f8cfa8b0d155cfe554078f58d34c30b74ca93e76c7d526b35c5457483865",
+    "avatar-canvas-narrow.svg": "116cfc3cbe32068ab57c9fdba64879aef1590210d2987a92aa46da13457e2a03",
+    "avatar-canvas-print.png": "9f0ced85094bab27ccff02394bc53371cbe6031d07e255cc6412ff6c3a2a0438",
+    "avatar-canvas-print.svg": "1f1bcbc296cdad6df6a7f5103654c2c8aca6d022d9a6fd5c524ce65c148933fd",
+    "avatar-canvas.svg": "3a887a0a2d262ecbe374f68caf3b351a2e1961a8dde1622a34e9ee40a51f2bb1",
+    "canvas-painting-character-narrow.svg": "cc66eb5611fd0ccbf74583ff1d5e4f9c2326db7a8ebacfd5d35519a74657be66",
+    "canvas-painting-character-print.png": "6c60b65c063692b57877879486c9c74c2cdcb86f3ba54850d2eb5fce31ca8990",
+    "canvas-painting-character-print.svg": "e1c940fc215e250b512940d505a6b95f7219a6f5a41bafc9de9ac185e99fc0b5",
+    "canvas-painting-character.svg": "1bea3498d6ccb9b0f95751e0e991dc9d60f7e50209c7e29c55ffec3f18ddb1ac",
+    "connection-and-identification-narrow.svg": "522b6fd27ffda9cd07c2db746c0921f27ced763b56acab4df6b846dd1d9098c0",
+    "connection-and-identification-print.png": "469bf40be5e975c06534fa23d844f1e91e393e46fc3177c0cdc18cdc99f02c55",
+    "connection-and-identification-print.svg": "28e2a978632874c65aa3dd6be7dd3ba2d06624364833a3768660b41ccc0b1ff4",
+    "connection-and-identification.svg": "2b6cbc3ea50cd21f594979514e5051cd242e6d8b47bd0f9df8f6f3dc894d0e48",
+    "cover-v5-release-web.webp": "b67193ac97121613a6bfda5e0ea847d9600fd79c7a60273f33c22c797727bd51",
+    "cover-v5-release.png": "a2846deab186c8397db1a7ecea656604023117811647d3775751dabe261f7657",
+    "cover-v5-release.svg": "27a13bf2a1016dd5dbab2720cef785fbdd4a5a8cca02743d65631b3b6c9d1686",
+    "experience-loop-narrow.svg": "d07b4e47579bd2666990d88f5e1249a0a15159c4b079d14d334227406abc129e",
+    "experience-loop-print.png": "433db03a55df4f390552fcb36e77ea86dc8f728a20500f7a344eca44dfccc98f",
+    "experience-loop-print.svg": "dfd5f9e169b825616d4149b7466f57724b1b334cdcd56f4c688a726ec1edebf4",
+    "experience-loop.svg": "1211b5c7de83b790a59000d32fe9f85cc0e5118b99e022603ac2329d614aea71",
+    "fear-and-choice-narrow.svg": "bf7688a8a589df30b2fede6908fef08ab361132d8b0813c47f4fb8b86a26babd",
+    "fear-and-choice-print.png": "514b0bad05b0378784d6aaabe88beade899b2713a75de6d5fe97cbe2f4d72f72",
+    "fear-and-choice-print.svg": "bc721e801bf655e7c97e5bde19a52350f9577df38259ed16fb0ed03c7687e572",
+    "fear-and-choice.svg": "b2ff922bfbddecb258b8badb50eba8da4606e6dcb9ac85d0ec87503a4a1dbaf6",
+    "figures.json": "9599bd11e323a46587a10f58b745da9b5748e7811e74f525cd730373803c924d",
+    "little-c-scope-narrow.svg": "0ca24d601188a922508a5a673c269e9f0037e8f6e2456d7d5736c4b9185f3d7c",
+    "little-c-scope-print.png": "646b0713fbe98f74e9ecf0dd0f82fd90d5a77fe365dada1d4be9c069d8dc8e9a",
+    "little-c-scope-print.svg": "d9005f7b680b57f4cc53ec3804eb1e448f84bbd1d8b2d18f38790ae4bf638dc5",
+    "little-c-scope.svg": "c09bdbbc7948027748feb9a6d0163ef5ef7a838d967d53a6813f37078915ff7e",
+    "reality-stream-narrow.svg": "071f32f65b56d7af5b1582efd04d1fd082aa876d28441618903c5962b95d8f64",
+    "reality-stream-print.png": "e419be2ff9f62ea257d08521daf838b54a3d7a638018c503b679491943f7e347",
+    "reality-stream-print.svg": "042f02ef102fbaa32a66ecbe0a9166b472554b51e49f59636b88f75fb039b46a",
+    "reality-stream.svg": "75d93cd44e9f78232817393ad5f1e627f8a2ae8ebda2d677676c5402cd980b5b"
+  },
+  "contents_pages": {
+    "the_observer_belongs_in_the_inquiry": "v",
+    "the_digital_organism": "1",
+    "the_decoupling_principle": "27",
+    "architecture_of_continuity": "45",
+    "reality_frames": "63",
+    "the_canvas": "83",
+    "the_painting": "103",
+    "the_research_program": "133",
+    "the_theory_returns_to_one_life": "151",
+    "equation_and_notation_guide": "157",
+    "core_terms": "163",
+    "references": "169"
+  },
+  "first_body_pdf_page": 17,
+  "pages": 190,
+  "tagged_pdf": true,
+  "pdf_page_labels": true,
+  "trim_inches": [
+    6,
+    9
+  ],
+  "pdf_sha256": "a3e4597e4826891da3964dc67e4a08f196fb1c32ea8cde23e3787bf86747be86",
+  "tagged_figures": 9,
+  "equation_5_7_hat_verified": true,
+  "render_adjustments": [
+    "Normalize B-hat accent in the temporary LibreOffice input only",
+    "Remove null structure child and verified invisible cover duplicate"
+  ],
+  "docx_sha256": "56d6b607d1cc09f86ff7730e2536bfff5f732a9582236f4047ff05b41f40380a",
+  "references_preserved": 51,
+  "depth_passages": 26,
+  "native_equations": 101
+}

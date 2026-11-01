@@ -16,7 +16,7 @@ const earlierDraftClaims = [
 ];
 
 describe("Book One authority", () => {
-  it("keeps delivery, canon ingestion, and the API image on edition v4", () => {
+  it("keeps delivery, canon ingestion, and the API image on edition v5", () => {
     for (const input of [
       "src/content/publications/dotBookOne.ts",
       "../backend/orchestrator/scripts/ingest_canon.py",
@@ -24,9 +24,9 @@ describe("Book One authority", () => {
       "scripts/materialize-public-routes.mjs",
     ]) {
       const source = readFileSync(input, "utf8");
-      // Literal paths, template literals (`${slug}/v4`), and path segments ("v4").
-      expect(source, input).toMatch(/digital-organism-theory\/v4|\/v4`|"v4"/);
-      expect(source, input).not.toMatch(/digital-organism-theory\/v[123]\b|\/v[123]`|"v[123]"/);
+      // Literal paths, template literals (`${slug}/v5`), and path segments ("v5").
+      expect(source, input).toMatch(/digital-organism-theory\/v5|\/v5`|"v5"/);
+      expect(source, input).not.toMatch(/digital-organism-theory\/v[1234]\b|\/v[1234]`|"v[1234]"/);
     }
   });
 

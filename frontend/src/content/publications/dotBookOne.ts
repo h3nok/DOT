@@ -2,6 +2,18 @@ import type {
   ReaderConceptDefinition,
   ReaderReference,
 } from "../../attention-os/reader/readerTypes";
+import type { BookFigureData } from "../../attention-os/reader/BookFigure";
+
+export interface BookIllustration extends BookFigureData {
+  section?: string;
+}
+
+export interface BookCoverAsset {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
 
 export type BookSectionKind =
   | "preface"
@@ -76,6 +88,9 @@ export interface DotBookOneManifest {
     claim_levels: string[];
   };
   sections: BookReleaseSection[];
+  /** Artwork belongs to this edition; older releases may omit it. */
+  figures?: BookIllustration[];
+  cover?: BookCoverAsset;
 }
 
 export type BookReference = ReaderReference;
@@ -93,14 +108,34 @@ export const DOT_BOOK_ONE_OWNER = "henok";
 export const DOT_BOOK_ONE_SLUG = "digital-organism-theory";
 
 const DOT_BOOK_ONE_ASSET_ROOT =
-  `publications/${DOT_BOOK_ONE_OWNER}/${DOT_BOOK_ONE_SLUG}/v4`;
+  `publications/${DOT_BOOK_ONE_OWNER}/${DOT_BOOK_ONE_SLUG}/v5`;
 
 const publicAssetUrl = (path: string) => {
+  if (!path || path.startsWith("/") || path.includes("\\") || path.split("/").some(part => part === "." || part === "..")) {
+    throw new Error("The book contains an invalid asset path.");
+  }
   const base = import.meta.env.BASE_URL.endsWith("/")
     ? import.meta.env.BASE_URL
     : `${import.meta.env.BASE_URL}/`;
   return `${base}${DOT_BOOK_ONE_ASSET_ROOT}/${path}`.replace(/\/{2,}/g, "/");
 };
+
+export function bookFigureMap(
+  manifest: Pick<DotBookOneManifest, "figures">,
+  assetUrl: (path: string) => string = publicAssetUrl,
+): Record<string, BookFigureData> {
+  return Object.fromEntries((manifest.figures ?? []).map(figure => {
+    const src = assetUrl(figure.src);
+    return [src, { ...figure, src, mobileSrc: figure.mobileSrc ? assetUrl(figure.mobileSrc) : undefined }];
+  }));
+}
+
+export function bookCoverAsset(
+  manifest: Pick<DotBookOneManifest, "cover">,
+  assetUrl: (path: string) => string = publicAssetUrl,
+): BookCoverAsset | undefined {
+  return manifest.cover ? { ...manifest.cover, src: assetUrl(manifest.cover.src) } : undefined;
+}
 
 export const DOT_BOOK_ONE_PDF_URL = publicAssetUrl(
   "digital-organism-theory-book-one.pdf",

@@ -132,6 +132,17 @@ function Participant({ at, show = 1, r = 24, tone = "cm-local" }: { at: Point; s
   );
 }
 
+/** The Avatar: the living body through which Little c participates in RF₀. */
+function Avatar({ at, show = 1, scale = 1 }: { at: Point; show?: number; scale?: number }) {
+  if (show <= 0.001) return null;
+  return (
+    <g data-model-role="avatar" transform={`translate(${at[0]} ${at[1]}) scale(${scale})`} opacity={show}>
+      <circle cy={-24} r={7} className="cm-s cm-hollow cm-ink" strokeWidth={2.2} />
+      <path d="M-5 -15Q-13 -13 -13 -4L-15 12Q-15 17 -11 16L-7 0L-6 16L-9 34H-2L1 17L4 34H11L8 15L8 0L12 16Q16 17 16 12L14 -4Q13 -13 6 -15Z" className="cm-s cm-ink" strokeWidth={2.2} />
+    </g>
+  );
+}
+
 /** A lens made of layered strokes: one person's Painting. */
 function PaintingLens({ c, rx, ry, tones, show }: { c: Point; rx: number; ry: number; tones: readonly string[]; show: number }) {
   const clipId = `concept-lens-${useId().replace(/[^\w-]/g, "")}`;
@@ -309,7 +320,6 @@ const E_POINTS = Array.from({ length: 96 }, (_, i) => ({
   y: 20 + seeded(i + 500) * 560,
   phase: seeded(i + 900) * Math.PI * 2,
 }));
-const BIG_C_LOCALS: Point[] = [[270, 300], [332, 336], [292, 370]];
 
 export function BigC({ t }: MotifProps) {
   const R = 180;
@@ -350,27 +360,32 @@ export function BigC({ t }: MotifProps) {
         }
         return <circle key={i} cx={p.x} cy={p.y} r={2.8} className="cm-f cm-origin" opacity={field * flicker} />;
       })}
-      {/* Big C: emerging within T × E, not containing them. */}
+      {/* T × E is speculative and outside Big C. RF₀ and Little c share Big C. */}
       <circle cx={300} cy={300} r={R} className="cm-ground" opacity={form} />
-      <circle cx={300} cy={300} r={R} className="cm-s cm-big-c" strokeWidth={3.4} transform="rotate(-90 300 300)" {...drawn(form)} />
-      <circle cx={300} cy={318} r={100} className="cm-s cm-rf" strokeWidth={2.6} transform="rotate(-90 300 318)" {...drawn(frame)} />
-      {[polar(300, 300, 142, -38), polar(300, 300, 142, 214)].map((c, i) => (
-        <circle key={i} cx={c[0]} cy={c[1]} r={24} className="cm-s cm-rf" strokeWidth={1.6} strokeDasharray="4 5" opacity={0.75 * frame} />
-      ))}
-      {BIG_C_LOCALS.map(([x, y], i) => {
-        const u = span(t, 8.8 + i * 0.35, 9.6 + i * 0.35);
-        return (
-          <g key={i} opacity={u}>
-            <circle cx={x} cy={y} r={14} className="cm-s cm-local" strokeWidth={1.4} opacity={0.6} />
-            <circle cx={x} cy={y} r={6} className="cm-f cm-local" />
-          </g>
-        );
-      })}
+      <circle data-model-role="big-c" cx={300} cy={300} r={R} className="cm-s cm-big-c" strokeWidth={3.4} transform="rotate(-90 300 300)" {...drawn(form)} />
+      <circle data-model-role="reality-frame" cx={230} cy={315} r={74} className="cm-s cm-rf" strokeWidth={2.6} transform="rotate(-90 230 315)" {...drawn(frame)} />
+      <Avatar at={[230, 325]} show={frame} />
+      <g opacity={locals}>
+        <path data-model-role="reality-stream" d="M249 315C290 315 320 300 359 300" className="cm-s cm-rf" strokeWidth={2.6} />
+        <Arrowhead at={[359, 300]} angle={0} tone="cm-rf" />
+        <circle data-model-role="little-c" cx={388} cy={300} r={24} className="cm-s cm-hollow cm-local" strokeWidth={2.6} />
+        <circle cx={388} cy={300} r={31} className="cm-s cm-local" strokeWidth={1.5} strokeDasharray="4 6" />
+        <circle cx={388} cy={300} r={7} className="cm-f cm-local" />
+        <path d="M388 336V357" className="cm-s cm-local" strokeWidth={2} />
+        <rect x={320} y={360} width={108} height={64} rx={10} className="cm-s cm-hollow cm-local" strokeWidth={2} />
+        <path d="M334 404C350 389 363 417 378 402S402 391 416 407" className="cm-s cm-local" strokeWidth={2.2} />
+        <path d="M337 411C356 416 371 391 389 404S407 409 417 398" className="cm-s cm-origin" strokeWidth={1.8} />
+      </g>
       <Label x={28} y={36} show={span(t, 0.8, 1.8)} anchor="start">T · Time</Label>
+      <Label x={300} y={78} show={span(t, 0.8, 1.8)}>T × E · Speculation</Label>
       <Label x={572} y={584} show={span(t, 1.4, 2.4)} anchor="end">E · raw information</Label>
       <Label x={300} y={160} show={span(t, 5.6, 6.6)} strong>Big C</Label>
-      <Label x={300} y={254} show={frame}>RF₀</Label>
-      <Label x={300} y={450} show={locals}>local experience</Label>
+      <Label x={230} y={269} show={frame}>RF₀</Label>
+      <Label x={230} y={377} show={frame}>Avatar</Label>
+      <Label x={311} y={284} show={locals}>RS</Label>
+      <Label x={388} y={263} show={locals}>Little c</Label>
+      <Label x={374} y={386} show={locals}>Canvas</Label>
+      <Label x={300} y={522} show={locals}>A proposed architecture</Label>
     </g>
   );
 }
@@ -565,8 +580,9 @@ export function RealityFrame({ t }: MotifProps) {
           </g>
         );
       })}
-      <Participant at={[150, 432]} show={span(t, 0.6, 1.4)} r={22} />
-      <Label x={96} y={122} anchor="start" show={span(t, 0.8, 1.6)}>rules</Label>
+      <Avatar at={[150, 421]} show={span(t, 0.6, 1.4)} />
+      <Label x={150} y={490} show={span(t, 0.8, 1.6)}>Avatar</Label>
+      <Label x={96} y={122} anchor="start" show={span(t, 0.8, 1.6)}>RF₀ · experience lab</Label>
       <Label x={214} y={352} anchor="start" show={span(t, 1.2, 2)}>action</Label>
       <Label x={392} y={490} show={span(t, 3.6, 4.4)} strong>consequence</Label>
     </g>
@@ -624,8 +640,8 @@ const BANK_Y = 270;
 const DECK_Y = 262;
 // Each person's place below the world, and where their stream leaves it.
 const STREAMERS = [
-  { at: [170, 500] as Point, mouth: [182, 338] as Point, offset: 0 },
-  { at: [430, 500] as Point, mouth: [418, 338] as Point, offset: 0.22 },
+  { at: [170, 500] as Point, mouth: [163, 275] as Point, offset: 0 },
+  { at: [430, 500] as Point, mouth: [438, 275] as Point, offset: 0.22 },
 ];
 // The moments the shared world changes: each half of the bridge, then the keystone.
 const WORLD_CHANGES = [4.4, 7, 9.6];
@@ -692,7 +708,9 @@ export function RealityStream({ t }: MotifProps) {
   const [a, b] = STREAMERS;
   return (
     <g>
-      {/* The shared world: a river between two banks. */}
+      <rect x={40} y={18} width={520} height={560} rx={44} className="cm-s cm-big-c" strokeWidth={2.4} {...drawn(span(t, 0, 1.2))} />
+      <Label x={64} y={54} anchor="start" show={span(t, 0.2, 1)}>Big C</Label>
+      {/* RF₀ and the distinct Little cs belong within Big C. */}
       <rect x={110} y={70} width={380} height={260} rx={22} className="cm-s cm-rf" strokeWidth={3} {...drawn(span(t, 0, 1.2))} />
       <g opacity={span(t, 0.6, 1.4)}>
         <path d={`M110 ${BANK_Y} H238 L252 330 H132 Q110 330 110 308 Z`} className="cm-f cm-rf" opacity={0.22} />
@@ -700,10 +718,10 @@ export function RealityStream({ t }: MotifProps) {
         <path d={`M110 ${BANK_Y} H238 L252 330 M490 ${BANK_Y} H362 L348 330`} className="cm-s cm-rf" strokeWidth={2.4} />
         <path d={waves(296, 0)} className="cm-s cm-line" strokeWidth={2.4} />
         <path d={waves(314, 2)} className="cm-s cm-line" strokeWidth={2.4} />
-        <line x1={160} y1={BANK_Y} x2={160} y2={230} className="cm-s cm-ink" strokeWidth={3} />
-        <circle cx={160} cy={214} r={22} className="cm-f cm-local" opacity={0.75} />
-        <rect x={418} y={236} width={40} height={34} className="cm-s cm-hollow cm-ink" strokeWidth={2.4} />
-        <path d="M412 238 L438 214 L464 238" className="cm-s cm-ink" strokeWidth={2.4} />
+        <Avatar at={[163, 239]} scale={0.8} />
+        <Avatar at={[438, 239]} scale={0.8} />
+        <Label x={163} y={312} show={1}>Avatar</Label>
+        <Label x={438} y={312} show={1}>Avatar</Label>
       </g>
 
       {/* The bridge: one half from each bank, then the keystone set together. */}
@@ -729,21 +747,27 @@ export function RealityStream({ t }: MotifProps) {
       })}
       <Stream t={t} from={a.mouth} to={[a.at[0], a.at[1] - 34]} offset={a.offset} />
       <Stream t={t} from={b.mouth} to={[b.at[0], b.at[1] - 34]} offset={b.offset} />
-      <Act t={t} from={[a.at[0] + 14, a.at[1] - 20]} to={[270, DECK_Y + 12]} at={3} />
-      <Act t={t} from={[b.at[0] - 14, b.at[1] - 20]} to={[330, DECK_Y + 12]} at={5.6} />
-      <Act t={t} from={[a.at[0] + 18, a.at[1] - 16]} to={[294, DECK_Y + 14]} at={8.4} />
-      <Act t={t} from={[b.at[0] - 18, b.at[1] - 16]} to={[306, DECK_Y + 14]} at={8.4} />
+      <Act t={t} from={[a.at[0] + 14, a.at[1] - 20]} to={[177, 244]} at={3} />
+      <Act t={t} from={[177, 244]} to={[270, DECK_Y + 12]} at={3.6} />
+      <Act t={t} from={[b.at[0] - 14, b.at[1] - 20]} to={[424, 244]} at={5.6} />
+      <Act t={t} from={[424, 244]} to={[330, DECK_Y + 12]} at={6.2} />
+      <Act t={t} from={[a.at[0] + 18, a.at[1] - 16]} to={[177, 244]} at={8.4} />
+      <Act t={t} from={[177, 244]} to={[294, DECK_Y + 14]} at={9} />
+      <Act t={t} from={[b.at[0] - 18, b.at[1] - 16]} to={[424, 244]} at={8.4} />
+      <Act t={t} from={[424, 244]} to={[306, DECK_Y + 14]} at={9} />
       <Participant at={a.at} r={22} show={span(t, 0.6, 1.4)} />
       <Participant at={b.at} r={22} show={span(t, 0.8, 1.6)} />
 
       {/* Someone crosses where no one could before. */}
-      <circle cx={walkerX} cy={lerp(BANK_Y - 7, DECK_Y - 12, onDeck)} r={7} className="cm-f cm-ink" opacity={span(t, 9.8, 10.4)} />
+      <Avatar at={[walkerX, lerp(BANK_Y - 13, DECK_Y - 13, onDeck)]} scale={0.38} show={span(t, 9.8, 10.4)} />
 
-      <Label x={300} y={52} show={span(t, 0.6, 1.4)} strong>shared reality</Label>
-      <Label x={a.at[0]} y={556} show={span(t, 2, 2.8)}>your stream</Label>
-      <Label x={b.at[0]} y={556} show={span(t, 2.4, 3.2)}>their stream</Label>
+      <Label x={300} y={106} show={span(t, 0.6, 1.4)} strong>RF₀ · shared experience lab</Label>
+      <Label x={202} y={412} show={span(t, 2, 2.8)}>RS</Label>
+      <Label x={398} y={412} show={span(t, 2.4, 3.2)}>RS</Label>
+      <Label x={a.at[0]} y={553} show={span(t, 2, 2.8)}>Little c₁</Label>
+      <Label x={b.at[0]} y={553} show={span(t, 2.4, 3.2)}>Little c₂</Label>
       <Label x={300} y={200} show={span(t, 8.8, 9.6)}>together</Label>
-      <Label x={300} y={136} show={span(t, 11.4, 12.2)} strong>reality evolves with us</Label>
+      <Label x={300} y={136} show={span(t, 11.4, 12.2)} strong>a shared crossing</Label>
     </g>
   );
 }
@@ -810,8 +834,8 @@ const LOOP_START = 2.4;
 const LOOP_STATIONS = [
   { name: "Reality Stream", example: "heat", angle: -90, tone: "cm-local" },
   { name: "Painting", example: "danger", angle: 0, tone: "cm-rf" },
-  { name: "Intent", example: "pull back", angle: 90, tone: "cm-big-c" },
-  { name: "Canvas", example: "remembered", angle: 180, tone: "cm-origin" },
+  { name: "Intent", example: "use a mitt", angle: 90, tone: "cm-big-c" },
+  { name: "Canvas", example: "new state", angle: 180, tone: "cm-origin" },
 ];
 
 export function ExperienceLoop({ t }: MotifProps) {
@@ -1301,7 +1325,7 @@ export function TourOpening({ t }: MotifProps) {
               <circle key={n} cx={300} cy={300} r={30 + 42 * phase} className="cm-s cm-fear" strokeWidth={2.6} opacity={(1 - phase) * 0.75 * span(t, 4, 5)} />
             );
           })}
-          <Participant at={[300, 300]} r={22} show={span(t, 0.1, 0.8)} />
+          <Avatar at={[300, 300]} show={span(t, 0.1, 0.8)} scale={0.9} />
           {PRESSURES.map(({ text, at }, k) => (
             <Pill
               key={text}
@@ -1333,13 +1357,14 @@ export function TourOpening({ t }: MotifProps) {
           return <line key={a} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} className="cm-s cm-big-c" strokeWidth={2.4} />;
         })}
       </g>
-      <Participant at={person} r={22} show={span(t, 35.8, 36.4)} />
+      <Avatar at={person} show={span(t, 35.8, 36.4)} scale={0.9} />
     </g>
   );
 }
 
 /* ── The architecture, as the homepage draws it ─────────────────────────
-   T × E outside, Big C emerged within it, RF₀ inside Big C, and Little c within RF₀.
+   T × E (Speculation) outside Big C; RF₀ and Little c within Big C.
+   Little c is outside RF₀ and is embodied there by the Avatar.
    The camera moves in to the layer a concept belongs to, so each concept is first seen
    where it sits. */
 
@@ -1348,16 +1373,18 @@ export type ArchitectureLayer = "all" | "big-c" | "reality-frame" | "reality-str
 const ARCH_CENTRE: Point = [300, 320];
 const ARCH_FIELD_R = 262;
 const ARCH_BIG_C_R = 222;
-const ARCH_RF: Point = [394, 236];
-const ARCH_RF_R = 74;
-const ARCH_LITTLE_C: Point = [384, 248];
-const ARCH_LITTLE_C_R = 13;
+const ARCH_RF: Point = [210, 300];
+const ARCH_RF_R = 93;
+const ARCH_LITTLE_C: Point = [398, 330];
+const ARCH_LITTLE_C_R = 33;
+const ARCH_AVATAR: Point = [210, 320];
+const ARCH_CANVAS: Point = [386, 445];
 const ARCH_VIEWS: Record<ArchitectureLayer, { focus: Point; scale: number }> = {
   all: { focus: ARCH_CENTRE, scale: 1 },
   "big-c": { focus: ARCH_CENTRE, scale: 1 },
-  "reality-frame": { focus: ARCH_RF, scale: 2.3 },
-  "reality-stream": { focus: ARCH_RF, scale: 2.3 },
-  "little-c": { focus: ARCH_LITTLE_C, scale: 5 },
+  "reality-frame": { focus: ARCH_RF, scale: 1.65 },
+  "reality-stream": { focus: [300, 330], scale: 1.65 },
+  "little-c": { focus: [345, 350], scale: 1.8 },
 };
 
 // The map is seen through a round lens, so moving in never shows the picture's square edge.
@@ -1372,20 +1399,25 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
   const scale = lerp(1, view.scale, ease);
   const focus = lerpPoint(ARCH_CENTRE, view.focus, ease);
   const at = (p: Point): Point => [ARCH_CENTRE[0] + (p[0] - focus[0]) * scale, ARCH_CENTRE[1] + (p[1] - focus[1]) * scale];
-  const within = ([x, y]: Point) => Math.hypot(x - ARCH_LENS[0], y - ARCH_LENS[1]) < ARCH_LENS_R - 24;
+  const within = ([x, y]: Point) => Math.hypot(x - ARCH_LENS[0], y - ARCH_LENS[1]) < ARCH_LENS_R - 8;
   const lit = (part: ArchitectureLayer) => (layer === "all" ? 1 : span(t, 0.9, 1.6) * (part === layer ? 1 : 0));
   const drawIn = (from: number) => (layer === "all" ? span(t, from, from + 1) : span(t, 0, 0.5));
 
   const centre = at(ARCH_CENTRE);
   const rf = at(ARCH_RF);
   const littleC = at(ARCH_LITTLE_C);
+  const avatar = at(ARCH_AVATAR);
+  const canvas = at(ARCH_CANVAS);
   const rfLit = Math.max(lit("reality-frame"), lit("reality-stream"));
   const littleLit = Math.max(lit("little-c"), lit("reality-stream"));
   const labels: { text: string; p: Point; show: number; strong: boolean }[] = [
-    { text: "T × E", p: [centre[0], centre[1] - ARCH_FIELD_R * scale - 14], show: drawIn(0), strong: false },
-    { text: "Big C", p: [centre[0] - 120 * scale, centre[1] - 150 * scale], show: drawIn(0.4), strong: lit("big-c") > 0.5 },
-    { text: "RF₀", p: [rf[0] - 54 * scale, rf[1] - 56 * scale], show: drawIn(0.9), strong: rfLit > 0.5 },
-    { text: "Little c", p: [littleC[0], littleC[1] + ARCH_LITTLE_C_R * scale + 32], show: drawIn(1.4), strong: littleLit > 0.5 },
+    { text: "T × E · Speculation", p: [centre[0], centre[1] - ARCH_FIELD_R * scale - 14], show: drawIn(0), strong: false },
+    { text: "Big C", p: at([185, 175]), show: drawIn(0.4), strong: lit("big-c") > 0.5 },
+    { text: "RF₀", p: at([210, 235]), show: drawIn(0.9), strong: rfLit > 0.5 },
+    { text: "Avatar", p: at([210, 376]), show: drawIn(0.9), strong: false },
+    { text: "RS", p: at([331, 293]), show: drawIn(1.2), strong: layer === "reality-stream" },
+    { text: "Little c", p: at([398, 275]), show: drawIn(1.4), strong: littleLit > 0.5 },
+    { text: "Canvas", p: [canvas[0], canvas[1] - 7 * scale], show: drawIn(1.6), strong: false },
   ];
 
   return (
@@ -1419,6 +1451,7 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
           cx={centre[0]}
           cy={centre[1]}
           r={ARCH_BIG_C_R * scale}
+          data-model-role="big-c"
           className={`cm-s ${lit("big-c") > 0.5 || layer === "all" ? "cm-big-c" : "cm-line"}`}
           strokeWidth={2.4 + 1.6 * lit("big-c")}
         />
@@ -1443,6 +1476,7 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
           cx={rf[0]}
           cy={rf[1]}
           r={ARCH_RF_R * scale}
+          data-model-role="reality-frame"
           className={`cm-s ${rfLit > 0.5 || layer === "all" ? "cm-rf" : "cm-line"}`}
           strokeWidth={2 + 1.6 * rfLit}
         />
@@ -1452,19 +1486,29 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
           return <line key={angle} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} className="cm-s cm-rf" strokeWidth={2} />;
         })}
       </g>
-      {/* The Reality Stream: what reaches Little c from within the Frame. */}
-      {layer === "reality-stream" &&
-        [0, 1, 2, 3, 4, 5].map((k) => {
-          const phase = (((t - 1.4 + k * 0.38) % 2.2) + 2.2) % 2.2 / 2.2;
-          const angle = -150 + k * 52;
-          const from = polar(ARCH_RF[0], ARCH_RF[1], ARCH_RF_R - 6, angle);
-          const p = at(lerpPoint(from, ARCH_LITTLE_C, phase));
-          return <circle key={k} cx={p[0]} cy={p[1]} r={5} className="cm-f cm-local" opacity={span(t, 1.4, 2) * (1 - phase) * 0.9} />;
-        })}
-      {/* Little c. */}
+      {/* The Avatar is in RF₀. Its stream reaches a distinct Little c within Big C. */}
+      <Avatar at={avatar} scale={scale} show={drawIn(0.9)} />
+      <g opacity={drawIn(1.2)}>
+        <path data-model-role="reality-stream" d={cubicPath(at([227, 310]), at([285, 273]), at([325, 330]), at([359, 330]))} className="cm-s cm-rf" strokeWidth={2.4} />
+        <Arrowhead at={at([359, 330])} angle={0} tone="cm-rf" />
+        <path d={cubicPath(at([365, 350]), at([330, 392]), at([263, 398]), at([231, 352]))} className="cm-s cm-local" strokeWidth={1.6} strokeDasharray="4 6" opacity={0.6} />
+        <Arrowhead at={at([231, 352])} angle={-125} tone="cm-local" opacity={0.6} />
+      </g>
+      {layer === "reality-stream" && [0, 1, 2].map((k) => {
+        const phase = (((t - 1.4 + k * 0.7) % 2.2) + 2.2) % 2.2 / 2.2;
+        const point = at(cubicAt([227, 310], [285, 273], [325, 330], [359, 330], phase));
+        return <circle key={k} cx={point[0]} cy={point[1]} r={4} className="cm-f cm-rf" opacity={span(t, 1.4, 2) * Math.sin(Math.PI * phase)} />;
+      })}
       <g opacity={drawIn(1.4)}>
-        <circle cx={littleC[0]} cy={littleC[1]} r={ARCH_LITTLE_C_R * scale} className="cm-s cm-hollow cm-local" strokeWidth={2 + 1.4 * littleLit} />
+        <circle data-model-role="little-c" cx={littleC[0]} cy={littleC[1]} r={ARCH_LITTLE_C_R * scale} className="cm-s cm-hollow cm-local" strokeWidth={2 + 1.4 * littleLit} />
+        <circle cx={littleC[0]} cy={littleC[1]} r={(ARCH_LITTLE_C_R + 7) * scale} className="cm-s cm-local" strokeWidth={1.4} strokeDasharray="4 7" opacity={0.7} />
         <circle cx={littleC[0]} cy={littleC[1]} r={Math.max(3.5, 4 * Math.sqrt(scale))} className="cm-f cm-local" />
+      </g>
+      <g opacity={drawIn(1.6)}>
+        <path d={`M${at([398, 374]).join(" ")}L${at([398, 407]).join(" ")}`} className="cm-s cm-local" strokeWidth={2} />
+        <rect x={canvas[0] - 70 * scale} y={canvas[1] - 35 * scale} width={140 * scale} height={70 * scale} rx={10 * scale} className="cm-s cm-hollow cm-local" strokeWidth={2} />
+        <path d={cubicPath(at([330, 456]), at([357, 430]), at([400, 478]), at([440, 454]))} className="cm-s cm-local" strokeWidth={2.2} />
+        <path d={cubicPath(at([330, 463]), at([367, 481]), at([400, 437]), at([440, 463]))} className="cm-s cm-origin" strokeWidth={1.6} />
       </g>
       </g>
       {labels.map(({ text, p, show, strong }) =>
@@ -1478,19 +1522,18 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
   );
 }
 
-/* ── The human character: Ego the protector, and Arrogance at its gate ──
-   It follows the Fear-Gating Principle. Little c, in one corner of its Canvas, sits inside
-   the same ring of fear and paints Ego around itself in the shape of a body to protect it.
-   The outline hardens; Arrogance stands at its edge and turns new strokes away. */
+/* ── The human character: a protective self-image in the Painting ─────
+   Little c relates to this image; it is not located inside the Canvas or the body outline.
+   The outline represents Ego, with Arrogance turning unfamiliar input away. */
 
 const EGO_OUTLINE = "M80 556 L80 446 C82 384 102 344 142 332 L208 332 C248 344 268 384 270 446 L270 556";
 const EGO_HEAD: Point = [175, 274];
 const EGO_GATE: Point = [271, 420];
 const OPEN_STROKES = [
-  { d: "M330 96 C370 80 420 112 470 92", tone: "cm-big-c", at: 0.3 },
-  { d: "M362 140 C410 124 452 160 520 140", tone: "cm-rf", at: 0.6 },
-  { d: "M392 232 C424 218 460 244 500 230", tone: "cm-origin", at: 0.9 },
-  { d: "M380 520 C420 504 470 532 528 516", tone: "cm-big-c", at: 1.2 },
+  { d: "M70 108 C120 92 240 124 300 104", tone: "cm-big-c", at: 0.3 },
+  { d: "M72 142 C120 126 230 160 302 140", tone: "cm-rf", at: 0.6 },
+  { d: "M74 170 C130 156 232 182 300 168", tone: "cm-origin", at: 0.9 },
+  { d: "M94 524 C140 508 220 540 250 524", tone: "cm-big-c", at: 1.2 },
 ];
 
 export function HumanCharacter({ t }: MotifProps) {
@@ -1499,18 +1542,21 @@ export function HumanCharacter({ t }: MotifProps) {
   const gate = span(t, 7.4, 8.2);
   return (
     <g>
-      {/* The Canvas, most of it open. */}
-      <rect x={40} y={40} width={520} height={520} rx={18} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 0, 0.6)} />
+      {/* The Canvas carries patterns; Little c remains distinct from them. */}
+      <rect x={40} y={40} width={300} height={520} rx={18} className="cm-s cm-line" strokeWidth={2} opacity={span(t, 0, 0.6)} />
       <Label x={60} y={74} anchor="start" show={span(t, 0.2, 0.8)}>the Canvas</Label>
       {OPEN_STROKES.map(({ d, tone, at }) => (
         <path key={d} d={d} className={`cm-s ${tone}`} strokeWidth={5} opacity={0.45 * span(t, at, at + 0.8)} {...drawn(span(t, at, at + 1.2))} />
       ))}
 
-      {/* In one corner: Little c, inside the ring of fear from the Fear-Gating Principle. */}
+      <Participant at={[480, 180]} r={22} show={span(t, 0.4, 1)} />
+      <Label x={480} y={136} show={span(t, 0.4, 1)}>Little c</Label>
+      <path d="M457 194C390 220 320 250 220 274" className="cm-s cm-local" strokeWidth={2} strokeDasharray="4 7" opacity={span(t, 1.2, 2)} />
+      {/* A fear pattern inside the self-image, not the experiencer. */}
       <circle cx={175} cy={430} r={34 + 3 * Math.sin(t * 2.4)} className="cm-s cm-fear" strokeWidth={2.6} opacity={0.75 * span(t, 0.8, 1.4)} />
-      <Participant at={[175, 430]} r={18} show={span(t, 0.4, 1)} />
+      <Label x={175} y={438} show={span(t, 0.8, 1.4)}>Fear</Label>
 
-      {/* Ego, painted around it in the shape of a body, then hardening. */}
+      {/* The protective self-image is represented by a painted body outline. */}
       <path
         d={EGO_OUTLINE}
         className={hardened > 0.5 ? "cm-s cm-ink" : "cm-s cm-muted"}
@@ -1525,7 +1571,7 @@ export function HumanCharacter({ t }: MotifProps) {
         strokeWidth={lerp(4, 9, hardened)}
         {...drawn(span(painted, 0.5, 1))}
       />
-      <Label x={175} y={212} show={span(t, 4.2, 4.8)} strong>Ego</Label>
+      <Label x={175} y={214} show={span(t, 4.2, 4.8)} strong>Ego · self-image</Label>
 
       {/* Arrogance at the gate: new strokes are turned away. */}
       {[0, 1, 2].map((k) => {
@@ -1541,7 +1587,7 @@ export function HumanCharacter({ t }: MotifProps) {
       <g opacity={gate} transform={`translate(${EGO_GATE[0]} ${EGO_GATE[1]}) scale(${lerp(1.3, 1, gate).toFixed(3)})`}>
         <path d="M0 -26 L20 -18 L20 4 C20 18 10 26 0 32 C-10 26 -20 18 -20 4 L-20 -18 Z" className="cm-f cm-fear" />
       </g>
-      <Label x={306} y={428} anchor="start" show={span(t, 8, 8.6)} strong>Arrogance</Label>
+      <Label x={356} y={466} anchor="start" show={span(t, 8, 8.6)} strong>Arrogance</Label>
     </g>
   );
 }
@@ -1553,11 +1599,12 @@ export function ArchitectureGlyph({ layer }: { layer: ArchitectureLayer }) {
     <svg className="concept-film-glyph" viewBox="0 0 48 48" aria-hidden="true">
       <circle cx={24} cy={24} r={22} className="cm-s cm-origin" strokeWidth={1.4} strokeDasharray="1.5 3.5" />
       <circle cx={24} cy={24} r={18} className={on("big-c") ? "cm-f cm-big-c" : "cm-f cm-line"} opacity={on("big-c") ? 0.35 : 0.5} />
-      <circle cx={24} cy={24} r={18} className={on("big-c") ? "cm-s cm-big-c" : "cm-s cm-muted"} strokeWidth={on("big-c") ? 2.4 : 1.2} />
-      <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-f cm-rf" : "cm-f cm-hollow"} opacity={on("reality-frame") ? 0.55 : 1} />
-      <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-s cm-rf" : "cm-s cm-muted"} strokeWidth={on("reality-frame") ? 2.2 : 1.2} />
-      {on("little-c") && <circle cx={29.2} cy={18.8} r={4.8} className="cm-s cm-hollow cm-local" strokeWidth={2} />}
-      <circle cx={29.2} cy={18.8} r={on("little-c") ? 2.2 : 1.6} className={on("little-c") ? "cm-f cm-local" : "cm-f cm-muted"} />
+      <circle data-model-role="big-c" cx={24} cy={24} r={18} className={on("big-c") ? "cm-s cm-big-c" : "cm-s cm-muted"} strokeWidth={on("big-c") ? 2.4 : 1.2} />
+      <circle data-model-role="reality-frame" cx={18} cy={23} r={7} className={on("reality-frame") ? "cm-f cm-rf" : "cm-f cm-hollow"} opacity={on("reality-frame") ? 0.55 : 1} />
+      <circle cx={18} cy={23} r={7} className={on("reality-frame") ? "cm-s cm-rf" : "cm-s cm-muted"} strokeWidth={on("reality-frame") ? 2.2 : 1.2} />
+      <path d="M26 24H29M27 22L29 24L27 26" className="cm-s cm-rf" strokeWidth={1.1} />
+      <circle data-model-role="little-c" cx={34} cy={25} r={4.8} className={on("little-c") ? "cm-s cm-hollow cm-local" : "cm-s cm-hollow cm-muted"} strokeWidth={on("little-c") ? 2 : 1.2} />
+      <circle cx={34} cy={25} r={1.6} className={on("little-c") ? "cm-f cm-local" : "cm-f cm-muted"} />
     </svg>
   );
 }

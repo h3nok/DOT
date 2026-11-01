@@ -1,0 +1,174 @@
+{
+  "version": 9,
+  "book_edition": 5,
+  "status": "local review export; not uploaded",
+  "full_duration_seconds": 453,
+  "trailer_duration_seconds": 156,
+  "sources": [
+    {
+      "path": "frontend/src/content/films.json",
+      "sha256": "f56ea11e5ad05519cbd964128a21d7f59982e80feaba4d2668a6b749fc06063e"
+    },
+    {
+      "path": "frontend/src/content/doctrine/doctrineData.ts",
+      "sha256": "1e34f0a7f1d816cbbda496ef1698dc2fb56cfc530416e4e73b59cde887b6cf5a"
+    },
+    {
+      "path": "frontend/src/blocks/films/ConceptFilmMotifs.tsx",
+      "sha256": "12b25eec8e45be2b3f3f8c956d7143194228f33ffdee8587fd0559ccd4b4849f"
+    },
+    {
+      "path": "frontend/src/blocks/films/ConceptTourPlayer.tsx",
+      "sha256": "5bf5bc1e95029c44f0e3be6a600e62702b7271ba014960b2998699e2adf1502f"
+    },
+    {
+      "path": "frontend/src/blocks/films/DarkFilmTrailer.tsx",
+      "sha256": "b8b6026ff04ee33d81270343a583629f3d3f8c3e5110f22a7710a8c785d57f0b"
+    },
+    {
+      "path": "frontend/src/blocks/films/darkFilmRevision.ts",
+      "sha256": "6a7677fcdb26a19baaae0d04877cfe7b72e2feecc3e37ea9972a8802049065e4"
+    },
+    {
+      "path": "frontend/src/blocks/films/conceptFilms.ts",
+      "sha256": "f31afbdf5498caee68381cc844f2c15fe63f34345de316825038473ab3769681"
+    },
+    {
+      "path": "frontend/src/blocks/core/home/HeroArchitecture.tsx",
+      "sha256": "1f8fbc35793283f3070464c59bb98c557374a62c747782e32ecf4bc14edf5b3f"
+    },
+    {
+      "path": "frontend/src/blocks/core/home/HeroArchitectureExperiencers.tsx",
+      "sha256": "ba11a844cde7f3fac638c1256b511fa78826ec0940093d8e09c456e57515f808"
+    },
+    {
+      "path": "frontend/src/blocks/core/home/architectureGeometry.ts",
+      "sha256": "d7f1fa33b137e4df57fa40aac508f89399c7f358df9c4628f08965eddf1bc0a4"
+    },
+    {
+      "path": "frontend/public/publications/henok/digital-organism-theory/v5/manifest.json",
+      "sha256": "5fdd31c063f33895e1738590b355af72be10bbb086f1d18080fc321d0ee6693a"
+    }
+  ],
+  "previous_external_upload": {
+    "youtube_id": "p2j_Aj8QhyY",
+    "modified": false,
+    "active_direct_promotion_removed": true
+  },
+  "render": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "reused_body": false,
+    "workers": 2,
+    "screenshot_timeout_ms": 120000
+  },
+  "validation": {
+    "concept-film-full-16x9-revised-dark-v9.mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "nb_frames": "13590"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "r_frame_rate": "0/0",
+          "nb_frames": "21236"
+        }
+      ],
+      "format": {
+        "duration": "453.000000"
+      },
+      "decode": "passed",
+      "sha256": "ea1a0848b9c06e6ebc3a49aa908a915d2b3a3d4528d27386d868dc6958fa1dde"
+    },
+    "dot-opening-trailer-dark-v9.mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "30/1",
+          "nb_frames": "4680"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 2,
+          "r_frame_rate": "0/0",
+          "nb_frames": "7314"
+        }
+      ],
+      "format": {
+        "duration": "156.000000"
+      },
+      "decode": "passed",
+      "sha256": "b16998dc772bb7c1797d7cc1866460afbdcc03582ec8ee6a58eb245058b83295"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "design/youtube/assets/concept-film-full-16x9-revised-dark-v9.en.srt",
+      "bytes": 4485,
+      "sha256": "5a574ff311103f0995b83588a7e26653217ee87c39a2fa4a9a3af5cb18d4ac66"
+    },
+    {
+      "path": "design/youtube/assets/concept-film-revised-dark-v9.json",
+      "bytes": 2559,
+      "sha256": "8d939e8365769b9eed6f09c7acc72594b7a4ef47220f54dd3e31f88f7427ed53"
+    },
+    {
+      "path": "design/youtube/assets/dot-film-v9-body-contact-sheet.jpg",
+      "bytes": 355542,
+      "sha256": "58bc8db567377c794c6cfe3eb71087d33d6576bc6fb17d6a5aba8a48c072334e"
+    },
+    {
+      "path": "design/youtube/assets/dot-film-v9-contact-sheet.jpg",
+      "bytes": 375852,
+      "sha256": "f4f67f26243b0de2b735bcce23f5b4aae6522d9af4e4ccabc7be89622f1a4b8d"
+    },
+    {
+      "path": "design/youtube/assets/dot-film-v9-poster.jpg",
+      "bytes": 240272,
+      "sha256": "a6f77bb7797d5dab1be4b2d123d10fa7ec62affd51d95e5b24b24020119b176d"
+    },
+    {
+      "path": "design/youtube/assets/dot-films-v9-chapters.json",
+      "bytes": 1050,
+      "sha256": "79386bde5a3613db20b0cb3aa678837a6d33a495bdb14689aea83d0dece1ad93"
+    },
+    {
+      "path": "design/youtube/assets/dot-opening-trailer-dark-v9.en.srt",
+      "bytes": 1390,
+      "sha256": "01053d4feccb36f482bf93723b473bc6bf7d3786f26baf99f30c7bb1053986fc"
+    },
+    {
+      "path": "design/youtube/assets/dot-opening-trailer-dark-v9.json",
+      "bytes": 665,
+      "sha256": "bbf647f7c56a96c6efb7998ec1075a38e5d31c6109e003175569a691ee63601c"
+    },
+    {
+      "path": "design/youtube/concept-film-full-16x9-revised-dark-v9.mp4",
+      "bytes": 73182926,
+      "sha256": "ea1a0848b9c06e6ebc3a49aa908a915d2b3a3d4528d27386d868dc6958fa1dde"
+    },
+    {
+      "path": "design/youtube/dot-opening-trailer-dark-v9.mp4",
+      "bytes": 55709046,
+      "sha256": "b16998dc772bb7c1797d7cc1866460afbdcc03582ec8ee6a58eb245058b83295"
+    }
+  ]
+}

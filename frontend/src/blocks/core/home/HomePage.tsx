@@ -183,6 +183,10 @@ export default function HomePage() {
               label: "Explore the Academy",
             },
             {
+              to: "/contact?purpose=writing",
+              label: "Talk through a question with Henok",
+            },
+            {
               to: "/doctrine",
               label: "Explore the interactive Doctrine",
             },

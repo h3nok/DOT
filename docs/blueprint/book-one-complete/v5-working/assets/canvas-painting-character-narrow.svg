@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="1050" viewBox="0 0 350 1050" role="img" aria-labelledby="canvas-painting-character-title canvas-painting-character-desc">
+<title id="canvas-painting-character-title">Three roles in a changing life</title>
+<desc id="canvas-painting-character-desc">Three panels repeat one visual motif. The first highlights the Canvas boundary as the capacity that carries state. The second highlights the accumulated strokes inside it as the Painting. The third shows repeated embodied actions as Character. The Canvas is not identical to its Painting, and neither is identical to Little c.</desc>
+<defs>
+<marker id="canvas-painting-character-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="canvas-painting-character-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="canvas-painting-character-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="canvas-painting-character-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="350" height="1050" fill="#ffffff"/>
+<text id="canvas-painting-character-text-1" data-fit-box="5,5,345,1045" x="22" y="34" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">DOT MODEL</tspan>
+</text>
+<text id="canvas-painting-character-text-2" data-fit-box="5,5,345,1045" x="22" y="72" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="27" font-weight="600" text-anchor="start">
+<tspan x="22" dy="0">Three roles in</tspan>
+<tspan x="22" dy="34.56">a changing life</tspan>
+</text>
+<text id="canvas-painting-character-text-3" data-fit-box="5,5,345,1045" x="22" y="138" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">Capacity · organization · expression</tspan>
+</text>
+<rect x="22" y="178" width="306" height="245" rx="10" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="canvas-painting-character-text-4" data-fit-box="27,183,323,418" x="40" y="211" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="600" text-anchor="start">
+<tspan x="40" dy="0">01  Canvas</tspan>
+</text>
+<text id="canvas-painting-character-text-5" data-fit-box="27,183,323,418" x="40" y="239" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="40" dy="0">Capacity that carries</tspan>
+<tspan x="40" dy="19.2">and updates state.</tspan>
+</text>
+<rect x="68" y="286" width="215" height="112" rx="14" fill="#ffffff" stroke="#2f715b" stroke-width="3"/>
+<g transform="translate(85 303) scale(0.9 0.76)" opacity="0.3">
+<path d="M12 72C40 8 70 97 103 38S157 12 188 45" fill="none" stroke="#2f715b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M16 31C59 54 78 1 113 31S151 92 188 69" fill="none" stroke="#a6553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M21 90C54 65 69 84 99 65S148 42 185 12" fill="none" stroke="#967022" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="44" cy="50" r="5" fill="#2f715b" stroke="#2f715b" stroke-width="0"/>
+<circle cx="112" cy="31" r="5" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<circle cx="151" cy="39" r="5" fill="#967022" stroke="#967022" stroke-width="0"/>
+</g>
+<rect x="22" y="451" width="306" height="245" rx="10" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="canvas-painting-character-text-6" data-fit-box="27,456,323,691" x="40" y="484" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="600" text-anchor="start">
+<tspan x="40" dy="0">02  Painting</tspan>
+</text>
+<text id="canvas-painting-character-text-7" data-fit-box="27,456,323,691" x="40" y="512" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="40" dy="0">The organization</tspan>
+<tspan x="40" dy="19.2">of that carried state.</tspan>
+</text>
+<rect x="68" y="559" width="215" height="112" rx="14" fill="#ffffff" stroke="#9bae9f" stroke-width="1.4"/>
+<g transform="translate(85 576) scale(0.9 0.76)" opacity="1">
+<path d="M12 72C40 8 70 97 103 38S157 12 188 45" fill="none" stroke="#2f715b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M16 31C59 54 78 1 113 31S151 92 188 69" fill="none" stroke="#a6553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M21 90C54 65 69 84 99 65S148 42 185 12" fill="none" stroke="#967022" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="44" cy="50" r="5" fill="#2f715b" stroke="#2f715b" stroke-width="0"/>
+<circle cx="112" cy="31" r="5" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<circle cx="151" cy="39" r="5" fill="#967022" stroke="#967022" stroke-width="0"/>
+</g>
+<rect x="22" y="724" width="306" height="245" rx="10" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="canvas-painting-character-text-8" data-fit-box="27,729,323,964" x="40" y="757" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="600" text-anchor="start">
+<tspan x="40" dy="0">03  Character</tspan>
+</text>
+<text id="canvas-painting-character-text-9" data-fit-box="27,729,323,964" x="40" y="785" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="40" dy="0">Patterns expressed</tspan>
+<tspan x="40" dy="19.2">through repeated action.</tspan>
+</text>
+<g transform="translate(91 895) scale(0.25)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<g transform="translate(175 895) scale(0.25)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<g transform="translate(259 895) scale(0.25)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="10.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="6.0" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<path d="M125 895h15" fill="none" stroke="#2f715b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#canvas-painting-character-arrow-jade)"/>
+<path d="M209 895h15" fill="none" stroke="#2f715b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#canvas-painting-character-arrow-jade)"/>
+</svg>

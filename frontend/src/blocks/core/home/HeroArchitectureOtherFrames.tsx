@@ -1,9 +1,4 @@
-import { OTHER_FRAME_ORBIT, OTHER_FRAME_RADIUS, OTHER_FRAMES } from "./architectureGeometry";
-
-const centreOf = (angle: number) => ({
-  x: 348 + Math.cos((angle * Math.PI) / 180) * OTHER_FRAME_ORBIT,
-  y: 352 + Math.sin((angle * Math.PI) / 180) * OTHER_FRAME_ORBIT,
-});
+import { OTHER_FRAME_RADIUS, OTHER_FRAMES } from "./architectureGeometry";
 
 /** Chords of three line families at 60°: a lattice RF₀'s square grid does not share. */
 function latticeChords(cx: number, cy: number, r: number) {
@@ -42,8 +37,7 @@ export function HeroArchitectureOtherFrames() {
   const inner = OTHER_FRAME_RADIUS - 4;
   return (
     <g className="home-architecture-other-frames" aria-hidden="true">
-      {OTHER_FRAMES.map(({ index, angle, rules }) => {
-        const { x, y } = centreOf(angle);
+      {OTHER_FRAMES.map(({ index, x, y, rules }) => {
         return (
           <g key={index} className="home-architecture-other-frame" data-part="rfn" data-rules={rules}>
             <g className="home-architecture-other-frame-body">

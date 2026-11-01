@@ -1,0 +1,51 @@
+.book-prose .book-figure {
+  display: block;
+  max-width: 100%;
+  margin: 2.75rem 0;
+  break-inside: avoid;
+}
+
+.book-figure__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--book-figure-ratio);
+  overflow: hidden;
+}
+
+.book-prose .book-figure__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: contain;
+}
+
+.book-figure__caption {
+  display: grid;
+  gap: .45rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--book-hairline, var(--border));
+  font-size: .9em;
+  line-height: 1.6;
+  text-align: start;
+}
+
+.book-figure__label {
+  color: var(--book-muted, var(--muted-foreground));
+  font-family: var(--font-sans);
+  font-size: .75rem;
+  line-height: 1.5;
+}
+
+.book-figure__title { font-weight: 600; }
+.book-figure__description { color: var(--book-ink, var(--foreground)); }
+
+@media (max-width: 639px) {
+  .book-figure__art { aspect-ratio: var(--book-figure-mobile-ratio); }
+  .book-prose .book-figure { margin-block: 2rem; }
+}
+
+@media print {
+  .book-figure__art { aspect-ratio: var(--book-figure-ratio); }
+}

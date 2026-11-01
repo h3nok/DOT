@@ -6,9 +6,9 @@ import { Consciousness101 } from "./Consciousness101";
 describe("Consciousness101", () => {
   it("connects the cultural critique to DOT’s direction and its book source", () => {
     render(<MemoryRouter><Consciousness101 /></MemoryRouter>);
-    const purpose = screen.getByRole("region", { name: "A society can be productive and still be lost." });
-    expect(within(purpose).getByText(/rewarding short-term gain/)).toBeVisible();
-    expect(within(purpose).getByText("What is all this progress for?")).toBeVisible();
+    const purpose = screen.getByRole("region", { name: "What shapes the way you see?" });
+    expect(within(purpose).getByText(/A few words have met a body, a history, and an expectation/)).toBeVisible();
+    expect(within(purpose).getByText("What are you bringing to this moment—and what will you carry from it?")).toBeVisible();
     expect(within(purpose).getByText(/Its proposed direction is Love/)).toBeVisible();
     expect(within(purpose).getByText("Love is the condition in which Fear no longer governs you.")).toBeVisible();
     expect(within(purpose).queryByRole("list")).not.toBeInTheDocument();

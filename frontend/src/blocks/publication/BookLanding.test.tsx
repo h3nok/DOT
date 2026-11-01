@@ -81,7 +81,8 @@ describe("BookLanding", () => {
     expect(screen.getByRole("link", { name: /PDF/ })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "A proposed model of reality.",
+        level: 1,
+        name: "Consciousness: A Digital Organism",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText(/DOT grew from nearly two decades/))
@@ -96,8 +97,29 @@ describe("BookLanding", () => {
       "href",
       "/doctrine",
     );
-    expect(screen.getByText("A finite sequence.")).toBeInTheDocument();
+    const contents = screen.getByRole("heading", { name: "Choose a place to begin." });
+    const guide = screen.getByRole("heading", { name: "Read the claim at the level it earns." });
+    expect(contents.compareDocumentPosition(guide) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Browse the chapters/ })).toHaveAttribute("href", "#volume-contents");
+    expect(screen.queryByText(/Illustrations appear beside/)).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Entrances/i })).not.toBeInTheDocument();
+  });
+
+  it("locates illustrations in their own released chapters when the edition supplies them", () => {
+    render(
+      <MemoryRouter>
+        <BookLanding manifest={{ ...manifest, figures: [{
+          id: "avatar-canvas", number: 1, title: "An embodied exchange", section: "preface",
+          src: "figures/avatar-canvas.svg", width: 900, height: 900,
+          caption: "The body and carried state remain connected.",
+          alt: "The Avatar exchanges experience with the Canvas.", claimLevel: "DOT model",
+        }] }} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /Figure 1 An embodied exchange/ })).toHaveAttribute(
+      "href", "/book/digital-organism-theory/preface#figure-avatar-canvas",
+    );
+    expect(screen.getByText(/Illustrations appear beside/)).toBeInTheDocument();
   });
 
   it("continues an existing local reading path", () => {

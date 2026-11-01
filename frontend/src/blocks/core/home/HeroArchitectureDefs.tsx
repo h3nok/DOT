@@ -1,4 +1,4 @@
-import { ARCHITECTURE_RADII as R } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, FRAME_CENTRE } from "./architectureGeometry";
 import { ArchitectureSurfaceDefs } from "./ArchitectureSurfaceDefs";
 
 export type HeroArchitectureIds = {
@@ -124,7 +124,7 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         <stop className="home-architecture-thread-to" offset="100%" />
       </linearGradient>
       <clipPath id={frameClipId}>
-        <circle cx="348" cy="352" r={R.frame} />
+        <circle cx={FRAME_CENTRE.x} cy={FRAME_CENTRE.y} r={R.frame} />
       </clipPath>
     </defs>
   );

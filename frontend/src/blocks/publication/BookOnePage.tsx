@@ -6,6 +6,7 @@ import {
   ArrowRight,
   Check,
   ChevronLeft,
+  Download,
   FilePenLine,
   Library,
   List,
@@ -31,6 +32,7 @@ import {
   DOT_BOOK_ONE_PDF_URL,
   DOT_BOOK_ONE_ROUTE,
   bookSectionRoute,
+  bookFigureMap,
   fetchDotBookOneManifest,
   fetchDotBookOneSection,
   groupBookSectionsByPart,
@@ -49,6 +51,7 @@ import BookLanding from "./BookLanding";
 import { TwinSurface } from "../../dot/TwinSurface";
 import { useAuth } from "../../dot/useAuth";
 import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
+import "./book-reading-page.css";
 
 function sectionLabel(section: BookReleaseSection): string {
   if (section.kind === "chapter") return `Chapter ${section.number}`;
@@ -194,6 +197,17 @@ function BookContents({
                       )}
                     </span>
                   </Link>
+                  {(manifest.figures ?? []).filter(figure => figure.section === section.slug).map(figure => (
+                    <Link
+                      key={figure.id}
+                      className="book-contents__illustration"
+                      to={`${destination}#figure-${figure.id}`}
+                      onClick={onNavigate}
+                    >
+                      <span>Figure {figure.number}</span>{" "}
+                      {figure.title}
+                    </Link>
+                  ))}
                 </li>
               );
             })}
@@ -263,7 +277,7 @@ function BookReader({
         className="book-reading-grid mx-auto grid w-full px-5 pb-24 pt-12 sm:px-8 sm:pt-16 lg:justify-center"
         data-layout={focusMode ? "focus" : companionOpen ? "companion" : "reader"}
       >
-        <article id="book-main" className="book-reader min-w-0">
+        <article id="book-main" className="book-reader book-reader--publication min-w-0">
           {/* Everything between a chapter's title and its first sentence is
               competing with the act of starting to read.
              
@@ -275,17 +289,17 @@ function BookReader({
              
               What is left is what a reader opening a chapter actually needs:
               which chapter, how long it will take, and the title. */}
-          <header className="book-chapter-header">
-            <div className="book-chapter-header__meta flex flex-wrap items-center justify-center gap-x-4 gap-y-1 dot-label text-[var(--book-muted)]">
+          <header className="book-chapter-header book-chapter-header--reading">
+            <div className="book-chapter-header__meta flex flex-wrap items-center gap-x-4 gap-y-1 dot-label text-[var(--book-muted)]">
               <span className="text-[var(--book-cinnabar)]">{sectionLabel(section)}</span>
               <span aria-hidden="true">/</span>
               <span>About {section.reading_time_minutes} min</span>
             </div>
-            <h1 className="book-reading-heading mx-auto mt-6 max-w-2xl text-balance text-4xl font-medium leading-[1.06] tracking-[-0.025em] text-foreground sm:text-5xl">
+            <h1 className="book-reading-heading mt-6 max-w-2xl text-balance text-4xl font-medium leading-[1.06] tracking-[-0.025em] text-foreground sm:text-5xl">
               {section.title}
             </h1>
             {section.subtitle && (
-              <p className="book-reading-copy mx-auto mt-5 max-w-2xl text-balance text-xl italic leading-relaxed text-muted-foreground">
+              <p className="book-reading-copy mt-5 max-w-2xl text-balance text-xl italic leading-relaxed text-muted-foreground">
                 {section.subtitle}
               </p>
             )}
@@ -326,6 +340,7 @@ function BookReader({
             references={references}
             variant={section.kind === "references" ? "references" : "chapter"}
             completeEditionHref={DOT_BOOK_ONE_PDF_URL}
+            figures={bookFigureMap(manifest)}
           />
 
           <footer className="book-coda book-focus-hidden print:hidden">
@@ -490,6 +505,10 @@ function BookReader({
             ) : null}
 
             <BookCitation manifest={manifest} section={section} />
+            <a href={DOT_BOOK_ONE_PDF_URL} className="book-reader-offline">
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Read this edition as a PDF
+            </a>
           </footer>
         </article>
 
@@ -732,7 +751,7 @@ export default function BookOnePage() {
       >
         Skip to book
       </a>
-      <SiteNav />
+      {!section && <SiteNav />}
       {section ? (
         <header className="appearance-ui-chrome book-chrome book-focus-hidden sticky top-0 z-30 print:hidden">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">

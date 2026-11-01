@@ -148,7 +148,7 @@ function TourSizers() {
 }
 
 const COVER_DESCRIPTION =
-  "The architecture of Digital Organism Theory: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.";
+  "The architecture of Digital Organism Theory: T × E (Speculation) outside Big C. RF₀ and Little c are within Big C; Little c is outside RF₀ and embodied by the Avatar within it. The Reality Stream connects them.";
 
 /** What the film passes through, in order, for the cover. */
 const COVER_PATH = [TOUR.scenes[0].name, TOUR.scenes[1].name, `${CONCEPT_FILMS.length} concepts`, "The architecture"];
@@ -199,7 +199,7 @@ function TourCover({ playLabel, onPlay, still }: { playLabel: string; onPlay: ()
   );
 }
 
-function TourFrame({ frame, still }: { frame: number; still: boolean }) {
+export function ConceptTourFrame({ frame, still }: { frame: number; still: boolean }) {
   const part = tourPartAt(frame);
   const opacity = tourPartOpacity(part, frame);
   const drift = still ? 0 : tourPartDrift(part, frame);
@@ -266,7 +266,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={TOUR.closing.source}
         sourceAt={CLOSING_TYPING.source}
         links={{ at: CLOSING_TYPING.links, items: TOUR.closing.links }}
-        description="The architecture of Digital Organism Theory: T × E outside; Big C within it, its outer process circling; RF₀ inside Big C; and Little c within RF₀, with its own inner process."
+        description="The architecture of Digital Organism Theory: T × E (Speculation) outside Big C. RF₀ and Little c are within Big C. Little c remains outside RF₀ and is embodied by the Avatar inside it. Broken arrows show the processes of Big C and Little c."
       />
     );
   }
@@ -317,7 +317,7 @@ export function ConceptTourPlayer() {
       {(frame, started) => (
         <>
           {sizers}
-          {started && <TourFrame frame={frame} still={still} />}
+          {started && <ConceptTourFrame frame={frame} still={still} />}
         </>
       )}
     </DrawnFilmPlayer>

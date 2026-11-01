@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="940" viewBox="0 0 900 940" role="img" aria-labelledby="experience-loop-title experience-loop-desc">
+<title id="experience-loop-title">One moment changes the next</title>
+<desc id="experience-loop-desc">Seven connected steps form the Experience Loop: receive a moment; interpret it through the Painting; notice possible responses; form Intent; act through the body; encounter consequence; and carry change forward in Canvas state. A returning arrow brings the changed state into the next moment.</desc>
+<defs>
+<marker id="experience-loop-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="experience-loop-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="experience-loop-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="experience-loop-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="900" height="940" fill="#fbfcf8"/>
+<text id="experience-loop-text-1" data-fit-box="5,5,895,935" x="60" y="37" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">PRACTICAL MODEL</tspan>
+</text>
+<text id="experience-loop-text-2" data-fit-box="5,5,895,935" x="60" y="91" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="44" font-weight="600" text-anchor="start">
+<tspan x="60" dy="0">One moment changes the next</tspan>
+</text>
+<text id="experience-loop-text-3" data-fit-box="5,5,895,935" x="60" y="132" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">The Experience Loop</tspan>
+</text>
+<rect x="70" y="190" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-4" data-fit-box="75,195,365,328" x="90" y="222" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">01</tspan>
+</text>
+<text id="experience-loop-text-5" data-fit-box="75,195,365,328" x="90" y="260" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="90" dy="0">Receive a moment</tspan>
+</text>
+<text id="experience-loop-text-6" data-fit-box="75,195,365,328" x="90" y="290" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">Reality Stream</tspan>
+</text>
+<text id="experience-loop-text-7" data-fit-box="75,195,365,328" x="90" y="317" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">A short reply arrives.</tspan>
+</text>
+<rect x="530" y="190" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-8" data-fit-box="535,195,825,328" x="550" y="222" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">02</tspan>
+</text>
+<text id="experience-loop-text-9" data-fit-box="535,195,825,328" x="550" y="260" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="550" dy="0">Interpret it</tspan>
+</text>
+<text id="experience-loop-text-10" data-fit-box="535,195,825,328" x="550" y="290" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">Painting</tspan>
+</text>
+<text id="experience-loop-text-11" data-fit-box="535,195,825,328" x="550" y="317" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">It sounds dismissive.</tspan>
+</text>
+<rect x="530" y="380" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-12" data-fit-box="535,385,825,518" x="550" y="412" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">03</tspan>
+</text>
+<text id="experience-loop-text-13" data-fit-box="535,385,825,518" x="550" y="450" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="550" dy="0">Notice options</tspan>
+</text>
+<text id="experience-loop-text-14" data-fit-box="535,385,825,518" x="550" y="480" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">Available responses</tspan>
+</text>
+<text id="experience-loop-text-15" data-fit-box="535,385,825,518" x="550" y="507" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">React, ask, wait…</tspan>
+</text>
+<rect x="530" y="570" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-16" data-fit-box="535,575,825,708" x="550" y="602" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">04</tspan>
+</text>
+<text id="experience-loop-text-17" data-fit-box="535,575,825,708" x="550" y="640" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="550" dy="0">Form Intent</tspan>
+</text>
+<text id="experience-loop-text-18" data-fit-box="535,575,825,708" x="550" y="670" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">Direction of action</tspan>
+</text>
+<text id="experience-loop-text-19" data-fit-box="535,575,825,708" x="550" y="697" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="550" dy="0">Choose what to attempt.</tspan>
+</text>
+<rect x="300" y="760" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-20" data-fit-box="305,765,595,898" x="320" y="792" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="320" dy="0">05</tspan>
+</text>
+<text id="experience-loop-text-21" data-fit-box="305,765,595,898" x="320" y="830" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="320" dy="0">Act in the world</tspan>
+</text>
+<text id="experience-loop-text-22" data-fit-box="305,765,595,898" x="320" y="860" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="320" dy="0">Living body</tspan>
+</text>
+<text id="experience-loop-text-23" data-fit-box="305,765,595,898" x="320" y="887" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="320" dy="0">Speak, send, or pause.</tspan>
+</text>
+<rect x="70" y="570" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="experience-loop-text-24" data-fit-box="75,575,365,708" x="90" y="602" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">06</tspan>
+</text>
+<text id="experience-loop-text-25" data-fit-box="75,575,365,708" x="90" y="640" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="90" dy="0">Meet consequence</tspan>
+</text>
+<text id="experience-loop-text-26" data-fit-box="75,575,365,708" x="90" y="670" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">Returning experience</tspan>
+</text>
+<text id="experience-loop-text-27" data-fit-box="75,575,365,708" x="90" y="697" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">What followed?</tspan>
+</text>
+<rect x="70" y="380" width="300" height="143" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="1.8"/>
+<text id="experience-loop-text-28" data-fit-box="75,385,365,518" x="90" y="412" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">07</tspan>
+</text>
+<text id="experience-loop-text-29" data-fit-box="75,385,365,518" x="90" y="450" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="500" text-anchor="start">
+<tspan x="90" dy="0">Carry change</tspan>
+</text>
+<text id="experience-loop-text-30" data-fit-box="75,385,365,518" x="90" y="480" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">Canvas state</tspan>
+</text>
+<text id="experience-loop-text-31" data-fit-box="75,385,365,518" x="90" y="507" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="90" dy="0">What changes next time?</tspan>
+</text>
+<path d="M385 260H512" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M680 346V365" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M680 536V555" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M680 726V742Q680 780 615 804" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M285 804Q220 780 220 742V727" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M220 554V537" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#experience-loop-arrow-jade)"/>
+<path d="M220 365V347" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="4 4" marker-end="url(#experience-loop-arrow-jade)"/>
+<text id="experience-loop-text-32" data-fit-box="5,5,895,935" x="450" y="477" fill="#536b60" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="29" font-weight="400" text-anchor="middle">
+<tspan x="450" dy="0">One</tspan>
+<tspan x="450" dy="37.12">encounter</tspan>
+</text>
+</svg>

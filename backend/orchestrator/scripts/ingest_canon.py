@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
 import os
 import pathlib
@@ -26,12 +27,16 @@ import app.auth.dependencies
 import app.db.session
 import app.domains.canon.service as canon
 
-configured_canon_root = os.environ.get("ORCHESTRATOR_CANON_ROOT")
-if configured_canon_root:
-    EDITION_ROOT = pathlib.Path(configured_canon_root)
-else:
-    repo_root = pathlib.Path(__file__).resolve().parents[2]
-    EDITION_ROOT = repo_root / "frontend/public/publications/henok/digital-organism-theory/v4"
+
+def edition_root() -> pathlib.Path:
+    configured = os.environ.get("ORCHESTRATOR_CANON_ROOT")
+    if configured:
+        return pathlib.Path(configured)
+    repo_root = pathlib.Path(__file__).resolve().parents[3]
+    return repo_root / "frontend/public/publications/henok/digital-organism-theory/v5"
+
+
+EDITION_ROOT = edition_root()
 
 #: Declared by the author, section by section. Absent means undeclared.
 CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
@@ -39,6 +44,11 @@ CLAIM_LEVELS_BY_SECTION: dict[str, str] = {}
 
 def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection]]:
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    if (
+        manifest["release"]["status"] != "published"
+        or manifest["project"]["visibility"] != "public"
+    ):
+        raise ValueError("Only a published public edition can become public canon")
     edition_slug: str = manifest["project"]["slug"]
     edition_title: str = manifest["project"]["title"]
 
@@ -47,6 +57,35 @@ def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection
         body = root / "sections" / f"{entry['slug']}.md"
         if not body.exists():
             raise SystemExit(f"missing section file: {body}")
+        text = body.read_text(encoding="utf-8")
+        if manifest["release"]["version"] >= 5:
+            expected = (
+                manifest.get("integrity", {}).get("files", {}).get(f"sections/{entry['slug']}.md")
+            )
+            if not expected or hashlib.sha256(body.read_bytes()).hexdigest() != expected:
+                raise ValueError(
+                    f"Released section no longer matches its manifest: {entry['slug']}"
+                )
+            if "/_book-v5" in text or "/_preview/book-v5" in text:
+                raise ValueError("A private proof cannot become public canon")
+        # The reader renders captions from the edition manifest. Restore that
+        # manuscript text beside each illustration before deriving AI chunks.
+        for figure in manifest.get("figures", []):
+            if figure.get("section") != entry["slug"]:
+                continue
+            figure_url = (
+                f"/publications/henok/{edition_slug}/v{manifest['release']['version']}/"
+                f"{figure['src']}"
+            )
+            pattern = r"!\[(?:\\.|[^\]])*\]\(" + re.escape(figure_url) + r"\)"
+            caption = (
+                f"Figure {figure['number']} · {figure['title']}. "
+                f"{figure['claimLevel']}. {figure['caption']}\n\n"
+                f"Illustration description: {figure['alt']}"
+            )
+            text, count = re.subn(pattern, lambda _, value=caption: value, text)
+            if count != 1:
+                raise ValueError(f"A canon illustration must occur exactly once: {figure['id']}")
         sections.append(
             canon.CanonSection(
                 slug=entry["slug"],
@@ -56,7 +95,7 @@ def load_sections(root: pathlib.Path) -> tuple[str, str, list[canon.CanonSection
                 part=entry["part"],
                 # Depth containers (ADR-0036) fold text in the reader; the canon
                 # keeps the passage and drops only its marker lines.
-                text=re.sub(r"^:::.*$\n?", "", body.read_text(encoding="utf-8"), flags=re.M),
+                text=re.sub(r"^:::.*$\n?", "", text, flags=re.M),
                 claim_level=CLAIM_LEVELS_BY_SECTION.get(entry["slug"]),
             )
         )

@@ -1,0 +1,105 @@
+{
+  "draft": true,
+  "duration": 453,
+  "openingSeconds": 156,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "frames": 13590,
+  "audio": {
+    "sampleRate": 48000,
+    "soundedKeys": 2082,
+    "openingSoundedKeys": 671,
+    "scored": true,
+    "peak": 0.5,
+    "openingPeak": 0.5
+  },
+  "reusedBody": null,
+  "excerpt": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "4680"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "7314"
+      }
+    ],
+    "format": {
+      "duration": "156.000000"
+    },
+    "sha256": "b16998dc772bb7c1797d7cc1866460afbdcc03582ec8ee6a58eb245058b83295",
+    "file": "/home/henok/Repo/DOT/design/youtube/dot-opening-trailer-dark-v9.mp4",
+    "startSeconds": 0,
+    "duration": 156,
+    "frames": 4680,
+    "decode": "passed"
+  },
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "13590"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "21236"
+      }
+    ],
+    "format": {
+      "duration": "453.000000"
+    },
+    "sha256": "ea1a0848b9c06e6ebc3a49aa908a915d2b3a3d4528d27386d868dc6958fa1dde",
+    "decode": "passed"
+  },
+  "opening": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "30/1",
+        "nb_frames": "4680"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "r_frame_rate": "0/0",
+        "nb_frames": "7314"
+      }
+    ],
+    "format": {
+      "duration": "156.000000"
+    },
+    "sha256": "b16998dc772bb7c1797d7cc1866460afbdcc03582ec8ee6a58eb245058b83295",
+    "file": "/home/henok/Repo/DOT/design/youtube/dot-opening-trailer-dark-v9.mp4",
+    "startSeconds": 0,
+    "duration": 156,
+    "frames": 4680,
+    "decode": "passed"
+  },
+  "full": "/home/henok/Repo/DOT/design/youtube/concept-film-full-16x9-revised-dark-v9.mp4",
+  "openingFile": "/home/henok/Repo/DOT/design/youtube/dot-opening-trailer-dark-v9.mp4",
+  "bookEdition": 5,
+  "status": "local review export; not uploaded"
+}

@@ -7,7 +7,7 @@ import { conceptMapHref } from "./dotBookConcepts";
 
 const manifest = JSON.parse(
   readFileSync(
-    join(process.cwd(), "public/publications/henok/digital-organism-theory/v4/manifest.json"),
+    join(process.cwd(), "public/publications/henok/digital-organism-theory/v5/manifest.json"),
     "utf8",
   ),
 ) as { sections: { slug: string; related_concepts: string[] }[] };

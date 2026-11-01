@@ -8,6 +8,12 @@ BOOK_PYTHON ?= .venv/bin/python
 PANDOC ?= pandoc
 COMPLETE_BOOK ?= docs/blueprint/book-one-complete/v4-working/v4.8-review/DOT-Complete-Book-One-v4.8-Review
 COMPLETE_RELEASE ?= /tmp/dot-book-one-v4-preview
+BOOK_V5 := docs/blueprint/book-one-complete/v5-working/proof/DOT-Book-One-Version-5-Review
+BOOK_V5_CANDIDATE := docs/blueprint/book-one-complete/v5-working/release-candidate/DOT-Book-One-Complete-Edition-v5
+BOOK_V5_WEB_STAGE ?= /tmp/dot-book-one-v5-release-stage
+RELEASE_DATE ?=
+
+.PHONY: book-v5 book-v5-web book-v5-candidate stage-book-v5 release-book-v5
 
 help:
 	@echo "Available targets:"
@@ -28,12 +34,17 @@ help:
 	@echo "  make seed-book-project    Seed Book One as a studio project"
 	@echo "  make seed-academy         Seed DOT Academy as institution kernel space 1"
 	@echo "  make ingest-canon      Load Book One so the copilot can cite it"
-	@echo "  make release-book      Publish Book One (the v4 Complete Edition) to the reader"
+	@echo "  make release-book      Seal the reviewed v5 candidate locally (RELEASE_DATE=YYYY-MM-DD)"
 	@echo "  make release-book-v3   Rebuild the frozen v3 reading units (history only)"
 	@echo "  make test-book-release Verify every Book One artifact matches the DOCX"
 	@echo "  make book-complete     Build the v4.8 Complete Edition (line edit, depth layer, print design)"
 	@echo "  make preview-book-complete Derive the digital reading units from it (COMPLETE_RELEASE=dir)"
-	@echo "  make release-book-complete Publish the approved Complete Edition as digital v4"
+	@echo "  make book-v5           Build the illustrated version 5 Word/PDF review proof"
+	@echo "  make book-v5-web       Derive the local version 5 reader preview (PANDOC=path)"
+	@echo "  make book-v5-candidate Build final-labelled v5 Word/PDF for review; does not publish"
+	@echo "  make stage-book-v5     Stage canonical v5 web pages (RELEASE_DATE=YYYY-MM-DD)"
+	@echo "  make release-book-v5   Seal the candidate and mirror its PDF; does not deploy"
+	@echo "  make release-book-complete Alias of release-book-v5"
 	@echo "  make test-orchestrator Test FastAPI orchestrator"
 	@echo "  make build             Build frontend"
 	@echo "  make lint              Lint frontend"
@@ -99,32 +110,44 @@ ingest-canon:
 # The Word manuscript is the only editorial source. Pandoc derives the web
 # sections and LibreOffice derives the public PDF; both tools must be explicit
 # so a release cannot quietly fall back to stale generated files.
-# The live edition is v4 (ADR-0036). The v3 Digital Edition is frozen; its
-# importer remains for provenance and writes only historical outputs.
-release-book: release-book-complete
+# Earlier editions remain immutable history. The v5 release is cut from an
+# already reviewed candidate; publication never silently rebuilds its prose.
+release-book: release-book-v5
 
 release-book-v3:
 	$(PYTHON) scripts/import_dot_book.py --input $(BOOK_MANUSCRIPT) --skip-artifacts --output frontend/public/publications/henok/digital-organism-theory/v3
 
 test-book-release:
+	$(PYTHON) scripts/test_book_v5_release.py
 	pnpm --dir frontend exec vitest run src/content/publications/dotBookOne.release.test.ts
 
-# One manuscript, two renderings (ADR-0036). Building never publishes; point
-# COMPLETE_RELEASE at frontend/public/publications/henok/digital-organism-theory/v4
-# only when the author has approved the edition.
+# Historical working proofs remain available (ADR-0036). Keep their output
+# outside the immutable v4 and v5 release directories.
 book-complete:
 	$(BOOK_PYTHON) scripts/build_book_v48.py --render
 
 preview-book-complete:
 	$(BOOK_PYTHON) scripts/import_dot_book_v4.py --input $(COMPLETE_BOOK).docx --output $(COMPLETE_RELEASE) --pandoc $(PANDOC)
 
-# Publish the approved edition: build the release-labelled Word/PDF, derive the
-# v4 reading units, and mirror the PDF to the backend artifact directory.
-RELEASE_BOOK := docs/blueprint/book-one-complete/release-v4/DOT-Book-One-Complete-Edition-v4
-release-book-complete:
-	$(BOOK_PYTHON) scripts/build_book_v48.py --release --render
-	$(BOOK_PYTHON) scripts/import_dot_book_v4.py --input $(RELEASE_BOOK).docx --pdf $(RELEASE_BOOK).pdf --output frontend/public/publications/henok/digital-organism-theory/v4 --pandoc $(PANDOC)
+# Review artifacts only: no public files, current-edition pointers, or canon writes.
+book-v5:
+	$(BOOK_PYTHON) scripts/build_book_v5.py --render
+
+book-v5-web:
+	$(BOOK_PYTHON) scripts/import_dot_book_v5.py --input $(BOOK_V5).docx --pdf $(BOOK_V5).pdf --pandoc $(PANDOC)
+
+book-v5-candidate:
+	$(BOOK_PYTHON) scripts/build_book_v5.py --release --render
+
+stage-book-v5:
+	@test -n "$(RELEASE_DATE)" || (echo "Set RELEASE_DATE=YYYY-MM-DD for the reviewed edition" && exit 1)
+	$(BOOK_PYTHON) scripts/import_dot_book_v5.py --release --release-date "$(RELEASE_DATE)" --input $(BOOK_V5_CANDIDATE).docx --pdf $(BOOK_V5_CANDIDATE).pdf --output $(BOOK_V5_WEB_STAGE) --pandoc $(PANDOC)
+
+release-book-v5: stage-book-v5
+	$(BOOK_PYTHON) scripts/promote_book_v5.py --input $(BOOK_V5_CANDIDATE).docx --pdf $(BOOK_V5_CANDIDATE).pdf --web $(BOOK_V5_WEB_STAGE)
 	$(MAKE) test-book-release
+
+release-book-complete: release-book-v5
 
 build:
 	pnpm --dir frontend build
@@ -136,6 +159,7 @@ typecheck:
 	pnpm --dir frontend exec tsc --noEmit
 
 test:
+	$(PYTHON) scripts/test_book_v5_release.py
 	pnpm --dir frontend exec vitest run
 
 # Browser-level checks: the rendered document, not the source. Needs a one-time

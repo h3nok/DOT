@@ -6,6 +6,7 @@ import { defineConfig } from "vite";
 import { essaysPlugin } from "./scripts/essays.mjs";
 import { contactPreviewPlugin } from "./scripts/contact-preview.mjs";
 import { localOrchestratorPlugin } from "./scripts/local-orchestrator.mjs";
+import { bookV5PreviewPlugin } from "./scripts/book-v5-preview.mjs";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -24,6 +25,7 @@ export default defineConfig({
     essaysPlugin(),
     localOrchestratorPlugin(),
     contactPreviewPlugin(),
+    bookV5PreviewPlugin(),
     // A bundle map is useful locally and is also a 1 MB implementation map we
     // have no reason to publish beside the book. Generate it only for the
     // explicit analysis command, never for a normal release.

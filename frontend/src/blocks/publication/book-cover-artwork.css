@@ -1,0 +1,16 @@
+.book-one-cover.book-one-cover--illustrated {
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  overflow: hidden;
+  transform: none;
+}
+
+.book-one-cover--illustrated img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.book-one-cover--illustrated::before,
+.book-one-cover--illustrated::after { content: none; }

@@ -1,92 +1,73 @@
-/**
- * analytics — how many people read, and nothing about who they are.
- *
- * ADR-0004 L9 forbids behavioural trackers, and it means it: no `gtag`, no
- * `fbq`, no Segment, no session recording, no cross-site identity. That law
- * bans *profiling*, not *counting*. Publishing a book to nobody and publishing
- * it to a thousand readers are different facts, and the steward is entitled to
- * know which one is happening (ADR-0024).
- *
- * Plausible is the one measurement that survives the law: no cookies, no
- * localStorage, no fingerprint, no cross-site identifier, nothing persisted on
- * the reader's device, and no per-person record to unseal later. It reports
- * aggregates — pageviews, referrers, countries — and cannot answer "what did
- * this person read," which is exactly the question DOT refuses to be able to
- * answer about anyone.
- *
- * Unset means unmeasured, and that has to keep working: a fork, a local build,
- * or a steward who wants no analytics at all sets nothing and no third-party
- * request is made. There is no default domain and no silent fallback.
- */
-
-/** Plausible's legacy hosted script. Existing sites remain supported. */
-const DEFAULT_SRC = "https://plausible.io/js/script.js";
-
+/** Aggregate public pageviews only (ADR-0024): no remote tracker, client identity,
+ * scroll measurements, active-time measurements, or custom events. */
 const DOMAIN = import.meta.env.VITE_PLAUSIBLE_DOMAIN?.trim() ?? "";
-const SRC = import.meta.env.VITE_PLAUSIBLE_SRC?.trim() || DEFAULT_SRC;
+const SRC = import.meta.env.VITE_PLAUSIBLE_SRC?.trim() || "https://plausible.io/js/script.js";
+const DOMAIN_PATTERN = /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
+export const ANALYTICS_DOMAIN = DOMAIN_PATTERN.test(DOMAIN) ? DOMAIN.toLowerCase() : null;
+const installed = new WeakSet<Window>();
 
-/** Marks the injected tag so a re-entrant call cannot double-count a pageview. */
-const MARKER = "data-dot-analytics";
+// Deliberately finite. Private, invitation, unsubscribe and preview paths are absent.
+const PUBLIC_PATH = /^(?:\/|\/(?:about|contact|community|blog|film|films|videos|applied|support|join|publications|readers|privacy|terms)|\/academy(?:\/films)?|\/doctrine(?:\/[a-z0-9-]+)?|\/amm(?:\/(?:power|capital|editions))?|\/essays(?:\/[a-z0-9-]+)?|\/writing\/[a-z0-9-]+(?:\/releases\/\d+)?|\/book\/digital-organism-theory(?:\/[a-z0-9-]+)?|\/read\/[a-z0-9-]+\/[a-z0-9-]+(?:\/[a-z0-9-]+)?)$/i;
 
-/** A bare hostname — `dotheory.org`. Not a URL, and never a wildcard. */
-const DOMAIN_PATTERN = /^[a-z0-9.-]+\.[a-z]{2,}$/i;
-
-type PlausibleQueue = ((...args: unknown[]) => void) & {
-  init?: (options?: Record<string, unknown>) => void;
-  o?: Record<string, unknown>;
-  q?: unknown[][];
-};
-
-type AnalyticsWindow = Window & { plausible?: PlausibleQueue };
-
-/** True when a measurable domain is configured. */
-export const ANALYTICS_DOMAIN: string | null = DOMAIN_PATTERN.test(DOMAIN)
-  ? DOMAIN
-  : null;
-
-/**
- * Install Plausible's tiny command queue before the remote script executes.
- *
- * New Plausible sites receive a unique `pa-XXXXX.js` URL and require
- * `plausible.init()`. The same queue is harmless for legacy `script.js` sites,
- * which continue to read `data-domain`. Supporting both lets an existing site
- * keep counting while a new one can paste its current site-specific URL.
- */
-function initializePlausible(win: AnalyticsWindow | null): void {
-  if (!win) return;
-
-  if (!win.plausible) {
-    const queue: PlausibleQueue = (...args: unknown[]) => {
-      queue.q ??= [];
-      queue.q.push(args);
-    };
-    win.plausible = queue;
-  }
-
-  const plausible = win.plausible;
-  plausible.init ??= (options = {}) => {
-    plausible.o = options;
-  };
-  plausible.init();
+function endpoint(): string | null {
+  try {
+    const source = new URL(SRC);
+    if (source.protocol !== "https:" || source.username || source.password) return null;
+    return `${source.origin}/api/event`;
+  } catch { return null; }
 }
 
-/**
- * Inject the counter, once, if one is configured.
- *
- * Returns whether a script was added, so the caller and the tests can tell
- * "measuring" from "deliberately not measuring" without reading the DOM.
- */
-export function initAnalytics(doc: Document | undefined = globalThis.document): boolean {
-  if (!ANALYTICS_DOMAIN || !doc) return false;
-  if (!SRC.startsWith("https://")) return false;
-  if (doc.querySelector(`script[${MARKER}]`)) return false;
+function optedOut(win: Window): boolean {
+  const navigator = win.navigator as Navigator & { globalPrivacyControl?: boolean };
+  if (navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.globalPrivacyControl || navigator.webdriver) return true;
+  try {
+    // Honor the existing Plausible opt-out. Never create or update device storage.
+    return win.localStorage.getItem("plausible_ignore") === "true";
+  } catch { return true; }
+}
 
-  const script = doc.createElement("script");
-  script.defer = true;
-  script.src = SRC;
-  script.setAttribute("data-domain", ANALYTICS_DOMAIN);
-  script.setAttribute(MARKER, "");
-  initializePlausible(doc.defaultView as AnalyticsWindow | null);
-  doc.head.appendChild(script);
+function referralOrigin(value: string): string {
+  try {
+    const url = new URL(value);
+    return ["https:", "http:"].includes(url.protocol) ? url.origin : "";
+  } catch { return ""; }
+}
+
+/** Install once; navigation continues normally if measurement is disabled or fails. */
+export function initAnalytics(doc: Document | undefined = globalThis.document): boolean {
+  const win = doc?.defaultView;
+  const destination = endpoint();
+  if (!ANALYTICS_DOMAIN || !win || !destination || installed.has(win)) return false;
+  const host = win.location.hostname.toLowerCase();
+  if (win.location.protocol !== "https:" || (host !== ANALYTICS_DOMAIN && !host.endsWith(`.${ANALYTICS_DOMAIN}`)) || optedOut(win)) return false;
+  installed.add(win);
+  const domain = ANALYTICS_DOMAIN;
+  const referrer = referralOrigin(doc.referrer);
+  let previousPath: string | undefined;
+
+  function pageview() {
+    if (!win) return;
+    const path = win.location.pathname.replace(/\/+$/, "") || "/";
+    if (path === previousPath) return;
+    previousPath = path;
+    if (!PUBLIC_PATH.test(path) || optedOut(win)) return;
+    const body = JSON.stringify({ name: "pageview", url: `${win.location.origin}${path}`, domain, referrer });
+    try {
+      void win.fetch(destination!, {
+        method: "POST", body, headers: { "Content-Type": "text/plain" },
+        credentials: "omit", referrerPolicy: "no-referrer", keepalive: true, mode: "cors",
+      }).catch(() => { /* An unavailable counter must never interrupt reading. */ });
+    } catch { /* Fetch may be unavailable or blocked by the reader. */ }
+  }
+
+  for (const method of ["pushState", "replaceState"] as const) {
+    const original = win.history[method];
+    win.history[method] = function (...args: Parameters<History[typeof method]>) {
+      original.apply(this, args);
+      pageview();
+    };
+  }
+  win.addEventListener("popstate", pageview);
+  pageview();
   return true;
 }

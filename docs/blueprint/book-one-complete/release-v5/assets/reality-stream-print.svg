@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="940" viewBox="0 0 900 940" role="img" aria-labelledby="reality-stream-title reality-stream-desc">
+<title id="reality-stream-title">RF₀ and the Reality Stream</title>
+<desc id="reality-stream-desc">Inside one Big C boundary, RF zero contains a living Avatar in a shared world. A downward Reality Stream arrow crosses the RF zero boundary and reaches Little c, which remains within Big C and outside RF zero. A connected Canvas carries the Painting used in interpretation. The frame is labelled lawful environment, the stream situated input, and the Painting accumulated interpretation. The diagram represents DOT’s proposed architecture.</desc>
+<defs>
+<marker id="reality-stream-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="reality-stream-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="reality-stream-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="reality-stream-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="900" height="940" fill="#ffffff"/>
+<text id="reality-stream-text-1" data-fit-box="5,5,895,935" x="60" y="37" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">DOT MODEL</tspan>
+</text>
+<text id="reality-stream-text-2" data-fit-box="5,5,895,935" x="60" y="91" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="44" font-weight="600" text-anchor="start">
+<tspan x="60" dy="0">RF₀ and the Reality Stream</tspan>
+</text>
+<text id="reality-stream-text-3" data-fit-box="5,5,895,935" x="60" y="132" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">World, input, interpretation.</tspan>
+</text>
+<rect x="60" y="178" width="780" height="700" rx="35" fill="#ffffff" stroke="#2f715b" stroke-width="3"/>
+<text id="reality-stream-text-4" data-fit-box="65,183,835,873" x="88" y="229" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="41" font-weight="600" text-anchor="start">
+<tspan x="88" dy="0">Big C</tspan>
+</text>
+<text id="reality-stream-text-5" data-fit-box="65,183,835,873" x="253" y="224" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="25" font-weight="400" text-anchor="start">
+<tspan x="253" dy="0">The encompassing conscious process</tspan>
+</text>
+<rect x="90" y="266" width="720" height="239" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="2"/>
+<text id="reality-stream-text-6" data-fit-box="95,271,805,500" x="119" y="316" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="34" font-weight="600" text-anchor="start">
+<tspan x="119" dy="0">RF₀ · our physical universe</tspan>
+</text>
+<text id="reality-stream-text-7" data-fit-box="95,271,805,500" x="119" y="357" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="26" font-weight="400" text-anchor="start">
+<tspan x="119" dy="0">Shared lawful environment</tspan>
+</text>
+<text id="reality-stream-text-8" data-fit-box="95,271,805,500" x="119" y="427" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="25" font-weight="400" text-anchor="start">
+<tspan x="119" dy="0">World and bodily conditions</tspan>
+<tspan x="119" dy="32.0">constrain what arrives.</tspan>
+</text>
+<path d="M604 450H784M615 423H773M626 385V462M762 385V462" fill="none" stroke="#9bae9f" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<g transform="translate(695 395) scale(0.29)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="8.620689655172415" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="8.620689655172415" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="8.620689655172415" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="8.620689655172415" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="8.620689655172415" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="5.172413793103448" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<text id="reality-stream-text-9" data-fit-box="95,271,805,500" x="695" y="485" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="23" font-weight="400" text-anchor="middle">
+<tspan x="695" dy="0">Avatar</tspan>
+</text>
+<path d="M276 520V640" fill="none" stroke="#2f715b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#reality-stream-arrow-jade)"/>
+<text id="reality-stream-text-10" data-fit-box="65,183,835,873" x="304" y="556" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="25" font-weight="400" text-anchor="start">
+<tspan x="304" dy="0">RS · Reality Stream</tspan>
+<tspan x="304" dy="33.75">Situated input</tspan>
+</text>
+<circle cx="276" cy="725" r="82" fill="#ffffff" stroke="#2f715b" stroke-width="1.7" stroke-dasharray="5 8"/>
+<circle cx="276" cy="725" r="74" fill="#f2f5ef" stroke="#2f715b" stroke-width="2.2"/>
+<text id="reality-stream-text-11" data-fit-box="207,656,345,794" x="276" y="721" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="31" font-weight="600" text-anchor="middle">
+<tspan x="276" dy="0">Little c</tspan>
+</text>
+<text id="reality-stream-text-12" data-fit-box="207,656,345,794" x="276" y="753.83" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22.63" font-weight="400" text-anchor="middle">
+<tspan x="276" dy="0">experiencer</tspan>
+</text>
+<path d="M357 725H461" fill="none" stroke="#2f715b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#reality-stream-arrow-jade)" marker-start="url(#reality-stream-arrow-jade)"/>
+<text id="reality-stream-text-13" data-fit-box="65,183,835,873" x="410" y="683" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="middle">
+<tspan x="410" dy="0">Access</tspan>
+<tspan x="410" dy="25.299999999999997">+ update</tspan>
+</text>
+<rect x="479" y="635" width="301" height="202" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="2"/>
+<text id="reality-stream-text-14" data-fit-box="484,640,775,832" x="502" y="677" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="32" font-weight="600" text-anchor="start">
+<tspan x="502" dy="0">Canvas</tspan>
+</text>
+<text id="reality-stream-text-15" data-fit-box="484,640,775,832" x="502" y="712" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="502" dy="0">Carries + updates state</tspan>
+</text>
+<g transform="translate(532 730) scale(1.015 0.54)" opacity="1">
+<path d="M12 72C40 8 70 97 103 38S157 12 188 45" fill="none" stroke="#2f715b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M16 31C59 54 78 1 113 31S151 92 188 69" fill="none" stroke="#a6553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M21 90C54 65 69 84 99 65S148 42 185 12" fill="none" stroke="#967022" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="44" cy="50" r="5" fill="#2f715b" stroke="#2f715b" stroke-width="0"/>
+<circle cx="112" cy="31" r="5" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<circle cx="151" cy="39" r="5" fill="#967022" stroke="#967022" stroke-width="0"/>
+</g>
+<text id="reality-stream-text-16" data-fit-box="484,640,775,832" x="630" y="817" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="23" font-weight="400" text-anchor="middle">
+<tspan x="630" dy="0">Painting · interpretation</tspan>
+</text>
+<text id="reality-stream-text-17" data-fit-box="65,183,835,873" x="276" y="835" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="23" font-weight="400" text-anchor="middle">
+<tspan x="276" dy="0">Outside RF₀; within Big C</tspan>
+</text>
+<text id="reality-stream-text-18" data-fit-box="5,5,895,935" x="450" y="925" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="25" font-weight="400" text-anchor="middle">
+<tspan x="450" dy="0">The Stream is situated input. The Frame is the wider world.</tspan>
+</text>
+</svg>

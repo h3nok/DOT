@@ -6,8 +6,8 @@ import { author } from "../../content/author";
 import filmsData from "../../content/films.json";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
-import { ConceptTourPlayer } from "./ConceptTourPlayer";
-import { CONCEPT_TOUR_SECONDS } from "./conceptTour";
+import { DarkFilmPlayer } from "./DarkFilmPlayer";
+import { DARK_FILM_SECONDS } from "./darkFilmRevision";
 import { formatDuration } from "./filmTime";
 import "./films.css";
 
@@ -28,7 +28,7 @@ function resolveTourYoutubeUrl(edition: "dark" | "light"): string {
   if (id && (!url || url === filmsData.channelUrl)) {
     return `https://www.youtube.com/watch?v=${id}`;
   }
-  return url || filmsData.channelUrl;
+  return url && url !== filmsData.channelUrl ? url : "";
 }
 
 /**
@@ -60,14 +60,14 @@ export default function FilmPage() {
 
       <header className="film-page-heading">
         <p className="dot-label">
-          {TOUR.label} · {formatDuration(CONCEPT_TOUR_SECONDS)} · By{" "}
+          {TOUR.label} · {formatDuration(DARK_FILM_SECONDS)} · By{" "}
           <Link to="/about" className="films-inline-link">{author.name}</Link>
         </p>
         <h1 className="dot-page-heading">{TOUR.title}</h1>
       </header>
 
       <div className="film-page-stage">
-        <ConceptTourPlayer />
+        <DarkFilmPlayer />
       </div>
 
       <nav aria-label="After the film" className="film-page-next">
@@ -75,9 +75,9 @@ export default function FilmPage() {
           <Link key={link.to} to={link.to} className="films-inline-link">{link.label}</Link>
         ))}
         <Link to="/academy/films" className="films-inline-link">Films in the Academy</Link>
-        <a href={youtubeHref} target="_blank" rel="noopener noreferrer" className="films-inline-link">
+        {youtubeHref && <a href={youtubeHref} target="_blank" rel="noopener noreferrer" className="films-inline-link">
           Watch on YouTube
-        </a>
+        </a>}
       </nav>
     </PageShell>
   );

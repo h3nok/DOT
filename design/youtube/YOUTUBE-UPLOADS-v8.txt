@@ -1,0 +1,112 @@
+DOT — YOUTUBE UPLOADS (v8) · DRAFT FOR AUTHOR REVIEW
+=====================================================
+
+Everything below is third-person project copy written for Henok's review and edits.
+It is not a quotation from the author. Claim levels follow the site's four labels:
+Observation · External model · DOT derivation · Speculative extension.
+
+Files:
+  Trailer    design/youtube/dot-opening-trailer-dark-v8.mp4            (2:36)
+  Full film  design/youtube/concept-film-full-16x9-revised-dark-v8.mp4  (7:33)
+  Captions   assets/dot-opening-trailer-dark-v8.en.srt
+             assets/concept-film-full-16x9-revised-dark-v8.en.srt
+  Thumbnail  assets/thumbnail-dot-film-v8.png (1280 x 720)
+  Chapters   assets/dot-films-v8-chapters.json (also pasted below)
+
+
+-----------------------------------------------------
+1. TRAILER  (suggested as the channel trailer)
+-----------------------------------------------------
+
+TITLE
+Digital Organism Theory — A pragmatic, testable framework for experience
+
+DESCRIPTION
+Every observation begins as an experience. This short film introduces Digital Organism
+Theory (DOT), a framework developed by Henok Ghebrechristos from his own experience
+and offered for each viewer to test against theirs.
+
+It moves from what is widely accepted — perception is formed from sensory data — to
+what DOT proposes: that you are a Little c, an experiencer, and that the body is your
+interface. It sets that proposal beside a widely held view, quoted from Francis Crick's
+The Astonishing Hypothesis (1994), and follows what happens when experience is left
+out of the account: a gap that markets, platforms, and ideologies fill, and stress
+that is treated more than its source.
+
+Claim levels: perception and stress lines draw on mainstream science (External model);
+"You are Little c" and the architecture are DOT's proposals (DOT derivation /
+Speculative extension). Nothing here asks for belief — only a test against your own
+experience.
+
+Chapters
+0:00 Observation
+0:10 Perception
+0:28 DOT's proposal
+0:41 The prevailing view
+1:01 Who fills the gap
+1:20 The body's signal
+1:51 Attention
+2:08 The architecture
+2:22 Digital Organism Theory
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+Watch the full film: [link after upload]
+
+
+-----------------------------------------------------
+2. FULL FILM  (replaces p2j_Aj8QhyY on the site)
+-----------------------------------------------------
+
+TITLE
+Book One, concept by concept — Digital Organism Theory
+
+DESCRIPTION
+The opening film, followed by each of the seventeen concepts in Book One, Consciousness:
+A Digital Organism, in the order of the Concept Map — each with its own picture, the
+Concept Map's definition, and an everyday analogy. The words are typed on screen; there
+is no narration, and the film plays only as fast as it can be read.
+
+Every concept carries its claim level on screen: Observation, External model, DOT
+derivation, or Speculative extension. DOT is presented as a set of proposals to be tested
+in each viewer's own experience, not as settled fact.
+
+Chapters
+0:00 Opening
+2:36 The Subjective Data Principle
+2:50 Digital Organism
+3:06 The Big C Hypothesis
+3:25 Little c
+3:45 The Decoupling Principle
+4:01 Reality Frame
+4:18 Physical Sciences as Frame Derivations
+4:36 Reality Stream
+4:56 Intent
+5:09 The Experience Loop
+5:26 Canvas
+5:41 Painting
+5:55 Character
+6:08 The Fear-Gating Principle
+6:21 The human character
+6:36 Love as an Epistemic Condition
+6:49 Conscious Authorship
+7:05 Limits and Unpaid Debts
+7:21 Closing
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+
+
+-----------------------------------------------------
+UPLOAD SETTINGS (both)
+-----------------------------------------------------
+Category: Education · Language: English · Captions: upload the .en.srt file
+(auto-captions will find nothing — there is no speech)
+Audience: not made for kids · Comments: author's choice (L4/L5: no prompts to like,
+subscribe, or ring a bell are included in the films or descriptions)
+Playlist: Book One — Consciousness: A Digital Organism
+Channel trailer: the trailer (YouTube Studio > Customization > Layout)
+
+After uploading, send the two video IDs; the site's films.json will be pointed at them
+and the old full film (concept-film-full-16x9-dark.mp4 / p2j_Aj8QhyY) can then be retired.
+

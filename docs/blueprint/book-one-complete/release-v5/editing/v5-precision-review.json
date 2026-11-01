@@ -1,0 +1,775 @@
+{
+  "review_date": "2026-11-01",
+  "source_inventory_sha256": "eddf1da3b55ae13579113b898a99f39279a19748d5ff66e1ae513267b69435af",
+  "paragraphs_reviewed": 2055,
+  "inserted_paragraphs_reviewed": 2,
+  "coverage": [
+    {
+      "start": 0,
+      "end": 587
+    },
+    {
+      "start": 588,
+      "end": 1223
+    },
+    {
+      "start": 1224,
+      "end": 2054
+    }
+  ],
+  "accepted_precision_edits": 107,
+  "scope": "Line-by-line editorial and internal-theory consistency review. References and equations preserved; this is not an independent scientific validation.",
+  "changes": [
+    {
+      "paragraph": 55,
+      "current": "In the double-slit family of experiments, interference can build from individual quanta, while the availability of which-path information constrains the visibility of that interference.⁵⁰,⁵¹ The measurement arrangement belongs to the lawful account of the pattern that becomes observable. DOT treats this as evidence for an observer-inclusive architecture: the conditions under which reality is interrogated are not always a passive afterthought to a complete classical story. Here, observation means a physical measurement relation; a conscious human witness is not required for the experimental effect.",
+      "new": "In the double-slit family of experiments, interference can build from individual quanta, while the availability of which-path information constrains the visibility of that interference.⁵⁰,⁵¹ The measurement arrangement belongs to the lawful account of the pattern that becomes observable. DOT draws a methodological lesson from this: the measurement conditions belong in the account of the observed result. Here, observation means a physical measurement relation; a conscious human witness is not required for the experimental effect.",
+      "reason": "Separate the physical measurement result from support for DOT’s ontology; the following paragraph already states that compatibility does not discriminate between theories.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 67,
+      "current": "DOT derivation names a claim that follows from the theory’s postulates. If Big C differentiates Little c and Little c enters a rule-bound Reality Frame through a biological interface, then the body is an interface rather than the producer of the experiencer. This conclusion may be internally required by DOT while remaining externally unverified.",
+      "new": "DOT derivation names a claim that follows from the theory’s postulates. If Big C differentiates Little c and Little c participates in a rule-bound Reality Frame through an Avatar, then the body is an interface rather than the producer of the experiencer. This conclusion may be internally required by DOT while remaining externally unverified.",
+      "reason": "Use the author-confirmed embodiment relation without implying that Little c itself is contained within RF₀.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 182,
+      "current": "The analogy concerns organized differences, patterns, that matter to an organism and influence what it does next. A Digital Organism takes pattern in and puts pattern out; what it carries between the two is its state. The analogy does not identify life with electronic computation.",
+      "new": "The analogy concerns organized differences—patterns—that matter to an organism and influence what it does next. A Digital Organism takes pattern in and puts pattern out; what it carries between the two is its state. The analogy does not identify life with electronic computation.",
+      "reason": "Clarify the apposition without changing the computational analogy.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 257,
+      "current": "That sentence contains more than one commitment.",
+      "new": "This formulation contains more than one commitment.",
+      "reason": "The preceding v5 formulation now contains several sentences; remove the stale singular reference.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 275,
+      "current": "The word survived needs care. It does not mean we possess a record of competing primordial organisms or evidence of a cosmic evolutionary tournament. It expresses a structural inference: for awareness to be occurring now, some continuity of process has succeeded in carrying it across change. DOT imagines that continuity as the outcome of work—the ongoing correction required to keep a pattern coherent rather than allowing it to dissolve.",
+      "new": "The word survived needs care. It does not mean we possess a record of competing primordial organisms or evidence of a cosmic evolutionary tournament. Within DOT, it names the hypothesis that a conscious process maintains its continuity across change. DOT imagines that persistence as the outcome of work—the ongoing correction required to keep a pattern coherent rather than allowing it to dissolve.",
+      "reason": "The occurrence of awareness now does not logically establish its prior continuity; state persistence as DOT’s hypothesis rather than a deduction from the minimum datum.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 277,
+      "current": "A process persists only by detecting consequential change and responding in ways that preserve or develop coherence.",
+      "new": "Within DOT, a Digital Organism persists by detecting consequential change and responding in ways that preserve or develop coherence.",
+      "reason": "Limit the persistence claim to DOT’s defined Digital Organism instead of asserting a universal requirement for every process.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 291,
+      "current": "Within DOT’s reconstruction, one undivided process would face a strategic limitation. Exploration could expose the whole to every failure, and only one path could be tested at a time.",
+      "new": "Within DOT’s reconstruction, an undivided process could face a strategic limitation: exploration might expose the whole to local failure, while a single perspective could restrict the range of conditions it can encounter.",
+      "reason": "Retain the proposed motivation for differentiation without asserting that an undivided process can test only one path at a time.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 310,
+      "current": "A Reality Frame is a rule-bound environment in which action meets consequence. DOT calls our physical universe RF₀. Gravity, chemistry, biological limits, spatial distance, time, scarcity, other agents, and the irreversibility of many actions give this Frame its density.",
+      "new": "A Reality Frame is a rule-bound environment in which action meets consequence. DOT calls our physical universe RF₀. Within the model, RF₀ serves as an experience laboratory for Little cs, each embodied by an Avatar within it. Gravity, chemistry, biological limits, spatial distance, time, scarcity, other agents, and the irreversibility of many actions give this Frame its density.",
+      "reason": "Introduce the author’s confirmed experience-laboratory and Avatar-embodiment relationship at the first full definition of RF₀.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 316,
+      "current": "This ethical boundary is essential. Calling reality an incubator must never excuse cruelty, neglect, oppression, or another person’s suffering.",
+      "new": "This ethical boundary is essential. Calling RF₀ an experience laboratory must never excuse cruelty, neglect, oppression, or another person’s suffering.",
+      "reason": "Use the author’s clarified analogy consistently while preserving the explicit boundary against justifying harm.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 334,
+      "current": "The Canvas carries. The Painting interprets. Character acts.",
+      "new": "The Canvas carries state. The Painting shapes interpretation. Character is expressed through action.",
+      "reason": "Keep capacity, organized state, and expression distinct; avoid making Painting and Character sound like separate agents.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 337,
+      "current": "Clear Intent can stabilize attention, organize effort, improve inquiry, and make features of a situation usable. Whether it also influences external reality beyond these embodied and attentional mechanisms remains a DOT hypothesis.",
+      "new": "Clear Intent can stabilize attention, organize effort, improve inquiry, and make features of a situation usable. Whether it also influences external reality beyond these embodied and attentional mechanisms remains a speculative extension of DOT.",
+      "reason": "Match the declared claim level for extra-physical Intent effects in the preface and derivation contract.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 345,
+      "current": "Little c does not enter RF₀ with a mature understanding of the Frame.",
+      "new": "Little c begins embodied participation in RF₀ without a mature understanding of the Frame.",
+      "reason": "Remove the residual claim that Little c enters RF₀ while retaining the developmental point.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 346,
+      "current": "It arrives through a body with needs, sensitivities, inherited biology, and developmental limits. It enters a family, language, culture, economy, history, and arrangements of power it did not choose. Before it can inspect these conditions, it must adapt.",
+      "new": "Through the Avatar, Little c encounters bodily needs, sensitivities, inherited biology, and developmental limits. Its experience is also shaped by a family, language, culture, economy, history, and arrangements of power it did not choose. Before it can inspect these conditions, it must adapt.",
+      "reason": "Make bodily and social participation explicit without a spatial arrival of Little c inside RF₀.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 367,
+      "current": " Reality Frame and Reality Stream as a distinction between the wider context and the experience available within it. ",
+      "new": " Reality Frame and Reality Stream as a distinction between the wider context and the experience supplied by it. ",
+      "reason": "Describe the Frame-to-Stream relationship without implying that the local experiencer is within the Frame.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 382,
+      "current": "Within DOT’s proposed architecture, physical laws must emerge as RF₀’s invariants and transitions; chemistry as stable compositions it permits; biology as adaptive, self-preserving organization; bodies as local interfaces; psychology as interpretation, Intent, and consequence; culture as interactions among embodied Little c. Biological accounts of learning, memory, and metacognition may explain many local regularities. DOT must recover their success and provide the missing bridges. The speculative prerequisites of Big C do not exempt any later layer from that derivation contract.",
+      "new": "Within DOT’s proposed architecture, physical laws must emerge as RF₀’s invariants and transitions; chemistry as stable compositions it permits; biology as adaptive, self-preserving organization; bodies as local interfaces; psychology as interpretation, Intent, and consequence; culture as interactions among Little cs embodied through their Avatars. Biological accounts of learning, memory, and metacognition may explain many local regularities. DOT must recover their success and provide the missing bridges. The speculative prerequisites of Big C do not exempt any later layer from that derivation contract.",
+      "reason": "Use an explicit plural and preserve the author-confirmed embodiment relationship.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 430,
+      "current": "The body is described as an avatar: a real, consequential in-Frame interface through which Little c perceives and acts. Its reality and importance are part of the model.",
+      "new": "In DOT, Little c is embodied by the Avatar: the living body in RF₀ through which it perceives and acts. The Avatar is real and consequential; its reality and importance are part of the model.",
+      "reason": "State the author’s embodiment clarification directly at the main Avatar definition and capitalize the defined term consistently.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 440,
+      "current": "In Equation (2.1), tRP is the reported onset of the readiness potential, tW is the retrospectively reported time of conscious wanting or intention, and tmove is movement onset. The inequality records the measured temporal order. It does not, by itself, identify the origin of authorship.",
+      "new": "In Equation (2.1), tRP is the estimated onset of the readiness potential, tW is the retrospectively reported time of conscious wanting or intention, and tmove is movement onset. The inequality records the measured temporal order. It does not, by itself, identify the origin of authorship.",
+      "reason": "Distinguish the estimated onset of the measured neural signal from the participant’s retrospective report of intention; preserve all native notation.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 476,
+      "current": "Rendering Latency: the hypothesized, minimal interval between the formation of Intent in Little c and the first measurable change associated with its execution through the body.",
+      "new": "Rendering Latency: the hypothesized interval between the formation of Intent in Little c and the first measurable change associated with its execution through the body.",
+      "reason": "The model defines an interval but does not establish a measured minimum.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 484,
+      "current": "Equations (2.3) and (2.4) define Rendering Latency. The variable tI is the hypothesized time at which Intent forms, while tN is the onset of the first measurable neural change causally recruited for execution. Current experiments do not independently measure tI, and they do not identify a neural event as the first event in the full causal sequence. These equations define DOT’s claim; they do not report an observed interval.",
+      "new": "Equations (2.3) and (2.4) define Rendering Latency. The variable tI is an idealized time at which Intent forms, while tN is the onset of the first measurable neural change causally recruited for execution. Current experiments do not independently measure tI, and they do not identify a neural event as the first event in the full causal sequence. These equations define DOT’s claim; they do not report an observed interval.",
+      "reason": "Acknowledge the point approximation after the preceding section models intention as an interval; preserve native equations and symbols.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 485,
+      "current": "Little c moves first; the body follows.",
+      "new": "DOT proposes that Intent precedes its neural execution.",
+      "reason": "Identify the causal ordering as a DOT proposal rather than an unqualified empirical fact or a literal movement of Little c.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 486,
+      "current": "Rendering Latency is one of DOT’s strongest ontological claims and one of its least operationally established relative to public evidence. The felt sequence—notice, intend, move—does not measure the interval. It locates a possible handoff phenomenologically, but only independent measurement can show where the neural execution sequence first changes. The handoff belongs to DOT’s architecture; its measurable signature remains unproven.",
+      "new": "Rendering Latency is one of DOT’s strongest ontological claims and one of its least operationally established relative to public evidence. The felt sequence—notice, intend, move—does not measure the interval or locate a nonphysical handoff. Only an independently justified measurement could establish where the neural execution sequence first changes. The handoff belongs to DOT’s architecture; its measurable signature remains unproven.",
+      "reason": "A phenomenological sequence does not itself locate the proposed interface mechanism; keep that inference separate from measurement.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 487,
+      "current": "Within the model, the handoff would need to be extremely small. A noticeable delay between Intent and action would disrupt immersion. Experience feels immediate because awareness, body, and environment operate as a tightly coordinated loop.",
+      "new": "DOT expects a short handoff interval, but the felt immediacy of action cannot establish its duration. Awareness, body, and environment are experienced as a tightly coordinated loop.",
+      "reason": "State the short-interval expectation as a hypothesis instead of deriving a timing bound from subjective immersion.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 503,
+      "current": "This is also why anesthesia is a harder case than a mystical report. Under general anesthesia, brain dynamics and later report can change in ways that track the loss and return of consciousness. The interface hypothesis must account for why Little c has no accessible Reality Stream, no stable memory, or no later report during many anesthetic states. Saying that the connection was “turned off” merely restates the phenomenon. A mechanism must describe what connection means.",
+      "new": "This is also why anesthesia is a harder case than a mystical report. Under general anesthesia, brain dynamics and later report can change in ways that track the loss and return of consciousness. The interface hypothesis must account for the apparent interruption of experience, failures of memory, and absence of later report in many anesthetic states. Saying that the connection was “turned off” merely restates the phenomenon. A mechanism must describe what connection means.",
+      "reason": "Preserve the distinction between experience, memory, and report; do not infer the absence of a Reality Stream directly from absent recall or response.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 523,
+      "current": "The sequence does not independently validate Little c from outside the body. Within DOT, it locates Little c prior to the biological interface and gives the theory a disciplined way to follow one event across subjective and physiological layers without erasing either one.",
+      "new": "The sequence does not independently establish the proposed handoff from Little c to the body. Within DOT, it places Little c before the biological interface in the proposed causal order and gives the theory a disciplined way to follow one event across subjective and physiological layers without erasing either one.",
+      "reason": "Clarify the kind of priority intended and name the mechanism that the practical sequence does not establish.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 533,
+      "current": "For DOT, that is evidence, not unique proof. The experimentally relevant observation is that measurement context, including whether path information is physically available, belongs to the account of the pattern that becomes observable. Standard quantum theory explains these results without requiring a conscious observer, and classical-wave models can reproduce important delayed-choice quantum-eraser statistics under postselection.¹¹",
+      "new": "These results constrain any physical account DOT proposes. The experimentally relevant observation is that measurement context, including whether path information is physically available, belongs to the account of the pattern that becomes observable. Standard quantum theory explains these results without requiring a conscious observer, and classical-wave models can reproduce important delayed-choice quantum-eraser statistics under postselection.¹¹",
+      "reason": "Avoid treating compatibility with standard quantum results as evidence selecting DOT; preserve the cited physical account and the following claim boundary.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 540,
+      "current": "DOT therefore needs a comparison class. Let N be the family of models in which the complete causal history of an intentional action is recoverable, in principle, from prior physical state and lawful physical dynamics. Let D be DOT’s Decoupling model, in which Intent contributes to the action through a lawful interface relation not reducible to that prior state.",
+      "new": "DOT therefore needs a comparison class. Let N be the family of models in which intentional action is fully accounted for, in principle, by prior physical state and lawful physical dynamics, including any stochastic processes. Let D be DOT’s Decoupling model, in which Intent contributes to action through a lawful interface relation not exhausted by that physical account.",
+      "reason": "Do not define all physical models as deterministically predictable; the following discussion already includes stochastic models and omitted-state controls.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 564,
+      "current": "Freedom is therefore not best measured by asking whether an action had causes. An uncaused action would be random, not authored. The more useful question is whether the system can represent alternatives, evaluate consequence, inhibit a dominant policy, learn from the result, and increasingly act from values it can examine and endorse.",
+      "new": "Freedom is therefore not best measured by asking whether an action had causes. An uncaused action would not, by itself, establish authorship. The more useful question is whether the system can represent alternatives, evaluate consequence, inhibit a dominant policy, learn from the result, and increasingly act from values it can examine and endorse.",
+      "reason": "An absence of causes does not logically entail randomness; preserve the narrower argument that lack of causes does not establish agency.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 575,
+      "current": "Pause before answering a difficult question and another sentence may become available. Notice the pull to check the phone and allow the pull to pass without obeying it. Begin a familiar movement, stop, and choose another. None of these acts proves a nonphysical interface. They reveal something more immediate: awareness can sometimes notice a proposed action without becoming identical to it.",
+      "new": "Pause before answering a difficult question and another sentence may become available. Notice the pull to check the phone and allow the pull to pass without obeying it. Begin a familiar movement, stop, and choose another. None of these acts proves a nonphysical interface. They reveal something more immediate: a person can sometimes notice an impulse without acting on it.",
+      "reason": "State what the practical examples show without treating a distinction in attention as evidence of ontological nonidentity.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 577,
+      "current": "Repetition turns action into policy. Attention can make policy visible. Once visible, policy may be revised through practice and consequence. As the Canvas becomes less divided, Intent becomes steadier and the effective decision-space widens.",
+      "new": "Repetition turns action into policy. Attention can make policy visible. Once visible, policy may be revised through practice and consequence. As the Canvas becomes less divided, Intent can become steadier and the effective decision-space can widen.",
+      "reason": "Keep the practical outcome conditional, consistent with the chapter’s bodily and structural limits on agency.",
+      "section_review": "opening"
+    },
+    {
+      "paragraph": 594,
+      "current": "The second is experienced continuity inside a Reality Frame. This is the seamless flow through which distinct events arrive as one life. DOT proposes that this continuity is constructed through the coordination of the Frame, the body, the Canvas, memory, and the way Little c gathers change into an intelligible present.",
+      "new": "The second is experienced continuity through embodied participation in a Reality Frame. This is the seamless flow through which distinct events arrive as one life. DOT proposes that this continuity is constructed through the coordination of the Frame, the body, the Canvas, memory, and the way Little c gathers change into an intelligible present.",
+      "reason": "Locate the embodied participation in the Frame without locating Little c itself inside RF₀.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 595,
+      "current": "DOT treats primordial continuity as a speculative prerequisite. It proposes that seamless continuity inside a Reality Frame is locally organized.",
+      "new": "DOT treats primordial continuity as a speculative prerequisite. It proposes that the continuity of embodied experience is locally organized.",
+      "reason": "Keep the two senses of continuity distinct without implying that Little c is contained in a Reality Frame.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 597,
+      "current": "Our clocks do not measure T itself. They measure regular change inside RF₀. Seconds, hours, and days belong to the local organization of experience. DOT uses t, or tRF, for this rendered time: the cadence by which a particular Frame orders consequence.",
+      "new": "In DOT’s terminology, clocks measure regular change inside RF₀ rather than primordial T. Seconds, hours, and days belong to the local organization of experience. DOT uses t, or tRF, for this rendered time: the cadence by which a particular Frame orders consequence.",
+      "reason": "Mark the distinction from primordial T as DOT’s terminology rather than an independently established physical finding.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 608,
+      "current": "These distinctions do not settle numerical continuity. Book One takes local self-awareness as a postulate without claiming a test that proves an intrinsically identical subject persists across every interruption.",
+      "new": "These distinctions do not settle numerical continuity. Book One begins with experienced local self-awareness without claiming a test that proves an intrinsically identical subject persists across every interruption.",
+      "reason": "Preserve the author’s order of inquiry from experienced awareness to the wider model; the unproven numerical-identity claim remains open.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 617,
+      "current": "What is observable is that human experience bundles information. Attention can be narrow or wide. A moment can feel brief under pressure and spacious under stillness. Practice can reveal distinctions that a beginner compresses into one event. Research on perceptual cycles provides evidence that perception and attention can operate rhythmically, but it does not establish a universal render tick.¹² The same Reality Stream can therefore be encountered at different resolutions.",
+      "new": "What is observable is that human experience bundles information. Attention can be narrow or wide. A moment can feel brief under pressure and spacious under stillness. Practice can reveal distinctions that a beginner compresses into one event. Research on perceptual cycles provides evidence that perception and attention can operate rhythmically, but it does not establish a universal render tick.¹² In DOT’s terms, the same Reality Stream may be encountered at different resolutions.",
+      "reason": "Avoid implying that cited perceptual-cycle research establishes DOT’s Reality Stream account.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 630,
+      "current": "This does not require a tiny spectator watching a temporal buffer. It requires only that the processes supporting experience integrate information over multiple scales.",
+      "new": "Accounting for this temporal organization does not require a tiny spectator watching a temporal buffer. It requires an account of how the processes supporting experience integrate information over multiple scales.",
+      "reason": "Distinguish an explanatory requirement from a claim that temporal integration alone explains consciousness.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 645,
+      "current": "This is why default experience feels total. The Frame does not ordinarily announce itself as a Frame. Culture then adds another layer. Repeated explanations, group rewards, identity, and habit determine which questions feel available. “How we do things” begins to feel identical to “how things are.”",
+      "new": "This is why default experience feels total. The Frame does not ordinarily announce itself as a Frame. Culture then adds another layer. Repeated explanations, group rewards, identity, and habit shape which questions feel available. “How we do things” begins to feel identical to “how things are.”",
+      "reason": "Avoid a deterministic claim about the effects of culture and habit on inquiry.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 647,
+      "current": "The scientific method is valuable precisely because it disciplines this problem. It turns claims into hypotheses, demands disconfirmation, compares observations, and prevents private certainty from becoming public fact merely through force of conviction.",
+      "new": "The scientific method is valuable precisely because it disciplines this problem. It turns claims into hypotheses, seeks tests that could disconfirm them, and compares observations. These practices help prevent the promotion of private certainty into public fact merely through force of conviction.",
+      "reason": "State scientific methods as error-correcting practices rather than a guarantee that conviction cannot influence public claims.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 667,
+      "current": "Transient patterns disappear without carrying consequence. Persistence begins when enough state is retained to compare change, register what bears on continuity, and alter the next transition. Feedback is retained consequence; memory is feedback made available to later response; self-preservation is the recursive use of both to remain a continuing process.",
+      "new": "A transient pattern may disappear without retaining the effects of earlier change. In DOT’s account, persistence requires enough retained state to register what bears on continuity and alter later response. Feedback brings consequences into subsequent regulation; memory makes aspects of earlier states available to later response; self-preservation uses these capacities to maintain a continuing process.",
+      "reason": "Distinguish having consequences from retaining their influence, and distinguish feedback from memory without asserting that every transient pattern is causally inert.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 683,
+      "current": "At the biological level, memory engram research has identified cell ensembles whose manipulation in animal models can be necessary or sufficient for aspects of recall.⁴³ That is powerful evidence that learned continuity is physically instantiated. DOT must expect it. If the Canvas has a nonphysical component, the theory must explain how that component relates to physical engrams and why disrupting the engram disrupts access.",
+      "new": "At the biological level, memory engram research has identified cell ensembles whose manipulation in animal models can be necessary or sufficient for aspects of recall.⁴³ That is evidence that aspects of learned memory are physically instantiated. DOT must expect it. If the Canvas has a nonphysical component, the theory must explain how that component relates to physical engrams and why disrupting the engram disrupts access.",
+      "reason": "Keep the inference proportional to the cited manipulation of memory engrams; it does not establish every form of learned or personal continuity.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 713,
+      "current": "Reality Frames answer those needs in DOT’s model. They are bounded environments in which stable rules convert possibility into structured experience. Actions produce consequences. Consequences update the Canvas. What is learned can shape the next action.",
+      "new": "Reality Frames answer those needs in DOT’s model. They are rule-bound environments that structure the experience available to Little cs. Actions produce consequences. Consequences update Canvas state. What is learned can shape the next action.",
+      "reason": "Describe how Frames supply experience without implying that their experiencers are physically contained in them.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 746,
+      "current": "Reports of near-death experiences, terminal lucidity, apparitions, mediumship, or claimed past-life memory may motivate investigation. They are also unusually vulnerable to retrospective reconstruction, cultural expectation, information leakage, selective reporting, medical uncertainty, and fraud. A complete scientific theory cannot accept them because they fit. It must define prospective protocols and admit negative results.",
+      "new": "Reports of near-death experiences, terminal lucidity, apparitions, mediumship, or claimed past-life memory may motivate investigation. Their evaluation must account for retrospective reconstruction, cultural expectation, information leakage, selective reporting, medical uncertainty, and possible fraud. A complete scientific theory cannot accept them because they fit. It must define prospective protocols and admit negative results.",
+      "reason": "State concrete evaluation concerns without an unsupported comparison about unusual vulnerability.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 762,
+      "current": "A Reality Frame is DOT’s model of that structured environment.",
+      "new": "A Reality Frame is DOT’s model of that structured environment. RF₀ is a shared experience laboratory for Little cs, which participate through their Avatars.",
+      "reason": "Make the author’s 2026-11-01 experience-laboratory and embodiment clarification explicit at the chapter’s first definition.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 767,
+      "current": " Reality Stream: the time-ordered experience delivered within that environment. ",
+      "new": " Reality Stream: the time-ordered experience supplied by that environment to Little c. ",
+      "reason": "Distinguish the supplying environment from the experiencer receiving the Reality Stream.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 807,
+      "current": "A Reality Frame is not identical to the experience occurring within it.",
+      "new": "A Reality Frame is not identical to the experience it supplies to Little c.",
+      "reason": "Remove spatial ambiguity while preserving the distinction between Frame and Stream.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 817,
+      "current": "From the human perspective, the Reality Stream arrives through vision, sound, touch, smell, taste, interoception, memory, and social context. It does not render a room alone. It renders a body-in-a-room: hungry or rested, safe or threatened, welcomed or watched, carrying a history that changes what the room means.",
+      "new": "For a human being, the Reality Stream includes sensory and bodily input: vision, sound, touch, smell, taste, and interoception. This input arrives in a setting that may include other people, while the body may be hungry or rested, comfortable or in pain. Memory and the existing Painting participate in what the encounter means.",
+      "reason": "Separate current sensory and bodily input from the carried memory and interpretation that shape its meaning, consistently with Equations (4.2)–(4.3).",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 818,
+      "current": "The body is the in-Frame delivery layer. It determines the sensory range available to the person, the movements that can be attempted, and many of the consequences through which the Canvas learns.",
+      "new": "The Avatar—the living body in RF₀—embodies Little c’s participation in the Frame. It constrains the sensory range available to the person, the movements that can be attempted, and the bodily consequences that enter the Experience Loop.",
+      "reason": "State the confirmed embodiment relationship and avoid treating the body as the sole determinant of every consequence or the Canvas itself as an experiencer.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 861,
+      "current": "If repeated actions produced unrelated consequences, learning would fail. If objects changed identity without constraint, memory would lose predictive value. If regularity depended on one observer’s preference, distinct Little c could not coordinate inside a shared curriculum.",
+      "new": "If repeated actions produced unrelated consequences, learning would fail. If objects changed identity without constraint, memory would lose predictive value. If regularity depended on one observer’s preference, distinct instances of Little c could not coordinate through a shared Frame.",
+      "reason": "Use a grammatical plural and distinguish participation through RF₀ from containment inside it.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 877,
+      "current": "DOT does not need consciousness-induced collapse in order to state its foundation. Big C is proposed as the ontological ground of the Frame, not as a human mind peeking at a detector. Little c is embedded in RF₀ and normally acts through a body. If DOT later predicts a distinctive relation between Intent and quantum outcome, it must specify the deviation from standard theory, the biological coupling, and the controls that would distinguish it from bias and postselection.",
+      "new": "DOT does not need consciousness-induced collapse in order to state its foundation. Big C is proposed as the ontological ground of the Frame, not as a human mind peeking at a detector. Little c is embodied by an Avatar in RF₀ and acts through that living body. If DOT later predicts a distinctive relation between Intent and quantum outcome, it must specify the deviation from standard theory, the biological coupling, and the controls that would distinguish it from bias and postselection.",
+      "reason": "Correct a direct contradiction of the author-confirmed relationship: the Avatar is in RF₀; Little c belongs within Big C and participates through the Avatar.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 907,
+      "current": "A child cannot read. The same child can later interpret a book. A beginner struggles to coordinate movements that an expert performs without conscious effort. A person invents a tool, learns a language, joins with others, or creates an institution. None of these acts breaks the rules of RF₀. Each occupies more of the lawful space those rules permit.",
+      "new": "A child who cannot yet read can later learn to interpret a book. A beginner struggles to coordinate movements that an expert performs without conscious effort. A person invents a tool, learns a language, joins with others, or creates an institution. None of these acts breaks the rules of RF₀. Each occupies more of the lawful space those rules permit.",
+      "reason": "Make the developmental example precise without asserting that children as a class cannot read.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 945,
+      "current": "Intent does not command the world. It commits the person to a lawful move within it.",
+      "new": "Intent does not command the world. It commits the person toward action through the Frame’s lawful channels.",
+      "reason": "Distinguish commitment toward action from guaranteed execution or control over physical outcomes.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 961,
+      "current": "Likewise, Little c receives one Reality Stream through one body and one Painting. It does not observe Big C directly. The Limit of Knowledge prevents the local perspective from being promoted into a complete map of the whole.",
+      "new": "In the ordinary human case considered here, Little c receives a situated Reality Stream through the Avatar and encounters it through the Painting. This does not provide a complete view of Big C. The Limit of Knowledge prevents the local perspective from being promoted into a complete map of the whole.",
+      "reason": "Scope the one-body example and distinguish bodily input from interpretation; avoid denying the author’s experienced starting point for inquiry into Big C.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 974,
+      "current": "The Reality Frame model now has a stable architecture.",
+      "new": "The working relationships in the Reality Frame model can now be summarized.",
+      "reason": "Describe the chapter’s completed exposition without implying that the proposed architecture is empirically established.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 984,
+      "current": "Something in You Is Recording",
+      "new": "Something in You Carries Change",
+      "reason": "Keep the chapter opening consistent with the later distinction between cumulative change and a literal recording of experience.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 986,
+      "current": "Something in you is always adapting.",
+      "new": "Something in you carries these changes forward.",
+      "reason": "Replace an unbounded claim of constant adaptation with the chapter’s specific subject: retained influence.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 987,
+      "current": "Human traditions have called this persistent interior by many names: soul, spirit, higher self, being, memory, conditioning. DOT does not need to settle the full meaning of those terms before describing the process they are trying to reach.",
+      "new": "Human traditions use terms such as soul, spirit, higher self, and being for aspects of interior life. Memory and conditioning name more specific processes. DOT need not equate these terms to describe how experience leaves enduring influence.",
+      "reason": "Avoid treating metaphysical, experiential, and psychological terms as interchangeable names for one construct.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1010,
+      "current": "This also supplies a boundary condition. If the Canvas becomes a synonym for everything that affects a person, it stops explaining. DOT should use it only for persistent organization that changes how later experience is interpreted or acted upon.",
+      "new": "This also supplies a boundary condition. If the Canvas becomes a synonym for everything that affects a person, it stops explaining. Its proposed role is to carry and update persistent state; the Painting names the accumulated organization that shapes later interpretation and action.",
+      "reason": "Keep Canvas as the capacity that carries state distinct from Painting as the accumulated organization of that state.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1033,
+      "current": " Return: Consequence is felt, interpreted, and carried forward as an update to the Canvas. ",
+      "new": " Return: Consequence is felt, interpreted, and carried forward as an update to Canvas state. ",
+      "reason": "Specify that consequence updates the carried state, preserving the capacity/content distinction.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1047,
+      "current": "Equations (5.1)–(5.3) define the Experience Loop. The first states that consequential change Δt updates the Canvas. The second states that the Painting is the organized content carried by the Canvas. The third represents Character as an action policy: the probability or tendency of action at depends on the present Reality Stream as interpreted through the Painting. The notation does not claim that these quantities have already been measured.",
+      "new": "Equations (5.1)–(5.3) relate three parts of the Experience Loop. The first states that consequential change Δt updates Canvas state. The second states that the Painting is the organized content carried by the Canvas. The third represents Character as an action policy: the probability or tendency of action at depends on the present Reality Stream as interpreted through the Painting. The notation does not claim that these quantities have already been measured.",
+      "reason": "These equations describe Canvas update, Painting organization, and action policy; they do not specify every transition in the loop. Specify that the update changes Canvas state.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1061,
+      "current": "The Canvas changes through what the system detects, predicts, rehearses, and can retain.",
+      "new": "Canvas state changes through what the system detects, predicts, rehearses, and can retain.",
+      "reason": "Specify what changes rather than conflating the capacity to carry state with its current contents.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1076,
+      "current": "As fragmentation on the Canvas increases, Intent becomes less steady. As fragmentation decreases, Intent becomes clearer and more coherent.",
+      "new": "DOT hypothesizes that greater fragmentation on the Canvas makes Intent less steady, while reduced fragmentation permits clearer and more coherent Intent.",
+      "reason": "Match the following equation’s status as a directional hypothesis rather than announcing a universal quantified law.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1094,
+      "current": "Functional coupling connects body, carried experience, and awareness. A different problem arises when that connection becomes identification:",
+      "new": "Functional coupling connects body, carried state, and awareness. Identification is a distinct relation:",
+      "reason": "Do not imply that the necessary functional connection transforms into, or is replaced by, identification.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1103,
+      "current": "They are the consequences of being born through one body.",
+      "new": "They arise through life in one body.",
+      "reason": "Clarify the embodied origin of early learning without the ambiguous phrase born through one body.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1104,
+      "current": "Hunger, warmth, pain, comfort, illness, relief, touch, movement, and safety all arrive through the same interface. The body is the only point of contact available to the developing person. It therefore becomes difficult to distinguish:",
+      "new": "Hunger, warmth, pain, comfort, illness, relief, touch, movement, and safety all arrive through the same interface. The developing person encounters the world through the body. It therefore becomes difficult to distinguish:",
+      "reason": "Keep the developmental account grounded in embodiment without an unnecessary universal exclusivity claim.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1124,
+      "current": "Equation (5.7) expresses a feedback loop: the Painting helps generate expectations about the body, those expectations participate in regulation and attention, the body changes or resists the prediction, and the returning internal stream updates interpretation. The notation is schematic. It captures why meaning can enter physiology and physiology can reorganize meaning.",
+      "new": "Equation (5.7) expresses a feedback loop: the Painting helps generate expectations about the body, those expectations participate in regulation and attention, the body changes or resists the prediction, and the returning internal stream updates interpretation. The notation is schematic. It describes how interpretation can affect bodily regulation and bodily changes can reorganize interpretation.",
+      "reason": "Make the proposed reciprocal functions explicit rather than treating meaning as something that literally enters physiology.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1162,
+      "current": "These distinctions can be reported imperfectly and still improve inquiry. They help separate “my chest tightened” from “you are dangerous,” and “I want to leave” from “leaving is the only safe option.” The first statement in each pair reports data closer to the experience. The second interprets or commits.",
+      "new": "These distinctions can be reported imperfectly and still improve inquiry. They help separate “my chest tightened” from “you are dangerous,” and “I want to leave” from “leaving is the only safe option.” The first statement in each pair stays closer to the reported sensation or urge. The second makes a claim about the situation.",
+      "reason": "The quoted second statements are appraisals, not committed Intent; keep interpretation and commitment distinct.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1176,
+      "current": "Little c approaches a conversation, a height, a decision, a relationship, or a different version of self. The situation passes through the Painting. If threat is predicted, the available field contracts.",
+      "new": "Little c approaches a conversation, a height, a decision, a relationship, or a different version of self. The situation passes through the Painting. When governing Fear organizes the interpretation, the available field contracts around threat.",
+      "reason": "Distinguish any threat prediction from the governing contraction the chapter specifically defines as Fear.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1199,
+      "current": "Protecting life is rational. DOT’s further interpretation of Fear of death as avatar–self fusion depends on Decoupling; it is not an established explanation.",
+      "new": "Protecting life is rational. DOT’s further interpretation of Fear of death as Avatar–Self Fusion depends on the Decoupling hypothesis; it is not an established explanation.",
+      "reason": "Use the defined term consistently and keep the dependence on an unestablished hypothesis explicit.",
+      "section_review": "architecture"
+    },
+    {
+      "paragraph": 1227,
+      "current": "But Little c never meets that stream empty-handed.",
+      "new": "Little c encounters the Reality Stream through the Painting already carried on its Canvas.",
+      "reason": "Give the chapter opening an explicit referent and state the model’s mediation relation without the unsupported pronoun “that stream.”",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1235,
+      "current": "You did not choose most of its earliest strokes. They arrived through the body into which you entered, the care you received, the fears surrounding your childhood, the language spoken around you, the consequences attached to belonging, and the civilization that supplied your first explanations. Much of the Painting formed before you possessed the clarity to question it.",
+      "new": "You did not choose most of its earliest strokes. They arrived through your living body, the care you received, the fears surrounding your childhood, the language spoken around you, the consequences attached to belonging, and the civilization that supplied your first explanations. Much of the Painting formed before you possessed the clarity to question it.",
+      "reason": "Avoid implying that a preexisting experiencer literally entered a body; preserve the account of embodied inheritance.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1244,
+      "current": "Little c communicates its experience of deeper reality by translating it through metaphors drawn from its Reality Frame and from what has already been painted on its Canvas.",
+      "new": "Little c communicates its experience by translating it through metaphors drawn from its Reality Frame and from what has already been painted on its Canvas.",
+      "reason": "The communication principle concerns experience; the phrase “deeper reality” should not imply that its ontological interpretation is already established.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1250,
+      "current": "Some ideas pass lightly across the surface and disappear. Others become so deeply coupled to the body that questioning them produces fear, shame, anger, or physical contraction. The difference is not always the quality of the idea. It is often the conditions under which the stroke was received.",
+      "new": "Some ideas pass lightly across the surface and disappear. Others become so closely tied to bodily responses that questioning them produces fear, shame, anger, or physical contraction. The difference is not always the quality of the idea. It is often the conditions under which the stroke was received.",
+      "reason": "Reserve coupling for the defined functional relationship; learned associations and bodily responses are the intended relation here.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1263,
+      "current": "The Painting exists inside nested systems. A complete account must examine at least four levels without collapsing one into another.",
+      "new": "Patterns in the Painting are shaped by nested systems. A complete account must examine at least four levels without collapsing one into another.",
+      "reason": "Make the social causal claim explicit without treating the Painting as a spatially nested entity.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1298,
+      "current": "Seeing does not require humiliation. You do not have to hate the person you were in order to become more conscious than that person could be. Shame often drives the Painting underground, where it continues operating without being named. Honest attention brings it into view.",
+      "new": "Seeing does not require humiliation. You do not have to hate the person you were in order to notice and choose more clearly now. Shame often drives the Painting underground, where it continues operating without being named. Honest attention brings it into view.",
+      "reason": "Development expands available awareness and action, not the intrinsic nature or degree of self-awareness.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1321,
+      "current": "Social threat is biologically consequential. Work on social safety describes how conflict, isolation, devaluation, rejection, and exclusion can recruit interacting neural, endocrine, autonomic, and immune processes, particularly when threat becomes sustained.⁴⁷ This does not mean every health difference is caused by perceived rejection or that one theory explains all stress. It demonstrates why social conditions cannot be cleanly separated from bodies and Canvases.",
+      "new": "Social threat is biologically consequential. Work on social safety describes how conflict, isolation, devaluation, rejection, and exclusion can recruit interacting neural, endocrine, autonomic, and immune processes, particularly when threat becomes sustained.⁴⁷ This does not mean every health difference is caused by perceived rejection or that one theory explains all stress. Such findings support treating social conditions as part of an account of bodily experience. DOT uses the Canvas model to describe how that experience is carried forward.",
+      "reason": "Separate the cited biological findings from DOT’s interpretation; the external research does not demonstrate the Canvas ontology.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1345,
+      "current": "The experience did not place me outside culture. No one stands outside the Painting. It gave me contrast.",
+      "new": "The experience did not place me outside culture or free me from my own conditioning. It gave me contrast.",
+      "reason": "Describe the limit of cultural contrast without spatially locating the experiencer inside the Painting.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1360,
+      "current": "This trap produces capable people who cannot feel sufficient. They may accomplish extraordinary things while remaining frightened of stillness, ordinary need, aging, failure, or being seen without the performance.",
+      "new": "This trap can produce capable people who cannot feel sufficient. They may accomplish extraordinary things while remaining frightened of stillness, ordinary need, aging, failure, or being seen without the performance.",
+      "reason": "State a recurring possible consequence without making it a universal causal result.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1443,
+      "current": "DOT does not ask us to choose between personal and structural responsibility. The Painting exists across both. Institutions organize consequences and shape the Reality Stream entering millions of people at once. Individuals interpret, participate, resist, repair, and reproduce.",
+      "new": "DOT does not ask us to choose between personal and structural responsibility. Personal Paintings and institutional patterns shape one another. Institutions organize consequences and shape the Reality Stream entering millions of people at once. Individuals interpret, participate, resist, repair, and reproduce.",
+      "reason": "Distinguish individual carried state from the collective patterns that influence it.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1449,
+      "current": "Autonomy without competence produces imagined options a person cannot yet enact. Competence without autonomy can produce a highly effective instrument for another’s Intent. Autonomy and competence without relatedness can leave the person isolated and brittle. Relatedness without autonomy becomes belonging purchased by self-erasure.",
+      "new": "Autonomy without competence can produce imagined options a person cannot yet enact. Competence without autonomy can produce a highly effective instrument for another’s Intent. Autonomy and competence without relatedness can leave the person isolated and brittle. Relatedness without autonomy can become belonging purchased by self-erasure.",
+      "reason": "Keep the examples as possible patterns rather than universal outcomes of combinations of psychological needs.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1489,
+      "current": "The Reality Frame is the deeper environment of constraint, possibility, action, and consequence. Human civilization is a collective Painting produced inside it. The Frame supplies the conditions in which learning can occur. Civilization supplies much of the information through which Little c initially interprets those conditions.",
+      "new": "In DOT’s model, RF₀ is the shared environment of constraint, possibility, action, and consequence. It serves as an experience laboratory for Little cs, embodied there by their Avatars. Human civilization is a collective Painting formed through those embodied lives. The Frame supplies conditions in which learning can occur; civilization supplies much of the inherited interpretation brought to those conditions.",
+      "reason": "Apply the author’s 2026-11-01 clarification: RF₀ is an experience laboratory, and Avatars embody Little cs within it. Distinguish the Frame from the civilization formed through embodied participation.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1499,
+      "current": "Little c cannot step outside its Canvas, discard the Painting, and encounter reality from perfect clarity. Even the tools used to question the Painting—language, reason, attention, memory, and metaphor—were developed inside it. The instrument of inspection has been shaped by what it must now inspect.",
+      "new": "Little c cannot simply discard the Painting and encounter reality with perfect clarity. Even the tools used to question it—language, reason, attention, memory, and metaphor—have developed through that history. The instrument of inspection has been shaped by what it must now inspect.",
+      "reason": "Preserve the bootstrapping argument without describing Little c as spatially inside its Canvas or Painting.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1509,
+      "current": "No one can repaint the Canvas without the participation of the painter.",
+      "new": "Deliberate repainting requires the participation of the painter.",
+      "reason": "Distinguish deliberate authorship from conditioning, which the chapter explicitly says can change the Painting without conscious participation.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1523,
+      "current": "8. Update without verdict. Do not turn one result into a total identity. Record the delta. Repeat under appropriate conditions.",
+      "new": "8. Update without verdict. Do not turn one result into a total identity. Note what changed. Repeat under appropriate conditions.",
+      "reason": "Make the practical instruction immediately intelligible while preserving the formal delta notation in the following equation.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1534,
+      "current": "What Reality Stream does the institution repeatedly deliver to different groups? What assumptions are encoded in policy, interface, budget, schedule, and enforcement? Which actions are rewarded, and which harms are treated as externalities? Who can revise the rules? Who bears the cost when the institution is wrong?",
+      "new": "How does the institution repeatedly shape the Reality Streams available to people in different groups? What assumptions are encoded in policy, interface, budget, schedule, and enforcement? Which actions are rewarded, and which harms are treated as externalities? Who can revise the rules? Who bears the cost when the institution is wrong?",
+      "reason": "A Reality Stream belongs to a situated experiencer; institutions influence those streams rather than supplying one shared stream to a group.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1560,
+      "current": "You are not responsible for the body into which you arrived, the first language you heard, the fears surrounding your childhood, or the civilization that supplied your earliest explanations. You are not guilty for every stroke that appears on the Canvas before you can see it.",
+      "new": "You are not responsible for the body you were born with, the first language you heard, the fears surrounding your childhood, or the civilization that supplied your earliest explanations. You are not guilty for every stroke that appears on the Canvas before you can see it.",
+      "reason": "Avoid asserting an unestablished arrival into a body while preserving the point about unchosen bodily inheritance.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1566,
+      "current": "This responsibility is personal, but it is not private. We inherit institutions together, and together we can alter the consequences they organize. Every repaired relationship, honest inquiry, humane technology, school, workplace, and community can make a wider decision-space available to another Canvas.",
+      "new": "This responsibility is personal, but it is not private. We inherit institutions together, and together we can alter the consequences they organize. Every repaired relationship, honest inquiry, humane technology, school, workplace, and community can make a wider decision-space available to another person.",
+      "reason": "Decision-space is available to an experiencer, not to the capacity that carries state.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1582,
+      "current": "P3 — Rule-bound mediation. Localized experience occurs within structured Reality Frames that constrain state transition, embodiment, action, and consequence.",
+      "new": "P3 — Rule-bound mediation. Structured Reality Frames constrain state transition, embodiment, action, and consequence, shaping the Reality Streams available to local experiencers.",
+      "reason": "State the mediation postulate without placing the experiencer or its self-awareness inside the Reality Frame.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1583,
+      "current": "P4 — Interface coupling. In RF₀, Little c is coupled to but not identical with the biological interface. Intent contributes causally through that coupling.",
+      "new": "P4 — Interface coupling. Little c is embodied by an Avatar in RF₀. It is coupled to, but not identical with, this biological interface; Intent contributes causally through that coupling.",
+      "reason": "Apply the confirmed embodiment relation directly in the postulate while retaining its explicitly ontological status in the following paragraph.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1588,
+      "current": "If P1 fails, the practical Canvas and agency models may remain useful, but DOT’s Big C architecture fails. A failure of the speculative T × E account would require revising the proposed prerequisites; it would not by itself resolve every claim about Big C. If P2 fails, the relation between encompassing and local awareness requires another account. If P4 fails, Decoupling and Intent as a non-neural causal contribution must be abandoned or radically revised. If the psychological component of P5 fails, the Experience Loop loses its organizing value. If P6 fails, Fear and Love cannot carry the theory’s developmental claims in their present form.",
+      "new": "If P1 fails, the practical Canvas and agency models may remain useful, but DOT’s Big C architecture fails. A failure of the speculative T × E account would require revising the proposed prerequisites; it would not by itself resolve every claim about Big C. If P2 fails, the relation between encompassing and local awareness requires another account. If P4 fails, the ontological Decoupling claim and Intent as a non-neural causal contribution must be abandoned or radically revised. If the psychological component of P5 fails, the Experience Loop loses its organizing value. If P6 fails, Fear and Love cannot carry the theory’s developmental claims in their present form.",
+      "reason": "A failure of the non-neural interaction claim does not by itself invalidate practical work on identification; specify which Decoupling claim is at risk.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1676,
+      "current": "The fifth program addresses DOT’s most consequential and most easily corrupted claims.",
+      "new": "The fifth program addresses some of DOT’s most consequential claims and those most vulnerable to error and overinterpretation.",
+      "reason": "Name the methodological vulnerabilities precisely instead of using the ambiguous phrase “most easily corrupted.”",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1726,
+      "current": "A theory that claims to protect decision-space must protect the decision-space of the people used to test it.",
+      "new": "A theory that claims to protect decision-space must protect the decision-space of the people participating in its tests.",
+      "reason": "Describe participants as agents in the research rather than as instruments.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1735,
+      "current": "The ordering matters. A theory should demonstrate discipline on accessible claims before asking the public to trust it on inaccessible ones.",
+      "new": "The ordering matters. A theory should demonstrate discipline on accessible claims and keep inaccessible claims explicitly speculative.",
+      "reason": "Scientific discipline on testable claims does not warrant public trust in inaccessible ontological claims; keep their epistemic status explicit.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1768,
+      "current": "From that starting point, the book proposed consciousness as the ground of a lawful world, local experience, embodiment, and learning. It distinguished the experiencer from the history shaping interpretation and action, then followed that history into culture.",
+      "new": "From that starting point, the book proposed Big C as a conscious process through which lawful Reality Frames, local experiencers, embodiment, and learning develop. It distinguished the experiencer from the history shaping interpretation and action, then followed that history into culture.",
+      "reason": "Name the proposed Big C process rather than leaving “consciousness as the ground” open to the superseded claim of an ultimate foundation without prerequisites.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1779,
+      "current": "Third, DOT proposes Big C as an encompassing conscious process and Little c as self-awareness at a local scope. Within this architecture, Big C develops rule-bound Reality Frames in which local experience becomes consequential. The inquiry moves from experience to Big C, then to T × E (Speculation): the prerequisites outside Big C within which it emerged.",
+      "new": "Third, DOT proposes Big C as an encompassing conscious process and Little c as self-awareness at a local scope. Within this architecture, Big C develops rule-bound Reality Frames through which local experience becomes consequential. The inquiry moves from experience to Big C, then to T × E (Speculation): the prerequisites outside Big C within which it emerged.",
+      "reason": "Describe mediated consequence without implying that Little c is contained within a Reality Frame.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1780,
+      "current": "Fourth, RF₀ presents each Little c with one embodied Reality Stream. The biological interface shapes capacity, content, action, and public report. DOT interprets this dependence as coupling rather than production, but the discriminating mechanism remains unproven.",
+      "new": "Fourth, RF₀ supplies a Reality Stream to each Little c embodied there by an Avatar. The biological interface shapes capacity, content, action, and public report. DOT interprets this dependence as coupling rather than production, but the discriminating mechanism remains unproven.",
+      "reason": "Make embodiment explicit and avoid implying that every possible Little c must belong to RF₀.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1783,
+      "current": "Seventh, governing Fear narrows this access. Love names the condition in which Fear no longer governs and the practice through which truth, boundary, care, accountability, and repair can coexist.",
+      "new": "Seventh, DOT proposes that governing Fear narrows this access. Love names the condition in which Fear no longer governs and the practice through which truth, boundary, care, accountability, and repair can coexist.",
+      "reason": "Retain the claim’s proposed status in the compressed summary rather than presenting the framework’s directional hypothesis as an established general law.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1805,
+      "current": "You did not choose your first body, first language, first household, first fear, or first explanation of reality. You entered a stream already moving. You inherited a Painting already begun. That inheritance is not your fault. Its consequences are now part of your life.",
+      "new": "You did not choose the body you were born with, your first language, first household, first fear, or first explanation of reality. You entered a stream already moving. You inherited a Painting already begun. That inheritance is not your fault. Its consequences are now part of your life.",
+      "reason": "Avoid implying a known succession of bodies in a passage about the unchosen conditions of this life.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1809,
+      "current": "The complete theory does not end above life. It returns to the next loop.",
+      "new": "The theory does not end above life. It returns to the next loop.",
+      "reason": "The book explicitly says its scientific architecture is unfinished; remove the contradictory implication that the theory is complete.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1814,
+      "current": "A Digital Organism does two things with pattern: it takes pattern in and it puts pattern out. Information, sensation, and returning consequence come in; response, action, and the Painting built from what the Canvas carries go out. Mathematics is among the most refined patterns Little c has produced. Applied to RF₀, it formalizes the world invariants, the rules this Frame keeps, and there it can be exact.",
+      "new": "A Digital Organism takes patterns in and produces patterns in response. Information, sensation, and returning consequence come in; response and action go out. The Canvas carries the resulting changes forward as an evolving Painting. Mathematics is among the most refined patterns Little c has produced. Applied to RF₀, it states models of the Frame’s regularities precisely. Whether those models describe the world accurately remains an empirical question.",
+      "reason": "Keep the Painting as the accumulated organization of carried state rather than an external output, and distinguish mathematical precision from empirical accuracy.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1815,
+      "current": "That exactness invites a familiar mistake: taking the rules of a Frame for the foundation of reality. The mistake has a motive. Consequence can return hard, and under that pressure Fear narrows what Intent can draft (Equation 5.8). Living by the Frame’s rules alone can then feel safer than examining the Canvas through which every rule is read. No equation about the world replaces that examination. Every reader, mathematician or not, still has to reflect on what their own Canvas carries and begin repainting it.",
+      "new": "That precision invites a familiar mistake: treating a model of a Frame’s regularities as a complete account of reality. DOT asks how the Painting shapes interpretation, including the interpretation of formal models. Fear may narrow the drafts available to Intent (Equation 5.8), but preference for a mathematical account does not by itself establish Fear. No equation replaces examining how one interprets experience.",
+      "reason": "Remove an unsupported attribution of Fear to readers who favor mathematical explanations; preserve the practical invitation and the native equation cross-reference.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1903,
+      "current": "The readiness-potential inequality records an experimental temporal order: reported readiness-potential onset precedes retrospectively reported conscious wanting, which precedes movement. DOT’s interpretation of that order is not part of the measurement.",
+      "new": "In the tasks discussed in Chapter 2, the readiness-potential inequality summarizes an observed temporal order: estimated readiness-potential onset precedes retrospectively reported conscious wanting, which precedes movement. DOT’s interpretation of that order is not part of the measurement.",
+      "reason": "Scope the observed ordering to the discussed experiments and distinguish estimated neural onset from retrospectively reported wanting.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1908,
+      "current": "A scientific equation earns authority from measurement, prediction, and successful attempts to prove it wrong—not from notation alone.",
+      "new": "A scientific equation earns authority from measurement, successful prediction, and surviving rigorous attempts to falsify it—not from notation alone.",
+      "reason": "Correct the logical error: successful attempts to prove an equation wrong undermine it; surviving rigorous attempts can support confidence in it.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1916,
+      "current": "Little c. The self-aware process at a local scope. Its distinctive history and developed identity depend on the state carried by its Canvas. Changes in that state can alter what is available to awareness and action. Book One leaves self-awareness’s intrinsic nature open; localization and body coupling remain mechanisms to be specified.",
+      "new": "Little c. The self-aware process at a local scope within Big C. In DOT’s model, Little c is outside RF₀ and is embodied by an Avatar within it, receiving the Frame’s Reality Stream. Its distinctive history and developed identity depend on the state carried by its Canvas. Changes in that state can alter what is available to awareness and action. Book One leaves self-awareness’s intrinsic nature open; localization and body coupling remain mechanisms to be specified.",
+      "reason": "Include the author-confirmed containment, embodiment, and input relationship in the central glossary definition.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1918,
+      "current": "RF₀. DOT’s designation for the physical universe in which this inquiry occurs. Public evidence establishes a lawful physical universe; it does not independently establish that the universe was generated by Big C.",
+      "new": "RF₀. DOT’s designation for the physical universe in which this inquiry occurs. Within the model, RF₀ is an experience laboratory for Little cs: their Avatars provide embodied participation in a shared environment of action and consequence. Public evidence establishes a lawful physical universe; it does not independently establish that the universe was generated by Big C.",
+      "reason": "Include the author’s experience-laboratory description while keeping the distinction between the proposed architecture and public evidence.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1919,
+      "current": "Reality Stream (RS). The time-ordered, embodied experience supplied by a Reality Frame to one Little c. The Stream is situated and selective; it is not a complete copy of the Frame.",
+      "new": "Reality Stream (RS). The time-ordered, embodied experience supplied by a Reality Frame to one Little c through its Avatar. The Stream is situated and selective; it is not a complete copy of the Frame.",
+      "reason": "Make the embodied relation explicit in the Reality Stream definition.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1923,
+      "current": "Body or avatar. The living biological interface through which Little c receives an RF₀ Reality Stream, acts, and encounters consequence. Avatar does not mean unreal or disposable. The body is adaptive, self-regulating, and indispensable to this life.",
+      "new": "Body or Avatar. The living biological interface through which Little c receives an RF₀ Reality Stream, acts, and encounters consequence. Avatar does not mean unreal or disposable. The body is adaptive, self-regulating, and indispensable to this life.",
+      "reason": "Use the same capitalization for the defined Avatar role as in the figures and surrounding glossary.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1935,
+      "current": "fear. A lower-case protective signal or state related to predicted threat. Fear can be accurate, disproportionate, learned, or mixed. Its presence is not itself a failure.",
+      "new": "fear. A lower-case protective signal or state related to predicted threat. This signal can be accurate, disproportionate, learned, or mixed. Its presence is not itself a failure.",
+      "reason": "Avoid using capitalized Fear inside the lowercase fear definition, where capitalization marks a distinct technical meaning.",
+      "section_review": "closing"
+    },
+    {
+      "paragraph": 1942,
+      "current": "Limit of Knowledge (LoK). The constraint that an observer embedded within a Reality Frame cannot assume a view from nowhere or claim direct access to the intrinsic nature of the source architecture. LoK restrains certainty; it does not license invention.",
+      "new": "Limit of Knowledge (LoK). The constraint that an observer participating through an Avatar in a Reality Frame cannot assume a view from nowhere or claim direct access to the intrinsic nature of the source architecture. LoK restrains certainty; it does not license invention.",
+      "reason": "Express the observer’s embodied access without placing Little c itself inside RF₀.",
+      "section_review": "closing"
+    }
+  ],
+  "protected_objects_preserved": true,
+  "manifesto": "Serves L7, L8 and L10 through precise claims, traceable revision and coherent reading. Violates no manifesto law."
+}

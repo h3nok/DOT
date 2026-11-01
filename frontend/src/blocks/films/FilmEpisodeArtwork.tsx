@@ -41,13 +41,19 @@ export const FilmEpisodeArtwork: React.FC<{ variant?: FilmArtworkVariant }> = ({
         <g transform="translate(320, 180)" fill="none">
           <circle r="128" stroke="var(--identity-origin)" strokeOpacity="0.55" strokeWidth="1.3" strokeDasharray="3 6" />
           <circle r="112" stroke="var(--organism-accent-strong)" strokeOpacity="0.88" strokeWidth="2" />
-          <circle r="76" stroke="var(--identity-rf)" strokeOpacity="0.85" strokeWidth="1.8" />
-          <circle r="34" stroke="var(--organism-accent-strong)" strokeOpacity="0.92" strokeWidth="1.6" strokeDasharray="4 4" />
-          <circle r="12" fill="var(--organism-accent-strong)" fillOpacity="0.9" />
-          <circle r="4" fill="var(--background)" />
-          <text y="-140" textAnchor="middle" fill="var(--identity-origin)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">T × E</text>
+          <circle cx="-42" cy="8" r="54" stroke="var(--identity-rf)" strokeOpacity="0.85" strokeWidth="1.8" />
+          <g transform="translate(-42, 14)" stroke="var(--identity-rf)" strokeWidth="1.5">
+            <circle cy="-12" r="5" />
+            <path d="M-7 18V0Q0-8 7 0V18M0 7V27M0 27L-7 36M0 27L7 36" />
+          </g>
+          <path d="M-28 10Q8-12 35 8M30 3L35 8L29 12" stroke="var(--identity-rf)" strokeWidth="1.6" />
+          <circle cx="59" cy="10" r="18" stroke="var(--organism-accent-strong)" strokeWidth="1.6" />
+          <circle cx="59" cy="10" r="25" stroke="var(--organism-accent-strong)" strokeWidth="1.2" strokeDasharray="4 4" />
+          <circle cx="59" cy="10" r="4" fill="var(--organism-accent-strong)" />
+          <text y="-140" textAnchor="middle" fill="var(--identity-origin)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">T × E · Speculation</text>
           <text y="-86" textAnchor="middle" fill="var(--organism-accent-strong)" fontSize="12" fontFamily="Space Grotesk, sans-serif" fontWeight="700">Big C</text>
-          <text y="-54" textAnchor="middle" fill="var(--identity-rf)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">RF₀</text>
+          <text x="-42" y="-25" textAnchor="middle" fill="var(--identity-rf)" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">RF₀</text>
+          <text x="59" y="52" textAnchor="middle" fill="var(--organism-accent-strong)" fontSize="11" fontFamily="Space Grotesk, sans-serif">Little c</text>
         </g>
       )}
 
@@ -60,10 +66,10 @@ export const FilmEpisodeArtwork: React.FC<{ variant?: FilmArtworkVariant }> = ({
           <line x1="66" y1="56" x2="-66" y2="56" stroke="var(--organism-accent-strong)" strokeWidth="1.8" />
           <line x1="-104" y1="18" x2="-104" y2="-18" stroke="var(--organism-accent-strong)" strokeWidth="1.8" />
           {[
-            { x: -104, y: -56, label: "Reality", sub: "01 · RF₀" },
+            { x: -104, y: -56, label: "Stream", sub: "01 · RS" },
             { x: 104, y: -56, label: "Painting", sub: "02 · LENS" },
             { x: 104, y: 56, label: "Intent", sub: "03 · CHOICE" },
-            { x: -104, y: 56, label: "Canvas", sub: "04 · RECORD" },
+            { x: -104, y: 56, label: "Canvas", sub: "04 · STATE" },
           ].map((node) => (
             <g key={node.label} transform={`translate(${node.x}, ${node.y})`}>
               <circle r="36" fill="var(--card)" stroke="var(--organism-accent-strong)" strokeWidth="1.6" />

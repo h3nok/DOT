@@ -1337,6 +1337,23 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   opacity: 1;
 }
 
+/* Embodiment is visible inside RF₀; experience and action cross its boundary. */
+.home-architecture-avatar { fill: none; stroke: var(--architecture-rf); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.home-architecture-avatar[data-secondary="true"] { opacity: .5; }
+.home-architecture-avatar .home-architecture-avatar-state { fill: var(--architecture-local); stroke: none; }
+.home-architecture-stream,
+.home-architecture-canvas-link { fill: none; stroke: var(--architecture-local); stroke-width: 1.8; stroke-linecap: round; }
+.home-architecture-canvas rect { fill: var(--background); stroke: var(--architecture-local); stroke-width: 1.5; }
+.home-architecture-canvas text,
+.home-architecture-detail-label,
+.home-architecture-small-label,
+.home-architecture-flow-label { fill: var(--architecture-line); font-family: "Space Grotesk", var(--font-sans, sans-serif); font-size: 24px; font-weight: 500; paint-order: stroke fill; stroke: var(--background); stroke-width: 3px; stroke-linejoin: round; }
+.home-architecture-detail-label,
+.home-architecture-canvas text { font-size: 32px; font-weight: 600; }
+.home-architecture-small-label { font-size: 24px; }
+.home-architecture-frame-purpose { font-size: 28px; }
+.home-architecture-painting { fill: none; stroke: var(--architecture-local); stroke-width: 1.8; }
+
 .home-architecture-ring-label {
   --ring-label-color: var(--architecture-line);
 
@@ -1426,7 +1443,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 }
 
 .home-architecture-label-you {
-  font-size: 0.62em;
+  font-size: 0.75em;
   font-style: italic;
   font-weight: 500;
 }
@@ -1647,7 +1664,7 @@ html[data-contrast="high"] .home-hero-kicker {
 
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-polar-scale {
     transform-box: view-box;
-    transform-origin: 348px 352px;
+    transform-origin: 235px 371px;
     animation: home-polar-calibrate 600ms cubic-bezier(0.22, 1, 0.36, 1) 2.52s both;
   }
 
@@ -1890,7 +1907,7 @@ html[data-contrast="high"] .home-hero-kicker {
     letter-spacing: 0.1em;
   }
 
-  /* Keep the complete concentric model readable. At 320px the 700-unit SVG is
+  /* Keep the complete model readable. At 320px the 700-unit SVG is
      painted at 0.4 scale: 40/36-unit labels stay above 16/14 screen pixels. */
   .home-hero-architecture .home-architecture-ring-label text {
     font-size: 40px;
@@ -1899,6 +1916,10 @@ html[data-contrast="high"] .home-hero-kicker {
   .home-hero-architecture .home-architecture-ring-label[data-layer="awareness-radius"] text {
     font-size: 36px;
   }
+
+  .home-architecture-small-label { font-size: 32px; }
+  .home-architecture-detail-label,
+  .home-architecture-canvas text { font-size: 36px; }
 
   .home-architecture-measure-marks,
   .home-architecture-cardinal-labels {

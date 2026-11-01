@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="1080" viewBox="0 0 350 1080" role="img" aria-labelledby="fear-and-choice-title fear-and-choice-desc">
+<title id="fear-and-choice-title">When the field of choice changes</title>
+<desc id="fear-and-choice-desc">One encounter leads to two conceptual fields of response. In the narrowed field, defending dominates while asking, waiting, and setting a boundary are less available. In the wider field, asking, a boundary, waiting, and protection can all be considered. No response is scored and protective action remains a legitimate possibility.</desc>
+<defs>
+<marker id="fear-and-choice-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="fear-and-choice-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="fear-and-choice-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="fear-and-choice-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="350" height="1080" fill="#ffffff"/>
+<text id="fear-and-choice-text-1" data-fit-box="5,5,345,1075" x="22" y="34" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">DOT PRACTICAL MODEL</tspan>
+</text>
+<text id="fear-and-choice-text-2" data-fit-box="5,5,345,1075" x="22" y="72" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="27" font-weight="600" text-anchor="start">
+<tspan x="22" dy="0">When the field</tspan>
+<tspan x="22" dy="34.56">of choice changes</tspan>
+</text>
+<text id="fear-and-choice-text-3" data-fit-box="5,5,345,1075" x="22" y="138" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="22" dy="0">One encounter; different possibilities.</tspan>
+</text>
+<rect x="22" y="180" width="306" height="355" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="fear-and-choice-text-4" data-fit-box="27,185,323,530" x="41" y="218" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="20" font-weight="600" text-anchor="start">
+<tspan x="41" dy="0">Fear governs</tspan>
+</text>
+<circle cx="65" cy="388" r="8" fill="#a6553b" stroke="none" stroke-width="2"/>
+<path d="M77 388C112 388 115 270 151 270" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#fear-and-choice-arrow-jade)"/>
+<text id="fear-and-choice-text-5" data-fit-box="27,185,323,530" x="168" y="277" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="600" text-anchor="start">
+<tspan x="168" dy="0">Defend</tspan>
+</text>
+<path d="M77 388C112 388 115 335 151 335" fill="none" stroke="#536b60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="3 5" marker-end="url(#fear-and-choice-arrow-muted)"/>
+<text id="fear-and-choice-text-6" data-fit-box="27,185,323,530" x="168" y="342" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="168" dy="0">Ask</tspan>
+</text>
+<path d="M77 388C112 388 115 400 151 400" fill="none" stroke="#536b60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="3 5" marker-end="url(#fear-and-choice-arrow-muted)"/>
+<text id="fear-and-choice-text-7" data-fit-box="27,185,323,530" x="168" y="407" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="168" dy="0">Wait</tspan>
+</text>
+<path d="M77 388C112 388 115 465 151 465" fill="none" stroke="#536b60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" stroke-dasharray="3 5" marker-end="url(#fear-and-choice-arrow-muted)"/>
+<text id="fear-and-choice-text-8" data-fit-box="27,185,323,530" x="168" y="472" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="168" dy="0">Boundary</tspan>
+</text>
+<rect x="22" y="570" width="306" height="355" rx="14" fill="#f2f5ef" stroke="#9bae9f" stroke-width="1.8"/>
+<text id="fear-and-choice-text-9" data-fit-box="27,575,323,920" x="41" y="608" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="20" font-weight="600" text-anchor="start">
+<tspan x="41" dy="0">Room for choice</tspan>
+</text>
+<circle cx="65" cy="778" r="8" fill="#2f715b" stroke="none" stroke-width="2"/>
+<path d="M77 778C112 778 115 660 151 660" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#fear-and-choice-arrow-jade)"/>
+<text id="fear-and-choice-text-10" data-fit-box="27,575,323,920" x="168" y="667" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="600" text-anchor="start">
+<tspan x="168" dy="0">Ask</tspan>
+</text>
+<path d="M77 778C112 778 115 725 151 725" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#fear-and-choice-arrow-jade)"/>
+<text id="fear-and-choice-text-11" data-fit-box="27,575,323,920" x="168" y="732" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="600" text-anchor="start">
+<tspan x="168" dy="0">Boundary</tspan>
+</text>
+<path d="M77 778C112 778 115 790 151 790" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#fear-and-choice-arrow-jade)"/>
+<text id="fear-and-choice-text-12" data-fit-box="27,575,323,920" x="168" y="797" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="600" text-anchor="start">
+<tspan x="168" dy="0">Wait</tspan>
+</text>
+<path d="M77 778C112 778 115 855 151 855" fill="none" stroke="#2f715b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#fear-and-choice-arrow-jade)"/>
+<text id="fear-and-choice-text-13" data-fit-box="27,575,323,920" x="168" y="862" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="18" font-weight="600" text-anchor="start">
+<tspan x="168" dy="0">Protect</tspan>
+</text>
+<text id="fear-and-choice-text-14" data-fit-box="5,5,345,1075" x="175" y="1001" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="16" font-weight="400" text-anchor="middle">
+<tspan x="175" dy="0">A wider field can still include</tspan>
+<tspan x="175" dy="20.48">protection and a clear no.</tspan>
+</text>
+<text id="fear-and-choice-text-15" data-fit-box="5,5,345,1075" x="175" y="1056" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="14" font-weight="400" text-anchor="middle">
+<tspan x="175" dy="0">Conceptual comparison · not a scale</tspan>
+</text>
+</svg>

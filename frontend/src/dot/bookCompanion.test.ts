@@ -6,7 +6,7 @@ import { answerFromCorpus, buildBookCorpus } from "./bookCompanion";
 
 const releaseRoot = join(
   process.cwd(),
-  "public/publications/henok/digital-organism-theory/v4",
+  "public/publications/henok/digital-organism-theory/v5",
 );
 const manifest = JSON.parse(
   readFileSync(join(releaseRoot, "manifest.json"), "utf8"),

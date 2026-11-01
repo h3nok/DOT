@@ -99,6 +99,8 @@ const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
 const AmmStudioPage = React.lazy(() => import("./blocks/amm/AmmStudioPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
 const EssayDraftsPage = import.meta.env.DEV ? React.lazy(() => import("./blocks/essays/EssayDraftsPage")) : null;
+const DarkFilmPreview = import.meta.env.DEV ? React.lazy(() => import("./blocks/films/DarkFilmPreview")) : null;
+const BookV5Preview = import.meta.env.DEV ? React.lazy(() => import("./blocks/publication/BookV5Preview")) : null;
 const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
 const PublicationsPage = React.lazy(() => import("./blocks/publication/PublicationsPage"));
 const NativeWritingPage = React.lazy(() => import("./blocks/publication/NativeWritingPage"));
@@ -264,6 +266,8 @@ const App: React.FC = () => {
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
                 {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}
+                {import.meta.env.DEV && DarkFilmPreview && <Route path="/_preview/film-dark" element={<DarkFilmPreview />} />}
+                {import.meta.env.DEV && BookV5Preview && <Route path="/_preview/book-v5/:sectionSlug?" element={<BookV5Preview />} />}
                 {import.meta.env.DEV && <Route path="/_preview/essays/:slug" element={<EssayPage preview />} />}
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/writing/:workId" element={<NativeWritingPage />} />

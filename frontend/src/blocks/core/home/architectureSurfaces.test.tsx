@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { ARCHITECTURE_RADII as R, FRAME_CENTRE } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, BIG_C_CENTRE, FRAME_CENTRE, LOCAL_CENTRE } from "./architectureGeometry";
 import { ConceptArchitecture } from "./ConceptArchitecture";
 import { HeroArchitecture } from "./HeroArchitecture";
 
@@ -20,9 +20,10 @@ describe("architecture surface lighting", () => {
       expect(frame.querySelector(".home-architecture-surface")).toBeNull();
       const zone = frame.querySelector(".home-architecture-other-frame-zone")!;
       const [x, y, r] = ["cx", "cy", "r"].map(name => Number(zone.getAttribute(name)));
-      const distance = Math.hypot(x - FRAME_CENTRE.x, y - FRAME_CENTRE.y);
-      expect(distance - r).toBeGreaterThan(R.frame + 8);
-      expect(distance + r).toBeLessThan(R.bigC - 8);
+      const frameDistance = Math.hypot(x - FRAME_CENTRE.x, y - FRAME_CENTRE.y);
+      const bigDistance = Math.hypot(x - BIG_C_CENTRE.x, y - BIG_C_CENTRE.y);
+      expect(frameDistance - r).toBeGreaterThan(R.frame + 4);
+      expect(bigDistance + r).toBeLessThan(R.bigC - 8);
     }
   });
 
@@ -48,7 +49,8 @@ describe("architecture surface lighting", () => {
           const coordinates = surface.getAttribute("d")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
           expect(coordinates).toHaveLength(192);
           for (let offset = 0; offset < coordinates.length; offset += 2) {
-            const distance = Math.hypot(coordinates[offset] - FRAME_CENTRE.x, coordinates[offset + 1] - FRAME_CENTRE.y);
+            const centre = index === 0 ? BIG_C_CENTRE : LOCAL_CENTRE;
+            const distance = Math.hypot(coordinates[offset] - centre.x, coordinates[offset + 1] - centre.y);
             expect(Math.abs(distance - radius)).toBeLessThan(radius * 0.08);
           }
         }
@@ -68,6 +70,28 @@ describe("architecture surface lighting", () => {
         expect(contour).toHaveAttribute("data-active", String(contourIndex === index));
       }
     }
+  });
+
+  it("embodies Little c through an Avatar in RF₀ without placing the experiencer inside that Frame", () => {
+    const { container } = render(<HeroArchitecture />);
+    const frame = container.querySelector(".home-architecture-frame-boundary")!;
+    const local = container.querySelector(".home-architecture-local-core")!;
+    const big = container.querySelector(".home-architecture-big-c-zone")!;
+    const geometry = (node: Element) => ["cx", "cy", "r"].map(name => Number(node.getAttribute(name)));
+    const [fx, fy, fr] = geometry(frame), [cx, cy] = geometry(local), [bx, by, br] = geometry(big);
+    expect(Math.hypot(cx - fx, cy - fy) - R.local).toBeGreaterThan(fr);
+    expect(Math.hypot(cx - bx, cy - by) + R.awareness).toBeLessThan(br);
+    expect(Math.hypot(fx - bx, fy - by) + fr).toBeLessThan(br);
+    for (const avatar of container.querySelectorAll(".home-architecture-avatar")) {
+      const [x, y, scale] = avatar.getAttribute("transform")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+      expect(Math.hypot(x - fx, y - fy) + 58 * scale).toBeLessThan(fr);
+      expect(avatar.closest('[data-entity="reality-frame"]')).not.toBeNull();
+    }
+    expect(local.closest('[data-entity="reality-frame"]')).toBeNull();
+    expect(container.querySelector('[data-flow="reality-stream"]')).toHaveAttribute("marker-end");
+    expect(container.querySelector('[data-flow="embodied-action"]')).toHaveAttribute("marker-end");
+    expect(container.querySelector('[data-entity="canvas"]')).not.toBeNull();
+    expect(container.querySelector("desc")?.textContent).toContain("Little c is outside RF₀ and embodied by an Avatar inside it");
   });
 
   it("keeps every definition local to its SVG even with repeated diagrams", () => {

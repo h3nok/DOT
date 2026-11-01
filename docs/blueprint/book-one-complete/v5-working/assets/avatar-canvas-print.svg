@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-labelledby="avatar-canvas-title avatar-canvas-desc">
+<title id="avatar-canvas-title">An embodied exchange</title>
+<desc id="avatar-canvas-desc">A living human Avatar exchanges experience and response with the Canvas. The Canvas carries an accumulated Painting. Little c, the local experiencer, remains distinct and is linked to the Canvas by access and update. The same roles are shown without placing consciousness at a measured physical location.</desc>
+<defs>
+<marker id="avatar-canvas-arrow-jade" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#2f715b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="avatar-canvas-arrow-clay" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#a6553b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="avatar-canvas-arrow-muted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#536b60" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="avatar-canvas-arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1 1L7 4L1 7" fill="none" stroke="#967022" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="900" height="900" fill="#ffffff"/>
+<text id="avatar-canvas-text-1" data-fit-box="5,5,895,895" x="60" y="37" fill="#2f715b" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">DOT MODEL</tspan>
+</text>
+<text id="avatar-canvas-text-2" data-fit-box="5,5,895,895" x="60" y="91" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="44" font-weight="600" text-anchor="start">
+<tspan x="60" dy="0">An embodied exchange</tspan>
+</text>
+<text id="avatar-canvas-text-3" data-fit-box="5,5,895,895" x="60" y="132" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="start">
+<tspan x="60" dy="0">Sensation, action, and carried state</tspan>
+</text>
+<g transform="translate(225 425) scale(0.92)">
+<path d="M-26 -119C-26 -157 26 -157 26 -119C26 -102 18 -90 0 -90C-18 -90 -26 -102 -26 -119Z" fill="none" stroke="#18382f" stroke-width="2.717391304347826" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -91V-72M11 -91V-72" fill="none" stroke="#18382f" stroke-width="2.717391304347826" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-11 -72C-39 -70 -54 -57 -57 -32L-62 15L-58 54Q-57 63 -49 63Q-41 62 -42 53L-43 17L-36 -29" fill="none" stroke="#18382f" stroke-width="2.717391304347826" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M11 -72C39 -70 54 -57 57 -32L62 15L58 54Q57 63 49 63Q41 62 42 53L43 17L36 -29" fill="none" stroke="#18382f" stroke-width="2.717391304347826" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M-36 -31C-34 1 -32 29 -26 60L-29 111L-35 164Q-35 171 -28 171H-15Q-9 171 -9 165L-5 113L0 73L5 113L9 165Q9 171 15 171H28Q35 171 35 164L29 111L26 60C32 29 34 1 36 -31" fill="none" stroke="#18382f" stroke-width="2.717391304347826" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="0" cy="-35" r="6" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<path d="M-47 183H47" fill="none" stroke="#9bae9f" stroke-width="1.6304347826086956" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+</g>
+<text id="avatar-canvas-text-4" data-fit-box="5,5,895,895" x="225" y="639" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="35" font-weight="600" text-anchor="middle">
+<tspan x="225" dy="0">Avatar</tspan>
+</text>
+<text id="avatar-canvas-text-5" data-fit-box="5,5,895,895" x="225" y="677" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="middle">
+<tspan x="225" dy="0">living body</tspan>
+</text>
+<circle cx="660" cy="256" r="85" fill="#ffffff" stroke="#2f715b" stroke-width="1.7" stroke-dasharray="5 8"/>
+<circle cx="660" cy="256" r="77" fill="#f2f5ef" stroke="#2f715b" stroke-width="2.2"/>
+<text id="avatar-canvas-text-6" data-fit-box="588,184,732,328" x="660" y="252" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="31" font-weight="600" text-anchor="middle">
+<tspan x="660" dy="0">Little c</tspan>
+</text>
+<text id="avatar-canvas-text-7" data-fit-box="588,184,732,328" x="660" y="284.83" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22.63" font-weight="400" text-anchor="middle">
+<tspan x="660" dy="0">experiencer</tspan>
+</text>
+<path d="M660 343V378" fill="none" stroke="#2f715b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#avatar-canvas-arrow-jade)" marker-start="url(#avatar-canvas-arrow-jade)"/>
+<text id="avatar-canvas-text-8" data-fit-box="5,5,895,895" x="690" y="355" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="690" dy="0">Access</tspan>
+<tspan x="690" dy="28.16">+ update</tspan>
+</text>
+<rect x="510" y="392" width="300" height="247" rx="14" fill="#f2f5ef" stroke="#2f715b" stroke-width="2"/>
+<text id="avatar-canvas-text-9" data-fit-box="515,397,805,634" x="530" y="437" fill="#18382f" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="32" font-weight="600" text-anchor="start">
+<tspan x="530" dy="0">Canvas</tspan>
+</text>
+<text id="avatar-canvas-text-10" data-fit-box="515,397,805,634" x="530" y="472" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="24" font-weight="400" text-anchor="start">
+<tspan x="530" dy="0">capacity to carry state</tspan>
+</text>
+<rect x="528" y="493" width="264" height="79" rx="8" fill="#ffffff" stroke="#9bae9f" stroke-width="1"/>
+<g transform="translate(537 501) scale(1.23 0.63)" opacity="1">
+<path d="M12 72C40 8 70 97 103 38S157 12 188 45" fill="none" stroke="#2f715b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M16 31C59 54 78 1 113 31S151 92 188 69" fill="none" stroke="#a6553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<path d="M21 90C54 65 69 84 99 65S148 42 185 12" fill="none" stroke="#967022" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<circle cx="44" cy="50" r="5" fill="#2f715b" stroke="#2f715b" stroke-width="0"/>
+<circle cx="112" cy="31" r="5" fill="#a6553b" stroke="#a6553b" stroke-width="0"/>
+<circle cx="151" cy="39" r="5" fill="#967022" stroke="#967022" stroke-width="0"/>
+</g>
+<text id="avatar-canvas-text-11" data-fit-box="515,397,805,634" x="530" y="596" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="22" font-weight="400" text-anchor="start">
+<tspan x="530" dy="0">Painting</tspan>
+<tspan x="530" dy="25.299999999999997">accumulated pattern</tspan>
+</text>
+<path d="M300 400C375 345 430 345 499 416" fill="none" stroke="#2f715b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#avatar-canvas-arrow-jade)"/>
+<text id="avatar-canvas-text-12" data-fit-box="5,5,895,895" x="395" y="335" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="middle">
+<tspan x="395" dy="0">Experience</tspan>
+</text>
+<path d="M500 552C420 612 365 612 300 551" fill="none" stroke="#2f715b" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity="1" marker-end="url(#avatar-canvas-arrow-jade)"/>
+<text id="avatar-canvas-text-13" data-fit-box="5,5,895,895" x="400" y="638" fill="#536b60" font-family="&#x27;Space Grotesk&#x27;, &#x27;Space Grotesk Light&#x27;, &#x27;DejaVu Sans&#x27;, sans-serif" font-size="27" font-weight="400" text-anchor="middle">
+<tspan x="400" dy="0">Response</tspan>
+</text>
+<path d="M70 738H830" fill="none" stroke="#9bae9f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<text id="avatar-canvas-text-14" data-fit-box="5,5,895,895" x="450" y="792" fill="#18382f" font-family="&#x27;Source Serif 4 SmText&#x27;, &#x27;Source Serif 4&#x27;, Georgia, serif" font-size="29" font-weight="400" text-anchor="middle">
+<tspan x="450" dy="0">One encounter changes carried state.</tspan>
+<tspan x="450" dy="37.12">Carried state participates in the next encounter.</tspan>
+</text>
+</svg>

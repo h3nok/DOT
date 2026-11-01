@@ -9,7 +9,7 @@ import { author, authorByline } from "../../content/author";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../../content/builder";
 
 const manifest = readFileSync(
-  "public/publications/henok/digital-organism-theory/v4/manifest.json",
+  "public/publications/henok/digital-organism-theory/v5/manifest.json",
   "utf8",
 );
 
