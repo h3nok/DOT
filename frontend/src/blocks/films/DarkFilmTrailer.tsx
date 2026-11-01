@@ -1,5 +1,6 @@
 import { createContext, useContext, useId, type CSSProperties } from "react";
 
+import amm from "../../content/amm.json";
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
@@ -25,10 +26,10 @@ const WEIGHT = 1.3;
 
 /** The film's two tones. Light lines glow on the dark stage; deeper inks hold their contrast on the light one. */
 export type FilmTone = "dark" | "light";
-type Palette = { jade: string; ink: string; clay: string; gold: string };
+type Palette = { jade: string; ink: string; clay: string; gold: string; stage: string };
 const PALETTES: Record<FilmTone, Palette> = {
-  dark: { jade: "#8ad6b9", ink: "#f2f0e8", clay: "#d4876d", gold: "#e6bc78" },
-  light: { jade: "#23805f", ink: "#17271f", clay: "#ad5434", gold: "#9a6a1c" },
+  dark: { jade: "#8ad6b9", ink: "#f2f0e8", clay: "#d4876d", gold: "#e6bc78", stage: "#081912" },
+  light: { jade: "#23805f", ink: "#17271f", clay: "#ad5434", gold: "#9a6a1c", stage: "#f3efe5" },
 };
 const TrailerPalette = createContext<Palette>(PALETTES.dark);
 
@@ -67,7 +68,13 @@ const CAMERA: readonly (readonly [number, number, number, number])[] = [
   [25, FIG_X, 450, 1.25],
   [32, FIG_X, 450, 1.25],
   [35.5, FIG_X, 450, 0.42],
-  [PAUSE + 0.4, FIG_X, 450, 0.42],
+  [41.6, FIG_X, 450, 0.42],
+  // In on the person and the one above who holds their string: looking up, then blamed.
+  [43.4, FIG_X, 230, 0.8],
+  [45.4, FIG_X, 230, 0.8],
+  // Out again as everyone diminishes.
+  [46.6, FIG_X, 450, 0.46],
+  [PAUSE + 0.4, FIG_X, 450, 0.46],
   [PAUSE + 4.6, FIG_X, 380, 1.5],
   [ARCH, FIG_X, 370, 1.9],
 ];
@@ -136,15 +143,18 @@ function Arrow({ from, to, px, s, color, opacity }: { from: Point; to: Point; px
  * A box and its measuring grid: the objective lens closed around one figure. The nudge
  * opens a jade gap in its lid; devolving thickens its walls and closes the gap again.
  */
-function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight = 0 }: {
+function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight = 0, press = 0 }: {
   cx: number; cy: number; scale: number; opacity: number; loosen: number; px: number; s: number; gap?: number; weight?: number;
+  /** 0–1: the lid presses down on the figure inside. */
+  press?: number;
 }) {
   const { clay, jade } = useContext(TrailerPalette);
   if (opacity <= 0.001) return null;
   const w = BOX.w * scale;
-  const h = BOX.h * scale;
+  const lid = BOX.h * scale * 0.12 * press;
+  const h = BOX.h * scale - lid;
   const x = cx - w / 2;
-  const y = cy - h / 2;
+  const y = cy - (BOX.h * scale) / 2 + lid;
   const columns = Array.from({ length: 5 }, (_, i) => x + ((i + 1) * w) / 6);
   const rows = Array.from({ length: 12 }, (_, i) => y + ((i + 1) * h) / 13);
   const dash = loosen > 0 ? `${(14 * (1 - loosen) + 2).toFixed(1)} ${(4 + 18 * loosen).toFixed(1)}` : undefined;
@@ -228,6 +238,98 @@ const LATTICE_COPIES = Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =
   })),
 );
 
+/** The culture's messages, as the American Millennial Manifesto quotes them, closing in on the one we follow. */
+const CULTURE = amm.home.concepts.map((concept) => concept.script);
+const CULTURE_START = 37.3;
+const CULTURE_STEP = 0.72;
+const CULTURE_LIFE = 2.8;
+/** Each message keeps its own lane, from beyond the frame to a place beside the person; "You have no choice." lands last, just above them. */
+const CULTURE_LANES: readonly (readonly [Point, Point])[] = [
+  [[-900, 40], [60, 130]],
+  [[2180, 40], [1220, 130]],
+  [[-900, 470], [60, 430]],
+  [[2180, 470], [1220, 430]],
+  [[640, -900], [640, -120]],
+  [[640, -760], [640, 96]],
+];
+
+function CultureMessages({ t, s }: { t: number; s: number }) {
+  const { clay, stage } = useContext(TrailerPalette);
+  return (
+    <g fontFamily="Source Serif 4, Georgia, serif" fontStyle="italic" textAnchor="middle" fill={clay} stroke={stage} paintOrder="stroke" strokeLinejoin="round">
+      {CULTURE.map((text, k) => {
+        const u = (t - (CULTURE_START + k * CULTURE_STEP)) / CULTURE_LIFE;
+        if (u <= 0 || u >= 1) return null;
+        const [from, to] = CULTURE_LANES[k];
+        const arrive = 1 - (1 - smooth(u, 0, 0.7)) ** 2;
+        return (
+          <text
+            key={text} x={lerp(from[0], to[0], arrive)} y={lerp(from[1], to[1], arrive)}
+            fontSize={34 / s} strokeWidth={8 / s} opacity={smooth(u, 0, 0.18) * (1 - smooth(u, 0.72, 1))}
+          >
+            {text}
+          </text>
+        );
+      })}
+    </g>
+  );
+}
+
+/** The figure in the box above, who holds our string: where we look for leadership, and who points back. */
+const ABOVE_BOX_FLOOR = FIG_Y - LATTICE.dy + 10 + BOX.h / 2;
+
+function LookingUp({ look, blame, s }: { look: number; blame: number; s: number }) {
+  const { ink, clay } = useContext(TrailerPalette);
+  if (look <= 0.001 && blame <= 0.001) return null;
+  return (
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {look > 0.001 && (
+        <g stroke={ink} strokeWidth={(2 * WEIGHT) / s} opacity={look * 0.85}>
+          <path d={`M${FIG_X} ${FIG_Y + HEAD_TOP_DY - 16}V${ABOVE_BOX_FLOOR + 22}`} strokeDasharray={`${6 / s} ${7 / s}`} />
+          <path d={`M${FIG_X - 12} ${ABOVE_BOX_FLOOR + 36}L${FIG_X} ${ABOVE_BOX_FLOOR + 20}L${FIG_X + 12} ${ABOVE_BOX_FLOOR + 36}`} />
+        </g>
+      )}
+      {blame > 0.001 && (
+        <g stroke={clay} strokeWidth={(2.6 * WEIGHT) / s} opacity={blame}>
+          <path d={`M${FIG_X + 96} ${ABOVE_BOX_FLOOR + 16}Q${FIG_X + 120} ${CHEST[1] - 130} ${lerp(FIG_X + 104, FIG_X + 46, blame)} ${CHEST[1] - 8}`} />
+          <path d={`M${FIG_X + 34} ${CHEST[1] - 30}L${FIG_X + 44} ${CHEST[1] - 6}L${FIG_X + 68} ${CHEST[1] - 16}`} opacity={smooth(blame, 0.7, 1)} />
+        </g>
+      )}
+    </g>
+  );
+}
+
+/** Paths open out from the person in every direction, each ending in an open choice. */
+const OPTIONS_LEFT: readonly Cubic[] = [
+  [[530, 300], [470, 280], [390, 220], [290, 170]],
+  [[524, 380], [450, 380], [360, 360], [240, 330]],
+  [[528, 460], [460, 470], [380, 500], [280, 500]],
+];
+const mirror = ([x, y]: Point): Point => [2 * FIG_X - x, y];
+const OPTIONS: readonly Cubic[] = OPTIONS_LEFT.flatMap((path) => [
+  path,
+  [mirror(path[0]), mirror(path[1]), mirror(path[2]), mirror(path[3])] as const,
+]);
+
+function Options({ open, s }: { open: number; s: number }) {
+  const { jade } = useContext(TrailerPalette);
+  if (open <= 0.001) return null;
+  return (
+    <g fill="none" stroke={jade} strokeLinecap="round">
+      {OPTIONS.map((path, k) => {
+        const drawnIn = smooth(open, 0.06 * k, 0.55 + 0.06 * k);
+        const end = path[3];
+        return (
+          <g key={k}>
+            <path d={cubicPath(path)} strokeWidth={(2.2 * WEIGHT) / s} strokeDasharray={`${8 / s} ${7 / s}`} opacity={0.9 * drawnIn} />
+            <circle cx={end[0]} cy={end[1]} r={14} strokeWidth={(2 * WEIGHT) / s} opacity={smooth(drawnIn, 0.85, 1)} />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
 /**
  * The strings: each figure is tugged from the hand of the figure in the box above it,
  * who is boxed too; the top row's strings rise out of frame.
@@ -281,6 +383,14 @@ function TrailerDrawing({ t }: { t: number }) {
   const loosen = smooth(t, PAUSE + 3, PAUSE + 5.4);
   const opening = smooth(t, PAUSE + 5.5, ARCH);
   const mainPain = pain * (1 - smooth(t, PAUSE + 1.4, PAUSE + 2.4));
+  // We look up to the one who holds our string; as the costs compound, they point back at us.
+  const lookUp = smooth(t, NUDGE + 0.2, NUDGE + 1) * (1 - calm);
+  const blame = smooth(t, NUDGE + 2, NUDGE + 2.9) * (1 - calm);
+  // Once the box dissolves, the person's options open out.
+  const options = smooth(t, PAUSE + 4, PAUSE + 7.4);
+  // A soft light stays on the one person through the crowd, which recedes while the culture speaks.
+  const spotlight = smooth(t, 32.5, 34) * (1 - calm);
+  const cultureSpeaks = smooth(t, CULTURE_START, CULTURE_START + 0.8) * (1 - smooth(t, NUDGE, NUDGE + 1));
 
   return (
     <div className="dark-trailer-stage" style={{ opacity: 1 - smooth(t, ARCH - 0.9, ARCH + 0.1) }}>
@@ -355,23 +465,28 @@ function TrailerDrawing({ t }: { t: number }) {
         )}
 
         {/* 5–6 · The lattice: the same box around everyone, tugged on strings, nudged by pain. */}
+        <circle cx={FIG_X} cy={FIG_Y - 40} r={330} fill={`url(#${uid}-warm)`} opacity={spotlight} />
         {t >= 32 && LATTICE_COPIES.map((copy) => {
-          const shown = smooth(t, 32.5 + copy.delay, 33.2 + copy.delay) * (1 - 0.8 * calm);
+          const shown = smooth(t, 32.5 + copy.delay, 33.2 + copy.delay) * (1 - 0.8 * calm) * (1 - 0.3 * cultureSpeaks);
           if (shown <= 0.001) return null;
           return (
             <g key={`${copy.i}:${copy.j}`} opacity={shown}>
-              <MeasuringBox cx={copy.x} cy={copy.y + 10} scale={1} opacity={1} loosen={0} px={1.4} s={s} gap={gap} weight={devolve} />
-              <Figure x={copy.x} y={copy.y} px={1.3} cameraScale={s} opacity={0.62 - 0.3 * devolve} shrink={devolve} />
+              <MeasuringBox cx={copy.x} cy={copy.y + 10} scale={1} opacity={1} loosen={0} px={1.4} s={s} gap={gap} weight={devolve} press={devolve} />
+              <Figure
+                x={copy.x} y={copy.y} px={1.3} cameraScale={s} shrink={devolve}
+                opacity={0.62 - 0.3 * devolve + (copy.i === 0 && copy.j === -1 ? 0.38 * lookUp : 0)}
+              />
               <PainRings at={[copy.x, copy.y + CHEST_DY]} phase={copy.phase} t={t} opacity={pain} s={s} />
             </g>
           );
         })}
         <Strings t={t} s={s} opacity={strings} />
+        <LookingUp look={lookUp} blame={blame} s={s} />
 
         {/* 4 · The lens snaps shut around the one figure we follow. */}
         <MeasuringBox
           cx={FIG_X} cy={FIG_Y + 10} scale={boxScale * (1 + 0.18 * loosen)} opacity={boxShown * (1 - 0.85 * loosen)}
-          loosen={loosen} px={2.2} s={s} gap={gap} weight={devolve * (1 - noticed)}
+          loosen={loosen} px={2.2} s={s} gap={gap} weight={devolve * (1 - noticed)} press={devolve * (1 - noticed)}
         />
         {push > 0.001 && [330, 460, 590].map((y) => (
           <g key={y}>
@@ -403,6 +518,8 @@ function TrailerDrawing({ t }: { t: number }) {
             <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={noticed} />
           </g>
         )}
+        <Options open={options} s={s} />
+        {t >= CULTURE_START && t < CULTURE_START + CULTURE_STEP * CULTURE.length + CULTURE_LIFE && <CultureMessages t={t} s={s} />}
       </g>
     </svg>
     </div>
