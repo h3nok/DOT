@@ -109,9 +109,10 @@ describe("the dark film's opening trailer", () => {
     for (const sense of ["sight", "sound", "smell", "touch", "taste"]) expect(senses.description).toContain(sense);
   });
 
-  it("reveals the architecture with T × E outermost, the field Big C emerged within (ADR-0026)", () => {
+  it("reveals the architecture with T × E outermost and Little c in Big C, outside RF₀ (ADR-0026)", () => {
     const architecture = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "architecture")!;
-    expect(architecture.description).toMatch(/RF₀ and Big C to the T × E field that Big C emerged within/);
+    expect(architecture.description).toMatch(/Reality Stream runs out of RF₀ to Little c₁ in Big C/);
+    expect(architecture.description).toMatch(/T × E field that Big C emerged within, labelled speculation/);
     expect(architecture.description).not.toMatch(/capacit/i);
   });
 

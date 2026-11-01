@@ -396,7 +396,7 @@ function TrailerDrawing({ t }: { t: number }) {
   );
 }
 
-/** Shots 8–9: the homepage architecture, pulled back from Little c₁ to the T × E field. */
+/** Shots 8–9: the homepage architecture, pulled back from c₁'s body in RF₀, past Little c₁ in Big C, to the T × E field. */
 function TrailerArchitecture({ t }: { t: number }) {
   const startScale = 6.5;
   const pull = smooth(t, ARCH + 0.4, ARCH + 8.4);
@@ -426,7 +426,7 @@ function TrailerArchitecture({ t }: { t: number }) {
     <div className="dark-trailer-arch" style={style} aria-hidden="true">
       {/* The camera is sized and placed in layout, not with a CSS transform: a transformed
           layer can be composited a frame late, which made the labels jump in exported video.
-          Little c₁ (at 44.857%, 47.429% of the figure) starts centred and the view widens around it. */}
+          c₁'s body (at 44.857%, 47.429% of the figure) starts centred and the view widens around it. */}
       <div
         className="dark-trailer-arch-camera"
         style={{

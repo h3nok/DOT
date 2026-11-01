@@ -22,7 +22,7 @@ import {
 } from "./darkFilmRevision";
 import { formatDuration } from "./filmTime";
 import "./films.css";
-import "./dark-film-preview.css";
+import "./dark-film.css";
 
 declare global {
   interface Window {
