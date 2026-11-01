@@ -150,7 +150,7 @@ export function HeroArchitecture({ embedded = false }: {
         }}
       >
         <title id={titleId}>DOT diagram</title>
-        <desc id={descriptionId}>DOT’s proposed relationships, not measured physical locations. T × E is Speculation: the preexisting conditions outside Big C. Big C contains RF₀ and Little c. RF₀ is an experience laboratory shared through living Avatars. Little c is outside RF₀ and embodied by an Avatar inside it. The Reality Stream runs from RF₀ to Little c. The Canvas carries and updates local state; embodied action returns through the Avatar. The dashed scope marks available access and action. Broken arrows around Big C and Little c indicate process. Other Frames are hypotheses.</desc>
+        <desc id={descriptionId}>DOT’s proposed relationships, not measured physical locations. T × E is Speculation: the preexisting conditions outside Big C. Big C contains RF₀ and Little c. RF₀ is an experience laboratory shared through living bodies. Little c is outside RF₀ and embodied by a living body inside it. The Reality Stream runs from RF₀ to Little c. The Canvas carries and updates local state; embodied action returns through the body. The dashed scope marks available access and action. Broken arrows around Big C and Little c indicate process. Other Frames are hypotheses.</desc>
         <HeroArchitectureDefs ids={ids} />
 
         <g data-part="te">
@@ -247,7 +247,6 @@ export function HeroArchitecture({ embedded = false }: {
               <HeroArchitectureAvatar x={160} y={390} scale={.52} secondary />
               <HeroArchitectureAvatar x={310} y={390} scale={.52} secondary />
             </g>
-            <text className="home-architecture-detail-label" x="235" y="464" textAnchor="middle">Avatar</text>
             <text className="home-architecture-small-label" x="235" y="496" textAnchor="middle">Living body</text>
           </g>
         </g>

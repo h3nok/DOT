@@ -137,18 +137,24 @@ test.describe("hero", () => {
       "Proposed explanation",
     );
     await expect(cards.nth(2).locator(".home-theory-layer-status")).toHaveText(
-      "Observed universe; proposed origin and purpose",
+      "Physical universe · Proposed purpose",
     );
-    await expect(cards.first().getByText("What remains unproven")).toBeVisible();
+    await expect(cards.first().getByText("Claim status")).toBeVisible();
+    const originNotes = cards.first().locator(".home-theory-layer-evidence-notes");
+    await expect(originNotes).toBeVisible();
+    await expect(originNotes.locator("p")).toHaveCount(3);
+    await expect(originNotes.getByText("The author does not report directly experiencing T × E.", { exact: true })).toBeVisible();
+    await expect(cards.first().getByText("What remains unproven")).not.toBeVisible();
+    await expect(cards.first().locator("figcaption")).toContainText("Big C emerged within T × E");
     await expect(cards.first().getByText("What we know")).not.toBeVisible();
     await cards.first().locator("summary").filter({ hasText: "Explore the reasoning" }).click();
     await expect(cards.first().getByText("What we know")).toBeVisible();
     await expect(cards.first().getByText("Covers: Earliest measurable physical states")).toBeVisible();
     await expect(cards.first().getByText("The open question")).toBeVisible();
-    await expect(cards.first().getByText("DOT proposes")).toBeVisible();
+    await expect(cards.first().getByText("DOT proposes", { exact: true })).toBeVisible();
     await expect(cards.first().getByText("What remains unproven")).toBeVisible();
     await expect(cards.first().locator(".home-theory-layer-conventional svg")).toHaveCount(0);
-    await expect(cards.first().locator(".home-theory-layer-inquiry-steps > section")).toHaveCount(2);
+    await expect(cards.first().locator(".home-theory-layer-inquiry-steps > section")).toHaveCount(3);
     await cards.first().locator("summary").filter({ hasText: "Sources and further reading" }).click();
     await expect(cards.first().getByText("Research to compare")).toBeVisible();
     await expect(cards.first().getByText("DOT · Book One")).toBeVisible();
@@ -158,14 +164,14 @@ test.describe("hero", () => {
       realityFrame.getByRole("heading", { name: "A world to live in, learn from, and evolve within." }),
     ).toBeVisible();
     await expect(realityFrame.getByText(/DOT proposes RF₀ as an experience laboratory for Little cs/)).toBeVisible();
-    await expect(realityFrame.getByText(/not a conclusion derived from physics/)).toBeVisible();
+    await expect(realityFrame.getByText(/Its proposed source in Big C and its developmental purpose remain unestablished/)).toBeVisible();
     await realityFrame.locator("summary").filter({ hasText: "Explore the reasoning" }).click();
     await expect(realityFrame.getByText(/models tested against measurement/)).toBeVisible();
     await expect(realityFrame.getByText(/generated rather than fundamental/)).toBeVisible();
     await expect(
-      realityFrame.getByText("Live, explore, and develop through real consequence."),
+      realityFrame.getByText(/not a conclusion derived from physics/),
     ).toBeVisible();
-    await expect(realityFrame.getByText("From consequence to choice")).toBeVisible();
+    await expect(realityFrame.getByRole("link", { name: "Next: Little c" })).toBeVisible();
 
     const labels = cards.first().locator(
       ".home-theory-layer-status, .home-theory-layer-comparison-label, .home-theory-layer-scope, .home-theory-layer-step-label",
@@ -190,12 +196,17 @@ test.describe("hero", () => {
     // The standalone evidence-boundary section is retired; the honesty now
     // lives inside every panel, so pin it there instead.
     await expect(page.locator("#epistemic-boundary")).toHaveCount(0);
-    const boundaries = page.locator(
-      ".home-theory-layer-card [data-step='boundary']",
-    );
-    await expect(boundaries).toHaveCount(4);
+    const cards = page.locator(".home-theory-layer-card");
+    await expect(cards).toHaveCount(4);
     for (let index = 0; index < 4; index += 1) {
-      await expect(boundaries.nth(index).getByText("What remains unproven")).toBeVisible();
+      const card = cards.nth(index);
+      await expect(card.locator('[data-step="status"]')).toBeVisible();
+      const boundary = card.locator('[data-step="boundary"]');
+      await expect(boundary).not.toBeVisible();
+      const reasoning = card.locator("summary").filter({ hasText: "Explore the reasoning" });
+      await reasoning.focus();
+      await page.keyboard.press("Enter");
+      await expect(boundary.getByText("What remains unproven")).toBeVisible();
     }
   });
 });

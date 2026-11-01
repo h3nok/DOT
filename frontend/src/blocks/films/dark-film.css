@@ -357,6 +357,13 @@ html:not(.dark) .dark-film-public {
 }
 
 .dark-film-public .dark-film-frame {
+  --film-ink: var(--df-ink);
+  --film-muted: var(--df-muted);
+  --film-jade: var(--df-jade);
+  --film-voice: var(--df-jade);
+  --film-clay: var(--df-clay);
+  --film-prevailing: var(--df-quote);
+  --film-cite: var(--df-cite);
   background: radial-gradient(ellipse at 28% 50%, var(--df-field) 0%, var(--df-stage) 53%, var(--df-edge) 100%);
 }
 .dark-film-public .dark-film-frame--trailer {

@@ -151,3 +151,22 @@ Big C rather than observed. Every public account labels it as Speculation; the
 homepage's "starting assumption" boundary is consistent with this. The
 computing analogy is the author's route to the inference, not public copy
 until the author approves its wording.
+
+## Presentation refinement — 2026-11-01
+
+Following the founder’s request to refine the four sections, retain the
+outside-in sequence and introduce it explicitly as DOT’s proposed structure.
+Each section keeps a visible claim level and a concise evidence boundary.
+The existing reasoning disclosure carries the complete argument and detailed
+limitations together. At the founder’s request, highlight claim status consistently
+in every section with a restrained tint and accent edge. Keep the full T × E
+qualification visible as three short paragraphs, without a table. Use “living
+body” in the introductory copy and diagrams; explain Avatar as the book’s term
+in the deeper reasoning. Reduce diagram label sizes while preserving phone legibility.
+Enlarged, labelled details reuse the hero’s geometry; the homepage background
+represents speculative T × E without another outer
+ring. The Little c detail emphasizes the Reality Stream and Avatar–Canvas
+coupling, preserving Little c outside RF₀ and both within Big C.
+
+Left-aligned prose and shorter continuation links serve L1, L7, L8, and L10.
+No manifesto law is violated; no new feature or automatic progression is added.

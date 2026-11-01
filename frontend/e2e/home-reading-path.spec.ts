@@ -33,20 +33,21 @@ test("home offers a reading path and readable theory comparisons", async ({ page
     const section = page.locator(`#${sectionId}`);
     await section.evaluate(element => element.scrollIntoView());
     await expect(section.getByRole("heading", { level: 2 })).toBeVisible();
-    const centered = await section.locator(".home-theory-layer-copy").evaluate(copy => {
+    await expect(section.locator("h2")).toHaveCSS("text-align", "center");
+    const prose = await section.locator(".home-theory-layer-copy").evaluate(copy => {
       const column = copy.getBoundingClientRect();
-      return [...copy.querySelectorAll("h2, .home-theory-layer-lede, .home-theory-layer-human-stakes, [data-step='boundary']")]
+      return [...copy.querySelectorAll(".home-theory-layer-lede, .home-theory-layer-human-stakes, [data-step='status']")]
         .map(element => {
           const box = element.getBoundingClientRect();
           return {
             alignment: getComputedStyle(element).textAlign,
-            offset: Math.abs((box.left + box.right - column.left - column.right) / 2),
+            offset: Math.abs(box.left - column.left),
           };
         });
     });
-    expect(centered).toHaveLength(4);
-    for (const content of centered) {
-      expect(content.alignment).toBe("center");
+    expect(prose).toHaveLength(3);
+    for (const content of prose) {
+      expect(content.alignment).toBe("left");
       expect(content.offset).toBeLessThanOrEqual(1);
     }
     // Only conscious processes carry the living surface; RF₀ and Canvas stay distinct.
@@ -55,7 +56,8 @@ test("home offers a reading path and readable theory comparisons", async ({ page
     await expect(section.locator('.home-concept-architecture [data-entity="canvas"]')).toHaveCount(1);
     const reasoning = section.locator("summary").filter({ hasText: "Explore the reasoning" });
     const boundaryElement = section.locator('[data-step="boundary"]');
-    await expect(boundaryElement).toBeVisible();
+    await expect(section.locator('[data-step="status"]')).toBeVisible();
+    await expect(boundaryElement).not.toBeVisible();
     await expect(section.locator('[data-step="question"]')).not.toBeVisible();
     await reasoning.focus();
     await page.keyboard.press("Enter");
@@ -72,7 +74,7 @@ test("home offers a reading path and readable theory comparisons", async ({ page
     } else {
       expect(proposed!.y).toBeGreaterThanOrEqual(known!.y + known!.height - 1);
     }
-    expect(boundary!.y + boundary!.height).toBeLessThanOrEqual(known!.y);
+    expect(boundary!.y).toBeGreaterThanOrEqual(Math.max(known!.y + known!.height, proposed!.y + proposed!.height) - 1);
     const overflow = await section.evaluate(element =>
       [...element.querySelectorAll("h2, p, a, .home-theory-layer-term")].some(child =>
         child.getBoundingClientRect().right > document.documentElement.clientWidth + 1,
@@ -83,6 +85,7 @@ test("home offers a reading path and readable theory comparisons", async ({ page
     await reasoning.focus();
     await page.keyboard.press("Enter");
     await expect(section.locator('[data-step="question"]')).not.toBeVisible();
-    await expect(boundaryElement).toBeVisible();
+    await expect(boundaryElement).not.toBeVisible();
+    await expect(section.locator('[data-step="status"]')).toBeVisible();
   }
 });

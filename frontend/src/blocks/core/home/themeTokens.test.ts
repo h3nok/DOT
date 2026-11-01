@@ -180,7 +180,7 @@ describe("home entry theme compatibility", () => {
 
   it("states embodiment and model boundaries in its accessible description", () => {
     const architecture = readArchitecture();
-    expect(architecture).toContain("Little c is outside RF₀ and embodied by an Avatar inside it");
+    expect(architecture).toContain("Little c is outside RF₀ and embodied by a living body inside it");
     expect(architecture).toContain("The Reality Stream runs from RF₀ to Little c");
     expect(architecture).toContain("not measured physical locations");
     expect(architecture).toContain("T × E is Speculation");

@@ -308,7 +308,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.lighting.traceFilters.every(filter => filter === "none")).toBe(true);
     expect(presentation.captionPresent).toBe(true);
     await expect(svg).toHaveAccessibleName("DOT diagram");
-    await expect(svg).toHaveAccessibleDescription(/Little c is outside RF₀ and embodied by an Avatar inside it/);
+    await expect(svg).toHaveAccessibleDescription(/Little c is outside RF₀ and embodied by a living body inside it/);
     await expect(page.locator(".home-architecture-field-note"))
       .toContainText("speculative conditions for Big C");
     await expect(page.locator(".home-hero-architecture")

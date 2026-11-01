@@ -21,7 +21,7 @@ export function HeroArchitectureLabels({ showOrigin = true }: { showOrigin?: boo
         <tspan x="235">Experience</tspan><tspan x="235" dy="1.15em">laboratory</tspan>
       </text>
       <g className="home-architecture-ring-label" data-layer="little-c">
-        <a href="#little-c" aria-label="Little c — the local experiencer, embodied through an Avatar">
+        <a href="#little-c" aria-label="Little c — the local experiencer, embodied through a living body">
           <text x="490" y="241" textAnchor="middle">Little c</text>
         </a>
       </g>

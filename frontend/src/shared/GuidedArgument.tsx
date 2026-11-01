@@ -7,6 +7,7 @@ interface GuidedArgumentProps {
   scope: string;
   question: string;
   proposal: string;
+  boundarySummary: string | readonly string[];
   boundary: string;
   className?: string;
   children?: ReactNode;
@@ -18,6 +19,7 @@ export function GuidedArgument({
   scope,
   question,
   proposal,
+  boundarySummary,
   boundary,
   className = "",
   children,
@@ -27,10 +29,16 @@ export function GuidedArgument({
       aria-label={ariaLabel}
       className={`dot-guided-argument home-theory-layer-inquiry ${className}`}
     >
-      <section data-step="boundary" aria-label="What remains unproven">
+      <section data-step="status" aria-label="Claim status">
         <div className="dot-guided-argument__content home-theory-layer-step-content">
-          <span className="home-theory-layer-step-label">What remains unproven</span>
-          <p>{boundary}</p>
+          <span className="home-theory-layer-step-label">Claim status</span>
+          {typeof boundarySummary === "string" ? <p>{boundarySummary}</p> : (
+            <div className="home-theory-layer-evidence-notes">
+              {boundarySummary.map(text => (
+                <p key={text}>{text}</p>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       <details className="home-theory-layer-details">
@@ -61,6 +69,12 @@ export function GuidedArgument({
               <div className="dot-guided-argument__content home-theory-layer-step-content">
                 <span className="home-theory-layer-step-label">DOT proposes</span>
                 <p>{proposal}</p>
+              </div>
+            </section>
+            <section data-step="boundary" aria-label="What remains unproven">
+              <div className="dot-guided-argument__content home-theory-layer-step-content">
+                <span className="home-theory-layer-step-label">What remains unproven</span>
+                <p>{boundary}</p>
               </div>
             </section>
           </div>

@@ -91,7 +91,7 @@ describe("architecture surface lighting", () => {
     expect(container.querySelector('[data-flow="reality-stream"]')).toHaveAttribute("marker-end");
     expect(container.querySelector('[data-flow="embodied-action"]')).toHaveAttribute("marker-end");
     expect(container.querySelector('[data-entity="canvas"]')).not.toBeNull();
-    expect(container.querySelector("desc")?.textContent).toContain("Little c is outside RF₀ and embodied by an Avatar inside it");
+    expect(container.querySelector("desc")?.textContent).toContain("Little c is outside RF₀ and embodied by a living body inside it");
   });
 
   it("keeps every definition local to its SVG even with repeated diagrams", () => {
