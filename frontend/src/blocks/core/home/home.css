@@ -1313,6 +1313,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 .home-architecture-canvas text { font-size: 32px; font-weight: 600; }
 .home-architecture-small-label { font-size: 24px; }
 .home-architecture-frame-purpose { font-size: 28px; }
+.home-architecture-stream-label { font-size: 18px; stroke-width: 1.5px; }
 .home-architecture-painting { fill: none; stroke: var(--architecture-local); stroke-width: 1.8; }
 
 .home-architecture-ring-label {

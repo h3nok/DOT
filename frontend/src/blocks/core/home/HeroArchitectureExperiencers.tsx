@@ -37,8 +37,8 @@ export function HeroArchitectureExperiencers({ ids }: { ids: HeroArchitectureIds
       </g>
       <g className="home-architecture-exchange home-architecture-social-relations">
         <path className="home-architecture-stream" data-flow="reality-stream" d="M379 333H436" markerEnd={`url(#${couplingArrowId})`} />
-        <text className="home-architecture-flow-label" x="410" y="272" textAnchor="middle">
-          <tspan x="410">Reality</tspan><tspan x="410" dy="1.15em">Stream</tspan>
+        <text className="home-architecture-flow-label home-architecture-stream-label" x="393" y="254" textAnchor="middle">
+          <tspan x="393">Reality</tspan><tspan x="393" dy="1.1em">Stream</tspan>
         </text>
         <path className="home-architecture-canvas-link" data-flow="access-update" d="M490 392V461" markerStart={`url(#${couplingArrowId})`} markerEnd={`url(#${couplingArrowId})`} />
         <g className="home-architecture-canvas" data-entity="canvas">
