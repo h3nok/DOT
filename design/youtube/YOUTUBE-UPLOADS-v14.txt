@@ -4,9 +4,9 @@ DOT — YOUTUBE UPLOADS (v14) · DRAFT FOR AUTHOR REVIEW
 Older versions are in deprecated/. Descriptions below are third-person project copy for
 Henok's review and edits, not quotations from the author.
 
-Files (dark and light tones of each)
-  Trailer    dot-opening-trailer-dark-v14.mp4 / dot-opening-trailer-light-v14.mp4  (3:31)
-  Full film  concept-film-full-16x9-dark-v14.mp4 / concept-film-full-16x9-light-v14.mp4  (8:28)
+Files (dark and light tones of each, 3840×2160 UHD, 30 fps)
+  Trailer    dot-opening-trailer-dark-v14-4k.mp4 / dot-opening-trailer-light-v14-4k.mp4  (3:31)
+  Full film  concept-film-full-16x9-dark-v14-4k.mp4 / concept-film-full-16x9-light-v14-4k.mp4  (8:28)
   Captions   assets/dot-opening-trailer-v14.en.srt, assets/concept-film-full-16x9-v14.en.srt (both tones)
   Chapters   assets/dot-films-v14-chapters.json (also below)
 

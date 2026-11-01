@@ -15,6 +15,7 @@ const option = (name, fallback) => arguments_.find((argument) => argument.starts
 if (arguments_.includes("--help")) {
   console.log(`Usage: node scripts/render-dark-film.mjs [options]
   --url=http://127.0.0.1:5173/_preview/film-dark?render=1
+  --density=1          Export 1920×1080 instead of 3840×2160 UHD (default: 2)
   --tone=light         Export the light version, with the page in its light theme (default: dark)
   --output=/tmp/dot-film-revised-dark
   --fps=30             Frames per second (default: 30)
@@ -45,8 +46,13 @@ const FPS = Number(option("fps", "30"));
 const WORKERS = Number(option("workers", String(Math.min(4, os.availableParallelism()))));
 const FFMPEG = process.env.DOT_FFMPEG || (existsSync("/tmp/dot-channel-video-tools/ffmpeg") ? "/tmp/dot-channel-video-tools/ffmpeg" : "ffmpeg");
 const FFPROBE = process.env.DOT_FFPROBE || (FFMPEG.includes(path.sep) ? path.join(path.dirname(FFMPEG), "ffprobe") : "ffprobe");
+// The film lays out at 1920×1080 and is drawn at twice that density: true UHD, never an upscale.
 const WIDTH = 1920;
 const HEIGHT = 1080;
+const DENSITY = Number(option("density", "2"));
+const PIXEL_WIDTH = WIDTH * DENSITY;
+const PIXEL_HEIGHT = HEIGHT * DENSITY;
+const H264_LEVEL = DENSITY > 1 ? "5.1" : "4.2";
 const OPENING_ONLY = arguments_.includes("--opening-only");
 const STILLS_ONLY = arguments_.includes("--stills-only");
 const SUFFIX = option("suffix", "revised-dark");
@@ -62,6 +68,7 @@ const EXCERPT_NAME = option("excerpt-name", `dot-introduction-fullscreen-${SUFFI
 const pageErrors = new WeakMap();
 assert.ok(Number.isInteger(FPS) && FPS >= 1 && FPS <= 60, "--fps must be an integer from 1 to 60");
 assert.ok(["dark", "light"].includes(TONE), "--tone must be dark or light");
+assert.ok(DENSITY === 1 || DENSITY === 2, "--density must be 1 or 2");
 assert.ok(Number.isInteger(WORKERS) && WORKERS >= 1 && WORKERS <= 8, "--workers must be an integer from 1 to 8");
 assert.match(SUFFIX, /^[a-z0-9-]+$/, "--suffix must contain lowercase letters, numbers, or hyphens");
 assert.ok(Number.isFinite(BODY_START) && BODY_START >= 0, "--body-start must be nonnegative");
@@ -327,7 +334,7 @@ async function encode(pages, duration, audio, target) {
   const child = spawn(FFMPEG, [
     "-hide_banner", "-loglevel", "error", "-y",
     "-f", "image2pipe", "-framerate", String(FPS), "-vcodec", "mjpeg", "-i", "pipe:0", "-i", audio,
-    "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-threads", "4", "-profile:v", "high", "-level:v", "4.2",
+    "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-threads", "4", "-profile:v", "high", "-level:v", H264_LEVEL,
     "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
     "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2", "-t", String(duration), "-movflags", "+faststart", target,
   ], { stdio: ["pipe", "ignore", "pipe"] });
@@ -369,7 +376,7 @@ async function inspect(file, duration) {
   const metadata = JSON.parse(stdout);
   const video = metadata.streams.find((stream) => stream.codec_type === "video");
   const audio = metadata.streams.find((stream) => stream.codec_type === "audio");
-  assert.ok(video?.codec_name === "h264" && video.width === WIDTH && video.height === HEIGHT, "The output must be H.264 at 1920×1080");
+  assert.ok(video?.codec_name === "h264" && video.width === PIXEL_WIDTH && video.height === PIXEL_HEIGHT, `The output must be H.264 at ${PIXEL_WIDTH}×${PIXEL_HEIGHT}`);
   assert.equal(video.r_frame_rate, `${FPS}/1`);
   assert.equal(Number(video.nb_frames), Math.ceil(duration * FPS));
   assert.equal(audio?.codec_name, "aac");
@@ -412,7 +419,7 @@ await mkdir(OUTPUT, { recursive: true });
 const temporary = await mkdtemp(path.join(os.tmpdir(), "dot-dark-film-render-"));
 const browser = await chromium.launch({ headless: true });
 try {
-  const context = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 1, colorScheme: TONE, reducedMotion: "no-preference", serviceWorkers: "block" });
+  const context = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: DENSITY, colorScheme: TONE, reducedMotion: "no-preference", serviceWorkers: "block" });
   const page = await preparePage(context);
   const info = await page.evaluate(() => {
     const { duration, openingSeconds, keystrokes, trailer } = window.__DOT_DARK_FILM_PREVIEW__;
@@ -457,7 +464,7 @@ try {
         "-hide_banner", "-loglevel", "error", "-y", "-i", temporaryVideo, "-i", REUSE_BODY, "-i", audio,
         "-filter_complex", `[0:v]setpts=PTS-STARTPTS[prefix];[1:v]trim=start=${BODY_START},setpts=PTS-STARTPTS[body];[prefix][body]concat=n=2:v=1:a=0,format=yuv420p[video]`,
         "-map", "[video]", "-map", "2:a:0", "-frames:v", String(frameCount), "-r", String(FPS),
-        "-c:v", "libx264", "-preset", "fast", "-crf", "17", "-threads", "4", "-profile:v", "high", "-level:v", "4.2",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "17", "-threads", "4", "-profile:v", "high", "-level:v", H264_LEVEL,
         "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
         "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2", "-t", String(duration), "-movflags", "+faststart", joined,
       ]);
@@ -471,7 +478,7 @@ try {
       openingMetadata = await inspect(opening, info.openingSeconds);
     }
     if (!reuse) excerptMetadata = await exportExcerpt(opening, info.openingSeconds);
-    await writeFile(path.join(OUTPUT, `concept-film-${SUFFIX}.json`), `${JSON.stringify({ draft: true, duration, openingSeconds: info.openingSeconds, width: WIDTH, height: HEIGHT, fps: FPS, frames: frameCount, audio: audioMetadata, reusedBody, excerpt: excerptMetadata, video: metadata, opening: openingMetadata, full: OPENING_ONLY ? null : full, openingFile: opening }, null, 2)}\n`);
+    await writeFile(path.join(OUTPUT, `concept-film-${SUFFIX}.json`), `${JSON.stringify({ draft: true, duration, openingSeconds: info.openingSeconds, width: PIXEL_WIDTH, height: PIXEL_HEIGHT, fps: FPS, frames: frameCount, audio: audioMetadata, reusedBody, excerpt: excerptMetadata, video: metadata, opening: openingMetadata, full: OPENING_ONLY ? null : full, openingFile: opening }, null, 2)}\n`);
     console.log(`Finished: ${outputVideo}\nOpening: ${opening}`);
   }
 } finally {
