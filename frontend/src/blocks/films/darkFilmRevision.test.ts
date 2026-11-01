@@ -10,6 +10,7 @@ import {
   tourPartAt,
   type TourPart,
 } from "./conceptTour";
+import amm from "../../content/amm.json";
 import { DarkFilmTrailer } from "./DarkFilmTrailer";
 import {
   DARK_FILM_KEYSTROKES,
@@ -114,6 +115,17 @@ describe("the dark film's opening trailer", () => {
     expect(architecture.description).toMatch(/Reality Stream runs out of RF₀ to Little c₁ in Big C/);
     expect(architecture.description).toMatch(/T × E field that Big C emerged within, labelled speculation/);
     expect(architecture.description).not.toMatch(/capacit/i);
+  });
+
+  it("brings the culture's own messages to the one person, then opens that person's options", () => {
+    const culture = render(createElement(DarkFilmTrailer, { seconds: 80 }));
+    expect(culture.container.querySelector(".dark-trailer-drawing")).toHaveTextContent("You have no choice.");
+    expect(amm.home.concepts.map((concept) => concept.script)).toContain("You have no choice.");
+    culture.unmount();
+
+    const options = render(createElement(DarkFilmTrailer, { seconds: 125 }));
+    expect(options.container.querySelectorAll('.dark-trailer-drawing circle[r="14"]')).toHaveLength(6);
+    options.unmount();
   });
 
   it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
