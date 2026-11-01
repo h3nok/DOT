@@ -55,16 +55,17 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "pretence", "struggle", "blame", "taught", "cost", "erosion", "turn", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
 
 /**
- * The opening trailer: the DOT mark, then twelve shots, one argument, before the seventeen
- * concepts. An ordinary day → the pretence → the struggle and the blame → what we are not taught → power unanswered →
- * moral erosion → where a truthful framework begins → you → your options. The words come from
- * Book One, the AMM, and the author, with DOT's proposals marked (content/films.json).
+ * The opening trailer: the DOT mark, then one person. DOT is about the individual (the AMM is its
+ * social application), so the film stays with them: an ordinary day → the pretence → confusion →
+ * the body → never enough → what they were given and never taught → where a truthful framework
+ * begins → you → your options. The words come from Book One and the author, with DOT's proposals
+ * marked (content/films.json).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
   if (shot.kind !== TRAILER_KINDS[index]) throw new Error(`Trailer shot ${index} must be "${TRAILER_KINDS[index]}", not "${shot.kind}".`);
@@ -172,14 +173,6 @@ export function trailerFilmTime(designSeconds: number): number {
   const local = Math.min(shot.drawingLength, Math.max(0, designSeconds - shot.designStart));
   return shot.start + local * ((shot.end - shot.start) / shot.drawingLength);
 }
-
-/** The American Millennial Manifesto's illustrations, and how the camera explores each: [x, y, scale]. */
-export const TRAILER_PLATES = {
-  pretence: { src: "/amm/media/host-reflection-1536.webp", from: [800, 450, 1], to: [640, 430, 1.12] },
-  struggle: { src: "/amm/media/host-at-home-v1-1536.webp", from: [800, 470, 1], to: [720, 490, 1.08] },
-  blame: { src: "/amm/media/host-anatomy-v2-1536.webp", from: [800, 450, 1], to: [820, 470, 1.08] },
-  erosion: { src: "/amm/media/erosion-1536.webp", from: [800, 450, 1], to: [700, 500, 1.1] },
-} as const;
 
 /** The heartbeat under the question, on the drawing's clock, and where each falls in the film. */
 export const TRAILER_HEARTBEATS_DESIGN = Array.from({ length: 13 }, (_, beat) => 0.3 + beat * 0.52);

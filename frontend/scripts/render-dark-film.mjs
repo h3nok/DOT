@@ -230,15 +230,15 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
 
 /**
  * The opening trailer's score, cut to the shots the preview reports: a cold hum that builds
- * through the ordinary day (faintly dissonant from the struggle on, sagging in pitch as the cost
- * mounts), near silence with heartbeats at the question, a pad under the proposal, and a warm
+ * through the ordinary day (faintly dissonant from the confusion on, sagging in pitch as the person
+ * declines), easing once it is not their fault, near silence with heartbeats at the question, a pad under the proposal, and a warm
  * D-major chord that begins with the architecture and blooms as the box dissolves. Pure sines,
  * deterministic, finite; it ends before the concepts (L2).
  */
 function addTrailerScore(mix, rate, count, trailer) {
   if (!trailer?.shots?.length) return false;
   const at = Object.fromEntries(trailer.shots.map((shot) => [shot.kind, shot]));
-  for (const kind of ["mark", "normal", "struggle", "cost", "erosion", "turn", "design", "pause", "architecture", "title"]) {
+  for (const kind of ["mark", "normal", "confused", "unfulfilled", "inherited", "turn", "design", "pause", "architecture", "title"]) {
     assert.ok(at[kind], `The trailer score needs the ${kind} shot`);
   }
   const tau = Math.PI * 2;
@@ -279,8 +279,8 @@ function addTrailerScore(mix, rate, count, trailer) {
   const envelopeOf = {
     mark: (t) => smooth(t, at.mark.start + 0.2, at.mark.start + 1.2) * (1 - smooth(t, at.mark.end - 1.6, at.mark.end)),
     pad: (t) => smooth(t, at.design.start, at.design.start + 4) * (1 - smooth(t, at.design.end - 0.5, at.design.end + 2.5)) * (1 + 0.15 * Math.sin(tau * 0.12 * t)),
-    hum: (t) => smooth(t, at.normal.start + 2, at.struggle.start + 2) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)) * (1 + 0.2 * Math.sin(tau * 0.5 * t)),
-    ache: (t) => smooth(t, at.struggle.start, at.struggle.start + 4) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)),
+    hum: (t) => smooth(t, at.normal.start + 2, at.confused.start + 2) * (1 - smooth(t, at.inherited.start, at.inherited.start + 6)) * (1 + 0.2 * Math.sin(tau * 0.5 * t)),
+    ache: (t) => smooth(t, at.confused.start, at.confused.start + 4) * (1 - smooth(t, at.inherited.start, at.inherited.start + 4)),
     chord: (t) => (0.35 * smooth(t, at.architecture.start - 0.4, at.architecture.start + 3.5) + 0.65 * smooth(t, settle, settle + 2)) * (1 - smooth(t, end - 1.5, end + 1.5)),
     lift: (t) => smooth(t, settle + 3, settle + 6) * (1 - smooth(t, end - 1.5, end + 1.5)),
   };
@@ -289,7 +289,7 @@ function addTrailerScore(mix, rate, count, trailer) {
   const last = Math.min(count, Math.ceil((end + 1.5) * rate));
   for (let i = 0; i < last; i++) {
     const t = i / rate;
-    const bend = 1 - 0.035 * smooth(t, at.cost.start, at.erosion.end - 0.2);
+    const bend = 1 - 0.035 * smooth(t, at.confused.start, at.unfulfilled.end - 0.2);
     let sample = 0;
     for (const [frequency, level, kind] of voices) {
       const envelope = envelopeOf[kind](t);

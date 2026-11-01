@@ -1,12 +1,11 @@
-import { createContext, useContext, useEffect, useId, type CSSProperties } from "react";
+import { createContext, useContext, useId, type CSSProperties } from "react";
 
-import amm from "../../content/amm.json";
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { DoWordmark } from "../../shared/DoWordmark";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
-import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, TRAILER_PLATES, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
+import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
 
 /* ── Film-time helpers: every motion is a pure function of the film second (L1). ── */
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -41,20 +40,16 @@ type Cubic = readonly [Point, Point, Point, Point];
 const FIG_X = 640;
 const FIG_Y = 450;
 const FIG = 1.55;
-/** Where a figure's chest, head-top, and right hand sit, relative to its centre. */
+/** Where a figure's chest sits, relative to its centre. */
 const CHEST_DY = -36 * FIG;
-const HEAD_TOP_DY = -150 * FIG;
-const HAND: Point = [49 * FIG, 63 * FIG];
 const CHEST: Point = [FIG_X, FIG_Y + CHEST_DY];
 const SPHERE: Point = [1010, 420];
 const SPHERE_R = 220;
 const BOX = { x: FIG_X - 120, y: 190, w: 240, h: 540 } as const;
-const LATTICE = { dx: 330, dy: 640 } as const;
 const INTENT: Cubic = [[790, 392], [748, 316], [690, 318], [660, 378]];
 const RETURN: Cubic = [[660, 448], [690, 512], [750, 520], [790, 452]];
 
 /* ── The drawing's own clock (seconds), before it is stretched to the words ── */
-const NUDGE = 42;
 const PAUSE = 49;
 const ARCH = 57;
 const TITLE = 69;
@@ -66,16 +61,7 @@ const CAMERA: readonly (readonly [number, number, number, number])[] = [
   [15, FIG_X, 455, 1.52],
   [20.5, 825, 440, 0.95],
   [23, 825, 440, 0.95],
-  [25, FIG_X, 450, 1.25],
-  [32, FIG_X, 450, 1.25],
-  [35.5, FIG_X, 450, 0.42],
-  [41.6, FIG_X, 450, 0.42],
-  // In on the person and the one above who holds their string: looking up, then blamed.
-  [43.4, FIG_X, 230, 0.8],
-  [45.4, FIG_X, 230, 0.8],
-  // Out again as everyone diminishes.
-  [46.6, FIG_X, 450, 0.46],
-  [PAUSE + 0.4, FIG_X, 450, 0.46],
+  [PAUSE, FIG_X, 450, 1.05],
   [PAUSE + 4.6, FIG_X, 380, 1.5],
   [ARCH, FIG_X, 370, 1.9],
 ];
@@ -127,19 +113,6 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
       {BODY_PATHS.map((d) => (
         <path key={d} d={d} {...(progress < 1 ? drawn(progress) : {})} />
       ))}
-    </g>
-  );
-}
-
-function Arrow({ from, to, px, s, color, opacity }: { from: Point; to: Point; px: number; s: number; color: string; opacity: number }) {
-  const angle = Math.atan2(to[1] - from[1], to[0] - from[0]);
-  const head = 16;
-  const left: Point = [to[0] - head * Math.cos(angle - 0.45), to[1] - head * Math.sin(angle - 0.45)];
-  const right: Point = [to[0] - head * Math.cos(angle + 0.45), to[1] - head * Math.sin(angle + 0.45)];
-  return (
-    <g opacity={opacity} fill="none" stroke={color} strokeWidth={(px * WEIGHT) / s} strokeLinecap="round" strokeLinejoin="round">
-      <path d={`M${from.join(" ")}L${to.join(" ")}`} />
-      <path d={`M${left.join(" ")}L${to.join(" ")}L${right.join(" ")}`} />
     </g>
   );
 }
@@ -214,96 +187,6 @@ function heartbeat(t: number) {
   return glow;
 }
 
-/** The five senses, each a stream from its own direction, named at the edge of the frame. */
-const SENSES: readonly { name: string; angle: number; label: Point; color: keyof Palette }[] = [
-  { name: "SIGHT", angle: -145, label: [300, 222] as Point, color: "gold" },
-  { name: "SMELL", angle: -90, label: [640, 186] as Point, color: "ink" },
-  { name: "SOUND", angle: -35, label: [980, 222] as Point, color: "jade" },
-  { name: "TOUCH", angle: 170, label: [190, 476] as Point, color: "ink" },
-  { name: "TASTE", angle: 10, label: [1090, 476] as Point, color: "gold" },
-];
-
-const PARTICLES = Array.from({ length: 170 }, (_, k) => {
-  const sense = SENSES[k % SENSES.length];
-  const angle = ((sense.angle + (hash(k + 1.7) - 0.5) * 26) * Math.PI) / 180;
-  const radius = 640 + 140 * hash(k + 2.3);
-  return {
-    spawn: 7.2 + 7.0 * hash(k + 0.1),
-    life: 1.5 + 1.1 * hash(k + 0.6),
-    from: [FIG_X + Math.cos(angle) * radius, 420 + Math.sin(angle) * radius] as Point,
-    to: [FIG_X + (hash(k + 3.1) - 0.5) * 120, 420 + (hash(k + 4.4) - 0.5) * 380] as Point,
-    color: sense.color,
-    size: 3.2 + 1.2 * hash(k + 5.2),
-  };
-});
-
-const LATTICE_COPIES = Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =>
-  [-1, 0, 1].filter((j) => i !== 0 || j !== 0).map((j) => ({
-    i, j, x: FIG_X + LATTICE.dx * i, y: FIG_Y + LATTICE.dy * j, delay: 0.28 * (Math.abs(i) + Math.abs(j)), phase: hash(i * 7.1 + j * 3.3),
-  })),
-);
-
-/** The culture's messages, as the American Millennial Manifesto quotes them, closing in on the one we follow. */
-const CULTURE = amm.home.concepts.map((concept) => concept.script);
-const CULTURE_START = 35.5;
-const CULTURE_STEP = 0.72;
-const CULTURE_LIFE = 2.8;
-/** Each message keeps its own lane, from beyond the frame to a place beside the person; "You have no choice." lands last, just above them. */
-const CULTURE_LANES: readonly (readonly [Point, Point])[] = [
-  [[-900, 40], [60, 130]],
-  [[2180, 40], [1220, 130]],
-  [[-900, 470], [60, 430]],
-  [[2180, 470], [1220, 430]],
-  [[640, -900], [640, -120]],
-  [[640, -760], [640, 96]],
-];
-
-function CultureMessages({ t, s }: { t: number; s: number }) {
-  const { clay, stage } = useContext(TrailerPalette);
-  return (
-    <g fontFamily="Source Serif 4, Georgia, serif" fontStyle="italic" textAnchor="middle" fill={clay} stroke={stage} paintOrder="stroke" strokeLinejoin="round">
-      {CULTURE.map((text, k) => {
-        const u = (t - (CULTURE_START + k * CULTURE_STEP)) / CULTURE_LIFE;
-        if (u <= 0 || u >= 1) return null;
-        const [from, to] = CULTURE_LANES[k];
-        const arrive = 1 - (1 - smooth(u, 0, 0.7)) ** 2;
-        return (
-          <text
-            key={text} x={lerp(from[0], to[0], arrive)} y={lerp(from[1], to[1], arrive)}
-            fontSize={40 / s} strokeWidth={9 / s} opacity={smooth(u, 0, 0.18) * (1 - smooth(u, 0.72, 1))}
-          >
-            {text}
-          </text>
-        );
-      })}
-    </g>
-  );
-}
-
-/** The figure in the box above, who holds our string: where we look for leadership, and who points back. */
-const ABOVE_BOX_FLOOR = FIG_Y - LATTICE.dy + 10 + BOX.h / 2;
-
-function LookingUp({ look, blame, s }: { look: number; blame: number; s: number }) {
-  const { ink, clay } = useContext(TrailerPalette);
-  if (look <= 0.001 && blame <= 0.001) return null;
-  return (
-    <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {look > 0.001 && (
-        <g stroke={ink} strokeWidth={(2 * WEIGHT) / s} opacity={look * 0.85}>
-          <path d={`M${FIG_X} ${FIG_Y + HEAD_TOP_DY - 16}V${ABOVE_BOX_FLOOR + 22}`} strokeDasharray={`${6 / s} ${7 / s}`} />
-          <path d={`M${FIG_X - 12} ${ABOVE_BOX_FLOOR + 36}L${FIG_X} ${ABOVE_BOX_FLOOR + 20}L${FIG_X + 12} ${ABOVE_BOX_FLOOR + 36}`} />
-        </g>
-      )}
-      {blame > 0.001 && (
-        <g stroke={clay} strokeWidth={(2.6 * WEIGHT) / s} opacity={blame}>
-          <path d={`M${FIG_X + 96} ${ABOVE_BOX_FLOOR + 16}Q${FIG_X + 120} ${CHEST[1] - 130} ${lerp(FIG_X + 104, FIG_X + 46, blame)} ${CHEST[1] - 8}`} />
-          <path d={`M${FIG_X + 34} ${CHEST[1] - 30}L${FIG_X + 44} ${CHEST[1] - 6}L${FIG_X + 68} ${CHEST[1] - 16}`} opacity={smooth(blame, 0.7, 1)} />
-        </g>
-      )}
-    </g>
-  );
-}
-
 /** Paths open out from the person in every direction, each ending in an open choice. */
 const OPTIONS_LEFT: readonly Cubic[] = [
   [[530, 300], [470, 280], [390, 220], [290, 170]],
@@ -335,29 +218,6 @@ function Options({ open, s }: { open: number; s: number }) {
   );
 }
 
-/**
- * The strings: each figure is tugged from the hand of the figure in the box above it,
- * who is boxed too; the top row's strings rise out of frame.
- */
-function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
-  const { clay } = useContext(TrailerPalette);
-  if (opacity <= 0.001) return null;
-  return (
-    <g fill="none" stroke={clay} strokeWidth={(1.2 * WEIGHT) / s} strokeLinecap="round" opacity={opacity * 0.75}>
-      {Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =>
-        [-1, 0, 1].map((j) => {
-          const x = FIG_X + LATTICE.dx * i;
-          const y = FIG_Y + LATTICE.dy * j;
-          const tug = Math.sin(Math.min(t, PAUSE + 0.2) * 1.7 + hash(i * 3.7 + j)) * 10;
-          const head: Point = [x, y + HEAD_TOP_DY - 6];
-          const from: Point = j === -1 ? [x + 40, y - LATTICE.dy] : [x + HAND[0], y - LATTICE.dy + HAND[1]];
-          return <path key={`${i}:${j}`} d={`M${from.join(" ")}Q${(from[0] + head[0]) / 2 + tug} ${(from[1] + head[1]) / 2} ${head.join(" ")}`} />;
-        }),
-      )}
-    </g>
-  );
-}
-
 /* ── The DOT mark: the film's signature, from a point of light ── */
 /* The rays leave room beneath the mark for its name. */
 const MARK_RAYS = Array.from({ length: 36 }, (_, k) => (k * 360) / 36).filter((angle) => angle < 65 || angle > 115);
@@ -369,7 +229,7 @@ function TrailerMark({ seconds }: { seconds: number }) {
   const centre: Point = [800, 400];
   return (
     <>
-      <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <svg className="dark-trailer-field" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <defs>
           <radialGradient id={`${uid}-mark`}>
             <stop offset="0" stopColor={jade} stopOpacity=".34" />
@@ -498,6 +358,8 @@ function TrailerNormal({ seconds }: { seconds: number }) {
   const naming = NORMAL_LINES[1].start;
   const mask = smooth(seconds, naming - 0.4, naming + 1.6);
   const closing = smooth(seconds, naming, NORMAL_LINES[2].until);
+  // "We pretend…": the day falls away, and only the smile and the strain remain.
+  const leaving = smooth(seconds, NORMAL_LINES[3].start, NORMAL_LINES[3].end + 1);
   // Each day takes less time than the one before.
   const day = seconds - NORMAL_START;
   const turn = day / 7 + 2.4 * (day / (NORMAL_END - NORMAL_START)) ** 3;
@@ -514,7 +376,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
           </radialGradient>
         </defs>
         <g transform={world}>
-          <g opacity={smooth(day, 0.2, 1.4)}>
+          <g opacity={smooth(day, 0.2, 1.4) * (1 - leaving)}>
             <circle cx={DAY_CENTRE[0]} cy={DAY_CENTRE[1]} r={DAY_R} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${2 / s} ${9 / s}`} opacity={0.45} />
             <circle cx={light[0]} cy={light[1]} r={26} fill={gold} opacity={0.18} />
             <circle cx={light[0]} cy={light[1]} r={8} fill={gold} />
@@ -523,7 +385,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
             const shown = smooth(seconds, at - 0.1, at + 0.7);
             if (shown <= 0.001) return null;
             const place = polar(DAY_CENTRE, lerp(DAY_R + 78, DAY_R - 22, closing), angle);
-            const opacity = shown * lerp(1, 0.62, closing);
+            const opacity = shown * lerp(1, 0.62, closing) * (1 - leaving);
             return (
               <g key={phrase} transform={`translate(${place[0]} ${place[1]}) scale(1.16)`} opacity={opacity}>
                 {phrase === "We go to work." && <Laptop seconds={seconds} color={ink} w={w} />}
@@ -552,32 +414,211 @@ function TrailerNormal({ seconds }: { seconds: number }) {
   );
 }
 
-/* ── The American Millennial Manifesto's own illustrations ── */
-type PlateKind = keyof typeof TRAILER_PLATES;
-const isPlate = (kind: string): kind is PlateKind => kind in TRAILER_PLATES;
-/** Past the waiting frame, so the illustrations load once a reader has pressed Play, never with the page. */
-const PLATES_LOAD_AFTER = 12;
-let platesRequested = false;
-function requestPlates() {
-  if (platesRequested) return;
-  platesRequested = true;
-  for (const { src } of Object.values(TRAILER_PLATES)) new Image().src = src;
+/* ── One person: what not knowing does to a life ── */
+const shotOf = (kind: string) => DARK_TRAILER_SHOTS.find((shot) => shot.kind === kind)!;
+const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited"];
+const HEAD: Point = [FIG_X, FIG_Y - 119 * FIG];
+/** When a word in one of a shot's lines starts typing. */
+function wordAt(kind: string, word: string) {
+  const line = DARK_TRAILER_LINES.find((typed) => typed.shot === kind && typed.text.includes(word))!;
+  return line.start + line.text.indexOf(word) / line.charsPerSecond;
 }
-const PLATE_HEIGHT = 760;
-const PLATE_WIDTH = PLATE_HEIGHT * 1.5;
+const unit = (n: number) => hash(n * 3.17 + 0.41);
 
-/** One illustration, held and slowly explored. The camera is an SVG transform, so it never jitters. */
-function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number }) {
-  const { src, from, to } = TRAILER_PLATES[kind];
-  const eased = progress * progress * (3 - 2 * progress);
-  const x = lerp(from[0], to[0], eased);
-  const y = lerp(from[1], to[1], eased);
-  const scale = lerp(from[2], to[2], eased);
+/** A line that loses its way inside the head. */
+const TANGLE = (() => {
+  let d = `M${HEAD[0] - 22} ${HEAD[1] + 8}`;
+  for (let k = 0; k < 26; k++) {
+    const a = unit(k) * Math.PI * 2;
+    const r = 8 + 22 * unit(k + 40);
+    const b = unit(k + 80) * Math.PI * 2;
+    d += `Q${(HEAD[0] + Math.cos(b) * 34).toFixed(1)} ${(HEAD[1] + Math.sin(b) * 34).toFixed(1)} ${(HEAD[0] + Math.cos(a) * r).toFixed(1)} ${(HEAD[1] + Math.sin(a) * r).toFixed(1)}`;
+  }
+  return d;
+})();
+const FRAGMENTS = Array.from({ length: 14 }, (_, k) => ({ start: (k * 360) / 14, drift: unit(k + 120), turn: unit(k + 160) - 0.5 }));
+const QUESTIONS = [[-150, 128], [-62, 118], [-20, 146], [158, 150], [24, 132]].map(([angle, radius], k) => ({ place: polar(HEAD, radius, angle), k }));
+
+const BODY_POINTS = [
+  { word: "sleep", label: "SLEEP", at: HEAD, side: -1 },
+  { word: "muscle tension", label: "TENSION", at: [FIG_X + 40, FIG_Y - 92] as Point, side: 1 },
+  { word: "digestion", label: "DIGESTION", at: [FIG_X, FIG_Y - 4] as Point, side: -1 },
+  { word: "attention,", label: "ATTENTION", at: [FIG_X - 4, FIG_Y - 212] as Point, side: 1 },
+  { word: "behavior", label: "BEHAVIOR", at: [FIG_X - 76, FIG_Y + 92] as Point, side: -1 },
+];
+const GAINS = ["CREDENTIALS", "INCOME", "APPEARANCE", "INFLUENCE", "PRODUCTIVITY"];
+const RINGS = [
+  { word: "the body", label: "BODY", r: 150 },
+  { word: "language", label: "LANGUAGE", r: 186 },
+  { word: "household", label: "HOUSEHOLD", r: 222 },
+  { word: "fear", label: "FEAR", r: 258 },
+  { word: "explanation", label: "EXPLANATION", r: 294 },
+];
+
+function personCamera(seconds: number) {
+  const health = shotOf("health").start;
+  const unfulfilled = shotOf("unfulfilled").start;
+  const inherited = shotOf("inherited").start;
+  const end = shotOf("inherited").end;
+  const keys: (readonly [number, number, number, number])[] = [
+    [shotOf("confused").start, FIG_X, 300, 2.5],
+    [health - 0.2, FIG_X, 300, 2.5],
+    [health + 2.4, FIG_X, 470, 1.36],
+    [unfulfilled - 0.2, FIG_X, 470, 1.36],
+    [unfulfilled + 2.4, FIG_X, 395, 1.85],
+    [inherited - 0.2, FIG_X, 395, 1.85],
+    [inherited + 2.6, FIG_X, 440, 1.18],
+    [end - 2, FIG_X, 440, 1.18],
+    [end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
+  ];
+  const index = keys.findIndex(([at]) => at > seconds);
+  if (index <= 0) {
+    const [, x, y, s] = index === 0 ? keys[0] : keys.at(-1)!;
+    return { x, y, s };
+  }
+  const [a, ax, ay, as] = keys[index - 1];
+  const [b, bx, by, bs] = keys[index];
+  const u = smooth(seconds, a, b);
+  return { x: lerp(ax, bx, u), y: lerp(ay, by, u), s: Math.exp(lerp(Math.log(as), Math.log(bs), u)) };
+}
+
+function TrailerPerson({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade, ink, clay, gold, stage } = useContext(TrailerPalette);
+  const cam = personCamera(seconds);
+  const s = cam.s;
+  const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
+  const confused = shotOf("confused");
+  const health = shotOf("health");
+  const unfulfilled = shotOf("unfulfilled");
+  const inherited = shotOf("inherited");
+  // The person declines through the first three shots, and recovers once it is not their fault.
+  const decline = smooth(seconds, confused.start, unfulfilled.end) * (1 - smooth(seconds, wordAt("inherited", "That inheritance"), inherited.end - 1));
+  const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 30 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
+
+  // Confusion.
+  const inConfusion = smooth(seconds, confused.start, confused.start + 1) * (1 - smooth(seconds, health.start, health.start + 1.6));
+  const tangled = smooth(seconds, confused.start + 0.4, health.start - 1);
+  const fragmenting = smooth(seconds, wordAt("confused", "Attention"), wordAt("confused", "Trust"));
+
+  // The body.
+  const inBody = smooth(seconds, health.start, health.start + 1.6) * (1 - smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4));
+  const trace = Array.from({ length: 64 }, (_, k) => {
+    const x = FIG_X + 200 + k * 4.6;
+    const u = (k / 64 + (seconds % 3.2) / 3.2) % 1;
+    const skip = Math.floor((seconds + k / 22) / 3.2);
+    const spike = Math.exp(-((u - 0.5) ** 2) * 2600) * (unit(skip) > 0.3 * decline ? 56 : 18);
+    const dip = Math.exp(-((u - 0.54) ** 2) * 2600) * 20;
+    return `${k ? "L" : "M"}${x.toFixed(1)} ${(FIG_Y + 80 - spike + dip).toFixed(1)}`;
+  }).join("");
+
+  // Never enough: each gain fills the circle, and drains faster than the last.
+  const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
+  const gainStart = unfulfilled.start + 1;
+  const gainEnd = wordAt("unfulfilled", "A persistent") - 0.4;
+  const gains = GAINS.map((name, k) => ({ name, at: gainStart + ((gainEnd - gainStart) * k) / GAINS.length }));
+  const level = Math.max(0, ...gains.map(({ at }, k) => (seconds >= at + 1.2 ? Math.exp(-(seconds - at - 1.2) * (0.7 + 0.25 * k)) : 0))) * (1 - smooth(seconds, gainEnd, gainEnd + 1));
+  const R = 44;
+  // The circle sits on the chest of the figure as it now stands: shrinking settles toward the feet.
+  const figureScale = FIG * (1 - 0.12 * decline);
+  const chestY = FIG_Y + 171 * (FIG - figureScale) - 36 * figureScale;
+
+  // What you were given.
+  const inRings = smooth(seconds, inherited.start, inherited.start + 1.4);
+  const soften = smooth(seconds, wordAt("inherited", "That inheritance"), inherited.end - 1);
+  const ringsLeave = smooth(seconds, inherited.end - 2.4, inherited.end - 0.4);
+
   return (
     <div className="dark-trailer-stage">
-      <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <g transform={`translate(800 ${PLATE_HEIGHT / 2}) scale(${scale.toFixed(5)}) translate(${(-x).toFixed(3)} ${(-y).toFixed(3)})`}>
-          <image href={src} x={800 - PLATE_WIDTH / 2} y={450 - PLATE_HEIGHT / 2} width={PLATE_WIDTH} height={PLATE_HEIGHT} preserveAspectRatio="xMidYMid meet" />
+      <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <radialGradient id={`${uid}-glow`}>
+            <stop offset="0" stopColor={jade} stopOpacity=".42" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`${uid}-hurt`}>
+            <stop offset="0" stopColor={clay} stopOpacity=".62" />
+            <stop offset="1" stopColor={clay} stopOpacity="0" />
+          </radialGradient>
+          <clipPath id={`${uid}-level`}>
+            <rect x={CHEST[0] - R} y={chestY + R - 2 * R * level} width={2 * R} height={2 * R * level} />
+          </clipPath>
+        </defs>
+        <g transform={world}>
+          {inRings > 0.001 && (
+            <g fill="none" opacity={inRings * (1 - 0.45 * soften) * (1 - ringsLeave)}>
+              {RINGS.map(({ word, label: name, r }) => {
+                const at = wordAt("inherited", word);
+                const drawnIn = smooth(seconds, at - 0.1, at + 1.3);
+                if (drawnIn <= 0.001) return null;
+                return (
+                  <g key={name}>
+                    <circle cx={FIG_X} cy={FIG_Y - 20} r={r} stroke={ink} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(drawnIn)} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 20})`} opacity={0.62} />
+                    <text x={FIG_X} y={FIG_Y - 20 - r + 7 / s} fill={ink} opacity={smooth(seconds, at + 0.3, at + 1)} {...label}>{name}</text>
+                  </g>
+                );
+              })}
+            </g>
+          )}
+
+          {inBody > 0.001 && (
+            <g opacity={inBody}>
+              <path d={trace} fill="none" stroke={clay} strokeWidth={(1.8 * WEIGHT) / s} strokeLinejoin="round" opacity={0.85} />
+            </g>
+          )}
+          {inBody > 0.001 && BODY_POINTS.map(({ word, label: name, at, side }) => {
+            const start = wordAt("health", word);
+            const lit = smooth(seconds, start, start + 0.7);
+            if (lit <= 0.001) return null;
+            const endX = FIG_X + side * 250;
+            const pulse = 0.82 + 0.18 * Math.sin(seconds * 2.4 + at[1]);
+            return (
+              <g key={name} opacity={lit * inBody}>
+                <circle cx={at[0]} cy={at[1]} r={46} fill={`url(#${uid}-hurt)`} opacity={pulse} />
+                <path d={`M${at[0]} ${at[1]}L${endX} ${at[1]}`} fill="none" stroke={clay} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${6 / s}`} opacity={0.7} />
+                <text x={endX + side * 92} y={at[1] + 8 / s} fill={clay} {...label}>{name}</text>
+              </g>
+            );
+          })}
+
+          {inRings > 0.001 && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften} />}
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
+
+          {inConfusion > 0.001 && (
+            <g fill="none" strokeLinecap="round" opacity={inConfusion}>
+              <path d={TANGLE} stroke={clay} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(tangled)} />
+              {FRAGMENTS.map(({ start, drift, turn }, k) => {
+                const radius = 88 + 74 * drift * fragmenting;
+                const shift = start + turn * 70 * fragmenting;
+                const a = polar(HEAD, radius, shift);
+                const b = polar(HEAD, radius, shift + 360 / 14 - 7);
+                return <path key={k} d={`M${a[0]} ${a[1]}A${radius} ${radius} 0 0 1 ${b[0]} ${b[1]}`} stroke={jade} strokeWidth={(1.8 * WEIGHT) / s} opacity={1 - 0.45 * fragmenting * drift} />;
+              })}
+              {QUESTIONS.map(({ place, k }) => {
+                const at = wordAt("confused", "Attention") + k * 1.6;
+                return <text key={k} x={place[0]} y={place[1]} fill={ink} stroke="none" fontFamily="Source Serif 4, Georgia, serif" fontSize={30 / s + 6} textAnchor="middle" opacity={0.75 * smooth(seconds, at, at + 1) * (0.55 + 0.45 * Math.sin(seconds * 0.9 + k))}>?</text>;
+              })}
+            </g>
+          )}
+
+          {inEmpty > 0.001 && (
+            <g opacity={inEmpty}>
+              <circle cx={CHEST[0]} cy={chestY} r={R} fill={stage} stroke={ink} strokeWidth={(1.8 * WEIGHT) / s} strokeDasharray={level < 0.02 ? `${5 / s} ${7 / s}` : undefined} />
+              <circle cx={CHEST[0]} cy={chestY} r={R - 3} fill={gold} opacity={0.75} clipPath={`url(#${uid}-level)`} />
+              {gains.map(({ name, at }) => {
+                const fall = between(seconds, at, at + 1.3);
+                if (fall <= 0 || seconds > at + 2.2) return null;
+                const eased = fall * fall;
+                const y = lerp(chestY - 300, chestY - 10, eased);
+                return (
+                  <g key={name} opacity={smooth(seconds, at, at + 0.2) * (1 - smooth(seconds, at + 1.2, at + 1.5))}>
+                    <path d={`M${FIG_X} ${y - 13}L${FIG_X + 13} ${y}L${FIG_X} ${y + 13}L${FIG_X - 13} ${y}Z`} fill={gold} />
+                    <text x={FIG_X + 200} y={y + 8} fill={gold} {...label}>{name}</text>
+                  </g>
+                );
+              })}
+            </g>
+          )}
         </g>
       </svg>
     </div>
@@ -587,43 +628,25 @@ function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number })
 /** One continuous drawing seen through a moving camera; each shot plays its own part of it. */
 function TrailerDrawing({ t }: { t: number }) {
   const uid = useId().replace(/[^\w-]/g, "");
-  const palette = useContext(TrailerPalette);
-  const { jade, ink, clay, gold } = palette;
+  const { jade, ink, gold } = useContext(TrailerPalette);
   const cam = cameraAt(t);
   const s = cam.s;
   const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
-
-  const beat = heartbeat(t) * (1 - smooth(t, 14.5, 16));
-  const immersion = smooth(t, 7.5, 14.5) * (1 - smooth(t, 23.2, 25));
-  const sphere = smooth(t, 16.2, 18.4) * (1 - 0.88 * smooth(t, 23.2, 25.4)) * (1 - smooth(t, 31, 33));
-  const coupling = smooth(t, 17, 19) * (1 - smooth(t, 23.2, 24.6));
-  const snap = smooth(t, 24.1, 24.75);
-  const boxShown = between(t, 24.1, 24.35);
-  const boxScale = lerp(1.7, 1, snap) + 0.035 * Math.sin(Math.PI * between(t, 24.75, 25.3));
-  const push = smooth(t, 25.2, 27.2) * (1 - smooth(t, 31.4, 32.6));
-  const lens = smooth(t, 25.6, 26.4) * (1 - smooth(t, 31.2, 32.2));
-  const pain = smooth(t, 33.2, 34.2);
-  const strings = smooth(t, 37.8, 39.2) * (1 - smooth(t, PAUSE + 0.4, PAUSE + 2));
-  // The nudge opens a way out; ignored, it closes and everyone diminishes.
-  const nudge = smooth(t, NUDGE + 0.4, NUDGE + 1.4);
-  const devolve = smooth(t, NUDGE + 4, NUDGE + 6.6);
-  const gap = nudge * (1 - devolve);
-  const calm = smooth(t, PAUSE + 0.4, PAUSE + 2);
+  const beat = heartbeat(t) * (1 - smooth(t, 6.5, 7));
+  const sphere = smooth(t, 16.2, 18.4) * (t < PAUSE - 1 ? 1 : 0);
+  const coupling = smooth(t, 17, 19) * (t < PAUSE - 1 ? 1 : 0);
+  const warmth = sphere;
+  // In the box: diminished and in pain, until attention returns and the box dissolves.
+  const boxed = t >= PAUSE - 1;
   const noticed = smooth(t, PAUSE + 2, PAUSE + 3);
   const loosen = smooth(t, PAUSE + 3, PAUSE + 5.4);
   const opening = smooth(t, PAUSE + 5.5, ARCH);
-  const mainPain = pain * (1 - smooth(t, PAUSE + 1.4, PAUSE + 2.4));
-  // We look up to the one who holds our string; as the costs compound, they point back at us.
-  const lookUp = smooth(t, NUDGE + 0.2, NUDGE + 1) * (1 - calm);
-  const blame = smooth(t, NUDGE + 2, NUDGE + 2.9) * (1 - calm);
-  // Once the box dissolves, the person's options open out.
+  const pain = boxed ? 1 - smooth(t, PAUSE + 1.4, PAUSE + 2.4) : 0;
   const options = smooth(t, PAUSE + 3.4, PAUSE + 6.6);
-  // A soft light stays on the one person through the crowd, which recedes while the culture speaks.
-  const spotlight = smooth(t, 32.5, 34) * (1 - calm);
-  const cultureSpeaks = smooth(t, CULTURE_START, CULTURE_START + 0.8) * (1 - smooth(t, NUDGE, NUDGE + 1));
+  const diminished = boxed ? 1 - noticed : 0;
 
   return (
-    <div className="dark-trailer-stage" style={{ opacity: 1 - smooth(t, ARCH - 0.9, ARCH + 0.1) }}>
+    <div className="dark-trailer-stage">
     <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
       <defs>
         <radialGradient id={`${uid}-jade`}>
@@ -638,33 +661,7 @@ function TrailerDrawing({ t }: { t: number }) {
         </radialGradient>
       </defs>
       <g transform={world}>
-        {/* 2 · Five senses build the world: the body's own light grows as they pour in. */}
-        <circle cx={FIG_X} cy={420} r={150 + 90 * immersion} fill={`url(#${uid}-warm)`} opacity={immersion} />
-        {t >= 7 && t < 16.5 && PARTICLES.map((particle, k) => {
-          const u = (t - particle.spawn) / particle.life;
-          if (u <= 0 || u >= 1) return null;
-          const eased = u ** 1.6;
-          const p: Point = [lerp(particle.from[0], particle.to[0], eased), lerp(particle.from[1], particle.to[1], eased)];
-          const back = Math.max(0, eased - 0.09);
-          const tail: Point = [lerp(particle.from[0], particle.to[0], back), lerp(particle.from[1], particle.to[1], back)];
-          const alpha = Math.sin(Math.PI * u) * (1 - smooth(t, 15, 16.4));
-          return (
-            <g key={k} opacity={alpha}>
-              <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={palette[particle.color]} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" opacity={0.75} />
-              <circle cx={p[0]} cy={p[1]} r={particle.size / s} fill={palette[particle.color]} />
-            </g>
-          );
-        })}
-        {t >= 7 && t < 16 && SENSES.map((sense, k) => (
-          <text
-            key={sense.name} x={sense.label[0]} y={sense.label[1]} textAnchor="middle" fill={palette[sense.color]}
-            fontSize={26 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={6 / s}
-            opacity={smooth(t, 7.6 + 0.35 * k, 8.4 + 0.35 * k) * (1 - smooth(t, 14.4, 15.4))}
-          >
-            {sense.name}
-          </text>
-        ))}
-
+        <circle cx={FIG_X} cy={420} r={240} fill={`url(#${uid}-warm)`} opacity={warmth} />
         {/* 3 · By design: Little c behind the avatar, its inner loop turning. */}
         {sphere > 0.001 && (
           <g opacity={sphere}>
@@ -694,52 +691,17 @@ function TrailerDrawing({ t }: { t: number }) {
           </g>
         )}
 
-        {/* 5–6 · The lattice: the same box around everyone, tugged on strings, nudged by pain. */}
-        <circle cx={FIG_X} cy={FIG_Y - 40} r={330} fill={`url(#${uid}-warm)`} opacity={spotlight} />
-        {t >= 32 && LATTICE_COPIES.map((copy) => {
-          const shown = smooth(t, 32.5 + copy.delay, 33.2 + copy.delay) * (1 - 0.8 * calm) * (1 - 0.42 * cultureSpeaks);
-          if (shown <= 0.001) return null;
-          return (
-            <g key={`${copy.i}:${copy.j}`} opacity={shown}>
-              <MeasuringBox cx={copy.x} cy={copy.y + 10} scale={1} opacity={1} loosen={0} px={1.4} s={s} gap={gap} weight={devolve} press={devolve} />
-              <Figure
-                x={copy.x} y={copy.y} px={1.3} cameraScale={s} shrink={devolve}
-                opacity={0.62 - 0.3 * devolve + (copy.i === 0 && copy.j === -1 ? 0.38 * lookUp : 0)}
-              />
-              <PainRings at={[copy.x, copy.y + CHEST_DY]} phase={copy.phase} t={t} opacity={pain} s={s} />
-            </g>
-          );
-        })}
-        <Strings t={t} s={s} opacity={strings} />
-        <LookingUp look={lookUp} blame={blame} s={s} />
-
-        {/* 4 · The lens snaps shut around the one figure we follow. */}
-        <MeasuringBox
-          cx={FIG_X} cy={FIG_Y + 10} scale={boxScale * (1 + 0.18 * loosen)} opacity={boxShown * (1 - 0.85 * loosen)}
-          loosen={loosen} px={2.2} s={s} gap={gap} weight={devolve * (1 - noticed)} press={devolve * (1 - noticed)}
-        />
-        {push > 0.001 && [330, 460, 590].map((y) => (
-          <g key={y}>
-            <Arrow from={[BOX.x - 200 - 260 * (1 - push), y]} to={[BOX.x - 14 - 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
-            <Arrow from={[BOX.x + BOX.w + 200 + 260 * (1 - push), y]} to={[BOX.x + BOX.w + 14 + 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
-          </g>
-        ))}
-        {lens > 0.001 && (
-          <text x={FIG_X} y={BOX.y - 38} textAnchor="middle" fill={clay} fontSize={30 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s} opacity={lens}>
-            CAUSE → EFFECT
-          </text>
+        
+        {boxed && (
+          <MeasuringBox
+            cx={FIG_X} cy={FIG_Y + 10} scale={1 + 0.18 * loosen} opacity={1 - 0.85 * loosen}
+            loosen={loosen} px={2.2} s={s} weight={diminished} press={diminished}
+          />
         )}
-
-        {/* 1 · The figure, with its heartbeat; it stays the one we follow throughout. */}
         <circle cx={CHEST[0]} cy={CHEST[1]} r={70} fill={`url(#${uid}-jade)`} opacity={beat * 0.9} />
-        <Figure
-          x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s}
-          opacity={1 - 0.25 * smooth(t, 24.4, 25.4) - 0.3 * devolve * (1 - noticed) + 0.25 * noticed}
-          shrink={devolve * (1 - noticed)}
-        />
-        <PainRings at={CHEST} phase={0.37} t={t} opacity={mainPain} s={s} />
-
-        {/* 7 · The pause: someone is experiencing this. */}
+        <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.3 * diminished} shrink={diminished} />
+        <PainRings at={CHEST} phase={0.37} t={t} opacity={pain} s={s} />
+        {/* The pause: someone is experiencing this. */}
         {noticed > 0.001 && (
           <g>
             <circle cx={CHEST[0]} cy={CHEST[1]} r={36 + 120 * opening} fill={`url(#${uid}-jade)`} opacity={noticed} />
@@ -749,7 +711,6 @@ function TrailerDrawing({ t }: { t: number }) {
           </g>
         )}
         <Options open={options} s={s} />
-        {t >= CULTURE_START && t < CULTURE_START + CULTURE_STEP * CULTURE.length + CULTURE_LIFE && <CultureMessages t={t} s={s} />}
       </g>
     </svg>
     </div>
@@ -845,7 +806,6 @@ function TrailerArchitecture({ t }: { t: number }) {
  */
 export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { seconds: number; still?: boolean; tone?: FilmTone }) {
   const shot = darkTrailerShot(seconds);
-  useEffect(() => { if (seconds > PLATES_LOAD_AFTER) requestPlates(); }, [seconds]);
   // Reduced motion shows each shot finished, with its last line still on screen.
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
   const t = still ? Math.min(shot.end - 0.8, lastLine ? lastLine.until - 0.7 : Infinity) : seconds;
@@ -853,9 +813,12 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
   const drawingTime = trailerDrawingTime(t);
   // Hold the settled title diagram under reduced motion, before its normal exit fade.
   const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
-  // Shots are separate scenes: each picture comes up from, and returns to, the stage.
-  const fade = smooth(t, shot.start, shot.start + 0.7) * (1 - smooth(t, shot.end - 0.7, shot.end));
-  const local = (t - shot.start) / (shot.end - shot.start);
+  // Separate scenes rise from and return to the stage; the person's shots run on without a break.
+  const index = DARK_TRAILER_SHOTS.indexOf(shot);
+  const inPerson = (kind?: string) => kind === "turn" || (kind !== undefined && PERSON_SHOTS.includes(kind));
+  const opens = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index - 1]?.kind);
+  const closes = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index + 1]?.kind);
+  const fade = (opens ? smooth(t, shot.start, shot.start + 0.7) : 1) * (closes ? 1 - smooth(t, shot.end - 0.7, shot.end) : 1);
   return (
     <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
@@ -863,14 +826,11 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
       <div className="dark-trailer-scene" style={{ opacity: fade }}>
         {shot.kind === "mark" && <TrailerMark seconds={t} />}
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
-        {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={local} />}
-        {["taught", "cost", "turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
+        {PERSON_SHOTS.includes(shot.kind) && <TrailerPerson seconds={t} />}
+        {["turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
         {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}
       </div>
       <div className="dark-trailer-words">
-        {isPlate(shot.kind) && (
-          <p className="dark-trailer-plate-note" style={{ opacity: fade }}>AI-generated illustration, directed by the author. A visual metaphor.</p>
-        )}
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
           const opacity = smooth(t, typed.start - 0.3, typed.start) * (1 - smooth(t, typed.until - 0.5, typed.until));

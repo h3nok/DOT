@@ -92,7 +92,7 @@
   "trailer": {
     "title": "Digital Organism Theory",
     "subtitle": "A school of thought for examining experience.",
-    "note": "The opening of the film: thirteen shots, one idea each. Its words come from Book One, The American Millennial Manifesto, and the author; DOT’s proposals are labelled.",
+    "note": "The opening of the film: the DOT mark, then ten shots that stay with one person. Its words come from Book One and the author; DOT’s proposals are labelled.",
     "shots": [
       {
         "kind": "mark",
@@ -107,94 +107,68 @@
         "label": "The performance of normality",
         "design": 14,
         "lead": 1.6,
-        "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile and the day presses closer.",
+        "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile. The day fades, and only the smile and the strain remain.",
         "lines": [
           "We go to work. We pay bills. We scroll. We compete.",
           "We call exhaustion adulthood, anxiety responsibility,",
-          "isolation independence, and endless accumulation success."
-        ]
-      },
-      {
-        "kind": "pretence",
-        "label": "The picture",
-        "design": 6,
-        "lead": 1.4,
-        "description": "Illustration from The American Millennial Manifesto: a flag-patterned cow, the Host, standing on cracked earth with a two-headed leech on its back, faces a phone-shaped mirror showing a healthy version of itself in a green meadow.",
-        "lines": [
+          "isolation independence, and endless accumulation success.",
           "We pretend the picture is coherent."
         ]
       },
       {
-        "kind": "struggle",
-        "label": "People struggling",
-        "design": 9,
-        "lead": 1.2,
-        "description": "Illustration from The American Millennial Manifesto: the Host rests its head beside a laptop at a kitchen table, carrying the leech. A meal sits untouched among household envelopes and keys, beside a picture of a cow in a green meadow.",
+        "kind": "confused",
+        "label": "Confusion",
+        "design": 7,
+        "lead": 1.4,
+        "description": "Close on the person’s head. A line tangles inside it. A ring of attention around it breaks into fragments that drift apart, and question marks surface and fade.",
         "lines": [
           "The body tightens. Attention fragments.",
           "Trust declines. Meaning thins."
         ]
       },
       {
-        "kind": "blame",
-        "label": "The blame",
-        "design": 6,
+        "kind": "health",
+        "label": "The body",
+        "design": 7,
         "lead": 1.2,
-        "description": "Illustration from The American Millennial Manifesto: the Host’s body opened like a butcher’s chart: labor and time, attention and data, savings and taxes, debt. Its head is labelled beliefs, identity, perception.",
+        "description": "The view widens to the whole person, shrinking and dimming. One by one, places on the body light up in clay and are named: sleep, tension, digestion, attention, behavior. A heart trace beside them grows uneven.",
         "lines": [
-          "The citizen is blamed. The architecture remains."
+          "An unresolved thought could change sleep,",
+          "muscle tension, digestion, attention, and behavior."
         ]
       },
       {
-        "kind": "taught",
-        "label": "What we are not taught",
+        "kind": "unfulfilled",
+        "label": "Never enough",
+        "design": 8,
+        "lead": 1.2,
+        "description": "Close on the person’s chest, an empty circle. Things drop into it, named credentials, income, appearance, influence, productivity. Each fills it briefly and drains away, until it stays empty.",
+        "lines": [
+          "Worth becomes achievement. Rest becomes laziness.",
+          "Success may bring relief, but only briefly.",
+          "A persistent sense that something essential is missing."
+        ]
+      },
+      {
+        "kind": "inherited",
+        "label": "What you were given",
         "design": 9,
-        "lead": 1.4,
-        "description": "One person stands in a measuring box. The view pulls far back to a lattice of boxed figures, each with a ring of stress, tugged on strings from the hand of a figure above who is boxed too. A soft light stays on the one person as six cultural messages drift in and settle around them: Your worth is what you earn. Do not risk your place. If it pays, it must be progress. Protect what is yours. Everyone does it. You have no choice.",
-        "lines": [
-          "A society may generate enormous wealth",
-          "and still fail to teach people how to confront fear,",
-          "govern attention, inspect inherited identity,",
-          "or distinguish freedom from consumption."
-        ],
-        "drawing": [
-          32.6,
-          41.6
-        ]
-      },
-      {
-        "kind": "cost",
-        "label": "Power unanswered",
-        "design": 7.4,
-        "lead": 1.0,
-        "description": "The view moves in on the one person. They look up to the figure above that holds their string, boxed and stressed too. That figure points back down at the person’s chest. The view pulls out: the lids press down, the boxes thicken, and every figure across the lattice dims and shrinks.",
-        "lines": [
-          "A public can lose the habit",
-          "of requiring power to answer for its conduct",
-          "while continuing to describe itself as free."
-        ],
-        "drawing": [
-          41.6,
-          49
-        ]
-      },
-      {
-        "kind": "erosion",
-        "label": "Moral erosion",
-        "design": 6,
         "lead": 1.2,
-        "description": "Illustration from The American Millennial Manifesto: the Host eats from a rusted trough labelled Moral Erosion, filled with phones, money, status, and fast food.",
+        "description": "Rings draw around the person, one at a time, named body, language, household, fear, explanation. They soften as the person straightens and a gentle light returns at the chest.",
         "lines": [
-          "Without a truthful framework, morality erodes."
-        ],
-        "voice": "dot"
+          "You did not choose the body you were born with,",
+          "your first language, first household, first fear,",
+          "or first explanation of reality.",
+          "No one taught you to inspect any of it.",
+          "That inheritance is not your fault."
+        ]
       },
       {
         "kind": "turn",
         "label": "The question",
         "design": 7,
-        "lead": 1.6,
-        "description": "Everything clears. The person stands alone, and a heartbeat glows at the chest.",
+        "lead": 1.2,
+        "description": "The rings clear. The person stands alone, and a heartbeat glows at the chest.",
         "lines": [
           "So where does a truthful framework begin?",
           "The most immediate fact of your existence",
@@ -242,7 +216,7 @@
         "label": "The opening",
         "design": 7,
         "lead": 1.2,
-        "description": "The crowd grows still around the person. A jade light at the chest marks renewed attention to experience. The box dissolves, and paths open out from the person in every direction, each ending in an open choice.",
+        "description": "The person stands diminished in a heavy box, a ring of stress at the chest. A jade light at the chest marks renewed attention to experience. The box dissolves, the person stands full height, and paths open out in every direction, each ending in an open choice.",
         "lines": [
           "Conditioning is real. Conditioning is not essence.",
           "What matters is what Little c does with the opening.",

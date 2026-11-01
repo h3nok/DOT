@@ -10,7 +10,6 @@ import {
   tourPartAt,
   type TourPart,
 } from "./conceptTour";
-import amm from "../../content/amm.json";
 import { DarkFilmTrailer } from "./DarkFilmTrailer";
 import {
   DARK_FILM_KEYSTROKES,
@@ -23,7 +22,6 @@ import {
   darkTrailerShot,
   describeDarkFilmTime,
   originalDarkFilmTime,
-  TRAILER_PLATES,
   trailerFilmTime,
 } from "./darkFilmRevision";
 
@@ -37,9 +35,9 @@ const partIdentity = (part: TourPart) => {
 describe("the dark film's opening trailer", () => {
   const originalBody = CONCEPT_TOUR.filter((part) => part.kind !== "scene");
 
-  it("runs thirteen unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
+  it("runs eleven unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "pretence", "struggle", "blame", "taught", "cost", "erosion", "turn", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
@@ -63,7 +61,7 @@ describe("the dark film's opening trailer", () => {
 
   it("lets the picture carry it: few words, one short line on screen at a time", () => {
     const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(185);
+    expect(words).toBeLessThanOrEqual(195);
     for (const typed of DARK_TRAILER_LINES) {
       // Every line fits on a single caption row at the trailer's type size.
       expect(typed.text.length, typed.text).toBeLessThanOrEqual(57);
@@ -87,15 +85,16 @@ describe("the dark film's opening trailer", () => {
       "We pretend the picture is coherent.",
       "The body tightens. Attention fragments.",
       "Trust declines. Meaning thins.",
-      "The citizen is blamed. The architecture remains.",
-      "A society may generate enormous wealth",
-      "and still fail to teach people how to confront fear,",
-      "govern attention, inspect inherited identity,",
-      "or distinguish freedom from consumption.",
-      "A public can lose the habit",
-      "of requiring power to answer for its conduct",
-      "while continuing to describe itself as free.",
-      "Without a truthful framework, morality erodes.",
+      "An unresolved thought could change sleep,",
+      "muscle tension, digestion, attention, and behavior.",
+      "Worth becomes achievement. Rest becomes laziness.",
+      "Success may bring relief, but only briefly.",
+      "A persistent sense that something essential is missing.",
+      "You did not choose the body you were born with,",
+      "your first language, first household, first fear,",
+      "or first explanation of reality.",
+      "No one taught you to inspect any of it.",
+      "That inheritance is not your fault.",
       "So where does a truthful framework begin?",
       "The most immediate fact of your existence",
       "is not a measurement.",
@@ -113,9 +112,7 @@ describe("the dark film's opening trailer", () => {
     expect(voiceOf("You are Little c.")).toBe("dot");
     expect(voiceOf("Your living body is your interface to a Reality Frame.")).toBe("dot");
     expect(voiceOf("RF₀ is an experience laboratory for Little cs.")).toBe("dot");
-    // The author's thesis is labelled as a proposal, never stated as settled fact.
-    expect(voiceOf("Without a truthful framework, morality erodes.")).toBe("dot");
-    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(4);
+    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(3);
   });
 
   it("reveals the architecture with T × E outermost, the field Big C emerged within (ADR-0026)", () => {
@@ -147,32 +144,27 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
-  it("brings the culture's own messages to the one person, then opens that person's options", () => {
-    const culture = render(createElement(DarkFilmTrailer, { seconds: trailerFilmTime(40.5) }));
-    expect(culture.container.querySelector(".dark-trailer-drawing")).toHaveTextContent("You have no choice.");
-    expect(amm.home.concepts.map((concept) => concept.script)).toContain("You have no choice.");
-    culture.unmount();
-
+  it("stays with one person: no crowd, no illustrations, and options after the box dissolves", () => {
+    for (const shot of DARK_TRAILER_SHOTS) {
+      const view = render(createElement(DarkFilmTrailer, { seconds: (shot.start + shot.end) / 2 }));
+      expect(view.container.querySelector("image"), shot.kind).toBeNull();
+      view.unmount();
+    }
     const options = render(createElement(DarkFilmTrailer, { seconds: trailerFilmTime(55.9) }));
     expect(options.container.querySelectorAll('.dark-trailer-drawing circle[r="14"]')).toHaveLength(6);
     options.unmount();
   });
 
-  it("opens on an ordinary day, then shows the AMM's illustrations with their disclosure", () => {
-    const [mark, normal, pretence] = DARK_TRAILER_SHOTS;
-    const view = render(createElement(DarkFilmTrailer, { seconds: normal.end - 2 }));
-    expect(view.container.querySelector(".dark-trailer-drawing rect")).not.toBeNull();
-    expect(view.container.querySelector(".dark-trailer-plate")).toBeNull();
-    for (const kind of Object.keys(TRAILER_PLATES)) {
-      const shot = DARK_TRAILER_SHOTS.find((item) => item.kind === kind)!;
-      view.rerender(createElement(DarkFilmTrailer, { seconds: shot.start + 2 }));
-      expect(view.container.querySelector(".dark-trailer-plate image")).toHaveAttribute("href", TRAILER_PLATES[kind as keyof typeof TRAILER_PLATES].src);
-      expect(view.getByText("AI-generated illustration, directed by the author. A visual metaphor.")).toBeInTheDocument();
-    }
-    expect(pretence.kind).toBe("pretence");
-    view.rerender(createElement(DarkFilmTrailer, { seconds: mark.end - 1 }));
+  it("opens on the DOT mark, then an ordinary day, and names what the person's body carries", () => {
+    const [mark, normal] = DARK_TRAILER_SHOTS;
+    const view = render(createElement(DarkFilmTrailer, { seconds: mark.end - 1 }));
     expect(view.getByRole("img", { name: "DOT" })).toBeInTheDocument();
     expect(view.getByText("Digital Organism Theory")).toBeInTheDocument();
+    view.rerender(createElement(DarkFilmTrailer, { seconds: normal.end - 2 }));
+    expect(view.container.querySelector(".dark-trailer-drawing path")).not.toBeNull();
+    const health = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "health")!;
+    view.rerender(createElement(DarkFilmTrailer, { seconds: health.end - 1 }));
+    for (const name of ["SLEEP", "TENSION", "DIGESTION", "ATTENTION", "BEHAVIOR"]) expect(view.getByText(name)).toBeInTheDocument();
     view.unmount();
   });
 
@@ -225,8 +217,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(206);
-    expect(DARK_FILM_SECONDS).toBe(503);
+    expect(DARK_OPENING_SECONDS).toBe(211);
+    expect(DARK_FILM_SECONDS).toBe(508);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);
