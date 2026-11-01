@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { BookOpen } from "lucide-react";
+import { FocusNav } from "../../attention-os/focus-nav/FocusNav";
 import { author } from "../../content/author";
 import newsletter from "../../content/newsletter.json";
 import { PageHeader, PageShell } from "../../shared/PageShell";
@@ -23,10 +25,19 @@ export default function PublicationsPage() {
             <p className="mt-3 text-sm text-muted-foreground">
               Foundations, Agency, and Research (Edition v5). The complete web edition and PDF are free to read and keep.
             </p>
-            <div className="mt-3 flex flex-wrap gap-4 text-sm">
-              <Link to="/book/digital-organism-theory" className="underline">Read the web edition</Link>
-              <Link to="/book/digital-organism-theory/copy" className="underline">Download the free PDF</Link>
-            </div>
+            <FocusNav
+              label="Read Book One"
+              className="mt-5 max-w-sm"
+              primary={{
+                to: "/book/digital-organism-theory",
+                label: "Read the web edition",
+                icon: <BookOpen />,
+              }}
+              secondary={[{
+                to: "/book/digital-organism-theory/copy",
+                label: "Download the free PDF",
+              }]}
+            />
           </div>
           <div className="border-b border-border/60 py-6"><p className="dot-label">Applied DOT · Book in development</p><h3 className="mt-2 text-xl font-semibold">{newsletter.title}</h3><p className="mt-3 text-sm text-muted-foreground">A separate book applying DOT to the author's analysis of the world and the environment he inhabits.</p><Link to="/amm" className="mt-3 inline-block text-sm underline">Explore the AMM publication</Link></div>
         </section>

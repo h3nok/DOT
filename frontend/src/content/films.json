@@ -182,9 +182,12 @@
         "kind": "architecture",
         "label": "The architecture",
         "design": 12,
-        "lead": 12.6,
-        "description": "The view pulls back from Little c to the Avatar in RF₀. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
-        "lines": []
+        "lead": 5.8,
+        "voice": "dot",
+        "description": "The view pulls back from Little c to the Avatars in RF₀, an experience laboratory for Little cs. RF₀’s boundary and its Avatars light up, then its Reality Stream travels toward Little c. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
+        "lines": [
+          "RF₀ is an experience laboratory for Little cs."
+        ]
       },
       {
         "kind": "title",

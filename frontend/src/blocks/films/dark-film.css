@@ -1,4 +1,4 @@
-/* The DOT film, drawn in its own dark palette in either site theme. L1: calm motion; L2: finite; L10: one visual focus.
+/* The DOT film's original dark palette; the public player adapts below. L1: calm motion; L2: finite; L10: one visual focus.
    Every animation is a function of film time so a paused/exported frame is stable. */
 .dark-film-scope {
   --df-stage: #081912;
@@ -13,6 +13,7 @@
   --border: #34483c;
   --identity-emerald: #5ee0ae;
   --identity-lumen: #68e6b5;
+  --identity-ink: var(--df-ink);
   --identity-origin: var(--df-jade);
   --identity-rf: #e6bc78;
   --organism-accent-strong: var(--df-jade);
@@ -139,6 +140,16 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   position: absolute;
 }
 .dark-trailer-arch-camera { position: absolute; }
+.dark-trailer-lab-flow { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.dark-trailer-lab-frame { stroke: var(--identity-rf); stroke-width: 4; }
+.dark-trailer-lab-stream, .dark-trailer-lab-receiver { stroke: var(--df-jade); stroke-width: 4; }
+.dark-trailer-lab-signal { fill: var(--df-jade); stroke: var(--df-stage); stroke-width: 1.5; }
+.dark-trailer-arch .home-architecture-avatar {
+  stroke-width: calc(2.2 + var(--lab-avatars, 0) * 2.8);
+}
+.dark-trailer-arch .home-architecture-avatar[data-secondary="true"] {
+  opacity: calc(.5 + var(--lab-avatars, 0) * .4);
+}
 .dark-trailer-arch-figure.home-hero-environment {
   display: block;
   width: 100%;
@@ -250,6 +261,89 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
 .dark-film-preview--render { width: 100vw; height: 100vh; min-height: 0; padding: 0; }
 .dark-film-preview--render .films-screening-shell { width: 100%; max-width: none; border: 0; }
 
+/* Only the public player follows Appearance. The preview/export keeps its original palette,
+   composition and time-driven drawings. A theme switch changes paint without restarting it. */
+.dark-film-public {
+  --df-gold: #e6bc78;
+  --df-line: #3b5245;
+  --df-voice: #d4876d;
+  --df-quote: #e7b9a8;
+  --df-cite: #c79a8a;
+  --df-field: #112b20;
+  --df-edge: #07150f;
+  --df-opening-field: #0f281d;
+  --df-opening-edge: #040b08;
+  --df-vignette: rgb(2 7 5 / .62);
+  --theory-origin: var(--df-jade);
+  --theory-big-c: var(--identity-emerald);
+  --theory-rf: var(--df-gold);
+  --theory-local: var(--df-jade);
+}
+
+html:not(.dark) .dark-film-public {
+  --df-stage: #f4f1e7;
+  --df-ink: #213b30;
+  --df-muted: #53675b;
+  --df-jade: #27664f;
+  --df-clay: #9a503b;
+  --df-gold: #805b27;
+  --df-line: #748775;
+  --df-voice: #9a503b;
+  --df-quote: #783f30;
+  --df-cite: #82594b;
+  --df-field: #edf0e6;
+  --df-edge: #e8e8db;
+  --df-opening-field: #f8f6ee;
+  --df-opening-edge: #e6e8da;
+  --df-vignette: rgb(83 103 78 / .06);
+  --card: #eeeee3;
+  --border: #c7cebe;
+  --identity-emerald: #27664f;
+  --identity-lumen: #2e7156;
+  --identity-rf: var(--df-gold);
+  --organism-accent-soft: #cddccd;
+}
+
+.dark-film-public .films-screening-shell {
+  --cf-line: var(--df-line);
+  --cf-big-c: var(--identity-emerald);
+  --cf-rf: var(--df-gold);
+}
+
+.dark-film-public .dark-film-frame {
+  background: radial-gradient(ellipse at 28% 50%, var(--df-field) 0%, var(--df-stage) 53%, var(--df-edge) 100%);
+}
+.dark-film-public .dark-film-frame--trailer {
+  background: radial-gradient(ellipse at 50% 46%, var(--df-opening-field) 0%, var(--df-stage) 48%, var(--df-opening-edge) 100%);
+}
+.dark-film-public .dark-trailer::after {
+  background: radial-gradient(ellipse at 50% 50%, transparent 58%, var(--df-vignette) 100%);
+}
+.dark-film-public .dark-trailer-voice--prevailing { color: var(--df-voice); }
+.dark-film-public .dark-trailer-line--prevailing { color: var(--df-quote); }
+.dark-film-public .dark-trailer-cite { color: var(--df-cite); }
+html:not(.dark) .dark-film-public :is(.dark-trailer-line, .dark-trailer-title, .dark-trailer-subtitle) {
+  text-shadow: none;
+}
+html:not(.dark) .dark-film-public .home-hero-environment {
+  --architecture-rf-ring: var(--df-gold);
+  --architecture-loop-outer: var(--df-jade);
+  --architecture-loop-inner: var(--df-gold);
+}
+
+/* The opening's SVG paint values are also used by the fixed dark export. Map those four
+   inks here, so its figure, senses, coupling paths and light washes all follow this player. */
+.dark-film-public .dark-trailer-drawing [stroke="#f2f0e8"] { stroke: var(--df-ink); }
+.dark-film-public .dark-trailer-drawing [fill="#f2f0e8"] { fill: var(--df-ink); }
+.dark-film-public .dark-trailer-drawing [stroke="#8ad6b9"] { stroke: var(--df-jade); }
+.dark-film-public .dark-trailer-drawing [fill="#8ad6b9"] { fill: var(--df-jade); }
+.dark-film-public .dark-trailer-drawing [stop-color="#8ad6b9"] { stop-color: var(--df-jade); }
+.dark-film-public .dark-trailer-drawing [stroke="#d4876d"] { stroke: var(--df-voice); }
+.dark-film-public .dark-trailer-drawing [fill="#d4876d"] { fill: var(--df-voice); }
+.dark-film-public .dark-trailer-drawing [stroke="#e6bc78"] { stroke: var(--df-gold); }
+.dark-film-public .dark-trailer-drawing [fill="#e6bc78"] { fill: var(--df-gold); }
+.dark-film-public .dark-trailer-drawing [stop-color="#e6bc78"] { stop-color: var(--df-gold); }
+
 @media (max-width: 639px) {
   .dark-film-preview { padding: 1rem .75rem 3rem; }
   .dark-film-preview-heading { align-items: start; gap: 1rem; }
@@ -267,6 +361,7 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   .dark-film-scope .dark-trailer-title { top: 54%; }
   .dark-film-scope .dark-trailer-subtitle { top: 78%; }
   .dark-film-lesson { inset: 3.5rem 1.1rem 3rem; grid-template-columns: 1fr; grid-template-rows: 17rem 1fr; align-items: start; }
+  .dark-film-public .dark-film-lesson { grid-template-columns: minmax(0, 1fr); }
   .dark-film-lesson .concept-film-motif { grid-row: 1; grid-column: 1; height: 17rem; max-width: 100%; }
   .dark-film-lesson .concept-film-copy { grid-row: 2; grid-column: 1; padding: .5rem .25rem 0; }
   .dark-film-lesson .concept-film-eyebrow { font-size: .65rem; min-height: 2rem; }

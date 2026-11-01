@@ -97,7 +97,7 @@ export default function DarkFilmPreview() {
   }, [renderMode]);
 
   return (
-    <main className={`dark-film-preview${renderMode ? " dark-film-preview--render" : ""}`}>
+    <main className={`dark dark-film-scope dark-film-preview${renderMode ? " dark-film-preview--render" : ""}`}>
       <Helmet>
         <title>Dark film revision — DOT preview</title>
         <meta name="robots" content="noindex,nofollow" />

@@ -96,6 +96,9 @@ did not — do not claim to have composed from primitives that are absent.
   RF₀. RF₀ is an experience laboratory for Little cs.** Explain the Avatar as
   Little c's embodied participation in RF₀, preserving the relationship above
   between Little c, Big C, RF₀, and the Reality Stream.
+- For the homepage, the author requested on 2026-11-01 that **the surrounding
+  background represent T × E**, rather than another bounded ring. Explain its
+  speculative status in a quiet adjacent note; preserve the model's relationships.
 - Keep this relationship consistent in narration, captions, diagrams, and public
   explanations. A familiar analogy must preserve the theory's relationships.
 - The v4 working manuscript and released v4 book contain a conflicting editorial

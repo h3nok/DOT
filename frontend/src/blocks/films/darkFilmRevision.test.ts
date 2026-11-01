@@ -22,6 +22,7 @@ import {
   darkTrailerShot,
   describeDarkFilmTime,
   originalDarkFilmTime,
+  trailerFilmTime,
 } from "./darkFilmRevision";
 
 const partIdentity = (part: TourPart) => {
@@ -60,7 +61,7 @@ describe("the dark film's opening trailer", () => {
 
   it("lets the picture carry it: few words, one short line on screen at a time", () => {
     const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(110);
+    expect(words).toBeLessThanOrEqual(120);
     for (const typed of DARK_TRAILER_LINES) {
       // Every line fits on a single caption row at the trailer's type size.
       expect(typed.text.length, typed.text).toBeLessThanOrEqual(56);
@@ -93,18 +94,20 @@ describe("the dark film's opening trailer", () => {
       "At stake: how we understand experience.",
       "Notice who is experiencing.",
       "Test this against your own experience.",
+      "RF₀ is an experience laboratory for Little cs.",
       "Digital Organism Theory",
       "A school of thought for examining experience.",
     ]);
     const voiceOf = (text: string) => DARK_TRAILER_LINES.find((typed) => typed.text === text)!.voice;
     expect(voiceOf("You are Little c.")).toBe("dot");
     expect(voiceOf("The Avatar is your living body.")).toBe("dot");
+    expect(voiceOf("RF₀ is an experience laboratory for Little cs.")).toBe("dot");
     // The prevailing view is quoted from its source, never paraphrased into a straw man.
     const quote = DARK_TRAILER_LINES.find((typed) => typed.voice === "prevailing")!;
     expect(quote.text).toBe("“You’re nothing but a pack of neurons.”");
     expect(quote.cite).toBe("Francis Crick, The Astonishing Hypothesis, 1994");
     expect(voiceOf("Does measuring activity explain experience?")).toBeUndefined();
-    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(3);
+    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(4);
     const senses = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "senses")!;
     for (const sense of ["sight", "sound", "smell", "touch", "taste"]) expect(senses.description).toContain(sense);
   });
@@ -117,6 +120,27 @@ describe("the dark film's opening trailer", () => {
     expect(architecture.description).not.toMatch(/capacit/i);
   });
 
+  it("shows RF₀ as an experience laboratory and traces its Stream to Little c before the title", () => {
+    const architecture = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "architecture")!;
+    const line = DARK_TRAILER_LINES.find((typed) => typed.shot === "architecture")!;
+    expect(line.text).toBe("RF₀ is an experience laboratory for Little cs.");
+    expect(line.voice).toBe("dot");
+    expect(line.until - line.end).toBeGreaterThan(3.5);
+
+    const view = render(createElement(DarkFilmTrailer, { seconds: trailerFilmTime(architecture.designStart + 8), still: false }));
+    const stream = view.container.querySelector(".dark-trailer-lab-stream")!;
+    const receiver = view.container.querySelector(".dark-trailer-lab-receiver")!;
+    expect(Number(stream.getAttribute("stroke-dashoffset"))).toBeGreaterThan(0);
+    expect(Number(stream.getAttribute("stroke-dashoffset"))).toBeLessThan(1);
+    expect(receiver).toHaveAttribute("opacity", "0");
+
+    view.rerender(createElement(DarkFilmTrailer, { seconds: architecture.start, still: true }));
+    expect(view.container.querySelector(".dark-trailer-lab-stream")).toHaveAttribute("stroke-dashoffset", "0");
+    expect(view.container.querySelector(".dark-trailer-lab-receiver")).toHaveAttribute("stroke-dashoffset", "0");
+    expect(view.getByText(line.text, { selector: ".sr-only" })).toBeInTheDocument();
+    view.unmount();
+  });
+
   it("draws each shot, shows its words, and settles into a stable still frame under reduced motion", () => {
     for (const shot of DARK_TRAILER_SHOTS) {
       const view = render(createElement(DarkFilmTrailer, { seconds: shot.start + 0.01, still: true }));
@@ -127,8 +151,10 @@ describe("the dark film's opening trailer", () => {
       view.rerender(createElement(DarkFilmTrailer, { seconds: shot.end - 0.1, still: true }));
       expect(view.container.innerHTML, shot.kind).toBe(first);
       const lines = view.container.querySelectorAll(`[data-trailer-line="${shot.kind}"]`);
-      // The architecture speaks through its own labels.
-      if (shot.kind !== "architecture") expect(lines.length, shot.kind).toBeGreaterThan(0);
+      expect(lines.length, shot.kind).toBeGreaterThan(0);
+      if (shot.kind === "title") {
+        expect(Number((view.container.querySelector(".dark-trailer-arch") as HTMLElement).style.opacity)).toBeGreaterThanOrEqual(.8);
+      }
       view.unmount();
     }
   });
@@ -151,6 +177,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
+    expect(DARK_OPENING_SECONDS).toBe(156);
+    expect(DARK_FILM_SECONDS).toBe(453);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

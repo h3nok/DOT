@@ -306,11 +306,13 @@ for (const colorScheme of ["light", "dark"] as const) {
     expect(presentation.lighting.figureFilter).toBe("none");
     expect(presentation.lighting.labelFilters.every(filter => filter === "none")).toBe(true);
     expect(presentation.lighting.traceFilters.every(filter => filter === "none")).toBe(true);
-    expect(presentation.captionPresent).toBe(false);
+    expect(presentation.captionPresent).toBe(true);
     await expect(svg).toHaveAccessibleName("DOT diagram");
     await expect(svg).toHaveAccessibleDescription(/Little c is outside RF₀ and embodied by an Avatar inside it/);
+    await expect(page.locator(".home-architecture-field-note"))
+      .toContainText("speculative conditions for Big C");
     await expect(page.locator(".home-hero-architecture")
-      .locator('figcaption, details, nav, dl, [class*="legend"], [class*="transcription"]'))
+      .locator('details, nav, dl, [class*="legend"], [class*="transcription"]'))
       .toHaveCount(0);
     for (const surface of presentation.surfaces) {
       expect(surface.backgroundAlpha, "The diagram must sit in the page field without a card").toBe(0);
@@ -480,10 +482,10 @@ test("the reading invitation opens the lived-experience path from the keyboard",
 test("diagram layers remain keyboard-accessible reading paths", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const svg = page.locator(".home-hero-architecture__svg");
+  const figure = page.locator(".home-hero-architecture");
 
   for (const layer of ["possibility-field", "big-c", "reality-frame", "little-c"]) {
-    const link = svg.locator(`a[href="#${layer}"]`);
+    const link = figure.locator(`a[href="#${layer}"]`);
     await link.focus();
     await expect(link).toBeFocused();
     await page.keyboard.press("Enter");

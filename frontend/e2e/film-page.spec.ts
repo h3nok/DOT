@@ -1,4 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function paintedPalette(page: Page) {
+  return page.locator(".dark-film-player").evaluate((player) => {
+    const style = (selector: string) => getComputedStyle(player.querySelector(selector)!);
+    return {
+      picture: style(".dark-film-frame").backgroundImage,
+      caption: style(".dark-trailer-line").color,
+      figure: style('.dark-trailer-drawing [stroke="#f2f0e8"]').stroke,
+      controls: style(".films-transport-shell").backgroundColor,
+      controlInk: style(".films-transport-time").color,
+    };
+  });
+}
 
 test("the film's own address opens on the film, waiting for Play", async ({ page }) => {
   await page.goto("/film");
@@ -39,4 +52,53 @@ test("the revised title stays readable in either theme with reduced motion", asy
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
     await page.locator(".dark-film-player").screenshot({ path: testInfo.outputPath(`revised-film-${theme}.png`) });
   }
+});
+
+test("the picture and controls follow the reader's theme without restarting the film", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
+  await page.goto("/film");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  const timeline = page.getByRole("slider", { name: "Seek timeline in seconds" });
+  await timeline.fill("74");
+  const light = await paintedPalette(page);
+
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  for (const property of Object.keys(light) as (keyof typeof light)[]) {
+    await expect.poll(async () => (await paintedPalette(page))[property], property).not.toBe(light[property]);
+  }
+  await expect(timeline).toHaveValue("74");
+  await expect(page.getByRole("button", { name: "Play film", exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: "Play film", exact: true }).click();
+  await expect.poll(async () => Number(await timeline.inputValue())).toBeGreaterThan(74.1);
+  const beforeSwitch = Number(await timeline.inputValue());
+  await page.emulateMedia({ colorScheme: "light" });
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.getByRole("button", { name: "Pause film", exact: true })).toBeVisible();
+  expect(Number(await timeline.inputValue())).toBeGreaterThanOrEqual(beforeSwitch);
+  await page.getByRole("button", { name: "Pause film", exact: true }).click();
+  await expect.poll(async () => (await paintedPalette(page)).picture).toBe(light.picture);
+});
+
+test("transport controls remain separate touch targets, including on a narrow phone", async ({ page }, testInfo) => {
+  if (testInfo.project.name === "mobile") await page.setViewportSize({ width: 320, height: 900 });
+  await page.goto("/film");
+  const player = page.locator(".dark-film-player");
+  await expect(player.getByRole("button", { name: "Typewriter sound" })).toBeVisible();
+  const targets = await player.locator(".films-transport-btn").evaluateAll((buttons) => buttons.map((button) => {
+    const { x, y, width, height } = button.getBoundingClientRect();
+    return { label: button.getAttribute("aria-label"), x, y, width, height };
+  }));
+  expect(targets.length).toBeGreaterThanOrEqual(5);
+  for (const [index, target] of targets.entries()) {
+    expect(target.width, `${target.label} width`).toBeGreaterThanOrEqual(44);
+    expect(target.height, `${target.label} height`).toBeGreaterThanOrEqual(44);
+    for (const other of targets.slice(index + 1)) {
+      const overlapX = Math.min(target.x + target.width, other.x + other.width) - Math.max(target.x, other.x);
+      const overlapY = Math.min(target.y + target.height, other.y + other.height) - Math.max(target.y, other.y);
+      expect(overlapX > 1 && overlapY > 1, `${target.label} overlaps ${other.label}`).toBe(false);
+    }
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
 });

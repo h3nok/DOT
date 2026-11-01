@@ -21,9 +21,9 @@ describe("the hero architecture opens the section that explains each part", () =
       document.body.append(section);
       return section;
     });
-    const [origin, bigC, frame, little] = sections;
-    fireEvent.click(document.querySelector('[data-part="te"] .home-architecture-origin-boundary')!);
-    expect(origin.scrollIntoView).toHaveBeenCalledTimes(1);
+    const [, bigC, frame, little] = sections;
+    // T × E is the surrounding field; its quiet note opens the explanation.
+    expect(screen.getByRole("link", { name: "T × E" })).toHaveAttribute("href", "#possibility-field");
     fireEvent.click(document.querySelector('[data-part="rfn"] .home-architecture-other-frame-zone')!);
     fireEvent.click(document.querySelector('[data-part="rf0"] .home-architecture-frame-zone')!);
     expect(frame.scrollIntoView).toHaveBeenCalledTimes(2);

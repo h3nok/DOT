@@ -67,14 +67,16 @@ test.describe("hero", () => {
     const svg = page.locator(".home-hero-architecture__svg");
     await expect(svg).toHaveAttribute("viewBox", "0 0 700 700");
     const labels = svg.locator(".home-architecture-ring-label");
-    await expect(labels).toHaveCount(5);
+    await expect(labels).toHaveCount(4);
     expect(await labels.locator("text").allTextContents()).toEqual([
-      "T × E · Speculation",
       "Big C",
       "RF0",
       "Little c",
       "Scope",
     ]);
+    const fieldNote = page.locator(".home-architecture-field-note");
+    await expect(fieldNote).toContainText("speculative conditions for Big C");
+    await expect(fieldNote.getByRole("link", { name: "T × E" })).toHaveAttribute("href", "#possibility-field");
     await expect(labels.locator("rect")).toHaveCount(0);
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);
 

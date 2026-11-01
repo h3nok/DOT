@@ -56,28 +56,28 @@ test.describe("appearance controls change the rendered document", () => {
     }
   });
 
-  test("the reading action keeps DOT's forest fill in both themes", async ({ page }) => {
+  test("the opening reading action uses the shared button appearance in both themes", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
     await page.goto("/");
     const action = page.locator("#threshold").getByRole("link", { name: "Read Book One", exact: true });
+    const sharedAction = page.locator("#choose-path .dot-focus-nav__primary");
     await expect(action).toBeVisible();
+
+    const appearance = (target: import("@playwright/test").Locator) => target.evaluate((node) => {
+      const style = getComputedStyle(node);
+      const label = getComputedStyle(node.querySelector("strong")!);
+      return { paper: style.backgroundColor, ink: style.color, radius: style.borderRadius, type: label.fontFamily };
+    });
+    const papers: string[] = [];
 
     for (const colorScheme of ["light", "dark"] as const) {
       await page.emulateMedia({ colorScheme });
       await expect.poll(() => htmlAttribute(page, "data-theme")).toBe(colorScheme);
-      const [red, green] = await action.evaluate((node) => {
-        const context = document.createElement("canvas").getContext("2d");
-        if (!context) throw new Error("Cannot inspect the painted reading action");
-        context.fillStyle = getComputedStyle(node).backgroundColor;
-        context.fillRect(0, 0, 1, 1);
-        return [...context.getImageData(0, 0, 1, 1).data].slice(0, 3);
-      });
-      // Forest retains more green than red in both its deep daylight and
-      // lighter night-time treatment. Text contrast is checked with the hero.
-      expect(green - red,
-        `${colorScheme} reading action hue`,
-      ).toBeGreaterThanOrEqual(4);
+      const shared = await appearance(sharedAction);
+      await expect.poll(() => appearance(action)).toEqual(shared);
+      papers.push(shared.paper);
     }
+    expect(papers[0]).not.toBe(papers[1]);
   });
 
   test("new readers get the shared identity and follow their system without saving an unchosen preference", async ({ page }) => {

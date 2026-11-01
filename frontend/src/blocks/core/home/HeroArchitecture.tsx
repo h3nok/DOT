@@ -134,7 +134,7 @@ export function HeroArchitecture({ embedded = false }: {
     ((target as Element).closest("[data-part]")?.getAttribute("data-part") as ArchitecturePartId | null) ?? null;
 
   return (
-    <figure ref={figure} className="home-hero-architecture" data-emergence={visible ? "ready" : "waiting"} data-process-visible={!embedded && processVisible ? "true" : undefined} aria-labelledby={titleId}>
+    <figure ref={figure} className="home-hero-architecture" data-origin-field={embedded ? "diagram" : "background"} data-emergence={visible ? "ready" : "waiting"} data-process-visible={!embedded && processVisible ? "true" : undefined} aria-labelledby={titleId}>
       {/* Pointer shortcut only: the hero's "Explore the architecture" link and the
           page map reach the same sections from the keyboard. */}
       <svg
@@ -271,10 +271,14 @@ export function HeroArchitecture({ embedded = false }: {
           </g>
         </g>
 
-        <HeroArchitectureLabels />
+        <HeroArchitectureLabels showOrigin={embedded} />
       </svg>
-
-
+      {!embedded && (
+        <figcaption className="home-architecture-field-note">
+          The surrounding field represents <a href="#possibility-field">T × E</a>—DOT’s
+          speculative conditions for Big C.
+        </figcaption>
+      )}
     </figure>
   );
 }

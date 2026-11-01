@@ -61,14 +61,14 @@ export function DarkFilmFrame({ seconds, still, burnIn = false }: { seconds: num
 
 /**
  * The public film: the opening trailer, then every concept in the Concept Map. It is drawn in
- * its own dark palette in either site theme. Nothing plays or sounds until the reader presses
+ * the site's light or dark palette. Nothing plays or sounds until the reader presses
  * Play; it stops at its end and never moves on by itself (L3). Reduced motion shows each part
  * finished, without sound.
  */
 export function DarkFilmPlayer() {
   const still = useReducedMotion();
   return (
-    <div className="dark-film-scope">
+    <div className="dark-film-scope dark-film-public">
       <DrawnFilmPlayer
         duration={DARK_FILM_SECONDS}
         posterTime={DARK_FILM_POSTER_SECONDS}

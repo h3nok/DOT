@@ -22,6 +22,7 @@ import {
 } from "../../content/publications/dotBookOne";
 import { Editable } from "../../content/editable";
 import bookLanding from "../../content/publications/bookLanding.json";
+import { DotButton } from "../../shared/DotButton";
 import BookCitation from "./BookCitation";
 import BookOneCover from "./BookOneCover";
 import "./book-reading-page.css";
@@ -127,20 +128,18 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
             </p>
 
             <div className="book-volume-actions mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Link
+              <DotButton
                 to={primaryHref}
-                className="book-frontispiece-action dot-reading-action group inline-flex min-h-12 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full px-7 text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
-                <span>
-                  {savedPath
+                label={
+                  savedPath
                     ? savedPathComplete
                       ? "Review your path"
                       : "Continue reading"
-                    : "Begin with lived experience"}
-                </span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
+                    : "Begin with lived experience"
+                }
+                icon={<BookOpen />}
+                endIcon={<ArrowRight />}
+              />
               <Link
                 to={`${DOT_BOOK_ONE_ROUTE}/copy`}
                 className="dot-label inline-flex min-h-11 items-center gap-2 text-[var(--book-muted)] transition-colors hover:text-[var(--book-ink)]"
@@ -356,14 +355,12 @@ export default function BookLanding({ manifest }: { manifest: DotBookOneManifest
                 Start reading
               </h2>
             </div>
-            <Link
+            <DotButton
               to={bookSectionRoute(firstSection)}
-              className="book-frontispiece-action group inline-flex min-h-12 shrink-0 items-center gap-2.5 rounded-full px-7 text-sm font-semibold"
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-              <span>Open the Preface</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
+              label="Open the Preface"
+              icon={<BookOpen />}
+              endIcon={<ArrowRight />}
+            />
           </div>
         </section>
       </div>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const HOME_SECTIONS = [
   { id: "threshold", label: "An invitation to examine experience" },
   { id: "consciousness-101", label: "The culture inside us" },
-  { id: "possibility-field", label: "T × E · Speculation about the model’s origin" },
+  { id: "possibility-field", label: "The conditions for Big C · a speculative account" },
   { id: "big-c", label: "An account of consciousness" },
   { id: "reality-frame", label: "A shared world" },
   { id: "little-c", label: "Your point of view" },

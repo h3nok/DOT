@@ -1,12 +1,12 @@
 /** The labels name model relationships and link to their existing explanations. */
-export function HeroArchitectureLabels() {
+export function HeroArchitectureLabels({ showOrigin = true }: { showOrigin?: boolean }) {
   return (
     <g className="home-architecture-ring-labels">
-      <g className="home-architecture-ring-label" data-layer="origin">
+      {showOrigin && <g className="home-architecture-ring-label" data-layer="origin">
         <a href="#possibility-field" aria-label="T × E · Speculation — read about primordial Time and unformed information">
           <text x="348" y="26" textAnchor="middle">T × E<tspan className="home-architecture-label-you"> · Speculation</tspan></text>
         </a>
-      </g>
+      </g>}
       <g className="home-architecture-ring-label" data-layer="big-c">
         <a href="#big-c" aria-label="Big C — read about the proposed conscious process">
           <text x="348" y="120" textAnchor="middle">Big C</text>

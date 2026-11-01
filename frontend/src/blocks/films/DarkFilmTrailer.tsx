@@ -1,7 +1,7 @@
 import { useId, type CSSProperties } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
-import { LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
+import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
 import { DARK_TRAILER_LINES, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
@@ -397,9 +397,40 @@ function TrailerDrawing({ t }: { t: number }) {
 }
 
 /** Shots 8–9: the homepage architecture, pulled back from Little c₁ to the T × E field. */
+/** A single pass through the existing diagram: embodiment in RF₀, its Stream, then Little c.
+ * These are model relationships, not motion through physical space. The still frame shows
+ * the completed path; no CSS loop or independent animation runs behind a paused film. */
+function ExperienceLabPassage({ t }: { t: number }) {
+  const frame = smooth(t, ARCH + 5.6, ARCH + 6.8);
+  const stream = smooth(t, ARCH + 7.2, ARCH + 8.8);
+  const experiencer = smooth(t, ARCH + 8.8, ARCH + 10);
+  const opacity = 1 - smooth(t, TITLE, TITLE + 1.2);
+  return (
+    <svg className="dark-trailer-lab-flow" viewBox="0 0 700 700" aria-hidden="true" data-experience-lab-passage>
+      <g opacity={opacity} fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <circle
+          className="dark-trailer-lab-frame"
+          cx={FRAME_CENTRE.x} cy={FRAME_CENTRE.y} r={ARCHITECTURE_RADII.frame}
+          {...drawn(frame)} opacity={frame > 0 ? 1 : 0}
+        />
+        <path className="dark-trailer-lab-stream" d="M379 333H436" {...drawn(stream)} opacity={stream > 0 ? 1 : 0} />
+        {stream > 0 && stream < 1 && (
+          <circle className="dark-trailer-lab-signal" cx={lerp(379, 436, stream)} cy={333} r={5} />
+        )}
+        <path
+          className="dark-trailer-lab-receiver"
+          d={membranePath(LOCAL_CENTRE.x, LOCAL_CENTRE.y, ARCHITECTURE_RADII.local, { amplitude: 2.5, lobes: 4, phase: .4 })}
+          {...drawn(experiencer)} opacity={experiencer > 0 ? 1 : 0}
+        />
+      </g>
+    </svg>
+  );
+}
+
 function TrailerArchitecture({ t }: { t: number }) {
   const startScale = 6.5;
-  const pull = smooth(t, ARCH + 0.4, ARCH + 8.4);
+  // Arrive at the whole diagram before the laboratory line finishes typing.
+  const pull = smooth(t, ARCH + 0.4, ARCH + 6);
   const scale = Math.exp(lerp(Math.log(startScale), 0, pull)) * (1 + 0.035 * smooth(t, ARCH + 8.4, END));
   const centring = Math.max(0, (scale - 1) / (startScale - 1));
   const localX = LOCAL_CENTRE.x / 7;
@@ -418,6 +449,7 @@ function TrailerArchitecture({ t }: { t: number }) {
     })(),
     // Ring labels wait until the view is wide enough to show them whole.
     "--labels": smooth(t, ARCH + 3.2, ARCH + 5.2),
+    "--lab-avatars": smooth(t, ARCH + 6.2, ARCH + 7.8) * (1 - smooth(t, TITLE, TITLE + 1.2)),
     "--te": smooth(t, ARCH + 6.8, ARCH + 8.4),
     "--big-c": smooth(t, ARCH + 5.4, ARCH + 7),
     "--rfn": smooth(t, ARCH + 4.8, ARCH + 6.2),
@@ -441,6 +473,7 @@ function TrailerArchitecture({ t }: { t: number }) {
         <div className="home-hero-environment dark-trailer-arch-figure" data-hero-motion="still" inert>
           <HeroArchitecture embedded />
         </div>
+        <ExperienceLabPassage t={t} />
       </div>
     </div>
   );
@@ -457,7 +490,9 @@ export function DarkFilmTrailer({ seconds, still = false }: { seconds: number; s
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
   const t = still ? Math.min(shot.end - 0.8, lastLine ? lastLine.until - 0.7 : Infinity) : seconds;
   // The picture runs on its own choreographed clock, stretched so every line can be read.
-  const d = trailerDrawingTime(t);
+  const drawingTime = trailerDrawingTime(t);
+  // Hold the settled title diagram under reduced motion, before its normal exit fade.
+  const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
   return (
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>

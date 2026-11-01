@@ -241,6 +241,11 @@ export function DrawnFilmPlayer({
 
       <div className="films-transport-shell">
         <div className="films-transport-bar">
+          {describeTime && (
+            <span className="films-transport-position" aria-hidden="true">
+              {describeTime(time)}
+            </span>
+          )}
           <button
             type="button"
             className="films-transport-btn films-transport-btn--primary"
@@ -252,6 +257,7 @@ export function DrawnFilmPlayer({
             ) : (
               <Play className="h-4 w-4 fill-current" aria-hidden="true" />
             )}
+            <span className="films-transport-play-label">{playing ? "Pause" : "Play"}</span>
           </button>
 
           {chapters && (
