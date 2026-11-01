@@ -655,14 +655,47 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   fill: var(--architecture-loop-inner);
 }
 
-/* The broken lines advance one short segment every eight seconds; arrowheads stay fixed. */
+/* The homepage uses fine, square-ended dashes and compact, attached arrow tips. */
+.home-hero-architecture[data-origin-field="background"] .home-architecture-process-loops {
+  opacity: 1;
+  stroke-linecap: butt;
+}
+.home-hero-architecture[data-origin-field="background"] [data-loop="outer"] {
+  --process-line-weight: 1.75;
+  --process-dashes: 10 8;
+  --process-drift: -18;
+}
+.home-hero-architecture[data-origin-field="background"] [data-loop="inner"] {
+  --process-line-weight: 1.5;
+  --process-dashes: 6 6;
+  --process-drift: -12;
+}
+.home-hero-architecture[data-origin-field="background"] :is(.home-architecture-process-loop, .home-architecture-process-tip) {
+  fill: none;
+  stroke: var(--loop-ink);
+  stroke-width: var(--process-line-weight);
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+  filter: none;
+}
+.home-hero-architecture[data-origin-field="background"] .home-architecture-process-loop {
+  stroke-dasharray: var(--process-dashes);
+}
+.home-architecture-process-tip {
+  stroke-dasharray: none;
+}
+.home-hero-architecture[data-origin-field="background"] :is(.home-architecture-loop-arrow--outer, .home-architecture-loop-arrow--inner) {
+  stroke: none;
+}
+
+/* Each track advances one dash period in twelve seconds; its arrow tip stays fixed. */
 @keyframes home-process-flow {
-  to { stroke-dashoffset: -24; }
+  to { stroke-dashoffset: var(--process-drift, -24); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-architecture-process-loop {
-    animation: home-process-flow 8s linear infinite;
+    animation: home-process-flow 12s linear infinite;
     animation-play-state: paused;
   }
 

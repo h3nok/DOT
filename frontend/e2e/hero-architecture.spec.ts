@@ -102,6 +102,8 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
       local: opacity('.home-architecture-experiencer-stage'),
       outerLoop: opacity('[data-loop="outer"]'),
       innerLoop: opacity('[data-loop="inner"]'),
+      processTips: [...node.querySelectorAll<SVGPathElement>(".home-architecture-process-tip")]
+        .map(path => path.getTotalLength()),
       intentDrawn: parseFloat(getComputedStyle(node.querySelector(".home-architecture-awareness-trace")!).strokeDashoffset) === 0,
     };
   }, time);
@@ -123,6 +125,9 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
   expect(local.intentDrawn).toBe(false);
   const complete = await sample(6000);
   expect(complete.intentDrawn).toBe(true);
+  // A terminal arc must stay short; the long-arc flag would draw another loop.
+  expect(complete.processTips).toHaveLength(2);
+  expect(complete.processTips.every(length => length > 0 && length < 20)).toBe(true);
   // Choosing a part of the figure opens the section that explains it (ADR-0055).
   await page.locator(".home-architecture-other-frame-label").first().click();
   await expect(page.locator("#reality-frame")).toBeInViewport();

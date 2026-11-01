@@ -18,7 +18,7 @@ export type HeroArchitectureIds = {
   innerLoopArrowId: string;
 };
 
-export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
+export function HeroArchitectureDefs({ ids, compactProcessArrows = false }: { ids: HeroArchitectureIds; compactProcessArrows?: boolean }) {
   const {
     gridId, arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, fieldWashId,
     frameWashId, localWashId, threadId, frameClipId, surfacePrefix, outerLoopArrowId, innerLoopArrowId,
@@ -92,8 +92,8 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
         [outerLoopArrowId, "home-architecture-loop-arrow--outer"],
         [innerLoopArrowId, "home-architecture-loop-arrow--inner"],
       ].map(([id, className]) => (
-        <marker key={id} id={id} markerWidth="8" markerHeight="8" refX="5.4" refY="3.5" orient="auto" markerUnits="strokeWidth">
-          <path className={className} d="M0.5 0.5L6.5 3.5L0.5 6.5Z" />
+        <marker key={id} id={id} markerWidth={compactProcessArrows ? 6 : 8} markerHeight={compactProcessArrows ? 6 : 8} refX={compactProcessArrows ? 5 : 5.4} refY={compactProcessArrows ? 3 : 3.5} orient="auto" markerUnits="strokeWidth">
+          <path className={className} d={compactProcessArrows ? "M1 1L5 3L1 5Z" : "M0.5 0.5L6.5 3.5L0.5 6.5Z"} />
         </marker>
       ))}
       <radialGradient id={fieldWashId} cx="50%" cy="48%" r="52%">

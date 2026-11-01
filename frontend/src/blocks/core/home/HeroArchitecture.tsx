@@ -72,16 +72,19 @@ const polar = (radius: number, angleDeg: number) => ({
   y: 352 + Math.sin((angleDeg * Math.PI) / 180) * radius,
 });
 
-/** A long clockwise arc (over 180°), used for the process loops. */
+/** Clockwise loops and their short terminal segments share the same circle. */
 const loopPath = (radius: number, startDeg: number, endDeg: number) => {
   const start = polar(radius, startDeg);
   const end = polar(radius, endDeg);
-  return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}A${radius} ${radius} 0 1 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+  const largeArc = endDeg - startDeg > 180 ? 1 : 0;
+  return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}A${radius} ${radius} 0 ${largeArc} 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
 };
 /* Big C's outer loop runs between its membrane and T × E, open at the top for the label. */
 const OUTER_LOOP = loopPath((R.membrane + R.origin) / 2, -70, 250);
+const OUTER_LOOP_TIP = loopPath((R.membrane + R.origin) / 2, 247.5, 250);
 /* c₁'s inner loop sits between its constraints and its awareness radius, open where its label and Intent leave. */
 const INNER_LOOP = loopPath(56, 70, 350);
+const INNER_LOOP_TIP = loopPath(56, 342, 350);
 
 /**
  * Code-native rendering of DOT's proposed layered architecture.
@@ -151,7 +154,7 @@ export function HeroArchitecture({ embedded = false }: {
       >
         <title id={titleId}>DOT diagram</title>
         <desc id={descriptionId}>DOT’s proposed relationships, not measured physical locations. T × E is Speculation: the preexisting conditions outside Big C. Big C contains RF₀ and Little c. RF₀ is an experience laboratory shared through living bodies. Little c is outside RF₀ and embodied by a living body inside it. The Reality Stream runs from RF₀ to Little c. The Canvas carries and updates local state; embodied action returns through the body. The dashed scope marks available access and action. Broken arrows around Big C and Little c indicate process. Other Frames are hypotheses.</desc>
-        <HeroArchitectureDefs ids={ids} />
+        <HeroArchitectureDefs ids={ids} compactProcessArrows={!embedded} />
 
         <g data-part="te">
         <circle
@@ -257,16 +260,17 @@ export function HeroArchitecture({ embedded = false }: {
           </g>
         </g>
 
-        {/* Broken arrows flow gently to distinguish ongoing process from a fixed boundary. */}
+        {/* The moving dashes meet a fixed tip, keeping process direction legible. */}
         <g className="home-architecture-process-loops" aria-hidden="true">
-          {/* A halo under each loop lifts it off the ring it travels along. */}
           <g className="home-architecture-process-loop-stage" data-loop="outer">
-          <path className="home-architecture-process-loop-halo" d={OUTER_LOOP} />
-          <path className="home-architecture-process-loop home-architecture-process-loop--outer" d={OUTER_LOOP} markerEnd={`url(#${ids.outerLoopArrowId})`} />
+            {embedded && <path className="home-architecture-process-loop-halo" d={OUTER_LOOP} />}
+            <path className="home-architecture-process-loop home-architecture-process-loop--outer" d={OUTER_LOOP} markerEnd={embedded ? `url(#${ids.outerLoopArrowId})` : undefined} />
+            {!embedded && <path className="home-architecture-process-tip home-architecture-process-loop--outer" d={OUTER_LOOP_TIP} markerEnd={`url(#${ids.outerLoopArrowId})`} />}
           </g>
           <g className="home-architecture-process-loop-stage" data-loop="inner">
-          <path className="home-architecture-process-loop-halo" d={INNER_LOOP} transform={C1_TRANSFORM} />
-          <path className="home-architecture-process-loop home-architecture-process-loop--inner" d={INNER_LOOP} transform={C1_TRANSFORM} markerEnd={`url(#${ids.innerLoopArrowId})`} />
+            {embedded && <path className="home-architecture-process-loop-halo" d={INNER_LOOP} transform={C1_TRANSFORM} />}
+            <path className="home-architecture-process-loop home-architecture-process-loop--inner" d={INNER_LOOP} transform={C1_TRANSFORM} markerEnd={embedded ? `url(#${ids.innerLoopArrowId})` : undefined} />
+            {!embedded && <path className="home-architecture-process-tip home-architecture-process-loop--inner" d={INNER_LOOP_TIP} transform={C1_TRANSFORM} markerEnd={`url(#${ids.innerLoopArrowId})`} />}
           </g>
         </g>
 
