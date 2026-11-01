@@ -20,6 +20,9 @@ const hash = (n: number) => {
   return value - Math.floor(value);
 };
 
+/** Every line is drawn this much heavier than its nominal width, so it survives video compression on a phone. */
+const WEIGHT = 1.3;
+
 const JADE = "#8ad6b9";
 const INK = "#f2f0e8";
 const CLAY = "#d4876d";
@@ -99,7 +102,7 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
   x: number; y: number; px: number; cameraScale: number; progress?: number; opacity?: number; shrink?: number;
 }) {
   const scale = FIG * (1 - 0.12 * shrink);
-  const width = px / (cameraScale * scale);
+  const width = (px * WEIGHT) / (cameraScale * scale);
   // Shrinking settles toward the feet, so a diminished figure still stands in its box.
   const lift = 171 * (FIG - scale);
   return (
@@ -117,7 +120,7 @@ function Arrow({ from, to, px, s, color, opacity }: { from: Point; to: Point; px
   const left: Point = [to[0] - head * Math.cos(angle - 0.45), to[1] - head * Math.sin(angle - 0.45)];
   const right: Point = [to[0] - head * Math.cos(angle + 0.45), to[1] - head * Math.sin(angle + 0.45)];
   return (
-    <g opacity={opacity} fill="none" stroke={color} strokeWidth={px / s} strokeLinecap="round" strokeLinejoin="round">
+    <g opacity={opacity} fill="none" stroke={color} strokeWidth={(px * WEIGHT) / s} strokeLinecap="round" strokeLinejoin="round">
       <path d={`M${from.join(" ")}L${to.join(" ")}`} />
       <path d={`M${left.join(" ")}L${to.join(" ")}L${right.join(" ")}`} />
     </g>
@@ -142,18 +145,18 @@ function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight =
   const half = 34 * gap;
   return (
     <g opacity={opacity}>
-      <g stroke={CLAY} strokeWidth={(px * (0.45 + 0.4 * weight)) / s} opacity={(0.22 + 0.2 * weight) * (1 - loosen)}>
+      <g stroke={CLAY} strokeWidth={(px * WEIGHT * (0.45 + 0.4 * weight)) / s} opacity={(0.22 + 0.2 * weight) * (1 - loosen)}>
         {columns.map((cxLine) => <line key={`c${cxLine}`} x1={cxLine} y1={y} x2={cxLine} y2={y + h} />)}
         {rows.map((ryLine) => <line key={`r${ryLine}`} x1={x} y1={ryLine} x2={x + w} y2={ryLine} />)}
       </g>
       <path
         d={`M${cx - half} ${y}H${x + 6}Q${x} ${y} ${x} ${y + 6}V${y + h - 6}Q${x} ${y + h} ${x + 6} ${y + h}H${x + w - 6}Q${x + w} ${y + h} ${x + w} ${y + h - 6}V${y + 6}Q${x + w} ${y} ${x + w - 6} ${y}H${cx + half}`}
-        fill="none" stroke={CLAY} strokeWidth={(px * (1 + 1.3 * weight)) / s} strokeDasharray={dash}
+        fill="none" stroke={CLAY} strokeWidth={(px * WEIGHT * (1 + 1.3 * weight)) / s} strokeDasharray={dash}
       />
       {gap > 0.01 && (
         <g opacity={gap}>
-          <path d={`M${cx - half} ${y}H${cx + half}`} stroke={JADE} strokeWidth={(px * 1.6) / s} strokeLinecap="round" />
-          <path d={`M${cx - 12} ${y - 14}L${cx} ${y - 28}L${cx + 12} ${y - 14}`} fill="none" stroke={JADE} strokeWidth={(px * 1.4) / s} strokeLinecap="round" strokeLinejoin="round" />
+          <path d={`M${cx - half} ${y}H${cx + half}`} stroke={JADE} strokeWidth={(px * WEIGHT * 1.6) / s} strokeLinecap="round" />
+          <path d={`M${cx - 12} ${y - 14}L${cx} ${y - 28}L${cx + 12} ${y - 14}`} fill="none" stroke={JADE} strokeWidth={(px * WEIGHT * 1.4) / s} strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
     </g>
@@ -171,7 +174,7 @@ function PainRings({ at, phase, t, opacity, s }: { at: Point; phase: number; t: 
         const frac = raw - Math.floor(raw);
         return (
           <g key={offset}>
-            <circle cx={at[0]} cy={at[1]} r={46 + 110 * frac} strokeWidth={3 / s} opacity={0.95 * (1 - frac) * opacity} />
+            <circle cx={at[0]} cy={at[1]} r={46 + 110 * frac} strokeWidth={(3 * WEIGHT) / s} opacity={0.95 * (1 - frac) * opacity} />
             {offset === 0 && <circle cx={at[0]} cy={at[1]} r={10} fill={CLAY} stroke="none" opacity={0.55 * opacity} />}
           </g>
         );
@@ -225,7 +228,7 @@ const LATTICE_COPIES = Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =
 function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
   if (opacity <= 0.001) return null;
   return (
-    <g fill="none" stroke={CLAY} strokeWidth={1.2 / s} strokeLinecap="round" opacity={opacity * 0.75}>
+    <g fill="none" stroke={CLAY} strokeWidth={(1.2 * WEIGHT) / s} strokeLinecap="round" opacity={opacity * 0.75}>
       {Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =>
         [-1, 0, 1].map((j) => {
           const x = FIG_X + LATTICE.dx * i;
@@ -297,7 +300,7 @@ function TrailerDrawing({ t }: { t: number }) {
           const alpha = Math.sin(Math.PI * u) * (1 - smooth(t, 15, 16.4));
           return (
             <g key={k} opacity={alpha}>
-              <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={particle.color} strokeWidth={1.8 / s} strokeLinecap="round" opacity={0.65} />
+              <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={particle.color} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" opacity={0.75} />
               <circle cx={p[0]} cy={p[1]} r={particle.size / s} fill={particle.color} />
             </g>
           );
@@ -305,8 +308,8 @@ function TrailerDrawing({ t }: { t: number }) {
         {t >= 7 && t < 16 && SENSES.map((sense, k) => (
           <text
             key={sense.name} x={sense.label[0]} y={sense.label[1]} textAnchor="middle" fill={sense.color}
-            fontSize={20 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={5 / s}
-            opacity={0.85 * smooth(t, 7.6 + 0.35 * k, 8.4 + 0.35 * k) * (1 - smooth(t, 14.4, 15.4))}
+            fontSize={26 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={6 / s}
+            opacity={smooth(t, 7.6 + 0.35 * k, 8.4 + 0.35 * k) * (1 - smooth(t, 14.4, 15.4))}
           >
             {sense.name}
           </text>
@@ -316,22 +319,22 @@ function TrailerDrawing({ t }: { t: number }) {
         {sphere > 0.001 && (
           <g opacity={sphere}>
             <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 1.25} fill={`url(#${uid}-jade)`} opacity={0.35} />
-            <path d={membranePath(SPHERE[0], SPHERE[1], SPHERE_R, { amplitude: 7, lobes: 4, phase: t * 0.22 })} fill={JADE} fillOpacity={0.035} stroke={JADE} strokeWidth={1.8 / s} />
-            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.64} fill="none" stroke={JADE} strokeWidth={1 / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.6} />
+            <path d={membranePath(SPHERE[0], SPHERE[1], SPHERE_R, { amplitude: 7, lobes: 4, phase: t * 0.22 })} fill={JADE} fillOpacity={0.035} stroke={JADE} strokeWidth={(1.8 * WEIGHT) / s} />
+            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.64} fill="none" stroke={JADE} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.6} />
             <circle
-              cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.42} fill="none" stroke={GOLD} strokeWidth={2.2 / s} strokeLinecap="round"
+              cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.42} fill="none" stroke={GOLD} strokeWidth={(2.2 * WEIGHT) / s} strokeLinecap="round"
               strokeDasharray={`${SPHERE_R * 1.9} ${SPHERE_R * 0.74}`}
               transform={`rotate(${(t * 16).toFixed(2)} ${SPHERE[0]} ${SPHERE[1]})`}
             />
             <circle cx={SPHERE[0]} cy={SPHERE[1]} r={11} fill={JADE} />
             <circle cx={SPHERE[0]} cy={SPHERE[1]} r={4} fill={INK} />
-            <text x={SPHERE[0]} y={SPHERE[1] + SPHERE_R + 50} textAnchor="middle" fill={JADE} fontSize={26 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s}>LITTLE c</text>
+            <text x={SPHERE[0]} y={SPHERE[1] + SPHERE_R + 50} textAnchor="middle" fill={JADE} fontSize={32 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s}>LITTLE c</text>
           </g>
         )}
         {coupling > 0.001 && (
           <g fill="none" strokeLinecap="round" opacity={coupling}>
-            <path d={cubicPath(INTENT)} stroke={JADE} strokeWidth={2.6 / s} opacity={0.85} />
-            <path d={cubicPath(RETURN)} stroke={GOLD} strokeWidth={2.6 / s} opacity={0.85} />
+            <path d={cubicPath(INTENT)} stroke={JADE} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
+            <path d={cubicPath(RETURN)} stroke={GOLD} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
             {[0, 1].map((n) => {
               const raw = (t - 17.4 - n * 1.1) / 2.2;
               const u = raw - Math.floor(raw);
@@ -348,7 +351,7 @@ function TrailerDrawing({ t }: { t: number }) {
           return (
             <g key={`${copy.i}:${copy.j}`} opacity={shown}>
               <MeasuringBox cx={copy.x} cy={copy.y + 10} scale={1} opacity={1} loosen={0} px={1.4} s={s} gap={gap} weight={devolve} />
-              <Figure x={copy.x} y={copy.y} px={1.3} cameraScale={s} opacity={0.75 - 0.35 * devolve} shrink={devolve} />
+              <Figure x={copy.x} y={copy.y} px={1.3} cameraScale={s} opacity={0.62 - 0.3 * devolve} shrink={devolve} />
               <PainRings at={[copy.x, copy.y + CHEST_DY]} phase={copy.phase} t={t} opacity={pain} s={s} />
             </g>
           );
@@ -367,7 +370,7 @@ function TrailerDrawing({ t }: { t: number }) {
           </g>
         ))}
         {lens > 0.001 && (
-          <text x={FIG_X} y={BOX.y - 38} textAnchor="middle" fill={CLAY} fontSize={24 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s} opacity={lens}>
+          <text x={FIG_X} y={BOX.y - 38} textAnchor="middle" fill={CLAY} fontSize={30 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s} opacity={lens}>
             CAUSE → EFFECT
           </text>
         )}
@@ -385,7 +388,7 @@ function TrailerDrawing({ t }: { t: number }) {
         {noticed > 0.001 && (
           <g>
             <circle cx={CHEST[0]} cy={CHEST[1]} r={36 + 120 * opening} fill={`url(#${uid}-jade)`} opacity={noticed} />
-            <circle cx={CHEST[0]} cy={CHEST[1]} r={14 + 4 * noticed} fill="none" stroke={JADE} strokeWidth={1.4 / s} opacity={noticed} />
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={14 + 4 * noticed} fill="none" stroke={JADE} strokeWidth={(1.4 * WEIGHT) / s} opacity={noticed} />
             <circle cx={CHEST[0]} cy={CHEST[1]} r={5 + 2 * noticed} fill={JADE} opacity={noticed} />
             <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={INK} opacity={noticed} />
           </g>
@@ -443,7 +446,7 @@ function TrailerArchitecture({ t }: { t: number }) {
     // Placed in layout (no transform), so every exported frame shows exactly this moment.
     // Sized from the frame itself (container units), so it stays square on wide and tall screens.
     ...(() => {
-      const size = `calc(min(74cqh, 92cqw) * ${(1 - 0.42 * settle).toFixed(4)})`;
+      const size = `calc(min(84cqh, 92cqw) * ${(1 - 0.42 * settle).toFixed(4)})`;
       const centre = 44 - 14 * settle;
       return { height: size, width: size, top: `calc(${centre.toFixed(3)}cqh - ${size} / 2)`, left: `calc(50cqw - ${size} / 2)` };
     })(),
