@@ -8,6 +8,8 @@ export type HeroArchitectureIds = {
   constraintArrowId: string;
   couplingArrowId: string;
   radiusArrowId: string;
+  streamArrowId: string;
+  streamPathId: string;
   fieldWashId: string;
   frameWashId: string;
   localWashId: string;
@@ -20,7 +22,7 @@ export type HeroArchitectureIds = {
 
 export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
   const {
-    gridId, arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, fieldWashId,
+    gridId, arrowId, optionArrowId, constraintArrowId, couplingArrowId, radiusArrowId, streamArrowId, fieldWashId,
     frameWashId, localWashId, threadId, frameClipId, surfacePrefix, outerLoopArrowId, innerLoopArrowId,
   } = ids;
 
@@ -87,6 +89,18 @@ export function HeroArchitectureDefs({ ids }: { ids: HeroArchitectureIds }) {
       >
         {/* Growth arrowhead: the awareness radius expands. */}
         <path className="home-architecture-radius-arrow" d="M0.6 0.6L5.4 3L0.6 5.4Z" />
+      </marker>
+      <marker
+        id={streamArrowId}
+        markerWidth="7"
+        markerHeight="7"
+        refX="5.2"
+        refY="3"
+        orient="auto"
+        markerUnits="strokeWidth"
+      >
+        {/* RF₀'s Reality Stream arrives at Little c. */}
+        <path className="home-architecture-stream-arrow" d="M0.6 0.6L5.4 3L0.6 5.4Z" />
       </marker>
       {[
         [outerLoopArrowId, "home-architecture-loop-arrow--outer"],

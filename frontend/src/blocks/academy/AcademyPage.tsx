@@ -8,7 +8,7 @@ import { OPEN_SEAMS_EDITION, openSeams } from "../../content/applied/openSeams";
 import filmsData from "../../content/films.json";
 import { PageHeader, PageShell } from "../../shared/PageShell";
 import { SiteColophon } from "../../shared/SiteColophon";
-import { ArchitectureMap, TourOpening } from "../films/ConceptFilmMotifs";
+import { ARCHITECTURE_DESCRIPTION, ArchitectureMap, TourOpening } from "../films/ConceptFilmMotifs";
 import { CONCEPT_FILM_SECONDS, CONCEPT_FILMS, CONCEPT_MOTIFS } from "../films/conceptFilms";
 import "../films/films.css";
 import "../films/concept-films.css";
@@ -94,10 +94,10 @@ export default function AcademyPage() {
             </nav>
           </header>
           <figure className="academy-hub-figure">
-            <Still label="The architecture of Digital Organism Theory: T × E (speculative) outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.">
+            <Still label={ARCHITECTURE_DESCRIPTION}>
               <ArchitectureMap t={CONCEPT_FILM_SECONDS} layer="all" />
             </Still>
-            <figcaption>The architecture of Digital Organism Theory: T × E (speculative) outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.</figcaption>
+            <figcaption>{ARCHITECTURE_DESCRIPTION}</figcaption>
           </figure>
         </div>
         <ol className="academy-hub-grid academy-hub-grid--two" aria-label="Reading paths">

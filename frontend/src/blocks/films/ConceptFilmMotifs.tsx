@@ -1339,24 +1339,32 @@ export function TourOpening({ t }: MotifProps) {
 }
 
 /* ── The architecture, as the homepage draws it ─────────────────────────
-   T × E outside, Big C emerged within it, RF₀ inside Big C, and Little c within RF₀.
+   T × E outside (speculative), Big C emerged within it, and RF₀ and Little c both inside
+   Big C. Little c is not inside RF₀: RF₀'s Reality Stream runs out to it.
    The camera moves in to the layer a concept belongs to, so each concept is first seen
    where it sits. */
 
 export type ArchitectureLayer = "all" | "big-c" | "reality-frame" | "reality-stream" | "little-c";
+
+/** What ArchitectureMap shows, for its captions and accessible names. */
+export const ARCHITECTURE_DESCRIPTION =
+  "The architecture of Digital Organism Theory: T × E (speculative) outside; Big C within it; RF₀ and Little c inside Big C, with RF₀'s Reality Stream running out to Little c.";
 
 const ARCH_CENTRE: Point = [300, 320];
 const ARCH_FIELD_R = 262;
 const ARCH_BIG_C_R = 222;
 const ARCH_RF: Point = [394, 236];
 const ARCH_RF_R = 74;
-const ARCH_LITTLE_C: Point = [384, 248];
+const ARCH_LITTLE_C: Point = [394, 363];
 const ARCH_LITTLE_C_R = 13;
+// RF₀'s Reality Stream: out of the Frame's lower edge, down to Little c.
+const ARCH_STREAM_FROM: Point = [ARCH_RF[0], ARCH_RF[1] + ARCH_RF_R + 4];
+const ARCH_STREAM_TO: Point = [ARCH_LITTLE_C[0], ARCH_LITTLE_C[1] - ARCH_LITTLE_C_R - 7];
 const ARCH_VIEWS: Record<ArchitectureLayer, { focus: Point; scale: number }> = {
   all: { focus: ARCH_CENTRE, scale: 1 },
   "big-c": { focus: ARCH_CENTRE, scale: 1 },
   "reality-frame": { focus: ARCH_RF, scale: 2.3 },
-  "reality-stream": { focus: ARCH_RF, scale: 2.3 },
+  "reality-stream": { focus: [ARCH_RF[0], (ARCH_RF[1] - ARCH_RF_R + ARCH_LITTLE_C[1] + ARCH_LITTLE_C_R) / 2], scale: 2.3 },
   "little-c": { focus: ARCH_LITTLE_C, scale: 5 },
 };
 
@@ -1379,6 +1387,8 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
   const centre = at(ARCH_CENTRE);
   const rf = at(ARCH_RF);
   const littleC = at(ARCH_LITTLE_C);
+  const streamFrom = at(ARCH_STREAM_FROM);
+  const streamTo = at(ARCH_STREAM_TO);
   const rfLit = Math.max(lit("reality-frame"), lit("reality-stream"));
   const littleLit = Math.max(lit("little-c"), lit("reality-stream"));
   const labels: { text: string; p: Point; show: number; strong: boolean }[] = [
@@ -1452,16 +1462,32 @@ export function ArchitectureMap({ t, layer }: { t: number; layer: ArchitectureLa
           return <line key={angle} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} className="cm-s cm-rf" strokeWidth={2} />;
         })}
       </g>
-      {/* The Reality Stream: what reaches Little c from within the Frame. */}
+      {/* The Reality Stream: RF₀'s world, leaving the Frame and reaching Little c in Big C. */}
+      <g opacity={drawIn(1.2)}>
+        <line
+          x1={streamFrom[0]}
+          y1={streamFrom[1]}
+          x2={streamTo[0]}
+          y2={streamTo[1]}
+          className="cm-s cm-local"
+          strokeWidth={1.6 + 1.2 * littleLit}
+          strokeDasharray="5 5"
+        />
+        <path
+          d={`M${streamTo[0] - 5} ${streamTo[1] - 6}L${streamTo[0]} ${streamTo[1]}L${streamTo[0] + 5} ${streamTo[1] - 6}`}
+          className="cm-s cm-local"
+          strokeWidth={1.6 + 1.2 * littleLit}
+        />
+      </g>
       {layer === "reality-stream" &&
         [0, 1, 2, 3, 4, 5].map((k) => {
           const phase = (((t - 1.4 + k * 0.38) % 2.2) + 2.2) % 2.2 / 2.2;
-          const angle = -150 + k * 52;
+          const angle = 60 + k * 12;
           const from = polar(ARCH_RF[0], ARCH_RF[1], ARCH_RF_R - 6, angle);
           const p = at(lerpPoint(from, ARCH_LITTLE_C, phase));
           return <circle key={k} cx={p[0]} cy={p[1]} r={5} className="cm-f cm-local" opacity={span(t, 1.4, 2) * (1 - phase) * 0.9} />;
         })}
-      {/* Little c. */}
+      {/* Little c, inside Big C and outside RF₀. */}
       <g opacity={drawIn(1.4)}>
         <circle cx={littleC[0]} cy={littleC[1]} r={ARCH_LITTLE_C_R * scale} className="cm-s cm-hollow cm-local" strokeWidth={2 + 1.4 * littleLit} />
         <circle cx={littleC[0]} cy={littleC[1]} r={Math.max(3.5, 4 * Math.sqrt(scale))} className="cm-f cm-local" />
@@ -1546,7 +1572,8 @@ export function HumanCharacter({ t }: MotifProps) {
   );
 }
 
-/** The architecture in miniature, lit where a concept sits: a locator beside its place in the film. */
+/** The architecture in miniature, lit where a concept sits: a locator beside its place in the film.
+ *  As in the full map, Little c sits in Big C below RF₀, not inside it. */
 export function ArchitectureGlyph({ layer }: { layer: ArchitectureLayer }) {
   const on = (part: ArchitectureLayer) => layer === part || (layer === "reality-stream" && (part === "reality-frame" || part === "little-c"));
   return (
@@ -1556,8 +1583,9 @@ export function ArchitectureGlyph({ layer }: { layer: ArchitectureLayer }) {
       <circle cx={24} cy={24} r={18} className={on("big-c") ? "cm-s cm-big-c" : "cm-s cm-muted"} strokeWidth={on("big-c") ? 2.4 : 1.2} />
       <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-f cm-rf" : "cm-f cm-hollow"} opacity={on("reality-frame") ? 0.55 : 1} />
       <circle cx={30} cy={18} r={7} className={on("reality-frame") ? "cm-s cm-rf" : "cm-s cm-muted"} strokeWidth={on("reality-frame") ? 2.2 : 1.2} />
-      {on("little-c") && <circle cx={29.2} cy={18.8} r={4.8} className="cm-s cm-hollow cm-local" strokeWidth={2} />}
-      <circle cx={29.2} cy={18.8} r={on("little-c") ? 2.2 : 1.6} className={on("little-c") ? "cm-f cm-local" : "cm-f cm-muted"} />
+      <line x1={30} y1={26} x2={30} y2={28.4} className={on("reality-stream") ? "cm-s cm-local" : "cm-s cm-muted"} strokeWidth={on("reality-stream") ? 1.6 : 1} />
+      {on("little-c") && <circle cx={30} cy={32.4} r={3.8} className="cm-s cm-hollow cm-local" strokeWidth={1.8} />}
+      <circle cx={30} cy={32.4} r={on("little-c") ? 1.9 : 1.6} className={on("little-c") ? "cm-f cm-local" : "cm-f cm-muted"} />
     </svg>
   );
 }

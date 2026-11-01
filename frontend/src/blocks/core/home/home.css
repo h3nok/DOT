@@ -733,12 +733,12 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-architecture-process-loop {
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] :is(.home-architecture-process-loop, .home-architecture-c1-stream .home-architecture-reality-stream) {
     animation: home-process-flow 8s linear infinite;
     animation-play-state: paused;
   }
 
-  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-process-visible="true"] .home-architecture-process-loop {
+  html:not([data-motion="still"]) .home-journey .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-process-visible="true"] :is(.home-architecture-process-loop, .home-architecture-c1-stream .home-architecture-reality-stream) {
     animation-play-state: running;
   }
 }
@@ -1176,7 +1176,52 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   stroke-width: 1.1;
 }
 
-/* Little c meet only through RF₀: every coupling carries mutual pressure. */
+/* A body is part of RF₀: the Frame's plain material, never a living cell. */
+.home-architecture-body,
+.home-architecture-peer-body {
+  fill: color-mix(in oklch, var(--architecture-rf) 16%, var(--background));
+  stroke: var(--architecture-rf);
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.home-architecture-peer-body {
+  stroke-width: 1;
+}
+
+/* RF₀'s Reality Stream: it leaves the body and runs out of RF₀ to Little c in Big C. */
+.home-architecture-reality-stream {
+  fill: none;
+  stroke: color-mix(in oklch, var(--architecture-local) 70%, var(--architecture-rf));
+  stroke-dasharray: 7 5;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.home-architecture-reality-stream[data-peer] {
+  stroke-dasharray: 1 4;
+  stroke-width: 1.1;
+  opacity: 0.8;
+}
+
+.home-architecture-stream-arrow {
+  fill: color-mix(in oklch, var(--architecture-local) 70%, var(--architecture-rf));
+}
+
+.home-architecture-stream-label {
+  fill: color-mix(in oklch, var(--architecture-local) 72%, var(--foreground));
+  font-family: "Space Grotesk", var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  paint-order: stroke fill;
+  stroke: var(--architecture-label-halo, var(--background));
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+/* Bodies meet only through RF₀: every coupling carries mutual pressure. */
 .home-architecture-social-relations line {
   stroke: color-mix(in oklab, var(--architecture-local) 72%, var(--architecture-rf));
   stroke-dasharray: 1 5;
@@ -1219,7 +1264,7 @@ html[data-contrast="high"] .home-hero-subtitle strong {
   stroke-width: 1.4;
 }
 
-/* Every Little c shares c₁'s anatomy: core, body ring, awareness. */
+/* Every Little c shares c₁'s anatomy: outer membrane, inner membrane, core. */
 .home-architecture-peer-ring {
   fill: color-mix(in oklch, var(--architecture-local) 6%, transparent);
   stroke: color-mix(in oklch, var(--architecture-local) 80%, transparent);
@@ -1415,7 +1460,8 @@ html[data-contrast="high"] .home-hero-subtitle strong {
 }
 
 .home-architecture-label-leader {
-  stroke: color-mix(in oklch, var(--ring-label-color) 70%, var(--background));
+  display: none;
+  stroke: color-mix(in oklch, var(--architecture-local) 70%, var(--background));
   stroke-width: 1;
 }
 
@@ -1670,11 +1716,16 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-local-resolve 400ms cubic-bezier(0.22, 1, 0.36, 1) 3.15s both;
   }
 
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-c1-stream {
+    animation: home-architecture-emerge 400ms ease-out 3.3s both;
+  }
+
   .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-peer-centres {
     animation: home-architecture-emerge 400ms ease-out 3.35s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="little-c"],
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-label-leader {
     animation: home-architecture-emerge 300ms ease-out 3.4s both;
   }
 
@@ -1900,6 +1951,20 @@ html[data-contrast="high"] .home-hero-kicker {
     font-size: 36px;
   }
 
+  /* At 40 units Little c₁'s name is wider than the band beside its cell, so it sits in
+     Big C below RF₀, on one line, with a leader back to the cell. */
+  .home-hero-architecture .home-architecture-ring-label[data-layer="little-c"] text {
+    transform: translate(-128px, 96px);
+  }
+
+  .home-hero-architecture .home-architecture-ring-label[data-layer="little-c"] .home-architecture-label-you {
+    display: none;
+  }
+
+  .home-hero-architecture .home-architecture-label-leader[data-layer="little-c"] {
+    display: inline;
+  }
+
   .home-architecture-measure-marks,
   .home-architecture-cardinal-labels {
     display: none;
@@ -1911,6 +1976,10 @@ html[data-contrast="high"] .home-hero-kicker {
 
   .home-architecture-peer-label {
     font-size: 22px;
+  }
+
+  .home-architecture-stream-label {
+    display: none;
   }
 }
 

@@ -1,12 +1,20 @@
 import type { ReactNode } from "react";
-import { C1_TRANSFORM } from "./architectureGeometry";
+import { C1_TRANSFORM, LITTLE_C1 } from "./architectureGeometry";
+
+/* Little c₁'s name hangs below its cell, inside Big C and clear of RF₀. */
+const LITTLE_C_LABEL = { x: Math.round(LITTLE_C1.x - 27), y: Math.round(LITTLE_C1.y + 53) };
 
 /**
  * Layers are named on one vertical axis, each centred in its own region;
- * c₁'s own measures hang from c₁.
+ * c₁'s awareness hangs from its body, and Little c₁'s name from its cell.
  */
 const LABEL_TEXT = {
-  origin: <text x="348" y="26" textAnchor="middle">T × E</text>,
+  origin: (
+    <text x="348" y="26" textAnchor="middle">
+      <tspan>T × E</tspan>
+      <tspan className="home-architecture-label-you"> · Speculation</tspan>
+    </text>
+  ),
   "big-c": <text x="348" y="120" textAnchor="middle">Big C</text>,
   "reality-frame": (
     <text x="348" y="192" textAnchor="middle">
@@ -23,10 +31,10 @@ const LABEL_TEXT = {
     </text>
   ),
   "little-c": (
-    <text x="430" y="361" textAnchor="start">
+    <text x={LITTLE_C_LABEL.x} y={LITTLE_C_LABEL.y} textAnchor="middle">
       <tspan>Little c</tspan>
       <tspan className="home-architecture-label-subscript">1</tspan>
-      <tspan className="home-architecture-label-you" x="430" dy="1.55em">— you</tspan>
+      <tspan className="home-architecture-label-you" x={LITTLE_C_LABEL.x} dy="1.55em">— you</tspan>
     </text>
   ),
 } satisfies Record<string, ReactNode>;
@@ -47,7 +55,7 @@ export function HeroArchitectureLabels() {
   return (
     <g className="home-architecture-ring-labels">
       <g className="home-architecture-ring-label" data-layer="origin">
-        <a href="#possibility-field" aria-label="T × E — read about primordial Time and unformed information">
+        <a href="#possibility-field" aria-label="T × E, speculation — read about primordial Time and unformed information">
           {LABEL_TEXT.origin}
         </a>
       </g>
@@ -66,9 +74,10 @@ export function HeroArchitectureLabels() {
         <path className="home-architecture-awareness-callout" d="M348 427V440" />
         {LABEL_TEXT["awareness-radius"]}
       </g>
-      <g className="home-architecture-ring-label" data-layer="little-c" transform={C1_TRANSFORM}>
-        <line className="home-architecture-label-leader" x1="378" y1="352" x2="422" y2="352" />
-        <a href="#little-c" aria-label="Little c₁ — you. Read about the local experiencer">
+      {/* Phones set Little c₁'s name larger than the band beside its cell, so it moves below RF₀ and this points back. */}
+      <line className="home-architecture-label-leader" data-layer="little-c" x1="564" y1="463" x2="499" y2="554" />
+      <g className="home-architecture-ring-label" data-layer="little-c">
+        <a href="#little-c" aria-label="Little c₁ — you, within Big C and receiving RF₀'s Reality Stream. Read about the local experiencer">
           {LABEL_TEXT["little-c"]}
         </a>
       </g>

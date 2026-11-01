@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import filmsData from "../../content/films.json";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
-import { ArchitectureGlyph, ArchitectureMap, HumanCharacter, TourOpening, type ArchitectureLayer } from "./ConceptFilmMotifs";
+import { ARCHITECTURE_DESCRIPTION, ArchitectureGlyph, ArchitectureMap, HumanCharacter, TourOpening, type ArchitectureLayer } from "./ConceptFilmMotifs";
 import { CONCEPT_FILMS, CONCEPT_FILM_SECONDS, conceptTyping } from "./conceptFilms";
 import { ConceptFrame, TypedText } from "./ConceptFrame";
 import {
@@ -147,9 +147,6 @@ function TourSizers() {
   );
 }
 
-const COVER_DESCRIPTION =
-  "The architecture of Digital Organism Theory: T × E outside, Big C within it, RF₀ inside Big C, and Little c within RF₀.";
-
 /** What the film passes through, in order, for the cover. */
 const COVER_PATH = [TOUR.scenes[0].name, TOUR.scenes[1].name, `${CONCEPT_FILMS.length} concepts`, "The architecture"];
 
@@ -160,7 +157,7 @@ const COVER_PATH = [TOUR.scenes[0].name, TOUR.scenes[1].name, `${CONCEPT_FILMS.l
 function TourCover({ playLabel, onPlay, still }: { playLabel: string; onPlay: () => void; still: boolean }) {
   return (
     <>
-      <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={COVER_DESCRIPTION}>
+      <svg className="concept-film-motif" viewBox="0 0 600 600" role="img" aria-label={ARCHITECTURE_DESCRIPTION}>
         <ArchitectureMap t={4} layer="all" />
       </svg>
       <div className="concept-film-copy concept-film-cover">
@@ -266,7 +263,7 @@ function TourFrame({ frame, still }: { frame: number; still: boolean }) {
         source={TOUR.closing.source}
         sourceAt={CLOSING_TYPING.source}
         links={{ at: CLOSING_TYPING.links, items: TOUR.closing.links }}
-        description="The architecture of Digital Organism Theory: T × E outside; Big C within it, its outer process circling; RF₀ inside Big C; and Little c within RF₀, with its own inner process."
+        description="The architecture of Digital Organism Theory: T × E (speculative) outside; Big C within it, its outer process circling; RF₀ inside Big C, holding the body; and Little c inside Big C, outside RF₀, receiving RF₀'s Reality Stream through the body, with its own inner process."
       />
     );
   }
