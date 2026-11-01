@@ -114,6 +114,18 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   container-type: inline-size;
 }
 .dark-film-player .concept-film-stage { display: block; }
+/* Fullscreen: the frame is the largest 16:9 picture that fits above the controls, centred on the
+   film's own dark edge, so no line it holds is ever hidden beneath them. */
+.dark-film-player:fullscreen .concept-film-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+  background: var(--df-edge, #040d09);
+}
+.dark-film-player:fullscreen .dark-film-frame { flex: none; width: min(100cqw, 100cqh * 16 / 9); }
+/* A line too long for a small fullscreen picture wraps rather than running off its edges. */
+.dark-film-player:fullscreen .dark-trailer-line { white-space: normal; text-wrap: balance; }
 .dark-film-scope .dark-film-player .films-play-hero-btn { left: 50%; }
 .dark-film-frame {
   position: relative;
@@ -301,6 +313,18 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
 .dark-film-lesson .concept-film-source { font-size: clamp(.7rem, 1.1cqi, 1.3rem); }
 .dark-film-lesson .concept-film-eyebrow { font-size: clamp(.8125rem, 1.15cqi, 1.4rem); }
 .dark-film-lesson .concept-film-motif { filter: var(--film-motif-bloom); }
+/* A small 16:9 picture (a narrow window, or fullscreen on a phone held sideways) scales its words
+   with it, as the exported video does, so no line runs past the frame. Phones held upright keep
+   their own tall layout, which this height limit excludes. */
+@container (max-width: 780px) and (max-height: 440px) {
+  .dark-film-lesson { inset: 9% 3% 8%; }
+  .dark-film-lesson .concept-film-eyebrow { min-height: 0; font-size: max(.6rem, 1.35cqi); }
+  .dark-film-lesson .concept-film-name { font-size: max(1rem, 3.7cqi); }
+  .dark-film-lesson .concept-film-name--sentence { font-size: max(.95rem, 2.9cqi); }
+  .dark-film-lesson .concept-film-definition { margin-top: .5em; font-size: max(.72rem, 2.05cqi); }
+  .dark-film-lesson .concept-film-analogy { margin-top: .5em; font-size: max(.68rem, 1.85cqi); }
+  .dark-film-lesson .concept-film-source { margin-top: .5em; font-size: max(.58rem, 1.35cqi); }
+}
 .dark-film-lesson .concept-film-architecture { background: transparent; min-height: 0; }
 .dark-film-lesson .home-hero-architecture { opacity: 1; transform: none; }
 
@@ -384,6 +408,27 @@ html:not(.dark) .dark-film-public .home-hero-environment {
   --architecture-loop-inner: var(--df-gold);
 }
 
+/* The film's words, glow and stage colours read tone variables; on the public player they follow
+   the reader's theme through this --df-* palette instead of a fixed tone. */
+.dark-film-public .dark-film-frame {
+  --film-ink: var(--df-ink);
+  --film-muted: var(--df-muted);
+  --film-jade: var(--df-jade);
+  --film-voice: color-mix(in oklab, var(--df-jade) 80%, var(--df-ink));
+  --film-clay: var(--df-voice);
+  --film-prevailing: var(--df-quote);
+  --film-cite: var(--df-cite);
+  --film-ground: var(--df-stage);
+}
+html:not(.dark) .dark-film-public .dark-film-frame {
+  --film-halo: rgb(250 248 241 / .9);
+  --film-bloom: none;
+  --film-arch-bloom: none;
+  --film-motif-bloom: none;
+}
+/* The halo behind words drawn over the picture takes the stage colour. */
+.dark-film-public .dark-trailer-drawing [stroke="#081912"] { stroke: var(--df-stage); }
+
 /* The opening's SVG paint values are also used by the fixed dark export. Map those four
    inks here, so its figure, senses, coupling paths and light washes all follow this player. */
 .dark-film-public .dark-trailer-drawing [stroke="#f2f0e8"] { stroke: var(--df-ink); }
@@ -404,6 +449,8 @@ html:not(.dark) .dark-film-public .home-hero-environment {
   .dark-film-frame { aspect-ratio: auto; min-height: 45rem; }
   /* Container-height units need a definite block size for the diagram camera. */
   .dark-film-scope .dark-film-frame { height: 45rem; }
+  /* Fullscreen on a phone: the tall layout fills the screen above the controls. */
+  .dark-film-scope .dark-film-player:fullscreen .dark-film-frame { width: 100%; height: 100%; min-height: 0; }
   .dark-film-signature { top: 1.25rem; left: 1.25rem; font-size: .65rem; gap: .75rem; }
   .dark-film-colophon { inset: auto 1.25rem 1.25rem; font-size: .56rem; }
   .dark-trailer-arch { height: auto; width: 92%; }
