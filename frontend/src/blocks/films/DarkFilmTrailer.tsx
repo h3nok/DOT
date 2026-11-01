@@ -1,11 +1,11 @@
-import { createContext, useContext, useId, type CSSProperties } from "react";
+import { createContext, useContext, useEffect, useId, type CSSProperties } from "react";
 
 import amm from "../../content/amm.json";
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
-import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, NORMAL_DESIGN, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
+import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, TRAILER_PLATES, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
 
 /* ── Film-time helpers: every motion is a pure function of the film second (L1). ── */
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -207,8 +207,8 @@ function PainRings({ at, phase, t, opacity, s }: { at: Point; phase: number; t: 
 function heartbeat(t: number) {
   let glow = 0;
   for (const beat of TRAILER_HEARTBEATS_DESIGN) {
-    if (t >= beat) glow = Math.max(glow, Math.exp(-(t - beat) * 4.5));
-    if (t >= beat + 0.3) glow = Math.max(glow, 0.6 * Math.exp(-(t - beat - 0.3) * 5));
+    if (t >= beat) glow = Math.max(glow, Math.exp(-(t - beat) * 14));
+    if (t >= beat + 0.08) glow = Math.max(glow, 0.6 * Math.exp(-(t - beat - 0.08) * 16));
   }
   return glow;
 }
@@ -269,7 +269,7 @@ function CultureMessages({ t, s }: { t: number; s: number }) {
         return (
           <text
             key={text} x={lerp(from[0], to[0], arrive)} y={lerp(from[1], to[1], arrive)}
-            fontSize={34 / s} strokeWidth={8 / s} opacity={smooth(u, 0, 0.18) * (1 - smooth(u, 0.72, 1))}
+            fontSize={40 / s} strokeWidth={9 / s} opacity={smooth(u, 0, 0.18) * (1 - smooth(u, 0.72, 1))}
           >
             {text}
           </text>
@@ -458,8 +458,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
   const s = CAMERA[0][3];
   const world = `translate(800 450) scale(${s}) translate(${-CAMERA[0][1]} ${-CAMERA[0][2]})`;
   const naming = NORMAL_LINES[1].start;
-  const clear = smooth(seconds, NORMAL_END - 1, NORMAL_END - 0.15);
-  const mask = smooth(seconds, naming - 0.4, naming + 1.6) * (1 - clear);
+  const mask = smooth(seconds, naming - 0.4, naming + 1.6);
   const closing = smooth(seconds, naming, NORMAL_LINES[2].until);
   // Each day takes less time than the one before.
   const turn = seconds / 7 + 2.4 * (seconds / NORMAL_END) ** 3;
@@ -476,7 +475,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
           </radialGradient>
         </defs>
         <g transform={world}>
-          <g opacity={smooth(seconds, 0.2, 1.4) * (1 - clear)}>
+          <g opacity={smooth(seconds, 0.2, 1.4)}>
             <circle cx={DAY_CENTRE[0]} cy={DAY_CENTRE[1]} r={DAY_R} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${2 / s} ${9 / s}`} opacity={0.45} />
             <circle cx={light[0]} cy={light[1]} r={26} fill={gold} opacity={0.18} />
             <circle cx={light[0]} cy={light[1]} r={8} fill={gold} />
@@ -485,7 +484,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
             const shown = smooth(seconds, at - 0.1, at + 0.7);
             if (shown <= 0.001) return null;
             const place = polar(DAY_CENTRE, lerp(DAY_R + 78, DAY_R - 22, closing), angle);
-            const opacity = shown * lerp(1, 0.62, closing) * (1 - clear);
+            const opacity = shown * lerp(1, 0.62, closing);
             return (
               <g key={phrase} transform={`translate(${place[0]} ${place[1]}) scale(1.16)`} opacity={opacity}>
                 {phrase === "We go to work." && <Laptop seconds={seconds} color={ink} w={w} />}
@@ -514,7 +513,39 @@ function TrailerNormal({ seconds }: { seconds: number }) {
   );
 }
 
-/** Shots 2–8: one continuous drawing seen through a moving camera. */
+/* ── The American Millennial Manifesto's own illustrations ── */
+type PlateKind = keyof typeof TRAILER_PLATES;
+const isPlate = (kind: string): kind is PlateKind => kind in TRAILER_PLATES;
+/** Past the waiting frame, so the illustrations load once a reader has pressed Play, never with the page. */
+const PLATES_LOAD_AFTER = 8;
+let platesRequested = false;
+function requestPlates() {
+  if (platesRequested) return;
+  platesRequested = true;
+  for (const { src } of Object.values(TRAILER_PLATES)) new Image().src = src;
+}
+const PLATE_HEIGHT = 760;
+const PLATE_WIDTH = PLATE_HEIGHT * 1.5;
+
+/** One illustration, held and slowly explored. The camera is an SVG transform, so it never jitters. */
+function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number }) {
+  const { src, from, to } = TRAILER_PLATES[kind];
+  const eased = progress * progress * (3 - 2 * progress);
+  const x = lerp(from[0], to[0], eased);
+  const y = lerp(from[1], to[1], eased);
+  const scale = lerp(from[2], to[2], eased);
+  return (
+    <div className="dark-trailer-stage">
+      <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <g transform={`translate(800 ${PLATE_HEIGHT / 2}) scale(${scale.toFixed(5)}) translate(${(-x).toFixed(3)} ${(-y).toFixed(3)})`}>
+          <image href={src} x={800 - PLATE_WIDTH / 2} y={450 - PLATE_HEIGHT / 2} width={PLATE_WIDTH} height={PLATE_HEIGHT} preserveAspectRatio="xMidYMid meet" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/** One continuous drawing seen through a moving camera; each shot plays its own part of it. */
 function TrailerDrawing({ t }: { t: number }) {
   const uid = useId().replace(/[^\w-]/g, "");
   const palette = useContext(TrailerPalette);
@@ -547,7 +578,7 @@ function TrailerDrawing({ t }: { t: number }) {
   const lookUp = smooth(t, NUDGE + 0.2, NUDGE + 1) * (1 - calm);
   const blame = smooth(t, NUDGE + 2, NUDGE + 2.9) * (1 - calm);
   // Once the box dissolves, the person's options open out.
-  const options = smooth(t, PAUSE + 4, PAUSE + 7.4);
+  const options = smooth(t, PAUSE + 3.4, PAUSE + 6.6);
   // A soft light stays on the one person through the crowd, which recedes while the culture speaks.
   const spotlight = smooth(t, 32.5, 34) * (1 - calm);
   const cultureSpeaks = smooth(t, CULTURE_START, CULTURE_START + 0.8) * (1 - smooth(t, NUDGE, NUDGE + 1));
@@ -627,7 +658,7 @@ function TrailerDrawing({ t }: { t: number }) {
         {/* 5–6 · The lattice: the same box around everyone, tugged on strings, nudged by pain. */}
         <circle cx={FIG_X} cy={FIG_Y - 40} r={330} fill={`url(#${uid}-warm)`} opacity={spotlight} />
         {t >= 32 && LATTICE_COPIES.map((copy) => {
-          const shown = smooth(t, 32.5 + copy.delay, 33.2 + copy.delay) * (1 - 0.8 * calm) * (1 - 0.3 * cultureSpeaks);
+          const shown = smooth(t, 32.5 + copy.delay, 33.2 + copy.delay) * (1 - 0.8 * calm) * (1 - 0.42 * cultureSpeaks);
           if (shown <= 0.001) return null;
           return (
             <g key={`${copy.i}:${copy.j}`} opacity={shown}>
@@ -733,8 +764,8 @@ function TrailerArchitecture({ t }: { t: number }) {
     // Placed in layout (no transform), so every exported frame shows exactly this moment.
     // Sized from the frame itself (container units), so it stays square on wide and tall screens.
     ...(() => {
-      const size = `calc(min(84cqh, 92cqw) * ${(1 - 0.42 * settle).toFixed(4)})`;
-      const centre = 44 - 14 * settle;
+      const size = `calc(min(78cqh, 92cqw) * ${(1 - 0.42 * settle).toFixed(4)})`;
+      const centre = 41 - 11 * settle;
       return { height: size, width: size, top: `calc(${centre.toFixed(3)}cqh - ${size} / 2)`, left: `calc(50cqw - ${size} / 2)` };
     })(),
     // Ring labels wait until the view is wide enough to show them whole.
@@ -770,27 +801,36 @@ function TrailerArchitecture({ t }: { t: number }) {
 }
 
 /**
- * The opening trailer: an ordinary day → experience → the senses → the body as an interface →
- * the interface taken for the whole → the culture around the person → the strain and the blame →
- * the opening and the person's options → the architecture → the title. Reduced motion shows each
- * shot finished.
+ * The opening trailer's picture and words, one shot at a time (the argument is set out in
+ * darkFilmRevision.ts). Reduced motion shows each shot finished.
  */
 export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { seconds: number; still?: boolean; tone?: FilmTone }) {
   const shot = darkTrailerShot(seconds);
+  useEffect(() => { if (seconds > PLATES_LOAD_AFTER) requestPlates(); }, [seconds]);
   // Reduced motion shows each shot finished, with its last line still on screen.
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
   const t = still ? Math.min(shot.end - 0.8, lastLine ? lastLine.until - 0.7 : Infinity) : seconds;
   // The picture runs on its own choreographed clock, stretched so every line can be read.
   const drawingTime = trailerDrawingTime(t);
   // Hold the settled title diagram under reduced motion, before its normal exit fade.
-  const d = (still && shot.kind === "title" ? Math.min(drawingTime, NORMAL_DESIGN + END - 1) : drawingTime) - NORMAL_DESIGN;
+  const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
+  // Shots are separate scenes: each picture comes up from, and returns to, the stage.
+  const fade = smooth(t, shot.start, shot.start + 0.7) * (1 - smooth(t, shot.end - 0.7, shot.end));
+  const local = (t - shot.start) / (shot.end - shot.start);
   return (
     <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
-      {shot.kind === "normal" ? <TrailerNormal seconds={t} /> : d < ARCH + 0.6 && <TrailerDrawing t={d} />}
-      {d >= ARCH - 0.5 && <TrailerArchitecture t={d} />}
+      <div className="dark-trailer-scene" style={{ opacity: fade }}>
+        {shot.kind === "normal" && <TrailerNormal seconds={t} />}
+        {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={local} />}
+        {["taught", "cost", "turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
+        {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}
+      </div>
       <div className="dark-trailer-words">
+        {isPlate(shot.kind) && (
+          <p className="dark-trailer-plate-note" style={{ opacity: fade }}>AI-generated illustration, directed by the author. A visual metaphor.</p>
+        )}
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
           const opacity = smooth(t, typed.start - 0.3, typed.start) * (1 - smooth(t, typed.until - 0.5, typed.until));

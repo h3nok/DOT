@@ -92,14 +92,14 @@
   "trailer": {
     "title": "Digital Organism Theory",
     "subtitle": "A school of thought for examining experience.",
-    "note": "The opening of the film: ten shots, one idea each. Its words come from Book One and the author; DOT’s proposals and the quoted prevailing view are labelled.",
+    "note": "The opening of the film: twelve shots, one idea each. Its words come from Book One, The American Millennial Manifesto, and the author; DOT’s proposals are labelled.",
     "shots": [
       {
         "kind": "normal",
         "label": "The performance of normality",
         "design": 14,
         "lead": 1.6,
-        "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile and the day presses closer. Then everything falls away and the person stands alone.",
+        "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile and the day presses closer.",
         "lines": [
           "We go to work. We pay bills. We scroll. We compete.",
           "We call exhaustion adulthood, anxiety responsibility,",
@@ -107,109 +107,160 @@
         ]
       },
       {
-        "kind": "body",
-        "label": "Observation",
-        "design": 7,
-        "lead": 1.2,
-        "description": "The person stands alone, and a heartbeat glows at the chest.",
+        "kind": "pretence",
+        "label": "The picture",
+        "design": 6,
+        "lead": 1.4,
+        "description": "Illustration from The American Millennial Manifesto: a flag-patterned cow, the Host, standing on cracked earth with a two-headed leech on its back, faces a phone-shaped mirror showing a healthy version of itself in a green meadow.",
         "lines": [
-          "Something is happening.",
-          "You are experiencing these words."
+          "We pretend the picture is coherent."
         ]
       },
       {
-        "kind": "senses",
-        "label": "Perception",
-        "design": 8,
-        "lead": 5,
-        "description": "Five streams — sight, sound, smell, touch, and taste — pour in from the edges and build a glowing world around the figure.",
-        "lines": []
+        "kind": "struggle",
+        "label": "People struggling",
+        "design": 9,
+        "lead": 1.2,
+        "description": "Illustration from The American Millennial Manifesto: the Host rests its head beside a laptop at a kitchen table, carrying the leech. A meal sits untouched among household envelopes and keys, beside a picture of a cow in a green meadow.",
+        "lines": [
+          "The body tightens. Attention fragments.",
+          "Trust declines. Meaning thins."
+        ]
+      },
+      {
+        "kind": "blame",
+        "label": "The blame",
+        "design": 6,
+        "lead": 1.2,
+        "description": "Illustration from The American Millennial Manifesto: the Host’s body opened like a butcher’s chart: labor and time, attention and data, savings and taxes, debt. Its head is labelled beliefs, identity, perception.",
+        "lines": [
+          "The citizen is blamed. The architecture remains."
+        ]
+      },
+      {
+        "kind": "taught",
+        "label": "What we are not taught",
+        "design": 9,
+        "lead": 1.4,
+        "description": "One person stands in a measuring box. The view pulls far back to a lattice of boxed figures, each with a ring of stress, tugged on strings from the hand of a figure above who is boxed too. A soft light stays on the one person as six cultural messages drift in and settle around them: Your worth is what you earn. Do not risk your place. If it pays, it must be progress. Protect what is yours. Everyone does it. You have no choice.",
+        "lines": [
+          "A society may generate enormous wealth",
+          "and still fail to teach people how to confront fear,",
+          "govern attention, inspect inherited identity,",
+          "or distinguish freedom from consumption."
+        ],
+        "drawing": [
+          32.6,
+          41.6
+        ]
+      },
+      {
+        "kind": "cost",
+        "label": "Power unanswered",
+        "design": 7.4,
+        "lead": 1.0,
+        "description": "The view moves in on the one person. They look up to the figure above that holds their string, boxed and stressed too. That figure points back down at the person’s chest. The view pulls out: the lids press down, the boxes thicken, and every figure across the lattice dims and shrinks.",
+        "lines": [
+          "A public can lose the habit",
+          "of requiring power to answer for its conduct",
+          "while continuing to describe itself as free."
+        ],
+        "drawing": [
+          41.6,
+          49
+        ]
+      },
+      {
+        "kind": "erosion",
+        "label": "Moral erosion",
+        "design": 6,
+        "lead": 1.2,
+        "description": "Illustration from The American Millennial Manifesto: the Host eats from a rusted trough labelled Moral Erosion, filled with phones, money, status, and fast food.",
+        "lines": [
+          "Without a truthful framework, morality erodes."
+        ],
+        "voice": "dot"
+      },
+      {
+        "kind": "turn",
+        "label": "The question",
+        "design": 7,
+        "lead": 1.6,
+        "description": "Everything clears. The person stands alone, and a heartbeat glows at the chest.",
+        "lines": [
+          "So where does a truthful framework begin?",
+          "The most immediate fact of your existence",
+          "is not a measurement.",
+          "It is that you are here to experience one."
+        ],
+        "drawing": [
+          0,
+          7
+        ]
       },
       {
         "kind": "design",
         "label": "DOT’s proposal",
-        "design": 8,
-        "lead": 2.0,
-        "voice": "dot",
+        "design": 7,
+        "lead": 1.6,
         "description": "The view pulls back: the living Avatar is distinct from Little c. A calm broken loop marks continuing process. Intent travels toward the body and experience returns through the embodied connection.",
         "lines": [
           "You are Little c.",
           "Your living body is your interface to a Reality Frame."
-        ]
-      },
-      {
-        "kind": "mistake",
-        "label": "The prevailing view",
-        "design": 9,
-        "lead": 2.0,
-        "description": "The sphere dims. A hard measuring grid snaps shut around the figure, and cause-and-effect arrows press in from outside. The prevailing view is quoted: “You’re nothing but a pack of neurons” — Francis Crick, 1994.",
-        "lines": [
-          {
-            "text": "“You’re nothing but a pack of neurons.”",
-            "voice": "prevailing",
-            "cite": "Francis Crick, The Astonishing Hypothesis, 1994"
-          },
-          "The experience is first-person."
-        ]
-      },
-      {
-        "kind": "pain",
-        "label": "Culture",
-        "design": 10,
-        "lead": 2.0,
-        "description": "The view pulls far back to a lattice of boxed figures, each with a ring of stress. Strings tug each figure from the hand of another figure above, who is boxed too. A soft light stays on one figure as six cultural messages drift in and settle around it: Your worth is what you earn. Do not risk your place. If it pays, it must be progress. Protect what is yours. Everyone does it. You have no choice.",
-        "lines": [
-          "Culture arrives through language, permitted emotions,",
-          "authority, admired people, and expected futures."
-        ]
-      },
-      {
-        "kind": "nudge",
-        "label": "The body’s signal",
-        "design": 7,
-        "lead": 1.4,
-        "description": "The view moves in on the one figure. It looks up to the figure above that holds its string, boxed and stressed too. Each ring of stress pulses toward a small jade opening above its figure: a signal to change course. The figure above points back down at the one figure’s chest. The view pulls out: the openings close, the lids press down, the boxes thicken, and every figure across the lattice dims and shrinks as the costs compound.",
-        "lines": [
-          "The body tightens. Attention fragments.",
-          "The citizen is blamed. The architecture remains.",
-          "Trust declines. Meaning thins.",
-          "Conditioning is real. Conditioning is not essence."
-        ]
-      },
-      {
-        "kind": "pause",
-        "label": "The opening",
-        "design": 8,
-        "lead": 1.6,
-        "linger": 1.6,
-        "description": "Everything stops. A jade light at one figure’s chest marks renewed attention to experience. Its enclosing box dissolves, and paths open out from the person in every direction, each ending in an open choice.",
-        "lines": [
-          "What matters is what Little c does with the opening.",
-          "Freedom is participation in the creation of possibility."
-        ]
+        ],
+        "drawing": [
+          16.4,
+          23.2
+        ],
+        "voice": "dot"
       },
       {
         "kind": "architecture",
         "label": "The architecture",
         "design": 12,
-        "lead": 5.8,
-        "voice": "dot",
+        "lead": 4.6,
         "description": "The view pulls back from Little c to the Avatars in RF₀, an experience laboratory for Little cs. RF₀’s boundary and its Avatars light up, then its Reality Stream travels toward Little c. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
         "lines": [
           "RF₀ is an experience laboratory for Little cs."
-        ]
+        ],
+        "drawing": [
+          57,
+          69
+        ],
+        "voice": "dot"
+      },
+      {
+        "kind": "pause",
+        "label": "The opening",
+        "design": 7,
+        "lead": 1.2,
+        "description": "The crowd grows still around the person. A jade light at the chest marks renewed attention to experience. The box dissolves, and paths open out from the person in every direction, each ending in an open choice.",
+        "lines": [
+          "Conditioning is real. Conditioning is not essence.",
+          "What matters is what Little c does with the opening.",
+          "Freedom is participation in the creation of possibility."
+        ],
+        "drawing": [
+          49.2,
+          56.1
+        ],
+        "linger": 1.2
       },
       {
         "kind": "title",
         "label": "Digital Organism Theory",
-        "design": 9,
-        "lead": 1.4,
-        "linger": 1.2,
+        "design": 7.2,
+        "lead": 1.0,
         "description": "The architecture rises above the title: Digital Organism Theory. A school of thought for examining experience.",
         "lines": [
           "Digital Organism Theory",
           "A school of thought for examining experience."
-        ]
+        ],
+        "drawing": [
+          70.8,
+          78
+        ],
+        "linger": 1.2
       }
     ]
   },

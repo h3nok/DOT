@@ -229,17 +229,16 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
 }
 
 /**
- * The opening trailer's score, cut to the shots the preview reports: heartbeats under the
- * body, a pad that swells as the senses pour in, a cold hum once the measuring lens closes
- * (faintly dissonant across the lattice, sagging in pitch as stress is sustained), near
- * silence for the pause, and a warm D-major chord that begins as the box dissolves and
- * blooms with the architecture. Pure sines, deterministic, finite; it ends before the
- * concepts (L2).
+ * The opening trailer's score, cut to the shots the preview reports: a cold hum that builds
+ * through the ordinary day (faintly dissonant from the struggle on, sagging in pitch as the cost
+ * mounts), near silence with heartbeats at the question, a pad under the proposal, and a warm
+ * D-major chord that begins with the architecture and blooms as the box dissolves. Pure sines,
+ * deterministic, finite; it ends before the concepts (L2).
  */
 function addTrailerScore(mix, rate, count, trailer) {
   if (!trailer?.shots?.length) return false;
   const at = Object.fromEntries(trailer.shots.map((shot) => [shot.kind, shot]));
-  for (const kind of ["body", "senses", "design", "mistake", "pain", "nudge", "pause", "architecture", "title"]) {
+  for (const kind of ["normal", "struggle", "cost", "erosion", "turn", "design", "pause", "architecture", "title"]) {
     assert.ok(at[kind], `The trailer score needs the ${kind} shot`);
   }
   const tau = Math.PI * 2;
@@ -250,7 +249,7 @@ function addTrailerScore(mix, rate, count, trailer) {
   const heartbeats = trailer.heartbeats;
   // Heartbeat: a low "lub" and softer "dub", fading as the senses take over.
   for (const beat of heartbeats) {
-    const fade = 1 - 0.75 * smooth(beat, at.senses.start + 1, at.senses.end);
+    const fade = 1 - 0.6 * smooth(beat, at.turn.end - 4, at.turn.end);
     for (const [hit, level, from, to] of [[beat, 0.42, 62, 38], [beat + 0.3, 0.26, 70, 44]]) {
       const start = Math.round(hit * rate);
       const length = Math.min(count - start, Math.ceil(rate * 0.24));
@@ -264,30 +263,30 @@ function addTrailerScore(mix, rate, count, trailer) {
     }
   }
   const voices = [
-    // Pad (the senses → the interface).
+    // Pad (the proposal).
     ...[110, 164.81, 220, 277.18, 329.63].flatMap((f) => [[f - 0.6, 0.017, "pad"], [f + 0.6, 0.017, "pad"]]),
-    // Cold hum (the lens) and its dissonance (the lattice); both sag as stress is sustained.
+    // Cold hum (the day) and its dissonance (the struggle); both sag as the cost mounts.
     [98, 0.03, "hum"], [147, 0.012, "hum"], [196, 0.018, "hum"],
     [103.83, 0.014, "ache"], [207.65, 0.014, "ache"],
-    // Warm chord (the box dissolving, the architecture, and the title).
+    // Warm chord (the architecture, the box dissolving, and the title).
     [73.42, 0.03, "chord"], [110, 0.022, "chord"], [146.83, 0.02, "chord"], [185, 0.016, "chord"],
     [220, 0.016, "chord"], [293.66, 0.012, "chord"], [369.99, 0.008, "lift"],
   ];
   const end = at.title.end;
-  const settle = at.pause.start + 0.6 * (at.pause.end - at.pause.start);
+  const settle = at.pause.start + 0.4 * (at.pause.end - at.pause.start);
   const envelopeOf = {
-    pad: (t) => smooth(t, at.senses.start, at.senses.start + 5) * (1 - smooth(t, at.design.end - 0.5, at.design.end + 2.5)) * (1 + 0.15 * Math.sin(tau * 0.12 * t)),
-    hum: (t) => smooth(t, at.mistake.start + 0.2, at.mistake.start + 2) * (1 - smooth(t, at.pause.start, at.pause.start + 0.6)) * (1 + 0.2 * Math.sin(tau * 0.5 * t)),
-    ache: (t) => smooth(t, at.pain.start, at.pain.start + 3) * (1 - smooth(t, at.pause.start, at.pause.start + 0.6)),
-    chord: (t) => (0.35 * smooth(t, settle, settle + 2) + 0.65 * smooth(t, at.architecture.start - 0.4, at.architecture.start + 3.5)) * (1 - smooth(t, end - 1.5, end + 1.5)),
-    lift: (t) => smooth(t, at.architecture.start + 6, at.architecture.start + 9) * (1 - smooth(t, end - 1.5, end + 1.5)),
+    pad: (t) => smooth(t, at.design.start, at.design.start + 4) * (1 - smooth(t, at.design.end - 0.5, at.design.end + 2.5)) * (1 + 0.15 * Math.sin(tau * 0.12 * t)),
+    hum: (t) => smooth(t, at.normal.start + 2, at.struggle.start + 2) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)) * (1 + 0.2 * Math.sin(tau * 0.5 * t)),
+    ache: (t) => smooth(t, at.struggle.start, at.struggle.start + 4) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)),
+    chord: (t) => (0.35 * smooth(t, at.architecture.start - 0.4, at.architecture.start + 3.5) + 0.65 * smooth(t, settle, settle + 2)) * (1 - smooth(t, end - 1.5, end + 1.5)),
+    lift: (t) => smooth(t, settle + 3, settle + 6) * (1 - smooth(t, end - 1.5, end + 1.5)),
   };
   const sag = { hum: true, ache: true };
-  const nudgeMiddle = (at.nudge.start + at.nudge.end) / 2;
+
   const last = Math.min(count, Math.ceil((end + 1.5) * rate));
   for (let i = 0; i < last; i++) {
     const t = i / rate;
-    const bend = 1 - 0.035 * smooth(t, nudgeMiddle, at.nudge.end - 0.2);
+    const bend = 1 - 0.035 * smooth(t, at.cost.start, at.erosion.end - 0.2);
     let sample = 0;
     for (const [frequency, level, kind] of voices) {
       const envelope = envelopeOf[kind](t);
@@ -302,7 +301,7 @@ function addTrailerScore(mix, rate, count, trailer) {
 
 async function contactSheet(context, page, openingSeconds, duration, trailer) {
   // By default, sample each trailer shot as its words are fully on screen.
-  const times = SAMPLE_TIMES ?? (trailer?.shots?.length === 9
+  const times = SAMPLE_TIMES ?? (trailer?.shots?.length
     ? trailer.shots.map((shot) => Number((shot.start + 0.62 * (shot.end - shot.start)).toFixed(1)))
     : [3, 18, 28, 38, 48, 56, 80, 200, 345]);
   const poster = POSTER_TIME ?? (trailer?.shots?.length ? Number((trailer.shots.at(-1).end - 2).toFixed(1)) : 28);

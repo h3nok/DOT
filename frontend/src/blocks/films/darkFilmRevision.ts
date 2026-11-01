@@ -18,11 +18,11 @@ export const TRAILER_READING = {
   /** Typing speed, characters per second: slower than reading, so the eye keeps up. */
   charsPerSecond: 15,
   /** How long a typed line stays: a base, plus time for its length, never under the minimum. */
-  holdSeconds: 1.6,
-  holdPerChar: 0.045,
-  minHoldSeconds: 2.6,
+  holdSeconds: 1.2,
+  holdPerChar: 0.04,
+  minHoldSeconds: 2.5,
   /** The empty pause between one line leaving and the next arriving. */
-  gapSeconds: 1.1,
+  gapSeconds: 1,
   /** The picture alone, after a shot's last line, before the next shot. */
   tailSeconds: 1,
 } as const;
@@ -41,8 +41,10 @@ interface ShotScript {
   kind: string;
   label: string;
   description: string;
-  /** The length the drawing was choreographed at; the film stretches it to fit the words. */
+  /** The shortest this shot may run; it stretches to fit the words. */
   design: number;
+  /** The part of the drawing's own clock this shot plays. Other shots have their own pictures. */
+  drawing?: readonly [number, number];
   /** Picture alone before the first line. */
   lead: number;
   lines: readonly (string | ScriptLine)[];
@@ -53,15 +55,16 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["normal", "body", "senses", "design", "mistake", "pain", "nudge", "pause", "architecture", "title"] as const;
+const TRAILER_KINDS = ["normal", "pretence", "struggle", "blame", "taught", "cost", "erosion", "turn", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
 
 /**
- * The opening trailer: ten shots, one idea each, before the seventeen concepts. The
- * picture carries the story; the words are Book One's and the author's, with DOT's proposals
- * and the quoted prevailing view marked. They live in content/films.json (trailer.shots).
+ * The opening trailer: twelve shots, one argument, before the seventeen concepts. An ordinary
+ * day → the pretence → the struggle and the blame → what we are not taught → power unanswered →
+ * moral erosion → where a truthful framework begins → you → your options. The words come from
+ * Book One, the AMM, and the author, with DOT's proposals marked (content/films.json).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
   if (shot.kind !== TRAILER_KINDS[index]) throw new Error(`Trailer shot ${index} must be "${TRAILER_KINDS[index]}", not "${shot.kind}".`);
@@ -71,6 +74,7 @@ const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) 
     label: shot.label,
     description: shot.description,
     design: shot.design,
+    drawing: "drawing" in shot ? (shot.drawing as unknown as readonly [number, number]) : undefined,
     lead: shot.lead,
     linger: "linger" in shot ? shot.linger : undefined,
     voice,
@@ -86,9 +90,10 @@ export interface DarkTrailerShot {
   description: string;
   start: number;
   end: number;
+  design: number;
   /** Where this shot's drawing begins and how long it runs, on the drawing's own clock. */
   designStart: number;
-  design: number;
+  drawingLength: number;
 }
 
 /** Every word on screen in the trailer, in film seconds. */
@@ -107,7 +112,6 @@ function buildTrailer() {
   const shots: DarkTrailerShot[] = [];
   const lines: TrailerLine[] = [];
   let at = 0;
-  let designAt = 0;
   for (const script of SCRIPT) {
     const kind = script.kind as DarkTrailerShotKind;
     const title = kind === "title";
@@ -131,9 +135,8 @@ function buildTrailer() {
     if (title) end = Math.ceil(end);
     if (title) for (const typed of shotLines) typed.until = end;
     lines.push(...shotLines);
-    shots.push({ kind, label: script.label, description: script.description, start: at, end, designStart: designAt, design: script.design });
+    shots.push({ kind, label: script.label, description: script.description, start: at, end, design: script.design, designStart: script.drawing?.[0] ?? 0, drawingLength: script.drawing ? script.drawing[1] - script.drawing[0] : 0 });
     at = end;
-    designAt += script.design;
   }
   return { shots, lines };
 }
@@ -160,22 +163,27 @@ export const darkTrailerShot = (seconds: number): DarkTrailerShot =>
 export function trailerDrawingTime(seconds: number): number {
   const shot = darkTrailerShot(seconds);
   const local = Math.min(shot.end - shot.start, Math.max(0, seconds - shot.start));
-  return shot.designStart + local * (shot.design / (shot.end - shot.start));
+  return shot.designStart + local * (shot.drawingLength / (shot.end - shot.start));
 }
 
 /** The film second at which the drawing reaches a moment on its own clock. */
 export function trailerFilmTime(designSeconds: number): number {
-  const shot = DARK_TRAILER_SHOTS.find((item) => designSeconds < item.designStart + item.design) ?? DARK_TRAILER_SHOTS.at(-1)!;
-  const local = Math.min(shot.design, Math.max(0, designSeconds - shot.designStart));
-  return shot.start + local * ((shot.end - shot.start) / shot.design);
+  const shot = DARK_TRAILER_SHOTS.find((item) => item.drawingLength && designSeconds >= item.designStart && designSeconds < item.designStart + item.drawingLength) ?? DARK_TRAILER_SHOTS.at(-1)!;
+  const local = Math.min(shot.drawingLength, Math.max(0, designSeconds - shot.designStart));
+  return shot.start + local * ((shot.end - shot.start) / shot.drawingLength);
 }
 
-/** The first shot runs on film seconds; the rest of the drawing's clock starts where it ends. */
-export const NORMAL_DESIGN = DARK_TRAILER_SHOTS[0].design;
+/** The American Millennial Manifesto's illustrations, and how the camera explores each: [x, y, scale]. */
+export const TRAILER_PLATES = {
+  pretence: { src: "/amm/media/host-reflection-1536.webp", from: [800, 450, 1], to: [640, 430, 1.12] },
+  struggle: { src: "/amm/media/host-at-home-v1-1536.webp", from: [800, 470, 1], to: [720, 490, 1.08] },
+  blame: { src: "/amm/media/host-anatomy-v2-1536.webp", from: [800, 450, 1], to: [820, 470, 1.08] },
+  erosion: { src: "/amm/media/erosion-1536.webp", from: [800, 450, 1], to: [700, 500, 1.1] },
+} as const;
 
-/** The heartbeat from the second shot on, on that clock, and where each falls in the film. */
-export const TRAILER_HEARTBEATS_DESIGN = [0.7, 2.7, 4.7, 6.7, 8.7, 10.7, 12.7, 14.7] as const;
-export const DARK_TRAILER_HEARTBEATS = TRAILER_HEARTBEATS_DESIGN.map((beat) => trailerFilmTime(NORMAL_DESIGN + beat));
+/** The heartbeat under the question, on the drawing's clock, and where each falls in the film. */
+export const TRAILER_HEARTBEATS_DESIGN = Array.from({ length: 13 }, (_, beat) => 0.3 + beat * 0.52);
+export const DARK_TRAILER_HEARTBEATS = TRAILER_HEARTBEATS_DESIGN.map(trailerFilmTime);
 
 function buildTrailerKeystrokes(): Keystroke[] {
   const keys: Keystroke[] = [];
