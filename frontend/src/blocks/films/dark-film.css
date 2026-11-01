@@ -428,6 +428,7 @@ html:not(.dark) .dark-film-public .dark-film-frame {
 }
 /* The halo behind words drawn over the picture takes the stage colour. */
 .dark-film-public .dark-trailer-drawing [stroke="#081912"] { stroke: var(--df-stage); }
+.dark-film-public .dark-trailer-drawing [fill="#081912"] { fill: var(--df-stage); }
 
 /* The opening's SVG paint values are also used by the fixed dark export. Map those four
    inks here, so its figure, senses, coupling paths and light washes all follow this player. */

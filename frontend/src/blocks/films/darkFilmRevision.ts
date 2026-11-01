@@ -53,15 +53,15 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["body", "senses", "design", "mistake", "pain", "nudge", "pause", "architecture", "title"] as const;
+const TRAILER_KINDS = ["normal", "body", "senses", "design", "mistake", "pain", "nudge", "pause", "architecture", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
 
 /**
- * The opening trailer: nine shots, one idea each, before the seventeen concepts. The
- * picture carries the story; each line is a plain observation, a quoted view, or a
- * clearly marked proposal. The words live in content/films.json (trailer.shots).
+ * The opening trailer: ten shots, one idea each, before the seventeen concepts. The
+ * picture carries the story; the words are Book One's and the author's, with DOT's proposals
+ * and the quoted prevailing view marked. They live in content/films.json (trailer.shots).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
   if (shot.kind !== TRAILER_KINDS[index]) throw new Error(`Trailer shot ${index} must be "${TRAILER_KINDS[index]}", not "${shot.kind}".`);
@@ -144,7 +144,7 @@ export const DARK_TRAILER_SHOTS: readonly DarkTrailerShot[] = TRAILER.shots;
 export const DARK_TRAILER_LINES: readonly TrailerLine[] = TRAILER.lines;
 
 /** Lines that finish with a soft bell: the proposal, the pause, and the hand-off. */
-const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "Test this against your own experience.", "A school of thought for examining experience."]);
+const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "Freedom is participation in the creation of possibility.", "A school of thought for examining experience."]);
 
 export const DARK_OPENING_SECONDS = DARK_TRAILER_SHOTS.at(-1)!.end;
 const SHIFT = TOUR_OPENING_SECONDS - DARK_OPENING_SECONDS;
@@ -170,9 +170,12 @@ export function trailerFilmTime(designSeconds: number): number {
   return shot.start + local * ((shot.end - shot.start) / shot.design);
 }
 
-/** The heartbeat under the opening, on the drawing's clock, and where each falls in the film. */
+/** The first shot runs on film seconds; the rest of the drawing's clock starts where it ends. */
+export const NORMAL_DESIGN = DARK_TRAILER_SHOTS[0].design;
+
+/** The heartbeat from the second shot on, on that clock, and where each falls in the film. */
 export const TRAILER_HEARTBEATS_DESIGN = [0.7, 2.7, 4.7, 6.7, 8.7, 10.7, 12.7, 14.7] as const;
-export const DARK_TRAILER_HEARTBEATS = TRAILER_HEARTBEATS_DESIGN.map(trailerFilmTime);
+export const DARK_TRAILER_HEARTBEATS = TRAILER_HEARTBEATS_DESIGN.map((beat) => trailerFilmTime(NORMAL_DESIGN + beat));
 
 function buildTrailerKeystrokes(): Keystroke[] {
   const keys: Keystroke[] = [];

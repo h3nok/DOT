@@ -55,13 +55,13 @@ describe("HomeFilmSection", () => {
 
     const region = screen.getByRole("region", { name: tour.title });
     expect(within(region).getAllByText(`${tour.label} · ${length}`).length).toBeGreaterThan(0);
-    expect(within(region).getByRole("region", { name: "Observation" })).toBeInTheDocument();
-    expect(within(region).getByText("Every observation begins as an experience.", { selector: ".sr-only" })).toBeInTheDocument();
+    expect(within(region).getByRole("region", { name: "The performance of normality" })).toBeInTheDocument();
+    expect(within(region).getByText("We go to work. We pay bills. We scroll. We compete.", { selector: ".sr-only" })).toBeInTheDocument();
     expect(within(region).getByRole("slider", { name: "Seek timeline in seconds" })).toHaveValue("0");
     expect(within(region).queryByRole("button", { name: /voiceover/i })).not.toBeInTheDocument();
 
     fireEvent.click(within(region).getByRole("button", { name: `Play ${tour.title} (${length})` }));
-    expect(within(region).getByRole("region", { name: "Observation" })).toBeInTheDocument();
+    expect(within(region).getByRole("region", { name: "The performance of normality" })).toBeInTheDocument();
     expect(within(region).getByRole("button", { name: "Pause film" })).toBeInTheDocument();
   });
 

@@ -92,34 +92,44 @@
   "trailer": {
     "title": "Digital Organism Theory",
     "subtitle": "A school of thought for examining experience.",
-    "note": "The opening of the film: nine shots, one idea each. Every line is a plain observation, a quoted view, or labelled as DOT’s proposal.",
+    "note": "The opening of the film: ten shots, one idea each. Its words come from Book One and the author; DOT’s proposals and the quoted prevailing view are labelled.",
     "shots": [
+      {
+        "kind": "normal",
+        "label": "The performance of normality",
+        "design": 14,
+        "lead": 1.6,
+        "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile and the day presses closer. Then everything falls away and the person stands alone.",
+        "lines": [
+          "We go to work. We pay bills. We scroll. We compete.",
+          "We call exhaustion adulthood, anxiety responsibility,",
+          "isolation independence, and endless accumulation success."
+        ]
+      },
       {
         "kind": "body",
         "label": "Observation",
         "design": 7,
-        "lead": 3.6,
-        "description": "A single line draws a full-height human figure in the dark. It breathes once, and a heartbeat glows at its chest.",
+        "lead": 1.2,
+        "description": "The person stands alone, and a heartbeat glows at the chest.",
         "lines": [
-          "Every observation begins as an experience."
+          "Something is happening.",
+          "You are experiencing these words."
         ]
       },
       {
         "kind": "senses",
         "label": "Perception",
         "design": 8,
-        "lead": 2.2,
+        "lead": 5,
         "description": "Five streams — sight, sound, smell, touch, and taste — pour in from the edges and build a glowing world around the figure.",
-        "lines": [
-          "Perception joins sensory input and interpretation.",
-          "The sensory apparatus is not the whole story."
-        ]
+        "lines": []
       },
       {
         "kind": "design",
         "label": "DOT’s proposal",
         "design": 8,
-        "lead": 2.8,
+        "lead": 2.0,
         "voice": "dot",
         "description": "The view pulls back: the living Avatar is distinct from Little c. A calm broken loop marks continuing process. Intent travels toward the body and experience returns through the embodied connection.",
         "lines": [
@@ -131,7 +141,7 @@
         "kind": "mistake",
         "label": "The prevailing view",
         "design": 9,
-        "lead": 2.8,
+        "lead": 2.0,
         "description": "The sphere dims. A hard measuring grid snaps shut around the figure, and cause-and-effect arrows press in from outside. The prevailing view is quoted: “You’re nothing but a pack of neurons” — Francis Crick, 1994.",
         "lines": [
           {
@@ -139,18 +149,18 @@
             "voice": "prevailing",
             "cite": "Francis Crick, The Astonishing Hypothesis, 1994"
           },
-          "Does measuring activity explain experience?"
+          "The experience is first-person."
         ]
       },
       {
         "kind": "pain",
-        "label": "Who fills the gap",
+        "label": "Culture",
         "design": 10,
-        "lead": 2.6,
+        "lead": 2.0,
         "description": "The view pulls far back to a lattice of boxed figures, each with a ring of stress. Strings tug each figure from the hand of another figure above, who is boxed too. A soft light stays on one figure as six cultural messages drift in and settle around it: Your worth is what you earn. Do not risk your place. If it pays, it must be progress. Protect what is yours. Everyone does it. You have no choice.",
         "lines": [
-          "We inherit explanations before examining them.",
-          "Others fill the gap: markets, platforms, ideologies."
+          "Culture arrives through language, permitted emotions,",
+          "authority, admired people, and expected futures."
         ]
       },
       {
@@ -160,22 +170,22 @@
         "lead": 1.4,
         "description": "The view moves in on the one figure. It looks up to the figure above that holds its string, boxed and stressed too. Each ring of stress pulses toward a small jade opening above its figure: a signal to change course. The figure above points back down at the one figure’s chest. The view pulls out: the openings close, the lids press down, the boxes thicken, and every figure across the lattice dims and shrinks as the costs compound.",
         "lines": [
-          "The body protests: stress, anxiety, burnout.",
-          "Relief matters. So do the underlying conditions.",
-          "Pressure can deepen division and conflict.",
-          "At stake: how we understand experience."
+          "The body tightens. Attention fragments.",
+          "The citizen is blamed. The architecture remains.",
+          "Trust declines. Meaning thins.",
+          "Conditioning is real. Conditioning is not essence."
         ]
       },
       {
         "kind": "pause",
-        "label": "Attention",
+        "label": "The opening",
         "design": 8,
-        "lead": 2.8,
+        "lead": 1.6,
         "linger": 1.6,
         "description": "Everything stops. A jade light at one figure’s chest marks renewed attention to experience. Its enclosing box dissolves, and paths open out from the person in every direction, each ending in an open choice.",
         "lines": [
-          "Notice who is experiencing.",
-          "Test this against your own experience."
+          "What matters is what Little c does with the opening.",
+          "Freedom is participation in the creation of possibility."
         ]
       },
       {

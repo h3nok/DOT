@@ -5,7 +5,7 @@ import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
-import { DARK_TRAILER_LINES, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
+import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, NORMAL_DESIGN, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
 
 /* ── Film-time helpers: every motion is a pure function of the film second (L1). ── */
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -91,6 +91,10 @@ function cameraAt(t: number) {
   return { x: lerp(ax, bx, u), y: lerp(ay, by, u), s: Math.exp(lerp(Math.log(as), Math.log(bs), u)) };
 }
 
+const polar = (centre: Point, radius: number, degrees: number): Point => [
+  centre[0] + Math.cos((degrees * Math.PI) / 180) * radius,
+  centre[1] + Math.sin((degrees * Math.PI) / 180) * radius,
+];
 const cubicAt = ([p0, p1, p2, p3]: Cubic, u: number): Point => {
   const v = 1 - u;
   return [
@@ -240,7 +244,7 @@ const LATTICE_COPIES = Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =
 
 /** The culture's messages, as the American Millennial Manifesto quotes them, closing in on the one we follow. */
 const CULTURE = amm.home.concepts.map((concept) => concept.script);
-const CULTURE_START = 37.3;
+const CULTURE_START = 35.5;
 const CULTURE_STEP = 0.72;
 const CULTURE_LIFE = 2.8;
 /** Each message keeps its own lane, from beyond the frame to a place beside the person; "You have no choice." lands last, just above them. */
@@ -353,7 +357,164 @@ function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
   );
 }
 
-/** Shots 1–7: one continuous drawing seen through a moving camera. */
+/* ── Shot 1: the performance of normality ── */
+const DAY_CENTRE: Point = [FIG_X, 430];
+const DAY_R = 282;
+const NORMAL_LINES = DARK_TRAILER_LINES.filter((typed) => typed.shot === "normal");
+const NORMAL_END = DARK_TRAILER_SHOTS[0].end;
+/** The film second a phrase of the opening sentence starts typing. */
+const phraseAt = (phrase: string) =>
+  NORMAL_LINES[0].start + NORMAL_LINES[0].text.indexOf(phrase) / NORMAL_LINES[0].charsPerSecond;
+const DAY_ITEMS = [
+  { phrase: "We go to work.", angle: -152 },
+  { phrase: "We pay bills.", angle: -28 },
+  { phrase: "We scroll.", angle: 28 },
+  { phrase: "We compete.", angle: 152 },
+].map((item) => ({ ...item, at: phraseAt(item.phrase) }));
+
+function Laptop({ seconds, color, w }: { seconds: number; color: string; w: number }) {
+  return (
+    <g fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">
+      <rect x={-70} y={-54} width={140} height={90} rx={8} />
+      <path d="M-90 36H90L78 54H-78Z" />
+      {[-34, -16, 2].map((y, k) => (
+        <path key={y} d={`M-50 ${y}H${-50 + 100 * (0.45 + 0.55 * Math.abs(Math.sin(seconds * 0.9 + k * 1.7)))}`} opacity={0.75} />
+      ))}
+    </g>
+  );
+}
+
+function Bills({ seconds, from, color, paper, w }: { seconds: number; from: number; color: string; paper: string; w: number }) {
+  const sheets = 1 + Math.min(4, Math.floor(Math.max(0, seconds - from) / 2.4));
+  return (
+    <g fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">
+      {Array.from({ length: sheets }, (_, k) => {
+        const dx = (k % 2 ? 1 : -1) * 3 * k;
+        const dy = -9 * k;
+        return (
+          <g key={k} transform={`translate(${dx} ${dy})`}>
+            <rect x={-48} y={-58} width={96} height={118} rx={4} fill={paper} />
+            {k === sheets - 1 && (
+              <>
+                <path d="M-30 -36H10M-30 -16H30M-30 4H30" opacity={0.65} />
+                <path d="M6 36H30" strokeWidth={w * 2} />
+              </>
+            )}
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function Phone({ seconds, color, w, clip }: { seconds: number; color: string; w: number; clip: string }) {
+  const travel = (seconds * 34) % 56;
+  return (
+    <g fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">
+      <rect x={-46} y={-84} width={92} height={168} rx={13} />
+      <g clipPath={`url(#${clip})`}>
+        {[0, 1, 2, 3, 4].map((k) => {
+          const y = -96 + k * 56 - travel;
+          return (
+            <g key={k}>
+              <rect x={-34} y={y} width={68} height={44} rx={5} />
+              <circle cx={-22} cy={y + 12} r={5} />
+              <path d={`M-10 ${y + 12}H22M-22 ${y + 31}H22`} opacity={0.7} />
+            </g>
+          );
+        })}
+      </g>
+    </g>
+  );
+}
+
+function Ranking({ seconds, from, color, ink, w }: { seconds: number; from: number; color: string; ink: string; w: number }) {
+  const rise = smooth(seconds, from, from + 2);
+  return (
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth={w}>
+      {[30, 62, 44, 96, 128].map((height, k) => {
+        const x = -84 + k * 42;
+        const h = height * rise;
+        const ours = k === 2;
+        return (
+          <g key={k} stroke={ours ? ink : color}>
+            <rect x={x - 14} y={64 - h} width={28} height={h} />
+            <circle cx={x} cy={64 - h - 17} r={10} />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+/**
+ * The film opens on the book's own sentence about an ordinary day: one person, and the day going
+ * round them, faster each time. It is the same figure the rest of the opening follows. As the
+ * words name what we call this life, the person wears a smile over the strain, and the day closes in.
+ */
+function TrailerNormal({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade, ink, clay, gold, stage } = useContext(TrailerPalette);
+  const s = CAMERA[0][3];
+  const world = `translate(800 450) scale(${s}) translate(${-CAMERA[0][1]} ${-CAMERA[0][2]})`;
+  const naming = NORMAL_LINES[1].start;
+  const clear = smooth(seconds, NORMAL_END - 1, NORMAL_END - 0.15);
+  const mask = smooth(seconds, naming - 0.4, naming + 1.6) * (1 - clear);
+  const closing = smooth(seconds, naming, NORMAL_LINES[2].until);
+  // Each day takes less time than the one before.
+  const turn = seconds / 7 + 2.4 * (seconds / NORMAL_END) ** 3;
+  const light = polar(DAY_CENTRE, DAY_R, turn * 360 - 90);
+  const w = (2.2 * WEIGHT) / s;
+  return (
+    <div className="dark-trailer-stage">
+      <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <clipPath id={`${uid}-screen`}><rect x={-40} y={-78} width={80} height={156} rx={9} /></clipPath>
+          <radialGradient id={`${uid}-glow`}>
+            <stop offset="0" stopColor={jade} stopOpacity=".3" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g transform={world}>
+          <g opacity={smooth(seconds, 0.2, 1.4) * (1 - clear)}>
+            <circle cx={DAY_CENTRE[0]} cy={DAY_CENTRE[1]} r={DAY_R} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${2 / s} ${9 / s}`} opacity={0.45} />
+            <circle cx={light[0]} cy={light[1]} r={26} fill={gold} opacity={0.18} />
+            <circle cx={light[0]} cy={light[1]} r={8} fill={gold} />
+          </g>
+          {DAY_ITEMS.map(({ phrase, angle, at }) => {
+            const shown = smooth(seconds, at - 0.1, at + 0.7);
+            if (shown <= 0.001) return null;
+            const place = polar(DAY_CENTRE, lerp(DAY_R + 78, DAY_R - 22, closing), angle);
+            const opacity = shown * lerp(1, 0.62, closing) * (1 - clear);
+            return (
+              <g key={phrase} transform={`translate(${place[0]} ${place[1]}) scale(1.16)`} opacity={opacity}>
+                {phrase === "We go to work." && <Laptop seconds={seconds} color={ink} w={w} />}
+                {phrase === "We pay bills." && <Bills seconds={seconds} from={at} color={gold} paper={stage} w={w} />}
+                {phrase === "We scroll." && (
+                  <>
+                    <circle r={130} fill={`url(#${uid}-glow)`} />
+                    <Phone seconds={seconds} color={jade} w={w} clip={`${uid}-screen`} />
+                  </>
+                )}
+                {phrase === "We compete." && <Ranking seconds={seconds} from={at} color={clay} ink={ink} w={w} />}
+              </g>
+            );
+          })}
+          <PainRings at={CHEST} phase={0.37} t={seconds} opacity={mask} s={s} />
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} progress={smooth(seconds, 0.1, 1.5)} />
+          {mask > 0.001 && (
+            <g transform={`translate(${FIG_X} ${FIG_Y}) scale(${FIG})`} opacity={mask} fill="none" stroke={ink} strokeWidth={(2.6 * WEIGHT) / (s * FIG)} strokeLinecap="round">
+              <path d="M-13 -112Q0 -100 13 -112" />
+              <path d="M-10 -126V-125M10 -126V-125" />
+            </g>
+          )}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/** Shots 2–8: one continuous drawing seen through a moving camera. */
 function TrailerDrawing({ t }: { t: number }) {
   const uid = useId().replace(/[^\w-]/g, "");
   const palette = useContext(TrailerPalette);
@@ -362,7 +523,6 @@ function TrailerDrawing({ t }: { t: number }) {
   const s = cam.s;
   const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
 
-  const drawProgress = smooth(t, 0.4, 3.6);
   const beat = heartbeat(t) * (1 - smooth(t, 14.5, 16));
   const immersion = smooth(t, 7.5, 14.5) * (1 - smooth(t, 23.2, 25));
   const sphere = smooth(t, 16.2, 18.4) * (1 - 0.88 * smooth(t, 23.2, 25.4)) * (1 - smooth(t, 31, 33));
@@ -503,7 +663,7 @@ function TrailerDrawing({ t }: { t: number }) {
         {/* 1 · The figure, with its heartbeat; it stays the one we follow throughout. */}
         <circle cx={CHEST[0]} cy={CHEST[1]} r={70} fill={`url(#${uid}-jade)`} opacity={beat * 0.9} />
         <Figure
-          x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} progress={drawProgress}
+          x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s}
           opacity={1 - 0.25 * smooth(t, 24.4, 25.4) - 0.3 * devolve * (1 - noticed) + 0.25 * noticed}
           shrink={devolve * (1 - noticed)}
         />
@@ -526,7 +686,7 @@ function TrailerDrawing({ t }: { t: number }) {
   );
 }
 
-/** Shots 8–9: the homepage architecture, pulled back from Little c₁ to the T × E field. */
+/** Shots 9–10: the homepage architecture, pulled back from Little c₁ to the T × E field. */
 /** A single pass through the existing diagram: embodiment in RF₀, its Stream, then Little c.
  * These are model relationships, not motion through physical space. The still frame shows
  * the completed path; no CSS loop or independent animation runs behind a paused film. */
@@ -610,9 +770,10 @@ function TrailerArchitecture({ t }: { t: number }) {
 }
 
 /**
- * The opening trailer: experience → the senses → the body as an interface → the interface
- * taken for the whole → a culture that measures everything except experience → the stress
- * response → the pause → the architecture → the title. Reduced motion shows each shot finished.
+ * The opening trailer: an ordinary day → experience → the senses → the body as an interface →
+ * the interface taken for the whole → the culture around the person → the strain and the blame →
+ * the opening and the person's options → the architecture → the title. Reduced motion shows each
+ * shot finished.
  */
 export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { seconds: number; still?: boolean; tone?: FilmTone }) {
   const shot = darkTrailerShot(seconds);
@@ -622,12 +783,12 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
   // The picture runs on its own choreographed clock, stretched so every line can be read.
   const drawingTime = trailerDrawingTime(t);
   // Hold the settled title diagram under reduced motion, before its normal exit fade.
-  const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
+  const d = (still && shot.kind === "title" ? Math.min(drawingTime, NORMAL_DESIGN + END - 1) : drawingTime) - NORMAL_DESIGN;
   return (
     <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
-      {d < ARCH + 0.6 && <TrailerDrawing t={d} />}
+      {shot.kind === "normal" ? <TrailerNormal seconds={t} /> : d < ARCH + 0.6 && <TrailerDrawing t={d} />}
       {d >= ARCH - 0.5 && <TrailerArchitecture t={d} />}
       <div className="dark-trailer-words">
         {DARK_TRAILER_LINES.map((typed) => {

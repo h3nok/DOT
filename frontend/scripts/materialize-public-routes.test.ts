@@ -63,7 +63,7 @@ describe("public route metadata", () => {
     expect(film.noindex).toBeFalsy();
     expect(film.image).toBe("/og/film.png");
     expect(film.description).toMatch(/seventeen concepts/);
-    expect(film.prerender).toContain("Every observation begins as an experience.");
+    expect(film.prerender).toContain("We go to work. We pay bills. We scroll. We compete.");
     expect(film.prerender).toContain("DOT proposes: Your living body is your interface to a Reality Frame.");
     expect(film.prerender).toContain("A school of thought for examining experience.");
     expect(film.prerender).not.toContain("<h3>The struggle</h3>");
