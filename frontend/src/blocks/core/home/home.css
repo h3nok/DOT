@@ -1634,7 +1634,8 @@ html[data-contrast="high"] .home-hero-kicker {
     animation: home-architecture-emerge 350ms ease-out 2.68s both;
   }
 
-  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="reality-frame"] {
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-ring-label[data-layer="reality-frame"],
+  .home-hero-environment[data-hero-motion="full"] .home-hero-architecture[data-emergence="ready"] .home-architecture-frame-purpose {
     animation: home-architecture-emerge 300ms ease-out 2.78s both;
   }
 

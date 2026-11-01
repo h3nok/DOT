@@ -225,6 +225,7 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
 .dark-trailer-arch .home-architecture-ring-label[data-layer="little-c"],
 .dark-trailer-arch .home-architecture-ring-label[data-layer="awareness-radius"] { opacity: var(--lc); }
 .dark-trailer-arch [data-part="rf0"],
+.dark-trailer-arch .home-architecture-frame-purpose,
 .dark-trailer-arch .home-architecture-ring-label[data-layer="reality-frame"] { opacity: var(--rf); }
 .dark-trailer-arch .home-architecture-other-frames { opacity: var(--rfn); }
 .dark-trailer-arch [data-part="big-c"],

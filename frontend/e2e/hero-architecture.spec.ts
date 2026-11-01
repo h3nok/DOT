@@ -75,6 +75,8 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
       intent: timing(".home-architecture-awareness-trace"),
       outerLoop: timing('[data-loop="outer"]'),
       innerLoop: timing('[data-loop="inner"]'),
+      frameLabel: timing('.home-architecture-ring-label[data-layer="reality-frame"]'),
+      labLabel: timing('.home-architecture-frame-purpose'),
     };
   });
   expect(stages.frames.every((frame) => frame.start >= stages.bigC.end)).toBe(true);
@@ -84,6 +86,8 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
   expect(stages.intent.start).toBeGreaterThanOrEqual(stages.awareness.end);
   expect(stages.outerLoop.start).toBeGreaterThanOrEqual(stages.bigC.end);
   expect(stages.innerLoop.start).toBeGreaterThanOrEqual(stages.local.end);
+  expect(stages.labLabel).toEqual(stages.frameLabel);
+  expect(stages.labLabel.start).toBeGreaterThanOrEqual(stages.frames[0].start);
 
   const sample = (time: number) => svg.evaluate((node, currentTime) => {
     for (const animation of node.getAnimations({ subtree: true })) {
@@ -102,6 +106,7 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
       local: opacity('.home-architecture-experiencer-stage'),
       outerLoop: opacity('[data-loop="outer"]'),
       innerLoop: opacity('[data-loop="inner"]'),
+      labLabel: opacity('.home-architecture-frame-purpose'),
       processTips: [...node.querySelectorAll<SVGPathElement>(".home-architecture-process-tip")]
         .map(path => path.getTotalLength()),
       intentDrawn: parseFloat(getComputedStyle(node.querySelector(".home-architecture-awareness-trace")!).strokeDashoffset) === 0,
@@ -114,6 +119,10 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
   expect(primordial.local).toBe(0);
   expect(primordial.outerLoop).toBe(0);
   expect(primordial.innerLoop).toBe(0);
+  expect(primordial.labLabel).toBe(0);
+  const labReveal = await sample((stages.labLabel.start + stages.labLabel.end) / 2);
+  expect(labReveal.labLabel).toBeGreaterThan(0);
+  expect(labReveal.labLabel).toBeLessThan(1);
   const frames = await sample(3000);
   expect(frames.frame).toBe(1);
   expect(frames.others).toEqual([1, 1, 1]);
@@ -125,6 +134,7 @@ test("Big C emerges before every Reality Frame, then Little c and its relations"
   expect(local.intentDrawn).toBe(false);
   const complete = await sample(6000);
   expect(complete.intentDrawn).toBe(true);
+  expect(complete.labLabel).toBe(1);
   // A terminal arc must stay short; the long-arc flag would draw another loop.
   expect(complete.processTips).toHaveLength(2);
   expect(complete.processTips.every(length => length > 0 && length < 20)).toBe(true);
