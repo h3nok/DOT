@@ -1,9 +1,12 @@
 // Generates YouTube captions (SRT) and chapter lists for the dark trailer and the full film,
 // from the same timings the film renders with. Writes into design/youtube/assets/.
+// Usage: pnpm dlx vite-node scripts/youtube-film-metadata.mjs <version>, for example v12. Captions apply to both tones.
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 
-const ROOT = "/home/henok/Repo/DOT";
+const VERSION = process.argv.at(-1);
+if (!/^v\d+$/.test(VERSION)) throw new Error("Give the film's version, for example v12.");
+const ROOT = path.resolve(import.meta.dirname, "../..");
 const OUT = path.join(ROOT, "design/youtube/assets");
 const rev = await import(path.join(ROOT, "frontend/src/blocks/films/darkFilmRevision.ts"));
 const tour = await import(path.join(ROOT, "frontend/src/blocks/films/conceptTour.ts"));
@@ -29,7 +32,7 @@ function srt(cues) {
 
 // Trailer.
 const trailer = trailerCues();
-writeFileSync(path.join(OUT, "dot-opening-trailer-dark-v8.en.srt"), srt(trailer));
+writeFileSync(path.join(OUT, `dot-opening-trailer-${VERSION}.en.srt`), srt(trailer));
 const trailerChapters = rev.DARK_TRAILER_SHOTS.map((shot) => `${clock(shot.start)} ${shot.label}`);
 
 // Full film: trailer cues, then each concept's name and Concept Map definition.
@@ -49,9 +52,9 @@ for (const part of tour.CONCEPT_TOUR) {
     filmChapters.push(`${clock(at)} Closing`);
   }
 }
-writeFileSync(path.join(OUT, "concept-film-full-16x9-revised-dark-v8.en.srt"), srt(full));
+writeFileSync(path.join(OUT, `concept-film-full-16x9-${VERSION}.en.srt`), srt(full));
 
 const chapters = { trailer: { duration: clock(rev.DARK_OPENING_SECONDS), chapters: trailerChapters }, full: { duration: clock(rev.DARK_FILM_SECONDS), chapters: filmChapters } };
-writeFileSync(path.join(OUT, "dot-films-v8-chapters.json"), `${JSON.stringify(chapters, null, 2)}\n`);
+writeFileSync(path.join(OUT, `dot-films-${VERSION}-chapters.json`), `${JSON.stringify(chapters, null, 2)}\n`);
 console.log(JSON.stringify(chapters, null, 2));
 

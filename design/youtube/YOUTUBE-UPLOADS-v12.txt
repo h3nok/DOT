@@ -1,0 +1,85 @@
+DOT — YOUTUBE UPLOADS (v12) · DRAFT FOR AUTHOR REVIEW
+======================================================
+
+Older versions are in deprecated/. Descriptions below are third-person project copy for
+Henok's review and edits, not quotations from the author.
+
+Files (dark and light tones of each)
+  Trailer    dot-opening-trailer-dark-v12.mp4 / dot-opening-trailer-light-v12.mp4  (2:57)
+  Full film  concept-film-full-16x9-dark-v12.mp4 / concept-film-full-16x9-light-v12.mp4  (7:54)
+  Captions   assets/dot-opening-trailer-v12.en.srt, assets/concept-film-full-16x9-v12.en.srt (both tones)
+  Chapters   assets/dot-films-v12-chapters.json (also below)
+
+
+1. TRAILER (suggested as the channel trailer)
+---------------------------------------------
+TITLE
+Digital Organism Theory
+
+DESCRIPTION
+The opening of the Book One film, in the book's own words. Claims DOT proposes and the view
+it examines are labelled on screen.
+
+Chapters
+0:00 The performance of normality
+0:27 Observation
+0:40 Perception
+0:48 DOT’s proposal
+1:03 The prevailing view
+1:20 Culture
+1:39 The body’s signal
+2:09 The opening
+2:30 The architecture
+2:43 Digital Organism Theory
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+
+
+2. FULL FILM
+------------
+TITLE
+Book One, concept by concept — Digital Organism Theory
+
+DESCRIPTION
+The opening, then each of the seventeen concepts in Book One in Concept Map order, with its
+picture, definition, everyday analogy, and claim level. The words are typed on screen; there
+is no narration.
+
+Chapters
+0:00 Opening
+2:57 The Subjective Data Principle
+3:11 Digital Organism
+3:27 The Big C Hypothesis
+3:46 Little c
+4:05 The Decoupling Principle
+4:22 Reality Frame
+4:40 Physical Sciences as Frame Derivations
+4:58 Reality Stream
+5:17 Intent
+5:30 The Experience Loop
+5:47 Canvas
+6:03 Painting
+6:17 Character
+6:30 The Fear-Gating Principle
+6:43 The human character
+6:58 Love as an Epistemic Condition
+7:11 Conscious Authorship
+7:26 Limits and Unpaid Debts
+7:42 Closing
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+
+
+UPLOAD SETTINGS (both)
+----------------------
+Category: Education · Language: English · Captions: upload the .en.srt file
+(auto-captions will find nothing; there is no speech)
+Audience: not made for kids · Comments: author's choice (L4/L5: no prompts to like,
+subscribe, or ring a bell are included in the films or descriptions)
+Playlist: Book One — Consciousness: A Digital Organism
+Channel trailer: the trailer (YouTube Studio > Customization > Layout)
+
+The earlier full film (p2j_Aj8QhyY) draws Little c inside RF₀. Unlist it when this one is up.
+The site has no YouTube links set; send the new video IDs to add them to films.json.

@@ -146,6 +146,7 @@ docs/blueprint/amm/*
 # YouTube kit renders: rebuilt by `node frontend/scripts/render-channel-kit.mjs --video`.
 # The videos are published on YouTube; index.html inlines every image and runs ~45 MB.
 design/youtube/*.mp4
+design/youtube/deprecated/*.mp4
 design/youtube/index.html
 
 # Voice replication profile & raw sample staging
