@@ -26,6 +26,43 @@ describe("architecture surface lighting", () => {
     }
   });
 
+  it("puts every Little c within Big C and outside RF₀, fed by RF₀'s Reality Stream", () => {
+    const inBigCOutsideRF0 = (x: number, y: number, r: number) => {
+      const distance = Math.hypot(x - FRAME_CENTRE.x, y - FRAME_CENTRE.y);
+      expect(distance - r).toBeGreaterThan(R.frame + 8);
+      expect(distance + r).toBeLessThan(R.bigC - 8);
+    };
+    const { container } = render(<HeroArchitecture />);
+
+    // Little c₁ is drawn in the body's coordinates and moved into Big C by its group.
+    const littleC = container.querySelector(".home-architecture-little-c")!;
+    const [dx, dy] = littleC.parentElement!.getAttribute("transform")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+    inBigCOutsideRF0(FRAME_CENTRE.x + dx, FRAME_CENTRE.y + dy, R.local);
+
+    const peers = [...container.querySelectorAll(".home-architecture-peer-cell .home-architecture-peer-core")];
+    expect(peers).toHaveLength(4);
+    for (const core of peers) inBigCOutsideRF0(Number(core.getAttribute("cx")), Number(core.getAttribute("cy")), 7);
+
+    // Each stream starts inside RF₀ and ends outside it, at its Little c.
+    const streams = [...container.querySelectorAll(".home-architecture-reality-stream")];
+    expect(streams).toHaveLength(5);
+    for (const stream of streams) {
+      const points = stream.getAttribute("d")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+      const distance = (x: number, y: number) => Math.hypot(x - FRAME_CENTRE.x, y - FRAME_CENTRE.y);
+      expect(distance(points[0], points[1])).toBeLessThan(R.frame);
+      expect(distance(points.at(-2)!, points.at(-1)!)).toBeGreaterThan(R.frame);
+    }
+
+    // The concept figure agrees: its Little c is in Big C, outside RF₀.
+    const concept = render(<ConceptArchitecture layer="little-c" />).container;
+    const local = concept.querySelector('[data-active="true"] .home-architecture-surface')!;
+    inBigCOutsideRF0(
+      FRAME_CENTRE.x + Number(local.getAttribute("cx")),
+      FRAME_CENTRE.y + Number(local.getAttribute("cy")),
+      R.local,
+    );
+  });
+
   it("preserves the shared geometry and each concept's focus", () => {
     const { container } = render(
       <>

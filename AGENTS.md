@@ -85,6 +85,13 @@ did not — do not claim to have composed from primitives that are absent.
   drawing on an understanding of computers. Understanding is meant to bubble up
   from experience to Big C, then to the speculative T × E; reaching it that
   way is the purpose. Label T × E as Speculation wherever it appears.
+- The author stated on 2026-10-31: **T and E are the preexisting conditions for
+  Big C. All is contained within Big C.** RF₀ is within Big C. **Little c is
+  within Big C, not within RF₀; its input is the Reality Stream (RS) of RF₀.**
+  Anything the author can model from experience probably comes from Big C.
+  Draw RF₀ and Little c inside Big C, with RF₀'s Reality Stream running to
+  Little c. Any drawing or caption that places Little c inside RF₀ is wrong,
+  as is any that places RF₀ or Little c outside Big C.
 - Keep this relationship consistent in narration, captions, diagrams, and public
   explanations. A familiar analogy must preserve the theory's relationships.
 - The v4 working manuscript and released v4 book contain a conflicting editorial

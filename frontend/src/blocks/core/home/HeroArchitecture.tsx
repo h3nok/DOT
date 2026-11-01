@@ -2,7 +2,7 @@ import { useId, useRef } from "react";
 import { useInView } from "framer-motion";
 import { useOrganismFieldAnchor } from "../../../organism/OrganismContext";
 
-import { ARCHITECTURE_RADII as R, C1_TRANSFORM } from "./architectureGeometry";
+import { ARCHITECTURE_RADII as R, LITTLE_C1_TRANSFORM } from "./architectureGeometry";
 import { HeroArchitectureDefs, type HeroArchitectureIds } from "./HeroArchitectureDefs";
 import { HeroArchitectureExperiencers } from "./HeroArchitectureExperiencers";
 import { HeroArchitectureLabels } from "./HeroArchitectureLabels";
@@ -87,16 +87,18 @@ const polar = (radius: number, angleDeg: number) => ({
   y: 352 + Math.sin((angleDeg * Math.PI) / 180) * radius,
 });
 
-/** A long clockwise arc (over 180°), used for the process loops. */
+/** A clockwise arc from one bearing to another, used for the process loops. */
 const loopPath = (radius: number, startDeg: number, endDeg: number) => {
   const start = polar(radius, startDeg);
   const end = polar(radius, endDeg);
-  return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}A${radius} ${radius} 0 1 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+  const large = (((endDeg - startDeg) % 360) + 360) % 360 > 180 ? 1 : 0;
+  return `M${start.x.toFixed(1)} ${start.y.toFixed(1)}A${radius} ${radius} 0 ${large} 1 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
 };
 /* Big C's outer loop runs between its membrane and T × E, open at the top for the label. */
 const OUTER_LOOP = loopPath((R.membrane + R.origin) / 2, -70, 250);
-/* c₁'s inner loop sits between its constraints and its awareness radius, open where its label and Intent leave. */
-const INNER_LOOP = loopPath(52, 70, 350);
+/* Little c₁'s inner loop arches over its cell in Big C, open below and to the left,
+   where the Reality Stream arrives and its label hangs. */
+const INNER_LOOP = loopPath(38, 228, 30);
 
 /**
  * Code-native rendering of DOT's proposed layered architecture.
@@ -131,6 +133,8 @@ export function HeroArchitecture({ embedded = false }: {
     constraintArrowId: `${instanceId}-hero-constraint-arrow`,
     couplingArrowId: `${instanceId}-hero-coupling-arrow`,
     radiusArrowId: `${instanceId}-hero-radius-arrow`,
+    streamArrowId: `${instanceId}-hero-stream-arrow`,
+    streamPathId: `${instanceId}-hero-stream-path`,
     fieldWashId: `${instanceId}-hero-field-wash`,
     frameWashId: `${instanceId}-hero-frame-wash`,
     localWashId: `${instanceId}-hero-local-wash`,
@@ -341,8 +345,8 @@ export function HeroArchitecture({ embedded = false }: {
           <path className="home-architecture-process-loop home-architecture-process-loop--outer" d={OUTER_LOOP} markerEnd={`url(#${ids.outerLoopArrowId})`} />
           </g>
           <g className="home-architecture-process-loop-stage" data-loop="inner">
-          <path className="home-architecture-process-loop-halo" d={INNER_LOOP} transform={C1_TRANSFORM} />
-          <path className="home-architecture-process-loop home-architecture-process-loop--inner" d={INNER_LOOP} transform={C1_TRANSFORM} markerEnd={`url(#${ids.innerLoopArrowId})`} />
+          <path className="home-architecture-process-loop-halo" d={INNER_LOOP} transform={LITTLE_C1_TRANSFORM} />
+          <path className="home-architecture-process-loop home-architecture-process-loop--inner" d={INNER_LOOP} transform={LITTLE_C1_TRANSFORM} markerEnd={`url(#${ids.innerLoopArrowId})`} />
           </g>
         </g>
 

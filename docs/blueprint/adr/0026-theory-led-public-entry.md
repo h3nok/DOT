@@ -151,3 +151,27 @@ Big C rather than observed. Every public account labels it as Speculation; the
 homepage's "starting assumption" boundary is consistent with this. The
 computing analogy is the author's route to the inference, not public copy
 until the author approves its wording.
+
+## Amendment — 2026-10-31: Everything is within Big C; Little c is not within RF₀
+
+The author stated: "T and E are the preexisting conditions for Big C. Little c
+is within Big C but its input is RS of RF₀. All is contained within Big C.
+Anything I can model is probably coming from Big C, as far as experiences."
+
+This corrects the architecture as drawn. T × E remains the preexisting,
+speculative condition outside Big C. Within Big C are RF₀ (and any other
+Frames) and every Little c. Little c is not inside RF₀: its input is RF₀'s
+Reality Stream, which reaches it through the body. What RF₀ holds is the
+body, its situation, and other bodies.
+
+Every drawing follows this. The homepage architecture draws c₁'s body in RF₀,
+with its awareness radius, options, constraints, and intent there, and draws
+Little c₁ in Big C, outside RF₀, with the Reality Stream running from the body
+to it; other people's bodies are in RF₀ and their Little c in Big C the same
+way. The homepage's concept figures, the films' architecture and its locator,
+and the Academy figure draw Little c in Big C below RF₀, fed by the same
+stream. Captions say so. Any drawing or caption that places Little c inside
+RF₀, or RF₀ or Little c outside Big C, is wrong.
+
+Book text is not changed here. Wording in the working manuscript that places
+Little c "in" or "within" RF₀ is the author's to revise.

@@ -238,7 +238,7 @@ describe("home entry theme compatibility", () => {
     expect(styles).toContain(".home-architecture-awareness-brightening");
   });
 
-  it("draws RF₀ as structure hosting many indexed Little c, centred on none", () => {
+  it("draws RF₀ as structure hosting bodies, centred on none, with every indexed Little c in Big C", () => {
     const architecture = readArchitecture();
     const geometry = readFileSync(join(HERE, "architectureGeometry.ts"), "utf8");
 
@@ -246,6 +246,8 @@ describe("home entry theme compatibility", () => {
     expect(architecture).toContain("home-architecture-frame-origin");
     expect(geometry).toContain("C1_OFFSET");
     expect(architecture).toContain("transform={C1_TRANSFORM}");
+    expect(architecture).toContain("transform={LITTLE_C1_TRANSFORM}");
+    expect(architecture).toContain("home-architecture-reality-stream");
     for (const index of ["2", "3", "4", "n"]) {
       expect(architecture).toContain(`index: "${index}"`);
     }
@@ -274,7 +276,6 @@ describe("home entry theme compatibility", () => {
     expect(styles).not.toContain(".home-architecture-ring-label rect");
     expect(styles).toContain(".home-architecture-ring-label text");
     expect(styles).toContain("stroke: var(--background)");
-    expect(styles).toContain(".home-architecture-label-leader");
     expect(styles).toContain("--architecture-origin");
     expect(styles).toContain("--architecture-big-c");
     expect(styles).toContain("--architecture-rf");

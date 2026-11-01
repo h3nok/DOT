@@ -151,7 +151,8 @@ plays, held long enough for a first-time reader (about 20 characters a
 second) to read them and then look at the picture, 13 to 18 seconds each.
 Big C, Little c, the Reality Frame, and the Reality Stream first show, for
 three seconds, where they sit in the architecture the homepage draws (T × E
-outside, Big C within it, RF₀ inside Big C, Little c within RF₀). After
+outside, Big C within it, RF₀ and Little c inside Big C, with RF₀'s Reality
+Stream running out to Little c; ADR-0026, 2026-10-31). After
 the Fear-Gating Principle comes the human character: the book's "Ego defends
 the Character Little c has learned to call itself" with the author's note on
 Ego as the protector of fears and untrue beliefs, hardening into Arrogance,
