@@ -2,7 +2,7 @@ import { DoWordmark } from "../../shared/DoWordmark";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
 import filmsData from "../../content/films.json";
 import { ConceptTourFrame } from "./ConceptTourPlayer";
-import { DarkFilmTrailer } from "./DarkFilmTrailer";
+import { DarkFilmTrailer, type FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import { FilmProgress } from "./FilmProgress";
 import {
@@ -26,17 +26,21 @@ export const DARK_FILM_POSTER_SECONDS = 7.5;
 /**
  * One frame of the film: the opening trailer, then the seventeen concepts. `burnIn` draws the
  * film's progress line into the picture, for exported video only; players have their own.
+ * `tone` sets the trailer's palette and the stage; the concepts follow the page's own theme,
+ * so a light export is rendered with the page in its light theme.
  */
-export function DarkFilmFrame({ seconds, still, burnIn = false }: { seconds: number; still: boolean; burnIn?: boolean }) {
+export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark" }: {
+  seconds: number; still: boolean; burnIn?: boolean; tone?: FilmTone;
+}) {
   const trailer = seconds < DARK_OPENING_SECONDS;
   return (
-    <div className={`dark-film-frame${trailer ? " dark-film-frame--trailer" : ""}`} data-dark-film-render>
+    <div className={`dark-film-frame${trailer ? " dark-film-frame--trailer" : ""}`} data-film-tone={tone} data-dark-film-render>
       <div className="dark-film-signature" aria-hidden="true">
         <DoWordmark compact />
         <span>Digital Organism Theory</span>
       </div>
       {trailer ? (
-        <DarkFilmTrailer seconds={seconds} still={still} />
+        <DarkFilmTrailer seconds={seconds} still={still} tone={tone} />
       ) : (
         <div className="dark-film-lesson concept-tour">
           <ConceptTourFrame frame={originalDarkFilmTime(seconds)} still={still} />

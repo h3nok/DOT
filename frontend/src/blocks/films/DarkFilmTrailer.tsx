@@ -1,4 +1,4 @@
-import { useId, type CSSProperties } from "react";
+import { createContext, useContext, useId, type CSSProperties } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
@@ -23,10 +23,14 @@ const hash = (n: number) => {
 /** Every line is drawn this much heavier than its nominal width, so it survives video compression on a phone. */
 const WEIGHT = 1.3;
 
-const JADE = "#8ad6b9";
-const INK = "#f2f0e8";
-const CLAY = "#d4876d";
-const GOLD = "#e6bc78";
+/** The film's two tones. Light lines glow on the dark stage; deeper inks hold their contrast on the light one. */
+export type FilmTone = "dark" | "light";
+type Palette = { jade: string; ink: string; clay: string; gold: string };
+const PALETTES: Record<FilmTone, Palette> = {
+  dark: { jade: "#8ad6b9", ink: "#f2f0e8", clay: "#d4876d", gold: "#e6bc78" },
+  light: { jade: "#23805f", ink: "#17271f", clay: "#ad5434", gold: "#9a6a1c" },
+};
+const TrailerPalette = createContext<Palette>(PALETTES.dark);
 
 type Point = readonly [number, number];
 type Cubic = readonly [Point, Point, Point, Point];
@@ -102,11 +106,12 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
   x: number; y: number; px: number; cameraScale: number; progress?: number; opacity?: number; shrink?: number;
 }) {
   const scale = FIG * (1 - 0.12 * shrink);
+  const { ink } = useContext(TrailerPalette);
   const width = (px * WEIGHT) / (cameraScale * scale);
   // Shrinking settles toward the feet, so a diminished figure still stands in its box.
   const lift = 171 * (FIG - scale);
   return (
-    <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={INK} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
+    <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
       {BODY_PATHS.map((d) => (
         <path key={d} d={d} {...(progress < 1 ? drawn(progress) : {})} />
       ))}
@@ -134,6 +139,7 @@ function Arrow({ from, to, px, s, color, opacity }: { from: Point; to: Point; px
 function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight = 0 }: {
   cx: number; cy: number; scale: number; opacity: number; loosen: number; px: number; s: number; gap?: number; weight?: number;
 }) {
+  const { clay, jade } = useContext(TrailerPalette);
   if (opacity <= 0.001) return null;
   const w = BOX.w * scale;
   const h = BOX.h * scale;
@@ -145,18 +151,18 @@ function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight =
   const half = 34 * gap;
   return (
     <g opacity={opacity}>
-      <g stroke={CLAY} strokeWidth={(px * WEIGHT * (0.45 + 0.4 * weight)) / s} opacity={(0.22 + 0.2 * weight) * (1 - loosen)}>
+      <g stroke={clay} strokeWidth={(px * WEIGHT * (0.45 + 0.4 * weight)) / s} opacity={(0.22 + 0.2 * weight) * (1 - loosen)}>
         {columns.map((cxLine) => <line key={`c${cxLine}`} x1={cxLine} y1={y} x2={cxLine} y2={y + h} />)}
         {rows.map((ryLine) => <line key={`r${ryLine}`} x1={x} y1={ryLine} x2={x + w} y2={ryLine} />)}
       </g>
       <path
         d={`M${cx - half} ${y}H${x + 6}Q${x} ${y} ${x} ${y + 6}V${y + h - 6}Q${x} ${y + h} ${x + 6} ${y + h}H${x + w - 6}Q${x + w} ${y + h} ${x + w} ${y + h - 6}V${y + 6}Q${x + w} ${y} ${x + w - 6} ${y}H${cx + half}`}
-        fill="none" stroke={CLAY} strokeWidth={(px * WEIGHT * (1 + 1.3 * weight)) / s} strokeDasharray={dash}
+        fill="none" stroke={clay} strokeWidth={(px * WEIGHT * (1 + 1.3 * weight)) / s} strokeDasharray={dash}
       />
       {gap > 0.01 && (
         <g opacity={gap}>
-          <path d={`M${cx - half} ${y}H${cx + half}`} stroke={JADE} strokeWidth={(px * WEIGHT * 1.6) / s} strokeLinecap="round" />
-          <path d={`M${cx - 12} ${y - 14}L${cx} ${y - 28}L${cx + 12} ${y - 14}`} fill="none" stroke={JADE} strokeWidth={(px * WEIGHT * 1.4) / s} strokeLinecap="round" strokeLinejoin="round" />
+          <path d={`M${cx - half} ${y}H${cx + half}`} stroke={jade} strokeWidth={(px * WEIGHT * 1.6) / s} strokeLinecap="round" />
+          <path d={`M${cx - 12} ${y - 14}L${cx} ${y - 28}L${cx + 12} ${y - 14}`} fill="none" stroke={jade} strokeWidth={(px * WEIGHT * 1.4) / s} strokeLinecap="round" strokeLinejoin="round" />
         </g>
       )}
     </g>
@@ -165,17 +171,18 @@ function MeasuringBox({ cx, cy, scale, opacity, loosen, px, s, gap = 0, weight =
 
 /** Two rings of pain on their own phase; they keep nudging until the film pauses. */
 function PainRings({ at, phase, t, opacity, s }: { at: Point; phase: number; t: number; opacity: number; s: number }) {
+  const { clay } = useContext(TrailerPalette);
   if (opacity <= 0.001) return null;
   const frozen = Math.min(t, PAUSE + 0.2);
   return (
-    <g fill="none" stroke={CLAY}>
+    <g fill="none" stroke={clay}>
       {[0, 0.5].map((offset) => {
         const raw = frozen * 0.6 + phase + offset;
         const frac = raw - Math.floor(raw);
         return (
           <g key={offset}>
             <circle cx={at[0]} cy={at[1]} r={46 + 110 * frac} strokeWidth={(3 * WEIGHT) / s} opacity={0.95 * (1 - frac) * opacity} />
-            {offset === 0 && <circle cx={at[0]} cy={at[1]} r={10} fill={CLAY} stroke="none" opacity={0.55 * opacity} />}
+            {offset === 0 && <circle cx={at[0]} cy={at[1]} r={10} fill={clay} stroke="none" opacity={0.55 * opacity} />}
           </g>
         );
       })}
@@ -193,13 +200,13 @@ function heartbeat(t: number) {
 }
 
 /** The five senses, each a stream from its own direction, named at the edge of the frame. */
-const SENSES = [
-  { name: "SIGHT", angle: -145, label: [300, 222] as Point, color: GOLD },
-  { name: "SMELL", angle: -90, label: [640, 186] as Point, color: INK },
-  { name: "SOUND", angle: -35, label: [980, 222] as Point, color: JADE },
-  { name: "TOUCH", angle: 170, label: [190, 476] as Point, color: INK },
-  { name: "TASTE", angle: 10, label: [1090, 476] as Point, color: GOLD },
-] as const;
+const SENSES: readonly { name: string; angle: number; label: Point; color: keyof Palette }[] = [
+  { name: "SIGHT", angle: -145, label: [300, 222] as Point, color: "gold" },
+  { name: "SMELL", angle: -90, label: [640, 186] as Point, color: "ink" },
+  { name: "SOUND", angle: -35, label: [980, 222] as Point, color: "jade" },
+  { name: "TOUCH", angle: 170, label: [190, 476] as Point, color: "ink" },
+  { name: "TASTE", angle: 10, label: [1090, 476] as Point, color: "gold" },
+];
 
 const PARTICLES = Array.from({ length: 170 }, (_, k) => {
   const sense = SENSES[k % SENSES.length];
@@ -226,9 +233,10 @@ const LATTICE_COPIES = Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =
  * who is boxed too; the top row's strings rise out of frame.
  */
 function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
+  const { clay } = useContext(TrailerPalette);
   if (opacity <= 0.001) return null;
   return (
-    <g fill="none" stroke={CLAY} strokeWidth={(1.2 * WEIGHT) / s} strokeLinecap="round" opacity={opacity * 0.75}>
+    <g fill="none" stroke={clay} strokeWidth={(1.2 * WEIGHT) / s} strokeLinecap="round" opacity={opacity * 0.75}>
       {Array.from({ length: 11 }, (_, i) => i - 5).flatMap((i) =>
         [-1, 0, 1].map((j) => {
           const x = FIG_X + LATTICE.dx * i;
@@ -246,6 +254,8 @@ function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
 /** Shots 1–7: one continuous drawing seen through a moving camera. */
 function TrailerDrawing({ t }: { t: number }) {
   const uid = useId().replace(/[^\w-]/g, "");
+  const palette = useContext(TrailerPalette);
+  const { jade, ink, clay, gold } = palette;
   const cam = cameraAt(t);
   const s = cam.s;
   const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
@@ -277,14 +287,14 @@ function TrailerDrawing({ t }: { t: number }) {
     <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
       <defs>
         <radialGradient id={`${uid}-jade`}>
-          <stop offset="0" stopColor={JADE} stopOpacity=".55" />
-          <stop offset=".45" stopColor={JADE} stopOpacity=".16" />
-          <stop offset="1" stopColor={JADE} stopOpacity="0" />
+          <stop offset="0" stopColor={jade} stopOpacity=".55" />
+          <stop offset=".45" stopColor={jade} stopOpacity=".16" />
+          <stop offset="1" stopColor={jade} stopOpacity="0" />
         </radialGradient>
         <radialGradient id={`${uid}-warm`}>
-          <stop offset="0" stopColor={GOLD} stopOpacity=".28" />
-          <stop offset=".5" stopColor={JADE} stopOpacity=".08" />
-          <stop offset="1" stopColor={JADE} stopOpacity="0" />
+          <stop offset="0" stopColor={gold} stopOpacity=".28" />
+          <stop offset=".5" stopColor={jade} stopOpacity=".08" />
+          <stop offset="1" stopColor={jade} stopOpacity="0" />
         </radialGradient>
       </defs>
       <g transform={world}>
@@ -300,14 +310,14 @@ function TrailerDrawing({ t }: { t: number }) {
           const alpha = Math.sin(Math.PI * u) * (1 - smooth(t, 15, 16.4));
           return (
             <g key={k} opacity={alpha}>
-              <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={particle.color} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" opacity={0.75} />
-              <circle cx={p[0]} cy={p[1]} r={particle.size / s} fill={particle.color} />
+              <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={palette[particle.color]} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" opacity={0.75} />
+              <circle cx={p[0]} cy={p[1]} r={particle.size / s} fill={palette[particle.color]} />
             </g>
           );
         })}
         {t >= 7 && t < 16 && SENSES.map((sense, k) => (
           <text
-            key={sense.name} x={sense.label[0]} y={sense.label[1]} textAnchor="middle" fill={sense.color}
+            key={sense.name} x={sense.label[0]} y={sense.label[1]} textAnchor="middle" fill={palette[sense.color]}
             fontSize={26 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={6 / s}
             opacity={smooth(t, 7.6 + 0.35 * k, 8.4 + 0.35 * k) * (1 - smooth(t, 14.4, 15.4))}
           >
@@ -319,27 +329,27 @@ function TrailerDrawing({ t }: { t: number }) {
         {sphere > 0.001 && (
           <g opacity={sphere}>
             <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 1.25} fill={`url(#${uid}-jade)`} opacity={0.35} />
-            <path d={membranePath(SPHERE[0], SPHERE[1], SPHERE_R, { amplitude: 7, lobes: 4, phase: t * 0.22 })} fill={JADE} fillOpacity={0.035} stroke={JADE} strokeWidth={(1.8 * WEIGHT) / s} />
-            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.64} fill="none" stroke={JADE} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.6} />
+            <path d={membranePath(SPHERE[0], SPHERE[1], SPHERE_R, { amplitude: 7, lobes: 4, phase: t * 0.22 })} fill={jade} fillOpacity={0.035} stroke={jade} strokeWidth={(1.8 * WEIGHT) / s} />
+            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.64} fill="none" stroke={jade} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.6} />
             <circle
-              cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.42} fill="none" stroke={GOLD} strokeWidth={(2.2 * WEIGHT) / s} strokeLinecap="round"
+              cx={SPHERE[0]} cy={SPHERE[1]} r={SPHERE_R * 0.42} fill="none" stroke={gold} strokeWidth={(2.2 * WEIGHT) / s} strokeLinecap="round"
               strokeDasharray={`${SPHERE_R * 1.9} ${SPHERE_R * 0.74}`}
               transform={`rotate(${(t * 16).toFixed(2)} ${SPHERE[0]} ${SPHERE[1]})`}
             />
-            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={11} fill={JADE} />
-            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={4} fill={INK} />
-            <text x={SPHERE[0]} y={SPHERE[1] + SPHERE_R + 50} textAnchor="middle" fill={JADE} fontSize={32 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s}>LITTLE c</text>
+            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={11} fill={jade} />
+            <circle cx={SPHERE[0]} cy={SPHERE[1]} r={4} fill={ink} />
+            <text x={SPHERE[0]} y={SPHERE[1] + SPHERE_R + 50} textAnchor="middle" fill={jade} fontSize={32 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s}>LITTLE c</text>
           </g>
         )}
         {coupling > 0.001 && (
           <g fill="none" strokeLinecap="round" opacity={coupling}>
-            <path d={cubicPath(INTENT)} stroke={JADE} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
-            <path d={cubicPath(RETURN)} stroke={GOLD} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
+            <path d={cubicPath(INTENT)} stroke={jade} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
+            <path d={cubicPath(RETURN)} stroke={gold} strokeWidth={(2.6 * WEIGHT) / s} opacity={0.9} />
             {[0, 1].map((n) => {
               const raw = (t - 17.4 - n * 1.1) / 2.2;
               const u = raw - Math.floor(raw);
               const p = cubicAt(n === 0 ? INTENT : RETURN, u);
-              return <circle key={n} cx={p[0]} cy={p[1]} r={7 / s} fill={n === 0 ? JADE : GOLD} opacity={Math.sin(Math.PI * u)} />;
+              return <circle key={n} cx={p[0]} cy={p[1]} r={7 / s} fill={n === 0 ? jade : gold} opacity={Math.sin(Math.PI * u)} />;
             })}
           </g>
         )}
@@ -365,12 +375,12 @@ function TrailerDrawing({ t }: { t: number }) {
         />
         {push > 0.001 && [330, 460, 590].map((y) => (
           <g key={y}>
-            <Arrow from={[BOX.x - 200 - 260 * (1 - push), y]} to={[BOX.x - 14 - 120 * (1 - push), y]} px={2} s={s} color={CLAY} opacity={push} />
-            <Arrow from={[BOX.x + BOX.w + 200 + 260 * (1 - push), y]} to={[BOX.x + BOX.w + 14 + 120 * (1 - push), y]} px={2} s={s} color={CLAY} opacity={push} />
+            <Arrow from={[BOX.x - 200 - 260 * (1 - push), y]} to={[BOX.x - 14 - 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
+            <Arrow from={[BOX.x + BOX.w + 200 + 260 * (1 - push), y]} to={[BOX.x + BOX.w + 14 + 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
           </g>
         ))}
         {lens > 0.001 && (
-          <text x={FIG_X} y={BOX.y - 38} textAnchor="middle" fill={CLAY} fontSize={30 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s} opacity={lens}>
+          <text x={FIG_X} y={BOX.y - 38} textAnchor="middle" fill={clay} fontSize={30 / s} fontFamily="JetBrains Mono, monospace" letterSpacing={4 / s} opacity={lens}>
             CAUSE → EFFECT
           </text>
         )}
@@ -388,9 +398,9 @@ function TrailerDrawing({ t }: { t: number }) {
         {noticed > 0.001 && (
           <g>
             <circle cx={CHEST[0]} cy={CHEST[1]} r={36 + 120 * opening} fill={`url(#${uid}-jade)`} opacity={noticed} />
-            <circle cx={CHEST[0]} cy={CHEST[1]} r={14 + 4 * noticed} fill="none" stroke={JADE} strokeWidth={(1.4 * WEIGHT) / s} opacity={noticed} />
-            <circle cx={CHEST[0]} cy={CHEST[1]} r={5 + 2 * noticed} fill={JADE} opacity={noticed} />
-            <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={INK} opacity={noticed} />
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={14 + 4 * noticed} fill="none" stroke={jade} strokeWidth={(1.4 * WEIGHT) / s} opacity={noticed} />
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={5 + 2 * noticed} fill={jade} opacity={noticed} />
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={noticed} />
           </g>
         )}
       </g>
@@ -487,7 +497,7 @@ function TrailerArchitecture({ t }: { t: number }) {
  * taken for the whole → a culture that measures everything except experience → the stress
  * response → the pause → the architecture → the title. Reduced motion shows each shot finished.
  */
-export function DarkFilmTrailer({ seconds, still = false }: { seconds: number; still?: boolean }) {
+export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { seconds: number; still?: boolean; tone?: FilmTone }) {
   const shot = darkTrailerShot(seconds);
   // Reduced motion shows each shot finished, with its last line still on screen.
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
@@ -497,6 +507,7 @@ export function DarkFilmTrailer({ seconds, still = false }: { seconds: number; s
   // Hold the settled title diagram under reduced motion, before its normal exit fade.
   const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
   return (
+    <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
       {d < ARCH + 0.6 && <TrailerDrawing t={d} />}
@@ -526,5 +537,6 @@ export function DarkFilmTrailer({ seconds, still = false }: { seconds: number; s
         })}
       </div>
     </section>
+    </TrailerPalette.Provider>
   );
 }
