@@ -11,7 +11,7 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
   const focused = layer === "little-c";
   const arrowId = `${surfacePrefix}-arrow`;
   return (
-    <svg className="home-concept-architecture" data-focus={layer} viewBox={focused ? "65 140 565 470" : "0 0 700 700"} aria-hidden="true">
+    <svg className="home-concept-architecture" data-focus={layer} viewBox={focused ? "65 180 565 435" : "0 0 700 700"} aria-hidden="true">
       <defs>
         <ArchitectureSurfaceDefs idPrefix={surfacePrefix} />
         <marker id={arrowId} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
@@ -20,7 +20,7 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
       </defs>
       <g data-active={layer === "origin"} className="home-concept-contour" />
       <g data-active={layer === "big-c"} className="home-concept-contour">
-        <circle className="home-architecture-surface" cx={B.x} cy={B.y} r={R.bigC} fill={`url(#${surfacePrefix}-big-c)`} stroke={`url(#${surfacePrefix}-rim)`} filter={`url(#${surfacePrefix}-shadow)`} />
+        {!focused && <circle className="home-architecture-surface" cx={B.x} cy={B.y} r={R.bigC} fill={`url(#${surfacePrefix}-big-c)`} stroke={`url(#${surfacePrefix}-rim)`} filter={`url(#${surfacePrefix}-shadow)`} />}
       </g>
       <g data-active={layer === "reality-frame"} className="home-concept-contour" data-entity="reality-frame">
         <circle className="home-concept-frame-plane" cx={F.x} cy={F.y} r={R.frame} />
@@ -36,7 +36,7 @@ export function ConceptArchitecture({ layer }: { layer: Layer }) {
         <path className="home-concept-exchange" d="M411 526C354 579 280 554 255 493" data-flow="embodied-action" markerStart={`url(#${arrowId})`} markerEnd={`url(#${arrowId})`} />
       </g>
       <g className="home-concept-labels">
-        <text className="home-concept-label" x="348" y="172" textAnchor="middle">Big C</text>
+        {!focused && <text className="home-concept-label" x="348" y="172" textAnchor="middle">Big C</text>}
         {layer !== "origin" && <>
           <text className="home-concept-label home-concept-label--world" x={F.x} y="298" textAnchor="middle">RF₀</text>
           <text className="home-concept-label home-concept-label--local" x={C.x} y="223" textAnchor="middle">Little c</text>

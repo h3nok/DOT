@@ -2667,6 +2667,7 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 .home-theory-layer-environment[data-layer="little-c"] .home-theory-layer-plate {
   max-width: 29rem;
   border-radius: 1.5rem;
+  background: none;
 }
 
 /* Phones keep the labelled figure and its caption above the reading column. */

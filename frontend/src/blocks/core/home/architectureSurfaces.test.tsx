@@ -39,17 +39,18 @@ describe("architecture surface lighting", () => {
 
     for (const diagram of diagrams) {
       const surfaces = [...diagram.querySelectorAll(".home-architecture-surface")];
-      // RF₀ is structure, not a conscious organism: only Big C and Little c are living surfaces.
-      expect(surfaces).toHaveLength(2);
+      // The local detail omits the outer Big C context. RF₀ remains structure.
+      const radii = diagram.getAttribute("data-focus") === "little-c" ? [R.local] : [R.bigC, R.local];
+      expect(surfaces).toHaveLength(radii.length);
       for (const [index, surface] of surfaces.entries()) {
-        const radius = [R.bigC, R.local][index];
+        const radius = radii[index];
         if (surface.tagName.toLowerCase() === "circle") {
           expect(Number(surface.getAttribute("r"))).toBe(radius);
         } else {
           const coordinates = surface.getAttribute("d")!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
           expect(coordinates).toHaveLength(192);
           for (let offset = 0; offset < coordinates.length; offset += 2) {
-            const centre = index === 0 ? BIG_C_CENTRE : LOCAL_CENTRE;
+            const centre = radius === R.bigC ? BIG_C_CENTRE : LOCAL_CENTRE;
             const distance = Math.hypot(coordinates[offset] - centre.x, coordinates[offset + 1] - centre.y);
             expect(Math.abs(distance - radius)).toBeLessThan(radius * 0.08);
           }
