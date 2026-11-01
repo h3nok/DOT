@@ -310,7 +310,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     await expect(svg).toHaveAccessibleName("DOT diagram");
     await expect(svg).toHaveAccessibleDescription(/Little c is outside RF₀ and embodied by a living body inside it/);
     await expect(page.locator(".home-architecture-field-note"))
-      .toContainText("speculative conditions for Big C");
+      .toContainText("speculative conditions in which Big C emerged");
     await expect(page.locator(".home-hero-architecture")
       .locator('details, nav, dl, [class*="legend"], [class*="transcription"]'))
       .toHaveCount(0);

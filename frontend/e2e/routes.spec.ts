@@ -75,7 +75,7 @@ test.describe("hero", () => {
       "Scope",
     ]);
     const fieldNote = page.locator(".home-architecture-field-note");
-    await expect(fieldNote).toContainText("speculative conditions for Big C");
+    await expect(fieldNote).toContainText("speculative conditions in which Big C emerged");
     await expect(fieldNote.getByRole("link", { name: "T × E" })).toHaveAttribute("href", "#possibility-field");
     await expect(labels.locator("rect")).toHaveCount(0);
     await expect(svg.locator(".home-architecture-organism-node")).toHaveCount(8);

@@ -274,8 +274,7 @@ export function HeroArchitecture({ embedded = false }: {
       </svg>
       {!embedded && (
         <figcaption className="home-architecture-field-note">
-          The surrounding field represents <a href="#possibility-field">T × E</a>—DOT’s
-          speculative conditions for Big C.
+          <a href="#possibility-field">T × E</a> — the speculative conditions in which Big C emerged.
         </figcaption>
       )}
     </figure>
