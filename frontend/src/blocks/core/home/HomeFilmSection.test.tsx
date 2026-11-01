@@ -61,7 +61,7 @@ describe("HomeFilmSection", () => {
     expect(within(region).queryByRole("button", { name: /voiceover/i })).not.toBeInTheDocument();
 
     fireEvent.click(within(region).getByRole("button", { name: `Play ${tour.title} (${length})` }));
-    expect(within(region).getByRole("region", { name: "The performance of normality" })).toBeInTheDocument();
+    expect(within(region).getByRole("region", { name: "DOT" })).toBeInTheDocument();
     expect(within(region).getByRole("button", { name: "Pause film" })).toBeInTheDocument();
   });
 

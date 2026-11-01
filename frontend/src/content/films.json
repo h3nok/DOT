@@ -92,8 +92,16 @@
   "trailer": {
     "title": "Digital Organism Theory",
     "subtitle": "A school of thought for examining experience.",
-    "note": "The opening of the film: twelve shots, one idea each. Its words come from Book One, The American Millennial Manifesto, and the author; DOT’s proposals are labelled.",
+    "note": "The opening of the film: thirteen shots, one idea each. Its words come from Book One, The American Millennial Manifesto, and the author; DOT’s proposals are labelled.",
     "shots": [
+      {
+        "kind": "mark",
+        "label": "DOT",
+        "design": 4,
+        "lead": 3,
+        "description": "The DOT mark forms from a point of light, with the name Digital Organism Theory beneath it.",
+        "lines": []
+      },
       {
         "kind": "normal",
         "label": "The performance of normality",

@@ -55,14 +55,14 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["normal", "pretence", "struggle", "blame", "taught", "cost", "erosion", "turn", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "pretence", "struggle", "blame", "taught", "cost", "erosion", "turn", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
 
 /**
- * The opening trailer: twelve shots, one argument, before the seventeen concepts. An ordinary
- * day → the pretence → the struggle and the blame → what we are not taught → power unanswered →
+ * The opening trailer: the DOT mark, then twelve shots, one argument, before the seventeen
+ * concepts. An ordinary day → the pretence → the struggle and the blame → what we are not taught → power unanswered →
  * moral erosion → where a truthful framework begins → you → your options. The words come from
  * Book One, the AMM, and the author, with DOT's proposals marked (content/films.json).
  */

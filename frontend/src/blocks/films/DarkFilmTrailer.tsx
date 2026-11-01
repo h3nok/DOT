@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useId, type CSSProperties } from 
 
 import amm from "../../content/amm.json";
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
+import { DoWordmark } from "../../shared/DoWordmark";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
@@ -357,11 +358,48 @@ function Strings({ t, s, opacity }: { t: number; s: number; opacity: number }) {
   );
 }
 
-/* ── Shot 1: the performance of normality ── */
+/* ── The DOT mark: the film's signature, from a point of light ── */
+/* The rays leave room beneath the mark for its name. */
+const MARK_RAYS = Array.from({ length: 36 }, (_, k) => (k * 360) / 36).filter((angle) => angle < 65 || angle > 115);
+
+function TrailerMark({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade, ink } = useContext(TrailerPalette);
+  const rise = smooth(seconds, 0.1, 1.5);
+  const centre: Point = [800, 400];
+  return (
+    <>
+      <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <radialGradient id={`${uid}-mark`}>
+            <stop offset="0" stopColor={jade} stopOpacity=".34" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx={centre[0]} cy={centre[1]} r={lerp(30, 430, rise)} fill={`url(#${uid}-mark)`} />
+        <g stroke={ink} strokeWidth={1.2} strokeLinecap="round" opacity={0.3 * smooth(seconds, 0.6, 2)}>
+          {MARK_RAYS.map((angle) => {
+            const from = polar(centre, 250, angle);
+            const to = polar(centre, lerp(250, angle % 30 ? 300 : 345, smooth(seconds, 0.6, 2)), angle);
+            return <line key={angle} x1={from[0]} y1={from[1]} x2={to[0]} y2={to[1]} />;
+          })}
+        </g>
+        <circle cx={centre[0]} cy={centre[1]} r={205} fill="none" stroke={jade} strokeWidth={2.4} strokeLinecap="round" {...drawn(smooth(seconds, 0.4, 1.8))} />
+      </svg>
+      <div className="dark-trailer-mark" style={{ opacity: smooth(seconds, 0.5, 1.5) }}>
+        <DoWordmark />
+        <p style={{ opacity: smooth(seconds, 1.5, 2.3) }}>Digital Organism Theory</p>
+      </div>
+    </>
+  );
+}
+
+/* ── The performance of normality ── */
 const DAY_CENTRE: Point = [FIG_X, 430];
 const DAY_R = 282;
 const NORMAL_LINES = DARK_TRAILER_LINES.filter((typed) => typed.shot === "normal");
-const NORMAL_END = DARK_TRAILER_SHOTS[0].end;
+const NORMAL_START = DARK_TRAILER_SHOTS[1].start;
+const NORMAL_END = DARK_TRAILER_SHOTS[1].end;
 /** The film second a phrase of the opening sentence starts typing. */
 const phraseAt = (phrase: string) =>
   NORMAL_LINES[0].start + NORMAL_LINES[0].text.indexOf(phrase) / NORMAL_LINES[0].charsPerSecond;
@@ -461,7 +499,8 @@ function TrailerNormal({ seconds }: { seconds: number }) {
   const mask = smooth(seconds, naming - 0.4, naming + 1.6);
   const closing = smooth(seconds, naming, NORMAL_LINES[2].until);
   // Each day takes less time than the one before.
-  const turn = seconds / 7 + 2.4 * (seconds / NORMAL_END) ** 3;
+  const day = seconds - NORMAL_START;
+  const turn = day / 7 + 2.4 * (day / (NORMAL_END - NORMAL_START)) ** 3;
   const light = polar(DAY_CENTRE, DAY_R, turn * 360 - 90);
   const w = (2.2 * WEIGHT) / s;
   return (
@@ -475,7 +514,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
           </radialGradient>
         </defs>
         <g transform={world}>
-          <g opacity={smooth(seconds, 0.2, 1.4)}>
+          <g opacity={smooth(day, 0.2, 1.4)}>
             <circle cx={DAY_CENTRE[0]} cy={DAY_CENTRE[1]} r={DAY_R} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${2 / s} ${9 / s}`} opacity={0.45} />
             <circle cx={light[0]} cy={light[1]} r={26} fill={gold} opacity={0.18} />
             <circle cx={light[0]} cy={light[1]} r={8} fill={gold} />
@@ -500,7 +539,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
             );
           })}
           <PainRings at={CHEST} phase={0.37} t={seconds} opacity={mask} s={s} />
-          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} progress={smooth(seconds, 0.1, 1.5)} />
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} progress={smooth(day, 0.1, 1.5)} />
           {mask > 0.001 && (
             <g transform={`translate(${FIG_X} ${FIG_Y}) scale(${FIG})`} opacity={mask} fill="none" stroke={ink} strokeWidth={(2.6 * WEIGHT) / (s * FIG)} strokeLinecap="round">
               <path d="M-13 -112Q0 -100 13 -112" />
@@ -517,7 +556,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
 type PlateKind = keyof typeof TRAILER_PLATES;
 const isPlate = (kind: string): kind is PlateKind => kind in TRAILER_PLATES;
 /** Past the waiting frame, so the illustrations load once a reader has pressed Play, never with the page. */
-const PLATES_LOAD_AFTER = 8;
+const PLATES_LOAD_AFTER = 12;
 let platesRequested = false;
 function requestPlates() {
   if (platesRequested) return;
@@ -822,6 +861,7 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
       <div className="dark-trailer-scene" style={{ opacity: fade }}>
+        {shot.kind === "mark" && <TrailerMark seconds={t} />}
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
         {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={local} />}
         {["taught", "cost", "turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}

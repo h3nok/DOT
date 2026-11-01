@@ -238,7 +238,7 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
 function addTrailerScore(mix, rate, count, trailer) {
   if (!trailer?.shots?.length) return false;
   const at = Object.fromEntries(trailer.shots.map((shot) => [shot.kind, shot]));
-  for (const kind of ["normal", "struggle", "cost", "erosion", "turn", "design", "pause", "architecture", "title"]) {
+  for (const kind of ["mark", "normal", "struggle", "cost", "erosion", "turn", "design", "pause", "architecture", "title"]) {
     assert.ok(at[kind], `The trailer score needs the ${kind} shot`);
   }
   const tau = Math.PI * 2;
@@ -263,6 +263,8 @@ function addTrailerScore(mix, rate, count, trailer) {
     }
   }
   const voices = [
+    // A soft open fifth under the DOT mark.
+    [146.83, 0.03, "mark"], [220, 0.022, "mark"], [293.66, 0.014, "mark"],
     // Pad (the proposal).
     ...[110, 164.81, 220, 277.18, 329.63].flatMap((f) => [[f - 0.6, 0.017, "pad"], [f + 0.6, 0.017, "pad"]]),
     // Cold hum (the day) and its dissonance (the struggle); both sag as the cost mounts.
@@ -275,6 +277,7 @@ function addTrailerScore(mix, rate, count, trailer) {
   const end = at.title.end;
   const settle = at.pause.start + 0.4 * (at.pause.end - at.pause.start);
   const envelopeOf = {
+    mark: (t) => smooth(t, at.mark.start + 0.2, at.mark.start + 1.2) * (1 - smooth(t, at.mark.end - 1.6, at.mark.end)),
     pad: (t) => smooth(t, at.design.start, at.design.start + 4) * (1 - smooth(t, at.design.end - 0.5, at.design.end + 2.5)) * (1 + 0.15 * Math.sin(tau * 0.12 * t)),
     hum: (t) => smooth(t, at.normal.start + 2, at.struggle.start + 2) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)) * (1 + 0.2 * Math.sin(tau * 0.5 * t)),
     ache: (t) => smooth(t, at.struggle.start, at.struggle.start + 4) * (1 - smooth(t, at.turn.start, at.turn.start + 0.8)),
