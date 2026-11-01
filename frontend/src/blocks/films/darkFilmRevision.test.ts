@@ -84,7 +84,7 @@ describe("the dark film's opening trailer", () => {
       "Perception joins sensory input and interpretation.",
       "The sensory apparatus is not the whole story.",
       "You are Little c.",
-      "The Avatar is your living body.",
+      "Your living body is your interface to a Reality Frame.",
       "“You’re nothing but a pack of neurons.”",
       "Does measuring activity explain experience?",
       "We inherit explanations before examining them.",
@@ -101,7 +101,7 @@ describe("the dark film's opening trailer", () => {
     ]);
     const voiceOf = (text: string) => DARK_TRAILER_LINES.find((typed) => typed.text === text)!.voice;
     expect(voiceOf("You are Little c.")).toBe("dot");
-    expect(voiceOf("The Avatar is your living body.")).toBe("dot");
+    expect(voiceOf("Your living body is your interface to a Reality Frame.")).toBe("dot");
     expect(voiceOf("RF₀ is an experience laboratory for Little cs.")).toBe("dot");
     // The prevailing view is quoted from its source, never paraphrased into a straw man.
     const quote = DARK_TRAILER_LINES.find((typed) => typed.voice === "prevailing")!;
@@ -201,8 +201,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(156);
-    expect(DARK_FILM_SECONDS).toBe(453);
+    expect(DARK_OPENING_SECONDS).toBe(158);
+    expect(DARK_FILM_SECONDS).toBe(455);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

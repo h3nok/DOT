@@ -144,7 +144,7 @@ export const DARK_TRAILER_SHOTS: readonly DarkTrailerShot[] = TRAILER.shots;
 export const DARK_TRAILER_LINES: readonly TrailerLine[] = TRAILER.lines;
 
 /** Lines that finish with a soft bell: the proposal, the pause, and the hand-off. */
-const BELL_AFTER = new Set(["The Avatar is your living body.", "Test this against your own experience.", "A school of thought for examining experience."]);
+const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "Test this against your own experience.", "A school of thought for examining experience."]);
 
 export const DARK_OPENING_SECONDS = DARK_TRAILER_SHOTS.at(-1)!.end;
 const SHIFT = TOUR_OPENING_SECONDS - DARK_OPENING_SECONDS;

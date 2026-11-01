@@ -60,7 +60,7 @@ test("the homepage film types every concept only when asked, and its sound is on
   // The film plays out and stops on its closing title, with the way into the book.
   await timeline.fill("452");
   await section.getByRole("button", { name: "Play film", exact: true }).click();
-  await expect(timeline).toHaveValue("453", { timeout: 10_000 });
+  await expect(timeline).toHaveValue("455", { timeout: 10_000 });
   await expect(shown.getByRole("heading", { level: 3 })).toHaveAccessibleName("Become a student of your own experience.");
   await expect(shown.getByRole("link", { name: "Enter the Academy" })).toHaveAttribute("href", "/academy");
   await expect(shown.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");
