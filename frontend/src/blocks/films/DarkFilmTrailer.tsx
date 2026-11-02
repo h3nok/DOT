@@ -475,18 +475,34 @@ const MACHINERY = [
   { word: "Getting people to comply?", label: "COMPLIANCE", x: FIG_X + 560 },
 ];
 const MACHINERY_BASE = FIG_Y + 110;
-/** The institution beside the person, and what it stands on rather than floats above. */
-const INSTITUTION = { x: FIG_X + 470, top: FIG_Y - 250 };
-const INSTITUTION_PATH = (() => {
-  const { x, top } = INSTITUTION;
-  const columns = [-105, -35, 35, 105].map((dx) => `M${x + dx - 9} ${top + 80}V${top + 190}M${x + dx + 9} ${top + 80}V${top + 190}`).join("");
-  return `M${x - 140} ${top + 60}L${x} ${top}L${x + 140} ${top + 60}ZM${x - 130} ${top + 60}V${top + 80}H${x + 130}V${top + 60}${columns}M${x - 140} ${top + 190}H${x + 140}M${x - 155} ${top + 204}H${x + 155}`;
-})();
+/**
+ * The establishment as people: Uncle Sam, the leadership class, holding the strings; and the
+ * scientific community in a lab coat, standing on money, prestige and power rather than above them.
+ */
+const SAM = { x: FIG_X + 800, y: 416, scale: 1.75 };
+const SCIENTIST = { x: FIG_X + 380, y: 418, scale: 1.3 };
+const PEDESTAL_TOP = SCIENTIST.y + 171 * SCIENTIST.scale + 6;
 const FOUNDATIONS = [
-  { word: "money", label: "MONEY", dx: -122 },
+  { word: "money", label: "MONEY", dx: -116 },
   { word: "prestige", label: "PRESTIGE", dx: 0 },
-  { word: "power", label: "POWER", dx: 122 },
+  { word: "power", label: "POWER", dx: 116 },
 ];
+/** Uncle Sam's own parts, in the figure's coordinates: a striped top hat, goatee, bow tie, and a raised arm with the strings' control. */
+const SAM_HAT = "M-40 -146H40M-23 -147L-26 -214H26L23 -147M-24 -162H24";
+const SAM_STRIPES = "M-12 -166V-212M0 -166V-213M12 -166V-212";
+const SAM_FACE = "M-7 -92L0 -77L7 -92M-9 -86L9 -79M9 -86L-9 -79";
+const SAM_RAISED_ARM = "M-11 -72C-39 -70 -50 -84 -60 -118L-70 -168";
+const SAM_CONTROL = "M-98 -174H-42M-70 -184V-164";
+/** The scientist's: lab coat, lapels, glasses and clipboard. */
+const LAB_COAT = "M-38 -58L-46 112H-8M38 -58L46 112H8M-11 -72L0 -38L11 -72";
+const LAB_GLASSES = "M-17 -122A7 7 0 1 0 -3 -122A7 7 0 1 0 -17 -122M3 -122A7 7 0 1 0 17 -122A7 7 0 1 0 3 -122M-3 -122H3";
+const CLIPBOARD = "M44 22H70V60H44ZM50 32H64M50 40H64M50 48H60";
+/** Where a figure's own point lands in the world. */
+const placed = (figure: { x: number; y: number; scale: number }, [px, py]: Point): Point => [figure.x + px * figure.scale, figure.y + py * figure.scale];
+const SAM_STRING_FROM: readonly Point[] = [placed(SAM, [-98, -174]), placed(SAM, [-70, -174]), placed(SAM, [-42, -174])];
+const SCIENTIST_STRUNG: readonly Point[] = [placed(SCIENTIST, [-49, 63]), placed(SCIENTIST, [0, -150]), placed(SCIENTIST, [49, 63])];
+const CLIPBOARD_AT = placed(SCIENTIST, [44, 40]);
+
 /** What research can be made to do to a person, each landing where it acts on them. */
 const BODY_POINTS = [
   { word: "predict,", label: "PREDICTED", at: HEAD },
@@ -513,8 +529,8 @@ function personCamera(seconds: number) {
   const keys: (readonly [number, number, number, number])[] = [
     [shotOf("confused").start, FIG_X + 170, 360, 1.6],
     [health - 0.2, FIG_X + 170, 360, 1.6],
-    [health + 2.4, FIG_X + 170, 450, 1.22],
-    [inherited - 0.2, FIG_X + 170, 450, 1.22],
+    [health + 2.4, FIG_X + 330, 440, 1],
+    [inherited - 0.2, FIG_X + 330, 440, 1],
     [inherited + 2.6, FIG_X, 440, 1.18],
     [unfulfilled - 0.2, FIG_X, 440, 1.18],
     [unfulfilled + 2.4, FIG_X, 395, 1.85],
@@ -542,9 +558,9 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const health = shotOf("health");
   const unfulfilled = shotOf("unfulfilled");
   const inherited = shotOf("inherited");
-  // The person declines through progress, the establishment and the culture, and straightens only
-  // when DOT asks what it would mean for them to develop.
-  const decline = smooth(seconds, confused.start, inherited.end) * (1 - smooth(seconds, wordAt("unfulfilled", "DOT asks"), unfulfilled.end - 1));
+  // The person declines through progress, the establishment and the culture, and stays diminished
+  // until DOT asks what it would mean for them to develop (the next scene finds them upright).
+  const decline = smooth(seconds, confused.start, inherited.end);
   const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 30 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
 
   // Confusion.
@@ -556,17 +572,20 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   // The machinery keeps rising after it is named; the person's attention does not.
   const rising = smooth(seconds, wordAt("confused", "Getting people"), wordAt("confused", "regression") + 2);
 
-  // The establishment: an institution rises beside the person, on money, prestige and power, and
-  // its work reaches the person where it predicts, persuades, controls, and asks them to endure.
+  // The establishment: Uncle Sam arrives with the word, then the scientific community on money,
+  // prestige and power; his strings answer "whose purposes", and the clipboard reaches the person
+  // where it predicts, persuades, controls, and asks them to endure.
   const inBody = smooth(seconds, health.start, health.start + 1.6) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
-  const built = smooth(seconds, health.start + 0.6, wordAt("health", "Scientific institutions"));
+  const sam = smooth(seconds, wordAt("health", "establishment"), wordAt("health", "establishment") + 2);
+  const scientist = smooth(seconds, wordAt("health", "scientific community"), wordAt("health", "scientific community") + 2);
+  const strung = smooth(seconds, wordAt("health", "whose purposes"), wordAt("health", "whose purposes") + 1.6);
 
   // Why it persists: each thing bought for security fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, unfulfilled.end - 1.6, unfulfilled.end));
   const gainStart = unfulfilled.start + 1;
-  const gainEnd = wordAt("unfulfilled", "DOT asks") - 0.4;
+  const gainEnd = wordAt("unfulfilled", "The rewards") + 2;
   // Named, the extraction shows: the circle leaks.
-  const leak = smooth(seconds, wordAt("unfulfilled", "the Leech"), wordAt("unfulfilled", "the Leech") + 1) * (1 - smooth(seconds, gainEnd, gainEnd + 1.2));
+  const leak = smooth(seconds, wordAt("unfulfilled", "somebody can profit"), wordAt("unfulfilled", "somebody can profit") + 1) * (1 - smooth(seconds, gainEnd, gainEnd + 1.2));
   const gainStep = (gainEnd - gainStart) / GAINS.length;
   const gains = GAINS.map((name, k) => ({ name, at: gainStart + gainStep * k }));
   const hold = gainStep - 0.1;
@@ -624,17 +643,42 @@ function TrailerPerson({ seconds }: { seconds: number }) {
           )}
 
           {inBody > 0.001 && (
-            <g opacity={inBody}>
-              <path d={INSTITUTION_PATH} fill="none" stroke={ink} strokeWidth={(1.8 * WEIGHT) / s} strokeLinejoin="round" opacity={0.8 * Math.min(1, built * 3)} {...drawn(built)} />
+            <g opacity={inBody} fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <g opacity={sam}>
+                <g transform={`translate(${SAM.x} ${SAM.y}) scale(${SAM.scale})`} stroke={ink} strokeWidth={(2.4 * WEIGHT) / (s * SAM.scale)}>
+                  {BODY_PATHS.filter((_, k) => k !== 2).map((d) => <path key={d} d={d} {...drawn(sam)} />)}
+                  <path d={SAM_RAISED_ARM} {...drawn(sam)} />
+                  <path d={SAM_HAT} />
+                  <path d={SAM_STRIPES} stroke={clay} />
+                  <path d={SAM_FACE} />
+                  <path d={SAM_CONTROL} stroke={gold} />
+                </g>
+                <text x={SAM.x} y={SAM.y + 171 * SAM.scale + 44} fill={ink} {...label} fontSize={22 / s} letterSpacing={3 / s} strokeWidth={3 / s}>UNCLE SAM</text>
+              </g>
+              <g opacity={scientist}>
+                <g transform={`translate(${SCIENTIST.x} ${SCIENTIST.y}) scale(${SCIENTIST.scale})`} stroke={ink} strokeWidth={(2.4 * WEIGHT) / (s * SCIENTIST.scale)}>
+                  {BODY_PATHS.map((d) => <path key={d} d={d} {...drawn(scientist)} />)}
+                  <path d={LAB_COAT} />
+                  <path d={LAB_GLASSES} />
+                  <path d={CLIPBOARD} stroke={gold} />
+                </g>
+                <text x={SCIENTIST.x} y={PEDESTAL_TOP + 82} fill={ink} {...label} fontSize={19 / s} letterSpacing={2 / s} strokeWidth={3 / s}>THE SCIENTIFIC COMMUNITY</text>
+              </g>
               {FOUNDATIONS.map(({ word, label: name, dx }) => {
                 const shown = smooth(seconds, wordAt("health", word), wordAt("health", word) + 0.7);
-                const x = INSTITUTION.x + dx;
+                const x = SCIENTIST.x + dx;
                 return (
-                  <g key={name} opacity={shown}>
-                    <rect x={x - 58} y={INSTITUTION.top + 212} width={116} height={40} rx={3} fill="none" stroke={gold} strokeWidth={(1.4 * WEIGHT) / s} />
-                    <text x={x} y={INSTITUTION.top + 239} fill={gold} {...label} fontSize={19 / s} letterSpacing={1.6 / s} strokeWidth={3 / s}>{name}</text>
+                  <g key={name}>
+                    {/* The scientist stands on the pedestal from the start; each block is named as it is said. */}
+                    <rect x={x - 56} y={PEDESTAL_TOP} width={112} height={40} rx={3} stroke={gold} strokeWidth={(1.4 * WEIGHT) / s} opacity={Math.max(shown, 0.45 * scientist)} />
+                    <text x={x} y={PEDESTAL_TOP + 27} fill={gold} {...label} fontSize={19 / s} letterSpacing={1.6 / s} strokeWidth={3 / s} opacity={shown}>{name}</text>
                   </g>
                 );
+              })}
+              {strung > 0.001 && SAM_STRING_FROM.map((from, k) => {
+                const to = SCIENTIST_STRUNG[k];
+                const sway = Math.sin(seconds * 1.3 + k) * 8;
+                return <path key={k} d={`M${from[0]} ${from[1]}Q${(from[0] + to[0]) / 2 + sway} ${(from[1] + to[1]) / 2 + 30} ${to[0]} ${to[1]}`} stroke={clay} strokeWidth={(1.2 * WEIGHT) / s} opacity={0.8} {...drawn(strung)} />;
               })}
             </g>
           )}
@@ -647,7 +691,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
             const reach = smooth(seconds, start, start + 1.2);
             return (
               <g key={name} opacity={lit * inBody}>
-                <path d={`M${INSTITUTION.x - 140} ${INSTITUTION.top + 120}L${at[0]} ${at[1]}`} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.35 * reach} />
+                <path d={`M${CLIPBOARD_AT[0]} ${CLIPBOARD_AT[1]}L${at[0]} ${at[1]}`} fill="none" stroke={gold} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.35 * reach} />
                 <circle cx={at[0]} cy={at[1]} r={46} fill={`url(#${uid}-hurt)`} opacity={pulse} />
                 <path d={`M${at[0]} ${at[1]}L${endX} ${at[1]}`} fill="none" stroke={clay} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${6 / s}`} opacity={0.7} />
                 <text x={endX - 100} y={at[1] + 8 / s} fill={clay} {...label}>{name}</text>

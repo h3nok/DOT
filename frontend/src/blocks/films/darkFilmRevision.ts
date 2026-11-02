@@ -67,7 +67,7 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "turn", "purpose", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "lenses", "turn", "purpose", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
@@ -76,7 +76,8 @@ const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || va
  * The opening trailer: the DOT mark, then one person. The picture stays with them while the
  * author's script widens: an ordinary day → what we call progress → moral erosion (the AMM's own
  * illustration) → the establishment's part →
- * the culture inside you → why it persists → where to begin → the purpose → DOT's proposal →
+ * the culture inside you → why it persists → two lenses (the Manifesto outward, DOT inward) →
+ * where to begin → the purpose → DOT's proposal →
  * the opening. The words are the author's script (content/films.json), with DOT's proposals marked.
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
@@ -203,6 +204,7 @@ export function trailerFilmTime(designSeconds: number): number {
 /** The American Millennial Manifesto's own illustrations, each slowly explored ([x, y, scale] from → to). */
 export const TRAILER_PLATES = {
   erosion: { src: "/amm/media/erosion-1536.webp", from: [800, 450, 0.96], to: [690, 500, 1.12] },
+  lenses: { src: "/amm/media/host-at-home-v1-1536.webp", from: [800, 450, 0.96], to: [760, 470, 1.1] },
 } as const;
 
 /** The heartbeat under the question, on the drawing's clock, and where each falls in the film. */

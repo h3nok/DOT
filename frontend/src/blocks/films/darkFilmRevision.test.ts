@@ -39,9 +39,9 @@ const partIdentity = (part: TourPart) => {
 describe("the dark film's opening trailer", () => {
   const originalBody = CONCEPT_TOUR.filter((part) => part.kind !== "scene");
 
-  it("runs thirteen unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
+  it("runs fourteen unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "turn", "purpose", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "lenses", "turn", "purpose", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
@@ -116,7 +116,11 @@ describe("the dark film's opening trailer", () => {
       "If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.",
       "No one has to coordinate every part of it. The rewards can keep it going.",
       "In the American Millennial Manifesto, I call this extractive logic the Leech.",
+      "The Manifesto looks outward: at how wealth and power concentrate, and how dependence shapes everyday life.",
+      "The Leech names the arrangement. Conditioning helps it survive.",
+      "Digital Organism Theory looks inward, at that conditioning.",
       "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
+      "Unless we address our own conditioning, the pain continues, and so does the lack of fulfillment.",
       "The most immediate fact of your existence is not a measurement.",
       "It is that you are here to experience one. The observer belongs in the inquiry.",
       "Feeling must be treated as data. But feeling is not automatically truth.",
@@ -180,11 +184,12 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
-  it("stays with one person, but for the AMM's own illustration of moral erosion, which says it is AI-generated", () => {
+  it("stays with one person, but for the AMM's own illustrations, each saying it is AI-generated", () => {
+    const plates: Record<string, string> = { erosion: "/amm/media/erosion-1536.webp", lenses: "/amm/media/host-at-home-v1-1536.webp" };
     for (const shot of DARK_TRAILER_SHOTS) {
       const view = render(createElement(DarkFilmTrailer, { seconds: (shot.start + shot.end) / 2 }));
-      if (shot.kind === "erosion") {
-        expect(view.container.querySelector("image")).toHaveAttribute("href", "/amm/media/erosion-1536.webp");
+      if (plates[shot.kind]) {
+        expect(view.container.querySelector("image")).toHaveAttribute("href", plates[shot.kind]);
         expect(view.container.querySelector(".dark-trailer-plate-note")).toHaveTextContent("AI-generated illustration, directed by the author. A visual metaphor.");
       } else {
         expect(view.container.querySelector("image"), shot.kind).toBeNull();
@@ -197,7 +202,7 @@ describe("the dark film's opening trailer", () => {
     options.unmount();
   });
 
-  it("opens on the DOT mark, then an ordinary day, and marks what research can be made to do to a person", () => {
+  it("opens on the DOT mark, then an ordinary day, and shows the establishment as Uncle Sam and the scientific community", () => {
     const [mark, normal] = DARK_TRAILER_SHOTS;
     const view = render(createElement(DarkFilmTrailer, { seconds: mark.end - 1 }));
     expect(view.getByRole("img", { name: "DOT" })).toBeInTheDocument();
@@ -206,7 +211,9 @@ describe("the dark film's opening trailer", () => {
     expect(view.container.querySelector(".dark-trailer-drawing path")).not.toBeNull();
     const health = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "health")!;
     view.rerender(createElement(DarkFilmTrailer, { seconds: health.end - 1 }));
-    for (const name of ["PREDICTED", "PERSUADED", "CONTROLLED", "ENDURE MORE"]) expect(view.getByText(name)).toBeInTheDocument();
+    for (const name of ["UNCLE SAM", "THE SCIENTIFIC COMMUNITY", "MONEY", "PRESTIGE", "POWER", "PREDICTED", "PERSUADED", "CONTROLLED", "ENDURE MORE"]) {
+      expect(view.getByText(name)).toBeInTheDocument();
+    }
     view.unmount();
   });
 
@@ -248,6 +255,7 @@ describe("the dark film's opening trailer", () => {
       "You inherited a Painting already begun.",
       "earning a living became proving that you deserve one.",
       "somebody can profit from keeping you unsettled.",
+      "Conditioning helps it survive.",
       "Feeling must be treated as data.",
       "It is a construction, not a revelation.",
       "In DOT, the purpose is expansion of awareness.",
@@ -344,8 +352,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(648);
-    expect(DARK_FILM_SECONDS).toBe(950);
+    expect(DARK_OPENING_SECONDS).toBe(689);
+    expect(DARK_FILM_SECONDS).toBe(991);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

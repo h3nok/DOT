@@ -1,15 +1,20 @@
 DOT — FILM NARRATION SCRIPT (v18, the whole film) · FOR THE AUTHOR TO READ
 ====================================================================
 
-Read all 79 lines in one recording, in order: the opening, then each concept's name and definition,
+Read all 83 lines in one recording, in order: the opening, then each concept's name and definition,
 the interlude, and the closing. The film places each line as it appears on screen.
 A calm, unhurried voice. Where a line ends with a pause in the film, let it land.
 
 THIS EDITION
-Your script of 2026-11-02, line for line, with one addition you asked for: lines 11–14,
-"Moral erosion", are a draft written from your direction ("the lack of moral foundation …
-where everyone believes they can be anything is really wrong, and unrealistic"). Approve or
-rewrite them before recording. Section names are the film's chapters.
+Your script of 2026-11-02, line for line, with the additions you asked for. These lines are
+not yet yours; approve or rewrite them before recording:
+- 11–14, "Moral erosion": drafted from your direction ("the lack of moral foundation … where
+  everyone believes they can be anything is really wrong, and unrealistic").
+- 36–37, "Two lenses": the Manifesto's own wording ("how wealth and power concentrate, how
+  dependence shapes everyday life"; "The Leech names this arrangement; conditioning helps it survive").
+- 38 and 40: drafted ("Digital Organism Theory looks inward…"; "Unless we address our own
+  conditioning…", from your note that people must address their own conditioning).
+Section names are the film's chapters.
 
 HOW TO RECORD
 - A quiet room with soft furnishings. A phone voice memo is fine, held 20–30 cm from your mouth.
@@ -74,62 +79,68 @@ THE LINES
 32. An arrangement can benefit from the very condition that is hurting the people inside it.
 33. If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.
 34. No one has to coordinate every part of it. The rewards can keep it going.
+
+— Two lenses —
 35. In the American Millennial Manifesto, I call this extractive logic the Leech.
-36. DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.
+36. The Manifesto looks outward: at how wealth and power concentrate, and how dependence shapes everyday life.
+37. The Leech names the arrangement. Conditioning helps it survive.
+38. Digital Organism Theory looks inward, at that conditioning.
 
 — Where to begin —
-37. The most immediate fact of your existence is not a measurement.
-38. It is that you are here to experience one. The observer belongs in the inquiry.
-39. Feeling must be treated as data. But feeling is not automatically truth.
-40. Digital Organism Theory is the framework I have been building around these questions.
-41. It is a construction, not a revelation. Examine it. I am not asking you to replace their authority with mine.
+39. DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.
+40. Unless we address our own conditioning, the pain continues, and so does the lack of fulfillment.
+41. The most immediate fact of your existence is not a measurement.
+42. It is that you are here to experience one. The observer belongs in the inquiry.
+43. Feeling must be treated as data. But feeling is not automatically truth.
+44. Digital Organism Theory is the framework I have been building around these questions.
+45. It is a construction, not a revelation. Examine it. I am not asking you to replace their authority with mine.
 
 — The purpose —
-42. In DOT, the purpose is expansion of awareness.   [DOT proposes]
-43. I do not mean collecting more information. I mean becoming more capable of seeing, understanding, and choosing.
-44. That requires mental focus. The ability to stay with experience long enough to examine it, including what you would rather avoid.
-45. In DOT, that capacity depends on internal coherence—on becoming less divided by fear, self-deception, and the defense of identity.   [DOT proposes]
-46. Coherence is not certainty. You can be very certain and very wrong. There has to be room for correction.
-47. The purpose is not to become better at defending what you already believe. It is to become capable of understanding what you could not see before.
-48. And we can help one another do this. We can make it possible to question, to admit uncertainty, and to change without humiliation.
+46. In DOT, the purpose is expansion of awareness.   [DOT proposes]
+47. I do not mean collecting more information. I mean becoming more capable of seeing, understanding, and choosing.
+48. That requires mental focus. The ability to stay with experience long enough to examine it, including what you would rather avoid.
+49. In DOT, that capacity depends on internal coherence—on becoming less divided by fear, self-deception, and the defense of identity.   [DOT proposes]
+50. Coherence is not certainty. You can be very certain and very wrong. There has to be room for correction.
+51. The purpose is not to become better at defending what you already believe. It is to become capable of understanding what you could not see before.
+52. And we can help one another do this. We can make it possible to question, to admit uncertainty, and to change without humiliation.
 
 — DOT’s proposal —
-49. DOT calls the local experiencer Little c.   [DOT proposes]
-50. It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.   [DOT proposes]
-51. Think of a musician and an instrument. They work together, but they are not the same thing.   [DOT proposes]
+53. DOT calls the local experiencer Little c.   [DOT proposes]
+54. It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.   [DOT proposes]
+55. Think of a musician and an instrument. They work together, but they are not the same thing.   [DOT proposes]
 
 — The architecture —
-52. This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.   [DOT proposes]
-53. But experience does not automatically become understanding. What matters is what you do with it.
+56. This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.   [DOT proposes]
+57. But experience does not automatically become understanding. What matters is what you do with it.
 
 — The opening —
-54. Conditioning is real. But in DOT’s language, the Painting is not the painter.
-55. You can notice an impulse without immediately obeying it. The conditioning is still there, but your relationship to it can change.
-56. Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.
-57. This cannot remain private work. We need time to think, enough security to speak honestly, and institutions that do not punish us for questioning them.
-58. That is what I believe a civilization should be for. Helping awareness expand—not making human beings easier to manage.
+58. Conditioning is real. But in DOT’s language, the Painting is not the painter.
+59. You can notice an impulse without immediately obeying it. The conditioning is still there, but your relationship to it can change.
+60. Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.
+61. This cannot remain private work. We need time to think, enough security to speak honestly, and institutions that do not punish us for questioning them.
+62. That is what I believe a civilization should be for. Helping awareness expand—not making human beings easier to manage.
 
 — Digital Organism Theory —
-59. Digital Organism Theory
-60. A school of thought for examining experience and expanding awareness.
+63. Digital Organism Theory
+64. A school of thought for examining experience and expanding awareness.
 
 — The concepts —
-61. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
-62. Digital Organism. In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.
-63. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
-64. Little c. The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.
-65. The Decoupling Principle. DOT proposes that Little c and the living body are distinct, but functionally connected.
-66. Reality Frame. A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.
-67. Physical Sciences as Frame Derivations. Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.
-68. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
-69. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
-70. The Experience Loop. Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.
-71. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
-72. Painting. The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.
-73. Character. The relatively stable patterns expressed in how you interpret what happens and respond to it.
-74. The Fear-Gating Principle. When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.
-75. Ego. The defense of the Character Little c has learned to call itself.
-76. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.
-77. Conscious Authorship. Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.
-78. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes.
-79. Become a student of your own experience. Help make room for others to do the same. We can do this together.
+65. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
+66. Digital Organism. In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.
+67. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
+68. Little c. The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.
+69. The Decoupling Principle. DOT proposes that Little c and the living body are distinct, but functionally connected.
+70. Reality Frame. A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.
+71. Physical Sciences as Frame Derivations. Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.
+72. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
+73. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
+74. The Experience Loop. Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.
+75. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
+76. Painting. The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.
+77. Character. The relatively stable patterns expressed in how you interpret what happens and respond to it.
+78. The Fear-Gating Principle. When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.
+79. Ego. The defense of the Character Little c has learned to call itself.
+80. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.
+81. Conscious Authorship. Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.
+82. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes.
+83. Become a student of your own experience. Help make room for others to do the same. We can do this together.

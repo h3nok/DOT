@@ -164,7 +164,7 @@
         "label": "The establishment",
         "design": 7,
         "lead": 1.2,
-        "description": "An institution draws itself beside the person, standing on blocks marked money, prestige and power. As research that predicts, persuades and controls is named, a line runs from the institution to the person at each point of strain, and finally to the demand to endure more.",
+        "description": "Uncle Sam, the leadership class, arrives in a striped top hat; beside him the scientific community, in a lab coat with a clipboard, stands on blocks marked money, prestige and power. Asked whose purposes the work serves, Uncle Sam’s strings run to the scientist’s head and hands. From the clipboard, lines reach the person where they are predicted, persuaded and controlled, and finally asked to endure more.",
         "lines": [
           "And the establishment has to answer for its part in this. The scientific community included.",
           "Scientific institutions are part of society. They do not float above money, prestige, or power.",
@@ -215,18 +215,35 @@
         "label": "Why it persists",
         "design": 8,
         "lead": 1.2,
-        "description": "Close on the chest, where a circle holds the person’s sense of security. Each purchase, upgrade, approval and bit of status lands in it and drains away faster than the last. When the extractive logic is named, the leak shows. Only when DOT asks what it would mean to develop does the person straighten.",
+        "description": "Close on the chest, where a circle holds the person’s sense of security. Each purchase, upgrade, approval and bit of status lands in it and drains away faster than the last; once profit from the unsettled is named, the leak shows, until the circle stays empty.",
         "lines": [
           "An arrangement can benefit from the very condition that is hurting the people inside it.",
           {
             "text": "If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.",
             "card": "somebody can profit from keeping you unsettled."
           },
-          "No one has to coordinate every part of it. The rewards can keep it going.",
-          "In the American Millennial Manifesto, I call this extractive logic the Leech.",
           {
-            "text": "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
-            "pause": 1.2
+            "text": "No one has to coordinate every part of it. The rewards can keep it going.",
+            "pause": 1
+          }
+        ]
+      },
+      {
+        "kind": "lenses",
+        "label": "Two lenses",
+        "design": 8,
+        "lead": 1.4,
+        "description": "Illustration from The American Millennial Manifesto, slowly explored: the flag-patterned Host rests its head beside a laptop at a kitchen table, carrying the two-headed Leech, an untouched meal and household envelopes around it.",
+        "lines": [
+          "In the American Millennial Manifesto, I call this extractive logic the Leech.",
+          "The Manifesto looks outward: at how wealth and power concentrate, and how dependence shapes everyday life.",
+          {
+            "text": "The Leech names the arrangement. Conditioning helps it survive.",
+            "card": "Conditioning helps it survive."
+          },
+          {
+            "text": "Digital Organism Theory looks inward, at that conditioning.",
+            "pause": 1
           }
         ]
       },
@@ -235,8 +252,13 @@
         "label": "Where to begin",
         "design": 7,
         "lead": 1.2,
-        "description": "The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat. The theory is introduced with care: the observer in the inquiry, feeling treated as data but not as truth, and DOT offered as a construction to examine, not a revelation.",
+        "description": "The person stands alone, upright again, the view moves slowly in, and a light grows at the chest with each heartbeat. DOT asks what it would mean to develop rather than adapt, and the theory is introduced with care: the observer in the inquiry, feeling treated as data but not as truth, and DOT offered as a construction to examine, not a revelation.",
         "lines": [
+          "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
+          {
+            "text": "Unless we address our own conditioning, the pain continues, and so does the lack of fulfillment.",
+            "pause": 1
+          },
           "The most immediate fact of your existence is not a measurement.",
           {
             "text": "It is that you are here to experience one. The observer belongs in the inquiry.",
