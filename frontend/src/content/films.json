@@ -115,142 +115,177 @@
             "card": "We call exhaustion adulthood"
           },
           "isolation independence, and endless accumulation success.",
-          "We pretend the picture is coherent,",
+          "We speak proudly of freedom.",
           {
-            "text": "because admitting otherwise means questioning ourselves.",
-            "pause": 0.8
+            "text": "Then we go quiet when exercising it might cost us our place.",
+            "pause": 1
           }
         ]
       },
       {
         "kind": "confused",
-        "label": "Why",
+        "label": "What we call progress",
         "design": 7,
         "lead": 1.4,
-        "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named, and the person is named hurting, uncertain and afraid.",
+        "description": "Beside the person, three bars rise as they are named, output, prediction and compliance, and keep rising. Inside the person’s head a line tangles, and the ring of attention around it breaks into fragments that drift apart: the machinery advances while the person does not.",
         "lines": [
-          "Look closely at what fills a day.",
-          "Marketing fills every space we look at.",
-          "Screens compete for every minute of our attention.",
+          "Here in America, we are very comfortable calling ourselves advanced.",
           {
-            "text": "Our attention has become the product.",
-            "card": true
+            "text": "But advanced at what? Producing more? Predicting behavior? Getting people to comply?",
+            "card": "But advanced at what?"
           },
-          "Money speaks, and most of us listen.",
-          "And we erode, from the inside.",
+          "I am asking whether the person is developing along with the machinery.",
+          "Are we becoming more capable of examining our beliefs, choosing deliberately, and caring for one another?",
           {
-            "text": "We’re hurting, uncertain, and more afraid.",
+            "text": "Because if those capacities are diminishing, I call that regression. Our machines cannot develop our awareness on our behalf.",
+            "pause": 1
+          }
+        ]
+      },
+      {
+        "kind": "erosion",
+        "label": "Moral erosion",
+        "design": 8,
+        "lead": 1.6,
+        "description": "Illustration from The American Millennial Manifesto, slowly explored: the Host eats from a rusted trough labelled Moral Erosion, filled with phones, money, status, and fast food.",
+        "lines": [
+          "Beneath all of this is a moral erosion.",
+          "We are taught that anyone can be anything.",
+          "It sounds like freedom. It is unrealistic, and it is no moral foundation.",
+          {
+            "text": "We learn what we could become. We are rarely asked what is good.",
+            "card": "We are rarely asked what is good.",
             "pause": 1
           }
         ]
       },
       {
         "kind": "health",
-        "label": "The body",
+        "label": "The establishment",
         "design": 7,
         "lead": 1.2,
-        "description": "The view widens to the whole person, shrinking and dimming. One by one, places on the body light up in clay and are named: sleep, tension, digestion, attention, behavior. A heart trace beside them grows uneven.",
+        "description": "An institution draws itself beside the person, standing on blocks marked money, prestige and power. As research that predicts, persuades and controls is named, a line runs from the institution to the person at each point of strain, and finally to the demand to endure more.",
         "lines": [
+          "And the establishment has to answer for its part in this. The scientific community included.",
+          "Scientific institutions are part of society. They do not float above money, prestige, or power.",
+          "What gets funded? Which questions become respectable? And whose purposes does the work serve?",
+          "When your research makes people easier to predict, persuade, and control, whose freedom are you expanding?",
+          "You cannot help build those tools and declare their consequences somebody else’s problem.",
+          "Nor can you present your assumptions as established knowledge simply because you have a title.",
           {
-            "text": "The body notices before we admit it.",
-            "card": true
-          },
-          "An unresolved thought can change sleep,",
-          "muscle tension, digestion, attention, and behavior."
-        ]
-      },
-      {
-        "kind": "unfulfilled",
-        "label": "Never enough",
-        "design": 8,
-        "lead": 1.2,
-        "description": "Close on the person’s chest, an empty circle. Things drop into it, named credentials, income, appearance, influence, productivity. Each fills it briefly and drains away, until it stays empty.",
-        "lines": [
-          "So we work harder for relief.",
-          "Worth becomes achievement. Rest becomes laziness.",
-          "Success may bring relief, but only briefly.",
-          {
-            "text": "Like filling a cup with a hole in it.",
-            "card": true
+            "text": "Show us the evidence. Explain its limits. Respect for expertise should not require the surrender of judgment.",
+            "card": "Respect for expertise should not require the surrender of judgment."
           },
           {
-            "text": "And a sense that something essential is missing.",
+            "text": "And helping a worker endure more does not answer whether more should be demanded of them.",
             "pause": 1
           }
         ]
       },
       {
         "kind": "inherited",
-        "label": "The culture around you",
+        "label": "The culture inside you",
         "design": 10,
         "lead": 1.2,
-        "description": "Rings close around the person one at a time, each named as it is spoken: language, emotions, authority, schools, religion, entertainment, work, markets. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
+        "description": "Rings close around the person one at a time, each named as it is spoken: family, school, employer, wants, beliefs, questions. As their expectations start to sound like the person’s own thoughts, the rings draw in. The scene dims under a moon at night and brightens with the morning sun. When the narrator asks how we help one another get free, the rings soften and a gentle light returns at the chest.",
         "lines": [
-          "This isn’t a personal failing.",
-          "Culture arrives through language, permitted emotions,",
-          "authority, admired people, and expected futures.",
-          "Schools, religions, entertainment, work, law, and markets",
-          "carry it into daily life.",
-          "Much of it is absorbed before it can be named.",
-          "You inherited a painting already begun.",
-          "We’re not immune to our culture, or our surroundings.",
-          "The worker is coached. The workload remains.",
+          "Civilization does not arrive inside you labeled civilization. It arrives as ordinary life.",
+          "Through what your family praises, what your school rewards, and what your employer will tolerate.",
+          "It teaches you what to want, whom to believe, and which questions might cost you your place.",
+          "Eventually, its expectations begin to sound like your own thoughts.",
+          "By the time you question the world, much of that world is already participating in the questioning.",
           {
-            "text": "The citizen is blamed. The architecture remains.",
-            "pause": 0.6
+            "text": "You inherited a Painting already begun. I did too.",
+            "card": "You inherited a Painting already begun."
+          },
+          "You tell yourself you are fine. But at night, you rehearse the words you were afraid to say.",
+          {
+            "text": "Then, in the morning, you go back to proving your worth. Somewhere along the way, earning a living became proving that you deserve one.",
+            "card": "earning a living became proving that you deserve one."
           },
           {
-            "text": "None of that is your fault.",
-            "pause": 0.6,
-            "card": true
-          },
-          {
-            "text": "But undoing it is your responsibility.",
-            "pause": 1.2,
-            "card": true
+            "text": "I am not describing this to look down on the person caught inside it. I am asking how we help one another get free.",
+            "pause": 1
           }
         ],
         "linger": 0.8
+      },
+      {
+        "kind": "unfulfilled",
+        "label": "Why it persists",
+        "design": 8,
+        "lead": 1.2,
+        "description": "Close on the chest, where a circle holds the person’s sense of security. Each purchase, upgrade, approval and bit of status lands in it and drains away faster than the last. When the extractive logic is named, the leak shows. Only when DOT asks what it would mean to develop does the person straighten.",
+        "lines": [
+          "An arrangement can benefit from the very condition that is hurting the people inside it.",
+          {
+            "text": "If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.",
+            "card": "somebody can profit from keeping you unsettled."
+          },
+          "No one has to coordinate every part of it. The rewards can keep it going.",
+          "In the American Millennial Manifesto, I call this extractive logic the Leech.",
+          {
+            "text": "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
+            "pause": 1.2
+          }
+        ]
       },
       {
         "kind": "turn",
         "label": "Where to begin",
         "design": 7,
         "lead": 1.2,
-        "description": "The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat. The theory is introduced with care: feeling treated as data but not as truth, and DOT offered as a construction to examine, not a revelation.",
+        "description": "The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat. The theory is introduced with care: the observer in the inquiry, feeling treated as data but not as truth, and DOT offered as a construction to examine, not a revelation.",
         "lines": [
+          "The most immediate fact of your existence is not a measurement.",
           {
-            "text": "So where do we begin?",
-            "pause": 1
-          },
-          "The most immediate fact of your existence",
-          "is not a measurement.",
-          {
-            "text": "It is that you are here to experience one.",
-            "pause": 1
-          },
-          "Feeling must be treated as data,",
-          {
-            "text": "but feeling is not automatically truth.",
+            "text": "It is that you are here to experience one. The observer belongs in the inquiry.",
             "pause": 0.8
           },
           {
-            "text": "The framework that emerged is Digital Organism Theory.",
-            "card": "Digital Organism Theory",
-            "pause": 0.6
+            "text": "Feeling must be treated as data. But feeling is not automatically truth.",
+            "card": "Feeling must be treated as data.",
+            "pause": 0.8
           },
+          "Digital Organism Theory is the framework I have been building around these questions.",
           {
-            "text": "It is a construction, not a revelation.",
-            "card": true
-          },
-          {
-            "text": "Examine the model. Compare it with your experience.",
+            "text": "It is a construction, not a revelation. Examine it. I am not asking you to replace their authority with mine.",
+            "card": "It is a construction, not a revelation.",
             "pause": 1
           }
         ],
         "drawing": [
           0,
           7
+        ]
+      },
+      {
+        "kind": "purpose",
+        "label": "The purpose",
+        "description": "The light at the person’s chest widens into rings of awareness. Scattered arcs around it, the divisions of fear, self-deception and defended identity, gather into one ring that stays open: coherence with room for correction. A warmth spreads as the narrator turns to helping one another.",
+        "design": 8,
+        "lead": 1.2,
+        "lines": [
+          {
+            "text": "In DOT, the purpose is expansion of awareness.",
+            "voice": "dot",
+            "card": true
+          },
+          "I do not mean collecting more information. I mean becoming more capable of seeing, understanding, and choosing.",
+          "That requires mental focus. The ability to stay with experience long enough to examine it, including what you would rather avoid.",
+          {
+            "text": "In DOT, that capacity depends on internal coherence—on becoming less divided by fear, self-deception, and the defense of identity.",
+            "voice": "dot"
+          },
+          {
+            "text": "Coherence is not certainty. You can be very certain and very wrong. There has to be room for correction.",
+            "card": "Coherence is not certainty."
+          },
+          "The purpose is not to become better at defending what you already believe. It is to become capable of understanding what you could not see before.",
+          {
+            "text": "And we can help one another do this. We can make it possible to question, to admit uncertainty, and to change without humiliation.",
+            "pause": 1
+          }
         ]
       },
       {
@@ -261,11 +296,14 @@
         "description": "The view pulls back: the living Avatar is distinct from Little c. A calm broken loop marks continuing process. Intent travels toward the body and experience returns through the embodied connection.",
         "lines": [
           {
-            "text": "You are Little c.",
+            "text": "DOT calls the local experiencer Little c.",
             "card": true
           },
-          "Your living body is your interface to a Reality Frame.",
-          "Like a musician and an instrument: joined, not the same."
+          "It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.",
+          {
+            "text": "Think of a musician and an instrument. They work together, but they are not the same thing.",
+            "pause": 0.6
+          }
         ],
         "drawing": [
           16.4,
@@ -280,14 +318,19 @@
         "lead": 4.8,
         "description": "The view pulls back from Little c to the Avatars in RF₀, an experience laboratory for Little cs. RF₀’s boundary and its Avatars light up, then its Reality Stream travels toward Little c. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
         "lines": [
-          "This world, RF₀, is an experience laboratory.",
-          "Its rules turn experience into lessons."
+          {
+            "text": "This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.",
+            "voice": "dot"
+          },
+          {
+            "text": "But experience does not automatically become understanding. What matters is what you do with it.",
+            "pause": 0.6
+          }
         ],
         "drawing": [
           57,
           69
-        ],
-        "voice": "dot"
+        ]
       },
       {
         "kind": "pause",
@@ -297,23 +340,15 @@
         "description": "The person stands diminished in a heavy box, a ring of stress at the chest. A jade light at the chest marks renewed attention to experience. The box dissolves, the person stands full height, and paths open out in every direction, each ending in an open choice.",
         "lines": [
           {
-            "text": "Conditioning is real. Conditioning is not essence.",
-            "card": "Conditioning is not essence."
+            "text": "Conditioning is real. But in DOT’s language, the Painting is not the painter.",
+            "card": "the Painting is not the painter."
           },
-          "A river is shaped by its banks. It is not the banks.",
-          "Yet the painting is not the painter.",
-          "What matters is what Little c does with the opening.",
+          "You can notice an impulse without immediately obeying it. The conditioning is still there, but your relationship to it can change.",
+          "Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.",
+          "This cannot remain private work. We need time to think, enough security to speak honestly, and institutions that do not punish us for questioning them.",
           {
-            "text": "Freedom is participation in the creation of possibility.",
-            "pause": 0.6
-          },
-          "Our culture trains us to adapt to the painting.",
-          {
-            "text": "DOT aims at seeing the painting itself.",
-            "voice": "dot"
-          },
-          {
-            "text": "I believe that’s where a cultural revolution begins.",
+            "text": "That is what I believe a civilization should be for. Helping awareness expand—not making human beings easier to manage.",
+            "card": "Helping awareness expand—not making human beings easier to manage.",
             "pause": 1
           }
         ],
@@ -331,7 +366,7 @@
         "description": "The architecture rises above the title: Digital Organism Theory. A school of thought for examining experience.",
         "lines": [
           "Digital Organism Theory",
-          "A school of thought for examining experience."
+          "A school of thought for examining experience and expanding awareness."
         ],
         "drawing": [
           70.8,
@@ -339,7 +374,26 @@
         ],
         "linger": 1.2
       }
-    ]
+    ],
+    "narration": {
+      "note": "How the author's voice reads the concept part of the film, where it differs from the Concept Map's written line.",
+      "concepts": {
+        "digital-organism": "In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.",
+        "little-c": "The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.",
+        "decoupling-principle": "DOT proposes that Little c and the living body are distinct, but functionally connected.",
+        "reality-frame": "A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.",
+        "world-invariants": "Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.",
+        "experience-loop": "Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.",
+        "painting": "The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.",
+        "character": "The relatively stable patterns expressed in how you interpret what happens and respond to it.",
+        "fear-gating": "When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.",
+        "love": "Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.",
+        "conscious-authorship": "Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.",
+        "limits-and-debts": "Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes."
+      },
+      "interlude": "Ego. The defense of the Character Little c has learned to call itself.",
+      "closing": "Become a student of your own experience. Help make room for others to do the same. We can do this together."
+    }
   },
   "seriesNote": "The episodes are in production. The reading behind each one is open now.",
   "completionNote": "That is every film and series stream in the catalogue. New episodes appear on @dotheory without schedules, streaks, or notifications.",

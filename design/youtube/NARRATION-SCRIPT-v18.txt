@@ -1,9 +1,15 @@
 DOT — FILM NARRATION SCRIPT (v18, the whole film) · FOR THE AUTHOR TO READ
 ====================================================================
 
-Read all 75 lines in one recording, in order: the opening, then each concept's name and definition,
+Read all 79 lines in one recording, in order: the opening, then each concept's name and definition,
 the interlude, and the closing. The film places each line as it appears on screen.
 A calm, unhurried voice. Where a line ends with a pause in the film, let it land.
+
+THIS EDITION
+Your script of 2026-11-02, line for line, with one addition you asked for: lines 11–14,
+"Moral erosion", are a draft written from your direction ("the lack of moral foundation …
+where everyone believes they can be anything is really wrong, and unrealistic"). Approve or
+rewrite them before recording. Section names are the film's chapters.
 
 HOW TO RECORD
 - A quiet room with soft furnishings. A phone voice memo is fine, held 20–30 cm from your mouth.
@@ -27,95 +33,103 @@ THE LINES
  1. We go to work. We pay bills. We scroll. We compete.
  2. We call exhaustion adulthood, anxiety responsibility,
  3. isolation independence, and endless accumulation success.
- 4. We pretend the picture is coherent,
- 5. because admitting otherwise means questioning ourselves.
+ 4. We speak proudly of freedom.
+ 5. Then we go quiet when exercising it might cost us our place.
 
-— Why —
- 6. Look closely at what fills a day.
- 7. Marketing fills every space we look at.
- 8. Screens compete for every minute of our attention.
- 9. Our attention has become the product.
-10. Money speaks, and most of us listen.
-11. And we erode, from the inside.
-12. We’re hurting, uncertain, and more afraid.
+— What we call progress —
+ 6. Here in America, we are very comfortable calling ourselves advanced.
+ 7. But advanced at what? Producing more? Predicting behavior? Getting people to comply?
+ 8. I am asking whether the person is developing along with the machinery.
+ 9. Are we becoming more capable of examining our beliefs, choosing deliberately, and caring for one another?
+10. Because if those capacities are diminishing, I call that regression. Our machines cannot develop our awareness on our behalf.
 
-— The body —
-13. The body notices before we admit it.
-14. An unresolved thought can change sleep,
-15. muscle tension, digestion, attention, and behavior.
+— Moral erosion —
+11. Beneath all of this is a moral erosion.
+12. We are taught that anyone can be anything.
+13. It sounds like freedom. It is unrealistic, and it is no moral foundation.
+14. We learn what we could become. We are rarely asked what is good.
 
-— Never enough —
-16. So we work harder for relief.
-17. Worth becomes achievement. Rest becomes laziness.
-18. Success may bring relief, but only briefly.
-19. Like filling a cup with a hole in it.
-20. And a sense that something essential is missing.
+— The establishment —
+15. And the establishment has to answer for its part in this. The scientific community included.
+16. Scientific institutions are part of society. They do not float above money, prestige, or power.
+17. What gets funded? Which questions become respectable? And whose purposes does the work serve?
+18. When your research makes people easier to predict, persuade, and control, whose freedom are you expanding?
+19. You cannot help build those tools and declare their consequences somebody else’s problem.
+20. Nor can you present your assumptions as established knowledge simply because you have a title.
+21. Show us the evidence. Explain its limits. Respect for expertise should not require the surrender of judgment.
+22. And helping a worker endure more does not answer whether more should be demanded of them.
 
-— The culture around you —
-21. This isn’t a personal failing.
-22. Culture arrives through language, permitted emotions,
-23. authority, admired people, and expected futures.
-24. Schools, religions, entertainment, work, law, and markets
-25. carry it into daily life.
-26. Much of it is absorbed before it can be named.
-27. You inherited a painting already begun.
-28. We’re not immune to our culture, or our surroundings.
-29. The worker is coached. The workload remains.
-30. The citizen is blamed. The architecture remains.
-31. None of that is your fault.
-32. But undoing it is your responsibility.
+— The culture inside you —
+23. Civilization does not arrive inside you labeled civilization. It arrives as ordinary life.
+24. Through what your family praises, what your school rewards, and what your employer will tolerate.
+25. It teaches you what to want, whom to believe, and which questions might cost you your place.
+26. Eventually, its expectations begin to sound like your own thoughts.
+27. By the time you question the world, much of that world is already participating in the questioning.
+28. You inherited a Painting already begun. I did too.
+29. You tell yourself you are fine. But at night, you rehearse the words you were afraid to say.
+30. Then, in the morning, you go back to proving your worth. Somewhere along the way, earning a living became proving that you deserve one.
+31. I am not describing this to look down on the person caught inside it. I am asking how we help one another get free.
+
+— Why it persists —
+32. An arrangement can benefit from the very condition that is hurting the people inside it.
+33. If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.
+34. No one has to coordinate every part of it. The rewards can keep it going.
+35. In the American Millennial Manifesto, I call this extractive logic the Leech.
+36. DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.
 
 — Where to begin —
-33. So where do we begin?
-34. The most immediate fact of your existence
-35. is not a measurement.
-36. It is that you are here to experience one.
-37. Feeling must be treated as data,
-38. but feeling is not automatically truth.
-39. The framework that emerged is Digital Organism Theory.
-40. It is a construction, not a revelation.
-41. Examine the model. Compare it with your experience.
+37. The most immediate fact of your existence is not a measurement.
+38. It is that you are here to experience one. The observer belongs in the inquiry.
+39. Feeling must be treated as data. But feeling is not automatically truth.
+40. Digital Organism Theory is the framework I have been building around these questions.
+41. It is a construction, not a revelation. Examine it. I am not asking you to replace their authority with mine.
+
+— The purpose —
+42. In DOT, the purpose is expansion of awareness.   [DOT proposes]
+43. I do not mean collecting more information. I mean becoming more capable of seeing, understanding, and choosing.
+44. That requires mental focus. The ability to stay with experience long enough to examine it, including what you would rather avoid.
+45. In DOT, that capacity depends on internal coherence—on becoming less divided by fear, self-deception, and the defense of identity.   [DOT proposes]
+46. Coherence is not certainty. You can be very certain and very wrong. There has to be room for correction.
+47. The purpose is not to become better at defending what you already believe. It is to become capable of understanding what you could not see before.
+48. And we can help one another do this. We can make it possible to question, to admit uncertainty, and to change without humiliation.
 
 — DOT’s proposal —
-42. You are Little c.   [DOT proposes]
-43. Your living body is your interface to a Reality Frame.   [DOT proposes]
-44. Like a musician and an instrument: joined, not the same.   [DOT proposes]
+49. DOT calls the local experiencer Little c.   [DOT proposes]
+50. It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.   [DOT proposes]
+51. Think of a musician and an instrument. They work together, but they are not the same thing.   [DOT proposes]
 
 — The architecture —
-45. This world, RF₀, is an experience laboratory.   [DOT proposes]
-46. Its rules turn experience into lessons.   [DOT proposes]
+52. This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.   [DOT proposes]
+53. But experience does not automatically become understanding. What matters is what you do with it.
 
 — The opening —
-47. Conditioning is real. Conditioning is not essence.
-48. A river is shaped by its banks. It is not the banks.
-49. Yet the painting is not the painter.
-50. What matters is what Little c does with the opening.
-51. Freedom is participation in the creation of possibility.
-52. Our culture trains us to adapt to the painting.
-53. DOT aims at seeing the painting itself.   [DOT proposes]
-54. I believe that’s where a cultural revolution begins.
+54. Conditioning is real. But in DOT’s language, the Painting is not the painter.
+55. You can notice an impulse without immediately obeying it. The conditioning is still there, but your relationship to it can change.
+56. Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.
+57. This cannot remain private work. We need time to think, enough security to speak honestly, and institutions that do not punish us for questioning them.
+58. That is what I believe a civilization should be for. Helping awareness expand—not making human beings easier to manage.
 
 — Digital Organism Theory —
-55. Digital Organism Theory
-56. A school of thought for examining experience.
+59. Digital Organism Theory
+60. A school of thought for examining experience and expanding awareness.
 
 — The concepts —
-57. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
-58. Digital Organism. A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.
-59. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
-60. Little c. The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.
-61. The Decoupling Principle. DOT proposes that Little c and the living body are distinct and functionally connected.
-62. Reality Frame. A shared, rule-bound experience laboratory, where each Little c takes part through a living body.
-63. Physical Sciences as Frame Derivations. DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.
-64. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
-65. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
-66. The Experience Loop. Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.
-67. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
-68. Painting. The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.
-69. Character. The relatively stable patterns expressed through repeated interpretation and action.
-70. The Fear-Gating Principle. When Fear governs, the set of responses that feels available becomes narrower.
-71. Ego defends the Character Little c has learned to call itself.
-72. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you.
-73. Conscious Authorship. Notice inherited interpretation, examine available responses, and act with greater deliberation.
-74. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.
-75. Become a student of your own experience.
+61. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
+62. Digital Organism. In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.
+63. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
+64. Little c. The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.
+65. The Decoupling Principle. DOT proposes that Little c and the living body are distinct, but functionally connected.
+66. Reality Frame. A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.
+67. Physical Sciences as Frame Derivations. Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.
+68. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
+69. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
+70. The Experience Loop. Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.
+71. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
+72. Painting. The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.
+73. Character. The relatively stable patterns expressed in how you interpret what happens and respond to it.
+74. The Fear-Gating Principle. When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.
+75. Ego. The defense of the Character Little c has learned to call itself.
+76. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.
+77. Conscious Authorship. Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.
+78. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes.
+79. Become a student of your own experience. Help make room for others to do the same. We can do this together.

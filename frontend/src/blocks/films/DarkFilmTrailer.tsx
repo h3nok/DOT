@@ -1,4 +1,4 @@
-import { createContext, useContext, useId, type CSSProperties } from "react";
+import { createContext, useContext, useEffect, useId, type CSSProperties } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { DoWordmark } from "../../shared/DoWordmark";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
-import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime, type TrailerVoice } from "./darkFilmRevision";
+import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, TRAILER_PLATES, darkTrailerShot, trailerDrawingTime, type TrailerVoice } from "./darkFilmRevision";
 
 /* ── Film-time helpers: every motion is a pure function of the film second (L1). ── */
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -445,7 +445,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
 
 /* ── One person: what not knowing does to a life ── */
 const shotOf = (kind: string) => DARK_TRAILER_SHOTS.find((shot) => shot.kind === kind)!;
-const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited"];
+const PERSON_SHOTS = ["confused", "health", "inherited", "unfulfilled"];
 const HEAD: Point = [FIG_X, FIG_Y - 119 * FIG];
 /** When a word in one of a shot's lines starts typing. */
 function wordAt(kind: string, word: string) {
@@ -468,39 +468,57 @@ const TANGLE = (() => {
 const FRAGMENTS = Array.from({ length: 14 }, (_, k) => ({ start: (k * 360) / 14, drift: unit(k + 120), turn: unit(k + 160) - 0.5 }));
 const QUESTIONS = [[-150, 128], [-62, 118], [-20, 146], [158, 150], [24, 132]].map(([angle, radius], k) => ({ place: polar(HEAD, radius, angle), k }));
 
-const BODY_POINTS = [
-  { word: "sleep", label: "SLEEP", at: HEAD, side: -1 },
-  { word: "muscle tension", label: "TENSION", at: [FIG_X + 40, FIG_Y - 92] as Point, side: 1 },
-  { word: "digestion", label: "DIGESTION", at: [FIG_X, FIG_Y - 4] as Point, side: -1 },
-  { word: "attention,", label: "ATTENTION", at: [FIG_X - 4, FIG_Y - 212] as Point, side: 1 },
-  { word: "behavior", label: "BEHAVIOR", at: [FIG_X - 76, FIG_Y + 92] as Point, side: -1 },
+/** What progress is measured in, each rising as it is named, while the person does not. */
+const MACHINERY = [
+  { word: "Producing more?", label: "OUTPUT", x: FIG_X + 320 },
+  { word: "Predicting behavior?", label: "PREDICTION", x: FIG_X + 440 },
+  { word: "Getting people to comply?", label: "COMPLIANCE", x: FIG_X + 560 },
 ];
-const GAINS = ["CREDENTIALS", "INCOME", "APPEARANCE", "INFLUENCE", "PRODUCTIVITY"];
+const MACHINERY_BASE = FIG_Y + 110;
+/** The institution beside the person, and what it stands on rather than floats above. */
+const INSTITUTION = { x: FIG_X + 470, top: FIG_Y - 250 };
+const INSTITUTION_PATH = (() => {
+  const { x, top } = INSTITUTION;
+  const columns = [-105, -35, 35, 105].map((dx) => `M${x + dx - 9} ${top + 80}V${top + 190}M${x + dx + 9} ${top + 80}V${top + 190}`).join("");
+  return `M${x - 140} ${top + 60}L${x} ${top}L${x + 140} ${top + 60}ZM${x - 130} ${top + 60}V${top + 80}H${x + 130}V${top + 60}${columns}M${x - 140} ${top + 190}H${x + 140}M${x - 155} ${top + 204}H${x + 155}`;
+})();
+const FOUNDATIONS = [
+  { word: "money", label: "MONEY", dx: -122 },
+  { word: "prestige", label: "PRESTIGE", dx: 0 },
+  { word: "power", label: "POWER", dx: 122 },
+];
+/** What research can be made to do to a person, each landing where it acts on them. */
+const BODY_POINTS = [
+  { word: "predict,", label: "PREDICTED", at: HEAD },
+  { word: "persuade,", label: "PERSUADED", at: [FIG_X + 40, FIG_Y - 92] as Point },
+  { word: "endure more", label: "ENDURE MORE", at: [FIG_X, FIG_Y - 4] as Point },
+  { word: "control", label: "CONTROLLED", at: [FIG_X - 76, FIG_Y + 92] as Point },
+];
+/** What insecurity keeps a person buying: each fills the circle and drains away. */
+const GAINS = ["PURCHASE", "UPGRADE", "APPROVAL", "STATUS", "REASSURANCE"];
 const RINGS = [
-  { word: "language", label: "LANGUAGE", r: 130, angle: -20 },
-  { word: "permitted emotions", label: "EMOTIONS", r: 160, angle: -160 },
-  { word: "authority", label: "AUTHORITY", r: 190, angle: -28 },
-  { word: "Schools", label: "SCHOOLS", r: 220, angle: -152 },
-  { word: "religions", label: "RELIGION", r: 250, angle: -36 },
-  { word: "entertainment", label: "ENTERTAINMENT", r: 280, angle: -144 },
-  { word: "work,", label: "WORK", r: 310, angle: -42 },
-  { word: "markets", label: "MARKETS", r: 340, angle: -138 },
+  { word: "family", label: "FAMILY", r: 130, angle: -20 },
+  { word: "school", label: "SCHOOL", r: 165, angle: -160 },
+  { word: "employer", label: "EMPLOYER", r: 200, angle: -28 },
+  { word: "what to want", label: "WANTS", r: 235, angle: -152 },
+  { word: "whom to believe", label: "BELIEFS", r: 270, angle: -36 },
+  { word: "which questions", label: "QUESTIONS", r: 305, angle: -144 },
 ];
 
 function personCamera(seconds: number) {
   const health = shotOf("health").start;
-  const unfulfilled = shotOf("unfulfilled").start;
   const inherited = shotOf("inherited").start;
-  const end = shotOf("inherited").end;
+  const unfulfilled = shotOf("unfulfilled").start;
+  const end = shotOf("unfulfilled").end;
   const keys: (readonly [number, number, number, number])[] = [
-    [shotOf("confused").start, FIG_X, 300, 2.5],
-    [health - 0.2, FIG_X, 300, 2.5],
-    [health + 2.4, FIG_X, 470, 1.36],
-    [unfulfilled - 0.2, FIG_X, 470, 1.36],
-    [unfulfilled + 2.4, FIG_X, 395, 1.85],
-    [inherited - 0.2, FIG_X, 395, 1.85],
+    [shotOf("confused").start, FIG_X + 170, 360, 1.6],
+    [health - 0.2, FIG_X + 170, 360, 1.6],
+    [health + 2.4, FIG_X + 170, 450, 1.22],
+    [inherited - 0.2, FIG_X + 170, 450, 1.22],
     [inherited + 2.6, FIG_X, 440, 1.18],
-    [end - 2, FIG_X, 440, 1.18],
+    [unfulfilled - 0.2, FIG_X, 440, 1.18],
+    [unfulfilled + 2.4, FIG_X, 395, 1.85],
+    [end - 2, FIG_X, 395, 1.85],
     [end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
   ];
   const index = keys.findIndex(([at]) => at > seconds);
@@ -524,30 +542,31 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const health = shotOf("health");
   const unfulfilled = shotOf("unfulfilled");
   const inherited = shotOf("inherited");
-  // The person declines through the first three shots, and recovers only as they take responsibility.
-  const decline = smooth(seconds, confused.start, unfulfilled.end) * (1 - smooth(seconds, wordAt("inherited", "But undoing"), inherited.end - 1));
+  // The person declines through progress, the establishment and the culture, and straightens only
+  // when DOT asks what it would mean for them to develop.
+  const decline = smooth(seconds, confused.start, inherited.end) * (1 - smooth(seconds, wordAt("unfulfilled", "DOT asks"), unfulfilled.end - 1));
   const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 30 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
 
   // Confusion.
-  const inConfusion = smooth(seconds, confused.start, confused.start + 1) * (1 - smooth(seconds, health.start, health.start + 1.6));
-  const tangled = smooth(seconds, confused.start + 0.4, health.start - 1);
-  const fragmenting = smooth(seconds, wordAt("confused", "Screens"), wordAt("confused", "Money"));
+  const inConfusion = seconds < confused.end ? smooth(seconds, confused.start, confused.start + 1) : 0;
+  const tangled = smooth(seconds, confused.start + 0.4, confused.end - 1);
+  // Attention breaks apart as progress is measured in output, prediction and compliance.
+  const fragmenting = smooth(seconds, wordAt("confused", "Producing more?"), wordAt("confused", "regression"));
 
-  // The body.
-  const inBody = smooth(seconds, health.start, health.start + 1.6) * (1 - smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4));
-  const trace = Array.from({ length: 64 }, (_, k) => {
-    const x = FIG_X + 200 + k * 4.6;
-    const u = (k / 64 + (seconds % 3.2) / 3.2) % 1;
-    const skip = Math.floor((seconds + k / 22) / 3.2);
-    const spike = Math.exp(-((u - 0.5) ** 2) * 2600) * (unit(skip) > 0.3 * decline ? 56 : 18);
-    const dip = Math.exp(-((u - 0.54) ** 2) * 2600) * 20;
-    return `${k ? "L" : "M"}${x.toFixed(1)} ${(FIG_Y + 80 - spike + dip).toFixed(1)}`;
-  }).join("");
+  // The machinery keeps rising after it is named; the person's attention does not.
+  const rising = smooth(seconds, wordAt("confused", "Getting people"), wordAt("confused", "regression") + 2);
 
-  // Never enough: each gain fills the circle, and drains faster than the last.
-  const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
+  // The establishment: an institution rises beside the person, on money, prestige and power, and
+  // its work reaches the person where it predicts, persuades, controls, and asks them to endure.
+  const inBody = smooth(seconds, health.start, health.start + 1.6) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
+  const built = smooth(seconds, health.start + 0.6, wordAt("health", "Scientific institutions"));
+
+  // Why it persists: each thing bought for security fills the circle, and drains faster than the last.
+  const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, unfulfilled.end - 1.6, unfulfilled.end));
   const gainStart = unfulfilled.start + 1;
-  const gainEnd = wordAt("unfulfilled", "something essential") - 0.4;
+  const gainEnd = wordAt("unfulfilled", "DOT asks") - 0.4;
+  // Named, the extraction shows: the circle leaks.
+  const leak = smooth(seconds, wordAt("unfulfilled", "the Leech"), wordAt("unfulfilled", "the Leech") + 1) * (1 - smooth(seconds, gainEnd, gainEnd + 1.2));
   const gainStep = (gainEnd - gainStart) / GAINS.length;
   const gains = GAINS.map((name, k) => ({ name, at: gainStart + gainStep * k }));
   const hold = gainStep - 0.1;
@@ -557,10 +576,18 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const figureScale = FIG * (1 - 0.12 * decline);
   const chestY = FIG_Y + 171 * (FIG - figureScale) - 36 * figureScale;
 
-  // What you were given.
+  // The culture inside you: the rings draw in as its expectations start to sound like your own
+  // thoughts, and soften when we ask how to help one another get free.
   const inRings = smooth(seconds, inherited.start, inherited.start + 1.4);
-  const soften = smooth(seconds, wordAt("inherited", "But undoing"), inherited.end - 1);
+  const drawIn = 1 - 0.16 * smooth(seconds, wordAt("inherited", "Eventually"), wordAt("inherited", "By the time") + 2);
+  const soften = smooth(seconds, wordAt("inherited", "I am asking how"), inherited.end - 1);
   const ringsLeave = smooth(seconds, inherited.end - 2.4, inherited.end - 0.4);
+  // At night the words you were afraid to say; in the morning, back to proving your worth.
+  const night = smooth(seconds, wordAt("inherited", "at night") - 0.4, wordAt("inherited", "at night") + 0.8)
+    * (1 - smooth(seconds, wordAt("inherited", "in the morning"), wordAt("inherited", "in the morning") + 1.2));
+  const morning = smooth(seconds, wordAt("inherited", "in the morning"), wordAt("inherited", "in the morning") + 1.2)
+    * (1 - smooth(seconds, wordAt("inherited", "I am not describing") - 0.6, wordAt("inherited", "I am not describing") + 0.6));
+  const SKY: Point = [FIG_X + 470, 160];
 
   return (
     <div className="dark-trailer-stage">
@@ -585,10 +612,10 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 const at = wordAt("inherited", word);
                 const drawnIn = smooth(seconds, at - 0.1, at + 1.3);
                 if (drawnIn <= 0.001) return null;
-                const place = polar([FIG_X, FIG_Y - 20], r, angle);
+                const place = polar([FIG_X, FIG_Y - 20], r * drawIn, angle);
                 return (
                   <g key={name}>
-                    <circle cx={FIG_X} cy={FIG_Y - 20} r={r} stroke={ink} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(drawnIn)} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 20})`} opacity={0.62} />
+                    <circle cx={FIG_X} cy={FIG_Y - 20} r={r * drawIn} stroke={ink} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(drawnIn)} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 20})`} opacity={0.62} />
                     <text x={place[0]} y={place[1] + 8 / s} fill={ink} opacity={smooth(seconds, at + 0.3, at + 1)} {...label}>{name}</text>
                   </g>
                 );
@@ -598,26 +625,55 @@ function TrailerPerson({ seconds }: { seconds: number }) {
 
           {inBody > 0.001 && (
             <g opacity={inBody}>
-              <path d={trace} fill="none" stroke={clay} strokeWidth={(1.8 * WEIGHT) / s} strokeLinejoin="round" opacity={0.85} />
+              <path d={INSTITUTION_PATH} fill="none" stroke={ink} strokeWidth={(1.8 * WEIGHT) / s} strokeLinejoin="round" opacity={0.8 * Math.min(1, built * 3)} {...drawn(built)} />
+              {FOUNDATIONS.map(({ word, label: name, dx }) => {
+                const shown = smooth(seconds, wordAt("health", word), wordAt("health", word) + 0.7);
+                const x = INSTITUTION.x + dx;
+                return (
+                  <g key={name} opacity={shown}>
+                    <rect x={x - 58} y={INSTITUTION.top + 212} width={116} height={40} rx={3} fill="none" stroke={gold} strokeWidth={(1.4 * WEIGHT) / s} />
+                    <text x={x} y={INSTITUTION.top + 239} fill={gold} {...label} fontSize={19 / s} letterSpacing={1.6 / s} strokeWidth={3 / s}>{name}</text>
+                  </g>
+                );
+              })}
             </g>
           )}
-          {inBody > 0.001 && BODY_POINTS.map(({ word, label: name, at, side }) => {
+          {inBody > 0.001 && BODY_POINTS.map(({ word, label: name, at }) => {
             const start = wordAt("health", word);
             const lit = smooth(seconds, start, start + 0.7);
             if (lit <= 0.001) return null;
-            const endX = FIG_X + side * 250;
+            const endX = FIG_X - 250;
             const pulse = 0.82 + 0.18 * Math.sin(seconds * 2.4 + at[1]);
+            const reach = smooth(seconds, start, start + 1.2);
             return (
               <g key={name} opacity={lit * inBody}>
+                <path d={`M${INSTITUTION.x - 140} ${INSTITUTION.top + 120}L${at[0]} ${at[1]}`} fill="none" stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.35 * reach} />
                 <circle cx={at[0]} cy={at[1]} r={46} fill={`url(#${uid}-hurt)`} opacity={pulse} />
                 <path d={`M${at[0]} ${at[1]}L${endX} ${at[1]}`} fill="none" stroke={clay} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${6 / s}`} opacity={0.7} />
-                <text x={endX + side * 92} y={at[1] + 8 / s} fill={clay} {...label}>{name}</text>
+                <text x={endX - 100} y={at[1] + 8 / s} fill={clay} {...label}>{name}</text>
               </g>
             );
           })}
 
           {inRings > 0.001 && seconds < inherited.end && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften * (1 - smooth(seconds, inherited.end - 1.2, inherited.end))} />}
           <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
+          {night > 0.001 && <rect x={-1000} y={-1000} width={3600} height={3000} fill={stage} opacity={0.42 * night} />}
+          {night > 0.001 && (
+            <g opacity={night}>
+              <circle cx={SKY[0]} cy={SKY[1]} r={26} fill={ink} opacity={0.85} />
+              <circle cx={SKY[0] + 11} cy={SKY[1] - 7} r={24} fill={stage} />
+            </g>
+          )}
+          {morning > 0.001 && (
+            <g opacity={morning} transform={`translate(0 ${(30 * (1 - morning)).toFixed(2)})`}>
+              <circle cx={SKY[0]} cy={SKY[1]} r={20} fill={gold} opacity={0.85} />
+              {Array.from({ length: 8 }, (_, k) => {
+                const a = polar(SKY, 32, k * 45);
+                const b = polar(SKY, 44, k * 45);
+                return <path key={k} d={`M${a[0]} ${a[1]}L${b[0]} ${b[1]}`} stroke={gold} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" />;
+              })}
+            </g>
+          )}
 
           {inConfusion > 0.001 && (
             <g fill="none" strokeLinecap="round" opacity={inConfusion}>
@@ -629,8 +685,20 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 const b = polar(HEAD, radius, shift + 360 / 14 - 7);
                 return <path key={k} d={`M${a[0]} ${a[1]}A${radius} ${radius} 0 0 1 ${b[0]} ${b[1]}`} stroke={jade} strokeWidth={(1.8 * WEIGHT) / s} opacity={1 - 0.45 * fragmenting * drift} />;
               })}
+              <path d={`M${MACHINERY[0].x - 50} ${MACHINERY_BASE}H${MACHINERY.at(-1)!.x + 50}`} stroke={ink} strokeWidth={WEIGHT / s} opacity={0.5 * smooth(seconds, wordAt("confused", "Producing more?") - 0.6, wordAt("confused", "Producing more?"))} />
+              {MACHINERY.map(({ word, label: name, x }, k) => {
+                const named = smooth(seconds, wordAt("confused", word), wordAt("confused", word) + 1.4);
+                if (named <= 0.001) return null;
+                const height = named * (120 + 30 * k) + rising * (110 + 25 * k);
+                return (
+                  <g key={name}>
+                    <rect x={x - 28} y={MACHINERY_BASE - height} width={56} height={height} fill={gold} fillOpacity={0.16} stroke={gold} strokeWidth={(1.6 * WEIGHT) / s} />
+                    <text x={x} y={MACHINERY_BASE + 36} fill={gold} {...label} fontSize={24 / s} letterSpacing={2 / s} strokeWidth={3 / s} opacity={named}>{name}</text>
+                  </g>
+                );
+              })}
               {QUESTIONS.map(({ place, k }) => {
-                const at = wordAt("confused", "Marketing") + k * 1.6;
+                const at = wordAt("confused", "advanced at what?") + k * 1.6;
                 return <text key={k} x={place[0]} y={place[1]} fill={ink} stroke="none" fontFamily="Source Serif 4, Georgia, serif" fontSize={30 / s + 6} textAnchor="middle" opacity={0.75 * smooth(seconds, at, at + 1) * (0.55 + 0.45 * Math.sin(seconds * 0.9 + k))}>?</text>;
               })}
             </g>
@@ -640,6 +708,10 @@ function TrailerPerson({ seconds }: { seconds: number }) {
             <g opacity={inEmpty}>
               <circle cx={CHEST[0]} cy={chestY} r={R} fill={stage} stroke={ink} strokeWidth={(1.8 * WEIGHT) / s} strokeDasharray={level < 0.02 ? `${5 / s} ${7 / s}` : undefined} />
               <circle cx={CHEST[0]} cy={chestY} r={R - 3} fill={gold} opacity={0.75} clipPath={`url(#${uid}-level)`} />
+              {leak > 0.001 && [0, 1, 2].map((n) => {
+                const fall = (seconds * 0.9 + n / 3) % 1;
+                return <circle key={n} cx={CHEST[0]} cy={chestY + R + 8 + 70 * fall * fall} r={4.5} fill={clay} opacity={leak * (1 - fall)} />;
+              })}
               {gains.map(({ name, at }) => {
                 const fall = between(seconds, at, at + 1.3);
                 if (fall <= 0 || seconds > at + hold) return null;
@@ -651,6 +723,106 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                     <text x={FIG_X + 210} y={chestY + 10} fill={gold} {...label} opacity={smooth(seconds, at, at + 0.3) * (1 - smooth(seconds, at + hold - 0.4, at + hold))}>{name}</text>
                   </g>
                 );
+              })}
+            </g>
+          )}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/* ── The American Millennial Manifesto's own illustration, for the culture's moral erosion ── */
+type PlateKind = keyof typeof TRAILER_PLATES;
+const isPlate = (kind: string): kind is PlateKind => kind in TRAILER_PLATES;
+/** Past the waiting frame, so the illustrations load once a viewer has pressed Play, never with the page. */
+const PLATES_LOAD_AFTER = 12;
+let platesRequested = false;
+function requestPlates() {
+  if (platesRequested) return;
+  platesRequested = true;
+  for (const { src } of Object.values(TRAILER_PLATES)) new Image().src = src;
+}
+const PLATE_HEIGHT = 680;
+/** Where the illustration sits on the stage: whole, clear of the caption band. */
+const PLATE_CENTRE_Y = 405;
+const PLATE_WIDTH = PLATE_HEIGHT * 1.5;
+
+/** One illustration, held and slowly explored. The camera is an SVG transform, so it never jitters. */
+function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number }) {
+  const { src, from, to } = TRAILER_PLATES[kind];
+  const eased = progress * progress * (3 - 2 * progress);
+  const x = lerp(from[0], to[0], eased);
+  const y = lerp(from[1], to[1], eased);
+  const scale = lerp(from[2], to[2], eased);
+  return (
+    <div className="dark-trailer-stage">
+      <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <g transform={`translate(800 ${PLATE_CENTRE_Y}) scale(${scale.toFixed(5)}) translate(${(-x).toFixed(3)} ${(-y).toFixed(3)})`}>
+          <image href={src} x={800 - PLATE_WIDTH / 2} y={450 - PLATE_HEIGHT / 2} width={PLATE_WIDTH} height={PLATE_HEIGHT} preserveAspectRatio="xMidYMid meet" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/* ── The purpose: awareness widening from the person, and coherence with room for correction ── */
+const DIVISIONS = Array.from({ length: 8 }, (_, k) => ({ start: (k * 360) / 8 + 10, drift: unit(k + 200), turn: unit(k + 240) - 0.5 }));
+
+function TrailerPurpose({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade, ink, gold } = useContext(TrailerPalette);
+  const purpose = shotOf("purpose");
+  // It begins where the question left the view, then steps back to give awareness room.
+  const [, x0, y0, s0] = CAMERA[1];
+  const back = smooth(seconds, purpose.start + 1, purpose.start + 8);
+  const s = Math.exp(lerp(Math.log(s0), Math.log(1.12), back));
+  const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-x0).toFixed(2)} ${(-lerp(y0, 440, back)).toFixed(2)})`;
+  const expand = smooth(seconds, purpose.start + 0.6, wordAt("purpose", "That requires"));
+  const focus = smooth(seconds, wordAt("purpose", "mental focus"), wordAt("purpose", "mental focus") + 1.5);
+  const divided = smooth(seconds, wordAt("purpose", "internal coherence") - 1, wordAt("purpose", "internal coherence"));
+  const gather = smooth(seconds, wordAt("purpose", "less divided"), wordAt("purpose", "Coherence is not"));
+  // Coherence is not certainty: one part of the ring stays open, room for correction.
+  const open = smooth(seconds, wordAt("purpose", "room for correction"), wordAt("purpose", "room for correction") + 1.4);
+  const together = smooth(seconds, wordAt("purpose", "And we can help"), wordAt("purpose", "And we can help") + 3);
+  const R = 118;
+  return (
+    <div className="dark-trailer-stage">
+      <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <radialGradient id={`${uid}-glow`}>
+            <stop offset="0" stopColor={jade} stopOpacity=".55" />
+            <stop offset=".45" stopColor={jade} stopOpacity=".16" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`${uid}-warm`}>
+            <stop offset="0" stopColor={gold} stopOpacity=".3" />
+            <stop offset=".55" stopColor={jade} stopOpacity=".08" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g transform={world}>
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={200 + 240 * together} fill={`url(#${uid}-warm)`} opacity={together} />
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={160 + 20 * Math.sin(seconds * 0.8)} fill={`url(#${uid}-glow)`} opacity={0.6} />
+          {/* Awareness widening: seeing, understanding, choosing. */}
+          {[0, 1, 2].map((k) => (
+            <circle key={k} cx={CHEST[0]} cy={CHEST[1]} r={60 + (150 + 85 * k) * expand} fill="none" stroke={jade} strokeWidth={(1.3 * WEIGHT) / s} strokeDasharray={`${3 / s} ${8 / s}`} opacity={0.85 * expand * (1 - 0.22 * k)} />
+          ))}
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} />
+          {/* Mental focus: one steady point. */}
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={5 + 2 * focus} fill={jade} opacity={focus} />
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={focus} />
+          {/* Divided by fear, self-deception and defended identity, the arcs gather into one ring. */}
+          {divided > 0.001 && (
+            <g fill="none" strokeLinecap="round">
+              {DIVISIONS.map(({ start, drift, turn }, k) => {
+                const radius = R + 80 * drift * (1 - gather);
+                const shift = start + turn * 90 * (1 - gather);
+                const a = polar(CHEST, radius, shift);
+                // Gathered, the arcs close up; only the one left open shows a gap.
+                const b = polar(CHEST, radius, shift + 360 / 8 - (8 - 7 * gather));
+                const left = k === 0 ? 1 - 0.85 * open : 1;
+                return <path key={k} d={`M${a[0]} ${a[1]}A${radius} ${radius} 0 0 1 ${b[0]} ${b[1]}`} stroke={k === 0 && open > 0.5 ? gold : jade} strokeWidth={(2 * WEIGHT) / s} opacity={divided * left} />;
               })}
             </g>
           )}
@@ -844,6 +1016,8 @@ function TrailerArchitecture({ t }: { t: number }) {
 /** How the opening's words appear: typed as you watch, or as subtitles to the author's voice. */
 export type FilmCaptions = "typed" | "spoken";
 
+/** The most characters a typed line holds on one caption row at the trailer's type size. */
+export const LONG_LINE = 57;
 /** The narration's pace, for placing a pull quote as it is said. */
 const SPOKEN_CPS = 13.5;
 const VOICE_LABEL: Record<TrailerVoice, string> = { dot: "DOT proposes", prevailing: "The prevailing view" };
@@ -875,7 +1049,7 @@ function SpokenWords({ t }: { t: number }) {
       )}
       {shown > 0.001 && (
         <p key={quote!.text} data-trailer-line={quote!.shot} style={{ opacity: shown, transform: `translateY(${(rise * 0.22).toFixed(3)}em)`, filter: rise > 0.01 ? `blur(${(rise * 5).toFixed(2)}px)` : undefined }}>
-          {quote!.card}
+          {quote!.card![0].toUpperCase() + quote!.card!.slice(1)}
         </p>
       )}
     </div>
@@ -886,6 +1060,7 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
   seconds: number; still?: boolean; tone?: FilmTone; captions?: FilmCaptions;
 }) {
   const shot = darkTrailerShot(seconds);
+  useEffect(() => { if (seconds > PLATES_LOAD_AFTER) requestPlates(); }, [seconds]);
   // Reduced motion shows each shot finished, with its last line still on screen.
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
   const t = still ? Math.min(shot.end - 0.8, lastLine ? lastLine.until - 0.7 : Infinity) : seconds;
@@ -895,7 +1070,7 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
   const d = still && shot.kind === "title" ? Math.min(drawingTime, END - 1) : drawingTime;
   // Separate scenes rise from and return to the stage; the person's shots run on without a break.
   const index = DARK_TRAILER_SHOTS.indexOf(shot);
-  const inPerson = (kind?: string) => kind === "turn" || (kind !== undefined && PERSON_SHOTS.includes(kind));
+  const inPerson = (kind?: string) => kind === "turn" || kind === "purpose" || (kind !== undefined && PERSON_SHOTS.includes(kind));
   const opens = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index - 1]?.kind);
   const closes = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index + 1]?.kind);
   const fade = (opens ? smooth(t, shot.start, shot.start + 0.7) : 1) * (closes ? 1 - smooth(t, shot.end - 0.7, shot.end) : 1);
@@ -908,9 +1083,15 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
         {PERSON_SHOTS.includes(shot.kind) && <TrailerPerson seconds={t} />}
         {["turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
+        {shot.kind === "purpose" && <TrailerPurpose seconds={t} />}
+        {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={(t - shot.start) / (shot.end - shot.start)} />}
         {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}
       </div>
       <div className="dark-trailer-words">
+        {/* The illustrations are AI-generated, and every appearance says so. */}
+        {isPlate(shot.kind) && (
+          <p className="dark-trailer-plate-note" style={{ opacity: fade }}>AI-generated illustration, directed by the author. A visual metaphor.</p>
+        )}
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
           // With the voice, the spoken lines give way to a few pull quotes (SpokenWords).
@@ -918,8 +1099,10 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
           const opacity = smooth(t, typed.start - 0.3, typed.start) * (1 - smooth(t, typed.until - 0.5, typed.until));
           const Tag = typed.role === "title" ? "h2" : "p";
           const voiced = typed.voice ? ` dark-trailer-${typed.role}--${typed.voice}` : "";
+          // Longer lines of the author's script wrap into two smaller rows instead of one.
+          const long = typed.role === "line" && typed.text.length > LONG_LINE ? " dark-trailer-line--long" : "";
           return (
-            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}`} style={{ opacity }} data-trailer-line={typed.shot}>
+            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}${long}`} style={{ opacity }} data-trailer-line={typed.shot}>
               {/* Whose claim it is, named above it: DOT's proposal or the view it examines. */}
               {typed.voice && (
                 <span className={`dark-trailer-voice dark-trailer-voice--${typed.voice}`}>

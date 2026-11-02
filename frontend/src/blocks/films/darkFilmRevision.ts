@@ -67,17 +67,17 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "turn", "purpose", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
 
 /**
- * The opening trailer: the DOT mark, then one person. DOT is about the individual (the AMM is its
- * social application), so the film stays with them: an ordinary day → the pretence → confusion →
- * the body → never enough → what they were given and never taught → where a truthful framework
- * begins, introduced with care → you → your options. The words come from Book One and the
- * author, with DOT's proposals marked (content/films.json).
+ * The opening trailer: the DOT mark, then one person. The picture stays with them while the
+ * author's script widens: an ordinary day → what we call progress → moral erosion (the AMM's own
+ * illustration) → the establishment's part →
+ * the culture inside you → why it persists → where to begin → the purpose → DOT's proposal →
+ * the opening. The words are the author's script (content/films.json), with DOT's proposals marked.
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
   if (shot.kind !== TRAILER_KINDS[index]) throw new Error(`Trailer shot ${index} must be "${TRAILER_KINDS[index]}", not "${shot.kind}".`);
@@ -166,7 +166,12 @@ export const DARK_TRAILER_SHOTS: readonly DarkTrailerShot[] = TRAILER.shots;
 export const DARK_TRAILER_LINES: readonly TrailerLine[] = TRAILER.lines;
 
 /** Lines that finish with a soft bell: the proposal, the responsibility, the options, and the hand-off. */
-const BELL_AFTER = new Set(["Your living body is your interface to a Reality Frame.", "But undoing it is your responsibility.", "Freedom is participation in the creation of possibility.", "A school of thought for examining experience."]);
+const BELL_AFTER = new Set([
+  "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
+  "It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.",
+  "Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.",
+  "A school of thought for examining experience and expanding awareness.",
+]);
 
 export const DARK_OPENING_SECONDS = DARK_TRAILER_SHOTS.at(-1)!.end;
 const SHIFT = TOUR_OPENING_SECONDS - DARK_OPENING_SECONDS;
@@ -194,6 +199,11 @@ export function trailerFilmTime(designSeconds: number): number {
   const local = Math.min(shot.drawingLength, Math.max(0, designSeconds - shot.designStart));
   return shot.start + local * ((shot.end - shot.start) / shot.drawingLength);
 }
+
+/** The American Millennial Manifesto's own illustrations, each slowly explored ([x, y, scale] from → to). */
+export const TRAILER_PLATES = {
+  erosion: { src: "/amm/media/erosion-1536.webp", from: [800, 450, 0.96], to: [690, 500, 1.12] },
+} as const;
 
 /** The heartbeat under the question, on the drawing's clock, and where each falls in the film. */
 export const TRAILER_HEARTBEATS_DESIGN = Array.from({ length: 13 }, (_, beat) => 0.3 + beat * 0.52);
@@ -226,14 +236,9 @@ export const describeDarkFilmTime = (seconds: number) => {
   return seconds < DARK_FILM_BODY_END ? describeTourTime(originalDarkFilmTime(seconds)) : "DOT";
 };
 
-/**
- * Where the spoken definition differs from the written one: plain speech rather than "Little cs",
- * and physics accepted as given (the author, 2026-11-01).
- */
-const SPOKEN_DEFINITIONS: Readonly<Record<string, string>> = {
-  "reality-frame": "A shared, rule-bound experience laboratory, where each Little c takes part through a living body.",
-  "world-invariants": "DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.",
-};
+/** Where the author's script says a concept, the interlude or the closing differently from how it is written. */
+const SPOKEN = filmsData.trailer.narration;
+const SPOKEN_DEFINITIONS: Readonly<Record<string, string>> = SPOKEN.concepts;
 
 /**
  * Everything the author's voice reads, in film seconds: each typed line of the opening, then each
@@ -251,10 +256,10 @@ export const DARK_FILM_NARRATION: readonly { text: string; speech: string; start
       const said = SPOKEN_DEFINITIONS[part.film.id];
       return [{ text, speech: said ? `${part.film.node.title}. ${said}` : text, start: at + typing.name.start, until }];
     }
-    if (part.kind === "interlude") return [{ text: part.interlude.title, speech: part.interlude.title, start: at + sceneTyping(part.interlude).title.start, until }];
+    if (part.kind === "interlude") return [{ text: part.interlude.title, speech: SPOKEN.interlude, start: at + sceneTyping(part.interlude).title.start, until }];
     if (part.kind === "closing") {
       const text = filmsData.conceptTour.closing.title;
-      return [{ text, speech: text, start: at + CLOSING_TYPING.title.start, until }];
+      return [{ text, speech: SPOKEN.closing, start: at + CLOSING_TYPING.title.start, until }];
     }
     return [];
   }),

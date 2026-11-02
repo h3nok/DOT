@@ -59,7 +59,6 @@ export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark", c
           duration={DARK_FILM_SECONDS}
           sections={DARK_FILM_SECTIONS}
           warmUntil={DARK_OPENING_SECONDS}
-          label={describeDarkFilmTime(seconds).replace(": ", " · ")}
         />
       )}
     </div>

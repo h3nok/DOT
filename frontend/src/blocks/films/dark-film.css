@@ -184,6 +184,18 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   background: radial-gradient(ellipse at 50% 50%, transparent 58%, var(--film-vignette) 100%);
 }
 .dark-trailer-drawing { display: block; width: 100%; height: 100%; overflow: visible; filter: var(--film-bloom); }
+.dark-trailer-plate { display: block; width: 100%; height: 100%; overflow: hidden; }
+/* The illustrations are AI-generated, and every appearance says so. */
+.dark-trailer-plate-note {
+  position: absolute;
+  right: 5%;
+  bottom: 4.2%;
+  max-width: 46%;
+  margin: 0;
+  color: var(--film-muted);
+  font-size: clamp(.6rem, .95cqi, 1.15rem);
+  text-align: right;
+}
 /* The picture keeps above the caption band, so words never sit on a figure. */
 .dark-trailer-scene { position: absolute; inset: 0; }
 /* With the author's voice, a pull quote at each turn of the argument: one whole sentence, held. */
@@ -319,6 +331,15 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   color: var(--film-voice);
 }
 .dark-trailer-voice--prevailing { color: var(--film-clay); }
+/* A long line of the author's script: two balanced rows, a size smaller, clear of the figure. */
+.dark-trailer-line--long {
+  right: 7%;
+  left: 7%;
+  font-size: clamp(1.05rem, 2.3cqi, 2.9rem);
+  line-height: 1.22;
+  white-space: normal;
+  text-wrap: balance;
+}
 .dark-trailer-line--prevailing { color: var(--film-prevailing); font-style: italic; }
 /* A quotation's source: small, upright, beneath the words it attributes. */
 .dark-trailer-cite {

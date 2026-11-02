@@ -17,6 +17,7 @@ import {
   DARK_TRAILER_HEARTBEATS,
   DARK_FILM_NARRATION,
   DARK_TRAILER_SHOTS,
+  TRAILER_PLATES,
   describeDarkFilmTime,
 } from "./darkFilmRevision";
 import { formatDuration } from "./filmTime";
@@ -67,8 +68,14 @@ export default function DarkFilmPreview() {
         await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
       },
     };
-    window.__DOT_DARK_FILM_PREVIEW__ = renderer;
-    return () => { delete window.__DOT_DARK_FILM_PREVIEW__; };
+    // The exporter starts only once every illustration is ready, so no frame shows a missing one.
+    let current = true;
+    void Promise.all(Object.values(TRAILER_PLATES).map(({ src }) => {
+      const image = new Image();
+      image.src = src;
+      return image.decode();
+    })).then(() => { if (current) window.__DOT_DARK_FILM_PREVIEW__ = renderer; });
+    return () => { current = false; delete window.__DOT_DARK_FILM_PREVIEW__; };
   }, [renderMode]);
 
   // The dark tone sets the page's dark tokens itself; the light tone uses the page's light theme.

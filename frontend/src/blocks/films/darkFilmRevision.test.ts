@@ -12,7 +12,7 @@ import {
   type TourPart,
 } from "./conceptTour";
 import { DarkFilmFrame } from "./DarkFilmPlayer";
-import { DarkFilmTrailer } from "./DarkFilmTrailer";
+import { DarkFilmTrailer, LONG_LINE } from "./DarkFilmTrailer";
 import {
   DARK_FILM_BODY_END,
   DARK_FILM_NARRATION,
@@ -39,9 +39,9 @@ const partIdentity = (part: TourPart) => {
 describe("the dark film's opening trailer", () => {
   const originalBody = CONCEPT_TOUR.filter((part) => part.kind !== "scene");
 
-  it("runs twelve unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
+  it("runs thirteen unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "erosion", "health", "inherited", "unfulfilled", "turn", "purpose", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
@@ -49,7 +49,7 @@ describe("the dark film's opening trailer", () => {
       if (index) expect(shot.start).toBe(DARK_TRAILER_SHOTS[index - 1].end);
     });
     expect(DARK_OPENING_SECONDS).toBeGreaterThan(90);
-    expect(DARK_OPENING_SECONDS).toBeLessThan(500);
+    expect(DARK_OPENING_SECONDS).toBeLessThan(700);
   });
 
   it("is friendly to read: calm typing, a long hold, and an empty pause between lines", () => {
@@ -63,12 +63,10 @@ describe("the dark film's opening trailer", () => {
     });
   });
 
-  it("lets the picture carry it: few words, one short line on screen at a time", () => {
-    const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(480);
+  it("keeps one line on screen at a time: one row, or two smaller rows for a long line", () => {
     for (const typed of DARK_TRAILER_LINES) {
-      // Every line fits on a single caption row at the trailer's type size.
-      expect(typed.text.length, typed.text).toBeLessThanOrEqual(57);
+      // Past one caption row, a line is set smaller and wraps; it must still fit in two rows.
+      expect(typed.text.length, typed.text).toBeLessThanOrEqual(LONG_LINE * 2.8);
       expect(typed.end, typed.text).toBeLessThan(typed.until - 1);
       const shot = DARK_TRAILER_SHOTS.find((item) => item.kind === typed.shot)!;
       expect(typed.start, typed.text).toBeGreaterThanOrEqual(shot.start);
@@ -86,64 +84,69 @@ describe("the dark film's opening trailer", () => {
       "We go to work. We pay bills. We scroll. We compete.",
       "We call exhaustion adulthood, anxiety responsibility,",
       "isolation independence, and endless accumulation success.",
-      "We pretend the picture is coherent,",
-      "because admitting otherwise means questioning ourselves.",
-      "Look closely at what fills a day.",
-      "Marketing fills every space we look at.",
-      "Screens compete for every minute of our attention.",
-      "Our attention has become the product.",
-      "Money speaks, and most of us listen.",
-      "And we erode, from the inside.",
-      "We’re hurting, uncertain, and more afraid.",
-      "The body notices before we admit it.",
-      "An unresolved thought can change sleep,",
-      "muscle tension, digestion, attention, and behavior.",
-      "So we work harder for relief.",
-      "Worth becomes achievement. Rest becomes laziness.",
-      "Success may bring relief, but only briefly.",
-      "Like filling a cup with a hole in it.",
-      "And a sense that something essential is missing.",
-      "This isn’t a personal failing.",
-      "Culture arrives through language, permitted emotions,",
-      "authority, admired people, and expected futures.",
-      "Schools, religions, entertainment, work, law, and markets",
-      "carry it into daily life.",
-      "Much of it is absorbed before it can be named.",
-      "You inherited a painting already begun.",
-      "We’re not immune to our culture, or our surroundings.",
-      "The worker is coached. The workload remains.",
-      "The citizen is blamed. The architecture remains.",
-      "None of that is your fault.",
-      "But undoing it is your responsibility.",
-      "So where do we begin?",
-      "The most immediate fact of your existence",
-      "is not a measurement.",
-      "It is that you are here to experience one.",
-      "Feeling must be treated as data,",
-      "but feeling is not automatically truth.",
-      "The framework that emerged is Digital Organism Theory.",
-      "It is a construction, not a revelation.",
-      "Examine the model. Compare it with your experience.",
-      "You are Little c.",
-      "Your living body is your interface to a Reality Frame.",
-      "Like a musician and an instrument: joined, not the same.",
-      "This world, RF₀, is an experience laboratory.",
-      "Its rules turn experience into lessons.",
-      "Conditioning is real. Conditioning is not essence.",
-      "A river is shaped by its banks. It is not the banks.",
-      "Yet the painting is not the painter.",
-      "What matters is what Little c does with the opening.",
-      "Freedom is participation in the creation of possibility.",
-      "Our culture trains us to adapt to the painting.",
-      "DOT aims at seeing the painting itself.",
-      "I believe that’s where a cultural revolution begins.",
+      "We speak proudly of freedom.",
+      "Then we go quiet when exercising it might cost us our place.",
+      "Here in America, we are very comfortable calling ourselves advanced.",
+      "But advanced at what? Producing more? Predicting behavior? Getting people to comply?",
+      "I am asking whether the person is developing along with the machinery.",
+      "Are we becoming more capable of examining our beliefs, choosing deliberately, and caring for one another?",
+      "Because if those capacities are diminishing, I call that regression. Our machines cannot develop our awareness on our behalf.",
+      "Beneath all of this is a moral erosion.",
+      "We are taught that anyone can be anything.",
+      "It sounds like freedom. It is unrealistic, and it is no moral foundation.",
+      "We learn what we could become. We are rarely asked what is good.",
+      "And the establishment has to answer for its part in this. The scientific community included.",
+      "Scientific institutions are part of society. They do not float above money, prestige, or power.",
+      "What gets funded? Which questions become respectable? And whose purposes does the work serve?",
+      "When your research makes people easier to predict, persuade, and control, whose freedom are you expanding?",
+      "You cannot help build those tools and declare their consequences somebody else’s problem.",
+      "Nor can you present your assumptions as established knowledge simply because you have a title.",
+      "Show us the evidence. Explain its limits. Respect for expertise should not require the surrender of judgment.",
+      "And helping a worker endure more does not answer whether more should be demanded of them.",
+      "Civilization does not arrive inside you labeled civilization. It arrives as ordinary life.",
+      "Through what your family praises, what your school rewards, and what your employer will tolerate.",
+      "It teaches you what to want, whom to believe, and which questions might cost you your place.",
+      "Eventually, its expectations begin to sound like your own thoughts.",
+      "By the time you question the world, much of that world is already participating in the questioning.",
+      "You inherited a Painting already begun. I did too.",
+      "You tell yourself you are fine. But at night, you rehearse the words you were afraid to say.",
+      "Then, in the morning, you go back to proving your worth. Somewhere along the way, earning a living became proving that you deserve one.",
+      "I am not describing this to look down on the person caught inside it. I am asking how we help one another get free.",
+      "An arrangement can benefit from the very condition that is hurting the people inside it.",
+      "If insecurity keeps you buying and fear keeps you obedient, somebody can profit from keeping you unsettled.",
+      "No one has to coordinate every part of it. The rewards can keep it going.",
+      "In the American Millennial Manifesto, I call this extractive logic the Leech.",
+      "DOT asks what it would mean for the person inside that arrangement to develop, rather than merely adapt.",
+      "The most immediate fact of your existence is not a measurement.",
+      "It is that you are here to experience one. The observer belongs in the inquiry.",
+      "Feeling must be treated as data. But feeling is not automatically truth.",
+      "Digital Organism Theory is the framework I have been building around these questions.",
+      "It is a construction, not a revelation. Examine it. I am not asking you to replace their authority with mine.",
+      "In DOT, the purpose is expansion of awareness.",
+      "I do not mean collecting more information. I mean becoming more capable of seeing, understanding, and choosing.",
+      "That requires mental focus. The ability to stay with experience long enough to examine it, including what you would rather avoid.",
+      "In DOT, that capacity depends on internal coherence—on becoming less divided by fear, self-deception, and the defense of identity.",
+      "Coherence is not certainty. You can be very certain and very wrong. There has to be room for correction.",
+      "The purpose is not to become better at defending what you already believe. It is to become capable of understanding what you could not see before.",
+      "And we can help one another do this. We can make it possible to question, to admit uncertainty, and to change without humiliation.",
+      "DOT calls the local experiencer Little c.",
+      "It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.",
+      "Think of a musician and an instrument. They work together, but they are not the same thing.",
+      "This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.",
+      "But experience does not automatically become understanding. What matters is what you do with it.",
+      "Conditioning is real. But in DOT’s language, the Painting is not the painter.",
+      "You can notice an impulse without immediately obeying it. The conditioning is still there, but your relationship to it can change.",
+      "Freedom is participation in the creation of possibility. That includes making room for someone else’s freedom.",
+      "This cannot remain private work. We need time to think, enough security to speak honestly, and institutions that do not punish us for questioning them.",
+      "That is what I believe a civilization should be for. Helping awareness expand—not making human beings easier to manage.",
       "Digital Organism Theory",
-      "A school of thought for examining experience.",
+      "A school of thought for examining experience and expanding awareness.",
     ]);
     const voiceOf = (text: string) => DARK_TRAILER_LINES.find((typed) => typed.text === text)!.voice;
-    expect(voiceOf("You are Little c.")).toBe("dot");
-    expect(voiceOf("Your living body is your interface to a Reality Frame.")).toBe("dot");
-    expect(voiceOf("This world, RF₀, is an experience laboratory.")).toBe("dot");
+    expect(voiceOf("In DOT, the purpose is expansion of awareness.")).toBe("dot");
+    expect(voiceOf("DOT calls the local experiencer Little c.")).toBe("dot");
+    expect(voiceOf("It proposes that your living body is your interface to a Reality Frame, not the whole of what you are.")).toBe("dot");
+    expect(voiceOf("But experience does not automatically become understanding. What matters is what you do with it.")).toBeUndefined();
     expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(6);
   });
 
@@ -158,7 +161,7 @@ describe("the dark film's opening trailer", () => {
   it("shows RF₀ as an experience laboratory and traces its Stream to Little c before the title", () => {
     const architecture = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "architecture")!;
     const line = DARK_TRAILER_LINES.find((typed) => typed.shot === "architecture" && typed.text.startsWith("This world"))!;
-    expect(line.text).toBe("This world, RF₀, is an experience laboratory.");
+    expect(line.text).toBe("This world, RF₀, is modeled as an experience laboratory. You act within its rules, encounter consequences, and carry something of the experience forward.");
     expect(line.voice).toBe("dot");
     expect(line.until - line.end).toBeGreaterThanOrEqual(2);
 
@@ -173,14 +176,20 @@ describe("the dark film's opening trailer", () => {
     expect(view.container.querySelector(".dark-trailer-lab-stream")).toHaveAttribute("stroke-dashoffset", "0");
     expect(view.container.querySelector(".dark-trailer-lab-receiver")).toHaveAttribute("stroke-dashoffset", "0");
     // Reduced motion holds the shot's last line.
-    expect(view.getByText("Its rules turn experience into lessons.", { selector: ".sr-only" })).toBeInTheDocument();
+    expect(view.getByText("But experience does not automatically become understanding. What matters is what you do with it.", { selector: ".sr-only" })).toBeInTheDocument();
     view.unmount();
   });
 
-  it("stays with one person: no crowd, no illustrations, and options after the box dissolves", () => {
+  it("stays with one person, but for the AMM's own illustration of moral erosion, which says it is AI-generated", () => {
     for (const shot of DARK_TRAILER_SHOTS) {
       const view = render(createElement(DarkFilmTrailer, { seconds: (shot.start + shot.end) / 2 }));
-      expect(view.container.querySelector("image"), shot.kind).toBeNull();
+      if (shot.kind === "erosion") {
+        expect(view.container.querySelector("image")).toHaveAttribute("href", "/amm/media/erosion-1536.webp");
+        expect(view.container.querySelector(".dark-trailer-plate-note")).toHaveTextContent("AI-generated illustration, directed by the author. A visual metaphor.");
+      } else {
+        expect(view.container.querySelector("image"), shot.kind).toBeNull();
+        expect(view.container.querySelector(".dark-trailer-plate-note"), shot.kind).toBeNull();
+      }
       view.unmount();
     }
     const options = render(createElement(DarkFilmTrailer, { seconds: trailerFilmTime(55.9) }));
@@ -188,7 +197,7 @@ describe("the dark film's opening trailer", () => {
     options.unmount();
   });
 
-  it("opens on the DOT mark, then an ordinary day, and names what the person's body carries", () => {
+  it("opens on the DOT mark, then an ordinary day, and marks what research can be made to do to a person", () => {
     const [mark, normal] = DARK_TRAILER_SHOTS;
     const view = render(createElement(DarkFilmTrailer, { seconds: mark.end - 1 }));
     expect(view.getByRole("img", { name: "DOT" })).toBeInTheDocument();
@@ -197,7 +206,7 @@ describe("the dark film's opening trailer", () => {
     expect(view.container.querySelector(".dark-trailer-drawing path")).not.toBeNull();
     const health = DARK_TRAILER_SHOTS.find((shot) => shot.kind === "health")!;
     view.rerender(createElement(DarkFilmTrailer, { seconds: health.end - 1 }));
-    for (const name of ["SLEEP", "TENSION", "DIGESTION", "ATTENTION", "BEHAVIOR"]) expect(view.getByText(name)).toBeInTheDocument();
+    for (const name of ["PREDICTED", "PERSUADED", "CONTROLLED", "ENDURE MORE"]) expect(view.getByText(name)).toBeInTheDocument();
     view.unmount();
   });
 
@@ -233,15 +242,19 @@ describe("the dark film's opening trailer", () => {
     const cards = DARK_TRAILER_LINES.filter((typed) => typed.card);
     expect(cards.map(({ card }) => card)).toEqual([
       "We call exhaustion adulthood",
-      "Our attention has become the product.",
-      "The body notices before we admit it.",
-      "Like filling a cup with a hole in it.",
-      "None of that is your fault.",
-      "But undoing it is your responsibility.",
-      "Digital Organism Theory",
+      "But advanced at what?",
+      "We are rarely asked what is good.",
+      "Respect for expertise should not require the surrender of judgment.",
+      "You inherited a Painting already begun.",
+      "earning a living became proving that you deserve one.",
+      "somebody can profit from keeping you unsettled.",
+      "Feeling must be treated as data.",
       "It is a construction, not a revelation.",
-      "You are Little c.",
-      "Conditioning is not essence.",
+      "In DOT, the purpose is expansion of awareness.",
+      "Coherence is not certainty.",
+      "DOT calls the local experiencer Little c.",
+      "the Painting is not the painter.",
+      "Helping awareness expand—not making human beings easier to manage.",
     ]);
     for (const typed of cards) expect(typed.text).toContain(typed.card);
     // The film introduces the theory, not its author.
@@ -253,9 +266,13 @@ describe("the dark film's opening trailer", () => {
     const view = render(createElement(DarkFilmTrailer, { seconds: line.until - 1, captions: "spoken" }));
     expect(view.container.querySelector(".dark-trailer-pull")).toBeNull();
     expect(view.container.querySelector(".dark-trailer-line")).toBeNull();
-    const quote = DARK_TRAILER_LINES.find((typed) => typed.text === "But undoing it is your responsibility.")!;
+    const quote = DARK_TRAILER_LINES.find((typed) => typed.card === "Coherence is not certainty.")!;
     view.rerender(createElement(DarkFilmTrailer, { seconds: quote.until - 1, captions: "spoken" }));
-    expect(view.container.querySelector(".dark-trailer-pull p")).toHaveTextContent(/^But undoing it is your responsibility\.$/);
+    expect(view.container.querySelector(".dark-trailer-pull p")).toHaveTextContent(/^Coherence is not certainty\.$/);
+    // A quote taken from mid-sentence still opens as a sentence.
+    const middle = DARK_TRAILER_LINES.find((typed) => typed.card === "somebody can profit from keeping you unsettled.")!;
+    view.rerender(createElement(DarkFilmTrailer, { seconds: middle.until - 1, captions: "spoken" }));
+    expect(view.container.querySelector(".dark-trailer-pull p")).toHaveTextContent(/^Somebody can profit from keeping you unsettled\.$/);
     // One label holds through the pauses between DOT's lines.
     const [first, second] = DARK_TRAILER_LINES.filter((typed) => typed.shot === "design");
     view.rerender(createElement(DarkFilmTrailer, { seconds: (first.until + second.start) / 2, captions: "spoken" }));
@@ -266,10 +283,14 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
-  it("speaks plainly where the written definition would not: no \"Little cs\", and physics as given", () => {
-    const spoken = DARK_FILM_NARRATION.map(({ speech }) => speech).join(" ");
-    expect(spoken).not.toContain("Little cs");
-    expect(spoken).toContain("DOT doesn’t dispute physics.");
+  it("reads the concepts, the interlude and the closing in the author's own spoken wording", () => {
+    const spoken = DARK_FILM_NARRATION.map(({ speech }) => speech);
+    expect(spoken.join(" ")).not.toContain("Little cs");
+    expect(spoken).toContain("Physical Sciences as Frame Derivations. Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.");
+    expect(spoken).toContain("Ego. The defense of the Character Little c has learned to call itself.");
+    expect(spoken.at(-1)).toBe("Become a student of your own experience. Help make room for others to do the same. We can do this together.");
+    // What is typed on screen stays the Concept Map's own line.
+    expect(DARK_FILM_NARRATION.at(-1)!.text).toBe("Become a student of your own experience.");
   });
 
   it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
@@ -323,8 +344,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(353);
-    expect(DARK_FILM_SECONDS).toBe(655);
+    expect(DARK_OPENING_SECONDS).toBe(648);
+    expect(DARK_FILM_SECONDS).toBe(950);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);
