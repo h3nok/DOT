@@ -78,7 +78,7 @@ for (const { number, display } of lines) {
   const master = path.join(run, "masters", `line-${number}.wav`);
   await masterVoiceover(path.join(run, `raw-scene-${number}.wav`), master, { leadInSeconds: 0.05, tailSeconds: 0.25 });
   const { durationSeconds } = await probeAudio(master);
-  manifest.push({ text: display, file: path.basename(master), durationSeconds });
+  manifest.push({ text: display, file: path.relative(run, master), durationSeconds });
 }
 await writeFile(path.join(run, "manifest.json"), `${JSON.stringify({ source: recording ? "recording" : "voice model", speed, lines: manifest }, null, 2)}\n`);
 console.log(`Ready: --voiceover=${run}`);
