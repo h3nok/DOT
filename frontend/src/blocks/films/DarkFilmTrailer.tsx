@@ -502,10 +502,14 @@ function personCamera(seconds: number) {
     [inherited + 2.6, FIG_X, 440, 1.18],
     [end - 2, FIG_X, 440, 1.18],
     [end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
-    // The author: from the question's close view, out to the person and the career beside them.
-    [shotOf("author").start, FIG_X, 415, 1.7],
-    [shotOf("author").start + 3, FIG_X - 70, 440, 1.2],
-    [shotOf("author").end, FIG_X - 40, 430, 1.3],
+    // The author: in on him as he gives his name, out as his career appears beside him,
+    // and back to the question's opening view.
+    [shotOf("author").start, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
+    [shotOf("author").start + 3, FIG_X, 415, 1.7],
+    [wordAt("author", "a career") - 1.5, FIG_X, 415, 1.7],
+    [wordAt("author", "a career") + 1.5, FIG_X - 70, 440, 1.2],
+    [shotOf("author").end - 1.5, FIG_X - 70, 440, 1.2],
+    [shotOf("author").end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
   ];
   const index = keys.findIndex(([at]) => at > seconds);
   if (index <= 0) {
@@ -551,14 +555,16 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   // The author: a career beside him, the strain he names, and stepping away to share this work.
   const author = shotOf("author");
   const inAuthor = seconds >= author.start ? 1 : 0;
-  const career = inAuthor * smooth(seconds, wordAt("author", "career") - 0.3, wordAt("author", "career") + 0.9)
-    * (1 - smooth(seconds, wordAt("author", "stepping away"), wordAt("author", "stepping away") + 2.2));
+  const career = inAuthor * smooth(seconds, wordAt("author", "a career") - 0.3, wordAt("author", "a career") + 0.9)
+    * (1 - smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2));
   const strain = inAuthor * smooth(seconds, wordAt("author", "erosion"), wordAt("author", "erosion") + 0.8)
-    * (1 - smooth(seconds, wordAt("author", "carrying"), wordAt("author", "I have spent")));
-  const step = inAuthor * 110 * smooth(seconds, wordAt("author", "stepping away"), wordAt("author", "stepping away") + 2.4);
-  const named = inAuthor * smooth(seconds, wordAt("author", "I call it"), wordAt("author", "I call it") + 1.6);
+    * (1 - smooth(seconds, wordAt("author", "Now I am") - 1, wordAt("author", "Now I am") + 0.5));
+  // Stepping away: his career drifts off and fades; he stays where he is.
+  const drift = inAuthor * 140 * smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2);
   // His entrance: as he says his name, a light rises at the chest, then settles.
-  const entrance = inAuthor * smooth(seconds, author.start + 1.2, author.start + 2.6) * (1 - smooth(seconds, wordAt("author", "I don’t claim"), wordAt("author", "But I feel")));
+  const entrance = inAuthor * smooth(seconds, wordAt("author", "My name"), wordAt("author", "My name") + 1.4) * (1 - smooth(seconds, wordAt("author", "For forty"), wordAt("author", "as if I were")));
+  // Forty years asleep in the culture: the figure dims, and wakes as he names the contrast.
+  const asleep = inAuthor * smooth(seconds, wordAt("author", "For forty"), wordAt("author", "as if I were") + 1) * (1 - smooth(seconds, wordAt("author", "It gave me contrast"), wordAt("author", "It gave me contrast") + 1.6));
 
   // Never enough: each gain fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
@@ -634,18 +640,17 @@ function TrailerPerson({ seconds }: { seconds: number }) {
 
           {inRings > 0.001 && seconds < inherited.end && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften * (1 - smooth(seconds, inherited.end - 1.2, inherited.end))} />}
           {career > 0.001 && (
-            <g transform={`translate(${FIG_X - 300} ${FIG_Y - 40}) scale(1.4)`} opacity={career}>
+            <g transform={`translate(${FIG_X - 300 - drift} ${FIG_Y - 40}) scale(1.4)`} opacity={career}>
               <Laptop seconds={seconds} color={ink} w={(2.2 * WEIGHT) / (s * 1.4)} />
             </g>
           )}
           {strain > 0.001 && [0, 0.5].map((offset) => {
             const raw = seconds * 0.45 + offset;
             const frac = raw - Math.floor(raw);
-            return <circle key={offset} cx={FIG_X + step} cy={CHEST[1]} r={40 + 80 * frac} fill="none" stroke={clay} strokeWidth={(2.4 * WEIGHT) / s} opacity={0.95 * strain * (1 - frac)} />;
+            return <circle key={offset} cx={FIG_X} cy={CHEST[1]} r={40 + 80 * frac} fill="none" stroke={clay} strokeWidth={(2.4 * WEIGHT) / s} opacity={0.95 * strain * (1 - frac)} />;
           })}
-          {entrance > 0.001 && <circle cx={FIG_X + step} cy={CHEST[1]} r={70 + 60 * entrance} fill={`url(#${uid}-glow)`} opacity={entrance} />}
-          {named > 0.001 && <circle cx={FIG_X + step} cy={CHEST[1]} r={60 + 50 * named} fill={`url(#${uid}-glow)`} opacity={named} />}
-          <Figure x={FIG_X + step} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
+          {entrance > 0.001 && <circle cx={FIG_X} cy={CHEST[1]} r={70 + 60 * entrance} fill={`url(#${uid}-glow)`} opacity={entrance} />}
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={(1 - 0.34 * decline) * (1 - 0.6 * asleep)} shrink={decline} />
 
           {inConfusion > 0.001 && (
             <g fill="none" strokeLinecap="round" opacity={inConfusion}>
@@ -930,7 +935,8 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
           );
         })}
         {shot.kind === "author" && (() => {
-          const at = DARK_TRAILER_LINES.find((typed) => typed.shot === "author")!;
+          // The name card enters on his name, in either caption mode.
+          const at = DARK_TRAILER_LINES.find((typed) => typed.text === "My name is Henok.")!;
           const shown = smooth(t, at.start + 0.2, at.start + 1.2) * (1 - smooth(t, at.start + 9, at.start + 10));
           return shown > 0.001 ? (
             <div className="dark-trailer-name-card" style={{ opacity: shown }}>

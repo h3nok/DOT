@@ -41,7 +41,7 @@ describe("the dark film's opening trailer", () => {
 
   it("runs twelve unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "author", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "author", "turn", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
@@ -49,7 +49,7 @@ describe("the dark film's opening trailer", () => {
       if (index) expect(shot.start).toBe(DARK_TRAILER_SHOTS[index - 1].end);
     });
     expect(DARK_OPENING_SECONDS).toBeGreaterThan(90);
-    expect(DARK_OPENING_SECONDS).toBeLessThan(420);
+    expect(DARK_OPENING_SECONDS).toBeLessThan(500);
   });
 
   it("is friendly to read: calm typing, a long hold, and an empty pause between lines", () => {
@@ -65,7 +65,7 @@ describe("the dark film's opening trailer", () => {
 
   it("lets the picture carry it: few words, one short line on screen at a time", () => {
     const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(400);
+    expect(words).toBeLessThanOrEqual(480);
     for (const typed of DARK_TRAILER_LINES) {
       // Every line fits on a single caption row at the trailer's type size.
       expect(typed.text.length, typed.text).toBeLessThanOrEqual(57);
@@ -86,19 +86,24 @@ describe("the dark film's opening trailer", () => {
       "We go to work. We pay bills. We scroll. We compete.",
       "We call exhaustion adulthood, anxiety responsibility,",
       "isolation independence, and endless accumulation success.",
-      "We pretend the picture is coherent.",
-      "Let us be honest about why.",
+      "We pretend the picture is coherent,",
+      "because admitting otherwise would mean questioning",
+      "the identities and institutions built inside it.",
+      "Look closely at what fills a day.",
       "Marketing fills every space we look at.",
       "Screens compete for every minute of our attention.",
       "Our attention has become the product.",
       "Money speaks, and most of us listen.",
       "And slowly, we stop caring for each other.",
-      "An unresolved thought could change sleep,",
+      "The body notices before we admit it.",
+      "An unresolved thought can change sleep,",
       "muscle tension, digestion, attention, and behavior.",
+      "So we work harder for relief.",
       "Worth becomes achievement. Rest becomes laziness.",
       "Success may bring relief, but only briefly.",
       "Like filling a cup with a hole in it.",
       "A persistent sense that something essential is missing.",
+      "This is not a personal failing.",
       "Culture arrives through language, permitted emotions,",
       "authority, admired people, and expected futures.",
       "Schools, religions, entertainment, work, law, and markets",
@@ -106,23 +111,29 @@ describe("the dark film's opening trailer", () => {
       "Much of it is absorbed before it can be named.",
       "You inherited a painting already begun.",
       "We are not immune to our culture or our surroundings.",
-      "This culture works against human development.",
+      "The worker is coached. The workload remains.",
+      "The citizen is blamed. The architecture remains.",
       "None of that is your fault.",
       "But undoing it is your responsibility.",
-      "So where do you begin?",
+      "I know this from the inside.",
+      "My name is Henok.",
+      "For forty years, I lived inside this culture",
+      "as if I were asleep.",
+      "I came to the United States as an African migrant.",
+      "Living between cultures did not free me.",
+      "It gave me contrast.",
+      "I have raised a family, carried debt, and made mistakes.",
+      "I could understand an argument",
+      "and still be unable to live it.",
+      "I don’t claim to know everything.",
+      "But I feel the erosion. I see the despair.",
+      "Now I am stepping away from a career in software and AI",
+      "to share this work.",
+      "So where does waking up begin?",
       "The most immediate fact of your existence",
       "is not a measurement.",
       "It is that you are here to experience one.",
-      "My name is Henok.",
-      "I don’t claim to know everything.",
-      "But I feel the erosion. I see the despair.",
-      "I pursued these questions while raising a family,",
-      "carrying debt, and making mistakes.",
-      "I have spent my career in software and AI.",
-      "Now I am stepping away from it to share this work.",
-      "I call it Digital Organism Theory.",
-      "I believe we need a cultural revolution,",
-      "and DOT aims to be its foundation.",
+      "I call what I found Digital Organism Theory.",
       "You are Little c.",
       "Your living body is your interface to a Reality Frame.",
       "Like a musician and an instrument: joined, not the same.",
@@ -130,8 +141,12 @@ describe("the dark film's opening trailer", () => {
       "Its rules turn experience into lessons.",
       "Conditioning is real. Conditioning is not essence.",
       "A river is shaped by its banks. It is not the banks.",
+      "Yet the painting is not the painter.",
       "What matters is what Little c does with the opening.",
       "Freedom is participation in the creation of possibility.",
+      "Our culture trains us to adapt to the painting.",
+      "DOT aims at seeing the painting itself.",
+      "I believe that is where a cultural revolution begins.",
       "Digital Organism Theory",
       "A school of thought for examining experience.",
     ]);
@@ -285,8 +300,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(382);
-    expect(DARK_FILM_SECONDS).toBe(684);
+    expect(DARK_OPENING_SECONDS).toBe(483);
+    expect(DARK_FILM_SECONDS).toBe(785);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

@@ -63,7 +63,7 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "author", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "author", "turn", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
@@ -72,7 +72,7 @@ const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || va
  * The opening trailer: the DOT mark, then one person. DOT is about the individual (the AMM is its
  * social application), so the film stays with them: an ordinary day → the pretence → confusion →
  * the body → never enough → what they were given and never taught → where a truthful framework
- * begins → the author, by name, and why → you → your options. The words come from Book One and the
+ * begins → the author, by name, and how he woke → you → your options. The words come from Book One and the
  * author, with DOT's proposals marked (content/films.json).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {

@@ -112,8 +112,10 @@
           "We go to work. We pay bills. We scroll. We compete.",
           "We call exhaustion adulthood, anxiety responsibility,",
           "isolation independence, and endless accumulation success.",
+          "We pretend the picture is coherent,",
+          "because admitting otherwise would mean questioning",
           {
-            "text": "We pretend the picture is coherent.",
+            "text": "the identities and institutions built inside it.",
             "pause": 1.5
           }
         ]
@@ -125,7 +127,7 @@
         "lead": 1.4,
         "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named.",
         "lines": [
-          "Let us be honest about why.",
+          "Look closely at what fills a day.",
           "Marketing fills every space we look at.",
           "Screens compete for every minute of our attention.",
           "Our attention has become the product.",
@@ -143,7 +145,8 @@
         "lead": 1.2,
         "description": "The view widens to the whole person, shrinking and dimming. One by one, places on the body light up in clay and are named: sleep, tension, digestion, attention, behavior. A heart trace beside them grows uneven.",
         "lines": [
-          "An unresolved thought could change sleep,",
+          "The body notices before we admit it.",
+          "An unresolved thought can change sleep,",
           "muscle tension, digestion, attention, and behavior."
         ]
       },
@@ -154,6 +157,7 @@
         "lead": 1.2,
         "description": "Close on the person’s chest, an empty circle. Things drop into it, named credentials, income, appearance, influence, productivity. Each fills it briefly and drains away, until it stays empty.",
         "lines": [
+          "So we work harder for relief.",
           "Worth becomes achievement. Rest becomes laziness.",
           "Success may bring relief, but only briefly.",
           "Like filling a cup with a hole in it.",
@@ -170,6 +174,7 @@
         "lead": 1.2,
         "description": "Rings close around the person one at a time, each named as it is spoken: language, emotions, authority, schools, religion, entertainment, work, markets. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
         "lines": [
+          "This is not a personal failing.",
           "Culture arrives through language, permitted emotions,",
           "authority, admired people, and expected futures.",
           "Schools, religions, entertainment, work, law, and markets",
@@ -177,9 +182,9 @@
           "Much of it is absorbed before it can be named.",
           "You inherited a painting already begun.",
           "We are not immune to our culture or our surroundings.",
+          "The worker is coached. The workload remains.",
           {
-            "text": "This culture works against human development.",
-            "voice": "dot",
+            "text": "The citizen is blamed. The architecture remains.",
             "pause": 1
           },
           {
@@ -194,14 +199,52 @@
         "linger": 0.8
       },
       {
+        "kind": "author",
+        "label": "Henok",
+        "design": 8,
+        "lead": 1.4,
+        "description": "The person stands. As the author gives his name, a light rises at the chest and a name card enters. The figure dims through his years asleep in the culture and brightens as he names the contrast. Soft rings of strain pulse as he speaks of erosion and despair. A laptop, his career, appears and drifts away as he steps away from it.",
+        "lines": [
+          "I know this from the inside.",
+          "My name is Henok.",
+          "For forty years, I lived inside this culture",
+          {
+            "text": "as if I were asleep.",
+            "pause": 1.5
+          },
+          "I came to the United States as an African migrant.",
+          "Living between cultures did not free me.",
+          {
+            "text": "It gave me contrast.",
+            "pause": 1
+          },
+          "I have raised a family, carried debt, and made mistakes.",
+          "I could understand an argument",
+          {
+            "text": "and still be unable to live it.",
+            "pause": 1
+          },
+          "I don’t claim to know everything.",
+          {
+            "text": "But I feel the erosion. I see the despair.",
+            "pause": 1.5
+          },
+          "Now I am stepping away from a career in software and AI",
+          {
+            "text": "to share this work.",
+            "pause": 1
+          }
+        ]
+      },
+      {
         "kind": "turn",
         "label": "The question",
         "design": 7,
         "lead": 1.2,
-        "description": "The rings clear. The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat.",
+        "description": "The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat.",
         "lines": [
           {
-            "text": "So where do you begin?",
+            "text": "So where does waking up begin?",
             "pause": 1.5
           },
           "The most immediate fact of your existence",
@@ -209,39 +252,15 @@
           {
             "text": "It is that you are here to experience one.",
             "pause": 1.5
+          },
+          {
+            "text": "I call what I found Digital Organism Theory.",
+            "pause": 1
           }
         ],
         "drawing": [
           0,
           7
-        ]
-      },
-      {
-        "kind": "author",
-        "label": "Henok",
-        "design": 8,
-        "lead": 1.4,
-        "description": "The person stands, and a laptop appears beside them: a career in software. Soft rings of strain pulse at the chest as the author speaks of erosion and despair, then still. As he steps away from his career, the person moves away from the laptop, which fades, and a light grows at the chest.",
-        "lines": [
-          "My name is Henok.",
-          "I don’t claim to know everything.",
-          {
-            "text": "But I feel the erosion. I see the despair.",
-            "pause": 1.5
-          },
-          "I pursued these questions while raising a family,",
-          {
-            "text": "carrying debt, and making mistakes.",
-            "pause": 1
-          },
-          "I have spent my career in software and AI.",
-          "Now I am stepping away from it to share this work.",
-          "I call it Digital Organism Theory.",
-          "I believe we need a cultural revolution,",
-          {
-            "text": "and DOT aims to be its foundation.",
-            "pause": 1.5
-          }
         ]
       },
       {
@@ -286,10 +305,20 @@
         "lines": [
           "Conditioning is real. Conditioning is not essence.",
           "A river is shaped by its banks. It is not the banks.",
+          "Yet the painting is not the painter.",
           "What matters is what Little c does with the opening.",
           {
             "text": "Freedom is participation in the creation of possibility.",
             "pause": 1
+          },
+          "Our culture trains us to adapt to the painting.",
+          {
+            "text": "DOT aims at seeing the painting itself.",
+            "voice": "dot"
+          },
+          {
+            "text": "I believe that is where a cultural revolution begins.",
+            "pause": 1.5
           }
         ],
         "drawing": [
