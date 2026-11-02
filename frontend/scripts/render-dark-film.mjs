@@ -491,7 +491,7 @@ try {
         "-filter_complex",
         `[0:v]trim=0:${cut},setpts=PTS-STARTPTS[a];[0:v]trim=start=${mark},setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0[video];` +
         `[0:a]atrim=0:${cut},asetpts=PTS-STARTPTS,afade=t=out:st=${cut - 0.6}:d=0.6[x];[0:a]atrim=start=${mark},asetpts=PTS-STARTPTS[y];[x][y]concat=n=2:v=0:a=1[audio]`,
-        "-map", "[video]", "-map", "[audio]",
+        "-map", "[video]", "-map", "[audio]", "-r", String(FPS),
         "-c:v", "libx264", "-preset", "fast", "-crf", "18", "-threads", "4", "-profile:v", "high", "-level:v", H264_LEVEL,
         "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
         "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", opening,
