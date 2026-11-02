@@ -1,7 +1,7 @@
 DOT — FILM NARRATION SCRIPT (v17, the whole film) · FOR THE AUTHOR TO READ
 ====================================================================
 
-Read all 84 lines in one recording, in order: the opening, then each concept's name and definition,
+Read all 85 lines in one recording, in order: the opening, then each concept's name and definition,
 the interlude, and the closing. The film places each line as it appears on screen.
 A calm, unhurried voice. Where a line ends with a pause in the film, let it land.
 
@@ -36,97 +36,98 @@ THE LINES
  8. Screens compete for every minute of our attention.
  9. Our attention has become the product.
 10. Money speaks, and most of us listen.
-11. And slowly, we stop caring for each other.
+11. And we erode, from the inside.
+12. We’re hurting, uncertain, and more afraid.
 
 — The body —
-12. The body notices before we admit it.
-13. An unresolved thought can change sleep,
-14. muscle tension, digestion, attention, and behavior.
+13. The body notices before we admit it.
+14. An unresolved thought can change sleep,
+15. muscle tension, digestion, attention, and behavior.
 
 — Never enough —
-15. So we work harder for relief.
-16. Worth becomes achievement. Rest becomes laziness.
-17. Success may bring relief, but only briefly.
-18. Like filling a cup with a hole in it.
-19. And a sense that something essential is missing.
+16. So we work harder for relief.
+17. Worth becomes achievement. Rest becomes laziness.
+18. Success may bring relief, but only briefly.
+19. Like filling a cup with a hole in it.
+20. And a sense that something essential is missing.
 
 — The culture around you —
-20. This isn’t a personal failing.
-21. Culture arrives through language, permitted emotions,
-22. authority, admired people, and expected futures.
-23. Schools, religions, entertainment, work, law, and markets
-24. carry it into daily life.
-25. Much of it is absorbed before it can be named.
-26. You inherited a painting already begun.
-27. We’re not immune to our culture, or our surroundings.
-28. The worker is coached. The workload remains.
-29. The citizen is blamed. The architecture remains.
-30. None of that is your fault.
-31. But undoing it is your responsibility.
+21. This isn’t a personal failing.
+22. Culture arrives through language, permitted emotions,
+23. authority, admired people, and expected futures.
+24. Schools, religions, entertainment, work, law, and markets
+25. carry it into daily life.
+26. Much of it is absorbed before it can be named.
+27. You inherited a painting already begun.
+28. We’re not immune to our culture, or our surroundings.
+29. The worker is coached. The workload remains.
+30. The citizen is blamed. The architecture remains.
+31. None of that is your fault.
+32. But undoing it is your responsibility.
 
 — Henok —
-32. I know this from the inside.
-33. My name is Enock.
-34. For forty years, I lived inside this culture
-35. as if I were asleep.
-36. I came to the United States as an African migrant.
-37. Living between cultures didn’t free me.
-38. It gave me contrast.
-39. I’ve raised a family, carried debt, and made mistakes.
-40. I could understand an argument
-41. and still be unable to live it.
-42. I don’t claim to know everything.
-43. But I feel the erosion. I see the despair.
-44. Now I’m stepping away from a career in software and AI
-45. to share this work.
+33. I know this from the inside.
+34. My name is Enock.
+35. For forty years, I lived inside this culture
+36. as if I were asleep.
+37. I came to the United States as an African migrant.
+38. Living between cultures didn’t free me.
+39. It gave me contrast.
+40. I’ve raised a family, carried debt, and made mistakes.
+41. I could understand an argument
+42. and still be unable to live it.
+43. I don’t claim to know everything.
+44. But I feel the erosion. I see the despair.
+45. Now I’m stepping away from a career in software and AI
+46. to share this work.
 
 — The question —
-46. So where does waking up begin?
-47. The most immediate fact of your existence
-48. is not a measurement.
-49. It is that you are here to experience one.
-50. I call what I found Digital Organism Theory.
+47. So where does waking up begin?
+48. The most immediate fact of your existence
+49. is not a measurement.
+50. It is that you are here to experience one.
+51. I call what I found Digital Organism Theory.
 
 — DOT’s proposal —
-51. You are Little c.   [DOT proposes]
-52. Your living body is your interface to a Reality Frame.   [DOT proposes]
-53. Like a musician and an instrument: joined, not the same.   [DOT proposes]
+52. You are Little c.   [DOT proposes]
+53. Your living body is your interface to a Reality Frame.   [DOT proposes]
+54. Like a musician and an instrument: joined, not the same.   [DOT proposes]
 
 — The architecture —
-54. This world, RF₀, is an experience laboratory.   [DOT proposes]
-55. Its rules turn experience into lessons.   [DOT proposes]
+55. This world, RF₀, is an experience laboratory.   [DOT proposes]
+56. Its rules turn experience into lessons.   [DOT proposes]
 
 — The opening —
-56. Conditioning is real. Conditioning is not essence.
-57. A river is shaped by its banks. It is not the banks.
-58. Yet the painting is not the painter.
-59. What matters is what Little c does with the opening.
-60. Freedom is participation in the creation of possibility.
-61. Our culture trains us to adapt to the painting.
-62. DOT aims at seeing the painting itself.   [DOT proposes]
-63. I believe that’s where a cultural revolution begins.
+57. Conditioning is real. Conditioning is not essence.
+58. A river is shaped by its banks. It is not the banks.
+59. Yet the painting is not the painter.
+60. What matters is what Little c does with the opening.
+61. Freedom is participation in the creation of possibility.
+62. Our culture trains us to adapt to the painting.
+63. DOT aims at seeing the painting itself.   [DOT proposes]
+64. I believe that’s where a cultural revolution begins.
 
 — Digital Organism Theory —
-64. Digital Organism Theory
-65. A school of thought for examining experience.
+65. Digital Organism Theory
+66. A school of thought for examining experience.
 
 — The concepts —
-66. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
-67. Digital Organism. A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.
-68. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
-69. Little c. The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.
-70. The Decoupling Principle. DOT proposes that Little c and the living body are distinct and functionally connected.
-71. Reality Frame. A shared, rule-bound experience laboratory, where each Little c takes part through a living body.
-72. Physical Sciences as Frame Derivations. DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.
-73. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
-74. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
-75. The Experience Loop. Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.
-76. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
-77. Painting. The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.
-78. Character. The relatively stable patterns expressed through repeated interpretation and action.
-79. The Fear-Gating Principle. When Fear governs, the set of responses that feels available becomes narrower.
-80. Ego defends the Character Little c has learned to call itself.
-81. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you.
-82. Conscious Authorship. Notice inherited interpretation, examine available responses, and act with greater deliberation.
-83. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.
-84. Become a student of your own experience.
+67. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
+68. Digital Organism. A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.
+69. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
+70. Little c. The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.
+71. The Decoupling Principle. DOT proposes that Little c and the living body are distinct and functionally connected.
+72. Reality Frame. A shared, rule-bound experience laboratory, where each Little c takes part through a living body.
+73. Physical Sciences as Frame Derivations. DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.
+74. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
+75. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
+76. The Experience Loop. Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.
+77. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
+78. Painting. The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.
+79. Character. The relatively stable patterns expressed through repeated interpretation and action.
+80. The Fear-Gating Principle. When Fear governs, the set of responses that feels available becomes narrower.
+81. Ego defends the Character Little c has learned to call itself.
+82. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you.
+83. Conscious Authorship. Notice inherited interpretation, examine available responses, and act with greater deliberation.
+84. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.
+85. Become a student of your own experience.

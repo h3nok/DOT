@@ -93,7 +93,8 @@ describe("the dark film's opening trailer", () => {
       "Screens compete for every minute of our attention.",
       "Our attention has become the product.",
       "Money speaks, and most of us listen.",
-      "And slowly, we stop caring for each other.",
+      "And we erode, from the inside.",
+      "We’re hurting, uncertain, and more afraid.",
       "The body notices before we admit it.",
       "An unresolved thought can change sleep,",
       "muscle tension, digestion, attention, and behavior.",
@@ -311,8 +312,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(401);
-    expect(DARK_FILM_SECONDS).toBe(703);
+    expect(DARK_OPENING_SECONDS).toBe(405);
+    expect(DARK_FILM_SECONDS).toBe(707);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

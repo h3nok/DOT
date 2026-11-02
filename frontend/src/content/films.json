@@ -149,7 +149,7 @@
         "label": "Why",
         "design": 7,
         "lead": 1.4,
-        "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named.",
+        "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named, and the person is named hurting, uncertain and afraid.",
         "lines": [
           "Look closely at what fills a day.",
           {
@@ -177,7 +177,18 @@
             ]
           },
           {
-            "text": "And slowly, we stop caring for each other.",
+            "text": "And we erode, from the inside.",
+            "show": [
+              "erode"
+            ]
+          },
+          {
+            "text": "We’re hurting, uncertain, and more afraid.",
+            "show": [
+              "hurting",
+              "uncertain",
+              "more afraid"
+            ],
             "pause": 1
           }
         ]
