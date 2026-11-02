@@ -17,6 +17,7 @@ import {
   EDITORIAL_FORMS,
   claimLevelFromLabel,
   editorialFormFromText,
+  numberedClaimStatement,
 } from "./editorialGrammar";
 import { headingSlug } from "./headingSlug";
 import { EvidenceChart } from "./EvidenceChart";
@@ -429,6 +430,22 @@ export function BookMarkdown({
                 return <figure className="post-inline-image">{children}{caption && <figcaption>{String(caption)}</figcaption>}</figure>;
               }
               const presentation = paragraphPresentation(children);
+              const entries = Children.toArray(children);
+              const first = entries[0];
+              const statement = numberedClaimStatement(nodeText(children).trim());
+              if (statement && typeof first === "string" && first.startsWith(statement.prefix)) {
+                return <p
+                  className="book-numbered-statement"
+                  data-statement-kind={statement.kind}
+                  data-claim-id={statement.id}
+                  data-claim-level={statement.claimLevel}
+                  data-short-opening="true"
+                  style={presentationStyle(statement)}
+                >
+                  <span className="book-numbered-statement__label">{statement.prefix}</span>{" "}
+                  <span className="book-numbered-statement__body">{withConceptLinks([first.slice(statement.prefix.length).trimStart(), ...entries.slice(1)])}</span>
+                </p>;
+              }
               // Runs of stacked one-sentence lines arrive already marked by
               // remarkStichicRuns; keep that class alongside the content-derived one.
               const draftPosition = (rest as Record<string, unknown>)[

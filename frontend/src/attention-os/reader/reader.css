@@ -23,6 +23,43 @@
   height: auto;
 }
 
+/* Logical boundaries and numbered claims should be found without interrupting reading. */
+.book-prose p.book-numbered-statement {
+  --statement-tone: var(--book-claim-tone, var(--book-cinnabar));
+  margin-block: 2rem;
+  padding: 1rem 1.15rem;
+  border-inline-start: 3px solid var(--statement-tone);
+  border-radius: 0 .35rem .35rem 0;
+  background: color-mix(in oklab, var(--statement-tone) 6%, transparent);
+  color: var(--book-ink, var(--foreground));
+  break-inside: avoid;
+  text-align: start;
+}
+
+.book-prose p.book-numbered-statement[data-statement-kind="boundary"] {
+  border-inline-start-width: 4px;
+  background: color-mix(in oklab, var(--statement-tone) 10%, transparent);
+}
+
+.book-numbered-statement__label {
+  display: block;
+  margin-bottom: .6rem;
+  color: var(--book-ink, var(--foreground));
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: calc(.8125rem * var(--reading-scale, 1));
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.book-numbered-statement__body { display: block; font-size: 1.06em; font-weight: 500; line-height: 1.65; }
+
+html[data-contrast="high"] .book-numbered-statement { --statement-tone: var(--book-ink, var(--foreground)); }
+
+@media print {
+  .book-prose p.book-numbered-statement { background: transparent; border-color: #000; color: #000; }
+  .book-numbered-statement__label { color: #000; }
+}
+
 .book-reference-sheet {
   overscroll-behavior: contain;
   overflow-wrap: anywhere;

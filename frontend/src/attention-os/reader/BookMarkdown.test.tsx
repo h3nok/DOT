@@ -213,4 +213,15 @@ describe("BookMarkdown", () => {
       "Consciousness is fundamental.",
     );
   });
+
+  it("highlights a numbered boundary without changing its meaning or losing inline formatting", () => {
+    const { container } = render(<BookMarkdown content="Bridge boundary — DOT-B1: Epistemic priority does not entail *ontological fundamentality*. [Read the argument](https://example.test/argument)." />);
+    const statement = container.querySelector('[data-claim-id="DOT-B1"]');
+    expect(statement).toHaveAttribute("data-statement-kind", "boundary");
+    expect(statement).not.toHaveAttribute("data-claim-level");
+    expect(statement?.querySelector(".book-numbered-statement__label")).toHaveTextContent("Bridge boundary — DOT-B1:");
+    expect(statement?.querySelector("em")).toHaveTextContent("ontological fundamentality");
+    expect(statement?.querySelector("a")).toHaveAttribute("href", "https://example.test/argument");
+    expect(statement).toHaveTextContent("Epistemic priority does not entail ontological fundamentality.");
+  });
 });

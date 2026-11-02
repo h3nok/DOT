@@ -140,3 +140,15 @@ export function claimLevelFromLabel(label: string | null): ClaimLevel | undefine
     (definition) => definition.label.toLocaleLowerCase() === normalized,
   )?.id;
 }
+
+/** Authored, numbered statements retain their exact label and reference code. */
+export function numberedClaimStatement(text: string) {
+  const match = text.match(/^((Observation|Definition|Bridge boundary|Ontological hypothesis|Architectural hypothesis)\s+[—–-]\s+(DOT-[A-Z]\d+):)\s+([\s\S]+)$/);
+  if (!match) return null;
+  const label = match[2];
+  const kind = label === "Bridge boundary" ? "boundary" : label === "Definition" ? "definition" : label === "Observation" ? "observation" : "hypothesis";
+  return {
+    prefix: match[1], id: match[3], kind,
+    claimLevel: kind === "observation" || kind === "hypothesis" ? kind : undefined,
+  };
+}
