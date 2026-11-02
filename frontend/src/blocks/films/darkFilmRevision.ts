@@ -24,11 +24,11 @@ export const TRAILER_READING = {
   /** Typing speed, characters per second: slower than reading, so the eye keeps up. */
   charsPerSecond: 15,
   /** How long a typed line stays: a base, plus time for its length, never under the minimum. */
-  holdSeconds: 1.2,
-  holdPerChar: 0.04,
-  minHoldSeconds: 2.5,
+  holdSeconds: 0.9,
+  holdPerChar: 0.03,
+  minHoldSeconds: 2,
   /** The empty pause between one line leaving and the next arriving. */
-  gapSeconds: 1,
+  gapSeconds: 0.6,
   /** The picture alone, after a shot's last line, before the next shot. */
   tailSeconds: 1,
 } as const;
@@ -43,6 +43,10 @@ interface ScriptLine {
   cite?: string;
   /** Extra seconds the line stays, in silence, so it can land. */
   pause?: number;
+  /** With the author's voice, only these words of the line appear, as he says them. */
+  show?: readonly string[];
+  /** How the narration says the line, where that differs from how it reads (a name, say). */
+  say?: string;
 }
 
 interface ShotScript {
@@ -87,8 +91,8 @@ const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) 
     lead: shot.lead,
     linger: "linger" in shot ? shot.linger : undefined,
     voice,
-    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string; pause?: number })[]).map((line) =>
-      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite, pause: line.pause },
+    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string; pause?: number; show?: string[]; say?: string })[]).map((line) =>
+      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite, pause: line.pause, show: line.show, say: line.say },
     ),
   };
 });
@@ -114,6 +118,10 @@ export interface TrailerLine extends TypedLine {
   voice?: TrailerVoice;
   /** The source of a quotation, shown beneath it once it is typed. */
   cite?: string;
+  /** The words that appear when the author's voice carries the line. */
+  show?: readonly string[];
+  /** What the narration says. */
+  speech: string;
 }
 
 function buildTrailer() {
@@ -127,13 +135,13 @@ function buildTrailer() {
     let cursor = at + script.lead;
     const shotLines: TrailerLine[] = [];
     script.lines.forEach((entry, index) => {
-      const { text, voice = script.voice, cite, pause = 0 } = typeof entry === "string" ? { text: entry } : entry;
+      const { text, voice = script.voice, cite, pause = 0, show, say } = typeof entry === "string" ? { text: entry } as ScriptLine : entry;
       const start = cursor;
       const end = start + text.length / charsPerSecond;
       // A quotation holds a little longer, so its source can be read too.
       const until = end + Math.max(minHoldSeconds, holdSeconds + holdPerChar * text.length) + (cite ? 1.6 : 0) + pause;
       const role = title ? (index === 0 ? "title" : "subtitle") : "line";
-      shotLines.push({ shot: kind, text, start, end, charsPerSecond, until, role, voice, cite });
+      shotLines.push({ shot: kind, text, start, end, charsPerSecond, until, role, voice, cite, show, speech: say ?? text });
       // The title stays while its subtitle types beneath it; spoken lines take turns.
       cursor = title ? end + gapSeconds : until + gapSeconds;
     });
@@ -217,21 +225,35 @@ export const describeDarkFilmTime = (seconds: number) => {
 };
 
 /**
+ * Where the spoken definition differs from the written one: plain speech rather than "Little cs",
+ * and physics accepted as given (the author, 2026-11-01).
+ */
+const SPOKEN_DEFINITIONS: Readonly<Record<string, string>> = {
+  "reality-frame": "A shared, rule-bound experience laboratory, where each Little c takes part through a living body.",
+  "world-invariants": "DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.",
+};
+
+/**
  * Everything the author's voice reads, in film seconds: each typed line of the opening, then each
  * concept's name and definition (its analogy stays on screen to read), the interlude, and the
  * closing line. `text` is what the narration manifest matches.
  */
-export const DARK_FILM_NARRATION: readonly { text: string; start: number; until: number }[] = [
-  ...DARK_TRAILER_LINES.map(({ text, start, until }) => ({ text, start, until })),
+export const DARK_FILM_NARRATION: readonly { text: string; speech: string; start: number; until: number }[] = [
+  ...DARK_TRAILER_LINES.map(({ text, speech, start, until }) => ({ text, speech, start, until })),
   ...CONCEPT_TOUR.filter((part) => part.start >= TOUR_OPENING_SECONDS).flatMap((part) => {
     const at = part.start - SHIFT;
     const until = part.end - SHIFT;
     if (part.kind === "concept") {
       const typing = conceptTyping(part.film, TOUR_CONCEPT_BEATS, tourPlace(part.position));
-      return [{ text: `${part.film.node.title}. ${part.film.node.oneLine}`, start: at + typing.name.start, until }];
+      const text = `${part.film.node.title}. ${part.film.node.oneLine}`;
+      const said = SPOKEN_DEFINITIONS[part.film.id];
+      return [{ text, speech: said ? `${part.film.node.title}. ${said}` : text, start: at + typing.name.start, until }];
     }
-    if (part.kind === "interlude") return [{ text: part.interlude.title, start: at + sceneTyping(part.interlude).title.start, until }];
-    if (part.kind === "closing") return [{ text: filmsData.conceptTour.closing.title, start: at + CLOSING_TYPING.title.start, until }];
+    if (part.kind === "interlude") return [{ text: part.interlude.title, speech: part.interlude.title, start: at + sceneTyping(part.interlude).title.start, until }];
+    if (part.kind === "closing") {
+      const text = filmsData.conceptTour.closing.title;
+      return [{ text, speech: text, start: at + CLOSING_TYPING.title.start, until }];
+    }
     return [];
   }),
 ];

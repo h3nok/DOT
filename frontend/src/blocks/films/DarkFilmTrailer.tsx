@@ -558,7 +558,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   const career = inAuthor * smooth(seconds, wordAt("author", "a career") - 0.3, wordAt("author", "a career") + 0.9)
     * (1 - smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2));
   const strain = inAuthor * smooth(seconds, wordAt("author", "erosion"), wordAt("author", "erosion") + 0.8)
-    * (1 - smooth(seconds, wordAt("author", "Now I am") - 1, wordAt("author", "Now I am") + 0.5));
+    * (1 - smooth(seconds, wordAt("author", "Now I’m") - 1, wordAt("author", "Now I’m") + 0.5));
   // Stepping away: his career drifts off and fades; he stays where he is.
   const drift = inAuthor * 140 * smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2);
   // His entrance: as he says his name, a light rises at the chest, then settles.
@@ -569,7 +569,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   // Never enough: each gain fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
   const gainStart = unfulfilled.start + 1;
-  const gainEnd = wordAt("unfulfilled", "A persistent") - 0.4;
+  const gainEnd = wordAt("unfulfilled", "something essential") - 0.4;
   const gainStep = (gainEnd - gainStart) / GAINS.length;
   const gains = GAINS.map((name, k) => ({ name, at: gainStart + gainStep * k }));
   const hold = gainStep - 0.1;
@@ -878,7 +878,9 @@ function TrailerArchitecture({ t }: { t: number }) {
 export type FilmCaptions = "typed" | "spoken";
 
 /** The author's name card, shown as he introduces himself. */
-const AUTHOR_CARD = { name: "Dr. Henok Ghebrechristos", role: "Author, Digital Organism Theory" } as const;
+const AUTHOR_CARD = { name: "Henok Ghebrechristos", role: "Author, Digital Organism Theory" } as const;
+/** The narration's pace, for placing each key word as it is said. */
+const SPOKEN_CPS = 13.5;
 
 export function DarkFilmTrailer({ seconds, still = false, tone = "dark", captions = "typed" }: {
   seconds: number; still?: boolean; tone?: FilmTone; captions?: FilmCaptions;
@@ -911,7 +913,32 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
       <div className="dark-trailer-words">
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
-          const spoken = captions === "spoken";
+          const spoken = captions === "spoken" && typed.role === "line";
+          // With the voice, a line shows only its key words, each as it is said; some show none.
+          if (spoken) {
+            if (!typed.show?.length && !typed.voice) return null;
+            const out = 1 - smooth(t, typed.until - 0.5, typed.until);
+            return (
+              <div key={typed.text} className="dark-trailer-keywords" data-trailer-line={typed.shot} style={{ opacity: out }}>
+                {typed.voice && (
+                  <span className={`dark-trailer-voice dark-trailer-voice--${typed.voice}`} style={{ opacity: smooth(t, typed.start, typed.start + 0.4) }}>
+                    {typed.voice === "dot" ? "DOT proposes" : "The prevailing view"}
+                  </span>
+                )}
+                <p>
+                  {(typed.show ?? []).map((word) => {
+                    const said = typed.start + 0.15 + typed.text.indexOf(word) / SPOKEN_CPS;
+                    const shown = smooth(t, said, said + 0.45);
+                    return (
+                      <span key={word} className="dark-trailer-keyword" style={{ opacity: shown, transform: `translateY(${((1 - shown) * 0.35).toFixed(3)}em)` }}>
+                        {word}
+                      </span>
+                    );
+                  })}
+                </p>
+              </div>
+            );
+          }
           // Spoken, a line arrives whole with the voice; typed, it types as you watch.
           const opacity = (spoken ? smooth(t, typed.start, typed.start + 0.45) : smooth(t, typed.start - 0.3, typed.start))
             * (1 - smooth(t, typed.until - 0.5, typed.until));

@@ -19,7 +19,7 @@ test("the film's own address opens on the film, waiting for Play", async ({ page
   const play = page.getByRole("button", { name: /^Play Book One, concept by concept/ });
   await expect(play).toBeVisible();
   await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveValue("0");
-  await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveAttribute("max", "785");
+  await expect(page.getByRole("slider", { name: "Seek timeline in seconds" })).toHaveAttribute("max", "703");
   await expect(page.locator('[data-trailer-shot="normal"]')).toBeVisible();
   await expect(page.getByRole("navigation", { name: "After the film" }).getByRole("link", { name: "Read Book One" }))
     .toHaveAttribute("href", "/book/digital-organism-theory");
@@ -37,7 +37,7 @@ test("the revised title stays readable in either theme with reduced motion", asy
     }, theme);
     const timeline = page.getByRole("slider", { name: "Seek timeline in seconds" });
     await expect(page.getByRole("button", { name: "Typewriter sound" })).toHaveCount(0);
-    await timeline.fill("479");
+    await timeline.fill("397");
     const title = page.locator(".dark-trailer-title");
     const subtitle = page.locator(".dark-trailer-subtitle");
     await expect(title).toHaveText(/Digital Organism Theory/);

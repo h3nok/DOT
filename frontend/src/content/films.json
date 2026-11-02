@@ -109,14 +109,38 @@
         "lead": 1.6,
         "description": "One line draws a person. Around them an ordinary day repeats, a light circling faster each time: a laptop, a growing stack of bills, a phone with a feed moving up its screen, and a ranked row of people on rising bars. The person starts to smile, while rings of stress pulse at the chest behind the smile. The day fades, and only the smile and the strain remain.",
         "lines": [
-          "We go to work. We pay bills. We scroll. We compete.",
-          "We call exhaustion adulthood, anxiety responsibility,",
-          "isolation independence, and endless accumulation success.",
-          "We pretend the picture is coherent,",
-          "because admitting otherwise would mean questioning",
           {
-            "text": "the identities and institutions built inside it.",
-            "pause": 1.5
+            "text": "We go to work. We pay bills. We scroll. We compete.",
+            "show": [
+              "work",
+              "bills",
+              "scroll",
+              "compete"
+            ]
+          },
+          {
+            "text": "We call exhaustion adulthood, anxiety responsibility,",
+            "show": [
+              "exhaustion",
+              "anxiety"
+            ]
+          },
+          {
+            "text": "isolation independence, and endless accumulation success.",
+            "show": [
+              "isolation",
+              "accumulation"
+            ]
+          },
+          {
+            "text": "We pretend the picture is coherent,",
+            "show": [
+              "pretend"
+            ]
+          },
+          {
+            "text": "because admitting otherwise means questioning ourselves.",
+            "pause": 0.8
           }
         ]
       },
@@ -128,13 +152,33 @@
         "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named.",
         "lines": [
           "Look closely at what fills a day.",
-          "Marketing fills every space we look at.",
-          "Screens compete for every minute of our attention.",
-          "Our attention has become the product.",
-          "Money speaks, and most of us listen.",
+          {
+            "text": "Marketing fills every space we look at.",
+            "show": [
+              "Marketing"
+            ]
+          },
+          {
+            "text": "Screens compete for every minute of our attention.",
+            "show": [
+              "Screens"
+            ]
+          },
+          {
+            "text": "Our attention has become the product.",
+            "show": [
+              "the product"
+            ]
+          },
+          {
+            "text": "Money speaks, and most of us listen.",
+            "show": [
+              "Money speaks"
+            ]
+          },
           {
             "text": "And slowly, we stop caring for each other.",
-            "pause": 1.5
+            "pause": 1
           }
         ]
       },
@@ -157,13 +201,32 @@
         "lead": 1.2,
         "description": "Close on the person’s chest, an empty circle. Things drop into it, named credentials, income, appearance, influence, productivity. Each fills it briefly and drains away, until it stays empty.",
         "lines": [
-          "So we work harder for relief.",
-          "Worth becomes achievement. Rest becomes laziness.",
-          "Success may bring relief, but only briefly.",
+          {
+            "text": "So we work harder for relief.",
+            "show": [
+              "harder"
+            ]
+          },
+          {
+            "text": "Worth becomes achievement. Rest becomes laziness.",
+            "show": [
+              "Worth",
+              "Rest"
+            ]
+          },
+          {
+            "text": "Success may bring relief, but only briefly.",
+            "show": [
+              "only briefly"
+            ]
+          },
           "Like filling a cup with a hole in it.",
           {
-            "text": "A persistent sense that something essential is missing.",
-            "pause": 1.5
+            "text": "And a sense that something essential is missing.",
+            "show": [
+              "missing"
+            ],
+            "pause": 1
           }
         ]
       },
@@ -174,26 +237,62 @@
         "lead": 1.2,
         "description": "Rings close around the person one at a time, each named as it is spoken: language, emotions, authority, schools, religion, entertainment, work, markets. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
         "lines": [
-          "This is not a personal failing.",
+          {
+            "text": "This isn’t a personal failing.",
+            "show": [
+              "personal failing"
+            ]
+          },
           "Culture arrives through language, permitted emotions,",
           "authority, admired people, and expected futures.",
           "Schools, religions, entertainment, work, law, and markets",
           "carry it into daily life.",
-          "Much of it is absorbed before it can be named.",
-          "You inherited a painting already begun.",
-          "We are not immune to our culture or our surroundings.",
-          "The worker is coached. The workload remains.",
+          {
+            "text": "Much of it is absorbed before it can be named.",
+            "show": [
+              "before it can be named"
+            ]
+          },
+          {
+            "text": "You inherited a painting already begun.",
+            "show": [
+              "a painting already begun"
+            ]
+          },
+          {
+            "text": "We’re not immune to our culture, or our surroundings.",
+            "show": [
+              "not immune"
+            ]
+          },
+          {
+            "text": "The worker is coached. The workload remains.",
+            "show": [
+              "coached",
+              "remains"
+            ]
+          },
           {
             "text": "The citizen is blamed. The architecture remains.",
-            "pause": 1
+            "show": [
+              "blamed",
+              "remains"
+            ],
+            "pause": 0.6
           },
           {
             "text": "None of that is your fault.",
-            "pause": 1
+            "show": [
+              "your fault"
+            ],
+            "pause": 0.6
           },
           {
             "text": "But undoing it is your responsibility.",
-            "pause": 2
+            "show": [
+              "your responsibility"
+            ],
+            "pause": 1.2
           }
         ],
         "linger": 0.8
@@ -206,33 +305,69 @@
         "description": "The person stands. As the author gives his name, a light rises at the chest and a name card enters. The figure dims through his years asleep in the culture and brightens as he names the contrast. Soft rings of strain pulse as he speaks of erosion and despair. A laptop, his career, appears and drifts away as he steps away from it.",
         "lines": [
           "I know this from the inside.",
-          "My name is Henok.",
-          "For forty years, I lived inside this culture",
+          {
+            "text": "My name is Henok.",
+            "say": "My name is Enock."
+          },
+          {
+            "text": "For forty years, I lived inside this culture",
+            "show": [
+              "forty years"
+            ]
+          },
           {
             "text": "as if I were asleep.",
-            "pause": 1.5
-          },
-          "I came to the United States as an African migrant.",
-          "Living between cultures did not free me.",
-          {
-            "text": "It gave me contrast.",
+            "show": [
+              "asleep"
+            ],
             "pause": 1
           },
-          "I have raised a family, carried debt, and made mistakes.",
+          {
+            "text": "I came to the United States as an African migrant.",
+            "show": [
+              "African migrant"
+            ]
+          },
+          "Living between cultures didn’t free me.",
+          {
+            "text": "It gave me contrast.",
+            "show": [
+              "contrast"
+            ],
+            "pause": 0.6
+          },
+          {
+            "text": "I’ve raised a family, carried debt, and made mistakes.",
+            "show": [
+              "family",
+              "debt",
+              "mistakes"
+            ]
+          },
           "I could understand an argument",
           {
             "text": "and still be unable to live it.",
-            "pause": 1
+            "show": [
+              "unable to live it"
+            ],
+            "pause": 0.6
           },
           "I don’t claim to know everything.",
           {
             "text": "But I feel the erosion. I see the despair.",
-            "pause": 1.5
+            "show": [
+              "erosion",
+              "despair"
+            ],
+            "pause": 1
           },
-          "Now I am stepping away from a career in software and AI",
+          "Now I’m stepping away from a career in software and AI",
           {
             "text": "to share this work.",
-            "pause": 1
+            "show": [
+              "share this work"
+            ],
+            "pause": 0.6
           }
         ]
       },
@@ -245,17 +380,31 @@
         "lines": [
           {
             "text": "So where does waking up begin?",
-            "pause": 1.5
+            "show": [
+              "waking up"
+            ],
+            "pause": 1
           },
           "The most immediate fact of your existence",
-          "is not a measurement.",
+          {
+            "text": "is not a measurement.",
+            "show": [
+              "not a measurement"
+            ]
+          },
           {
             "text": "It is that you are here to experience one.",
-            "pause": 1.5
+            "show": [
+              "you are here"
+            ],
+            "pause": 1
           },
           {
             "text": "I call what I found Digital Organism Theory.",
-            "pause": 1
+            "show": [
+              "Digital Organism Theory"
+            ],
+            "pause": 0.6
           }
         ],
         "drawing": [
@@ -270,9 +419,25 @@
         "lead": 1.6,
         "description": "The view pulls back: the living Avatar is distinct from Little c. A calm broken loop marks continuing process. Intent travels toward the body and experience returns through the embodied connection.",
         "lines": [
-          "You are Little c.",
-          "Your living body is your interface to a Reality Frame.",
-          "Like a musician and an instrument: joined, not the same."
+          {
+            "text": "You are Little c.",
+            "show": [
+              "Little c"
+            ]
+          },
+          {
+            "text": "Your living body is your interface to a Reality Frame.",
+            "show": [
+              "interface"
+            ]
+          },
+          {
+            "text": "Like a musician and an instrument: joined, not the same.",
+            "show": [
+              "musician",
+              "instrument"
+            ]
+          }
         ],
         "drawing": [
           16.4,
@@ -287,8 +452,18 @@
         "lead": 4.8,
         "description": "The view pulls back from Little c to the Avatars in RF₀, an experience laboratory for Little cs. RF₀’s boundary and its Avatars light up, then its Reality Stream travels toward Little c. RF₀ and Little c are both within Big C, with Little c outside RF₀ and receiving its Reality Stream. Beyond Big C, T × E is labelled Speculation: its proposed preexisting conditions.",
         "lines": [
-          "This world, RF₀, is an experience laboratory.",
-          "Its rules turn experience into lessons."
+          {
+            "text": "This world, RF₀, is an experience laboratory.",
+            "show": [
+              "experience laboratory"
+            ]
+          },
+          {
+            "text": "Its rules turn experience into lessons.",
+            "show": [
+              "lessons"
+            ]
+          }
         ],
         "drawing": [
           57,
@@ -303,22 +478,52 @@
         "lead": 1.2,
         "description": "The person stands diminished in a heavy box, a ring of stress at the chest. A jade light at the chest marks renewed attention to experience. The box dissolves, the person stands full height, and paths open out in every direction, each ending in an open choice.",
         "lines": [
-          "Conditioning is real. Conditioning is not essence.",
+          {
+            "text": "Conditioning is real. Conditioning is not essence.",
+            "show": [
+              "real",
+              "not essence"
+            ]
+          },
           "A river is shaped by its banks. It is not the banks.",
-          "Yet the painting is not the painter.",
-          "What matters is what Little c does with the opening.",
+          {
+            "text": "Yet the painting is not the painter.",
+            "show": [
+              "not the painter"
+            ]
+          },
+          {
+            "text": "What matters is what Little c does with the opening.",
+            "show": [
+              "the opening"
+            ]
+          },
           {
             "text": "Freedom is participation in the creation of possibility.",
-            "pause": 1
+            "show": [
+              "Freedom"
+            ],
+            "pause": 0.6
           },
-          "Our culture trains us to adapt to the painting.",
+          {
+            "text": "Our culture trains us to adapt to the painting.",
+            "show": [
+              "adapt"
+            ]
+          },
           {
             "text": "DOT aims at seeing the painting itself.",
+            "show": [
+              "seeing"
+            ],
             "voice": "dot"
           },
           {
-            "text": "I believe that is where a cultural revolution begins.",
-            "pause": 1.5
+            "text": "I believe that’s where a cultural revolution begins.",
+            "show": [
+              "cultural revolution"
+            ],
+            "pause": 1
           }
         ],
         "drawing": [

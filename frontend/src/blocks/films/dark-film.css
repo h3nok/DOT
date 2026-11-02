@@ -186,11 +186,35 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
 .dark-trailer-drawing { display: block; width: 100%; height: 100%; overflow: visible; filter: var(--film-bloom); }
 /* The picture keeps above the caption band, so words never sit on a figure. */
 .dark-trailer-scene { position: absolute; inset: 0; }
-/* Subtitles to the author's voice: a little smaller and lighter than typed lines, arriving whole. */
-.dark-trailer-line.dark-trailer-spoken {
-  font-size: clamp(1.25rem, 2.7cqi, 3.4rem);
-  letter-spacing: -.01em;
+/* With the author's voice, a few key words rise in as he says them: light, spaced, and brief. */
+.dark-trailer-keywords {
+  position: absolute;
+  right: 6%;
+  bottom: 9%;
+  left: 6%;
+  display: grid;
+  justify-items: center;
+  gap: .35em;
+  font-size: clamp(1.6rem, 3.9cqi, 4.9rem);
+  text-align: center;
 }
+.dark-trailer-keywords .dark-trailer-voice { margin: 0; font-size: .34em; }
+.dark-trailer-keywords p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .2em 1.1em;
+  margin: 0;
+  color: var(--film-ink);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+  text-shadow: 0 2px 28px var(--film-halo);
+}
+.dark-trailer-keyword { display: inline-block; }
 /* The author's name card, a lower third that enters on his name and leaves before his story. */
 .dark-trailer-name-card {
   position: absolute;

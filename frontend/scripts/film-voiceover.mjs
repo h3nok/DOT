@@ -29,8 +29,9 @@ const reuse = option("reuse", null);
 // Every typed line, spoken as it appears. The title is said as a sentence.
 const lines = narrated.map((line, index) => ({
   number: index + 1,
-  text: /[.?!,]$/.test(line.text) ? line.text : `${line.text}.`,
+  text: /[.?!,]$/.test(line.speech) ? line.speech : `${line.speech}.`,
   display: line.text,
+  speech: line.speech,
 }));
 const reference = path.join(PRIVATE, "reference/voice.wav");
 const referenceText = path.join(PRIVATE, "reference/voice.txt");
@@ -42,7 +43,8 @@ await mkdir(path.join(run, "masters"), { recursive: true });
 if (reuse) {
   const earlier = JSON.parse(await readFile(path.join(path.resolve(reuse), "manifest.json"), "utf8")).lines;
   for (const line of lines) {
-    const take = earlier.findIndex((item) => item.text === line.display);
+    // A take is reused only if it said exactly these words.
+    const take = earlier.findIndex((item) => (item.speech ?? item.text) === line.speech);
     if (take >= 0) await copyFile(path.join(path.resolve(reuse), `raw-scene-${take + 1}.wav`), path.join(run, `raw-scene-${line.number}.wav`));
   }
 }
@@ -86,11 +88,11 @@ async function synthesize() {
 }
 
 const manifest = [];
-for (const { number, display } of lines) {
+for (const { number, display, speech } of lines) {
   const master = path.join(run, "masters", `line-${number}.wav`);
   await masterVoiceover(path.join(run, `raw-scene-${number}.wav`), master, { leadInSeconds: 0.05, tailSeconds: 0.25 });
   const { durationSeconds } = await probeAudio(master);
-  manifest.push({ text: display, file: path.relative(run, master), durationSeconds });
+  manifest.push({ text: display, speech, file: path.relative(run, master), durationSeconds });
 }
 await writeFile(path.join(run, "manifest.json"), `${JSON.stringify({ source: recording ? "recording" : "voice model", speed, lines: manifest }, null, 2)}\n`);
 console.log(`Ready: --voiceover=${run}`);

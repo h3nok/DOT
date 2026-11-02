@@ -23,7 +23,7 @@ import "./dark-film.css";
 const TOUR = filmsData.conceptTour;
 
 /** The frame shown before Play: the figure drawn, its first line typed. */
-export const DARK_FILM_POSTER_SECONDS = 11.5;
+export const DARK_FILM_POSTER_SECONDS = 10.2;
 
 /**
  * One frame of the film: the opening trailer, then the seventeen concepts. `burnIn` draws the
