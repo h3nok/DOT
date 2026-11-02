@@ -328,6 +328,7 @@ export function BookMarkdown({
   completeEditionHref,
   images,
   figures,
+  figureArtwork,
   restrictImages = false,
 }: {
   content: string;
@@ -338,6 +339,8 @@ export function BookMarkdown({
   images?: Readonly<Record<string, { width: number; height: number; src?: string }>>;
   /** Reviewed manuscript illustrations, keyed by their Markdown image URL. */
   figures?: Readonly<Record<string, BookFigureData>>;
+  /** Screen presentation of a reviewed figure; its original remains available for print. */
+  figureArtwork?: (figure: BookFigureData) => ReactNode;
   /** Native posts only load artwork attached to the reviewed revision. */
   restrictImages?: boolean;
   /** Where the printed Complete Edition can be read; offered inside depth passages. */
@@ -405,14 +408,10 @@ export function BookMarkdown({
                 </>
               );
             },
-            h3: ({ children }) => (
-              <h3
-                id={headingId(children)}
-                className="book-subsection-heading scroll-mt-24"
-              >
-                {children}
-              </h3>
-            ),
+            h3: ({ children }) => {
+              const id = headingId(children);
+              return <><h3 id={id} className="book-subsection-heading scroll-mt-24">{children}</h3>{afterHeading?.[id]}</>;
+            },
             h4: ({ children }) => (
               <h4 id={headingId(children)} className="scroll-mt-24">
                 {children}
@@ -423,7 +422,7 @@ export function BookMarkdown({
               if (child?.type === "element" && child.tagName === "img") {
                 const source = child.properties.src;
                 const figure = typeof source === "string" ? figures?.[source] : undefined;
-                if (figure) return <BookFigure figure={figure} />;
+                if (figure) return <BookFigure figure={figure} artwork={figureArtwork?.(figure)} />;
               }
               if (variant === "post" && child?.type === "element" && child.tagName === "img") {
                 const caption = child.properties.title;

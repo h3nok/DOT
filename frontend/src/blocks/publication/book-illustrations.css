@@ -1,0 +1,61 @@
+/* Web illustrations sit on the reader's own paper; all motion has a finite clock. */
+.book-illustration {
+  --diagram-ink: var(--book-ink, var(--foreground));
+  --diagram-muted: var(--book-muted, var(--muted-foreground));
+  --diagram-jade: color-mix(in oklab, var(--theory-local, var(--primary)) 60%, var(--diagram-ink));
+  --diagram-gold: color-mix(in oklab, var(--theory-rf, var(--primary)) 60%, var(--diagram-ink));
+  --diagram-clay: var(--book-cinnabar, var(--primary));
+  color: var(--diagram-ink);
+  isolation: isolate;
+}
+
+.book-diagram, .book-concept-art { display: block; width: 100%; height: auto; overflow: visible; }
+.book-concept-art { --cf-stage: var(--book-paper, var(--background)); --cf-big-c: var(--diagram-jade); }
+.book-diagram { max-width: 35rem; margin-inline: auto; }
+.book-diagram-label { fill: var(--diagram-ink); font-family: var(--font-sans); font-size: 30px; font-weight: 500; }
+.book-diagram-label--small { font-size: 24px; font-weight: 400; fill: var(--diagram-muted); }
+.book-diagram-organism { fill: color-mix(in oklab, var(--diagram-jade) 5%, transparent); stroke: var(--diagram-jade); stroke-width: 1.5; }
+.book-diagram-world { fill: color-mix(in oklab, var(--diagram-gold) 7%, transparent); stroke: var(--diagram-gold); stroke-width: 1.6; }
+.book-diagram-body { fill: none; stroke: var(--diagram-gold); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+.book-diagram-point, .book-diagram-step-point { fill: var(--diagram-jade); stroke: none; }
+.book-diagram-local { fill: color-mix(in oklab, var(--diagram-jade) 12%, transparent); stroke: var(--diagram-jade); stroke-width: 1.8; }
+.book-diagram-scope { fill: none; stroke: var(--diagram-jade); stroke-width: 1.2; stroke-dasharray: 4 7; }
+.book-diagram-canvas { fill: color-mix(in oklab, var(--diagram-jade) 4%, transparent); stroke: var(--diagram-jade); stroke-width: 1.5; }
+.book-diagram-flow, .book-diagram-arrow { fill: none; stroke: var(--diagram-jade); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.book-diagram-paint { fill: none; stroke: var(--diagram-jade); stroke-width: 2.5; stroke-linecap: round; }
+.book-diagram-paint--1 { stroke: var(--diagram-clay); }
+.book-diagram-paint--2 { stroke: var(--diagram-gold); }
+.book-diagram-step { fill: none; stroke: var(--book-hairline, var(--border)); stroke-width: 1.2; }
+.book-diagram-choice { fill: color-mix(in oklab, var(--diagram-jade) 5%, transparent); stroke: var(--diagram-jade); stroke-width: 1.5; }
+.book-diagram-narrow-option rect { stroke-dasharray: 3 5; }
+.book-diagram-reaction { fill: var(--diagram-clay); }
+.book-diagram-role--0 .book-diagram-canvas { stroke-width: 3; }
+.book-diagram-role--0 .book-diagram-paint { opacity: .35; }
+.book-diagram-role--1 .book-diagram-canvas { stroke: var(--book-hairline, var(--border)); }
+
+.book-illustration-controls { display: flex; justify-content: flex-end; margin-top: .65rem; font-family: var(--font-sans); }
+.book-illustration-controls button { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: .4rem .5rem; border: 0; border-radius: .25rem; background: transparent; color: var(--book-muted, var(--muted-foreground)); font-size: .75rem; cursor: pointer; }
+.book-illustration-controls button:hover { color: var(--book-ink, var(--foreground)); }
+.book-illustration-controls button:focus-visible { outline: 2px solid var(--book-cinnabar, var(--primary)); outline-offset: 3px; }
+.book-prose .book-concept-study { margin: 2rem 0 2.75rem; break-inside: avoid; }
+.book-concept-study__art { width: min(100%, 30rem); aspect-ratio: 1; margin-inline: auto; }
+.book-concept-study__placeholder { aspect-ratio: 1; }
+.book-concept-study__caption { display: grid; gap: .4rem; border-top: 1px solid var(--book-hairline, var(--border)); padding-top: .85rem; font-size: .85em; line-height: 1.6; text-align: start; }
+.book-concept-study__caption strong { font-weight: 500; }
+
+/* Reuse the film's drawings without its screen, framing, typography, or animation loop. */
+.book-concept-art .cm-s { fill: none; stroke: var(--cm, var(--diagram-ink)); stroke-linecap: round; stroke-linejoin: round; }
+.book-concept-art .cm-f { fill: var(--cm, var(--diagram-ink)); stroke: none; }
+.book-concept-art .cm-hollow, .book-concept-art .cm-ground { fill: var(--book-paper, var(--background)); }
+.book-concept-art .cm-ink { --cm: var(--diagram-ink); }
+.book-concept-art .cm-muted { --cm: var(--diagram-muted); }
+.book-concept-art .cm-line { --cm: var(--book-hairline, var(--border)); }
+.book-concept-art .cm-origin { --cm: var(--diagram-clay); }
+.book-concept-art .cm-big-c, .book-concept-art .cm-local { --cm: var(--diagram-jade); }
+.book-concept-art .cm-rf { --cm: var(--diagram-gold); }
+.book-concept-art .cm-fear { --cm: var(--diagram-clay); }
+.book-concept-art .cm-label { fill: var(--diagram-muted); font-family: var(--font-sans); font-size: 25px; font-weight: 400; paint-order: stroke; stroke: var(--book-paper, var(--background)); stroke-width: 3px; stroke-linejoin: round; }
+.book-concept-art .cm-label--strong { fill: var(--diagram-ink); font-weight: 500; }
+
+html[data-contrast="high"] .book-illustration { --diagram-jade: var(--diagram-ink); --diagram-gold: var(--diagram-ink); --diagram-clay: var(--diagram-ink); }
+@media print { .book-concept-study, .book-illustration-controls { display: none; } }

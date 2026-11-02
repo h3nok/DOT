@@ -48,6 +48,7 @@ import { SiteNav } from "../../shared/SiteNav";
 import BookCitation from "./BookCitation";
 import { ReaderListForm } from "../../dot/ReaderListForm";
 import BookLanding from "./BookLanding";
+import { bookFigureArtwork, bookConceptIllustrations } from "./bookIllustrations";
 import { TwinSurface } from "../../dot/TwinSurface";
 import { useAuth } from "../../dot/useAuth";
 import type { AgentWorkspaceRequest } from "../../dot/AgentWorkspace";
@@ -341,6 +342,8 @@ function BookReader({
             variant={section.kind === "references" ? "references" : "chapter"}
             completeEditionHref={DOT_BOOK_ONE_PDF_URL}
             figures={bookFigureMap(manifest)}
+            figureArtwork={bookFigureArtwork}
+            afterHeading={manifest.release.version === 5 ? bookConceptIllustrations(section.slug) : undefined}
           />
 
           <footer className="book-coda book-focus-hidden print:hidden">

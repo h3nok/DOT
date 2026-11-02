@@ -40,6 +40,7 @@
 
 .book-figure__title { font-weight: 600; }
 .book-figure__description { color: var(--book-ink, var(--foreground)); }
+.book-figure__art[data-print-only="true"] { display: none; }
 
 @media (max-width: 639px) {
   .book-figure__art { aspect-ratio: var(--book-figure-mobile-ratio); }
@@ -47,5 +48,7 @@
 }
 
 @media print {
+  .book-figure__screen { display: none; }
+  .book-figure__art[data-print-only="true"] { display: block; }
   .book-figure__art { aspect-ratio: var(--book-figure-ratio); }
 }

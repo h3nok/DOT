@@ -1,4 +1,4 @@
-import { useId, type CSSProperties } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 import "./book-figure.css";
 
 export interface BookFigureData {
@@ -17,7 +17,7 @@ export interface BookFigureData {
 }
 
 /** A manuscript illustration stays beside its explanation in every reader size. */
-export function BookFigure({ figure }: { figure: BookFigureData }) {
+export function BookFigure({ figure, artwork }: { figure: BookFigureData; artwork?: ReactNode }) {
   const captionId = useId();
   const mobileRatio = figure.mobileWidth && figure.mobileHeight
     ? `${figure.mobileWidth} / ${figure.mobileHeight}`
@@ -29,10 +29,11 @@ export function BookFigure({ figure }: { figure: BookFigureData }) {
 
   return (
     <figure className="book-figure" id={`figure-${figure.id}`} aria-labelledby={captionId}>
-      <picture className="book-figure__art" style={dimensions}>
+      {artwork && <div className="book-figure__screen">{artwork}</div>}
+      <picture className="book-figure__art" data-print-only={artwork ? "true" : undefined} style={dimensions}>
         {figure.mobileSrc && (
           <source
-            media="(max-width: 639px)"
+            media="screen and (max-width: 639px)"
             srcSet={figure.mobileSrc}
             width={figure.mobileWidth}
             height={figure.mobileHeight}
@@ -43,7 +44,7 @@ export function BookFigure({ figure }: { figure: BookFigureData }) {
           alt={figure.alt}
           width={figure.width}
           height={figure.height}
-          loading="lazy"
+          loading={artwork ? "eager" : "lazy"}
           decoding="async"
         />
       </picture>
