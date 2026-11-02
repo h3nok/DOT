@@ -1516,6 +1516,7 @@ function SpokenWords({ t }: { t: number }) {
           {VOICE_LABEL[run.voice]}
         </span>
       )}
+      {shown > 0.001 && !run && <span className="dark-trailer-pull-rule" style={{ opacity: shown, transform: `scaleX(${(1 - rise).toFixed(3)})` }} />}
       {shown > 0.001 && (
         <p key={quote!.text} data-trailer-line={quote!.shot} style={{ opacity: shown, transform: `translateY(${(rise * 0.22).toFixed(3)}em)`, filter: rise > 0.01 ? `blur(${(rise * 5).toFixed(2)}px)` : undefined }}>
           {quote!.card![0].toUpperCase() + quote!.card!.slice(1)}
@@ -1547,11 +1548,14 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
   const fade = arrive * leave;
   // Separate scenes breathe: each settles in from slightly near, and recedes as it goes.
   const breathe = 1 + 0.045 * (1 - arrive) - 0.025 * (1 - leave);
+  // The camera is never quite still: a slow float and breath keep long holds alive.
+  const float = still ? { x: 0, y: 0, z: 1 } : { x: 5 * Math.sin(t * 0.11), y: 3.5 * Math.cos(t * 0.083), z: 1 + 0.01 * Math.sin(t * 0.057) };
+  const sceneTransform = `translate(${float.x.toFixed(2)}px, ${float.y.toFixed(2)}px) scale(${(breathe * float.z).toFixed(4)})`;
   return (
     <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
-      <div className="dark-trailer-scene" style={{ opacity: fade, transform: breathe === 1 ? undefined : `scale(${breathe.toFixed(4)})` }}>
+      <div className="dark-trailer-scene" style={{ opacity: fade, transform: still ? undefined : sceneTransform }}>
         {shot.kind === "mark" && <TrailerMark seconds={t} />}
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
         {PERSON_SHOTS.includes(shot.kind) && <TrailerPerson seconds={t} />}

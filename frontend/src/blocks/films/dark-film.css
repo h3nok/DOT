@@ -33,6 +33,7 @@
   --film-ink: #f2f0e8;
   --film-muted: #b6c9be;
   --film-jade: #8ad6b9;
+  --film-gold: #e6bc78;
   --film-voice: #9fe3c8;
   --film-clay: #d4876d;
   --film-prevailing: #e7b9a8;
@@ -53,6 +54,7 @@
   --film-ink: #17271f;
   --film-muted: #4f6458;
   --film-jade: #23805f;
+  --film-gold: #9a6a1c;
   --film-voice: #1f7656;
   --film-clay: #a4573c;
   --film-prevailing: #8d4a33;
@@ -217,6 +219,7 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   text-align: center;
 }
 .dark-trailer-pull .dark-trailer-voice { margin: 0; font-size: .32em; }
+.dark-trailer-pull-rule { display: block; width: 2.6em; height: 2px; border-radius: 1px; background: var(--film-gold); transform-origin: 50% 50%; }
 .dark-trailer-pull p {
   max-width: 21em;
   margin: 0;
