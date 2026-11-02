@@ -1,7 +1,7 @@
 DOT — YOUTUBE UPLOADS (v16, narrated) · DRAFT FOR AUTHOR REVIEW
 =================================================================
 
-Older versions are in deprecated/. Descriptions are written for Henok's review and edits.
+Older versions are in deprecated/. Descriptions are third-person drafts for Henok's review and edits, not quotations except where marked.
 
 Files (dark and light tones of each, 3840×2160 UHD, 30 fps, narrated)
   Trailer    dot-opening-trailer-dark-v16-4k.mp4 / dot-opening-trailer-light-v16-4k.mp4  (6:27)
@@ -29,9 +29,10 @@ costs: confusion, a body under strain, and success that never fills the gap.
 We are not immune to our culture or our surroundings. None of that is our fault. Undoing it is
 our responsibility.
 
-I am Henok Ghebrechristos. I have spent my career in software and AI, and I am stepping away from
-it to share this work. I don't claim to know everything. Digital Organism Theory (DOT) is a school
-of thought for examining experience, and I hope it can be a foundation for a cultural change.
+Digital Organism Theory (DOT) is a school of thought for examining experience, developed by Henok
+Ghebrechristos after a career in software and AI. From the film: "I don't claim
+to know everything. But I feel the erosion. I see the despair." DOT aims to be a foundation for
+a cultural change.
 
 DOT's own claims are labelled "DOT proposes" on screen. They are proposals, not established
 science. Book One sets out the argument, its rival explanations, and what would count against it.
