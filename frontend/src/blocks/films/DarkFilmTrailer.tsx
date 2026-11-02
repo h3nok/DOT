@@ -1139,6 +1139,44 @@ function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number })
   );
 }
 
+/**
+ * Two lenses: the Manifesto's illustration looks outward at the arrangement; as Digital Organism
+ * Theory "looks inward", it moves aside and the person, with the light at their chest, stands beside it.
+ */
+function TrailerLenses({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade } = useContext(TrailerPalette);
+  const shot = shotOf("lenses");
+  const outward = smooth(seconds, wordAt("lenses", "looks outward"), wordAt("lenses", "looks outward") + 1.2);
+  const inward = smooth(seconds, wordAt("lenses", "looks inward") - 0.6, wordAt("lenses", "looks inward") + 1.6);
+  const beat = 0.85 + 0.15 * Math.sin(seconds * 2.2);
+  return (
+    <>
+      <div className="dark-trailer-lens" style={{ transform: `translateX(${(-21 * inward).toFixed(2)}%) scale(${(1 - 0.2 * inward).toFixed(3)})` }}>
+        <TrailerPlate kind="lenses" progress={(seconds - shot.start) / (shot.end - shot.start)} />
+        <p className="dark-trailer-lens-label" style={{ opacity: outward }}>The Manifesto · outward</p>
+      </div>
+      {inward > 0.001 && (
+        <div className="dark-trailer-lens dark-trailer-lens--inward" style={{ opacity: inward }}>
+          <svg className="dark-trailer-drawing" viewBox={`${FIG_X - 320} ${FIG_Y - 330} 640 760`} preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <radialGradient id={`${uid}-in`}>
+                <stop offset="0" stopColor={jade} stopOpacity=".6" />
+                <stop offset=".5" stopColor={jade} stopOpacity=".14" />
+                <stop offset="1" stopColor={jade} stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={150} fill={`url(#${uid}-in)`} opacity={beat} />
+            <Figure x={FIG_X} y={FIG_Y} px={2.4} cameraScale={0.9} />
+            <circle cx={CHEST[0]} cy={CHEST[1]} r={7} fill={jade} />
+          </svg>
+          <p className="dark-trailer-lens-label dark-trailer-lens-label--inward">Digital Organism Theory · inward</p>
+        </div>
+      )}
+    </>
+  );
+}
+
 /* ── The purpose: awareness widening from the person, and coherence with room for correction ── */
 const DIVISIONS = Array.from({ length: 8 }, (_, k) => ({ start: (k * 360) / 8 + 10, drift: unit(k + 200), turn: unit(k + 240) - 0.5 }));
 
@@ -1564,7 +1602,8 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
         {shot.kind === "turn" && <TrailerBegin seconds={t} />}
         {["design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
         {shot.kind === "purpose" && <TrailerPurpose seconds={t} />}
-        {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={(t - shot.start) / (shot.end - shot.start)} />}
+        {shot.kind === "lenses" && <TrailerLenses seconds={t} />}
+        {isPlate(shot.kind) && shot.kind !== "lenses" && <TrailerPlate kind={shot.kind} progress={(t - shot.start) / (shot.end - shot.start)} />}
         {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}
       </div>
       <Atmosphere seconds={t} />
