@@ -56,7 +56,7 @@
 html[data-contrast="high"] .book-numbered-statement { --statement-tone: var(--book-ink, var(--foreground)); }
 
 @media print {
-  .book-prose p.book-numbered-statement { background: transparent; border-color: #000; color: #000; }
+  .book-prose p.book-numbered-statement[data-statement-kind] { background: transparent; border-color: #000; color: #000; }
   .book-numbered-statement__label { color: #000; }
 }
 

@@ -16,5 +16,8 @@ for (const theme of ["light", "dark"] as const) {
     await expect(page.locator('[data-claim-id="DOT-H1"]')).toHaveAttribute("data-claim-level", "hypothesis");
     await expect(page.locator('[data-claim-id="DOT-E0"]')).toHaveAttribute("data-claim-level", "observation");
     await expectNoHorizontalOverflow(page);
+    await page.emulateMedia({ media: "print" });
+    await expect(boundary).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(boundary).toHaveCSS("color", "rgb(0, 0, 0)");
   });
 }
