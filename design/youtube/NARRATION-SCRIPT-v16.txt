@@ -1,0 +1,118 @@
+DOT — FILM NARRATION SCRIPT (v16, the whole film) · FOR THE AUTHOR TO READ
+====================================================================
+
+Read all 70 lines in one recording, in order: the opening, then each concept's name and definition,
+the interlude, and the closing. The film places each line as it appears on screen.
+A calm, unhurried voice. Where a line ends with a pause in the film, let it land.
+
+HOW TO RECORD
+- A quiet room with soft furnishings. A phone voice memo is fine, held 20–30 cm from your mouth.
+- Read each line once, calmly, a little slower than conversation.
+- Leave about two seconds of silence between lines (count "one, two" in your head). The pauses
+  are how the recording is split into lines, so keep them silent and keep them longer than
+  any pause inside a line.
+- Do not read the [DOT proposes] labels; they appear on screen.
+- Read "RF₀" as you say it in conversation (for example "R F zero"). Little c is "little see".
+- If you stumble, pause, read the whole line again, and tell me its number.
+- For a concept, say its name, then its definition, as one sentence pair.
+
+WHEN YOU ARE DONE
+Save the file (m4a or wav) to artifacts/voiceover/film/ and tell me its name. Then:
+  pnpm dlx vite-node scripts/film-voiceover.mjs --recording=<file>
+splits, trims and masters it, and the film is exported with:
+  node scripts/render-dark-film.mjs --voiceover=<the run directory it prints>
+
+THE LINES
+— The performance of normality —
+ 1. We go to work. We pay bills. We scroll. We compete.
+ 2. We call exhaustion adulthood, anxiety responsibility,
+ 3. isolation independence, and endless accumulation success.
+ 4. We pretend the picture is coherent.
+
+— Why —
+ 5. Let us be honest about why.
+ 6. Marketing fills every space we look at.
+ 7. Screens compete for every minute of our attention.
+ 8. Our attention has become the product.
+ 9. Money speaks, and most of us listen.
+10. And slowly, we stop caring for each other.
+
+— The body —
+11. An unresolved thought could change sleep,
+12. muscle tension, digestion, attention, and behavior.
+
+— Never enough —
+13. Worth becomes achievement. Rest becomes laziness.
+14. Success may bring relief, but only briefly.
+15. Like filling a cup with a hole in it.
+16. A persistent sense that something essential is missing.
+
+— The culture around you —
+17. Culture arrives through language, permitted emotions,
+18. authority, admired people, and expected futures.
+19. Schools, religions, entertainment, work, law, and markets
+20. carry it into daily life.
+21. Much of it is absorbed before it can be named.
+22. You inherited a painting already begun.
+23. We are not immune to our culture or our surroundings.
+24. This culture works against human development.   [DOT proposes]
+25. None of that is your fault.
+26. But undoing it is your responsibility.
+
+— The question —
+27. So where do you begin?
+28. The most immediate fact of your existence
+29. is not a measurement.
+30. It is that you are here to experience one.
+
+— Henok —
+31. My name is Henok.
+32. I don’t claim to know everything.
+33. But I feel the erosion. I see the despair.
+34. I pursued these questions while raising a family,
+35. carrying debt, and making mistakes.
+36. I have spent my career in software and AI.
+37. Now I am stepping away from it to share this work.
+38. I call it Digital Organism Theory.
+39. I believe we need a cultural revolution,
+40. and DOT aims to be its foundation.
+
+— DOT’s proposal —
+41. You are Little c.   [DOT proposes]
+42. Your living body is your interface to a Reality Frame.   [DOT proposes]
+43. Like a musician and an instrument: joined, not the same.   [DOT proposes]
+
+— The architecture —
+44. This world, RF₀, is an experience laboratory.   [DOT proposes]
+45. Its rules turn experience into lessons.   [DOT proposes]
+
+— The opening —
+46. Conditioning is real. Conditioning is not essence.
+47. A river is shaped by its banks. It is not the banks.
+48. What matters is what Little c does with the opening.
+49. Freedom is participation in the creation of possibility.
+
+— Digital Organism Theory —
+50. Digital Organism Theory
+51. A school of thought for examining experience.
+
+— The concepts —
+52. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
+53. Digital Organism. A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.
+54. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
+55. Little c. The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.
+56. The Decoupling Principle. DOT proposes that Little c and the living body are distinct and functionally connected.
+57. Reality Frame. A shared, rule-bound experience laboratory in which Little cs participate through their Avatars.
+58. Physical Sciences as Frame Derivations. Physics measures RF₀’s regularities; DOT must account for those results within its proposed Frame architecture.
+59. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
+60. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
+61. The Experience Loop. Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.
+62. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
+63. Painting. The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.
+64. Character. The relatively stable patterns expressed through repeated interpretation and action.
+65. The Fear-Gating Principle. When Fear governs, the set of responses that feels available becomes narrower.
+66. Ego defends the Character Little c has learned to call itself.
+67. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you.
+68. Conscious Authorship. Notice inherited interpretation, examine available responses, and act with greater deliberation.
+69. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.
+70. Become a student of your own experience.
