@@ -627,7 +627,7 @@ export function WorldInvariants({ t }: MotifProps) {
         <Arrowhead at={[300, 366]} angle={90} tone="cm-rf" />
       </g>
       <Label x={190} y={96} anchor="start" show={span(t, 0.8, 1.6)}>RF₀</Label>
-      <Label x={318} y={344} anchor="start" show={span(t, 10.4, 11.2)} strong>to be derived</Label>
+      <Label x={318} y={344} anchor="start" show={span(t, 10.4, 11.2)} strong>the Frame’s rule</Label>
       <Label x={110} y={536} anchor="start" show={span(t, 3.4, 4.2)}>measured</Label>
       <Label x={490} y={536} anchor="end" show={span(t, 9.6, 10.4)}>formalized</Label>
     </g>

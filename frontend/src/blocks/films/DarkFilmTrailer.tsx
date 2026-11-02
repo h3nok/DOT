@@ -120,6 +120,20 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
   );
 }
 
+/** An arrow drawn at a steady width on screen, whatever the camera. */
+function Arrow({ from, to, px, s, color, opacity }: { from: Point; to: Point; px: number; s: number; color: string; opacity: number }) {
+  const angle = Math.atan2(to[1] - from[1], to[0] - from[0]);
+  const head = 16;
+  const left: Point = [to[0] - head * Math.cos(angle - 0.45), to[1] - head * Math.sin(angle - 0.45)];
+  const right: Point = [to[0] - head * Math.cos(angle + 0.45), to[1] - head * Math.sin(angle + 0.45)];
+  return (
+    <g opacity={opacity} fill="none" stroke={color} strokeWidth={(px * WEIGHT) / s} strokeLinecap="round" strokeLinejoin="round">
+      <path d={`M${from.join(" ")}L${to.join(" ")}`} />
+      <path d={`M${left.join(" ")}L${to.join(" ")}L${right.join(" ")}`} />
+    </g>
+  );
+}
+
 /**
  * A box and its measuring grid: the objective lens closed around one figure. The nudge
  * opens a jade gap in its lid; devolving thickens its walls and closes the gap again.
@@ -776,6 +790,150 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   );
 }
 
+/* ── Where to begin: the measuring box, then experience, the senses, and feeling as data ── */
+/** The five senses, each a stream from its own direction, named at the edge of the frame. */
+const SENSES: readonly { name: string; angle: number; label: Point; color: keyof Palette }[] = [
+  { name: "SIGHT", angle: -145, label: [300, 222], color: "gold" },
+  { name: "SMELL", angle: -90, label: [640, 150], color: "ink" },
+  { name: "SOUND", angle: -35, label: [980, 222], color: "jade" },
+  { name: "TOUCH", angle: 170, label: [170, 476], color: "ink" },
+  { name: "TASTE", angle: 10, label: [1110, 476], color: "gold" },
+];
+const SENSE_PARTICLES = Array.from({ length: 170 }, (_, k) => {
+  const sense = SENSES[k % SENSES.length];
+  const angle = ((sense.angle + (hash(k + 1.7) - 0.5) * 26) * Math.PI) / 180;
+  const radius = 640 + 140 * hash(k + 2.3);
+  return {
+    spawn: 7 * hash(k + 0.1),
+    life: 1.5 + 1.1 * hash(k + 0.6),
+    from: [FIG_X + Math.cos(angle) * radius, 420 + Math.sin(angle) * radius] as Point,
+    to: [FIG_X + (hash(k + 3.1) - 0.5) * 120, 420 + (hash(k + 4.4) - 0.5) * 380] as Point,
+    color: sense.color,
+    size: 3.2 + 1.2 * hash(k + 5.2),
+  };
+});
+
+function TrailerBegin({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const palette = useContext(TrailerPalette);
+  const { jade, clay, stage } = palette;
+  const turn = shotOf("turn");
+  const cue = (word: string) => wordAt("turn", word);
+  const measure = cue("not a measurement");
+  const experience = cue("experience one");
+  const observer = cue("The observer");
+  const feeling = cue("Feeling must");
+  const framework = cue("Digital Organism Theory");
+  // Wide for the box and the senses, then in on the person for the purpose that follows.
+  const keys: (readonly [number, number, number, number])[] = [
+    [turn.start, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
+    [measure - 0.6, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
+    [measure + 1.4, FIG_X, 450, 1.1],
+    [feeling - 0.6, FIG_X, 440, 1.05],
+    [feeling + 1.4, FIG_X, 400, 1.55],
+    [framework - 0.6, FIG_X, 400, 1.55],
+    [framework + 2, FIG_X, 440, 1.05],
+    [turn.end - 1, CAMERA[1][1], CAMERA[1][2], CAMERA[1][3]],
+  ];
+  const index = keys.findIndex(([at]) => at > seconds);
+  const [a, ax, ay, as] = keys[Math.max(0, (index < 0 ? keys.length : index) - 1)];
+  const [b, bx, by, bs] = keys[index < 0 ? keys.length - 1 : index];
+  const u = index <= 0 ? (index === 0 ? 0 : 1) : smooth(seconds, a, b);
+  const s = Math.exp(lerp(Math.log(as), Math.log(bs), u));
+  const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-lerp(ax, bx, u)).toFixed(2)} ${(-lerp(ay, by, u)).toFixed(2)})`;
+
+  const beat = heartbeat(trailerDrawingTime(seconds));
+  const develop = smooth(seconds, cue("to develop"), cue("to develop") + 2);
+  // Unless we address our own conditioning, the pain continues.
+  const pain = smooth(seconds, cue("the pain continues"), cue("the pain continues") + 0.8) * (1 - smooth(seconds, measure - 0.6, measure + 0.4));
+  // Not a measurement: the lens snaps shut, and cause and effect press in from both sides.
+  const snap = smooth(seconds, measure, measure + 0.65);
+  const boxScale = lerp(1.7, 1, snap) + 0.035 * Math.sin(Math.PI * between(seconds, measure + 0.65, measure + 1.2));
+  const push = smooth(seconds, measure + 1.1, measure + 3.1) * (1 - smooth(seconds, experience - 0.4, experience + 0.8));
+  const lens = smooth(seconds, measure + 1.5, measure + 2.3) * (1 - smooth(seconds, experience - 0.4, experience + 0.6));
+  // You are here to experience one: the box loosens, the light grows.
+  const loosen = smooth(seconds, experience, experience + 2.4);
+  const presence = smooth(seconds, experience, experience + 3);
+  // The observer belongs in the inquiry: the senses pour in.
+  const immersion = smooth(seconds, observer, observer + 3) * (1 - smooth(seconds, feeling - 1, feeling + 1));
+  // Feeling is data, not automatically truth.
+  const knot = smooth(seconds, feeling, feeling + 1.2) * (1 - smooth(seconds, framework - 1, framework + 0.5));
+  const data = smooth(seconds, cue("treated as data"), cue("treated as data") + 0.8);
+  const truth = smooth(seconds, cue("not automatically truth"), cue("not automatically truth") + 0.8);
+  // The framework draws around the person, and gives way as the view moves in.
+  const ring = smooth(seconds, framework, framework + 2.4) * (1 - smooth(seconds, turn.end - 6, turn.end - 2));
+  const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 26 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 5 / s, paintOrder: "stroke" as const };
+  return (
+    <div className="dark-trailer-stage">
+      <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <radialGradient id={`${uid}-jade`}>
+            <stop offset="0" stopColor={jade} stopOpacity=".55" />
+            <stop offset=".45" stopColor={jade} stopOpacity=".16" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g transform={world}>
+          {/* The senses build the world the observer is part of. */}
+          {immersion > 0.001 && SENSE_PARTICLES.map((particle, k) => {
+            const life = (seconds - observer - particle.spawn) / particle.life;
+            const cycle = life - Math.floor(life);
+            if (life < 0) return null;
+            const eased = cycle ** 1.6;
+            const p: Point = [lerp(particle.from[0], particle.to[0], eased), lerp(particle.from[1], particle.to[1], eased)];
+            const back = Math.max(0, eased - 0.09);
+            const tail: Point = [lerp(particle.from[0], particle.to[0], back), lerp(particle.from[1], particle.to[1], back)];
+            return (
+              <g key={k} opacity={Math.sin(Math.PI * cycle) * immersion}>
+                <line x1={tail[0]} y1={tail[1]} x2={p[0]} y2={p[1]} stroke={palette[particle.color]} strokeWidth={(1.8 * WEIGHT) / s} strokeLinecap="round" opacity={0.75} />
+                <circle cx={p[0]} cy={p[1]} r={particle.size / s} fill={palette[particle.color]} />
+              </g>
+            );
+          })}
+          {immersion > 0.001 && SENSES.map((sense, k) => (
+            <text key={sense.name} x={sense.label[0]} y={sense.label[1]} fill={palette[sense.color]} {...label} letterSpacing={6 / s}
+              opacity={immersion * smooth(seconds, observer + 0.5 + 0.35 * k, observer + 1.3 + 0.35 * k)}>
+              {sense.name}
+            </text>
+          ))}
+          {ring > 0.001 && (
+            <g fill="none" opacity={ring}>
+              <circle cx={FIG_X} cy={FIG_Y - 30} r={330} stroke={jade} strokeWidth={(2.2 * WEIGHT) / s} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 30})`} {...drawn(ring)} />
+              <circle cx={FIG_X} cy={FIG_Y - 30} r={300} stroke={jade} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${9 / s}`} opacity={0.5} />
+            </g>
+          )}
+          <MeasuringBox
+            cx={FIG_X} cy={FIG_Y + 10} scale={boxScale * (1 + 0.18 * loosen)} opacity={(seconds >= measure ? 1 : 0) * (1 - loosen)}
+            loosen={loosen} px={2.2} s={s}
+          />
+          {push > 0.001 && [330, 460, 590].map((y) => (
+            <g key={y}>
+              <Arrow from={[BOX.x - 200 - 260 * (1 - push), y]} to={[BOX.x - 14 - 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
+              <Arrow from={[BOX.x + BOX.w + 200 + 260 * (1 - push), y]} to={[BOX.x + BOX.w + 14 + 120 * (1 - push), y]} px={2} s={s} color={clay} opacity={push} />
+            </g>
+          ))}
+          {lens > 0.001 && <text x={FIG_X} y={BOX.y - 38} fill={clay} {...label} fontSize={30 / s} letterSpacing={4 / s} opacity={lens}>CAUSE → EFFECT</text>}
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={70 + 90 * presence} fill={`url(#${uid}-jade)`} opacity={Math.min(1, beat * 0.9 + 0.3 * develop + 0.6 * presence)} />
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.25 * snap * (1 - loosen)} />
+          <PainRings at={CHEST} phase={0.37} t={seconds} opacity={pain} s={s} />
+          {knot > 0.001 && (
+            <g opacity={knot} fill="none">
+              {[0, 120, 240].map((angle) => {
+                const c = polar(CHEST, 13, angle - 90);
+                return <circle key={angle} cx={c[0]} cy={c[1]} r={20} stroke={clay} strokeWidth={(2 * WEIGHT) / s} />;
+              })}
+              <path d={`M${CHEST[0] + 44} ${CHEST[1]}H${CHEST[0] + 190}`} stroke={jade} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${6 / s}`} opacity={data} />
+              <text x={CHEST[0] + 250} y={CHEST[1] + 9 / s} fill={jade} {...label} opacity={data}>DATA</text>
+              <path d={`M${CHEST[0] - 44} ${CHEST[1]}H${CHEST[0] - 190}`} stroke={clay} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${6 / s}`} opacity={truth} />
+              <text x={CHEST[0] - 260} y={CHEST[1] + 9 / s} fill={clay} {...label} opacity={truth}>TRUTH?</text>
+            </g>
+          )}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 /* ── The American Millennial Manifesto's own illustration, for the culture's moral erosion ── */
 type PlateKind = keyof typeof TRAILER_PLATES;
 const isPlate = (kind: string): kind is PlateKind => kind in TRAILER_PLATES;
@@ -883,9 +1041,6 @@ function TrailerDrawing({ t }: { t: number }) {
   const cam = cameraAt(t);
   const s = cam.s;
   const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-cam.x).toFixed(2)} ${(-cam.y).toFixed(2)})`;
-  const beat = heartbeat(t) * (1 - smooth(t, 6.5, 7));
-  // At the question, a light grows at the chest: the one fact no one has to teach.
-  const presence = smooth(t, 1.2, 6.8) * (t < 7 ? 1 : 0);
   const sphere = smooth(t, 16.2, 18.4) * (t < PAUSE - 1 ? 1 : 0);
   const coupling = smooth(t, 17, 19) * (t < PAUSE - 1 ? 1 : 0);
   const warmth = sphere;
@@ -951,7 +1106,6 @@ function TrailerDrawing({ t }: { t: number }) {
             loosen={loosen} px={2.2} s={s} weight={diminished} press={diminished}
           />
         )}
-        <circle cx={CHEST[0]} cy={CHEST[1]} r={70 + 90 * presence} fill={`url(#${uid}-jade)`} opacity={Math.min(1, beat * 0.9 + 0.6 * presence)} />
         <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.3 * diminished} shrink={diminished} />
         <PainRings at={CHEST} phase={0.37} t={t} opacity={pain} s={s} />
         {/* The pause: someone is experiencing this. */}
@@ -1126,7 +1280,8 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
         {shot.kind === "mark" && <TrailerMark seconds={t} />}
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
         {PERSON_SHOTS.includes(shot.kind) && <TrailerPerson seconds={t} />}
-        {["turn", "design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
+        {shot.kind === "turn" && <TrailerBegin seconds={t} />}
+        {["design", "pause"].includes(shot.kind) && <TrailerDrawing t={d} />}
         {shot.kind === "purpose" && <TrailerPurpose seconds={t} />}
         {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={(t - shot.start) / (shot.end - shot.start)} />}
         {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}

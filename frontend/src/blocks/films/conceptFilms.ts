@@ -112,8 +112,8 @@ export const CONCEPT_MOTIFS: Record<string, ConceptMotif> = {
   },
   "world-invariants": {
     Motif: WorldInvariants,
-    description: "A pendulum swings inside RF₀. Its positions are measured point by point and fitted with a curve. A dashed arrow from the frame marks that the rhythm is still to be derived from it.",
-    analogy: "Like timing a pendulum: physics describes its rhythm exactly; DOT must still derive where the rhythm comes from.",
+    description: "A pendulum swings inside RF₀. Its positions are measured point by point and fitted with a curve. A dashed arrow from the frame marks the rhythm as one of the Frame’s own rules.",
+    analogy: "Like timing a pendulum: physics describes its rhythm exactly; DOT reads that rhythm as one of the Frame’s rules.",
     layer: "reality-frame",
   },
   "reality-stream": {

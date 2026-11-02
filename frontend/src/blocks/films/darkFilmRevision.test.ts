@@ -217,6 +217,21 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
+  it("illustrates where to begin: the measuring box, the senses, and feeling as data", () => {
+    const at = (word: string) => {
+      const line = DARK_TRAILER_LINES.find((typed) => typed.shot === "turn" && typed.text.includes(word))!;
+      return line.start + line.text.indexOf(word) / line.charsPerSecond;
+    };
+    const view = render(createElement(DarkFilmTrailer, { seconds: at("not a measurement") + 3 }));
+    expect(view.getByText("CAUSE → EFFECT")).toBeInTheDocument();
+    view.rerender(createElement(DarkFilmTrailer, { seconds: at("The observer") + 3 }));
+    for (const sense of ["SIGHT", "SMELL", "SOUND", "TOUCH", "TASTE"]) expect(view.getByText(sense)).toBeInTheDocument();
+    view.rerender(createElement(DarkFilmTrailer, { seconds: at("not automatically truth") + 1.5 }));
+    expect(view.getByText("DATA")).toBeInTheDocument();
+    expect(view.getByText("TRUTH?")).toBeInTheDocument();
+    view.unmount();
+  });
+
   it("ends by holding on the DOT mark, with its name, until the film stops", () => {
     const frame = (seconds: number, burnIn: boolean) =>
       createElement(MemoryRouter, null, createElement(DarkFilmFrame, { seconds, still: false, burnIn }));
