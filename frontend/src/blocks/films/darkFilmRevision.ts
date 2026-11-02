@@ -43,8 +43,8 @@ interface ScriptLine {
   cite?: string;
   /** Extra seconds the line stays, in silence, so it can land. */
   pause?: number;
-  /** With the author's voice, only these words of the line appear, as he says them. */
-  show?: readonly string[];
+  /** With the author's voice, the line appears as a pull quote: whole (true), or just this part of it. */
+  card?: boolean | string;
   /** How the narration says the line, where that differs from how it reads (a name, say). */
   say?: string;
 }
@@ -67,7 +67,7 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "author", "turn", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
@@ -76,7 +76,7 @@ const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || va
  * The opening trailer: the DOT mark, then one person. DOT is about the individual (the AMM is its
  * social application), so the film stays with them: an ordinary day → the pretence → confusion →
  * the body → never enough → what they were given and never taught → where a truthful framework
- * begins → the author, by name, and how he woke → you → your options. The words come from Book One and the
+ * begins, introduced with care → you → your options. The words come from Book One and the
  * author, with DOT's proposals marked (content/films.json).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
@@ -91,8 +91,8 @@ const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) 
     lead: shot.lead,
     linger: "linger" in shot ? shot.linger : undefined,
     voice,
-    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string; pause?: number; show?: string[]; say?: string })[]).map((line) =>
-      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite, pause: line.pause, show: line.show, say: line.say },
+    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string; pause?: number; card?: boolean | string; say?: string })[]).map((line) =>
+      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite, pause: line.pause, card: line.card, say: line.say },
     ),
   };
 });
@@ -118,8 +118,8 @@ export interface TrailerLine extends TypedLine {
   voice?: TrailerVoice;
   /** The source of a quotation, shown beneath it once it is typed. */
   cite?: string;
-  /** The words that appear when the author's voice carries the line. */
-  show?: readonly string[];
+  /** The pull quote shown when the author's voice carries the line; most lines show none. */
+  card?: string;
   /** What the narration says. */
   speech: string;
 }
@@ -135,13 +135,15 @@ function buildTrailer() {
     let cursor = at + script.lead;
     const shotLines: TrailerLine[] = [];
     script.lines.forEach((entry, index) => {
-      const { text, voice = script.voice, cite, pause = 0, show, say } = typeof entry === "string" ? { text: entry } as ScriptLine : entry;
+      const { text, voice = script.voice, cite, pause = 0, card, say } = typeof entry === "string" ? { text: entry } as ScriptLine : entry;
+      // A pull quote is the narrator's own words, never a paraphrase.
+      if (typeof card === "string" && !text.includes(card)) throw new Error(`"${card}" is not part of "${text}".`);
       const start = cursor;
       const end = start + text.length / charsPerSecond;
       // A quotation holds a little longer, so its source can be read too.
       const until = end + Math.max(minHoldSeconds, holdSeconds + holdPerChar * text.length) + (cite ? 1.6 : 0) + pause;
       const role = title ? (index === 0 ? "title" : "subtitle") : "line";
-      shotLines.push({ shot: kind, text, start, end, charsPerSecond, until, role, voice, cite, show, speech: say ?? text });
+      shotLines.push({ shot: kind, text, start, end, charsPerSecond, until, role, voice, cite, card: card === true ? text : card || undefined, speech: say ?? text });
       // The title stays while its subtitle types beneath it; spoken lines take turns.
       cursor = title ? end + gapSeconds : until + gapSeconds;
     });

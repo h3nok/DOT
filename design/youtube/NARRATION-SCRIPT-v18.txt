@@ -1,0 +1,121 @@
+DOT — FILM NARRATION SCRIPT (v18, the whole film) · FOR THE AUTHOR TO READ
+====================================================================
+
+Read all 75 lines in one recording, in order: the opening, then each concept's name and definition,
+the interlude, and the closing. The film places each line as it appears on screen.
+A calm, unhurried voice. Where a line ends with a pause in the film, let it land.
+
+HOW TO RECORD
+- A quiet room with soft furnishings. A phone voice memo is fine, held 20–30 cm from your mouth.
+- Read each line once, calmly, a little slower than conversation.
+- Leave about two seconds of silence between lines (count "one, two" in your head). The pauses
+  are how the recording is split into lines, so keep them silent and keep them longer than
+  any pause inside a line.
+- Do not read the [DOT proposes] labels; they appear on screen.
+- Read "RF₀" as you say it in conversation (for example "R F zero"). Little c is "little see".
+- If you stumble, pause, read the whole line again, and tell me its number.
+- For a concept, say its name, then its definition, as one sentence pair.
+
+WHEN YOU ARE DONE
+Save the file (m4a or wav) to artifacts/voiceover/film/ and tell me its name. Then:
+  pnpm dlx vite-node scripts/film-voiceover.mjs --recording=<file>
+splits, trims and masters it, and the film is exported with:
+  node scripts/render-dark-film.mjs --voiceover=<the run directory it prints>
+
+THE LINES
+— The performance of normality —
+ 1. We go to work. We pay bills. We scroll. We compete.
+ 2. We call exhaustion adulthood, anxiety responsibility,
+ 3. isolation independence, and endless accumulation success.
+ 4. We pretend the picture is coherent,
+ 5. because admitting otherwise means questioning ourselves.
+
+— Why —
+ 6. Look closely at what fills a day.
+ 7. Marketing fills every space we look at.
+ 8. Screens compete for every minute of our attention.
+ 9. Our attention has become the product.
+10. Money speaks, and most of us listen.
+11. And we erode, from the inside.
+12. We’re hurting, uncertain, and more afraid.
+
+— The body —
+13. The body notices before we admit it.
+14. An unresolved thought can change sleep,
+15. muscle tension, digestion, attention, and behavior.
+
+— Never enough —
+16. So we work harder for relief.
+17. Worth becomes achievement. Rest becomes laziness.
+18. Success may bring relief, but only briefly.
+19. Like filling a cup with a hole in it.
+20. And a sense that something essential is missing.
+
+— The culture around you —
+21. This isn’t a personal failing.
+22. Culture arrives through language, permitted emotions,
+23. authority, admired people, and expected futures.
+24. Schools, religions, entertainment, work, law, and markets
+25. carry it into daily life.
+26. Much of it is absorbed before it can be named.
+27. You inherited a painting already begun.
+28. We’re not immune to our culture, or our surroundings.
+29. The worker is coached. The workload remains.
+30. The citizen is blamed. The architecture remains.
+31. None of that is your fault.
+32. But undoing it is your responsibility.
+
+— Where to begin —
+33. So where do we begin?
+34. The most immediate fact of your existence
+35. is not a measurement.
+36. It is that you are here to experience one.
+37. Feeling must be treated as data,
+38. but feeling is not automatically truth.
+39. The framework that emerged is Digital Organism Theory.
+40. It is a construction, not a revelation.
+41. Examine the model. Compare it with your experience.
+
+— DOT’s proposal —
+42. You are Little c.   [DOT proposes]
+43. Your living body is your interface to a Reality Frame.   [DOT proposes]
+44. Like a musician and an instrument: joined, not the same.   [DOT proposes]
+
+— The architecture —
+45. This world, RF₀, is an experience laboratory.   [DOT proposes]
+46. Its rules turn experience into lessons.   [DOT proposes]
+
+— The opening —
+47. Conditioning is real. Conditioning is not essence.
+48. A river is shaped by its banks. It is not the banks.
+49. Yet the painting is not the painter.
+50. What matters is what Little c does with the opening.
+51. Freedom is participation in the creation of possibility.
+52. Our culture trains us to adapt to the painting.
+53. DOT aims at seeing the painting itself.   [DOT proposes]
+54. I believe that’s where a cultural revolution begins.
+
+— Digital Organism Theory —
+55. Digital Organism Theory
+56. A school of thought for examining experience.
+
+— The concepts —
+57. The Subjective Data Principle. Feeling must be treated as data, but feeling is not automatically truth.
+58. Digital Organism. A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.
+59. The Big C Hypothesis. DOT proposes a living, conscious process from which Reality Frames and local experiencers develop.
+60. Little c. The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.
+61. The Decoupling Principle. DOT proposes that Little c and the living body are distinct and functionally connected.
+62. Reality Frame. A shared, rule-bound experience laboratory, where each Little c takes part through a living body.
+63. Physical Sciences as Frame Derivations. DOT doesn’t dispute physics. It accepts physics as the measure of this world’s regularities.
+64. Reality Stream. The situated input RF₀ supplies to Little c through the Avatar.
+65. Intent. Commitment toward an action, distinct from the thoughts and impulses that remain possible drafts.
+66. The Experience Loop. Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.
+67. Canvas. The capacity to carry and update state, allowing earlier experience to influence what comes next.
+68. Painting. The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.
+69. Character. The relatively stable patterns expressed through repeated interpretation and action.
+70. The Fear-Gating Principle. When Fear governs, the set of responses that feels available becomes narrower.
+71. Ego defends the Character Little c has learned to call itself.
+72. Love as an Epistemic Condition. Love is the condition in which Fear no longer governs you.
+73. Conscious Authorship. Notice inherited interpretation, examine available responses, and act with greater deliberation.
+74. Limits and Unpaid Debts. Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.
+75. Become a student of your own experience.

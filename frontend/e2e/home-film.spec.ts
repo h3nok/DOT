@@ -42,7 +42,7 @@ test("the homepage film types every concept only when asked, and its sound is on
 
   // Moving to a concept shows it in the Concept Map's words, at the same height.
   const height = (await stage.boundingBox())!.height;
-  await timeline.fill("510");
+  await timeline.fill("458");
   await expect(shown.getByRole("heading", { level: 3 })).toHaveAccessibleName("Physical Sciences as Frame Derivations");
   await expect(timeline).toHaveAttribute("aria-valuetext", /Concept 7 of 17/);
   await expect(shown.locator(".concept-film-analogy")).toContainText("Like timing a pendulum");
@@ -58,9 +58,9 @@ test("the homepage film types every concept only when asked, and its sound is on
   await expect(section.getByRole("button", { name: "Play film", exact: true })).toBeAttached();
 
   // The film plays out and stops on the DOT mark, with the way into the book.
-  await timeline.fill("704");
+  await timeline.fill("652");
   await section.getByRole("button", { name: "Play film", exact: true }).click();
-  await expect(timeline).toHaveValue("707", { timeout: 10_000 });
+  await expect(timeline).toHaveValue("655", { timeout: 10_000 });
   await expect(section.locator(".dark-trailer-mark .do-wordmark")).toBeVisible();
   await expect(section.getByRole("link", { name: "Enter the Academy" })).toHaveAttribute("href", "/academy");
   await expect(section.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");

@@ -7,7 +7,7 @@ import { DoWordmark } from "../../shared/DoWordmark";
 import { ARCHITECTURE_RADII, FRAME_CENTRE, LOCAL_CENTRE, membranePath } from "../core/home/architectureGeometry";
 import "../core/home/home.css";
 import { TypedText } from "./ConceptFrame";
-import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime } from "./darkFilmRevision";
+import { DARK_TRAILER_LINES, DARK_TRAILER_SHOTS, TRAILER_HEARTBEATS_DESIGN, darkTrailerShot, trailerDrawingTime, type TrailerVoice } from "./darkFilmRevision";
 
 /* ── Film-time helpers: every motion is a pure function of the film second (L1). ── */
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
@@ -445,7 +445,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
 
 /* ── One person: what not knowing does to a life ── */
 const shotOf = (kind: string) => DARK_TRAILER_SHOTS.find((shot) => shot.kind === kind)!;
-const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited", "author"];
+const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited"];
 const HEAD: Point = [FIG_X, FIG_Y - 119 * FIG];
 /** When a word in one of a shot's lines starts typing. */
 function wordAt(kind: string, word: string) {
@@ -502,14 +502,6 @@ function personCamera(seconds: number) {
     [inherited + 2.6, FIG_X, 440, 1.18],
     [end - 2, FIG_X, 440, 1.18],
     [end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
-    // The author: in on him as he gives his name, out as his career appears beside him,
-    // and back to the question's opening view.
-    [shotOf("author").start, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
-    [shotOf("author").start + 3, FIG_X, 415, 1.7],
-    [wordAt("author", "a career") - 1.5, FIG_X, 415, 1.7],
-    [wordAt("author", "a career") + 1.5, FIG_X - 70, 440, 1.2],
-    [shotOf("author").end - 1.5, FIG_X - 70, 440, 1.2],
-    [shotOf("author").end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
   ];
   const index = keys.findIndex(([at]) => at > seconds);
   if (index <= 0) {
@@ -551,20 +543,6 @@ function TrailerPerson({ seconds }: { seconds: number }) {
     const dip = Math.exp(-((u - 0.54) ** 2) * 2600) * 20;
     return `${k ? "L" : "M"}${x.toFixed(1)} ${(FIG_Y + 80 - spike + dip).toFixed(1)}`;
   }).join("");
-
-  // The author: a career beside him, the strain he names, and stepping away to share this work.
-  const author = shotOf("author");
-  const inAuthor = seconds >= author.start ? 1 : 0;
-  const career = inAuthor * smooth(seconds, wordAt("author", "a career") - 0.3, wordAt("author", "a career") + 0.9)
-    * (1 - smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2));
-  const strain = inAuthor * smooth(seconds, wordAt("author", "erosion"), wordAt("author", "erosion") + 0.8)
-    * (1 - smooth(seconds, wordAt("author", "Now I’m") - 1, wordAt("author", "Now I’m") + 0.5));
-  // Stepping away: his career drifts off and fades; he stays where he is.
-  const drift = inAuthor * 140 * smooth(seconds, wordAt("author", "to share this work"), wordAt("author", "to share this work") + 2.2);
-  // His entrance: as he says his name, a light rises at the chest, then settles.
-  const entrance = inAuthor * smooth(seconds, wordAt("author", "My name"), wordAt("author", "My name") + 1.4) * (1 - smooth(seconds, wordAt("author", "For forty"), wordAt("author", "as if I were")));
-  // Forty years asleep in the culture: the figure dims, and wakes as he names the contrast.
-  const asleep = inAuthor * smooth(seconds, wordAt("author", "For forty"), wordAt("author", "as if I were") + 1) * (1 - smooth(seconds, wordAt("author", "It gave me contrast"), wordAt("author", "It gave me contrast") + 1.6));
 
   // Never enough: each gain fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
@@ -639,18 +617,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
           })}
 
           {inRings > 0.001 && seconds < inherited.end && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften * (1 - smooth(seconds, inherited.end - 1.2, inherited.end))} />}
-          {career > 0.001 && (
-            <g transform={`translate(${FIG_X - 300 - drift} ${FIG_Y - 40}) scale(1.4)`} opacity={career}>
-              <Laptop seconds={seconds} color={ink} w={(2.2 * WEIGHT) / (s * 1.4)} />
-            </g>
-          )}
-          {strain > 0.001 && [0, 0.5].map((offset) => {
-            const raw = seconds * 0.45 + offset;
-            const frac = raw - Math.floor(raw);
-            return <circle key={offset} cx={FIG_X} cy={CHEST[1]} r={40 + 80 * frac} fill="none" stroke={clay} strokeWidth={(2.4 * WEIGHT) / s} opacity={0.95 * strain * (1 - frac)} />;
-          })}
-          {entrance > 0.001 && <circle cx={FIG_X} cy={CHEST[1]} r={70 + 60 * entrance} fill={`url(#${uid}-glow)`} opacity={entrance} />}
-          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={(1 - 0.34 * decline) * (1 - 0.6 * asleep)} shrink={decline} />
+          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
 
           {inConfusion > 0.001 && (
             <g fill="none" strokeLinecap="round" opacity={inConfusion}>
@@ -877,10 +844,43 @@ function TrailerArchitecture({ t }: { t: number }) {
 /** How the opening's words appear: typed as you watch, or as subtitles to the author's voice. */
 export type FilmCaptions = "typed" | "spoken";
 
-/** The author's name card, shown as he introduces himself. */
-const AUTHOR_CARD = { name: "Henok Ghebrechristos", role: "Author, Digital Organism Theory" } as const;
-/** The narration's pace, for placing each key word as it is said. */
+/** The narration's pace, for placing a pull quote as it is said. */
 const SPOKEN_CPS = 13.5;
+const VOICE_LABEL: Record<TrailerVoice, string> = { dot: "DOT proposes", prevailing: "The prevailing view" };
+/** With the voice, whose claim it is is named once for a run of lines, so the label holds still. */
+const VOICE_RUNS = DARK_TRAILER_LINES.filter((typed) => typed.role === "line" && typed.voice).reduce<{ voice: TrailerVoice; start: number; until: number }[]>((runs, typed) => {
+  const last = runs.at(-1);
+  if (last && last.voice === typed.voice && typed.start - last.until < 1) last.until = typed.until;
+  else runs.push({ voice: typed.voice!, start: typed.start, until: typed.until });
+  return runs;
+}, []);
+
+/**
+ * With the author's voice, the screen carries few words: a pull quote at each turn of the
+ * argument, a whole sentence held while he says it. Every word stays in the captions track.
+ */
+function SpokenWords({ t }: { t: number }) {
+  const run = VOICE_RUNS.find(({ start, until }) => t >= start && t < until);
+  const quote = DARK_TRAILER_LINES.find((typed) => typed.card && t >= typed.start && t < typed.until);
+  const said = quote ? quote.start + 0.15 + quote.text.indexOf(quote.card!) / SPOKEN_CPS : 0;
+  const shown = quote ? smooth(t, said, said + 0.9) * (1 - smooth(t, quote.until - 0.6, quote.until)) : 0;
+  const rise = quote ? 1 - smooth(t, said, said + 0.9) : 0;
+  if (!run && shown <= 0.001) return null;
+  return (
+    <div className="dark-trailer-pull">
+      {run && (
+        <span className={`dark-trailer-voice dark-trailer-voice--${run.voice}`} style={{ opacity: smooth(t, run.start, run.start + 0.5) * (1 - smooth(t, run.until - 0.6, run.until)) }}>
+          {VOICE_LABEL[run.voice]}
+        </span>
+      )}
+      {shown > 0.001 && (
+        <p key={quote!.text} data-trailer-line={quote!.shot} style={{ opacity: shown, transform: `translateY(${(rise * 0.22).toFixed(3)}em)`, filter: rise > 0.01 ? `blur(${(rise * 5).toFixed(2)}px)` : undefined }}>
+          {quote!.card}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function DarkFilmTrailer({ seconds, still = false, tone = "dark", captions = "typed" }: {
   seconds: number; still?: boolean; tone?: FilmTone; captions?: FilmCaptions;
@@ -913,46 +913,20 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
       <div className="dark-trailer-words">
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
-          const spoken = captions === "spoken" && typed.role === "line";
-          // With the voice, a line shows only its key words, each as it is said; some show none.
-          if (spoken) {
-            if (!typed.show?.length && !typed.voice) return null;
-            const out = 1 - smooth(t, typed.until - 0.5, typed.until);
-            return (
-              <div key={typed.text} className="dark-trailer-keywords" data-trailer-line={typed.shot} style={{ opacity: out }}>
-                {typed.voice && (
-                  <span className={`dark-trailer-voice dark-trailer-voice--${typed.voice}`} style={{ opacity: smooth(t, typed.start, typed.start + 0.4) }}>
-                    {typed.voice === "dot" ? "DOT proposes" : "The prevailing view"}
-                  </span>
-                )}
-                <p>
-                  {(typed.show ?? []).map((word) => {
-                    const said = typed.start + 0.15 + typed.text.indexOf(word) / SPOKEN_CPS;
-                    const shown = smooth(t, said, said + 0.45);
-                    return (
-                      <span key={word} className="dark-trailer-keyword" style={{ opacity: shown, transform: `translateY(${((1 - shown) * 0.35).toFixed(3)}em)` }}>
-                        {word}
-                      </span>
-                    );
-                  })}
-                </p>
-              </div>
-            );
-          }
-          // Spoken, a line arrives whole with the voice; typed, it types as you watch.
-          const opacity = (spoken ? smooth(t, typed.start, typed.start + 0.45) : smooth(t, typed.start - 0.3, typed.start))
-            * (1 - smooth(t, typed.until - 0.5, typed.until));
+          // With the voice, the spoken lines give way to a few pull quotes (SpokenWords).
+          if (captions === "spoken" && typed.role === "line") return null;
+          const opacity = smooth(t, typed.start - 0.3, typed.start) * (1 - smooth(t, typed.until - 0.5, typed.until));
           const Tag = typed.role === "title" ? "h2" : "p";
           const voiced = typed.voice ? ` dark-trailer-${typed.role}--${typed.voice}` : "";
           return (
-            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}${spoken ? " dark-trailer-spoken" : ""}`} style={{ opacity }} data-trailer-line={typed.shot}>
+            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}`} style={{ opacity }} data-trailer-line={typed.shot}>
               {/* Whose claim it is, named above it: DOT's proposal or the view it examines. */}
               {typed.voice && (
                 <span className={`dark-trailer-voice dark-trailer-voice--${typed.voice}`}>
-                  {typed.voice === "dot" ? "DOT proposes" : "The prevailing view"}
+                  {VOICE_LABEL[typed.voice]}
                 </span>
               )}
-              {spoken ? <span>{typed.text}</span> : <TypedText line={typed} time={t} caret={typed.role !== "subtitle"} />}
+              <TypedText line={typed} time={t} caret={typed.role !== "subtitle"} />
               {typed.cite && (
                 <span className="dark-trailer-cite" style={{ opacity: smooth(t, typed.end + 0.2, typed.end + 0.9) }}>
                   — {typed.cite}
@@ -961,18 +935,7 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
             </Tag>
           );
         })}
-        {shot.kind === "author" && (() => {
-          // The name card enters on his name, in either caption mode.
-          const at = DARK_TRAILER_LINES.find((typed) => typed.text === "My name is Henok.")!;
-          const shown = smooth(t, at.start + 0.2, at.start + 1.2) * (1 - smooth(t, at.start + 9, at.start + 10));
-          return shown > 0.001 ? (
-            <div className="dark-trailer-name-card" style={{ opacity: shown }}>
-              <span className="dark-trailer-name-card-rule" style={{ transform: `scaleX(${smooth(t, at.start + 0.2, at.start + 1.6).toFixed(3)})` }} />
-              <strong>{AUTHOR_CARD.name}</strong>
-              <span>{AUTHOR_CARD.role}</span>
-            </div>
-          ) : null;
-        })()}
+        {captions === "spoken" && <SpokenWords t={t} />}
       </div>
     </section>
     </TrailerPalette.Provider>

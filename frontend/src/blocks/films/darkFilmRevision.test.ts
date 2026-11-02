@@ -41,7 +41,7 @@ describe("the dark film's opening trailer", () => {
 
   it("runs twelve unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "author", "turn", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
@@ -115,25 +115,15 @@ describe("the dark film's opening trailer", () => {
       "The citizen is blamed. The architecture remains.",
       "None of that is your fault.",
       "But undoing it is your responsibility.",
-      "I know this from the inside.",
-      "My name is Henok.",
-      "For forty years, I lived inside this culture",
-      "as if I were asleep.",
-      "I came to the United States as an African migrant.",
-      "Living between cultures didn’t free me.",
-      "It gave me contrast.",
-      "I’ve raised a family, carried debt, and made mistakes.",
-      "I could understand an argument",
-      "and still be unable to live it.",
-      "I don’t claim to know everything.",
-      "But I feel the erosion. I see the despair.",
-      "Now I’m stepping away from a career in software and AI",
-      "to share this work.",
-      "So where does waking up begin?",
+      "So where do we begin?",
       "The most immediate fact of your existence",
       "is not a measurement.",
       "It is that you are here to experience one.",
-      "I call what I found Digital Organism Theory.",
+      "Feeling must be treated as data,",
+      "but feeling is not automatically truth.",
+      "The framework that emerged is Digital Organism Theory.",
+      "It is a construction, not a revelation.",
+      "Examine the model. Compare it with your experience.",
       "You are Little c.",
       "Your living body is your interface to a Reality Frame.",
       "Like a musician and an instrument: joined, not the same.",
@@ -239,17 +229,38 @@ describe("the dark film's opening trailer", () => {
     expect(DARK_FILM_NARRATION.at(-1)!.text).toBe("Become a student of your own experience.");
   });
 
-  it("with the author's voice, shows only a line's key words, names him, and says his name as he does", () => {
+  it("with the author's voice, shows a few whole pull quotes, never fragments, and names DOT's claims steadily", () => {
+    const cards = DARK_TRAILER_LINES.filter((typed) => typed.card);
+    expect(cards.map(({ card }) => card)).toEqual([
+      "We call exhaustion adulthood",
+      "Our attention has become the product.",
+      "The body notices before we admit it.",
+      "Like filling a cup with a hole in it.",
+      "None of that is your fault.",
+      "But undoing it is your responsibility.",
+      "Digital Organism Theory",
+      "It is a construction, not a revelation.",
+      "You are Little c.",
+      "Conditioning is not essence.",
+    ]);
+    for (const typed of cards) expect(typed.text).toContain(typed.card);
+    // The film introduces the theory, not its author.
+    expect(DARK_TRAILER_SHOTS.map(({ kind }) => kind as string)).not.toContain("author");
+    expect(DARK_TRAILER_LINES.some((typed) => /\bmy name\b/i.test(typed.text))).toBe(false);
+
+    // A line without a pull quote leaves the picture alone.
     const line = DARK_TRAILER_LINES.find((typed) => typed.text === "We go to work. We pay bills. We scroll. We compete.")!;
     const view = render(createElement(DarkFilmTrailer, { seconds: line.until - 1, captions: "spoken" }));
-    const words = [...view.container.querySelectorAll(".dark-trailer-keyword")].map((word) => word.textContent);
-    expect(words).toEqual(["work", "bills", "scroll", "compete"]);
+    expect(view.container.querySelector(".dark-trailer-pull")).toBeNull();
     expect(view.container.querySelector(".dark-trailer-line")).toBeNull();
-    const name = DARK_TRAILER_LINES.find((typed) => typed.text === "My name is Henok.")!;
-    expect(name.speech).toBe("My name is Enock.");
-    view.rerender(createElement(DarkFilmTrailer, { seconds: name.start + 1.5, captions: "spoken" }));
-    expect(view.container.querySelector(".dark-trailer-name-card")).toHaveTextContent("Henok Ghebrechristos");
-    expect(view.container.querySelector(".dark-trailer-name-card")).not.toHaveTextContent("Dr.");
+    const quote = DARK_TRAILER_LINES.find((typed) => typed.text === "But undoing it is your responsibility.")!;
+    view.rerender(createElement(DarkFilmTrailer, { seconds: quote.until - 1, captions: "spoken" }));
+    expect(view.container.querySelector(".dark-trailer-pull p")).toHaveTextContent(/^But undoing it is your responsibility\.$/);
+    // One label holds through the pauses between DOT's lines.
+    const [first, second] = DARK_TRAILER_LINES.filter((typed) => typed.shot === "design");
+    view.rerender(createElement(DarkFilmTrailer, { seconds: (first.until + second.start) / 2, captions: "spoken" }));
+    expect(view.container.querySelector(".dark-trailer-pull .dark-trailer-voice")).toHaveTextContent("DOT proposes");
+    // The website still types every line.
     view.rerender(createElement(DarkFilmTrailer, { seconds: line.until - 1 }));
     expect(view.container.querySelector(".dark-trailer-line")).toHaveTextContent(line.text);
     view.unmount();
@@ -312,8 +323,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(405);
-    expect(DARK_FILM_SECONDS).toBe(707);
+    expect(DARK_OPENING_SECONDS).toBe(353);
+    expect(DARK_FILM_SECONDS).toBe(655);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);
