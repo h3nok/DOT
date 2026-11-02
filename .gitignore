@@ -147,6 +147,8 @@ docs/blueprint/amm/*
 # The videos are published on YouTube; index.html inlines every image and runs ~45 MB.
 design/youtube/*.mp4
 design/youtube/deprecated/*.mp4
+design/youtube/deprecated/**/*.mp4
+design/youtube/deprecated/*.m4a
 # Narration in the author's voice (recorded or generated) stays out of the public repository.
 design/youtube/*.m4a
 design/youtube/*.wav

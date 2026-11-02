@@ -1,5 +1,16 @@
 DIGITAL ORGANISM THEORY — CHANNEL SETUP
 
+THIS FOLDER
+- The film: concept-film-full-16x9-dark-v18-voiced-review-1080p.mp4, the whole film
+  (opening, seventeen concepts, closing). It is a review copy narrated by the voice model, so a
+  YouTube upload of it needs the altered or synthetic content disclosure.
+- Its script: NARRATION-SCRIPT-v18.txt. Upload titles, descriptions and chapters:
+  YOUTUBE-UPLOADS-v18.txt. Captions and chapter files: assets/*-v18.*
+- The channel kit: the profile images and text below, and mark-splash.mp4 (with a light
+  version), the 5-second DOT mark splash.
+- Everything older is in deprecated/. The 2026-10-28 concept shorts there
+  (deprecated/shorts-2026-10-28/) use concept wording that has since changed.
+
 Channel creation is pending. This package contains local artwork and proposed
 profile text. It does not reserve a handle or create a YouTube account.
 
@@ -8,10 +19,8 @@ The website's opening dot, single ring, and surrounding curved field.
 The banner and title card carry: Conditioning · Choice · Agency.
 Palette: DOT Daylight. Warm ivory #f2f0e8,
 deep green #142822, jade #285c4b.
-splash-intro.mp4 is the finished 18-second introductory opening video with quiet digital audio.
-It presents DOT's proposed model of reality in creation order, one typewriter line per scene: T × E (speculative), Big C emerging and stabilizing itself, Big C building tools — Reality Frames (RF₁…RFₙ, RF₀) — Little c, and choosing with others — before settling into the Digital Organism Theory brand lockup.
-splash-bumper.mp4 is the 5-second episode-opening cut of the same animation (no captions).
-splash.png is its still poster.
+mark-splash.mp4 (and mark-splash-light.mp4) is the 5-second DOT mark splash for opening episodes.
+splash.png is a still title card and poster.
 
 1. CREATE THE CHANNEL
 Sign in to YouTube with the Google account you want to own the channel.
@@ -62,9 +71,7 @@ PROPOSED PLAYLISTS (FOR WHEN VIDEOS ARE PUBLISHED)
 FILES
 banner.png / avatar.png — profile uploads
 watermark.png — optional transparent video mark
-splash-intro.mp4 — 3840 x 2160 (4K), 30 fps, 18 seconds, H.264 video with quiet digital AAC audio
-splash-storyboard.png — keyframes showing the motion sequence
-splash-bumper.mp4 — 3840 x 2160 (4K), 30 fps, 5 seconds, episode-opening cut
+mark-splash.mp4 / mark-splash-light.mp4 — 3840 x 2160 (4K), 30 fps, 5 seconds, the DOT mark splash
 splash.png — still title card and video poster
 end-card.png — 1920 x 1080 closing video colophon card (Book One + AMM + Claim levels)
 thumbnail-*.png — 1280 x 720 thumbnail templates for Book One, Epistemic Method, and AMM
