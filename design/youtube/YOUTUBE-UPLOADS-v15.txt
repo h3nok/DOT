@@ -9,6 +9,7 @@ Files (dark and light tones of each, 3840×2160 UHD, 30 fps)
   Full film  concept-film-full-16x9-dark-v15-4k.mp4 / concept-film-full-16x9-light-v15-4k.mp4  (8:39)
   Captions   assets/dot-opening-trailer-v15.en.srt, assets/concept-film-full-16x9-v15.en.srt (both tones)
   Chapters   assets/dot-films-v15-chapters.json (also below)
+  Thumbnail  assets/thumbnail-dot-film-v15.png (1280 x 720)
 
 
 1. TRAILER (suggested as the channel trailer)
