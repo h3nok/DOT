@@ -353,7 +353,7 @@ describe("the dark film's opening trailer", () => {
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
     expect(DARK_OPENING_SECONDS).toBe(689);
-    expect(DARK_FILM_SECONDS).toBe(991);
+    expect(DARK_FILM_SECONDS).toBe(1002);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

@@ -58,9 +58,9 @@ test("the homepage film types every concept only when asked, and its sound is on
   await expect(section.getByRole("button", { name: "Play film", exact: true })).toBeAttached();
 
   // The film plays out and stops on the DOT mark, with the way into the book.
-  await timeline.fill("988");
+  await timeline.fill("999");
   await section.getByRole("button", { name: "Play film", exact: true }).click();
-  await expect(timeline).toHaveValue("991", { timeout: 10_000 });
+  await expect(timeline).toHaveValue("1002", { timeout: 10_000 });
   await expect(section.locator(".dark-trailer-mark .do-wordmark")).toBeVisible();
   await expect(section.getByRole("link", { name: "Enter the Academy" })).toHaveAttribute("href", "/academy");
   await expect(section.getByRole("link", { name: "Read Book One" })).toHaveAttribute("href", "/book/digital-organism-theory");

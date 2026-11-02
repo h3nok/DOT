@@ -150,7 +150,7 @@ export const DOCTRINE_CONCEPTS = [
     id: "digital-organism",
     name: "Digital Organism",
     oneLine:
-      "A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.",
+"In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.",
   },
   {
     id: "big-c",
@@ -162,25 +162,25 @@ export const DOCTRINE_CONCEPTS = [
     id: "little-c",
     name: "Little c",
     oneLine:
-      "The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.",
+"The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.",
   },
   {
     id: "decoupling-principle",
     name: "The Decoupling Principle",
     oneLine:
-      "DOT proposes that Little c and the living body are distinct and functionally connected.",
+"DOT proposes that Little c and the living body are distinct, but functionally connected.",
   },
   {
     id: "reality-frame",
     name: "Reality Frame",
     oneLine:
-      "A shared, rule-bound experience laboratory in which Little cs participate through their Avatars.",
+"A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.",
   },
   {
     id: "world-invariants",
     name: "Physical Sciences as Frame Derivations",
     oneLine:
-      "Physics measures RF₀’s regularities; DOT must account for those results within its proposed Frame architecture.",
+"Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.",
   },
   {
     id: "reality-stream",
@@ -198,7 +198,7 @@ export const DOCTRINE_CONCEPTS = [
     id: "experience-loop",
     name: "The Experience Loop",
     oneLine:
-      "Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.",
+"Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.",
   },
   {
     id: "canvas",
@@ -210,36 +210,37 @@ export const DOCTRINE_CONCEPTS = [
     id: "painting",
     name: "Painting",
     oneLine:
-      "The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.",
+"The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.",
   },
   {
     id: "character",
     name: "Character",
     oneLine:
-      "The relatively stable patterns expressed through repeated interpretation and action.",
+"The relatively stable patterns expressed in how you interpret what happens and respond to it.",
   },
   {
     id: "fear-gating",
     name: "The Fear-Gating Principle",
     oneLine:
-      "When Fear governs, the set of responses that feels available becomes narrower.",
+"When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.",
   },
   {
     id: "love",
     name: "Love as an Epistemic Condition",
-    oneLine: "Love is the condition in which Fear no longer governs you.",
+    oneLine:
+"Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.",
   },
   {
     id: "conscious-authorship",
     name: "Conscious Authorship",
     oneLine:
-      "Notice inherited interpretation, examine available responses, and act with greater deliberation.",
+"Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.",
   },
   {
     id: "limits-and-debts",
     name: "Limits and Unpaid Debts",
     oneLine:
-      "Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.",
+"Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes.",
   },
 ];
 

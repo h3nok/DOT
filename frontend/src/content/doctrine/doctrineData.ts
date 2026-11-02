@@ -95,7 +95,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Digital Organism",
     oneLine:
-      "A living, conscious system that carries its past forward, senses what matters, and adapts to stay whole across change.",
+      "In DOT, a living, conscious system that carries its past forward, responds to what matters, and adapts to remain whole through change.",
     body: [
       "Digital does not mean electronic, binary, or made of silicon. The book uses computational language as handles for state, consequential difference, response, persistence, feedback, and adaptation.",
       "Digital Organism names a functional class. A process carries state, detects differences that matter to it, responds, preserves some continuity, and can change future behavior through what it encounters.",
@@ -148,7 +148,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "Little c",
     oneLine:
-      "The local experiencer in DOT’s model, embodied by an Avatar and participating through a situated Reality Stream.",
+      "The local experiencer in DOT’s model, participating through an Avatar and receiving a situated Reality Stream.",
     body: [
       "Little c names local self-awareness in DOT’s architecture. It is within Big C and outside RF₀. The Avatar is its living body in RF₀, through which Little c receives experience and acts.",
       "The distinction preserves the consequences of embodiment. Injury, chemistry, development, and neural activity shape what is available to experience. DOT must account for these measured relationships.",
@@ -175,7 +175,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "The Decoupling Principle",
     oneLine:
-      "DOT proposes that Little c and the living body are distinct and functionally connected.",
+      "DOT proposes that Little c and the living body are distinct, but functionally connected.",
     body: [
       "Readiness-potential experiments establish a measured temporal order, but they do not directly observe the origin of authorship. The book separates the measurement from interpretations placed on it.",
       "DOT proposes Rendering Latency: a minimal interval between Intent in Little c and the first measurable bodily change recruited for execution. That interval is not currently measured independently.",
@@ -202,7 +202,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Reality Frame",
     oneLine:
-      "A shared, rule-bound experience laboratory in which Little cs participate through their Avatars.",
+      "A shared, rule-bound experience laboratory, where Little c participates through a living body and encounters consequences.",
     body: [
       "A Reality Frame names a structured environment with lawful constraints, available actions, and consequences. RF₀ names our physical universe and, within DOT, serves as an experience laboratory for Little cs.",
       "The Frame supplies a Reality Stream to each local experiencer through its Avatar. RF₀ and Little c are within Big C; Little c is outside RF₀, while the Avatar embodies its participation within the Frame.",
@@ -229,7 +229,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "Physical Sciences as Frame Derivations",
     oneLine:
-      "Physics measures RF₀’s regularities; DOT must account for those results within its proposed Frame architecture.",
+      "Physics describes this world’s regularities. DOT interprets those regularities as properties of the Reality Frame.",
     body: [
       "Physics develops publicly testable accounts of causal structure, symmetry, conservation, coupling, decay, space, time, and statistical law. Within DOT, these measured regularities constrain the proposed generator of RF₀.",
       "A mature DOT must show how its proposed Frame architecture accounts for the regularities physical science measures, and how chemistry and biology become possible under those constraints.",
@@ -307,7 +307,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "foundation",
     title: "The Experience Loop",
     oneLine:
-      "Input is interpreted through the Painting; Intent leads toward action, and consequence updates carried state.",
+      "Little c interprets input through the Painting. Intent guides action through the body. Consequences return and update carried state.",
     body: [
       "The loop joins the architecture to lived change. A present Reality Stream is interpreted through the Painting, possible responses form, Intent commits direction, the body acts, and consequence returns.",
       "Consequential difference updates Canvas state. Its accumulated organization—the Painting—then participates in how the next moment is interpreted.",
@@ -361,7 +361,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Painting",
     oneLine:
-      "The accumulated organization of carried state: expectations, associations, skills, habits, and meanings.",
+      "The accumulated organization of that state: expectations, associations, skills, habits, fears, and meanings.",
     body: [
       "The Painting is what has accumulated: expectations, associations, fears, habits, meanings, and learned predictions. It influences what stands out and which responses feel possible.",
       "A Painting is inherited and revised through experience; it is not an essence. Seeing it clearly allows a person to distinguish the present from the interpretation brought into the present.",
@@ -388,7 +388,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "definition",
     title: "Character",
     oneLine:
-      "The relatively stable patterns expressed through repeated interpretation and action.",
+      "The relatively stable patterns expressed in how you interpret what happens and respond to it.",
     body: [
       "Character is the Painting in motion. Repeated interpretations and actions become a person's familiar way of meeting the world.",
       "The term describes an enacted pattern, not a permanent moral substance. A familiar response may be deeply conditioned and still remain open to revision through awareness, practice, consequence, and care.",
@@ -414,7 +414,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "claim",
     title: "The Fear-Gating Principle",
     oneLine:
-      "When Fear governs, the set of responses that feels available becomes narrower.",
+      "When Fear governs, the responses that feel available become fewer. You may stop seeing possibilities that are still there.",
     body: [
       "Fear can organize perception around defense, control, avoidance, domination, or preservation of identity. In that condition, physically possible options may become psychologically unavailable.",
       "The book models this as narrowing, not as proof that every excluded option was good or safe. Protective sensation remains part of an organism's intelligence; the concern is governance by inherited contraction.",
@@ -440,7 +440,8 @@ export const doctrineNodes: DoctrineNode[] = [
     id: "love",
     kind: "practice",
     title: "Love as an Epistemic Condition",
-    oneLine: "Love is the condition in which Fear no longer governs you.",
+    oneLine:
+      "Love is the condition in which Fear no longer governs you. There is room for truth to contradict who you think you are.",
     body: [
       "Love does not mean sentimentality, agreement, passivity, or the absence of protective sensation. A person can act with Love while frightened.",
       "In Book One, Love names enough inner freedom for reality to contradict identity. It permits inherited patterns to be inspected, another person to remain more than a threat, and a cherished model to be revised when consequence no longer supports it.",
@@ -466,7 +467,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "practice",
     title: "Conscious Authorship",
     oneLine:
-      "Notice inherited interpretation, examine available responses, and act with greater deliberation.",
+      "Notice what is shaping your interpretation. Examine what else is possible. Act with greater deliberation.",
     body: [
       "Authorship begins with recognition. A person learns to notice the inherited interpretation before it becomes the only available action.",
       "The pause is not escape from embodiment or consequence. It is a larger decision-space inside them: the capacity to compare a familiar draft with the present and commit direction more deliberately.",
@@ -493,7 +494,7 @@ export const doctrineNodes: DoctrineNode[] = [
     kind: "question",
     title: "Limits and Unpaid Debts",
     oneLine:
-      "Distinguish observation, model, hypothesis, and speculation, then ask what would support or challenge each claim.",
+      "Distinguish observation, model, hypothesis, and speculation. Ask what would support or challenge each claim—including every claim DOT makes.",
     body: [
       "Big C and its development of RF₀ remain hypotheses. T × E (Speculation) is an extrapolation beyond direct experience. Multiple Reality Frames, Canvas persistence beyond embodiment, and Rendering Latency remain unestablished and incompletely operationalized.",
       "Its equations formalize dependencies and measured orderings. They are not discovered laws, and most DOT variables do not yet have accepted operational measures.",
