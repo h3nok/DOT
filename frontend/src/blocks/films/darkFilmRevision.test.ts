@@ -15,6 +15,7 @@ import { DarkFilmFrame } from "./DarkFilmPlayer";
 import { DarkFilmTrailer } from "./DarkFilmTrailer";
 import {
   DARK_FILM_BODY_END,
+  DARK_FILM_NARRATION,
   DARK_FILM_KEYSTROKES,
   DARK_FILM_SECONDS,
   DARK_FILM_STARTS,
@@ -38,17 +39,17 @@ const partIdentity = (part: TourPart) => {
 describe("the dark film's opening trailer", () => {
   const originalBody = CONCEPT_TOUR.filter((part) => part.kind !== "scene");
 
-  it("runs eleven unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
+  it("runs twelve unbroken shots, from the DOT mark to the title, each long enough for its words", () => {
     expect(DARK_TRAILER_SHOTS.map((shot) => shot.kind)).toEqual([
-      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title",
+      "mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "author", "design", "architecture", "pause", "title",
     ]);
     expect(DARK_TRAILER_SHOTS[0].start).toBe(0);
     DARK_TRAILER_SHOTS.forEach((shot, index) => {
-      expect(shot.end - shot.start, shot.kind).toBeGreaterThanOrEqual(shot.design);
+      expect(shot.end - shot.start, shot.kind).toBeGreaterThanOrEqual(shot.design - 1e-6);
       if (index) expect(shot.start).toBe(DARK_TRAILER_SHOTS[index - 1].end);
     });
     expect(DARK_OPENING_SECONDS).toBeGreaterThan(90);
-    expect(DARK_OPENING_SECONDS).toBeLessThan(230);
+    expect(DARK_OPENING_SECONDS).toBeLessThan(360);
   });
 
   it("is friendly to read: calm typing, a long hold, and an empty pause between lines", () => {
@@ -58,13 +59,13 @@ describe("the dark film's opening trailer", () => {
     }
     const spoken = DARK_TRAILER_LINES.filter((typed) => typed.role === "line");
     spoken.forEach((typed, index) => {
-      if (index) expect(typed.start - spoken[index - 1].until, typed.text).toBeGreaterThanOrEqual(1);
+      if (index) expect(typed.start - spoken[index - 1].until, typed.text).toBeGreaterThanOrEqual(1 - 1e-9);
     });
   });
 
   it("lets the picture carry it: few words, one short line on screen at a time", () => {
     const words = DARK_TRAILER_LINES.reduce((total, typed) => total + typed.text.split(/\s+/).length, 0);
-    expect(words).toBeLessThanOrEqual(205);
+    expect(words).toBeLessThanOrEqual(340);
     for (const typed of DARK_TRAILER_LINES) {
       // Every line fits on a single caption row at the trailer's type size.
       expect(typed.text.length, typed.text).toBeLessThanOrEqual(57);
@@ -86,23 +87,39 @@ describe("the dark film's opening trailer", () => {
       "We call exhaustion adulthood, anxiety responsibility,",
       "isolation independence, and endless accumulation success.",
       "We pretend the picture is coherent.",
-      "The body tightens. Attention fragments.",
-      "Trust declines. Meaning thins.",
+      "Let us be honest about why.",
+      "Marketing fills every space we look at.",
+      "Screens compete for every minute of our attention.",
+      "Money speaks, and most of us listen.",
+      "And slowly, we stop caring for each other.",
       "An unresolved thought could change sleep,",
       "muscle tension, digestion, attention, and behavior.",
       "Worth becomes achievement. Rest becomes laziness.",
       "Success may bring relief, but only briefly.",
       "A persistent sense that something essential is missing.",
-      "You did not choose the body you were born with,",
-      "your first language, first household, first fear,",
-      "or first explanation of reality.",
-      "No one taught you to inspect any of it.",
-      "That inheritance is not your fault.",
+      "Culture arrives through language, permitted emotions,",
+      "authority, admired people, and expected futures.",
+      "Schools, religions, entertainment, work, law, and markets",
+      "carry it into daily life.",
+      "Much of it is absorbed before it can be named.",
+      "We are not immune to our culture or our surroundings.",
+      "This culture works against human development.",
+      "None of that is your fault.",
       "But undoing it is your responsibility.",
       "So where do you begin?",
       "The most immediate fact of your existence",
       "is not a measurement.",
       "It is that you are here to experience one.",
+      "My name is Henok.",
+      "I don’t claim to know everything.",
+      "But I feel the erosion. I see the despair.",
+      "I pursued these questions while raising a family,",
+      "carrying debt, and making mistakes.",
+      "I have spent my career in software and AI.",
+      "Now I am stepping away from it to share this work.",
+      "I call it Digital Organism Theory.",
+      "I believe we need a cultural revolution,",
+      "and DOT aims to be its foundation.",
       "You are Little c.",
       "Your living body is your interface to a Reality Frame.",
       "This world, RF₀, is an experience laboratory.",
@@ -116,7 +133,7 @@ describe("the dark film's opening trailer", () => {
     expect(voiceOf("You are Little c.")).toBe("dot");
     expect(voiceOf("Your living body is your interface to a Reality Frame.")).toBe("dot");
     expect(voiceOf("This world, RF₀, is an experience laboratory.")).toBe("dot");
-    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(3);
+    expect(DARK_TRAILER_LINES.filter((typed) => typed.voice)).toHaveLength(4);
   });
 
   it("reveals the architecture with T × E outermost, the field Big C emerged within (ADR-0026)", () => {
@@ -190,6 +207,16 @@ describe("the dark film's opening trailer", () => {
     view.unmount();
   });
 
+  it("narrates every typed line of the opening, then each concept, the interlude and the closing, in order", () => {
+    expect(DARK_FILM_NARRATION.slice(0, DARK_TRAILER_LINES.length).map(({ text }) => text)).toEqual(DARK_TRAILER_LINES.map(({ text }) => text));
+    expect(DARK_FILM_NARRATION).toHaveLength(DARK_TRAILER_LINES.length + 17 + 1 + 1);
+    DARK_FILM_NARRATION.forEach((line, index) => {
+      expect(line.until, line.text).toBeGreaterThan(line.start);
+      if (index) expect(line.start, line.text).toBeGreaterThan(DARK_FILM_NARRATION[index - 1].start);
+    });
+    expect(DARK_FILM_NARRATION.at(-1)!.text).toBe("Become a student of your own experience.");
+  });
+
   it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
     const strokes = (tone: "dark" | "light") => {
       const view = render(createElement(DarkFilmTrailer, { seconds: DARK_TRAILER_SHOTS.find((shot) => shot.kind === "turn")!.start + 1, still: true, tone }));
@@ -241,8 +268,8 @@ describe("the dark film's opening trailer", () => {
   });
 
   it("hands off at the exact trailer boundary and keeps each shot and the final frame addressable", () => {
-    expect(DARK_OPENING_SECONDS).toBe(217);
-    expect(DARK_FILM_SECONDS).toBe(519);
+    expect(DARK_OPENING_SECONDS).toBe(341);
+    expect(DARK_FILM_SECONDS).toBe(643);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS - 0.001)).toBe("Opening: Digital Organism Theory");
     expect(originalDarkFilmTime(DARK_OPENING_SECONDS)).toBe(TOUR_OPENING_SECONDS);
     expect(describeDarkFilmTime(DARK_OPENING_SECONDS)).toMatch(/^Concept 1 of /);

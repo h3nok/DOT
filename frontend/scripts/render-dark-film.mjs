@@ -97,6 +97,24 @@ async function command(binary, args) {
   return { stdout, stderr };
 }
 
+/**
+ * A narrated film is brought to -16 LUFS, a speech level that streaming services play as is,
+ * with a true-peak ceiling; the limiter only catches rare peaks.
+ */
+async function levelForPublishing(file, temporary) {
+  const measure = async (input) => {
+    const { stderr } = await command(FFMPEG, ["-hide_banner", "-nostats", "-i", input, "-af", "ebur128=peak=true", "-f", "null", "-"]);
+    return Number(stderr.match(/I:\s+(-?[\d.]+) LUFS/g).at(-1).match(/-?[\d.]+/)[0]);
+  };
+  const before = await measure(file);
+  const leveled = path.join(temporary, "leveled.wav");
+  await command(FFMPEG, ["-hide_banner", "-loglevel", "error", "-y", "-i", file, "-af", `volume=${(-16 - before).toFixed(2)}dB,alimiter=limit=0.89:level=false`, "-c:a", "pcm_s16le", "-ar", "48000", leveled]);
+  await rename(leveled, file);
+  const after = await measure(file);
+  console.log(`Loudness: ${before.toFixed(1)} → ${after.toFixed(1)} LUFS`);
+  return { before, after };
+}
+
 /** The voice sits at its mastered loudness, above everything else. */
 const VOICE_GAIN = 0.95;
 
@@ -510,6 +528,7 @@ try {
     const audio = path.join(temporary, "typewriter.wav");
     const voice = VOICEOVER ? await loadVoiceover(VOICEOVER, info.trailer.lines, temporary) : null;
     const audioMetadata = await typewriterAudio(page, audio, duration, info.openingSeconds, info.keystrokes, info.trailer, voice);
+    if (voice) audioMetadata.loudness = await levelForPublishing(audio, temporary);
     const pages = [page];
     for (let i = 1; i < WORKERS; i++) pages.push(await preparePage(context));
     const full = path.join(OUTPUT, `concept-film-full-16x9-${SUFFIX}.mp4`);

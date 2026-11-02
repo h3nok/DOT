@@ -445,7 +445,7 @@ function TrailerNormal({ seconds }: { seconds: number }) {
 
 /* ── One person: what not knowing does to a life ── */
 const shotOf = (kind: string) => DARK_TRAILER_SHOTS.find((shot) => shot.kind === kind)!;
-const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited"];
+const PERSON_SHOTS = ["confused", "health", "unfulfilled", "inherited", "author"];
 const HEAD: Point = [FIG_X, FIG_Y - 119 * FIG];
 /** When a word in one of a shot's lines starts typing. */
 function wordAt(kind: string, word: string) {
@@ -477,11 +477,14 @@ const BODY_POINTS = [
 ];
 const GAINS = ["CREDENTIALS", "INCOME", "APPEARANCE", "INFLUENCE", "PRODUCTIVITY"];
 const RINGS = [
-  { word: "the body", label: "BODY", r: 140, angle: -18 },
-  { word: "language", label: "LANGUAGE", r: 180, angle: -162 },
-  { word: "household", label: "HOUSEHOLD", r: 220, angle: -26 },
-  { word: "fear", label: "FEAR", r: 260, angle: -154 },
-  { word: "explanation", label: "EXPLANATION", r: 300, angle: -34 },
+  { word: "language", label: "LANGUAGE", r: 130, angle: -20 },
+  { word: "permitted emotions", label: "EMOTIONS", r: 160, angle: -160 },
+  { word: "authority", label: "AUTHORITY", r: 190, angle: -28 },
+  { word: "Schools", label: "SCHOOLS", r: 220, angle: -152 },
+  { word: "religions", label: "RELIGION", r: 250, angle: -36 },
+  { word: "entertainment", label: "ENTERTAINMENT", r: 280, angle: -144 },
+  { word: "work,", label: "WORK", r: 310, angle: -42 },
+  { word: "markets", label: "MARKETS", r: 340, angle: -138 },
 ];
 
 function personCamera(seconds: number) {
@@ -499,6 +502,10 @@ function personCamera(seconds: number) {
     [inherited + 2.6, FIG_X, 440, 1.18],
     [end - 2, FIG_X, 440, 1.18],
     [end, CAMERA[0][1], CAMERA[0][2], CAMERA[0][3]],
+    // The author: from the question's close view, out to the person and the career beside them.
+    [shotOf("author").start, FIG_X, 415, 1.7],
+    [shotOf("author").start + 3, FIG_X - 70, 440, 1.2],
+    [shotOf("author").end, FIG_X - 40, 430, 1.3],
   ];
   const index = keys.findIndex(([at]) => at > seconds);
   if (index <= 0) {
@@ -528,7 +535,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   // Confusion.
   const inConfusion = smooth(seconds, confused.start, confused.start + 1) * (1 - smooth(seconds, health.start, health.start + 1.6));
   const tangled = smooth(seconds, confused.start + 0.4, health.start - 1);
-  const fragmenting = smooth(seconds, wordAt("confused", "Attention"), wordAt("confused", "Trust"));
+  const fragmenting = smooth(seconds, wordAt("confused", "Screens"), wordAt("confused", "Money"));
 
   // The body.
   const inBody = smooth(seconds, health.start, health.start + 1.6) * (1 - smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4));
@@ -540,6 +547,16 @@ function TrailerPerson({ seconds }: { seconds: number }) {
     const dip = Math.exp(-((u - 0.54) ** 2) * 2600) * 20;
     return `${k ? "L" : "M"}${x.toFixed(1)} ${(FIG_Y + 80 - spike + dip).toFixed(1)}`;
   }).join("");
+
+  // The author: a career beside him, the strain he names, and stepping away to share this work.
+  const author = shotOf("author");
+  const inAuthor = seconds >= author.start ? 1 : 0;
+  const career = inAuthor * smooth(seconds, wordAt("author", "career") - 0.3, wordAt("author", "career") + 0.9)
+    * (1 - smooth(seconds, wordAt("author", "stepping away"), wordAt("author", "stepping away") + 2.2));
+  const strain = inAuthor * smooth(seconds, wordAt("author", "erosion"), wordAt("author", "erosion") + 0.8)
+    * (1 - smooth(seconds, wordAt("author", "carrying"), wordAt("author", "I have spent")));
+  const step = inAuthor * 110 * smooth(seconds, wordAt("author", "stepping away"), wordAt("author", "stepping away") + 2.4);
+  const named = inAuthor * smooth(seconds, wordAt("author", "I call it"), wordAt("author", "I call it") + 1.6);
 
   // Never enough: each gain fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
@@ -613,8 +630,19 @@ function TrailerPerson({ seconds }: { seconds: number }) {
             );
           })}
 
-          {inRings > 0.001 && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften} />}
-          <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
+          {inRings > 0.001 && seconds < inherited.end && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften * (1 - smooth(seconds, inherited.end - 1.2, inherited.end))} />}
+          {career > 0.001 && (
+            <g transform={`translate(${FIG_X - 300} ${FIG_Y - 40}) scale(1.4)`} opacity={career}>
+              <Laptop seconds={seconds} color={ink} w={(2.2 * WEIGHT) / (s * 1.4)} />
+            </g>
+          )}
+          {strain > 0.001 && [0, 0.5].map((offset) => {
+            const raw = seconds * 0.45 + offset;
+            const frac = raw - Math.floor(raw);
+            return <circle key={offset} cx={FIG_X + step} cy={CHEST[1]} r={40 + 80 * frac} fill="none" stroke={clay} strokeWidth={(2.4 * WEIGHT) / s} opacity={0.95 * strain * (1 - frac)} />;
+          })}
+          {named > 0.001 && <circle cx={FIG_X + step} cy={CHEST[1]} r={60 + 50 * named} fill={`url(#${uid}-glow)`} opacity={named} />}
+          <Figure x={FIG_X + step} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
 
           {inConfusion > 0.001 && (
             <g fill="none" strokeLinecap="round" opacity={inConfusion}>
@@ -627,7 +655,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 return <path key={k} d={`M${a[0]} ${a[1]}A${radius} ${radius} 0 0 1 ${b[0]} ${b[1]}`} stroke={jade} strokeWidth={(1.8 * WEIGHT) / s} opacity={1 - 0.45 * fragmenting * drift} />;
               })}
               {QUESTIONS.map(({ place, k }) => {
-                const at = wordAt("confused", "Attention") + k * 1.6;
+                const at = wordAt("confused", "Marketing") + k * 1.6;
                 return <text key={k} x={place[0]} y={place[1]} fill={ink} stroke="none" fontFamily="Source Serif 4, Georgia, serif" fontSize={30 / s + 6} textAnchor="middle" opacity={0.75 * smooth(seconds, at, at + 1) * (0.55 + 0.45 * Math.sin(seconds * 0.9 + k))}>?</text>;
               })}
             </g>

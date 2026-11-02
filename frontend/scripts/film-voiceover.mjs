@@ -9,7 +9,7 @@
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { detectRecordingScenes } from "./process-voiceover.mjs";
@@ -20,10 +20,14 @@ const PRIVATE = path.join(ROOT, "artifacts/voiceover");
 const option = (name, fallback) => process.argv.find((argument) => argument.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback;
 const speed = Number(option("speed", "0.91"));
 const recording = option("recording", null);
-const { DARK_TRAILER_LINES } = await import(path.join(ROOT, "frontend/src/blocks/films/darkFilmRevision.ts"));
+const { DARK_FILM_NARRATION, DARK_TRAILER_LINES } = await import(path.join(ROOT, "frontend/src/blocks/films/darkFilmRevision.ts"));
+// --opening narrates only the opening; by default the whole film, concepts included.
+const narrated = process.argv.includes("--opening") ? DARK_FILM_NARRATION.slice(0, DARK_TRAILER_LINES.length) : DARK_FILM_NARRATION;
+// --reuse=<run> keeps earlier takes of lines whose words have not changed.
+const reuse = option("reuse", null);
 
 // Every typed line, spoken as it appears. The title is said as a sentence.
-const lines = DARK_TRAILER_LINES.map((line, index) => ({
+const lines = narrated.map((line, index) => ({
   number: index + 1,
   text: /[.?!,]$/.test(line.text) ? line.text : `${line.text}.`,
   display: line.text,
@@ -35,10 +39,18 @@ const inWorkspace = (target) => `/workspace/${path.relative(ROOT, target)}`;
 const sha = createHash("sha256").update(JSON.stringify(lines.map(({ text }) => text))).digest("hex").slice(0, 12);
 const run = option("run", null) ? path.resolve(option("run")) : path.join(PRIVATE, "film", `${new Date().toISOString().replace(/[:.]/g, "-")}-${sha}`);
 await mkdir(path.join(run, "masters"), { recursive: true });
+if (reuse) {
+  const earlier = JSON.parse(await readFile(path.join(path.resolve(reuse), "manifest.json"), "utf8")).lines;
+  for (const line of lines) {
+    const take = earlier.findIndex((item) => item.text === line.display);
+    if (take >= 0) await copyFile(path.join(path.resolve(reuse), `raw-scene-${take + 1}.wav`), path.join(run, `raw-scene-${line.number}.wav`));
+  }
+}
 const missing = [];
 for (const line of lines) {
   try { await access(path.join(run, `raw-scene-${line.number}.wav`)); } catch { missing.push(line); }
 }
+console.log(`${lines.length - missing.length} takes reused, ${missing.length} to make`);
 await writeFile(path.join(run, "scenes.json"), JSON.stringify(missing.map(({ number, text }) => ({ number, text })), null, 2));
 console.log(`Narrating ${lines.length} lines into ${path.relative(ROOT, run)}`);
 

@@ -92,7 +92,7 @@
   "trailer": {
     "title": "Digital Organism Theory",
     "subtitle": "A school of thought for examining experience.",
-    "note": "The opening of the film: the DOT mark, then ten shots that stay with one person. Its words come from Book One and the author; DOT’s proposals are labelled.",
+    "note": "The opening of the film: the DOT mark, then one person, and the author in his own words. Its words come from Book One and the author; DOT’s proposals are labelled.",
     "shots": [
       {
         "kind": "mark",
@@ -112,18 +112,27 @@
           "We go to work. We pay bills. We scroll. We compete.",
           "We call exhaustion adulthood, anxiety responsibility,",
           "isolation independence, and endless accumulation success.",
-          "We pretend the picture is coherent."
+          {
+            "text": "We pretend the picture is coherent.",
+            "pause": 1.5
+          }
         ]
       },
       {
         "kind": "confused",
-        "label": "Confusion",
+        "label": "Why",
         "design": 7,
         "lead": 1.4,
-        "description": "Close on the person’s head. A line tangles inside it. A ring of attention around it breaks into fragments that drift apart, and question marks surface and fade.",
+        "description": "Close on the person’s head. A line tangles inside it, and a ring of attention around it breaks into fragments that drift apart, as marketing, screens and money are named.",
         "lines": [
-          "The body tightens. Attention fragments.",
-          "Trust declines. Meaning thins."
+          "Let us be honest about why.",
+          "Marketing fills every space we look at.",
+          "Screens compete for every minute of our attention.",
+          "Money speaks, and most of us listen.",
+          {
+            "text": "And slowly, we stop caring for each other.",
+            "pause": 1.5
+          }
         ]
       },
       {
@@ -146,22 +155,38 @@
         "lines": [
           "Worth becomes achievement. Rest becomes laziness.",
           "Success may bring relief, but only briefly.",
-          "A persistent sense that something essential is missing."
+          {
+            "text": "A persistent sense that something essential is missing.",
+            "pause": 1.5
+          }
         ]
       },
       {
         "kind": "inherited",
-        "label": "What you were given",
-        "design": 9,
+        "label": "The culture around you",
+        "design": 10,
         "lead": 1.2,
-        "description": "Rings draw around the person, one at a time, named body, language, household, fear, explanation. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
+        "description": "Rings close around the person one at a time, each named as it is spoken: language, emotions, authority, schools, religion, entertainment, work, markets. Only when responsibility is named do they soften, as the person straightens and a gentle light returns at the chest.",
         "lines": [
-          "You did not choose the body you were born with,",
-          "your first language, first household, first fear,",
-          "or first explanation of reality.",
-          "No one taught you to inspect any of it.",
-          "That inheritance is not your fault.",
-          "But undoing it is your responsibility."
+          "Culture arrives through language, permitted emotions,",
+          "authority, admired people, and expected futures.",
+          "Schools, religions, entertainment, work, law, and markets",
+          "carry it into daily life.",
+          "Much of it is absorbed before it can be named.",
+          "We are not immune to our culture or our surroundings.",
+          {
+            "text": "This culture works against human development.",
+            "voice": "dot",
+            "pause": 1
+          },
+          {
+            "text": "None of that is your fault.",
+            "pause": 1
+          },
+          {
+            "text": "But undoing it is your responsibility.",
+            "pause": 2
+          }
         ],
         "linger": 0.8
       },
@@ -172,14 +197,48 @@
         "lead": 1.2,
         "description": "The rings clear. The person stands alone, the view moves slowly in, and a light grows at the chest with each heartbeat.",
         "lines": [
-          "So where do you begin?",
+          {
+            "text": "So where do you begin?",
+            "pause": 1.5
+          },
           "The most immediate fact of your existence",
           "is not a measurement.",
-          "It is that you are here to experience one."
+          {
+            "text": "It is that you are here to experience one.",
+            "pause": 1.5
+          }
         ],
         "drawing": [
           0,
           7
+        ]
+      },
+      {
+        "kind": "author",
+        "label": "Henok",
+        "design": 8,
+        "lead": 1.4,
+        "description": "The person stands, and a laptop appears beside them: a career in software. Soft rings of strain pulse at the chest as the author speaks of erosion and despair, then still. As he steps away from his career, the person moves away from the laptop, which fades, and a light grows at the chest.",
+        "lines": [
+          "My name is Henok.",
+          "I don’t claim to know everything.",
+          {
+            "text": "But I feel the erosion. I see the despair.",
+            "pause": 1.5
+          },
+          "I pursued these questions while raising a family,",
+          {
+            "text": "carrying debt, and making mistakes.",
+            "pause": 1
+          },
+          "I have spent my career in software and AI.",
+          "Now I am stepping away from it to share this work.",
+          "I call it Digital Organism Theory.",
+          "I believe we need a cultural revolution,",
+          {
+            "text": "and DOT aims to be its foundation.",
+            "pause": 1.5
+          }
         ]
       },
       {
@@ -222,7 +281,10 @@
         "lines": [
           "Conditioning is real. Conditioning is not essence.",
           "What matters is what Little c does with the opening.",
-          "Freedom is participation in the creation of possibility."
+          {
+            "text": "Freedom is participation in the creation of possibility.",
+            "pause": 1
+          }
         ],
         "drawing": [
           49.2,

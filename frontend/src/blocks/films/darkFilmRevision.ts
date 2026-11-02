@@ -1,4 +1,10 @@
+import { conceptTyping } from "./conceptFilms";
 import {
+  CLOSING_TYPING,
+  CONCEPT_TOUR,
+  TOUR_CONCEPT_BEATS,
+  sceneTyping,
+  tourPlace,
   CONCEPT_TOUR_KEYSTROKES,
   CONCEPT_TOUR_SECONDS,
   CONCEPT_TOUR_STARTS,
@@ -35,6 +41,8 @@ interface ScriptLine {
   text: string;
   voice?: TrailerVoice;
   cite?: string;
+  /** Extra seconds the line stays, in silence, so it can land. */
+  pause?: number;
 }
 
 interface ShotScript {
@@ -55,7 +63,7 @@ interface ShotScript {
 }
 
 /** The trailer's shots, one idea each, kept in content so the site's prerender reads the same words. */
-const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "design", "architecture", "pause", "title"] as const;
+const TRAILER_KINDS = ["mark", "normal", "confused", "health", "unfulfilled", "inherited", "turn", "author", "design", "architecture", "pause", "title"] as const;
 export type DarkTrailerShotKind = (typeof TRAILER_KINDS)[number];
 
 const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || value === "prevailing";
@@ -64,8 +72,8 @@ const isVoice = (value: unknown): value is TrailerVoice => value === "dot" || va
  * The opening trailer: the DOT mark, then one person. DOT is about the individual (the AMM is its
  * social application), so the film stays with them: an ordinary day → the pretence → confusion →
  * the body → never enough → what they were given and never taught → where a truthful framework
- * begins → you → your options. The words come from Book One and the author, with DOT's proposals
- * marked (content/films.json).
+ * begins → the author, by name, and why → you → your options. The words come from Book One and the
+ * author, with DOT's proposals marked (content/films.json).
  */
 const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) => {
   if (shot.kind !== TRAILER_KINDS[index]) throw new Error(`Trailer shot ${index} must be "${TRAILER_KINDS[index]}", not "${shot.kind}".`);
@@ -79,8 +87,8 @@ const SCRIPT: readonly ShotScript[] = filmsData.trailer.shots.map((shot, index) 
     lead: shot.lead,
     linger: "linger" in shot ? shot.linger : undefined,
     voice,
-    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string })[]).map((line) =>
-      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite },
+    lines: (shot.lines as readonly (string | { text: string; voice?: string; cite?: string; pause?: number })[]).map((line) =>
+      typeof line === "string" ? line : { text: line.text, voice: isVoice(line.voice) ? line.voice : undefined, cite: line.cite, pause: line.pause },
     ),
   };
 });
@@ -119,11 +127,11 @@ function buildTrailer() {
     let cursor = at + script.lead;
     const shotLines: TrailerLine[] = [];
     script.lines.forEach((entry, index) => {
-      const { text, voice = script.voice, cite } = typeof entry === "string" ? { text: entry } : entry;
+      const { text, voice = script.voice, cite, pause = 0 } = typeof entry === "string" ? { text: entry } : entry;
       const start = cursor;
       const end = start + text.length / charsPerSecond;
       // A quotation holds a little longer, so its source can be read too.
-      const until = end + Math.max(minHoldSeconds, holdSeconds + holdPerChar * text.length) + (cite ? 1.6 : 0);
+      const until = end + Math.max(minHoldSeconds, holdSeconds + holdPerChar * text.length) + (cite ? 1.6 : 0) + pause;
       const role = title ? (index === 0 ? "title" : "subtitle") : "line";
       shotLines.push({ shot: kind, text, start, end, charsPerSecond, until, role, voice, cite });
       // The title stays while its subtitle types beneath it; spoken lines take turns.
@@ -207,3 +215,23 @@ export const describeDarkFilmTime = (seconds: number) => {
   if (seconds < DARK_OPENING_SECONDS) return `Opening: ${darkTrailerShot(seconds).label}`;
   return seconds < DARK_FILM_BODY_END ? describeTourTime(originalDarkFilmTime(seconds)) : "DOT";
 };
+
+/**
+ * Everything the author's voice reads, in film seconds: each typed line of the opening, then each
+ * concept's name and definition (its analogy stays on screen to read), the interlude, and the
+ * closing line. `text` is what the narration manifest matches.
+ */
+export const DARK_FILM_NARRATION: readonly { text: string; start: number; until: number }[] = [
+  ...DARK_TRAILER_LINES.map(({ text, start, until }) => ({ text, start, until })),
+  ...CONCEPT_TOUR.filter((part) => part.start >= TOUR_OPENING_SECONDS).flatMap((part) => {
+    const at = part.start - SHIFT;
+    const until = part.end - SHIFT;
+    if (part.kind === "concept") {
+      const typing = conceptTyping(part.film, TOUR_CONCEPT_BEATS, tourPlace(part.position));
+      return [{ text: `${part.film.node.title}. ${part.film.node.oneLine}`, start: at + typing.name.start, until }];
+    }
+    if (part.kind === "interlude") return [{ text: part.interlude.title, start: at + sceneTyping(part.interlude).title.start, until }];
+    if (part.kind === "closing") return [{ text: filmsData.conceptTour.closing.title, start: at + CLOSING_TYPING.title.start, until }];
+    return [];
+  }),
+];
