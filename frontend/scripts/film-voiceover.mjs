@@ -3,12 +3,13 @@
 //   pnpm dlx vite-node scripts/film-voiceover.mjs --recording=<file>   the author's own reading:
 //     every line in order, about two seconds of silence between lines; split at those pauses.
 //   pnpm dlx vite-node scripts/film-voiceover.mjs [--speed=0.91]       the local voice model
-//     (offline: no network, the author's own reference recordings).
+//     (offline: no network, the author's own reference recordings). --run=<dir> resumes a run,
+//     generating only the lines it does not have yet.
 // Takes stay private in artifacts/voiceover/film (git-ignored).
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { detectRecordingScenes } from "./process-voiceover.mjs";
@@ -32,9 +33,13 @@ const referenceText = path.join(PRIVATE, "reference/voice.txt");
 const inWorkspace = (target) => `/workspace/${path.relative(ROOT, target)}`;
 
 const sha = createHash("sha256").update(JSON.stringify(lines.map(({ text }) => text))).digest("hex").slice(0, 12);
-const run = path.join(PRIVATE, "film", `${new Date().toISOString().replace(/[:.]/g, "-")}-${sha}`);
+const run = option("run", null) ? path.resolve(option("run")) : path.join(PRIVATE, "film", `${new Date().toISOString().replace(/[:.]/g, "-")}-${sha}`);
 await mkdir(path.join(run, "masters"), { recursive: true });
-await writeFile(path.join(run, "scenes.json"), JSON.stringify(lines.map(({ number, text }) => ({ number, text })), null, 2));
+const missing = [];
+for (const line of lines) {
+  try { await access(path.join(run, `raw-scene-${line.number}.wav`)); } catch { missing.push(line); }
+}
+await writeFile(path.join(run, "scenes.json"), JSON.stringify(missing.map(({ number, text }) => ({ number, text })), null, 2));
 console.log(`Narrating ${lines.length} lines into ${path.relative(ROOT, run)}`);
 
 if (recording) {
@@ -47,7 +52,7 @@ if (recording) {
       path.join(run, `raw-scene-${index + 1}.wav`),
     ]);
   }
-} else {
+} else if (missing.length) {
   await readFile(reference);
   await synthesize();
 }

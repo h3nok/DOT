@@ -562,7 +562,8 @@ def main():
                 assembled.append(make_room_pause(pause_sec, rate, room_tone))
 
         full_wave = np.concatenate(assembled) if assembled else np.zeros(rate, dtype=np.float32)
-        if full_wave.size < rate or not np.isfinite(full_wave).all():
+        # Half a second allows the shortest real lines ("You are Little c.") and still rejects empty audio.
+        if full_wave.size < rate // 2 or not np.isfinite(full_wave).all():
             raise ValueError(f"Invalid audio returned for scene {scene_num}")
         unconditioned_path = output / f"unconditioned-scene-{scene_num}.wav"
         raw_path = output / f"raw-scene-{scene_num}.wav"
