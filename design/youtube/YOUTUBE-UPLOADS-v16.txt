@@ -1,0 +1,104 @@
+DOT — YOUTUBE UPLOADS (v16, narrated) · DRAFT FOR AUTHOR REVIEW
+=================================================================
+
+Older versions are in deprecated/. Descriptions are written for Henok's review and edits.
+
+Files (dark and light tones of each, 3840×2160 UHD, 30 fps, narrated)
+  Trailer    dot-opening-trailer-dark-v16-4k.mp4 / dot-opening-trailer-light-v16-4k.mp4  (6:27)
+  Full film  concept-film-full-16x9-dark-v16-4k.mp4 / concept-film-full-16x9-light-v16-4k.mp4  (11:24)
+  Captions   assets/dot-opening-trailer-v16.en.srt, assets/concept-film-full-16x9-v16.en.srt (both tones)
+  Chapters   assets/dot-films-v16-chapters.json (also below)
+
+NARRATION
+If the narration is the voice model (trained on Henok's own recordings), mark the upload as
+altered or synthetic content in YouTube Studio. A recording of Henok reading the script
+(NARRATION-SCRIPT-v16.txt) needs no disclosure.
+
+
+1. TRAILER (suggested as the channel trailer)
+---------------------------------------------
+TITLE
+Digital Organism Theory: An Introduction
+
+DESCRIPTION
+We go to work. We pay bills. We scroll. We compete. We call exhaustion adulthood and anxiety
+responsibility. Marketing fills every space we look at, screens compete for every minute of our
+attention, and money speaks. This film follows one person through that culture and what it
+costs: confusion, a body under strain, and success that never fills the gap.
+
+We are not immune to our culture or our surroundings. None of that is our fault. Undoing it is
+our responsibility.
+
+I am Henok Ghebrechristos. I have spent my career in software and AI, and I am stepping away from
+it to share this work. I don't claim to know everything. Digital Organism Theory (DOT) is a school
+of thought for examining experience, and I hope it can be a foundation for a cultural change.
+
+DOT's own claims are labelled "DOT proposes" on screen. They are proposals, not established
+science. Book One sets out the argument, its rival explanations, and what would count against it.
+
+Chapters
+0:00 The performance of normality
+0:36 Why
+1:17 The body
+1:33 Never enough
+2:04 The culture around you
+3:18 The question
+3:46 Henok
+4:54 DOT’s proposal
+5:16 The architecture
+5:34 The opening
+6:09 Digital Organism Theory
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+
+
+2. FULL FILM
+------------
+TITLE
+Book One, concept by concept — Digital Organism Theory
+
+DESCRIPTION
+An introduction in Henok Ghebrechristos's own words, then all seventeen concepts of Digital
+Organism Theory, Book One, in the order of the Concept Map. Each concept has its own drawing,
+its definition, an everyday analogy, and its claim level: Observation, Model, Hypothesis, or
+Speculation. Those labels show how much support each idea has, and which are still untested.
+
+The book is free to read. Captions are available.
+
+Chapters
+0:00 Opening
+6:22 The Subjective Data Principle
+6:36 Digital Organism
+6:52 The Big C Hypothesis
+7:11 Little c
+7:30 The Decoupling Principle
+7:47 Reality Frame
+8:05 Physical Sciences as Frame Derivations
+8:23 Reality Stream
+8:42 Intent
+8:55 The Experience Loop
+9:12 Canvas
+9:28 Painting
+9:42 Character
+9:55 The Fear-Gating Principle
+10:08 The human character
+10:23 Love as an Epistemic Condition
+10:36 Conscious Authorship
+10:51 Limits and Unpaid Debts
+11:07 Closing
+
+Read Book One free: https://dotheory.org/book/digital-organism-theory
+Book One Concept Map: https://dotheory.org/doctrine
+
+
+UPLOAD SETTINGS (both)
+----------------------
+Category: Education · Language: English · Captions: upload the .en.srt file
+Audience: not made for kids · Comments: author's choice (L4/L5: no prompts to like,
+subscribe, or ring a bell are included in the films or descriptions)
+Playlist: Book One — Consciousness: A Digital Organism
+Channel trailer: the trailer (YouTube Studio > Customization > Layout)
+
+The earlier full film (p2j_Aj8QhyY) draws Little c inside RF₀. Unlist it when this one is up.
+The site has no YouTube links set; send the new video IDs to add them to films.json.
