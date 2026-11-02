@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId, type CSSProperties, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, type CSSProperties } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { Link } from "react-router-dom";
@@ -112,7 +112,9 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
   // Shrinking settles toward the feet, so a diminished figure still stands in its box.
   const lift = 171 * (FIG - scale);
   const feet = y + 171 * FIG;
-  const backlight = `${useId().replace(/[^\w-]/g, "")}-back`;
+  const id = useId().replace(/[^\w-]/g, "");
+  const backlight = `${id}-back`;
+  const reflection = `${id}-mirror`;
   const paths = BODY_PATHS.map((d) => <path key={d} d={d} {...(progress < 1 ? drawn(progress) : {})} />);
   return (
     <>
@@ -125,9 +127,18 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
       </defs>
       <circle cx={x} cy={y - 40 * scale} r={250 * scale} fill={`url(#${backlight})`} opacity={opacity * progress} />
       <Ground x={x} y={feet} width={120 * scale} opacity={opacity * progress} />
-      <Reflection x={x} y={feet} opacity={0.16 * opacity}>
-        <g transform={`scale(${scale} ${-scale}) translate(0 -171)`} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">{paths}</g>
-      </Reflection>
+      {/* Mirrored on a dark, glassy floor, fading within a body's height; a gradient stroke, not a mask, so it stays cheap. */}
+      {opacity > 0.001 && (
+        <g transform={`translate(${x} ${feet + 3}) scale(${scale} ${-scale}) translate(0 -171)`} fill="none" stroke={`url(#${reflection})`} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" opacity={opacity}>
+          <defs>
+            <linearGradient id={reflection} gradientUnits="userSpaceOnUse" x1="0" y1="171" x2="0" y2="30">
+              <stop offset="0" stopColor={ink} stopOpacity=".16" />
+              <stop offset="1" stopColor={ink} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {paths}
+        </g>
+      )}
       <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
         {paths}
       </g>
@@ -152,28 +163,6 @@ function Ground({ x, y, width, opacity = 1 }: { x: number; y: number; width: num
       {/* A wide, faint floor, then the bright pool where they stand. */}
       <ellipse cx={x} cy={y + 10} rx={width * 6} ry={width * 0.55} fill={`url(#${uid}-pool)`} opacity={0.35} />
       <ellipse cx={x} cy={y + 4} rx={width * 1.6} ry={width * 0.2} fill={`url(#${uid}-pool)`} />
-    </g>
-  );
-}
-
-/** What stands at (x, y), mirrored on a dark, glassy floor that swallows it within a body's height. */
-function Reflection({ x, y, opacity, children }: { x: number; y: number; opacity: number; children: ReactNode }) {
-  const uid = useId().replace(/[^\w-]/g, "");
-  if (opacity <= 0.001) return null;
-  return (
-    <g opacity={opacity}>
-      <defs>
-        <linearGradient id={`${uid}-fade`} gradientUnits="userSpaceOnUse" x1="0" y1={y} x2="0" y2={y + 220}>
-          <stop offset="0" stopColor="#fff" stopOpacity="1" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0" />
-        </linearGradient>
-        <mask id={`${uid}-mask`} maskUnits="userSpaceOnUse" x={x - 400} y={y} width={800} height={240}>
-          <rect x={x - 400} y={y} width={800} height={240} fill={`url(#${uid}-fade)`} />
-        </mask>
-      </defs>
-      <g mask={`url(#${uid}-mask)`}>
-        <g transform={`translate(${x} ${y + 3})`}>{children}</g>
-      </g>
     </g>
   );
 }
