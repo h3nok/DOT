@@ -224,6 +224,16 @@ describe("the dark film's opening trailer", () => {
     expect(DARK_FILM_NARRATION.at(-1)!.text).toBe("Become a student of your own experience.");
   });
 
+  it("with the author's voice, shows each line whole as a subtitle, and names him as he introduces himself", () => {
+    const line = DARK_TRAILER_LINES.find((typed) => typed.text === "My name is Henok.")!;
+    const view = render(createElement(DarkFilmTrailer, { seconds: line.start + 0.6, captions: "spoken" }));
+    expect(view.container.querySelector(".dark-trailer-spoken")).toHaveTextContent("My name is Henok.");
+    expect(view.container.querySelector(".dark-trailer-name-card")).toHaveTextContent("Dr. Henok Ghebrechristos");
+    view.rerender(createElement(DarkFilmTrailer, { seconds: line.start + 0.6 }));
+    expect(view.container.querySelector(".dark-trailer-spoken")).toBeNull();
+    view.unmount();
+  });
+
   it("draws in the tone it is given: light lines on the dark stage, dark lines on the light one", () => {
     const strokes = (tone: "dark" | "light") => {
       const view = render(createElement(DarkFilmTrailer, { seconds: DARK_TRAILER_SHOTS.find((shot) => shot.kind === "turn")!.start + 1, still: true, tone }));

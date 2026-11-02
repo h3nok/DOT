@@ -40,6 +40,8 @@ const TONE = option("tone", "dark");
 const URL = (() => {
   const url = new globalThis.URL(option("url", "http://127.0.0.1:5173/_preview/film-dark?render=1"));
   url.searchParams.set("tone", TONE);
+  // With the author's voice, the opening's words are his subtitles, and its keys fall silent.
+  if (option("voiceover", null)) url.searchParams.set("captions", "spoken");
   return url.href;
 })();
 const OUTPUT = path.resolve(option("output", "/tmp/dot-film-revised-dark"));
@@ -278,6 +280,7 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
       voiced++;
     }
   }
+  if (voice) keyGain.fill(0, 0, Math.min(count, Math.round(openingSeconds * rate)));
   for (let i = 0; i < count; i++) mix[i] = loudness * (mix[i] + keyGain[i] * keys[i]);
   if (voice) {
     for (const { at, samples } of voice) {

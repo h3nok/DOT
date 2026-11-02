@@ -186,6 +186,43 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
 .dark-trailer-drawing { display: block; width: 100%; height: 100%; overflow: visible; filter: var(--film-bloom); }
 /* The picture keeps above the caption band, so words never sit on a figure. */
 .dark-trailer-scene { position: absolute; inset: 0; }
+/* Subtitles to the author's voice: a little smaller and lighter than typed lines, arriving whole. */
+.dark-trailer-line.dark-trailer-spoken {
+  font-size: clamp(1.25rem, 2.7cqi, 3.4rem);
+  letter-spacing: -.01em;
+}
+/* The author's name card, a lower third that enters on his name and leaves before his story. */
+.dark-trailer-name-card {
+  position: absolute;
+  bottom: 22%;
+  left: 7%;
+  display: grid;
+  gap: .35em;
+  font-size: clamp(.9rem, 1.7cqi, 2.1rem);
+  text-align: left;
+}
+.dark-trailer-name-card-rule {
+  display: block;
+  width: 4.5em;
+  height: 2px;
+  margin-bottom: .35em;
+  background: var(--film-jade);
+  transform-origin: left;
+}
+.dark-trailer-name-card strong {
+  color: var(--film-ink);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.45em;
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+.dark-trailer-name-card span:last-child {
+  color: var(--film-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: .62em;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
 .dark-trailer-mark {
   position: absolute;
   top: 44.4%;

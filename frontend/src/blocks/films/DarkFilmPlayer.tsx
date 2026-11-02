@@ -2,7 +2,7 @@ import { DoWordmark } from "../../shared/DoWordmark";
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
 import filmsData from "../../content/films.json";
 import { ConceptTourFrame } from "./ConceptTourPlayer";
-import { DarkFilmTrailer, FilmClosingMark, type FilmTone } from "./DarkFilmTrailer";
+import { DarkFilmTrailer, FilmClosingMark, type FilmCaptions, type FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import { FilmProgress } from "./FilmProgress";
 import {
@@ -31,8 +31,8 @@ export const DARK_FILM_POSTER_SECONDS = 11.5;
  * `tone` sets the trailer's palette and the stage; the concepts follow the page's own theme,
  * so a light export is rendered with the page in its light theme.
  */
-export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark" }: {
-  seconds: number; still: boolean; burnIn?: boolean; tone?: FilmTone;
+export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark", captions = "typed" }: {
+  seconds: number; still: boolean; burnIn?: boolean; tone?: FilmTone; captions?: FilmCaptions;
 }) {
   const opening = seconds < DARK_OPENING_SECONDS;
   const closing = seconds >= DARK_FILM_BODY_END;
@@ -42,7 +42,7 @@ export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark" }:
         <DoWordmark compact />
         <span>Digital Organism Theory</span>
       </div>
-      {opening && <DarkFilmTrailer seconds={seconds} still={still} tone={tone} />}
+      {opening && <DarkFilmTrailer seconds={seconds} still={still} tone={tone} captions={captions} />}
       {closing && <FilmClosingMark seconds={seconds - DARK_FILM_BODY_END} still={still} tone={tone} links={!burnIn} />}
       {!opening && !closing && (
         <div className="dark-film-lesson concept-tour">

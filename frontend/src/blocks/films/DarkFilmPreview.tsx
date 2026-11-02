@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import { useReducedMotion } from "../../organism/signals/useReducedMotion";
 import { DarkFilmFrame } from "./DarkFilmPlayer";
-import type { FilmTone } from "./DarkFilmTrailer";
+import type { FilmCaptions, FilmTone } from "./DarkFilmTrailer";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import {
   DARK_FILM_BODY_END,
@@ -44,6 +44,8 @@ export default function DarkFilmPreview() {
   const params = new URLSearchParams(window.location.search);
   const renderMode = params.get("render") === "1";
   const tone: FilmTone = params.get("tone") === "light" ? "light" : "dark";
+  // `?captions=spoken`: the opening's words as subtitles to the author's narration.
+  const captions: FilmCaptions = params.get("captions") === "spoken" ? "spoken" : "typed";
   const [renderTime, setRenderTime] = useState(1.2);
   const still = useReducedMotion();
 
@@ -91,7 +93,7 @@ export default function DarkFilmPreview() {
       )}
       {renderMode ? (
         <div className="films-screening-shell concept-film dark-film-render-shell">
-          <DarkFilmFrame seconds={renderTime} still={false} burnIn tone={tone} />
+          <DarkFilmFrame seconds={renderTime} still={false} burnIn tone={tone} captions={captions} />
         </div>
       ) : (
         <DrawnFilmPlayer
@@ -107,7 +109,7 @@ export default function DarkFilmPreview() {
           describeTime={describeDarkFilmTime}
           keystrokes={still ? undefined : DARK_FILM_KEYSTROKES}
         >
-          {(frame) => <DarkFilmFrame seconds={frame} still={still} tone={tone} />}
+          {(frame) => <DarkFilmFrame seconds={frame} still={still} tone={tone} captions={captions} />}
         </DrawnFilmPlayer>
       )}
     </main>

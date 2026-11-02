@@ -557,6 +557,8 @@ function TrailerPerson({ seconds }: { seconds: number }) {
     * (1 - smooth(seconds, wordAt("author", "carrying"), wordAt("author", "I have spent")));
   const step = inAuthor * 110 * smooth(seconds, wordAt("author", "stepping away"), wordAt("author", "stepping away") + 2.4);
   const named = inAuthor * smooth(seconds, wordAt("author", "I call it"), wordAt("author", "I call it") + 1.6);
+  // His entrance: as he says his name, a light rises at the chest, then settles.
+  const entrance = inAuthor * smooth(seconds, author.start + 1.2, author.start + 2.6) * (1 - smooth(seconds, wordAt("author", "I don’t claim"), wordAt("author", "But I feel")));
 
   // Never enough: each gain fills the circle, and drains faster than the last.
   const inEmpty = smooth(seconds, unfulfilled.start, unfulfilled.start + 1.4) * (1 - smooth(seconds, inherited.start, inherited.start + 1.4));
@@ -641,6 +643,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
             const frac = raw - Math.floor(raw);
             return <circle key={offset} cx={FIG_X + step} cy={CHEST[1]} r={40 + 80 * frac} fill="none" stroke={clay} strokeWidth={(2.4 * WEIGHT) / s} opacity={0.95 * strain * (1 - frac)} />;
           })}
+          {entrance > 0.001 && <circle cx={FIG_X + step} cy={CHEST[1]} r={70 + 60 * entrance} fill={`url(#${uid}-glow)`} opacity={entrance} />}
           {named > 0.001 && <circle cx={FIG_X + step} cy={CHEST[1]} r={60 + 50 * named} fill={`url(#${uid}-glow)`} opacity={named} />}
           <Figure x={FIG_X + step} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
 
@@ -866,7 +869,15 @@ function TrailerArchitecture({ t }: { t: number }) {
  * The opening trailer's picture and words, one shot at a time (the argument is set out in
  * darkFilmRevision.ts). Reduced motion shows each shot finished.
  */
-export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { seconds: number; still?: boolean; tone?: FilmTone }) {
+/** How the opening's words appear: typed as you watch, or as subtitles to the author's voice. */
+export type FilmCaptions = "typed" | "spoken";
+
+/** The author's name card, shown as he introduces himself. */
+const AUTHOR_CARD = { name: "Dr. Henok Ghebrechristos", role: "Author, Digital Organism Theory" } as const;
+
+export function DarkFilmTrailer({ seconds, still = false, tone = "dark", captions = "typed" }: {
+  seconds: number; still?: boolean; tone?: FilmTone; captions?: FilmCaptions;
+}) {
   const shot = darkTrailerShot(seconds);
   // Reduced motion shows each shot finished, with its last line still on screen.
   const lastLine = DARK_TRAILER_LINES.filter((typed) => typed.shot === shot.kind).at(-1);
@@ -895,18 +906,21 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
       <div className="dark-trailer-words">
         {DARK_TRAILER_LINES.map((typed) => {
           if (t < typed.start - 0.3 || t >= typed.until) return null;
-          const opacity = smooth(t, typed.start - 0.3, typed.start) * (1 - smooth(t, typed.until - 0.5, typed.until));
+          const spoken = captions === "spoken";
+          // Spoken, a line arrives whole with the voice; typed, it types as you watch.
+          const opacity = (spoken ? smooth(t, typed.start, typed.start + 0.45) : smooth(t, typed.start - 0.3, typed.start))
+            * (1 - smooth(t, typed.until - 0.5, typed.until));
           const Tag = typed.role === "title" ? "h2" : "p";
           const voiced = typed.voice ? ` dark-trailer-${typed.role}--${typed.voice}` : "";
           return (
-            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}`} style={{ opacity }} data-trailer-line={typed.shot}>
+            <Tag key={typed.text} className={`dark-trailer-${typed.role}${voiced}${spoken ? " dark-trailer-spoken" : ""}`} style={{ opacity }} data-trailer-line={typed.shot}>
               {/* Whose claim it is, named above it: DOT's proposal or the view it examines. */}
               {typed.voice && (
                 <span className={`dark-trailer-voice dark-trailer-voice--${typed.voice}`}>
                   {typed.voice === "dot" ? "DOT proposes" : "The prevailing view"}
                 </span>
               )}
-              <TypedText line={typed} time={t} caret={typed.role !== "subtitle"} />
+              {spoken ? <span>{typed.text}</span> : <TypedText line={typed} time={t} caret={typed.role !== "subtitle"} />}
               {typed.cite && (
                 <span className="dark-trailer-cite" style={{ opacity: smooth(t, typed.end + 0.2, typed.end + 0.9) }}>
                   — {typed.cite}
@@ -915,6 +929,17 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark" }: { sec
             </Tag>
           );
         })}
+        {shot.kind === "author" && (() => {
+          const at = DARK_TRAILER_LINES.find((typed) => typed.shot === "author")!;
+          const shown = smooth(t, at.start + 0.2, at.start + 1.2) * (1 - smooth(t, at.start + 9, at.start + 10));
+          return shown > 0.001 ? (
+            <div className="dark-trailer-name-card" style={{ opacity: shown }}>
+              <span className="dark-trailer-name-card-rule" style={{ transform: `scaleX(${smooth(t, at.start + 0.2, at.start + 1.6).toFixed(3)})` }} />
+              <strong>{AUTHOR_CARD.name}</strong>
+              <span>{AUTHOR_CARD.role}</span>
+            </div>
+          ) : null;
+        })()}
       </div>
     </section>
     </TrailerPalette.Provider>
