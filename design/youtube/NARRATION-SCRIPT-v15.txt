@@ -1,0 +1,71 @@
+DOT — FILM NARRATION SCRIPT (v15 opening) · FOR THE AUTHOR TO READ
+====================================================================
+
+Read all 29 lines in one recording, in order. The film places each line as it types on screen.
+
+HOW TO RECORD
+- A quiet room with soft furnishings. A phone voice memo is fine, held 20–30 cm from your mouth.
+- Read each line once, calmly, a little slower than conversation.
+- Leave about two seconds of silence between lines (count "one, two" in your head). The pauses
+  are how the recording is split into lines, so keep them silent and keep them longer than
+  any pause inside a line.
+- Each line must fit the time shown. Most lines have room to spare.
+- Do not read the [DOT proposes] labels; they appear on screen.
+- Read "RF₀" as you say it in conversation (for example "R F zero"). Little c is "little see".
+- If you stumble, pause, read the whole line again, and tell me its number.
+
+WHEN YOU ARE DONE
+Save the file (m4a or wav) to artifacts/voiceover/film/ and tell me its name. Then:
+  pnpm dlx vite-node scripts/film-voiceover.mjs --recording=<file>
+splits, trims and masters it, and the film is exported with:
+  node scripts/render-dark-film.mjs --voiceover=<the run directory it prints>
+
+THE LINES
+— The performance of normality —
+ 1. We go to work. We pay bills. We scroll. We compete.      (up to 6.6s)
+ 2. We call exhaustion adulthood, anxiety responsibility,      (up to 6.9s)
+ 3. isolation independence, and endless accumulation success.      (up to 7.3s)
+ 4. We pretend the picture is coherent.      (up to 4.9s)
+
+— Confusion —
+ 5. The body tightens. Attention fragments.      (up to 5.4s)
+ 6. Trust declines. Meaning thins.      (up to 4.5s)
+
+— The body —
+ 7. An unresolved thought could change sleep,      (up to 5.6s)
+ 8. muscle tension, digestion, attention, and behavior.      (up to 6.6s)
+
+— Never enough —
+ 9. Worth becomes achievement. Rest becomes laziness.      (up to 6.4s)
+10. Success may bring relief, but only briefly.      (up to 5.8s)
+11. A persistent sense that something essential is missing.      (up to 7.1s)
+
+— What you were given —
+12. You did not choose the body you were born with,      (up to 6.2s)
+13. your first language, first household, first fear,      (up to 6.4s)
+14. or first explanation of reality.      (up to 4.6s)
+15. No one taught you to inspect any of it.      (up to 5.4s)
+16. That inheritance is not your fault.      (up to 4.9s)
+17. But undoing it is your responsibility.      (up to 5.3s)
+
+— The question —
+18. So where do you begin?      (up to 4.0s)
+19. The most immediate fact of your existence      (up to 5.6s)
+20. is not a measurement.      (up to 3.9s)
+21. It is that you are here to experience one.      (up to 5.7s)
+
+— DOT’s proposal —
+22. You are Little c.   [DOT proposes]      (up to 3.6s)
+23. Your living body is your interface to a Reality Frame.   [DOT proposes]      (up to 7.0s)
+
+— The architecture —
+24. This world, RF₀, is an experience laboratory.   [DOT proposes]      (up to 6.0s)
+
+— The opening —
+25. Conditioning is real. Conditioning is not essence.      (up to 6.5s)
+26. What matters is what Little c does with the opening.      (up to 6.7s)
+27. Freedom is participation in the creation of possibility.      (up to 7.2s)
+
+— Digital Organism Theory —
+28. Digital Organism Theory      (up to 11.4s)
+29. A school of thought for examining experience.      (up to 8.8s)

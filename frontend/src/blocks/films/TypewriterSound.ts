@@ -40,7 +40,8 @@ export class TypewriterSound {
     if (!this.context) {
       const context = new window.AudioContext();
       const output = context.createGain();
-      output.gain.value = 0.62;
+      // Soft: the keys mark the typing; they should never compete with reading it.
+      output.gain.value = 0.31;
       output.connect(context.destination);
       const length = Math.floor(context.sampleRate * 0.06);
       const click = context.createBuffer(1, length, context.sampleRate);

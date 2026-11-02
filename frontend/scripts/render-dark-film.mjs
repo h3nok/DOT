@@ -16,6 +16,7 @@ if (arguments_.includes("--help")) {
   console.log(`Usage: node scripts/render-dark-film.mjs [options]
   --url=http://127.0.0.1:5173/_preview/film-dark?render=1
   --density=1          Export 1920×1080 instead of 3840×2160 UHD (default: 2)
+  --voiceover=<dir>    Mix the author's narration from scripts/film-voiceover.mjs into the opening
   --tone=light         Export the light version, with the page in its light theme (default: dark)
   --output=/tmp/dot-film-revised-dark
   --fps=30             Frames per second (default: 30)
@@ -57,6 +58,12 @@ const OPENING_ONLY = arguments_.includes("--opening-only");
 const STILLS_ONLY = arguments_.includes("--stills-only");
 const SUFFIX = option("suffix", "revised-dark");
 const REUSE_BODY = option("reuse-body", null);
+// A narration run from scripts/film-voiceover.mjs: one take per on-screen line of the opening.
+const VOICEOVER = option("voiceover", null);
+/** The keys sit well under the picture; under the author's voice they almost disappear. */
+const KEY_LEVEL = 0.5;
+const KEY_UNDER_VOICE = 0.18;
+const BELL_LEVEL = 0.7;
 const BODY_START = Number(option("body-start", "30"));
 const SAMPLE_TIMES = option("samples", null)?.split(",").map(Number) ?? null;
 const POSTER_TIME = option("poster", null) === null ? null : Number(option("poster", null));
@@ -88,6 +95,35 @@ async function command(binary, args) {
   const [code] = await once(child, "close");
   assert.equal(code, 0, `${binary} failed: ${stderr.slice(-5000)}`);
   return { stdout, stderr };
+}
+
+/** The voice sits at its mastered loudness, above everything else. */
+const VOICE_GAIN = 0.95;
+
+/**
+ * Each take starts as its line begins typing, so the voice and the words arrive together.
+ * Every take must match a line exactly and end before the next line begins.
+ */
+async function loadVoiceover(directory, lines, temporary) {
+  const { lines: takes } = JSON.parse(await readFile(path.join(directory, "manifest.json"), "utf8"));
+  const placed = [];
+  for (const take of takes) {
+    const index = lines.findIndex((line) => line.text === take.text);
+    assert.ok(index >= 0, `The narration's line is not in the film: "${take.text}"`);
+    const line = lines[index];
+    const raw = path.join(temporary, `voice-${index}.f32`);
+    await command(FFMPEG, ["-hide_banner", "-loglevel", "error", "-y", "-i", path.join(directory, take.file), "-ac", "1", "-ar", "48000", "-f", "f32le", raw]);
+    const bytes = await readFile(raw);
+    const samples = new Float32Array(bytes.buffer, bytes.byteOffset, bytes.length / 4);
+    const at = line.start + 0.1;
+    const next = lines[index + 1];
+    const limit = next && next.start > line.start ? next.start : line.until + 1;
+    assert.ok(at + samples.length / 48000 <= limit + 0.05, `"${take.text}" runs ${(at + samples.length / 48000 - limit).toFixed(2)}s into the next line`);
+    placed.push({ at, samples });
+  }
+  const missing = lines.filter((line) => !takes.some((take) => take.text === line.text)).map((line) => line.text);
+  if (missing.length) console.log(`Not narrated: ${missing.join(" | ")}`);
+  return placed;
 }
 
 async function preparePage(context) {
@@ -130,10 +166,12 @@ async function frame(page, seconds, quality = 96) {
  * click/knock for each key avoids a minutes-long native audio graph with thousands
  * of still-connected filters. The same key times and 65 ms spacing are retained.
  */
-async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes, trailer) {
+async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes, trailer, voice = null) {
   const rate = 48000;
   const count = Math.ceil(duration * rate);
   const mix = new Float32Array(count);
+  // The keys are mixed apart, so they can sit lower than the score and duck under the voice.
+  const keys = new Float32Array(count);
   let seed = 0x444f5446;
   const random = () => {
     seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
@@ -156,7 +194,7 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
         for (let i = 0; i < length; i++) {
           const t = i / rate;
           const gain = t < 0.006 ? ramp(0.0001, level, t, 0.006) : ramp(level, 0.0001, t - 0.006, 1.094);
-          mix[start + i] += masterGain * gain * Math.sin(tau * frequency * t);
+          mix[start + i] += BELL_LEVEL * masterGain * gain * Math.sin(tau * frequency * t);
         }
       }
       continue;
@@ -198,15 +236,41 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
         const triangle = 2 / Math.PI * Math.asin(Math.sin(phase));
         knock = triangle * ramp(space ? 0.26 : 0.14, 0.001, t, 0.05);
       }
-      mix[start + i] += masterGain * (bar + knock);
+      keys[start + i] += masterGain * (bar + knock);
     }
   }
   const scored = addTrailerScore(mix, rate, count, trailer);
   // Normalize once, here, so the published file needs no separate volume pass.
+  // The level is set as before, by the full-strength keys, so lowering them lowers only them.
   let rawPeak = 0;
-  for (let i = 0; i < count; i++) rawPeak = Math.max(rawPeak, Math.abs(mix[i]));
+  for (let i = 0; i < count; i++) rawPeak = Math.max(rawPeak, Math.abs(mix[i] + keys[i]));
   const loudness = rawPeak > 0 ? 0.5 / rawPeak : 1;
-  for (let i = 0; i < count; i++) mix[i] *= loudness;
+  const keyGain = new Float32Array(count).fill(KEY_LEVEL);
+  let voiced = 0;
+  if (voice) {
+    for (const { at, samples } of voice) {
+      const start = Math.round(at * rate);
+      const end = Math.min(count, start + samples.length);
+      // Duck the keys from just before the voice until just after it, with short ramps.
+      const ramp = Math.round(0.15 * rate);
+      for (let i = Math.max(0, start - ramp); i < Math.min(count, end + ramp); i++) {
+        const edge = Math.min(1, (i - (start - ramp)) / ramp, ((end + ramp) - i) / ramp);
+        keyGain[i] = Math.min(keyGain[i], KEY_LEVEL + (KEY_UNDER_VOICE - KEY_LEVEL) * Math.max(0, edge));
+      }
+      voiced++;
+    }
+  }
+  for (let i = 0; i < count; i++) mix[i] = loudness * (mix[i] + keyGain[i] * keys[i]);
+  if (voice) {
+    for (const { at, samples } of voice) {
+      const start = Math.round(at * rate);
+      for (let i = 0; i < samples.length && start + i < count; i++) mix[start + i] += VOICE_GAIN * samples[i];
+    }
+    // Keep headroom over the voice's own true-peak limit.
+    let mixed = 0;
+    for (let i = 0; i < count; i++) mixed = Math.max(mixed, Math.abs(mix[i]));
+    if (mixed > 0.9) for (let i = 0; i < count; i++) mix[i] *= 0.9 / mixed;
+  }
   const header = Buffer.alloc(44);
   header.write("RIFF", 0); header.writeUInt32LE(36 + count * 2, 4); header.write("WAVE", 8);
   header.write("fmt ", 12); header.writeUInt32LE(16, 16); header.writeUInt16LE(1, 20); header.writeUInt16LE(1, 22);
@@ -229,8 +293,9 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
       await output.write(pcm);
     }
   } finally { await output.close(); }
-  assert.ok(openingPeak > 0.05, `The revised opening must have audible typewriter sound (received openingPeak=${openingPeak})`);
-  assert.ok(peak < 0.85, `Typewriter sound needs headroom: ${peak}`);
+  assert.ok(openingPeak > 0.05, `The revised opening must have audible sound (received openingPeak=${openingPeak})`);
+  assert.ok(peak < 0.92, `The mix needs headroom: ${peak}`);
+  if (voice) console.log(`Voice: ${voiced} narrated lines`);
   console.log(`Audio: ${soundedKeys} soft keys (${openingSoundedKeys} in opening); score ${scored ? "on" : "off"}; openingPeak ${openingPeak.toFixed(4)}; peak ${peak.toFixed(4)}`);
   return { sampleRate: rate, soundedKeys, openingSoundedKeys, scored, peak, openingPeak };
 }
@@ -443,7 +508,8 @@ try {
     await command(FFPROBE, ["-version"]);
     const duration = OPENING_ONLY ? info.openingSeconds : info.duration;
     const audio = path.join(temporary, "typewriter.wav");
-    const audioMetadata = await typewriterAudio(page, audio, duration, info.openingSeconds, info.keystrokes, info.trailer);
+    const voice = VOICEOVER ? await loadVoiceover(VOICEOVER, info.trailer.lines, temporary) : null;
+    const audioMetadata = await typewriterAudio(page, audio, duration, info.openingSeconds, info.keystrokes, info.trailer, voice);
     const pages = [page];
     for (let i = 1; i < WORKERS; i++) pages.push(await preparePage(context));
     const full = path.join(OUTPUT, `concept-film-full-16x9-${SUFFIX}.mp4`);
