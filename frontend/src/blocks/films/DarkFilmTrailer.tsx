@@ -127,6 +127,9 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
       </defs>
       <circle cx={x} cy={y - 40 * scale} r={250 * scale} fill={`url(#${backlight})`} opacity={opacity * progress} />
       <Ground x={x} y={feet} width={120 * scale} opacity={opacity * progress} />
+      <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
+        {paths}
+      </g>
       {/* Mirrored on a dark, glassy floor, fading within a body's height; a gradient stroke, not a mask, so it stays cheap. */}
       {opacity > 0.001 && (
         <g transform={`translate(${x} ${feet + 3}) scale(${scale} ${-scale}) translate(0 -171)`} fill="none" stroke={`url(#${reflection})`} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" opacity={opacity}>
@@ -139,9 +142,6 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
           {paths}
         </g>
       )}
-      <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
-        {paths}
-      </g>
     </>
   );
 }
