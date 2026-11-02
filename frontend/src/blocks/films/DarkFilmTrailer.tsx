@@ -650,12 +650,12 @@ const NIGHT_STARS = Array.from({ length: 36 }, (_, k) => [hash(k * 1.9 + 0.4) * 
 /** What insecurity keeps a person buying: each fills the circle and drains away. */
 const GAINS = ["PURCHASE", "UPGRADE", "APPROVAL", "STATUS", "REASSURANCE"];
 const RINGS = [
-  { word: "family", label: "FAMILY", r: 130, angle: -20 },
-  { word: "school", label: "SCHOOL", r: 165, angle: -160 },
-  { word: "employer", label: "EMPLOYER", r: 200, angle: -28 },
-  { word: "what to want", label: "WANTS", r: 235, angle: -152 },
-  { word: "whom to believe", label: "BELIEFS", r: 270, angle: -36 },
-  { word: "which questions", label: "QUESTIONS", r: 305, angle: -144 },
+  { word: "family", label: "FAMILY", r: 130, angle: -6 },
+  { word: "school", label: "SCHOOL", r: 165, angle: -174 },
+  { word: "employer", label: "EMPLOYER", r: 200, angle: -30 },
+  { word: "what to want", label: "WANTS", r: 235, angle: -150 },
+  { word: "whom to believe", label: "BELIEFS", r: 270, angle: -52 },
+  { word: "which questions", label: "QUESTIONS", r: 305, angle: -128 },
 ];
 
 function personCamera(seconds: number) {
@@ -781,7 +781,9 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 const at = wordAt("inherited", word);
                 const drawnIn = smooth(seconds, at - 0.1, at + 1.3);
                 if (drawnIn <= 0.001) return null;
-                const place = polar([FIG_X, FIG_Y - 20], r * drawIn, angle);
+                // The names sway together around the person, slowly, so the layout never collides.
+                const orbit = 12 * Math.sin((seconds - inherited.start) * 0.045);
+                const place = polar([FIG_X, FIG_Y - 20], r * drawIn, angle + orbit);
                 return (
                   <g key={name}>
                     <circle cx={FIG_X} cy={FIG_Y - 20} r={r * drawIn} stroke={ink} strokeWidth={(1.3 * WEIGHT) / s} {...drawn(drawnIn)} transform={`rotate(-90 ${FIG_X} ${FIG_Y - 20})`} opacity={0.62} />

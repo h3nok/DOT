@@ -218,7 +218,19 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   font-size: clamp(1.5rem, 3.4cqi, 4.3rem);
   text-align: center;
 }
-.dark-trailer-pull .dark-trailer-voice { margin: 0; font-size: .32em; }
+.dark-trailer-pull .dark-trailer-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: .7em;
+  margin: 0;
+  padding: .45em 1.1em;
+  border: 1px solid color-mix(in srgb, var(--film-jade) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--film-jade) 9%, transparent);
+  font-size: .3em;
+}
+/* DOT's claims carry a small jade light. */
+.dark-trailer-pull .dark-trailer-voice::before { content: ""; width: .55em; height: .55em; border-radius: 50%; background: var(--film-jade); box-shadow: 0 0 .8em var(--film-jade); }
 .dark-trailer-pull-rule { display: block; width: 2.6em; height: 2px; border-radius: 1px; background: var(--film-gold); transform-origin: 50% 50%; }
 .dark-trailer-pull p {
   max-width: 21em;
