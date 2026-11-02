@@ -3,6 +3,7 @@ import { useReducedMotion } from "../../organism/signals/useReducedMotion";
 import filmsData from "../../content/films.json";
 import { ConceptTourFrame } from "./ConceptTourPlayer";
 import { DarkFilmTrailer, FilmClosingMark, type FilmCaptions, type FilmTone } from "./DarkFilmTrailer";
+import { FilmBackdrop } from "./FilmBackdrop";
 import { DrawnFilmPlayer } from "./DrawnFilmPlayer";
 import { FilmProgress } from "./FilmProgress";
 import {
@@ -44,6 +45,7 @@ export function DarkFilmFrame({ seconds, still, burnIn = false, tone = "dark", c
       </div>
       {opening && <DarkFilmTrailer seconds={seconds} still={still} tone={tone} captions={captions} />}
       {closing && <FilmClosingMark seconds={seconds - DARK_FILM_BODY_END} still={still} tone={tone} links={!burnIn} />}
+      {!opening && !closing && <FilmBackdrop seconds={seconds} still={still} tone={tone} />}
       {!opening && !closing && (
         <div className="dark-film-lesson concept-tour">
           <ConceptTourFrame frame={originalDarkFilmTime(seconds)} still={still} />

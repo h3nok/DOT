@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId, type CSSProperties } from "react";
+import { createContext, useContext, useEffect, useId, type CSSProperties, type ReactNode } from "react";
 
 import { HeroArchitecture } from "../core/home/HeroArchitecture";
 import { Link } from "react-router-dom";
@@ -107,16 +107,116 @@ function Figure({ x, y, px, cameraScale, progress = 1, opacity = 1, shrink = 0 }
   x: number; y: number; px: number; cameraScale: number; progress?: number; opacity?: number; shrink?: number;
 }) {
   const scale = FIG * (1 - 0.12 * shrink);
-  const { ink } = useContext(TrailerPalette);
+  const { ink, jade } = useContext(TrailerPalette);
   const width = (px * WEIGHT) / (cameraScale * scale);
   // Shrinking settles toward the feet, so a diminished figure still stands in its box.
   const lift = 171 * (FIG - scale);
+  const feet = y + 171 * FIG;
+  const backlight = `${useId().replace(/[^\w-]/g, "")}-back`;
+  const paths = BODY_PATHS.map((d) => <path key={d} d={d} {...(progress < 1 ? drawn(progress) : {})} />);
   return (
-    <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
-      {BODY_PATHS.map((d) => (
-        <path key={d} d={d} {...(progress < 1 ? drawn(progress) : {})} />
-      ))}
+    <>
+      <defs>
+        <radialGradient id={backlight}>
+          <stop offset="0" stopColor={jade} stopOpacity=".16" />
+          <stop offset=".6" stopColor={jade} stopOpacity=".05" />
+          <stop offset="1" stopColor={jade} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx={x} cy={y - 40 * scale} r={250 * scale} fill={`url(#${backlight})`} opacity={opacity * progress} />
+      <Ground x={x} y={feet} width={120 * scale} opacity={opacity * progress} />
+      <Reflection x={x} y={feet} opacity={0.16 * opacity}>
+        <g transform={`scale(${scale} ${-scale}) translate(0 -171)`} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">{paths}</g>
+      </Reflection>
+      <g transform={`translate(${x} ${y + lift}) scale(${scale})`} opacity={opacity} fill="none" stroke={ink} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round">
+        {paths}
+      </g>
+    </>
+  );
+}
+
+/** A soft pool of light where someone stands, so no one floats in the void. */
+function Ground({ x, y, width, opacity = 1 }: { x: number; y: number; width: number; opacity?: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { jade } = useContext(TrailerPalette);
+  if (opacity <= 0.001) return null;
+  return (
+    <g opacity={opacity}>
+      <defs>
+        <radialGradient id={`${uid}-pool`}>
+          <stop offset="0" stopColor={jade} stopOpacity=".34" />
+          <stop offset=".55" stopColor={jade} stopOpacity=".08" />
+          <stop offset="1" stopColor={jade} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* A wide, faint floor, then the bright pool where they stand. */}
+      <ellipse cx={x} cy={y + 10} rx={width * 6} ry={width * 0.55} fill={`url(#${uid}-pool)`} opacity={0.35} />
+      <ellipse cx={x} cy={y + 4} rx={width * 1.6} ry={width * 0.2} fill={`url(#${uid}-pool)`} />
     </g>
+  );
+}
+
+/** What stands at (x, y), mirrored on a dark, glassy floor that swallows it within a body's height. */
+function Reflection({ x, y, opacity, children }: { x: number; y: number; opacity: number; children: ReactNode }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  if (opacity <= 0.001) return null;
+  return (
+    <g opacity={opacity}>
+      <defs>
+        <linearGradient id={`${uid}-fade`} gradientUnits="userSpaceOnUse" x1="0" y1={y} x2="0" y2={y + 220}>
+          <stop offset="0" stopColor="#fff" stopOpacity="1" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        <mask id={`${uid}-mask`} maskUnits="userSpaceOnUse" x={x - 400} y={y} width={800} height={240}>
+          <rect x={x - 400} y={y} width={800} height={240} fill={`url(#${uid}-fade)`} />
+        </mask>
+      </defs>
+      <g mask={`url(#${uid}-mask)`}>
+        <g transform={`translate(${x} ${y + 3})`}>{children}</g>
+      </g>
+    </g>
+  );
+}
+
+/** The opening's dust in the air, for the rest of the film, in its tone. */
+export function FilmAtmosphere({ seconds, tone }: { seconds: number; tone: FilmTone }) {
+  return (
+    <TrailerPalette.Provider value={PALETTES[tone]}>
+      <Atmosphere seconds={seconds} />
+    </TrailerPalette.Provider>
+  );
+}
+
+/* ── Dust in the light: slow, deterministic, over every scene of the opening ── */
+const MOTES = Array.from({ length: 64 }, (_, k) => ({
+  x: hash(k * 1.31 + 0.2) * 1600,
+  y: hash(k * 2.17 + 0.7) * 900,
+  /** 0 is far and faint; 1 is near, larger and softer. */
+  depth: hash(k * 3.71 + 0.5) ** 1.6,
+  drift: 0.5 + hash(k * 5.3) * 0.8,
+  phase: hash(k * 7.9) * Math.PI * 2,
+}));
+
+function Atmosphere({ seconds }: { seconds: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { gold } = useContext(TrailerPalette);
+  return (
+    <svg className="dark-trailer-atmosphere" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <radialGradient id={`${uid}-mote`}>
+          <stop offset="0" stopColor={gold} stopOpacity="1" />
+          <stop offset=".4" stopColor={gold} stopOpacity=".5" />
+          <stop offset="1" stopColor={gold} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {MOTES.map(({ x, y, depth, drift, phase }, k) => {
+        const rise = seconds * (5 + 16 * depth) * drift;
+        const cy = (((y - rise) % 960) + 960) % 960 - 30;
+        const cx = x + Math.sin(seconds * 0.16 * drift + phase) * (12 + 30 * depth);
+        const twinkle = 0.65 + 0.35 * Math.sin(seconds * (0.4 + 0.5 * drift) + phase);
+        return <circle key={k} cx={cx.toFixed(1)} cy={cy.toFixed(1)} r={(1.4 + 7 * depth).toFixed(2)} fill={`url(#${uid}-mote)`} opacity={((0.1 + 0.3 * depth) * twinkle).toFixed(3)} />;
+      })}
+    </svg>
   );
 }
 
@@ -216,18 +316,30 @@ const OPTIONS: readonly Cubic[] = OPTIONS_LEFT.flatMap((path) => [
   [mirror(path[0]), mirror(path[1]), mirror(path[2]), mirror(path[3])] as const,
 ]);
 
-function Options({ open, s }: { open: number; s: number }) {
+function Options({ open, s, t = 0 }: { open: number; s: number; t?: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
   const { jade } = useContext(TrailerPalette);
   if (open <= 0.001) return null;
   return (
     <g fill="none" stroke={jade} strokeLinecap="round">
+      <defs>
+        <radialGradient id={`${uid}-end`}>
+          <stop offset="0" stopColor={jade} stopOpacity=".45" />
+          <stop offset="1" stopColor={jade} stopOpacity="0" />
+        </radialGradient>
+      </defs>
       {OPTIONS.map((path, k) => {
         const drawnIn = smooth(open, 0.06 * k, 0.55 + 0.06 * k);
         const end = path[3];
+        // A light travels each way once it is open: options are live, not drawn on a map.
+        const raw = (t * 0.32 + k / OPTIONS.length) % 1;
+        const along = cubicAt(path, raw);
         return (
           <g key={k}>
-            <path d={cubicPath(path)} strokeWidth={(2.2 * WEIGHT) / s} strokeDasharray={`${8 / s} ${7 / s}`} opacity={0.9 * drawnIn} />
-            <circle cx={end[0]} cy={end[1]} r={14} strokeWidth={(2 * WEIGHT) / s} opacity={smooth(drawnIn, 0.85, 1)} />
+            <circle cx={end[0]} cy={end[1]} r={52} fill={`url(#${uid}-end)`} stroke="none" opacity={smooth(drawnIn, 0.8, 1)} />
+            <path d={cubicPath(path)} strokeWidth={(2.6 * WEIGHT) / s} strokeDasharray={`${8 / s} ${7 / s}`} opacity={drawnIn} />
+            <circle cx={end[0]} cy={end[1]} r={14} strokeWidth={(2.4 * WEIGHT) / s} opacity={smooth(drawnIn, 0.85, 1)} />
+            <circle cx={along[0]} cy={along[1]} r={5 / s + 2} fill={jade} stroke="none" opacity={smooth(drawnIn, 0.9, 1) * Math.sin(Math.PI * raw)} />
           </g>
         );
       })}
@@ -485,8 +597,8 @@ const QUESTIONS = [[-150, 128], [-62, 118], [-20, 146], [158, 150], [24, 132]].m
 /** What progress is measured in, each rising as it is named, while the person does not. */
 const MACHINERY = [
   { word: "Producing more?", label: "OUTPUT", x: FIG_X + 320 },
-  { word: "Predicting behavior?", label: "PREDICTION", x: FIG_X + 440 },
-  { word: "Getting people to comply?", label: "COMPLIANCE", x: FIG_X + 560 },
+  { word: "Predicting behavior?", label: "PREDICTION", x: FIG_X + 460 },
+  { word: "Getting people to comply?", label: "COMPLIANCE", x: FIG_X + 600 },
 ];
 const MACHINERY_BASE = FIG_Y + 110;
 /**
@@ -507,6 +619,14 @@ const SAM_STRIPES = "M-12 -166V-212M0 -166V-213M12 -166V-212";
 const SAM_FACE = "M-7 -92L0 -77L7 -92M-9 -86L9 -79M9 -86L-9 -79";
 const SAM_RAISED_ARM = "M-11 -72C-39 -70 -50 -84 -60 -118L-70 -168";
 const SAM_CONTROL = "M-98 -174H-42M-70 -184V-164";
+const SAM_TAILS = "M-36 -20L-50 92L-30 82M36 -20L50 92L30 82";
+/** A five-pointed star of radius r at (x, y). */
+const starPath = (x: number, y: number, r: number) =>
+  `M${Array.from({ length: 10 }, (_, k) => {
+    const radius = k % 2 ? r * 0.42 : r;
+    const angle = (k * Math.PI) / 5 - Math.PI / 2;
+    return `${(x + radius * Math.cos(angle)).toFixed(2)} ${(y + radius * Math.sin(angle)).toFixed(2)}`;
+  }).join("L")}Z`;
 /** The scientist's: lab coat, lapels, glasses and clipboard. */
 const LAB_COAT = "M-38 -58L-46 112H-8M38 -58L46 112H8M-11 -72L0 -38L11 -72";
 const LAB_GLASSES = "M-17 -122A7 7 0 1 0 -3 -122A7 7 0 1 0 -17 -122M3 -122A7 7 0 1 0 17 -122A7 7 0 1 0 3 -122M-3 -122H3";
@@ -524,6 +644,9 @@ const BODY_POINTS = [
   { word: "endure more", label: "ENDURE MORE", at: [FIG_X, FIG_Y - 4] as Point },
   { word: "control", label: "CONTROLLED", at: [FIG_X - 76, FIG_Y + 92] as Point },
 ];
+/** The sky over the culture scene at night. */
+const NIGHT_STARS = Array.from({ length: 36 }, (_, k) => [hash(k * 1.9 + 0.4) * 1400 - 60, 40 + hash(k * 3.3 + 0.2) * 300, 1.2 + 1.8 * hash(k * 6.1)] as const)
+  .filter(([x, y]) => Math.hypot(x - FIG_X, y - 380) > 340);
 /** What insecurity keeps a person buying: each fills the circle and drains away. */
 const GAINS = ["PURCHASE", "UPGRADE", "APPROVAL", "STATUS", "REASSURANCE"];
 const RINGS = [
@@ -575,7 +698,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
   // The person declines through progress, the establishment and the culture, and stays diminished
   // until DOT asks what it would mean for them to develop (the next scene finds them upright).
   const decline = smooth(seconds, confused.start, inherited.end);
-  const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 30 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
+  const label = { fontFamily: "JetBrains Mono, monospace", letterSpacing: 3 / s, fontSize: 34 / s, textAnchor: "middle" as const, stroke: stage, strokeWidth: 6 / s, paintOrder: "stroke" as const };
 
   // Confusion.
   const inConfusion = seconds < confused.end ? smooth(seconds, confused.start, confused.start + 1) : 0;
@@ -634,8 +757,21 @@ function TrailerPerson({ seconds }: { seconds: number }) {
             <stop offset="0" stopColor={clay} stopOpacity=".62" />
             <stop offset="1" stopColor={clay} stopOpacity="0" />
           </radialGradient>
+          <linearGradient id={`${uid}-beam`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={gold} stopOpacity="0" />
+            <stop offset=".5" stopColor={gold} stopOpacity=".07" />
+            <stop offset="1" stopColor={gold} stopOpacity=".12" />
+          </linearGradient>
           <clipPath id={`${uid}-level`}>
-            <rect x={CHEST[0] - R} y={chestY + R - 2 * R * level} width={2 * R} height={2 * R * level} />
+            {/* The surface moves, so it reads as something poured, not a gauge. */}
+            <path d={(() => {
+              const top = chestY + R - 2 * R * level;
+              const wave = Array.from({ length: 13 }, (_, k) => {
+                const x = CHEST[0] - R + (k * 2 * R) / 12;
+                return `L${x.toFixed(1)} ${(top + 3.2 * Math.sin(seconds * 3.1 + k * 0.9)).toFixed(1)}`;
+              }).join("");
+              return `M${CHEST[0] - R} ${chestY + R}${wave}L${CHEST[0] + R} ${chestY + R}Z`;
+            })()} />
           </clipPath>
         </defs>
         <g transform={world}>
@@ -659,24 +795,30 @@ function TrailerPerson({ seconds }: { seconds: number }) {
           {inBody > 0.001 && (
             <g opacity={inBody} fill="none" strokeLinecap="round" strokeLinejoin="round">
               <g opacity={sam}>
+                {/* The light of power falls on him from above. */}
+                <path d={`M${SAM.x - 60} -400L${SAM.x + 60} -400L${SAM.x + 230} ${SAM.y + 171 * SAM.scale}L${SAM.x - 230} ${SAM.y + 171 * SAM.scale}Z`} fill={`url(#${uid}-beam)`} stroke="none" />
+                <Ground x={SAM.x} y={SAM.y + 171 * SAM.scale} width={120 * SAM.scale} />
                 <g transform={`translate(${SAM.x} ${SAM.y}) scale(${SAM.scale})`} stroke={ink} strokeWidth={(2.4 * WEIGHT) / (s * SAM.scale)}>
                   {BODY_PATHS.filter((_, k) => k !== 2).map((d) => <path key={d} d={d} {...drawn(sam)} />)}
                   <path d={SAM_RAISED_ARM} {...drawn(sam)} />
                   <path d={SAM_HAT} />
+                  {[-14, 0, 14].map((dx) => <path key={dx} d={starPath(dx, -154, 5)} fill={ink} stroke="none" />)}
+                  <path d={SAM_TAILS} />
                   <path d={SAM_STRIPES} stroke={clay} />
                   <path d={SAM_FACE} />
                   <path d={SAM_CONTROL} stroke={gold} />
                 </g>
-                <text x={SAM.x} y={SAM.y + 171 * SAM.scale + 44} fill={ink} {...label} fontSize={22 / s} letterSpacing={3 / s} strokeWidth={3 / s}>UNCLE SAM</text>
+                <text x={SAM.x} y={SAM.y + 171 * SAM.scale + 44} fill={ink} {...label} fontSize={30 / s} letterSpacing={4 / s} strokeWidth={4 / s}>UNCLE SAM</text>
               </g>
               <g opacity={scientist}>
+                <Ground x={SCIENTIST.x} y={PEDESTAL_TOP + 40} width={150} />
                 <g transform={`translate(${SCIENTIST.x} ${SCIENTIST.y}) scale(${SCIENTIST.scale})`} stroke={ink} strokeWidth={(2.4 * WEIGHT) / (s * SCIENTIST.scale)}>
                   {BODY_PATHS.map((d) => <path key={d} d={d} {...drawn(scientist)} />)}
                   <path d={LAB_COAT} />
                   <path d={LAB_GLASSES} />
                   <path d={CLIPBOARD} stroke={gold} />
                 </g>
-                <text x={SCIENTIST.x} y={PEDESTAL_TOP + 82} fill={ink} {...label} fontSize={19 / s} letterSpacing={2 / s} strokeWidth={3 / s}>THE SCIENTIFIC COMMUNITY</text>
+                <text x={SCIENTIST.x} y={PEDESTAL_TOP + 82} fill={ink} {...label} fontSize={25 / s} letterSpacing={2.4 / s} strokeWidth={4 / s}>THE SCIENTIFIC COMMUNITY</text>
               </g>
               {FOUNDATIONS.map(({ word, label: name, dx }) => {
                 const shown = smooth(seconds, wordAt("health", word), wordAt("health", word) + 0.7);
@@ -685,7 +827,7 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                   <g key={name}>
                     {/* The scientist stands on the pedestal from the start; each block is named as it is said. */}
                     <rect x={x - 56} y={PEDESTAL_TOP} width={112} height={40} rx={3} stroke={gold} strokeWidth={(1.4 * WEIGHT) / s} opacity={Math.max(shown, 0.45 * scientist)} />
-                    <text x={x} y={PEDESTAL_TOP + 27} fill={gold} {...label} fontSize={19 / s} letterSpacing={1.6 / s} strokeWidth={3 / s} opacity={shown}>{name}</text>
+                    <text x={x} y={PEDESTAL_TOP + 27} fill={gold} {...label} fontSize={21 / s} letterSpacing={1.6 / s} strokeWidth={3 / s} opacity={shown}>{name}</text>
                   </g>
                 );
               })}
@@ -716,6 +858,9 @@ function TrailerPerson({ seconds }: { seconds: number }) {
           {inRings > 0.001 && seconds < inherited.end && <circle cx={CHEST[0]} cy={CHEST[1]} r={90} fill={`url(#${uid}-glow)`} opacity={soften * (1 - smooth(seconds, inherited.end - 1.2, inherited.end))} />}
           <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} opacity={1 - 0.34 * decline} shrink={decline} />
           {night > 0.001 && <rect x={-1000} y={-1000} width={3600} height={3000} fill={stage} opacity={0.42 * night} />}
+          {night > 0.001 && NIGHT_STARS.map(([x, y, size], k) => (
+            <circle key={k} cx={x} cy={y} r={size} fill={ink} opacity={night * (0.35 + 0.35 * Math.sin(seconds * 1.7 + k * 2.3))} />
+          ))}
           {night > 0.001 && (
             <g opacity={night}>
               <circle cx={SKY[0]} cy={SKY[1]} r={26} fill={ink} opacity={0.85} />
@@ -744,6 +889,10 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 return <path key={k} d={`M${a[0]} ${a[1]}A${radius} ${radius} 0 0 1 ${b[0]} ${b[1]}`} stroke={jade} strokeWidth={(1.8 * WEIGHT) / s} opacity={1 - 0.45 * fragmenting * drift} />;
               })}
               <path d={`M${MACHINERY[0].x - 50} ${MACHINERY_BASE}H${MACHINERY.at(-1)!.x + 50}`} stroke={ink} strokeWidth={WEIGHT / s} opacity={0.5 * smooth(seconds, wordAt("confused", "Producing more?") - 0.6, wordAt("confused", "Producing more?"))} />
+              {[1, 2, 3, 4].map((k) => (
+                <path key={k} d={`M${MACHINERY[0].x - 60} ${MACHINERY_BASE - 90 * k}H${MACHINERY.at(-1)!.x + 60}`} stroke={ink} strokeWidth={WEIGHT / s} strokeDasharray={`${2 / s} ${8 / s}`}
+                  opacity={0.18 * smooth(seconds, wordAt("confused", "Producing more?") - 0.6, wordAt("confused", "Producing more?") + 0.6)} />
+              ))}
               {MACHINERY.map(({ word, label: name, x }, k) => {
                 const named = smooth(seconds, wordAt("confused", word), wordAt("confused", word) + 1.4);
                 if (named <= 0.001) return null;
@@ -751,10 +900,15 @@ function TrailerPerson({ seconds }: { seconds: number }) {
                 return (
                   <g key={name}>
                     <rect x={x - 28} y={MACHINERY_BASE - height} width={56} height={height} fill={gold} fillOpacity={0.16} stroke={gold} strokeWidth={(1.6 * WEIGHT) / s} />
-                    <text x={x} y={MACHINERY_BASE + 36} fill={gold} {...label} fontSize={24 / s} letterSpacing={2 / s} strokeWidth={3 / s} opacity={named}>{name}</text>
+                    <path d={`M${x - 10} ${MACHINERY_BASE - height - 14}L${x} ${MACHINERY_BASE - height - 28}L${x + 10} ${MACHINERY_BASE - height - 14}Z`} fill={gold} stroke="none" opacity={named} />
+                    <text x={x} y={MACHINERY_BASE + 36} fill={gold} {...label} fontSize={25 / s} letterSpacing={1.6 / s} strokeWidth={4 / s} opacity={named}>{name}</text>
                   </g>
                 );
               })}
+              {/* The trend: up and to the right, whatever happens to the person. */}
+              {rising > 0.001 && (
+                <path d={`M${MACHINERY.map(({ x }, k) => `${x} ${MACHINERY_BASE - (120 + 30 * k) - rising * (110 + 25 * k) - 46}`).join("L")}`} fill="none" stroke={gold} strokeWidth={(1.4 * WEIGHT) / s} strokeDasharray={`${4 / s} ${5 / s}`} opacity={0.7 * rising} />
+              )}
               {QUESTIONS.map(({ place, k }) => {
                 const at = wordAt("confused", "advanced at what?") + k * 1.6;
                 return <text key={k} x={place[0]} y={place[1]} fill={ink} stroke="none" fontFamily="Source Serif 4, Georgia, serif" fontSize={30 / s + 6} textAnchor="middle" opacity={0.75 * smooth(seconds, at, at + 1) * (0.55 + 0.45 * Math.sin(seconds * 0.9 + k))}>?</text>;
@@ -952,6 +1106,8 @@ const PLATE_WIDTH = PLATE_HEIGHT * 1.5;
 
 /** One illustration, held and slowly explored. The camera is an SVG transform, so it never jitters. */
 function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number }) {
+  const uid = useId().replace(/[^\w-]/g, "");
+  const { gold, jade } = useContext(TrailerPalette);
   const { src, from, to } = TRAILER_PLATES[kind];
   const eased = progress * progress * (3 - 2 * progress);
   const x = lerp(from[0], to[0], eased);
@@ -960,7 +1116,20 @@ function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number })
   return (
     <div className="dark-trailer-stage">
       <svg className="dark-trailer-plate" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <radialGradient id={`${uid}-halo`}>
+            <stop offset="0" stopColor={gold} stopOpacity=".16" />
+            <stop offset=".6" stopColor={jade} stopOpacity=".05" />
+            <stop offset="1" stopColor={jade} stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={`${uid}-shadow`}>
+            <stop offset="0" stopColor="#000" stopOpacity=".55" />
+            <stop offset="1" stopColor="#000" stopOpacity="0" />
+          </radialGradient>
+        </defs>
         <g transform={`translate(800 ${PLATE_CENTRE_Y}) scale(${scale.toFixed(5)}) translate(${(-x).toFixed(3)} ${(-y).toFixed(3)})`}>
+          <ellipse cx={800} cy={450} rx={PLATE_WIDTH * 0.42} ry={PLATE_HEIGHT * 0.5} fill={`url(#${uid}-halo)`} />
+          <ellipse cx={800} cy={450 + PLATE_HEIGHT * 0.4} rx={PLATE_WIDTH * 0.36} ry={40} fill={`url(#${uid}-shadow)`} />
           <image href={src} x={800 - PLATE_WIDTH / 2} y={450 - PLATE_HEIGHT / 2} width={PLATE_WIDTH} height={PLATE_HEIGHT} preserveAspectRatio="xMidYMid meet" />
         </g>
       </svg>
@@ -971,23 +1140,89 @@ function TrailerPlate({ kind, progress }: { kind: PlateKind; progress: number })
 /* ── The purpose: awareness widening from the person, and coherence with room for correction ── */
 const DIVISIONS = Array.from({ length: 8 }, (_, k) => ({ start: (k * 360) / 8 + 10, drift: unit(k + 200), turn: unit(k + 240) - 0.5 }));
 
+/** Points of the world that come into view as awareness widens, kept clear of the person. */
+const FIELD_STARS = (() => {
+  const stars: { p: Point; d: number; size: number; tone: "ink" | "jade" | "gold" }[] = [];
+  for (let k = 0; stars.length < 92 && k < 1200; k++) {
+    const p: Point = [60 + hash(k * 1.7 + 0.3) * 1560, 40 + hash(k * 2.9 + 0.1) * 720];
+    const d = Math.hypot(p[0] - CHEST[0], (p[1] - CHEST[1]) * 1.2);
+    // A clear column around the person: the field surrounds them, never crosses them.
+    if (d < 200 || Math.abs(p[0] - FIG_X) < 160 || stars.some((star) => Math.hypot(star.p[0] - p[0], star.p[1] - p[1]) < 72)) continue;
+    const tone = hash(k * 4.1 + 0.8);
+    stars.push({ p, d, size: 2.2 + 3.4 * hash(k * 5.3), tone: tone < 0.62 ? "ink" : tone < 0.86 ? "jade" : "gold" });
+  }
+  return stars;
+})();
+/** Understanding: each point joined to its nearest neighbours. */
+const FIELD_LINKS = FIELD_STARS.flatMap((star, i) =>
+  FIELD_STARS.map((other, j) => ({ i, j, length: Math.hypot(star.p[0] - other.p[0], star.p[1] - other.p[1]) }))
+    .filter(({ j, length }) => j > i && length < 170)
+    .sort((x, y) => x.length - y.length)
+    .slice(0, 2),
+);
+/** Choosing: one way through the field, from the person outward. */
+const CHOSEN: readonly Point[] = (() => {
+  const path: Point[] = [CHEST];
+  const used = new Set<number>();
+  let at: Point = CHEST;
+  for (let step = 0; step < 6; step++) {
+    let best = -1;
+    FIELD_STARS.forEach((star, k) => {
+      if (used.has(k) || star.p[0] < at[0] + 40) return;
+      const cost = Math.hypot(star.p[0] - at[0], (star.p[1] - at[1]) * 1.6);
+      if (best < 0 || cost < Math.hypot(FIELD_STARS[best].p[0] - at[0], (FIELD_STARS[best].p[1] - at[1]) * 1.6)) best = k;
+    });
+    if (best < 0) break;
+    used.add(best);
+    at = FIELD_STARS[best].p;
+    path.push(at);
+  }
+  return path;
+})();
+/** What you would rather avoid: a dim point off to one side, held in focus. */
+const AVOIDED: Point = [CHEST[0] - 430, CHEST[1] - 170];
+/** Far off on the floor, others doing the same work: lights only, no crowd. */
+const OTHERS: readonly Point[] = [[FIG_X - 420, 650], [FIG_X + 520, 640], [FIG_X + 760, 662], [FIG_X + 1000, 646], [FIG_X + 300, 668]];
+
 function TrailerPurpose({ seconds }: { seconds: number }) {
   const uid = useId().replace(/[^\w-]/g, "");
-  const { jade, ink, gold } = useContext(TrailerPalette);
+  const palette = useContext(TrailerPalette);
+  const { jade, ink, gold, clay } = palette;
   const purpose = shotOf("purpose");
-  // It begins where the question left the view, then steps back to give awareness room.
-  const [, x0, y0, s0] = CAMERA[1];
-  const back = smooth(seconds, purpose.start + 1, purpose.start + 8);
-  const s = Math.exp(lerp(Math.log(s0), Math.log(1.12), back));
-  const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-x0).toFixed(2)} ${(-lerp(y0, 440, back)).toFixed(2)})`;
-  const expand = smooth(seconds, purpose.start + 0.6, wordAt("purpose", "That requires"));
-  const focus = smooth(seconds, wordAt("purpose", "mental focus"), wordAt("purpose", "mental focus") + 1.5);
-  const divided = smooth(seconds, wordAt("purpose", "internal coherence") - 1, wordAt("purpose", "internal coherence"));
-  const gather = smooth(seconds, wordAt("purpose", "less divided"), wordAt("purpose", "Coherence is not"));
+  const cue = (word: string) => wordAt("purpose", word);
+  // From the question's close view out to a wide field, in for coherence, and out again for one another.
+  const keys: (readonly [number, number, number, number])[] = [
+    [purpose.start, CAMERA[1][1], CAMERA[1][2], CAMERA[1][3]],
+    [purpose.start + 1, CAMERA[1][1], CAMERA[1][2], CAMERA[1][3]],
+    [purpose.start + 8, FIG_X + 230, 420, 0.95],
+    [cue("internal coherence") - 1.5, FIG_X + 230, 420, 0.95],
+    [cue("internal coherence") + 1.5, FIG_X, 400, 1.5],
+    [cue("The purpose is not") - 1, FIG_X, 400, 1.5],
+    [cue("The purpose is not") + 2, FIG_X + 230, 420, 0.95],
+    [cue("And we can help") + 1, FIG_X + 200, 440, 0.9],
+  ];
+  const index = keys.findIndex(([at]) => at > seconds);
+  const [a, ax, ay, as] = keys[Math.max(0, (index < 0 ? keys.length : index) - 1)];
+  const [b, bx, by, bs] = keys[index < 0 ? keys.length - 1 : index];
+  const u = index <= 0 ? (index === 0 ? 0 : 1) : smooth(seconds, a, b);
+  const s = Math.exp(lerp(Math.log(as), Math.log(bs), u));
+  const world = `translate(800 450) scale(${s.toFixed(4)}) translate(${(-lerp(ax, bx, u)).toFixed(2)} ${(-lerp(ay, by, u)).toFixed(2)})`;
+
+  // Awareness widens: the world comes into view from the person outward, and further still at the end.
+  const expand = smooth(seconds, purpose.start + 0.6, cue("That requires"));
+  const beyond = smooth(seconds, cue("could not see before"), cue("could not see before") + 3);
+  const reach = 160 + 760 * expand + 900 * beyond;
+  const understanding = smooth(seconds, cue("understanding"), cue("understanding") + 3);
+  const choosing = smooth(seconds, cue("choosing"), cue("choosing") + 2.4);
+  const focus = smooth(seconds, cue("mental focus"), cue("mental focus") + 1.5) * (1 - smooth(seconds, cue("internal coherence") - 1.5, cue("internal coherence")));
+  const avoided = smooth(seconds, cue("rather avoid"), cue("rather avoid") + 1);
+  const divided = smooth(seconds, cue("internal coherence") - 1, cue("internal coherence"));
+  const gather = smooth(seconds, cue("less divided"), cue("Coherence is not"));
   // Coherence is not certainty: one part of the ring stays open, room for correction.
-  const open = smooth(seconds, wordAt("purpose", "room for correction"), wordAt("purpose", "room for correction") + 1.4);
-  const together = smooth(seconds, wordAt("purpose", "And we can help"), wordAt("purpose", "And we can help") + 3);
+  const open = smooth(seconds, cue("room for correction"), cue("room for correction") + 1.4);
+  const together = smooth(seconds, cue("And we can help"), cue("And we can help") + 3);
   const R = 118;
+  const seen = (d: number) => clamp01((reach - d) / 120);
   return (
     <div className="dark-trailer-stage">
       <svg className="dark-trailer-drawing" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -998,22 +1233,58 @@ function TrailerPurpose({ seconds }: { seconds: number }) {
             <stop offset="1" stopColor={jade} stopOpacity="0" />
           </radialGradient>
           <radialGradient id={`${uid}-warm`}>
-            <stop offset="0" stopColor={gold} stopOpacity=".3" />
-            <stop offset=".55" stopColor={jade} stopOpacity=".08" />
-            <stop offset="1" stopColor={jade} stopOpacity="0" />
+            <stop offset="0" stopColor={gold} stopOpacity=".5" />
+            <stop offset=".5" stopColor={gold} stopOpacity=".1" />
+            <stop offset="1" stopColor={gold} stopOpacity="0" />
           </radialGradient>
         </defs>
         <g transform={world}>
-          <circle cx={CHEST[0]} cy={CHEST[1]} r={200 + 240 * together} fill={`url(#${uid}-warm)`} opacity={together} />
-          <circle cx={CHEST[0]} cy={CHEST[1]} r={160 + 20 * Math.sin(seconds * 0.8)} fill={`url(#${uid}-glow)`} opacity={0.6} />
-          {/* Awareness widening: seeing, understanding, choosing. */}
-          {[0, 1, 2].map((k) => (
-            <circle key={k} cx={CHEST[0]} cy={CHEST[1]} r={60 + (150 + 85 * k) * expand} fill="none" stroke={jade} strokeWidth={(1.3 * WEIGHT) / s} strokeDasharray={`${3 / s} ${8 / s}`} opacity={0.85 * expand * (1 - 0.22 * k)} />
+          {/* The edge of awareness, widening. */}
+          {[0, 1].map((k) => (
+            <ellipse key={k} cx={CHEST[0]} cy={CHEST[1]} rx={Math.max(1, reach - 60 * k)} ry={Math.max(1, (reach - 60 * k) / 1.2)} fill="none" stroke={jade}
+              strokeWidth={(1.2 * WEIGHT) / s} strokeDasharray={`${3 / s} ${9 / s}`} opacity={(0.5 - 0.2 * k) * expand * (1 - 0.6 * beyond)} />
           ))}
+          {/* Understanding: what is seen, connected. */}
+          {understanding > 0.001 && FIELD_LINKS.map(({ i, j }) => {
+            const shown = understanding * Math.min(seen(FIELD_STARS[i].d), seen(FIELD_STARS[j].d));
+            if (shown <= 0.001) return null;
+            const [p, q] = [FIELD_STARS[i].p, FIELD_STARS[j].p];
+            return <path key={`${i}-${j}`} d={`M${p[0]} ${p[1]}L${q[0]} ${q[1]}`} stroke={jade} strokeWidth={WEIGHT / s} opacity={0.32 * shown} />;
+          })}
+          {/* Choosing: one way taken, in gold. */}
+          {choosing > 0.001 && (
+            <path d={`M${CHOSEN.map((p) => p.join(" ")).join("L")}`} fill="none" stroke={gold} strokeWidth={(2 * WEIGHT) / s} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} {...drawn(choosing)} />
+          )}
+          {FIELD_STARS.map(({ p, d, size, tone }, k) => {
+            const shown = seen(d);
+            if (shown <= 0.001) return null;
+            const twinkle = 0.75 + 0.25 * Math.sin(seconds * 1.1 + k);
+            return <circle key={k} cx={p[0]} cy={p[1]} r={(size * (0.6 + 0.4 * shown)) / Math.sqrt(s)} fill={palette[tone]} opacity={shown * twinkle * 0.9} />;
+          })}
+          {/* Mental focus: a steady line held on what one would rather avoid. */}
+          {focus > 0.001 && (
+            <g opacity={focus}>
+              <path d={`M${CHEST[0]} ${CHEST[1]}L${AVOIDED[0]} ${AVOIDED[1]}`} stroke={ink} strokeWidth={(1.6 * WEIGHT) / s} strokeLinecap="round" opacity={0.6} />
+              <circle cx={AVOIDED[0]} cy={AVOIDED[1]} r={46} fill={`url(#${uid}-warm)`} opacity={0.5 * avoided} />
+              <circle cx={AVOIDED[0]} cy={AVOIDED[1]} r={7 + 3 * avoided} fill={clay} opacity={0.5 + 0.5 * avoided} />
+            </g>
+          )}
+          {/* One another: other lights, far off on the floor, and the threads between. */}
+          {together > 0.001 && OTHERS.map((other, k) => {
+            const shown = smooth(seconds, cue("And we can help") + 0.5 * k, cue("And we can help") + 1.5 + 0.5 * k);
+            return (
+              <g key={k} opacity={shown}>
+                <path d={`M${CHEST[0]} ${CHEST[1] + 40}Q${(CHEST[0] + other[0]) / 2} ${Math.min(CHEST[1], other[1]) - 60} ${other[0]} ${other[1]}`} fill="none" stroke={gold} strokeWidth={WEIGHT / s} strokeDasharray={`${3 / s} ${7 / s}`} opacity={0.5} />
+                <circle cx={other[0]} cy={other[1]} r={60} fill={`url(#${uid}-warm)`} />
+                <circle cx={other[0]} cy={other[1]} r={5} fill={gold} />
+              </g>
+            );
+          })}
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={200 + 200 * together} fill={`url(#${uid}-warm)`} opacity={0.6 * together} />
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={160 + 20 * Math.sin(seconds * 0.8)} fill={`url(#${uid}-glow)`} opacity={0.6} />
           <Figure x={FIG_X} y={FIG_Y} px={2.6} cameraScale={s} />
-          {/* Mental focus: one steady point. */}
-          <circle cx={CHEST[0]} cy={CHEST[1]} r={5 + 2 * focus} fill={jade} opacity={focus} />
-          <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={focus} />
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={6 + 2 * focus} fill={jade} opacity={Math.max(focus, divided)} />
+          <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={Math.max(focus, divided)} />
           {/* Divided by fear, self-deception and defended identity, the arcs gather into one ring. */}
           {divided > 0.001 && (
             <g fill="none" strokeLinecap="round">
@@ -1117,7 +1388,7 @@ function TrailerDrawing({ t }: { t: number }) {
             <circle cx={CHEST[0]} cy={CHEST[1]} r={2} fill={ink} opacity={noticed} />
           </g>
         )}
-        <Options open={options} s={s} />
+        <Options open={options} s={s} t={t} />
       </g>
     </svg>
     </div>
@@ -1271,12 +1542,16 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
   const inPerson = (kind?: string) => kind === "turn" || kind === "purpose" || (kind !== undefined && PERSON_SHOTS.includes(kind));
   const opens = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index - 1]?.kind);
   const closes = !inPerson(shot.kind) || !inPerson(DARK_TRAILER_SHOTS[index + 1]?.kind);
-  const fade = (opens ? smooth(t, shot.start, shot.start + 0.7) : 1) * (closes ? 1 - smooth(t, shot.end - 0.7, shot.end) : 1);
+  const arrive = opens ? smooth(t, shot.start, shot.start + 0.9) : 1;
+  const leave = closes ? 1 - smooth(t, shot.end - 0.8, shot.end) : 1;
+  const fade = arrive * leave;
+  // Separate scenes breathe: each settles in from slightly near, and recedes as it goes.
+  const breathe = 1 + 0.045 * (1 - arrive) - 0.025 * (1 - leave);
   return (
     <TrailerPalette.Provider value={PALETTES[tone]}>
     <section className="dark-trailer" aria-label={shot.label} data-trailer-shot={shot.kind}>
       <p className="sr-only">{shot.description}</p>
-      <div className="dark-trailer-scene" style={{ opacity: fade }}>
+      <div className="dark-trailer-scene" style={{ opacity: fade, transform: breathe === 1 ? undefined : `scale(${breathe.toFixed(4)})` }}>
         {shot.kind === "mark" && <TrailerMark seconds={t} />}
         {shot.kind === "normal" && <TrailerNormal seconds={t} />}
         {PERSON_SHOTS.includes(shot.kind) && <TrailerPerson seconds={t} />}
@@ -1286,6 +1561,7 @@ export function DarkFilmTrailer({ seconds, still = false, tone = "dark", caption
         {isPlate(shot.kind) && <TrailerPlate kind={shot.kind} progress={(t - shot.start) / (shot.end - shot.start)} />}
         {(shot.kind === "architecture" || shot.kind === "title") && <TrailerArchitecture t={d} />}
       </div>
+      <Atmosphere seconds={t} />
       <div className="dark-trailer-words">
         {/* The illustrations are AI-generated, and every appearance says so. */}
         {isPlate(shot.kind) && (

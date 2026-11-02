@@ -259,7 +259,12 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
       keys[start + i] += masterGain * (bar + knock);
     }
   }
-  const scored = addTrailerScore(mix, rate, count, trailer);
+  // The score is built apart, given a room to sound in, then laid under everything else.
+  const score = new Float32Array(count);
+  const scored = addTrailerScore(score, rate, count, trailer);
+  if (scored) addConceptBed(score, rate, count, openingSeconds, trailer.closingMark);
+  const room = hall(score, rate);
+  for (let i = 0; i < count; i++) mix[i] += 0.78 * score[i] + SCORE_REVERB * room[i];
   // Normalize once, here, so the published file needs no separate volume pass.
   // The level is set as before, by the full-strength keys, so lowering them lowers only them.
   let rawPeak = 0;
@@ -319,6 +324,76 @@ async function typewriterAudio(_page, file, duration, openingSeconds, keystrokes
   if (voice) console.log(`Voice: ${voiced} narrated lines`);
   console.log(`Audio: ${soundedKeys} soft keys (${openingSoundedKeys} in opening); score ${scored ? "on" : "off"}; openingPeak ${openingPeak.toFixed(4)}; peak ${peak.toFixed(4)}`);
   return { sampleRate: rate, soundedKeys, openingSoundedKeys, scored, peak, openingPeak };
+}
+
+/** How much of the score's room is heard: enough for space, not enough to blur. */
+const SCORE_REVERB = 0.55;
+
+/**
+ * A plain, deterministic hall (Freeverb's comb and all-pass network, mono): the same room on
+ * every export, so the score has space around it rather than sounding like test tones.
+ */
+function hall(input, rate) {
+  const scale = rate / 44100;
+  const combs = [1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617].map((length) => ({ buffer: new Float32Array(Math.round(length * scale)), index: 0, store: 0 }));
+  const passes = [556, 441, 341, 225].map((length) => ({ buffer: new Float32Array(Math.round(length * scale)), index: 0 }));
+  const feedback = 0.86;
+  const damp = 0.3;
+  const output = new Float32Array(input.length);
+  for (let i = 0; i < input.length; i++) {
+    const x = input[i] * 0.015;
+    let sum = 0;
+    for (const comb of combs) {
+      const y = comb.buffer[comb.index];
+      comb.store = y * (1 - damp) + comb.store * damp;
+      comb.buffer[comb.index] = x + comb.store * feedback;
+      if (++comb.index >= comb.buffer.length) comb.index = 0;
+      sum += y;
+    }
+    for (const pass of passes) {
+      const held = pass.buffer[pass.index];
+      pass.buffer[pass.index] = sum + held * 0.5;
+      if (++pass.index >= pass.buffer.length) pass.index = 0;
+      sum = held - sum;
+    }
+    output[i] = sum;
+  }
+  return output;
+}
+
+/**
+ * Under the seventeen concepts, a quiet bed: four slow chords in D, each held sixteen seconds,
+ * soft enough to sit beneath the narration. It begins as the concepts do and ends with them.
+ */
+function addConceptBed(mix, rate, count, from, to) {
+  if (!(to > from)) return;
+  const tau = Math.PI * 2;
+  const smooth = (t, a, b) => {
+    const u = Math.min(1, Math.max(0, (t - a) / (b - a)));
+    return u * u * (3 - 2 * u);
+  };
+  const chords = [[73.42, 146.83, 185, 220, 293.66], [61.74, 123.47, 146.83, 185, 246.94], [49, 98, 123.47, 146.83, 196], [55, 110, 138.59, 164.81, 220]];
+  const hold = 16;
+  const start = Math.round(from * rate);
+  const end = Math.min(count, Math.round((to + 1.5) * rate));
+  for (let i = start; i < end; i++) {
+    const t = i / rate;
+    const local = t - from;
+    const envelope = smooth(t, from, from + 5) * (1 - smooth(t, to - 3, to + 1.5));
+    const step = Math.floor(local / hold);
+    const blend = smooth(local - step * hold, 0, 3.5);
+    let sample = 0;
+    for (const [weight, chord] of [[1 - blend, chords[(step + chords.length - 1) % chords.length]], [blend, chords[step % chords.length]]]) {
+      if (weight <= 0.001 || step === 0 && weight === 1 - blend) continue;
+      chord.forEach((frequency, k) => {
+        const breath = 1 + 0.18 * Math.sin(tau * (0.05 + 0.013 * k) * t + k);
+        const level = (k === 0 ? 0.022 : 0.014) * breath;
+        // Two slightly detuned voices per note: a slow, living chorus rather than a test tone.
+        sample += weight * level * (Math.sin(tau * frequency * t) + 0.8 * Math.sin(tau * frequency * 1.003 * t + k) + 0.18 * Math.sin(tau * 2 * frequency * t));
+      });
+    }
+    mix[i] += envelope * sample;
+  }
 }
 
 /**
