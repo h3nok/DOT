@@ -49,7 +49,7 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   const paymentField = debt.getByRole('region', { name: 'How the payment works', exact: true });
   await paymentField.getByRole('button', { name: 'Publish change', exact: true }).click();
   await expect(paymentField.getByText('Published on the page.')).toBeVisible();
-  const delusion = page.locator('.page-copy-sections > details').filter({ has: page.getByText('Home · Cultural delusion', { exact: true }) });
+  const delusion = page.locator('.page-copy-sections > details').filter({ has: page.getByText('Home · Authority', { exact: true }) });
   await delusion.locator(':scope > summary').click();
   const script = delusion.getByRole('region', { name: 'Script', exact: true });
   await script.getByRole('textbox').fill('Synthetic cultural message, edited by the owner.');
@@ -68,7 +68,10 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 
-test("the owner can enter the exact chapter editor from its public page", async ({ page }) => {
+for (const chapter of [
+  { slug: "amm-chapter-one-the-leech", title: "Chapter One: The Leech" },
+  { slug: "amm-book-chapter-four-authorship-without-dominance", title: "Chapter Four: Authorship Without Dominance" },
+]) test(`the owner can line edit ${chapter.title} from its reading page`, async ({ page }) => {
   await page.route("**/v1/**", async route => {
     const path = new URL(route.request().url()).pathname;
     if (path.endsWith("/auth/session")) return route.fulfill({ json: { user: { id: "owner", role: "owner", is_owner: true } } });
@@ -77,9 +80,9 @@ test("the owner can enter the exact chapter editor from its public page", async 
     if (path.endsWith("/spaces/space/works")) return route.fulfill({ json: [] });
     return route.fulfill({ status: 404, json: { detail: "No fixture" } });
   });
-  await page.goto("/essays/amm-chapter-one-the-leech");
+  await page.goto(`/essays/${chapter.slug}`);
   await page.getByRole("link", { name: "Edit this chapter", exact: true }).click();
-  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Chapter One: The Leech");
+  await expect(page.getByLabel("Title", { exact: true })).toHaveValue(chapter.title);
   await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "DOT — Home", exact: true })).toHaveCount(0);
   await expect(page.getByText(/Original text and artwork opened/)).toBeVisible();

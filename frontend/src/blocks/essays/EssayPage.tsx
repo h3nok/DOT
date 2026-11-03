@@ -22,7 +22,7 @@ import AMM from "../../content/amm.json";
 import { AmmShell } from "../amm/AmmIdentity";
 import { AmmEditionEnd, AmmReadingBar } from "../amm/AmmEditionFrame";
 import { fetchReleasedWriting } from "../../services/OrchestratorWritingService";
-import { managedEssay, replacesEssay } from "../publication/writing/publicationBridge";
+import { isManagedChapter, managedEssay, replacesEssay } from "../publication/writing/publicationBridge";
 import NativeWritingPage from "../publication/NativeWritingPage";
 import MOVES from "../../content/essays/moves.json";
 import { OwnerEditLink } from "../publication/components/OwnerEditLink";
@@ -105,7 +105,7 @@ function EssayContent({ slug, preview }: { slug: string; preview: boolean }) {
 
   return (
     <EssayShell amm={isAmm}>
-      {!preview && managedEssay(slug) && <OwnerEditLink to={`/studio/writing?series=amm&source=${encodeURIComponent(slug)}`} label={slug.startsWith("amm-chapter-") ? "Edit this chapter" : "Edit this piece"} />}
+      {!preview && managedEssay(slug) && <OwnerEditLink to={`/studio/writing?series=amm&source=${encodeURIComponent(slug)}`} label={isManagedChapter(slug) ? "Edit this chapter" : "Edit this piece"} />}
       {preview && <aside className="post-preview-note"><strong>Local preview</strong><span>Changes here do not publish the post.</span><Link to="/_preview/essays" className={LINK}>All local posts</Link></aside>}
       {state.status === "loading" && (
         <p className="mx-auto text-sm text-muted-foreground" style={COLUMN} role="status">

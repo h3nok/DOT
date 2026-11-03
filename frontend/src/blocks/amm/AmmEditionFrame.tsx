@@ -11,7 +11,7 @@ export function AmmReadingBar({ slug }: { slug?: string }) {
   const { reading } = useAmmContent();
   const part = ammPart(slug);
   return <nav className="amm-reading-bar" aria-label="Reading order">
-    <p><span className="amm-eyebrow">{part ? reading.orderLabel : reading.letterLabel}</span>{part && <span className="amm-reading-bar-position">Part {part.part} of {AMM_PARTS.length} published</span>}</p>
+    <p><span className="amm-eyebrow">{part ? reading.orderLabel : reading.letterLabel}</span>{part && <span className="amm-reading-bar-position">Chapter {part.part} of {AMM_PARTS.length}</span>}</p>
     <details className="amm-contents">
       <summary>{reading.contentsLabel}</summary>
       <ol>{AMM_PARTS.map(item => <li key={item.slug}><Link to={item.route} aria-current={item.slug === slug ? "page" : undefined}><span aria-hidden="true">0{item.part}</span><span>{item.label} · {item.title}</span></Link></li>)}</ol>

@@ -6,78 +6,78 @@
   "feed": "/amm/feed.xml",
   "eyebrow": "An independent publication by Henok Ghebrechristos",
   "headline": [
-    "An extractive economy.",
-    "The culture that sustains it."
+    "The attitude of dominance.",
+    "The culture that teaches it."
   ],
   "heroAction": "Explore the analysis",
-  "description": "The American Millennial Manifesto examines economic extraction, concentrated power, and the cultural beliefs and everyday conduct that sustain them.",
+  "description": "The American Millennial Manifesto applies Digital Organism Theory to American culture: how dominance is learned, organized, transmitted, and revised.",
   "home": {
-    "overviewTitle": "The system in everyday life.",
-    "overviewClaim": "Economic dependence shapes more than a paycheck.",
-    "overviewIntro": "Income, rent, debt, and job security shape the choices available to a person. AMM follows six familiar cultural messages through these conditions: how economic pressure becomes an expectation, a habit, or a justification.",
-    "overviewArgument": "Distress is individualized while the architecture producing it is preserved.",
-    "overviewSource": "Chapter Two · The Leech’s Anatomy",
-    "premise": "“Work hard, play by the rules, and you will get ahead.” AMM sets out to diagnose the economic system behind that promise—how wealth and power concentrate, how dependence shapes everyday life, and how people come to accept and defend the arrangements they live within.",
-    "conceptsLabel": "Economic conditions and everyday conduct",
+    "overviewTitle": "How culture becomes conduct.",
+    "overviewClaim": "What we learn to endure can become what we ask of others.",
+    "overviewIntro": "A work message interrupts dinner. A justified warning threatens a supervisor’s standing. Someone who once had little room to refuse begins setting terms for others. AMM follows these encounters through DOT: experience, interpretation, Intent, action, consequence, and what is carried into the next encounter.",
+    "overviewArgument": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+    "overviewSource": "Chapter One · The Leech — The Attitude of Dominance",
+    "premise": "AMM applies Digital Organism Theory to American culture: how fear, status, and inherited lessons can make control seem necessary; how institutions reinforce that attitude; and how people learn to carry it forward—or revise it.",
+    "conceptsLabel": "How cultural instructions become everyday conduct",
     "concepts": [
       {
         "id": "conditioning",
-        "label": "Conditioning",
-        "text": "Competition, income, and status can become measures of personal worth. AMM examines how these lessons are learned through family, school, work, and everyday rewards—and how they come to feel natural.",
+        "label": "Worth",
         "script": "Your worth is what you earn.",
-        "argument": "You, as a person belonging to this society, are taught to earn a dignity you already possess, and to defend the arrangements that steadily erode it.",
+        "text": "A credential, salary, or promotion can become proof that a person deserves to belong. DOT calls the carried organization of such expectations the Painting. AMM asks when a local measure of performance becomes a verdict on a whole life.",
+        "argument": "A skill can improve a task; it cannot establish that another person has lesser standing.",
         "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "fear",
         "label": "Fear",
-        "text": "Rent, debt, and job insecurity can make refusal costly. A work message at home can carry more than a request: it can bring the risk of lost income, standing, or employment. AMM examines how dependence narrows the choices that feel available.",
         "script": "Do not risk your place.",
-        "argument": "Fear has begun governing the inquiry when protecting an identity or livelihood makes a conclusion unavailable for examination.",
-        "source": "Chapter Three · The Host and the Infection"
+        "text": "At dinner, a work message can carry a learned demand: answer now to remain indispensable. AMM distinguishes an expectation that can be questioned from a real employment threat that also requires material protection.",
+        "argument": "If availability is treated as evidence of worth, another person's command of one's attention can feel like recognition.",
+        "source": "Chapter Two · The Anatomy of Dominance"
       },
       {
         "id": "delusion",
-        "label": "Cultural delusion",
-        "text": "Profit can stand in for progress, consumption for freedom, and status for worth. AMM uses cultural delusion to describe the gap between what an economy rewards and what those rewards are taken to prove.",
-        "script": "If it pays, it must be progress.",
-        "argument": "The Leech's signature method is inversion: an institution claims moral authority from the purpose its conduct is undermining.",
-        "source": "Chapter One · The Leech"
+        "label": "Authority",
+        "script": "Being in charge means being right.",
+        "text": "A warning can be heard as information about a task, or as a threat to the person holding authority. AMM examines how identifying with a role can turn a revisable decision into a demand that others remain silent.",
+        "argument": "A role can be corrected without the person ceasing to exist.",
+        "source": "Chapter One · The Leech — The Attitude of Dominance"
       },
       {
         "id": "protection",
-        "label": "Self-protection",
-        "text": "Income, reputation, and belonging can become tied to an existing arrangement. AMM examines how that attachment can shape judgment, including the explanations people give for practices that benefit them while imposing costs on others.",
-        "script": "Protect what is yours.",
-        "argument": "A capable mind can produce an elaborate defense of a conclusion it has become afraid to lose.",
+        "label": "Belonging",
+        "script": "Protect your own.",
+        "text": "A group can provide care, memory, and solidarity. Its reputation can also become so bound to identity that criticism feels intolerable. AMM asks whether the same standard still applies when it reaches someone admired.",
+        "argument": "A standard advertised as universal becomes conditional upon loyalty.",
         "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "erosion",
-        "label": "Moral erosion",
-        "text": "Harm can become routine through ordinary compromises, professional obligations, or accepted business practice. AMM traces how familiarity and justification can make the costs less visible, even while they continue to fall on other people.",
-        "script": "Everyone does it.",
-        "argument": "The compromise becomes ordinary. Then it becomes invisible.",
-        "source": "Chapter Two · The Leech’s Anatomy"
+        "label": "Transmission",
+        "script": "I endured it. So should you.",
+        "text": "A person once silenced becomes a supervisor. Their history can lead them to protect a colleague’s warning or teach silence as professionalism. In DOT, the resulting action becomes part of another person’s experience.",
+        "argument": "There is a threshold between learning that one must sometimes endure a condition and learning that the condition is right to impose.",
+        "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "accountability",
-        "label": "Accountability",
-        "text": "People occupy different positions within the same economy. AMM examines responsibility in relation to knowledge, authority, dependence, and the consequences of conduct—how a person can be constrained by an arrangement while also helping sustain it.",
-        "script": "You have no choice.",
-        "argument": "What you have learned to call normal becomes part of the world another person must live in.",
-        "source": "Chapter Three · The Host and the Infection"
+        "label": "Revision",
+        "script": "This is just how things are.",
+        "text": "A new promise becomes credible through what happens next. A warning is protected, an error is corrected, a different response becomes affordable. Chapter Four follows how repeated encounters can revise expectations and Character.",
+        "argument": "This is why cultural change requires consequences, not vocabulary alone.",
+        "source": "Chapter Four · Authorship Without Dominance"
       }
     ],
-    "scriptLabel": "A cultural message examined by AMM",
+    "scriptLabel": "A cultural instruction examined by AMM",
     "sceneAlt": "The flag-patterned Host rests its head beside a laptop at a kitchen table, carrying the two-headed Leech. An untouched meal, household envelopes, keys, and a picture of a cow family in a green meadow surround it.",
-    "diagnosisTitle": "Who benefits when this feels normal?",
-    "diagnosisClaim": "Your life serves accumulation. Power escapes accountability.",
-    "diagnosisIntro": "AMM argues that Western civilization has inverted the relationship between life and wealth. Modern culture teaches you to call that inversion success. Modern oligarchy benefits when your dependence becomes its recurring income—and the costs feel like your personal failure. The Leech names this arrangement; conditioning helps it survive.",
-    "cureTitle": "What would it take to live differently?",
-    "cureIntro": "AMM’s proposed response has to reach both the culture we carry and the systems we depend on: honesty and accountability in how we live, cooperation and shared economic capacity in what we build.",
-    "cureChapterLabel": "Chapter Four · The Cure",
-    "cureStatus": "Not yet written. The next chapter will develop the proposed response; Chapters One–Three are available now."
+    "diagnosisTitle": "How does an attitude become an arrangement?",
+    "diagnosisClaim": "Dominance is learned, enacted, and reinforced.",
+    "diagnosisIntro": "The Leech names an attitude of dominance. AMM examines how it can become organized in the Painting, expressed through Intent, and stabilized in Character. Institutions can give it reach by rewarding some choices and making others costly.",
+    "cureTitle": "How can the next encounter be different?",
+    "cureIntro": "Revision needs both a change in response and conditions that make another response possible: truthful interpretation, material support, accountable authority, and consequences that make a different practice credible.",
+    "cureChapterLabel": "Chapter Four · Authorship Without Dominance",
+    "cureStatus": "A complete working chapter is included in the illustrated online edition. Version 1.1 is pending line editing."
   },
   "deck": "You keep the economy running. Who does it leave in control?",
   "statement": "The public is more than a resource.",
@@ -179,10 +179,10 @@
   "emptyTitle": "The next chapter starts here.",
   "emptyDescription": "New AMM editions will be collected here as they are published. Subscribe to receive the next one.",
   "introduction": {
-    "title": "Chapter One: The Leech",
-    "route": "/essays/amm-chapter-one-the-leech",
+    "title": "Chapter One: The Leech — The Attitude of Dominance",
+    "route": "/essays/amm-book-chapter-one-the-leech",
     "label": "Start with Chapter One",
-    "description": "The opening chapter: what the Leech is, where it comes from, and how to trace it."
+    "description": "The book’s opening: DOT’s practical framework, the attitude of dominance, and its possible roots in fear and cultural inheritance."
   },
   "artwork": {
     "src": "/amm/media/host2-1536.webp",
@@ -196,12 +196,12 @@
       {
         "id": "leech",
         "label": "The Leech",
-        "meaning": "Organized extraction"
+        "meaning": "The attitude of dominance"
       }
     ],
-    "alt": "A flag-patterned Host carries a two-headed Leech beside a phone-shaped mirror showing a healthy cow in a green landscape. A visual metaphor for extraction and the image of prosperity.",
-    "caption": "AI-generated illustration, directed by the author. A visual metaphor.",
-    "description": "The Host is the public: exhausted by the Leech it carries, yet reassured by a mirror that shows prosperity. The image depicts systemic extraction, manufactured illusion, and the gap between subjective perception and objective reality.",
+    "alt": "A flag-patterned Host carries a two-headed Leech beside a phone-shaped mirror showing a healthy cow in a green landscape. A visual metaphor for the public, the attitude of dominance, and the image of prosperity.",
+    "caption": "Host and Leech illustrations are AI-generated, directed by the author. Mesob artwork from 4Us.",
+    "description": "The Host represents the living public. The Leech represents an attitude of dominance that people can learn, organize, transmit, or resist. The mirror depicts the promise of prosperity. The image is a metaphor for these relationships.",
     "movementUrl": "https://sullix.com/venture"
   },
   "principle": {
@@ -209,34 +209,38 @@
     "attribution": "From the working manuscript · The Host and the Infection"
   },
   "chapterSection": {
-    "title": "The manifesto.",
-    "description": "Three chapters examine organized extraction, the institutions it works through, and the beliefs and conduct that sustain it.",
+    "title": "The first book manuscript.",
+    "description": "Four chapters apply DOT to dominance, institutional power, the Host and infection, and the possibility of revision. The illustrated online edition and Markdown copy are available for reading and line editing.",
     "chapters": [
       {
-        "id": "amm-chapter-one-the-leech",
-        "line": "In this manifesto, the Leech is a logic of domination made durable through ownership, institutions, and everyday behavior. It converts dependence into extraction, extraction into power, and power into protection from accountability."
+        "id": "amm-book-chapter-one-the-leech",
+        "line": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage."
       },
       {
-        "id": "amm-chapter-two-the-leechs-anatomy",
-        "line": "The Leech has two strategic heads, an institutional body organized around four feeding interfaces, one principal point of attachment, and one host."
+        "id": "amm-book-chapter-two-the-anatomy-of-dominance",
+        "line": "Terms establish consequences. Explanations assign those consequences meaning. Repeated responses help teach which terms are open to question."
       },
       {
-        "id": "amm-chapter-three-the-host-and-the-infection",
-        "line": "My concern in this chapter is the moral erosion of the person. I mean the weakening of your willingness to recognize harm, judge power honestly, and let another person’s humanity place a limit on what you will accept."
+        "id": "amm-book-chapter-three-the-host-and-the-infection",
+        "line": "There is a threshold between learning that one must sometimes endure a condition and learning that the condition is right to impose."
+      },
+      {
+        "id": "amm-book-chapter-four-authorship-without-dominance",
+        "line": "A trustworthy revision supplies encounters in which another response is possible, can actually be taken, and does not return the old penalty under a new name."
       }
     ]
   },
   "reading": {
     "pathEyebrow": "Start here",
-    "orderLabel": "The manifesto",
+    "orderLabel": "The working book",
     "contentsLabel": "Contents",
-    "letterLabel": "A letter alongside the manifesto",
-    "lettersEyebrow": "Alongside the manifesto",
-    "lettersTitle": "Letters",
-    "lettersDescription": "Shorter pieces that apply the manifesto’s terms to a current question. Each one can be read on its own.",
+    "letterLabel": "Earlier writing alongside the book",
+    "lettersEyebrow": "Alongside the working book",
+    "lettersTitle": "Earlier chapters and letters",
+    "lettersDescription": "The serialized chapters and independent letters remain available in their earlier forms. The four chapters above are the current working book.",
     "nextLabel": "Next in the manifesto",
     "beginLabel": "Begin the manifesto",
-    "latestNote": "This is the latest published chapter.",
+    "latestNote": "End of the first working book manuscript. Version 1.1 is pending line editing.",
     "signupTitle": "Receive the next part.",
     "signupDescription": "New chapters and letters arrive by email when they are ready. No schedule, no tracking pixels. Leave in one click.",
     "supportTitle": "Support this writing.",
@@ -262,8 +266,8 @@
     "artwork": "/work/4us/mesob.webp",
     "artworkAlt": "Woven Mesob artwork from 4Us"
   },
-  "archiveTitle": "Letters from the present.",
-  "archiveDescription": "One argument, examined from different angles: how dependence becomes income, how income becomes power, and how that power is made to seem normal.",
+  "archiveTitle": "The book and earlier writing.",
+  "archiveDescription": "Begin the four-chapter working book, or return to the earlier serialized chapters and letters. Each edition keeps its own reading address.",
   "money": {
     "definitionTitle": "What is capital, in everyday language?",
     "definitions": [
@@ -733,7 +737,7 @@
   },
   "dot": {
     "title": "AMM applies Digital Organism Theory to public life.",
-    "intro": "Digital Organism Theory (DOT) is the framework AMM uses to connect experience, interpretation, and conduct. AMM applies it to economic dependence, inherited beliefs, and the ways people sustain or challenge the conditions around them.",
+    "intro": "DOT distinguishes the experiencer from the Painting: the carried expectations, fears, skills, and meanings through which a situation is interpreted. AMM follows how these interpretations shape Intent and action, and how consequences become the next person’s experience.",
     "action": "Go to Digital Organism Theory",
     "route": "/",
     "footer": "An application of Digital Organism Theory.",
@@ -742,20 +746,26 @@
         "id": "experience-loop",
         "title": "The Experience Loop",
         "quote": "Every loop begins from the state left by earlier loops. This is why conditioning matters, and also why repeated truthful action can make a different response increasingly available.",
-        "applies": "In AMM: the learned equation of earnings with worth."
+        "applies": "In AMM: an imposed condition becomes a learned expectation, an action, and then part of someone else’s environment."
       },
       {
         "id": "fear-gating",
         "title": "The Fear-Gating Principle",
         "quote": "When Fear governs, the responses that feel available become fewer.",
-        "applies": "In AMM: dependence and the perceived limits on refusal."
+        "applies": "In AMM: distinguish a refusal that feels unavailable from one made unaffordable by wages, debt, care, or institutional power."
       },
       {
         "id": "love",
         "title": "Love as an Epistemic Condition",
         "quote": "Love is the condition in which Fear no longer governs you.",
-        "applies": "In 4Us: love and cooperation are the starting principles."
+        "applies": "In AMM: protect truthful participation, retain proportionate boundaries, and make authority capable of correction."
       }
     ]
+  },
+  "manuscript": {
+    "href": "/amm/american-millennial-manifesto-v1.1.md",
+    "filename": "american-millennial-manifesto-v1.1.md",
+    "label": "Download the working manuscript (.md)",
+    "status": "Working edition · Pending line editing"
   }
 }

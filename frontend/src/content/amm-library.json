@@ -1,5 +1,61 @@
 [
   {
+    "slug": "amm-book-chapter-one-the-leech",
+    "title": "Chapter One: The Leech — The Attitude of Dominance",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-11-03",
+    "revised": "2026-11-03",
+    "revision": false,
+    "part": 1,
+    "partLabel": "Chapter One",
+    "partTitle": "The Leech — The Attitude of Dominance",
+    "partNote": "Working book · Version 1.1 · Pending line editing",
+    "partAction": "Read Chapter One"
+  },
+  {
+    "slug": "amm-book-chapter-two-the-anatomy-of-dominance",
+    "title": "Chapter Two: The Anatomy of Dominance",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-11-03",
+    "revised": "2026-11-03",
+    "revision": false,
+    "part": 2,
+    "partLabel": "Chapter Two",
+    "partTitle": "The Anatomy of Dominance",
+    "partNote": "Working book · Version 1.1 · Pending line editing",
+    "partAction": "Read Chapter Two"
+  },
+  {
+    "slug": "amm-book-chapter-three-the-host-and-the-infection",
+    "title": "Chapter Three: The Host and the Infection",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-11-03",
+    "revised": "2026-11-03",
+    "revision": false,
+    "part": 3,
+    "partLabel": "Chapter Three",
+    "partTitle": "The Host and the Infection",
+    "partNote": "Working book · Version 1.1 · Pending line editing",
+    "partAction": "Read Chapter Three"
+  },
+  {
+    "slug": "amm-book-chapter-four-authorship-without-dominance",
+    "title": "Chapter Four: Authorship Without Dominance",
+    "kind": "essay",
+    "source": null,
+    "published": "2026-11-03",
+    "revised": "2026-11-03",
+    "revision": false,
+    "part": 4,
+    "partLabel": "Chapter Four",
+    "partTitle": "Authorship Without Dominance",
+    "partNote": "Working book · Version 1.1 · Pending line editing",
+    "partAction": "Read Chapter Four"
+  },
+  {
     "slug": "amm-chapter-one-the-leech",
     "title": "Chapter One: The Leech",
     "kind": "essay",
@@ -7,11 +63,7 @@
     "published": "2026-04-18",
     "revised": "2026-10-15",
     "revision": false,
-    "part": 1,
-    "partLabel": "Chapter One",
-    "partTitle": "The Leech",
-    "partNote": "Revised edition, October 15, 2026",
-    "partAction": "Read Chapter One"
+    "partLabel": "Chapter One"
   },
   {
     "slug": "amm-chapter-two-the-leechs-anatomy",
@@ -21,11 +73,7 @@
     "published": "2026-07-29",
     "revised": "2026-10-16",
     "revision": false,
-    "part": 2,
-    "partLabel": "Chapter Two",
-    "partTitle": "The Leech’s Anatomy",
-    "partNote": "First published July 29, 2026; edited October 16, 2026",
-    "partAction": "Read Chapter Two"
+    "partLabel": "Chapter Two"
   },
   {
     "slug": "amm-chapter-three-the-host-and-the-infection",
@@ -35,11 +83,7 @@
     "published": "2026-10-15",
     "revised": "2026-10-15",
     "revision": false,
-    "part": 3,
-    "partLabel": "Chapter Three",
-    "partTitle": "The Host and the Infection",
-    "partNote": "Working draft, October 15, 2026",
-    "partAction": "Read Chapter Three"
+    "partLabel": "Chapter Three"
   },
   {
     "slug": "amm-ai-will-not-kill-you",

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 import { expectNoHorizontalOverflow } from "./helpers";
 import AMM from '../src/content/amm.json' with { type: 'json' };
 
@@ -17,7 +18,7 @@ test("the hidden power page, chapters and portable figures work on a narrow scre
   await expect(page.locator("#holders .evidence-chart")).toHaveCount(3);
   await expectNoHorizontalOverflow(page);
   await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
-  await page.getByRole('link', { name: 'Read Chapter Two', exact: true }).click();
+  await page.getByRole('link', { name: 'Chapter Two: The Leech’s Anatomy', exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Two: The Leech’s Anatomy" })).toBeVisible();
   await expect(page.locator(".evidence-chart")).toHaveCount(4);
   const chart = page.locator(".evidence-chart").first();
@@ -63,7 +64,7 @@ test("a Studio edition retains AMM's identity, title, and return path", async ({
   await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm/editions");
   await expectNoHorizontalOverflow(page);
   await page.getByRole("link", { name: "All AMM editions", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Letters from the present." })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: AMM.archiveTitle })).toBeInViewport();
   await page.getByRole('navigation', { name: 'AMM footer' }).getByRole("link", { name: "Digital Organism Theory", exact: true }).click();
   await expect(page.locator(".amm-shell")).toHaveCount(0);
   await expect(page.locator('link[rel="icon"][href="/amm/mark.svg"]')).toHaveCount(0);
@@ -101,9 +102,9 @@ test("Chapter Three opens from the archive and the illustration has a readable d
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
   await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm/editions");
-  await expect(page.getByText(/AMM applies my systemic understanding of society/)).toBeVisible();
-  await expect(page.getByRole("table")).toBeVisible();
-  await expect(page.getByText(/The standard remains specific enough to investigate/)).toBeVisible();
+  await expect(page.getByText("Infection is the metaphor for learning, internalizing, and reproducing the attitude of dominance.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "5. The Infection, Step by Step", exact: true })).toBeVisible();
+  await expect(page.getByText(/There is a threshold between learning that one must sometimes endure/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 
@@ -114,13 +115,13 @@ test("the landing has one reading action and keeps chapter and archive bookmarks
   await expect(page.locator(".amm-hero-actions .amm-button")).toHaveCount(1);
   await expect(page.locator(".amm-chapters")).toHaveCount(0);
   await expect(page.locator(".amm-analysis, .amm-principle, .amm-editions, .amm-movement, .amm-subscribe, .amm-end-support")).toHaveCount(0);
-  // The finite home leads from its key ideas into the manuscript's three chapters.
+  // The finite home leads from its key ideas into the four-chapter working book.
   await expect(page.getByRole("list", { name: "The manifesto, in reading order" })).toHaveCount(1);
-  await expect(page.getByRole('link', { name: 'Start with Chapter One', exact: true })).toHaveAttribute('href', '/essays/amm-chapter-one-the-leech');
+  await expect(page.getByRole('link', { name: 'Start with Chapter One', exact: true })).toHaveAttribute('href', AMM.introduction.route);
   await expect(page.locator(".amm-footer")).toBeVisible();
   await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
   await expect(page).toHaveURL(/\/amm\/editions$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Letters from the present." })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: AMM.archiveTitle })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Read Chapter Three', exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await page.goto("/amm#amm-chapters");
@@ -212,30 +213,78 @@ test("newsletter delivery requires a separate review and explicit approval", asy
   await expectNoHorizontalOverflow(page);
 });
 
-test("each part names its place, opens the contents, and ends with the next part and the two asks", async ({ page }) => {
+test("the working book keeps four chapters in order and preserves earlier edition addresses", async ({ page }) => {
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: true, publications: ["all", "amm"] } }));
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
-  await page.goto("/essays/amm-chapter-one-the-leech");
+  await page.goto(AMM.introduction.route);
   const order = page.getByRole("navigation", { name: "Reading order" });
-  await expect(order).toContainText("Part 1 of 3 published");
+  await expect(order).toContainText("Chapter 1 of 4");
   await order.getByText("Contents", { exact: true }).click();
   await expect(order.getByRole("link", { name: /Chapter One · The Leech/ })).toHaveAttribute("aria-current", "page");
-  const next = page.getByRole("navigation", { name: "Continue reading" }).getByRole("link", { name: "Next in the manifesto: The Leech’s Anatomy" });
+  await expect(order.getByRole("link")).toHaveCount(4);
+  await expect(page.getByText(/Working book · Version 1.1/)).toBeVisible();
   await expect(page.getByRole("region", { name: "Subscribe to AMM by email" }).getByRole("button", { name: "Subscribe by email" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Contribute once" })).toHaveAttribute("href", "/support?purpose=author&from=amm");
+  await expect(page.getByRole("link", { name: "earlier serialized edition", exact: true })).toHaveAttribute("href", "/essays/amm-chapter-one-the-leech");
   await expectNoHorizontalOverflow(page);
-  await next.click();
-  await expect(page.getByRole("heading", { level: 1, name: "Chapter Two: The Leech’s Anatomy" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("Part 2 of 3 published");
-  await page.goto("/essays/amm-chapter-three-the-host-and-the-infection");
-  await expect(page.getByText("This is the latest published chapter.", { exact: false })).toBeVisible();
-  // The former standalone section opens at its place in Chapter Three, keeping a deep link's anchor.
+  await page.getByRole("navigation", { name: "Continue reading" }).getByRole("link", { name: "Next in the manifesto: The Anatomy of Dominance" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Two: The Anatomy of Dominance" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("Chapter 2 of 4");
+  await page.getByRole("navigation", { name: "Continue reading" }).getByRole("link", { name: "Next in the manifesto: The Host and the Infection" }).click();
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("Chapter 3 of 4");
+  await page.getByRole("navigation", { name: "Continue reading" }).getByRole("link", { name: "Next in the manifesto: Authorship Without Dominance" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Four: Authorship Without Dominance" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("Chapter 4 of 4");
+  await expect(page.getByText(AMM.reading.latestNote, { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Working Definitions", exact: true })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+  // Earlier deep links retain their original text and destination.
   await page.goto("/essays/the-anatomy-of-the-host");
   await expect(page).toHaveURL(/\/essays\/amm-chapter-three-the-host-and-the-infection#the-anatomy-of-the-host$/);
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
   await page.goto("/essays/the-anatomy-of-the-host#class-and-the-head-of-the-host");
   await expect(page).toHaveURL(/\/essays\/amm-chapter-three-the-host-and-the-infection#class-and-the-head-of-the-host$/);
   await page.goto("/essays/amm-ai-will-not-kill-you");
-  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText("A letter alongside the manifesto");
-  await expect(page.getByRole("link", { name: "Begin the manifesto: The Leech" })).toHaveAttribute("href", "/essays/amm-chapter-one-the-leech");
+  await expect(page.getByRole("navigation", { name: "Reading order" })).toContainText(AMM.reading.letterLabel);
+  await expect(page.getByRole("link", { name: "Begin the manifesto: The Leech — The Attitude of Dominance" })).toHaveAttribute("href", AMM.introduction.route);
+});
+
+test("the complete illustrated working manifesto can be downloaded for line editing", async ({ page }) => {
+  await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
+  await page.goto("/amm");
+  const downloadLink = page.getByRole("link", { name: AMM.manuscript.label, exact: true });
+  await expect(page.getByText(AMM.manuscript.status, { exact: true })).toBeVisible();
+  const downloadEvent = page.waitForEvent("download");
+  await downloadLink.click();
+  const download = await downloadEvent;
+  expect(download.suggestedFilename()).toBe(AMM.manuscript.filename);
+  const content = await readFile((await download.path())!, "utf8");
+  expect(content).toContain("Working edition — pending line editing.");
+  expect(content).not.toContain("Private draft for editorial review.");
+  for (const chapter of ["One", "Two", "Three", "Four"]) expect(content).toContain(`## Chapter ${chapter}:`);
+  expect(content.match(/!\[[^\]]+\]\(https:\/\/dotheory\.org\/essay-media\//g)).toHaveLength(5);
+});
+
+for (const [slug, count] of [
+  ["amm-book-chapter-one-the-leech", 2],
+  ["amm-book-chapter-two-the-anatomy-of-dominance", 1],
+  ["amm-book-chapter-three-the-host-and-the-infection", 1],
+  ["amm-book-chapter-four-authorship-without-dominance", 1],
+] as const) test(`the online working chapter ${slug} contains captioned illustrations`, async ({ page }) => {
+  await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(`/essays/${slug}`);
+  await expect(page.getByText(/Working book · Version 1.1/)).toContainText("Pending line editing");
+  const illustrations = page.locator(".book-prose--post .post-inline-image");
+  await expect(illustrations).toHaveCount(count);
+  for (const figure of await illustrations.all()) {
+    const image = figure.locator("img");
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toHaveAttribute("src", new RegExp(`/essay-media/${slug}/`));
+    await expect(image).toHaveAttribute("alt", /.+/);
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
+    await expect(image).toHaveCSS("border-top-width", "0px");
+    await expect(figure.locator("figcaption")).toContainText(/Figure [1-5]\./);
+  }
+  await expectNoHorizontalOverflow(page);
 });

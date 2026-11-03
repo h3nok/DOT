@@ -7,6 +7,21 @@ AMM's public home is `/amm`; its own feed is `/amm/feed.xml`. Open
 in Writing Studio. The landing page contains the publication premise and links;
 it does not contain invented editions.
 
+### Working book — pending line editing
+
+The current four-chapter book uses the `amm-book-chapter-*` Markdown sources in
+`frontend/src/content/essays/`. Each chapter identifies its working status and
+contains captioned illustrations stored in its own asset directory. The Reader
+and private Studio import use these same text and image files. Earlier
+serialized editions keep their original text and reading addresses.
+
+The book section on `/amm` and `/amm/editions` also offers
+`/amm/american-millennial-manifesto-v1.1.md`: a complete illustrated Markdown
+snapshot, explicitly pending line editing. Its image links point to the same
+local, versioned assets served by the online chapters. Update that snapshot
+when preparing the next working edition; chapter revisions saved privately in
+Studio do not silently replace a downloadable edition.
+
 AMM has its own mark, navigation, color system and reading shell, including
 file-backed introductions and native Studio editions. Its analytical spine
 follows **conditions → interpretation → conduct → feedback**, with passage links

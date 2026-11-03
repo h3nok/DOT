@@ -28,8 +28,15 @@ test("AMM keeps frameless pictures without requesting video in reduced motion", 
   // Each part of the reading path carries the author's artwork for it.
   await page.goto("/amm/editions#amm-chapters");
   const path = page.getByRole("list", { name: "The manifesto, in reading order" });
-  await expect(path.locator(".amm-path-art img")).toHaveCount(3);
-  await expect.poll(() => path.locator(".amm-path-art img").evaluateAll(images => images.map(image => (image as HTMLImageElement).currentSrc.split("/").pop()?.replace(/-\d+\.webp$/, "")))).toEqual(["leech", "leech-anatomy", "host-anatomy-v2"]);
+  const artwork = path.locator(".amm-path-art img");
+  await expect(artwork).toHaveCount(4);
+  const sources = [/\/amm\/media\/leech-\d+\.webp$/, /\/amm\/media\/host2-\d+\.webp$/, /\/amm\/media\/host-at-home-v1-\d+\.webp$/, /\/work\/4us\/mesob\.webp$/];
+  for (const [index, source] of sources.entries()) {
+    const image = artwork.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.currentSrc)).toMatch(source);
+    await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
+  }
   await page.goto("/amm/power");
   await expect(page.getByRole("img", { name: /The erosion of the public/ })).toBeVisible();
   expect(films).toEqual([]);

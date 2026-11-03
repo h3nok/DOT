@@ -36,6 +36,30 @@
       "srcset": "/amm/media/host-anatomy-v2-640.webp 640w, /amm/media/host-anatomy-v2-1024.webp 1024w, /amm/media/host-anatomy-v2-1536.webp 1536w",
       "width": 1024,
       "height": 683
+    },
+    "amm-book-chapter-one-the-leech": {
+      "src": "/amm/media/leech-1024.webp",
+      "srcset": "/amm/media/leech-640.webp 640w, /amm/media/leech-1024.webp 1024w",
+      "width": 1024,
+      "height": 435
+    },
+    "amm-book-chapter-two-the-anatomy-of-dominance": {
+      "src": "/amm/media/host2-1280.webp",
+      "srcset": "/amm/media/host2-640.webp 640w, /amm/media/host2-1024.webp 1024w, /amm/media/host2-1280.webp 1280w, /amm/media/host2-1536.webp 1536w",
+      "width": 1536,
+      "height": 1024
+    },
+    "amm-book-chapter-three-the-host-and-the-infection": {
+      "src": "/amm/media/host-at-home-v1-1024.webp",
+      "srcset": "/amm/media/host-at-home-v1-640.webp 640w, /amm/media/host-at-home-v1-1024.webp 1024w, /amm/media/host-at-home-v1-1536.webp 1536w",
+      "width": 1536,
+      "height": 1024
+    },
+    "amm-book-chapter-four-authorship-without-dominance": {
+      "src": "/work/4us/mesob.webp",
+      "srcset": "/work/4us/mesob.webp 1024w",
+      "width": 1024,
+      "height": 1536
     }
   },
   "partSizes": "(min-width: 901px) 30vw, 100vw",

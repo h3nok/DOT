@@ -11,6 +11,7 @@ import { OwnerEditLink } from "./components/OwnerEditLink";
 import AMM from "../../content/amm.json";
 import { AmmShell } from "../amm/AmmIdentity";
 import { AmmEditionEnd, AmmReadingBar } from "../amm/AmmEditionFrame";
+import { isManagedChapter } from "./writing/publicationBridge";
 
 export default function NativeWritingPage({ sourceWorkId, sourcePath }: { sourceWorkId?: string; sourcePath?: string } = {}) {
   const { workId: routeWorkId = "", releaseNumber } = useParams();
@@ -39,7 +40,7 @@ export default function NativeWritingPage({ sourceWorkId, sourcePath }: { source
   const ammSlug = sourcePath?.split('/').pop();
   const body = (
       <div className="book-surface mx-auto max-w-6xl">
-        {isAmm && content && <OwnerEditLink to={`/studio/writing?series=amm&work=${encodeURIComponent(workId)}`} label={sourcePath?.includes("amm-chapter-") ? "Edit this chapter" : "Edit this piece"} />}
+        {isAmm && content && <OwnerEditLink to={`/studio/writing?series=amm&work=${encodeURIComponent(workId)}`} label={isManagedChapter(ammSlug) ? "Edit this chapter" : "Edit this piece"} />}
         <Helmet><title>{`${manifest?.title || content?.delivery.title || "Writing"} — ${isAmm ? AMM.title : author.name}`}</title>{manifest?.summary && <meta name="description" content={manifest.summary} />}{cover && <meta property="og:image" content={new URL(cover.src, window.location.origin).href} />}{cover && <meta property="og:image:alt" content={manifest?.presentation?.cover?.alt ?? ""} />}<meta name="twitter:card" content={cover ? "summary_large_image" : "summary"} /></Helmet>
         {error ? <>
             <h1 className="font-serif text-3xl">This piece could not be opened</h1>

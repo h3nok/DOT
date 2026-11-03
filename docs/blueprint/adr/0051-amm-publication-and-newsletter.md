@@ -151,6 +151,26 @@ and L10 (separate writing, reading and sending). Violates none.
 
 ## Existing manuscripts, revisions and inspectable figures
 
+On 2026-11-03, the author requested a complete first book manuscript, followed by
+deeper application of DOT in both the writing and AMM's website ahead of line
+editing. The four working book chapters use distinct `amm-book-chapter-*` reading
+addresses and the existing Markdown reader. Earlier serialized chapters retain
+their text and addresses in the archive. The reading path and owner source
+library identify the working book explicitly; the library also retains the
+earlier sources. The combined Markdown manuscript stays in the existing private
+manuscript directory. These are content revisions, with no new publishing or
+mailing mechanism. They serve L2/L3 (fixed reading order), L7 (preserved editions
+and editable Markdown), and L10/L12 (a clear reading purpose), violating none.
+
+The author then requested publication of the working manifesto pending line
+editing, with illustrations within the online edition. The four chapters use
+the existing captioned Markdown image path and local attachment validation.
+The book section offers a complete, versioned Markdown snapshot with explicit
+working status. That snapshot is a public copy prepared for this request;
+private authoring sources and earlier editions retain their existing boundaries.
+Artwork remains still, locally served, and captioned; no newsletter is sent by
+website publication. This also serves L7 (portable text) and L9 (local media).
+
 The author requested self-contained copies of two published chapters and two
 letters, and direct website editing. These and the supplied introduction form
 an explicit managed manuscript library. The initial Markdown files retain the

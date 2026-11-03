@@ -44,7 +44,7 @@ export function AmmEditions() {
     <section id="amm-letters" className="amm-letters" aria-labelledby="amm-letters-title">
       <header className="amm-section-heading"><div><p className="amm-eyebrow">{AMM.reading.lettersEyebrow}</p><h2 id="amm-letters-title" tabIndex={-1} ref={heading}>{AMM.reading.lettersTitle}</h2></div><p>{AMM.reading.lettersDescription}</p></header>
       {letters === null ? <p role="status">Opening the archive…</p> : letters.length > 0 ? <>
-        <ol className="amm-edition-grid" aria-label="AMM letters, newest first">{letters.slice((page - 1) * SIZE, page * SIZE).map(edition => <li key={edition.id}><AmmEditionCard edition={edition} /></li>)}</ol>
+        <ol className="amm-edition-grid" aria-label="Earlier AMM writing, newest first">{letters.slice((page - 1) * SIZE, page * SIZE).map(edition => <li key={edition.id}><AmmEditionCard edition={edition} /></li>)}</ol>
         {pages > 1 && <nav className="amm-pagination" aria-label="AMM archive pages">{page > 1 ? <Link to={`/amm/editions?page=${page - 1}#amm-letters`}>Newer letters</Link> : <span />}<span>Page {page} of {pages}</span>{page < pages ? <Link to={`/amm/editions?page=${page + 1}#amm-letters`}>Older letters</Link> : <span />}</nav>}
         {page === pages && !failed && <p className="amm-end">You’ve reached the end of the archive.</p>}
       </> : !failed && <div className="amm-empty"><AmmMark /><div><h3>{AMM.emptyTitle}</h3><p>{AMM.emptyDescription}</p><a className="amm-text-link" href="#amm-subscribe">Receive the next edition <ArrowRight aria-hidden="true" /></a></div></div>}

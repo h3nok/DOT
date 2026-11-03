@@ -81,10 +81,10 @@ test('the hero separates its artwork and copy and offers one wide reading action
   await expect(page.getByRole('heading', { level: 2, name: AMM.home.overviewTitle })).toBeInViewport();
   await expect(page.locator('#amm-overview .amm-overview-claim')).toHaveText(AMM.home.overviewClaim);
   const source = page.locator('.amm-overview-source').getByRole('link', { name: AMM.home.overviewSource, exact: true });
-  await expect(source).toHaveAttribute('href', '/essays/amm-chapter-two-the-leechs-anatomy');
+  await expect(source).toHaveAttribute('href', '/essays/amm-book-chapter-one-the-leech');
   await source.focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { level: 1, name: 'Chapter Two: The Leech’s Anatomy' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Chapter One: The Leech — The Attitude of Dominance' })).toBeVisible();
   await page.goBack();
   await expect(page.getByRole('heading', { level: 2, name: AMM.home.overviewTitle })).toBeInViewport();
 });
@@ -146,12 +146,12 @@ test('published opening, concept and chapter wording reaches the public page', a
     'amm.home.concepts.fear.argument': 'Published author argument about fear.',
     'amm.home.concepts.fear.source': 'Published chapter source.',
     'amm.home.scenealt': 'Published description of the Host at home.',
-    'amm.chaptersection.chapters.amm-chapter-two-the-leechs-anatomy.line': 'Published Chapter Two introduction.',
+    'amm.chaptersection.chapters.amm-book-chapter-two-the-anatomy-of-dominance.line': 'Published Chapter Two introduction.',
   } } }));
   await page.goto('/amm');
   await expect(page.locator('.amm-home-premise')).toHaveText('Published author introduction.');
   await expect(page.locator('#amm-overview .amm-overview-claim')).toHaveText('Published author statement of the central argument.');
-  await expect(page.locator('.amm-overview-source').getByRole('link', { name: 'Chapter One · Published overview source.', exact: true })).toHaveAttribute('href', '/essays/amm-chapter-one-the-leech');
+  await expect(page.locator('.amm-overview-source').getByRole('link', { name: 'Chapter One · Published overview source.', exact: true })).toHaveAttribute('href', '/essays/amm-book-chapter-one-the-leech');
   await expect(page.getByText('Published author revision of fear.')).toBeVisible();
   await expect(page.getByText('Published Chapter Two introduction.')).toBeVisible();
   const step = page.locator('#amm-overview .explainer-story-steps > li').nth(1);
@@ -163,7 +163,7 @@ test('published opening, concept and chapter wording reaches the public page', a
   await expect(page.locator('.amm-everyday-art img')).toHaveAttribute('alt', 'Published description of the Host at home.');
 });
 
-test('the introduction leads into the three chapters with clear reading actions and times', async ({ page }) => {
+test('the introduction leads into the four working chapters with clear reading actions and times', async ({ page }) => {
   await page.goto('/amm');
   await expect(page.locator('.amm-home-sections > section')).toHaveCount(1);
   await expect(page.getByRole('navigation', { name: 'On this page' })).toHaveCount(0);
@@ -171,17 +171,18 @@ test('the introduction leads into the three chapters with clear reading actions 
   const book = page.locator('#amm-start');
   await expect(book.getByRole('heading', { level: 2 })).toHaveText(AMM.chapterSection.title);
   const parts = book.locator('.amm-part');
-  await expect(parts).toHaveCount(3);
-  await expect(parts.locator('.amm-part-name')).toHaveText(['The Leech', 'The Leech’s Anatomy', 'The Host and the Infection']);
-  for (let index = 0; index < 3; index++) {
+  await expect(parts).toHaveCount(4);
+  await expect(parts.locator('.amm-part-name')).toHaveText(['The Leech — The Attitude of Dominance', 'The Anatomy of Dominance', 'The Host and the Infection', 'Authorship Without Dominance']);
+  for (let index = 0; index < 4; index++) {
     await expect(parts.nth(index).locator('.amm-part-line')).toHaveText(AMM.chapterSection.chapters[index].line);
     await expect(parts.nth(index).getByRole('link')).toHaveCount(1);
     await expect(parts.nth(index).locator('.amm-part-time')).toContainText(/\d+ min read/);
+    await expect(parts.nth(index).locator('.amm-part-note')).toContainText('Pending line editing');
   }
   const start = book.getByRole('link', { name: AMM.introduction.label, exact: true });
   await start.focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { level: 1, name: 'Chapter One: The Leech' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Chapter One: The Leech — The Attitude of Dominance' })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 

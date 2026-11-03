@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 import AMM from "../../content/amm.json";
 import { AMM_PARTS } from "./ammReading";
 
-const chapters = import.meta.glob<string>("../../content/essays/amm-chapter-*.md", { query: "?raw", import: "default", eager: true });
+const chapters = import.meta.glob<string>("../../content/essays/amm-book-chapter-*.md", { query: "?raw", import: "default", eager: true });
 
 // The chapter a source line names, as published, without Markdown emphasis.
 const chapterText = (source: string) => {

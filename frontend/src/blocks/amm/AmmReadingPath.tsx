@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
 import { useAmmContent } from "../../content/editable/useAmmContent";
 import { fetchEssayIndex } from "../../content/essays/essays";
 import MEDIA from "../../content/amm-media.json";
@@ -30,7 +30,7 @@ export function AmmReadingPath({ id }: { id: string }) {
   const AMM = useAmmContent();
   const minutes = useChapterMinutes();
   return <section className="amm-path-section amm-book" id={id} tabIndex={-1} aria-labelledby={`${id}-title`}>
-    <header className="amm-book-heading"><h2 id={`${id}-title`} data-reveal>{AMM.chapterSection.title}</h2><p data-reveal="1">{AMM.chapterSection.description}</p></header>
+    <header className="amm-book-heading"><h2 id={`${id}-title`} data-reveal>{AMM.chapterSection.title}</h2><div className="amm-book-introduction" data-reveal="1"><p className="amm-book-status">{AMM.manuscript.status}</p><p>{AMM.chapterSection.description}</p><a className="amm-text-link" href={AMM.manuscript.href} download={AMM.manuscript.filename}><Download aria-hidden="true" />{AMM.manuscript.label}</a></div></header>
     <ol className="amm-path" aria-label="The manifesto, in reading order">
       {AMM_PARTS.map((part, index) => {
         const line = AMM.chapterSection.chapters.find(chapter => chapter.id === part.slug)?.line;
@@ -42,6 +42,7 @@ export function AmmReadingPath({ id }: { id: string }) {
           </Link>}
           <div className="amm-part-text">
             <h3 id={`${id}-${part.slug}`} className="amm-part-title" data-reveal="1"><span className="amm-part-number">{part.label}</span> <span className="amm-part-name">{part.title}</span></h3>
+            <p className="amm-part-note" data-reveal="1">{part.note}</p>
             {line && <p className="amm-part-line" data-reveal="2">{line}</p>}
             <div className="amm-part-actions" data-reveal="3">
               <AmmButton variant={index === 0 ? "primary" : "secondary"} to={part.route} label={index === 0 ? AMM.introduction.label : part.action} endIcon={<ArrowRight />} />
@@ -51,7 +52,7 @@ export function AmmReadingPath({ id }: { id: string }) {
         </li>;
       })}
     </ol>
-    {/* The artwork is AI-generated; the page says so once. */}
+    {/* Keep the existing artwork's provenance visible. */}
     <p className="amm-path-credit">{AMM.artwork.caption}</p>
   </section>;
 }

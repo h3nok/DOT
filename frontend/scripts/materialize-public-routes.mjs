@@ -687,10 +687,10 @@ function ammSponsorHtml({ movement }) {
 
 /** The manifesto as a book (front page and archive): each chapter's full title, its own line, reading time and one way in. */
 function ammPathHtml(content, id, essays = []) {
-  return `<section id="${id}"><h2>${escapeHtml(content.chapterSection.title)}</h2><p>${escapeHtml(content.chapterSection.description)}</p><ol aria-label="The manifesto, in reading order">${AMM_PARTS.map((part, index) => {
+  return `<section id="${id}"><h2>${escapeHtml(content.chapterSection.title)}</h2><p>${escapeHtml(content.manuscript.status)}</p><p>${escapeHtml(content.chapterSection.description)}</p><p><a href="${escapeHtml(content.manuscript.href)}" download="${escapeHtml(content.manuscript.filename)}">${escapeHtml(content.manuscript.label)}</a></p><ol aria-label="The manifesto, in reading order">${AMM_PARTS.map((part, index) => {
     const line = content.chapterSection.chapters.find(chapter => chapter.id === part.slug)?.line;
     const minutes = essays.find(essay => essay.slug === part.slug)?.readingMinutes;
-    return `<li><h3>${escapeHtml(part.partLabel)}: ${escapeHtml(part.partTitle)}</h3>${line ? `<p>${escapeHtml(line)}</p>` : ""}<p>${link(`${ESSAYS_ROUTE}/${part.slug}`, index === 0 ? content.introduction.label : part.partAction)}${minutes ? ` · ${minutes} min read` : ""}</p></li>`;
+    return `<li><h3>${escapeHtml(part.partLabel)}: ${escapeHtml(part.partTitle)}</h3><p>${escapeHtml(part.partNote)}</p>${line ? `<p>${escapeHtml(line)}</p>` : ""}<p>${link(`${ESSAYS_ROUTE}/${part.slug}`, index === 0 ? content.introduction.label : part.partAction)}${minutes ? ` · ${minutes} min read` : ""}</p></li>`;
   }).join("")}</ol><p>${escapeHtml(content.artwork.caption)}</p></section>`;
 }
 
@@ -704,7 +704,7 @@ function ammHomeSceneHtml(group, id, home) {
 
 function ammReadingBarHtml(content, slug) {
   const part = AMM_PARTS.find(item => item.slug === slug);
-  return `<nav aria-label="Reading order"><p>${escapeHtml(part ? content.reading.orderLabel : content.reading.letterLabel)}${part ? ` · Part ${part.part} of ${AMM_PARTS.length} published` : ""}</p><ol>${AMM_PARTS.map(item => `<li>${item.slug === slug ? `<a href="${ESSAYS_ROUTE}/${item.slug}" aria-current="page">${escapeHtml(`${item.partLabel} · ${item.partTitle}`)}</a>` : ammPartLink(item)}</li>`).join("")}</ol></nav>`;
+  return `<nav aria-label="Reading order"><p>${escapeHtml(part ? content.reading.orderLabel : content.reading.letterLabel)}${part ? ` · Chapter ${part.part} of ${AMM_PARTS.length}` : ""}</p><ol>${AMM_PARTS.map(item => `<li>${item.slug === slug ? `<a href="${ESSAYS_ROUTE}/${item.slug}" aria-current="page">${escapeHtml(`${item.partLabel} · ${item.partTitle}`)}</a>` : ammPartLink(item)}</li>`).join("")}</ol></nav>`;
 }
 
 /** What follows the text: the next part in the author's order, then the two asks. */
