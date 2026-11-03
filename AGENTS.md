@@ -6,8 +6,8 @@
 
 ## What this project is
 
-An invite-only platform that **protects attention instead of selling it**. It starts as
-the founder's public profile and grows one trusted invitation at a time. The product
+An open, free membership platform that **protects attention instead of selling it**. It starts as
+the founder's public profile, with verified accounts and separate newsletter consent. The product
 philosophy is binding law, not vibes.
 
 **Read these, in order, before non-trivial work:**
@@ -51,6 +51,11 @@ not exist, either build it in `attention-os/` as a reusable module or say plainl
 did not — do not claim to have composed from primitives that are absent.
 
 ## Repo facts (save yourself time)
+
+- **Membership is now open and free when enabled**, per the founder's explicit
+  2026-11-03 decision in ADR-0059. This supersedes invitation-only account
+  admission; verified email, separate newsletter consent, and owner-only
+  publishing controls remain required.
 
 - Project root is `DOT/` (this folder). Frontend: `frontend/`, backend: `backend/`.
 - **Frontend entry is `src/AppOptimized.tsx`**, not `src/App.tsx` (consolidating — ADR-0005).

@@ -28,6 +28,7 @@ class ServiceSettings(pydantic_settings.BaseSettings):
 
     AUTH_ENABLED: bool = True
     AUTH_MODE: str = pydantic.Field(default="local_header", pattern="^(local_header|gateway|jwt)$")
+    OPEN_MEMBERSHIP_ENABLED: bool = False
     SERVICE_AUTH_SECRET: str = ""
     JWT_ISSUER: str = "dot-bff"
     JWT_AUDIENCE: str = "dot-orchestrator"

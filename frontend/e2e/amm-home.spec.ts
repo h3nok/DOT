@@ -73,8 +73,8 @@ test('the hero separates its artwork and copy and offers one wide reading action
     expect(button!.y).toBeGreaterThanOrEqual(picture!.y + picture!.height);
     expect(button!.width).toBeCloseTo(copy!.width, 0);
   }
-  await expect(page.locator('main .amm-eyebrow')).toHaveCount(0);
-  await expect(page.locator('main details')).toHaveCount(0);
+  await expect(hero.locator('.amm-eyebrow')).toHaveCount(0);
+  await expect(page.locator('#amm-overview details')).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
   await action.click();
   await expect(page).toHaveURL(/#amm-overview$/);

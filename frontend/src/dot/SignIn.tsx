@@ -10,6 +10,7 @@ interface SignInProps {
   onClose: () => void;
   /** Present when someone arrives through an invitation link. */
   inviteToken?: string;
+  membership?: boolean;
   /** Where to go once signed in. Defaults to reloading the current page. */
   onSignedIn?: () => void;
 }
@@ -19,6 +20,7 @@ export const SignIn: React.FC<SignInProps> = ({
   reducedMotion = false,
   onClose,
   inviteToken,
+  membership = false,
   onSignedIn,
 }) => {
   const { requestCode, verifyCode } = useAuth();
@@ -74,8 +76,8 @@ export const SignIn: React.FC<SignInProps> = ({
 
   return (
     <BloomSurface
-      kicker="private membership"
-      title={step === "code" ? "Enter your code" : inviteToken ? "Accept your invitation" : "Sign in"}
+      kicker={membership ? "Free membership" : "private membership"}
+      title={step === "code" ? "Enter your code" : inviteToken ? "Accept your invitation" : membership ? "Join or sign in" : "Sign in"}
       description={
         step === "email"
           ? "A one-time code will be sent to your email."
@@ -87,11 +89,12 @@ export const SignIn: React.FC<SignInProps> = ({
       size="sm"
       onClose={onClose}
     >
+      {membership && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">Confirm your email to create or open your free account. Newsletter subscription is a separate choice. <a href="/privacy" className="underline">Privacy</a> · <a href="/terms" className="underline">Terms</a></p>}
       {step === "email" ? (
         // The keys keep each step's DOM separate. Reusing a button across steps would
         // turn "Use a different email" into a submit button in the middle of its click.
         <form key="email" onSubmit={handleRequestCode}>
-          {inviteToken && (
+          {(inviteToken || membership) && (
             <>
               <label className="mb-1.5 block text-xs text-muted-foreground" htmlFor="signin-name">
                 Your name (optional)
@@ -154,7 +157,7 @@ export const SignIn: React.FC<SignInProps> = ({
             </p>
           )}
           <button type="submit" disabled={busy || !code.trim()} className={submitClass}>
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{membership ? "Confirm membership" : "Sign in"} <ArrowRight className="h-4 w-4" /></>}
           </button>
           <button
             type="button"

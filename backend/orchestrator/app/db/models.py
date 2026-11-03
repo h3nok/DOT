@@ -56,12 +56,15 @@ class Member(Base, TimestampMixin):
     display_name: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(128)
     )
-    # active | suspended
+    # active | suspended | closed (a member's own departure)
     status: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), nullable=False, default="active", index=True
     )
     role: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(32), nullable=False, default="member"
+    )
+    session_version: sqlalchemy.orm.Mapped[int] = sqlalchemy.orm.mapped_column(
+        sqlalchemy.Integer, nullable=False, default=0, server_default="0"
     )
     invited_by: sqlalchemy.orm.Mapped[str | None] = sqlalchemy.orm.mapped_column(
         sqlalchemy.ForeignKey("members.id"), index=True

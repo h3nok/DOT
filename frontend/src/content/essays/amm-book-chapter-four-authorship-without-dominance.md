@@ -10,6 +10,8 @@ draft: false
 
 > Working book · Version 1.1 · November 3, 2026. Pending line editing.
 
+![A resolute person forces open a restrictive harness carrying the Leech, with disconnected control cords falling away.](amm-book-chapter-four-authorship-without-dominance/authorship-resolve-v1.webp "Figure 5. Taking your life seriously. A person opens a controlling harness carrying the Leech. The image represents the work of reclaiming agency; the Leech represents the attitude of dominance.")
+
 ## 1. A Different Meaning of Strength
 
 Recognizing the attitude of dominance does not by itself change the terms of a life. A person can understand an institution and still depend upon it tomorrow. They can recognize a habit and repeat it under pressure. They can criticize someone else's control while preserving an exemption for their own.
@@ -167,8 +169,6 @@ In public administration, the resident can be treated as someone entitled to und
 In a digital environment, the service can begin with what the person came to do and permit that purpose to end. It can make payment, data use, and exit clear. It can refuse to manufacture insecurity through constant comparison. Technical convenience becomes humane when it supports a life beyond the interface.
 
 These examples are applications of one standard, not a claim that every setting needs the same procedure. Each changes the experience through which people learn what authority permits. Each also gives the standard a material test. If nothing can change after a justified objection, the institution has not yet made answerability real.
-
-![Woven Mesob artwork from 4Us, accompanying the discussion of cooperation and shared capacity.](amm-book-chapter-four-authorship-without-dominance/shared-capacity-mesob.webp "Figure 5. Shared capacity. Mesob artwork from 4Us accompanies the discussion of building alternatives and keeping them answerable.")
 
 ## 10. Building Alternatives without a Founder's Exemption
 

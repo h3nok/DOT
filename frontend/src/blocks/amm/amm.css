@@ -153,6 +153,12 @@ body:has(.amm-shell) .organism-membrane { display: none; }
 :is(.amm-subscribe, .amm-end-signup) .reader-list-field { min-height: 48px; border-radius: 0; background: var(--background); }
 .amm-signup-foot { margin-top: 1.2rem; font-size: .65rem; line-height: 1.8; color: var(--muted-foreground); }
 .amm-signup-foot a { text-decoration: underline; }
+.amm-subscribe-note h2 { font: 500 clamp(2rem, 3vw, 3.2rem)/1.1 var(--font-serif); letter-spacing: -.03em; margin-block: .8rem 1.2rem; }
+.amm-subscribe-note p.amm-participation-description { font: .95rem/1.8 var(--font-sans); letter-spacing: normal; color: var(--muted-foreground); max-width: 46ch; }
+.amm-membership { margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: .5rem; font-size: .8rem; }
+.amm-membership summary { display: list-item; min-height: 44px; padding-block: .8rem; cursor: pointer; }
+.amm-membership p { max-width: 56ch; color: var(--muted-foreground); line-height: 1.8; margin-bottom: .75rem; }
+.amm-membership .amm-text-link { min-height: 44px; }
 .amm-footer { border-top: 1px solid var(--border); padding-block: 2rem; }
 .amm-footer-signature { display: flex; align-items: center; gap: 1rem; }
 .amm-footer-signature strong { font: 500 1.15rem/1.4 var(--font-serif); }

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { useAmmContent } from "../../content/editable/useAmmContent";
-import { ReaderListForm } from "../../dot/ReaderListForm";
+import { AmmMembershipLink, AmmReaderSignup } from "./AmmParticipation";
 import { AmmButton, AmmReadingLink } from "./AmmControls";
 import { AMM_PARTS, ammPart, nextAmmPart, previousAmmPart } from "./ammReading";
 import "./amm-reading.css";
@@ -41,10 +41,8 @@ export function AmmEditionEnd({ slug }: { slug?: string }) {
       {previous && <Link className="amm-text-link" to={previous.route}><ArrowLeft aria-hidden="true" />{previous.label} · {previous.title}</Link>}
     </nav>
     <section className="amm-end-signup" aria-label="Subscribe to AMM by email">
-      <ReaderListForm source="amm" publication="amm"
-        fallback={<p>AMM email signup is not open yet. <a href={AMM.feed}>Read with RSS</a> in the meantime.</p>}
-        unavailableFallback={<p role="alert">Email signup could not be reached. Please try again later. <a href={AMM.feed}>AMM RSS remains available.</a></p>}
-        loadingFallback={<p role="status">Opening signup…</p>} />
+      <AmmReaderSignup />
+      <AmmMembershipLink />
     </section>
     <section className="amm-end-support" aria-labelledby={`amm-support-${slug ?? "edition"}`}>
       <h2 id={`amm-support-${slug ?? "edition"}`}>{reading.supportTitle}</h2>

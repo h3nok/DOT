@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useAmmContent } from "../../content/editable/useAmmContent";
 import { fetchEssayIndex } from "../../content/essays/essays";
 import MEDIA from "../../content/amm-media.json";
@@ -30,7 +30,7 @@ export function AmmReadingPath({ id }: { id: string }) {
   const AMM = useAmmContent();
   const minutes = useChapterMinutes();
   return <section className="amm-path-section amm-book" id={id} tabIndex={-1} aria-labelledby={`${id}-title`}>
-    <header className="amm-book-heading"><h2 id={`${id}-title`} data-reveal>{AMM.chapterSection.title}</h2><div className="amm-book-introduction" data-reveal="1"><p className="amm-book-status">{AMM.manuscript.status}</p><p>{AMM.chapterSection.description}</p><a className="amm-text-link" href={AMM.manuscript.href} download={AMM.manuscript.filename}><Download aria-hidden="true" />{AMM.manuscript.label}</a></div></header>
+    <header className="amm-book-heading"><h2 id={`${id}-title`} data-reveal>{AMM.chapterSection.title}</h2><div className="amm-book-introduction" data-reveal="1"><p className="amm-book-status">{AMM.manuscript.status}</p><p>{AMM.chapterSection.description}</p></div></header>
     <ol className="amm-path" aria-label="The manifesto, in reading order">
       {AMM_PARTS.map((part, index) => {
         const line = AMM.chapterSection.chapters.find(chapter => chapter.id === part.slug)?.line;

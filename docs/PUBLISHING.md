@@ -15,12 +15,25 @@ contains captioned illustrations stored in its own asset directory. The Reader
 and private Studio import use these same text and image files. Earlier
 serialized editions keep their original text and reading addresses.
 
-The book section on `/amm` and `/amm/editions` also offers
-`/amm/american-millennial-manifesto-v1.1.md`: a complete illustrated Markdown
-snapshot, explicitly pending line editing. Its image links point to the same
-local, versioned assets served by the online chapters. Update that snapshot
-when preparing the next working edition; chapter revisions saved privately in
-Studio do not silently replace a downloadable edition.
+The complete illustrated Markdown snapshot is now withheld from the public
+site at the author's request. Its former download link and public file are
+removed. The working copy remains in the existing private manuscript directory;
+the online chapters stay open. A future reading-copy flow must check access on
+the server. Neither hiding a link nor a newsletter unsubscribe token constitutes
+authorization to download a manuscript.
+
+`/amm/membership` offers open free membership through verified email, under
+ADR-0059. Newsletter consent remains separate. The membership page includes
+profile export, sign-out, and account closure; manuscript downloads remain
+withheld pending their own access policy.
+
+`/studio/newsletter` links to the existing owner-only People desk for AMM
+subscribers and members. AMM email consent stays separate from membership.
+The discovery section reuses the released-writing tools for LinkedIn, Substack,
+and Medium copies, and exposes the sitemap and RSS addresses for search setup.
+Search-console verification and submission remain actions in the owner's search
+accounts. Publishing, sending a newsletter, and external posting are separate
+actions; no email or external post is sent merely by opening these tools.
 
 AMM has its own mark, navigation, color system and reading shell, including
 file-backed introductions and native Studio editions. Its analytical spine

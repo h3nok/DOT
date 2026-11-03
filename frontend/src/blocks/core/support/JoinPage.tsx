@@ -1,26 +1,6 @@
-import { useEffect } from "react";
-import { useReducedMotion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
-import { JoinSurface } from "../../../dot/JoinSurface";
+import { Navigate } from "react-router-dom";
 
 /**
- * The request-to-join ask as its own address, so it can be linked from the end
- * of the book, the steward node, or anywhere the reader has earned the ask.
+ * Preserve the old joining address after opening free verified membership.
  */
-export default function JoinPage() {
-  const navigate = useNavigate();
-  const reducedMotion = useReducedMotion() ?? false;
-
-  useEffect(() => {
-    document.title = "Request an invitation — Digital Organism Theory";
-  }, []);
-
-  return (
-    <JoinSurface
-      reducedMotion={reducedMotion}
-      titleAs="h1"
-      onClose={() => navigate("/", { replace: true })}
-    />
-  );
-}
+export default function JoinPage() { return <Navigate to="/amm/membership" replace />; }

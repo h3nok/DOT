@@ -41,6 +41,52 @@ def _set_session_cookie(response: fastapi.Response, token: str, *, max_age: int)
         response.headers["set-cookie"] += "; Partitioned"
 
 
+@router.get("/membership/status")
+async def membership_status(response: fastapi.Response) -> dict[str, bool]:
+    response.headers["Cache-Control"] = "no-store"
+    opened = app.settings.get_settings().OPEN_MEMBERSHIP_ENABLED
+    return {"open": opened, "available": opened and auth_service.email_delivery_available()}
+
+
+@router.get("/membership/me", response_model=schemas.MembershipProfile)
+async def membership_profile(
+    response: fastapi.Response,
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> schemas.MembershipProfile:
+    member = await session.get(app.db.models.Member, owner.owner_id)
+    if member is None:
+        raise fastapi.HTTPException(status_code=404, detail="Membership was not found.")
+    response.headers["Cache-Control"] = "no-store"
+    return schemas.MembershipProfile(
+        id=member.id,
+        display_name=member.display_name,
+        role=member.role,
+        status=member.status,
+        joined_at=member.created_at,
+    )
+
+
+@router.delete("/membership/me")
+async def leave_membership(
+    owner: app.auth.dependencies.OwnerContext = fastapi.Depends(
+        app.auth.dependencies.require_owner
+    ),
+    session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
+) -> fastapi.Response:
+    if not await auth_service.close_membership(session, owner.owner_id):
+        raise fastapi.HTTPException(
+            status_code=403, detail="This account cannot be closed through the member page."
+        )
+    response = fastapi.responses.JSONResponse(
+        {"status": "closed"}, headers={"Cache-Control": "no-store"}
+    )
+    _set_session_cookie(response, "", max_age=0)
+    return response
+
+
 @router.post("/otp/request", response_model=schemas.OtpRequestResponse)
 @_limiter.limit("5/minute")
 async def request_otp(
@@ -184,11 +230,13 @@ async def revoke_invite(
 
 @router.get("/members", response_model=schemas.MemberList)
 async def list_members(
+    response: fastapi.Response,
     _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
         app.auth.dependencies.require_steward
     ),
     session: sqlalchemy.ext.asyncio.AsyncSession = fastapi.Depends(app.db.session.get_session),
 ) -> schemas.MemberList:
+    response.headers["Cache-Control"] = "no-store"
     rows = await auth_service.list_members(session)
     return schemas.MemberList(members=[schemas.MemberOut(**row) for row in rows])
 

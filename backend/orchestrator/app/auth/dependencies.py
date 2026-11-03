@@ -18,6 +18,7 @@ class OwnerContext:
     actor_id: str
     role: str = "member"
     scopes: tuple[str, ...] = ()
+    session_version: int = 0
 
 
 ALGORITHM = "HS256"
@@ -112,11 +113,19 @@ def _verify_jwt_token(token: str, settings: app.settings.Settings) -> OwnerConte
         )
     actor_id: str = str(payload.get("sub") or owner_id).strip()
     scopes: tuple[str, ...] = tuple(str(s) for s in payload.get("scopes", []) if str(s).strip())
+    session_version = payload.get("session_version", 0)
+    if (
+        not isinstance(session_version, int)
+        or isinstance(session_version, bool)
+        or session_version < 0
+    ):
+        raise fastapi.HTTPException(status_code=401, detail="Invalid session version.")
     return OwnerContext(
         owner_id=owner_id,
         actor_id=actor_id,
         role=str(payload.get("role", "member")),
         scopes=scopes,
+        session_version=session_version,
     )
 
 

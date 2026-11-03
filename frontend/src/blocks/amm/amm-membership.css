@@ -1,0 +1,11 @@
+.amm-membership-page { max-width: 56rem; margin-inline: auto; padding-block: clamp(2rem, 6vw, 5rem); }
+.amm-membership-page h1 { font: 500 clamp(2.8rem, 6vw, 5rem)/1.05 var(--font-serif); letter-spacing: -.04em; margin-block: 1rem 1.5rem; }
+.amm-membership-page p { max-width: 62ch; font-size: 1rem; line-height: 1.85; color: var(--muted-foreground); margin-block: 1rem; }
+.amm-membership-page .dot-focus-nav, .amm-membership-entry { margin-block: 2rem; }
+.amm-membership-page a:not(.dot-button) { text-decoration: underline; text-underline-offset: .2em; }
+.amm-membership-page p.amm-membership-note { font-size: .85rem; }
+.amm-account-details { border-block: 1px solid var(--border); margin-top: 2rem; padding-block: .5rem; }
+.amm-account-details summary { min-height: 44px; cursor: pointer; padding-block: .75rem; }
+.amm-account-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1.5rem; }
+.amm-membership-close { border-top: 1px solid var(--border); padding-block: 1rem; }
+.amm-membership-close button { min-height: 44px; text-decoration: underline; text-underline-offset: .2em; }

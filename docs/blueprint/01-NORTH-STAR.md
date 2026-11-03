@@ -8,6 +8,10 @@
 
 ## 1. One-line vision
 
+**Current admission policy:** the founder chose open free verified membership
+on 2026-11-03 (ADR-0059). This supersedes the invitation-only admission language
+below; the attention laws and separate newsletter consent remain binding.
+
 > An invite-only home on the internet that **protects your attention instead of selling it** —
 > starting as the founder's profile, growing one trusted invitation at a time.
 

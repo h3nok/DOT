@@ -61,12 +61,20 @@ def _is_owner_email(email: str) -> bool:
     return email.strip().lower() in owner_emails()
 
 
+def _admission_error() -> str:
+    return (
+        "Sign-in is not available for this account."
+        if app.settings.get_settings().OPEN_MEMBERSHIP_ENABLED
+        else "Membership is by invitation."
+    )
+
+
 async def _can_sign_in(
     session: sqlalchemy.ext.asyncio.AsyncSession,
     email: str,
     invite_token: str | None = None,
 ) -> bool:
-    """Restrict production/staging sign-in to owners, existing members, or invite holders."""
+    """Verify admission policy without ever overriding an account suspension."""
     if _is_owner_email(email):
         return True
     email_hash = _hash_email(email)
@@ -75,6 +83,8 @@ async def _can_sign_in(
     )
     if existing is not None and existing.status == "suspended":
         return False
+    if app.settings.get_settings().OPEN_MEMBERSHIP_ENABLED:
+        return True
     if os.environ.get("ORCHESTRATOR_ENVIRONMENT", "development") not in {"production", "staging"}:
         return True
     if existing is not None:
@@ -100,6 +110,7 @@ def _mint_session_jwt(member: app.db.models.Member, email: str) -> str:
         "exp": now + _SESSION_TTL_SECONDS,
         # is_owner is informational; authorization uses role/scopes.
         "is_owner": _is_owner_email(email),
+        "session_version": member.session_version or 0,
     }
     return jwt.encode(payload, settings.SERVICE_AUTH_SECRET, algorithm=_ALGORITHM)
 
@@ -199,7 +210,7 @@ async def request_otp(
     if not await _can_sign_in(session, email, invite_token):
         return {
             "ok": False,
-            "error": "Membership is by invitation.",
+            "error": _admission_error(),
             "status": 403,
         }
 
@@ -213,6 +224,7 @@ async def request_otp(
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
+        .with_for_update()
     )
     if recent:
         elapsed: float = (now - recent.created_at.replace(tzinfo=datetime.UTC)).total_seconds()
@@ -274,7 +286,7 @@ async def verify_otp(
     if not await _can_sign_in(session, email, invite_token):
         return {
             "ok": False,
-            "error": "Membership is by invitation.",
+            "error": _admission_error(),
             "status": 403,
         }
 
@@ -288,6 +300,7 @@ async def verify_otp(
         )
         .order_by(app.db.models.OtpCode.created_at.desc())
         .limit(1)
+        .with_for_update()
     )
     if not record:
         return {"ok": False, "error": "Code expired. Request a new one.", "status": 400}
@@ -312,6 +325,8 @@ async def verify_otp(
     )
     if member:
         member.last_signed_in_at = now
+        if member.status == "closed":
+            member.status = "active"
         if display_name and not member.display_name:
             member.display_name = display_name
     else:
@@ -341,6 +356,30 @@ async def verify_otp(
             "is_owner": _is_owner_email(email),
         },
     }
+
+
+async def close_membership(session: sqlalchemy.ext.asyncio.AsyncSession, member_id: str) -> bool:
+    """End membership immediately; newsletter consent and owned work are separate."""
+    member = await session.get(app.db.models.Member, member_id)
+    if member is None or member.role != "member":
+        return False
+    # Match verification's lock order: code first, then member. Holding a
+    # member lock while waiting for its code could deadlock a concurrent login.
+    await session.execute(
+        sqlalchemy.update(app.db.models.OtpCode)
+        .where(
+            app.db.models.OtpCode.email_hash == member.email_hash,
+            app.db.models.OtpCode.purpose == "signin",
+            app.db.models.OtpCode.used_at.is_(None),
+        )
+        .values(used_at=_now_utc())
+    )
+    await session.refresh(member, with_for_update=True)
+    member.status = "closed"
+    member.session_version += 1
+    member.display_name = None
+    await session.commit()
+    return True
 
 
 # ── Invite issuance ───────────────────────────────────────────────────────────

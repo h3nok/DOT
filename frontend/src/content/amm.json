@@ -175,7 +175,15 @@
     }
   ],
   "signupTitle": "Subscribe to AMM.",
-  "signupDescription": "Receive AMM’s complete chapters and letters on money, power, culture, and the alternatives people can build. Confirm your address with a one-time code. Every edition is also free to read here.",
+  "signupDescription": "Receive new AMM writing and revisions: applying DOT to the patterns that shape our lives, the attitude of dominance, and the work of taking responsibility. Confirm your address with a one-time code.",
+  "participation": {
+    "eyebrow": "The AMM reader list",
+    "title": "Give your own life attention.",
+    "description": "Read closely. Examine what shapes you. Put the inquiry to work in your own life. Receive new writing and revisions when they are ready.",
+    "membershipTitle": "Free membership",
+    "membershipDescription": "Membership is open. Create an account with a verified email address. Newsletter subscription is a separate choice, and public reading remains available without an account.",
+    "membershipAction": "Join free"
+  },
   "emptyTitle": "The next chapter starts here.",
   "emptyDescription": "New AMM editions will be collected here as they are published. Subscribe to receive the next one.",
   "introduction": {
@@ -200,7 +208,7 @@
       }
     ],
     "alt": "A flag-patterned Host carries a two-headed Leech beside a phone-shaped mirror showing a healthy cow in a green landscape. A visual metaphor for the public, the attitude of dominance, and the image of prosperity.",
-    "caption": "Host and Leech illustrations are AI-generated, directed by the author. Mesob artwork from 4Us.",
+    "caption": "Host, Leech, and Chapter Four illustrations are AI-generated, directed by the author.",
     "description": "The Host represents the living public. The Leech represents an attitude of dominance that people can learn, organize, transmit, or resist. The mirror depicts the promise of prosperity. The image is a metaphor for these relationships.",
     "movementUrl": "https://sullix.com/venture"
   },
@@ -210,7 +218,7 @@
   },
   "chapterSection": {
     "title": "The first book manuscript.",
-    "description": "Four chapters apply DOT to dominance, institutional power, the Host and infection, and the possibility of revision. The illustrated online edition and Markdown copy are available for reading and line editing.",
+    "description": "Four chapters apply DOT to dominance, institutional power, the Host and infection, and the possibility of revision. The illustrated online edition is available for reading and line editing.",
     "chapters": [
       {
         "id": "amm-book-chapter-one-the-leech",
@@ -763,9 +771,6 @@
     ]
   },
   "manuscript": {
-    "href": "/amm/american-millennial-manifesto-v1.1.md",
-    "filename": "american-millennial-manifesto-v1.1.md",
-    "label": "Download the working manuscript (.md)",
     "status": "Working edition · Pending line editing"
   }
 }

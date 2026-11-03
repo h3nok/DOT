@@ -5,6 +5,7 @@ import AMM from "../../content/amm.json";
 import library from "../../content/amm-library.json";
 import { AmmButton } from "./AmmControls";
 import { AmmShell } from "./AmmIdentity";
+import { AmmDiscovery } from "./AmmDiscovery";
 import { fetchReleasedWriting, type ReleasedWriting } from "../../services/OrchestratorWritingService";
 import { approveNewsletter, cancelNewsletter, dispatchNewsletter, newsletterCampaigns, newsletterStatus, prepareNewsletter, retryRejectedNewsletter, type NewsletterCampaign, type NewsletterReadiness } from "../../services/OrchestratorNewsletterService";
 import { downloadText } from "../publication/writing/manuscriptFile";
@@ -27,6 +28,7 @@ export default function AmmStudioPage() {
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [discoveryOpen, setDiscoveryOpen] = useState(false);
   const running = useRef(false);
   const mounted = useRef(true);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; running.current = false; }; }, []);
@@ -88,6 +90,8 @@ export default function AmmStudioPage() {
     <div className="amm-studio-start"><AmmButton variant="primary" to="/studio/writing?series=amm" label="Write an AMM edition" endIcon={<ArrowRight />} /><AmmButton onClick={() => downloadText(TEMPLATE, "amm-edition.md")} label="Markdown template" icon={<Download />} /></div>
     <section className="amm-source-library" aria-labelledby="amm-edit-library"><h2 id="amm-edit-library">Pages & manuscripts</h2><p>The working book comes first, followed by earlier chapters and letters. Open a page or chapter to line edit, then save a private revision in Studio.</p><ul><li><Link to="/studio/pages/amm">AMM pages<span>Landing, archive, and signup <ArrowRight aria-hidden="true" /></span></Link></li>{library.map(item => <li key={item.slug}><Link to={`/studio/writing?series=amm&source=${item.slug}`}>{item.title}<span>{"part" in item && typeof item.part === "number" ? item.partNote : item.revision ? "Revision requested" : "Earlier writing · Text, images, and figures"} <ArrowRight aria-hidden="true" /></span></Link></li>)}</ul></section>
     {error && <p role="alert" className="writing-error">{error} <button className="writing-text-button" disabled={busy} onClick={() => setAttempt(value => value + 1)}>Reload desk</button></p>}
+    <section className="amm-studio-tool" aria-labelledby="amm-people-tools"><h2 id="amm-people-tools">Readers and members</h2><p>Email consent and free membership are separate relationships.</p><div className="amm-studio-start"><AmmButton to="/studio/people?view=subscribers&publication=amm" label="Manage AMM readers" /><AmmButton to="/studio/people?view=members" label="Manage free members" /></div></section>
+    <details className="amm-studio-tool" onToggle={event => setDiscoveryOpen(event.currentTarget.open)}><summary>Discovery and external editions</summary>{discoveryOpen && <AmmDiscovery releases={releases} />}</details>
     {!loaded && !error && <p role="status">Opening your publication desk…</p>}
     {loaded && <div className="amm-studio-columns"><section className="amm-studio-select"><h2>Choose the edition.</h2>{!releases.length ? <p>Your first AMM edition will appear here after you publish it from Writing Studio.</p> : <><label htmlFor="amm-release">Published AMM writing</label><select id="amm-release" value={selected} disabled={busy} onChange={event => setSelected(event.target.value)}><option value="">Choose a published edition</option>{releases.map(item => <option key={item.work_id} value={item.work_id}>{item.title} · Version {item.release_number}</option>)}</select><AmmButton disabled={!selected || busy} onClick={() => void prepare()} icon={<Eye />} label="Prepare email preview" /></>}
       <h3>Recent mailings</h3>{!history.length ? <p>No email editions prepared yet.</p> : <ul>{history.map(item => <li key={item.id}><button disabled={busy} aria-current={campaign?.id === item.id ? "true" : undefined} onClick={() => open(item)}>{item.title}<small>Version {item.release_number} · {item.cancelled_at ? "Cancelled" : item.approved_at ? "Approved mailing" : "Preview only"}</small></button></li>)}</ul>}

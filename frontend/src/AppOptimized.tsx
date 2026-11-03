@@ -96,6 +96,7 @@ const BlogPage = React.lazy(() => import("./blocks/blog/BlogPage"));
 const FilmsPage = React.lazy(() => import("./blocks/films/FilmsPage"));
 const AcademyPage = React.lazy(() => import("./blocks/academy/AcademyPage"));
 const AmmPublicationPage = React.lazy(() => import("./blocks/amm/AmmPublicationPage"));
+const AmmMembershipPage = React.lazy(() => import("./blocks/amm/AmmMembershipPage"));
 const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
 const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
 const AmmStudioPage = React.lazy(() => import("./blocks/amm/AmmStudioPage"));
@@ -266,6 +267,7 @@ const App: React.FC = () => {
                 <Route path="/amm/capital" element={<AmmMovedGuide />} />
                 <Route path="/amm/money/*" element={<AmmMovedGuide />} />
                 <Route path="/amm/editions" element={<AmmPublicationPage />} />
+                <Route path="/amm/membership" element={<AmmMembershipPage />} />
                 <Route path="/essays" element={<EssaysPage />} />
                 <Route path="/essays/:slug" element={<EssayPage />} />
                 {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}

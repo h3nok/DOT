@@ -37,6 +37,8 @@ function AmmFooter() {
       <div className="amm-footer-signature"><AmmMark /><div><strong>The American Millennial Manifesto</strong><p>Manifesto and writing by <Link to="/about">Henok Ghebrechristos</Link>.</p><p className="amm-footer-lineage"><Link to={dot.route}>{dot.footer}</Link> <a href={movement.href} rel="noopener">{movement.footer}</a></p></div></div>
       <nav aria-label="AMM footer">
         <Link to="/amm/editions">Editions</Link>
+        <Link to="/amm/editions#amm-subscribe">Reader list</Link>
+        <Link to="/amm/membership">Free membership</Link>
         <Link to="/contact?purpose=writing">Correspondence <ArrowUpRight aria-hidden="true" /></Link>
         <a href={AMM.feed}>RSS</a>
         <Link to="/privacy">Privacy</Link>

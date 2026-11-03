@@ -156,9 +156,9 @@ describe("public route metadata", () => {
     expect(publicPage.prerender).toContain(AMM.headline.join(" "));
     expect(publicPage.prerender).toContain(`<h2 id="amm-overview-title">${AMM.home.overviewTitle}</h2>`);
     expect(publicPage.prerender).not.toContain('<nav aria-label="On this page">');
-    // The reflection questions were removed; nothing on the home is hidden behind a disclosure.
+    // The argument stays readable without opening a disclosure.
     expect(publicPage.prerender).not.toContain('id="amm-concerns"');
-    expect(publicPage.prerender).not.toContain("<details>");
+    expect(publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-overview"'), publicPage.prerender.indexOf('id="amm-dot"'))).not.toContain("<details>");
     for (const concept of AMM.home.concepts) {
       expect(publicPage.prerender).toContain(concept.text);
       expect(publicPage.prerender).toContain(concept.script);
@@ -198,10 +198,15 @@ describe("public route metadata", () => {
     expect(book.indexOf("Chapter Two: The Anatomy of Dominance")).toBeLessThan(book.indexOf("Chapter Three: The Host and the Infection"));
     expect(book.indexOf("Chapter Three: The Host and the Infection")).toBeLessThan(book.indexOf("Chapter Four: Authorship Without Dominance"));
     expect(book).toContain(`>${AMM.introduction.label}</a>`);
-    expect(book).toContain(`href="${AMM.manuscript.href}" download="${AMM.manuscript.filename}"`);
+    expect(book).not.toContain("Download the working manuscript");
+    expect(existsSync(join(process.cwd(), "public/amm/american-millennial-manifesto-v1.1.md"))).toBe(false);
     expect(book).toContain(AMM.manuscript.status);
     expect(book).toContain("min read");
     expect(publicPage.prerender).not.toContain('class="amm-latest"');
+    expect(publicPage.prerender).toContain('id="amm-participate"');
+    expect(publicPage.prerender).toContain('href="/amm/membership"');
+    expect(publicPage.prerender).toContain(AMM.participation.membershipDescription);
+    expect(nodeOfType(publicPage, "Blog")?.hasPart).toEqual(AMM.chapterSection.chapters.map((chapter, index) => ({ "@type": "WebPage", name: `${["Chapter One", "Chapter Two", "Chapter Three", "Chapter Four"][index]}: ${["The Leech — The Attitude of Dominance", "The Anatomy of Dominance", "The Host and the Infection", "Authorship Without Dominance"][index]}`, url: `${SITE_URL}/essays/${chapter.id}/`, isAccessibleForFree: true })));
     // AMM reads as an application of DOT and a sponsor of 4Us: the theory before the book, the movement after it.
     const order = ['id="amm-overview"', 'id="amm-dot"', 'id="amm-start"', 'id="amm-sponsor"'].map(id => publicPage.prerender.indexOf(id));
     expect(order.every(index => index > 0)).toBe(true);

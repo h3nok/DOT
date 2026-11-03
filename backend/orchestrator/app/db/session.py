@@ -41,13 +41,17 @@ async def flag_suspended_session(
     context = app.auth.dependencies.resolve_session_optional(request)
     if context is None or context.role != "member":
         return
-    status = await session.scalar(
-        sqlalchemy.select(app.db.models.Member.status).where(
-            app.db.models.Member.id == context.owner_id
+    member_state = (
+        await session.execute(
+            sqlalchemy.select(
+                app.db.models.Member.status, app.db.models.Member.session_version
+            ).where(app.db.models.Member.id == context.owner_id)
         )
-    )
+    ).first()
     await session.rollback()
-    if status == "suspended":
+    if member_state is not None and (
+        member_state.status != "active" or member_state.session_version != context.session_version
+    ):
         request.state.session_suspended = True
 
 

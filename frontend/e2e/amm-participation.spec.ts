@@ -1,0 +1,98 @@
+import { expect, test } from "@playwright/test";
+import { expectNoHorizontalOverflow } from "./helpers";
+
+test.beforeEach(async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.route("**/v1/site-content", route => route.fulfill({ json: { blocks: {} } }));
+  await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
+  await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: true, publications: ["all", "amm"] } }));
+  await page.route("**/v1/auth/membership/status", route => route.fulfill({ json: { open: true, available: true } }));
+});
+
+test("AMM signup confirms publication-specific consent without creating membership", async ({ page }) => {
+  const subscriptions: unknown[] = [];
+  let membershipCalls = 0;
+  await page.route("**/v1/readers/subscribe", route => { subscriptions.push(route.request().postDataJSON()); return route.fulfill({ json: { status: "awaiting_confirmation", expires_in: 900 } }); });
+  await page.route("**/v1/readers/confirm", route => { expect(route.request().postDataJSON()).toEqual({ email: "reader@example.com", code: "123456", publication: "amm", include_all: false }); return route.fulfill({ json: { status: "subscribed", unsubscribe_token: "synthetic-amm-leave-token" } }); });
+  await page.route("**/v1/auth/otp/request", route => { membershipCalls++; return route.abort(); });
+  await page.goto("/amm");
+  const participation = page.locator("#amm-participate");
+  await expect(participation.getByRole("heading", { name: "Give your own life attention." })).toBeVisible();
+  await expect(participation.getByRole("checkbox")).not.toBeChecked();
+  await participation.getByLabel("Email address").fill("reader@example.com");
+  await participation.getByRole("button", { name: "Subscribe by email" }).click();
+  await participation.getByLabel("Confirmation code").fill("123456");
+  await participation.getByRole("button", { name: "Confirm", exact: true }).click();
+  await expect(participation.getByRole("heading", { name: "You’re subscribed to AMM." })).toBeVisible();
+  await expect(participation.getByRole("link", { name: "Unsubscribe", exact: true })).toHaveAttribute("href", "/readers/leave?publication=amm#synthetic-amm-leave-token");
+  expect(subscriptions).toEqual([{ email: "reader@example.com", source: "amm", publication: "amm", include_all: false }]);
+  expect(membershipCalls).toBe(0);
+  await expectNoHorizontalOverflow(page);
+});
+
+test("free membership verifies an account without newsletter consent and offers departure", async ({ page }) => {
+  let loggedIn = false;
+  let readerSubscriptions = 0;
+  let closures = 0;
+  const member = { id: "fixture-member", role: "member", display_name: "Reader", is_owner: false };
+  await page.route("**/v1/auth/session", route => route.fulfill({ json: { user: loggedIn ? member : null } }));
+  await page.route("**/v1/readers/subscribe", route => { readerSubscriptions++; return route.abort(); });
+  await page.route("**/v1/auth/otp/request", route => route.fulfill({ json: { expires_in: 600 } }));
+  await page.route("**/v1/auth/otp/verify", route => { expect(route.request().postDataJSON()).toEqual({ email: "member@example.com", code: "123456", display_name: "Reader" }); loggedIn = true; return route.fulfill({ json: { user: member } }); });
+  await page.route("**/v1/auth/membership/me", route => { expect(route.request().method()).toBe("DELETE"); closures++; loggedIn = false; return route.fulfill({ json: { status: "closed" } }); });
+  await page.goto("/amm/editions#amm-subscribe");
+  const participation = page.locator("#amm-subscribe");
+  await participation.locator("summary", { hasText: "Free membership" }).click();
+  await participation.getByRole("link", { name: "Join free", exact: true }).click();
+  await expect(page).toHaveURL(/\/amm\/membership\/?$/);
+  await page.getByRole("button", { name: "Join or sign in", exact: true }).click();
+  await page.getByLabel("Your name (optional)").fill("Reader");
+  await page.getByLabel("Email address", { exact: true }).fill("typo@example.com");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Use a different email" }).click();
+  await page.getByLabel("Email address", { exact: true }).fill("member@example.com");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByLabel("One-time code").fill("123456");
+  await page.getByRole("button", { name: "Confirm membership", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Your free membership." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Read the working book" })).toBeVisible();
+  expect(readerSubscriptions).toBe(0);
+  await page.getByText("Account and privacy", { exact: true }).click();
+  await expect(page.getByRole("button", { name: "Export membership details" })).toBeVisible();
+  await page.getByRole("button", { name: "Leave free membership" }).click();
+  expect(closures).toBe(0);
+  await page.getByRole("button", { name: "Keep membership" }).click();
+  expect(closures).toBe(0);
+  await page.getByRole("button", { name: "Leave free membership" }).click();
+  await page.getByRole("button", { name: "Close membership", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Your free membership is closed");
+  expect(closures).toBe(1);
+  expect(readerSubscriptions).toBe(0);
+  await expectNoHorizontalOverflow(page);
+});
+
+test("the newsletter desk reaches existing people management and discovery tools", async ({ page }) => {
+  await page.route("**/v1/auth/session", route => route.fulfill({ json: { user: { id: "owner", role: "owner", display_name: "Fixture", is_owner: true } } }));
+  await page.route("**/v1/newsletters/status", route => route.fulfill({ json: { ready: false, reason: "Sender setup needed.", missing: [] } }));
+  await page.route("**/v1/newsletters/campaigns", route => route.fulfill({ json: [] }));
+  let readerReads = 0;
+  const created = "2026-11-03T12:00:00Z";
+  await page.route("**/v1/readers", route => { readerReads++; return route.fulfill({ json: { readers: [{ id: "r1", email: "fixture-amm-reader@example.com", publication: "amm", confirmed_at: created }, { id: "r2", email: "fixture-other-reader@example.com", publication: "all", confirmed_at: created }] } }); });
+  await page.route("**/v1/auth/members", route => route.fulfill({ json: { members: [{ id: "m1", display_name: "Fixture member", role: "member", status: "active", invited_by: null, joined_at: created }] } }));
+  await page.goto("/studio/newsletter");
+  await expect(page.getByRole("heading", { name: "The newsletter.", exact: true })).toBeVisible();
+  expect(readerReads).toBe(0);
+  await page.getByText("Discovery and external editions", { exact: true }).click();
+  await expect(page.getByRole("link", { name: "Open Google Search Console" })).toHaveAttribute("href", "https://search.google.com/search-console");
+  await expect(page.getByRole("link", { name: "Open Bing Webmaster Tools" })).toHaveAttribute("href", "https://www.bing.com/webmasters/");
+  await expect(page.getByText(/Publish an AMM edition from Writing Studio/)).toBeVisible();
+  await page.getByRole("link", { name: "Manage AMM readers" }).click();
+  await expect(page.getByRole("heading", { name: "AMM subscribers", exact: true })).toBeVisible();
+  await expect(page.getByText("fixture-amm-reader@example.com", { exact: true })).toBeVisible();
+  await expect(page.getByText("fixture-other-reader@example.com", { exact: true })).toHaveCount(0);
+  await page.goto("/studio/newsletter");
+  await page.getByRole("link", { name: "Manage free members" }).click();
+  await expect(page.getByRole("heading", { name: "Members", exact: true })).toBeVisible();
+  await expect(page.getByText("Fixture member", { exact: true })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});

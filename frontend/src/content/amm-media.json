@@ -56,10 +56,10 @@
       "height": 1024
     },
     "amm-book-chapter-four-authorship-without-dominance": {
-      "src": "/work/4us/mesob.webp",
-      "srcset": "/work/4us/mesob.webp 1024w",
-      "width": 1024,
-      "height": 1536
+      "src": "/amm/media/authorship-resolve-v1-1024.webp",
+      "srcset": "/amm/media/authorship-resolve-v1-640.webp 640w, /amm/media/authorship-resolve-v1-1024.webp 1024w, /amm/media/authorship-resolve-v1-1536.webp 1536w",
+      "width": 1536,
+      "height": 1024
     }
   },
   "partSizes": "(min-width: 901px) 30vw, 100vw",

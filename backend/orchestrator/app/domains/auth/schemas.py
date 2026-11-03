@@ -37,6 +37,14 @@ class SessionResponse(pydantic.BaseModel):
     user: SessionUser | None
 
 
+class MembershipProfile(pydantic.BaseModel):
+    id: str
+    display_name: str | None
+    role: str
+    status: str
+    joined_at: datetime.datetime
+
+
 class InviteIssueResponse(pydantic.BaseModel):
     id: str
     token: str

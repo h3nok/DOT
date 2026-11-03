@@ -4,6 +4,10 @@
 - **Date:** 2026-08-15
 - **Deciders:** Founder
 
+[ADR-0059](0059-open-free-membership.md) subsequently opens free verified
+membership. Its account admission policy supersedes the invitation requirement
+below; separate newsletter consent and all reader-list protections remain binding.
+
 ## Context
 
 ADR-0001 makes growth invite-only and trust-gated, and ADR-0019 built the verified queue

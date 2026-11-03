@@ -216,5 +216,6 @@ def test_the_queue_requires_owner_write_scope_not_mere_membership(
 
     owner_read = client.get("/v1/join/requests")
     assert owner_read.status_code == 200
+    assert owner_read.headers["cache-control"] == "no-store"
     assert len(owner_read.json()["requests"]) == 1
     assert owner_read.json()["requests"][0]["email"] == "reader@example.com"

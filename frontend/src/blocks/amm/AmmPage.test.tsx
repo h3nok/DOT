@@ -28,8 +28,7 @@ it("shows the manuscript in reading order, then only other AMM releases in a fin
   expect(within(path).getAllByRole("link").map(link => link.getAttribute("href"))).toEqual(["/essays/amm-book-chapter-one-the-leech", "/essays/amm-book-chapter-two-the-anatomy-of-dominance", "/essays/amm-book-chapter-three-the-host-and-the-infection", "/essays/amm-book-chapter-four-authorship-without-dominance"]);
   expect(within(path).getByRole("link", { name: AMM.introduction.label })).toHaveAttribute("href", "/essays/amm-book-chapter-one-the-leech");
   for (const chapter of AMM.chapterSection.chapters) expect(within(path).getByText(chapter.line)).toBeVisible();
-  expect(screen.getByRole("link", { name: AMM.manuscript.label })).toHaveAttribute("href", AMM.manuscript.href);
-  expect(screen.getByRole("link", { name: AMM.manuscript.label })).toHaveAttribute("download", AMM.manuscript.filename);
+  expect(screen.queryByRole("link", { name: /Download the working manuscript/i })).toBeNull();
   expect(screen.getByText(AMM.manuscript.status)).toBeVisible();
   expect(screen.queryByText("Other essay")).toBeNull();
   expect(screen.getByText("You’ve reached the end of the archive.")).toBeVisible();

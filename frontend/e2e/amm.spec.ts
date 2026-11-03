@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { readFile } from "node:fs/promises";
 import { expectNoHorizontalOverflow } from "./helpers";
 import AMM from '../src/content/amm.json' with { type: 'json' };
 
@@ -114,7 +113,8 @@ test("the landing has one reading action and keeps chapter and archive bookmarks
   await page.goto("/amm");
   await expect(page.locator(".amm-hero-actions .amm-button")).toHaveCount(1);
   await expect(page.locator(".amm-chapters")).toHaveCount(0);
-  await expect(page.locator(".amm-analysis, .amm-principle, .amm-editions, .amm-movement, .amm-subscribe, .amm-end-support")).toHaveCount(0);
+  await expect(page.locator(".amm-analysis, .amm-principle, .amm-editions, .amm-movement, .amm-end-support")).toHaveCount(0);
+  await expect(page.locator("#amm-participate.amm-subscribe")).toHaveCount(1);
   // The finite home leads from its key ideas into the four-chapter working book.
   await expect(page.getByRole("list", { name: "The manifesto, in reading order" })).toHaveCount(1);
   await expect(page.getByRole('link', { name: 'Start with Chapter One', exact: true })).toHaveAttribute('href', AMM.introduction.route);
@@ -249,20 +249,13 @@ test("the working book keeps four chapters in order and preserves earlier editio
   await expect(page.getByRole("link", { name: "Begin the manifesto: The Leech — The Attitude of Dominance" })).toHaveAttribute("href", AMM.introduction.route);
 });
 
-test("the complete illustrated working manifesto can be downloaded for line editing", async ({ page }) => {
+test("the working manifesto has no public manuscript download", async ({ page, request }) => {
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
   await page.goto("/amm");
-  const downloadLink = page.getByRole("link", { name: AMM.manuscript.label, exact: true });
   await expect(page.getByText(AMM.manuscript.status, { exact: true })).toBeVisible();
-  const downloadEvent = page.waitForEvent("download");
-  await downloadLink.click();
-  const download = await downloadEvent;
-  expect(download.suggestedFilename()).toBe(AMM.manuscript.filename);
-  const content = await readFile((await download.path())!, "utf8");
-  expect(content).toContain("Working edition — pending line editing.");
-  expect(content).not.toContain("Private draft for editorial review.");
-  for (const chapter of ["One", "Two", "Three", "Four"]) expect(content).toContain(`## Chapter ${chapter}:`);
-  expect(content.match(/!\[[^\]]+\]\(https:\/\/dotheory\.org\/essay-media\//g)).toHaveLength(5);
+  await expect(page.getByRole("link", { name: /Download the working manuscript/i })).toHaveCount(0);
+  const previousDownload = await request.get("/amm/american-millennial-manifesto-v1.1.md");
+  expect(await previousDownload.text()).not.toContain("## Chapter One:");
 });
 
 for (const [slug, count] of [
@@ -285,6 +278,10 @@ for (const [slug, count] of [
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
     await expect(image).toHaveCSS("border-top-width", "0px");
     await expect(figure.locator("figcaption")).toContainText(/Figure [1-5]\./);
+    if (slug.includes("chapter-four")) {
+      await expect(image).toHaveAttribute("src", /authorship-resolve-v1\.webp$/);
+      await expect(figure.locator("figcaption")).toContainText("Taking your life seriously");
+    }
   }
   await expectNoHorizontalOverflow(page);
 });

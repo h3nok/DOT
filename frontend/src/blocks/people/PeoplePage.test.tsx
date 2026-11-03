@@ -35,6 +35,21 @@ describe("PeoplePage", () => {
     expect(service.fetchMembers).not.toHaveBeenCalled();
   });
 
+  it("scopes the AMM reader entry to AMM consent", async () => {
+    service.fetchSubscribers.mockResolvedValue([{ id: "r1", email: "amm@example.test", publication: "amm", confirmed_at: null }, { id: "r2", email: "general@example.test", publication: "all", confirmed_at: null }]);
+    open("subscribers&publication=amm");
+    expect(await screen.findByText("amm@example.test")).toBeVisible();
+    expect(screen.queryByText("general@example.test")).toBeNull();
+    expect(screen.getByRole("heading", { name: "AMM subscribers" })).toBeVisible();
+  });
+
+  it("identifies membership closed by its member without offering an administrative reversal", async () => {
+    service.fetchMembers.mockResolvedValue([member({ status: "closed" })]);
+    open("members");
+    expect(await screen.findByText(/Closed by member/)).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Suspend|Restore/ })).toBeNull();
+  });
+
   it("asks before removing a subscriber, then reloads the list", async () => {
     service.fetchSubscribers.mockResolvedValueOnce([{ id: "r1", email: "reader@example.test", publication: "all", confirmed_at: null }]).mockResolvedValueOnce([]);
     service.removeSubscriber.mockResolvedValue(undefined);

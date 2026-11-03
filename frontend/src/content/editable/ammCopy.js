@@ -32,7 +32,7 @@ export function ammCopyFields(content) {
   add('Chapters', 'chapterSection.title', 'Section heading');
   add('Chapters', 'chapterSection.description', 'Section introduction');
   add('Chapters', 'manuscript.status', 'Working edition status');
-  add('Chapters', 'manuscript.label', 'Markdown download label');
+  for (const field of Object.keys(content.participation)) add('Readers and membership', `participation.${field}`, words(field));
   content.chapterSection.chapters.forEach((chapter, index) => add('Chapters', `chapterSection.chapters.${index}.line`, `Chapter ${index + 1} — one line`, `chapterSection.chapters.${chapter.id}.line`));
   for (const [field, label] of Object.entries({ pathEyebrow: 'Reading path label', orderLabel: 'Orientation label', contentsLabel: 'Contents label', letterLabel: 'Letter orientation label', lettersEyebrow: 'Letters label', lettersTitle: 'Letters heading', lettersDescription: 'Letters introduction', nextLabel: 'Next part label', beginLabel: 'Begin label', latestNote: 'Latest part note' })) {
     add('Reading order', `reading.${field}`, label);

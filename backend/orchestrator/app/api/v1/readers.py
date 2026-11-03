@@ -101,6 +101,7 @@ async def remove_reader(
 
 @router.get("", response_model=schemas.ReaderList)
 async def read_list(
+    response: fastapi.Response,
     _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
         app.auth.dependencies.require_steward
     ),
@@ -112,5 +113,6 @@ async def read_list(
     the owner write scope rather than mere membership — the same bar the join
     queue sets.
     """
+    response.headers["Cache-Control"] = "no-store"
     rows = await readers_service.list_readers(session)
     return schemas.ReaderList(readers=[schemas.ReaderOut(**row) for row in rows])

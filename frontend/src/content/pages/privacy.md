@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated October 23, 2026.
+Last updated November 3, 2026.
 
 This site does not sell attention or data. There are no ads, no cross-site trackers, and no behavioural profiles. This page lists everything the site does handle, so that the promise can be checked.
 
@@ -34,6 +34,12 @@ You give an address only if you choose to: to send a contact message, join the r
 - **A request to join** keeps your encrypted address and the reason you gave, so that a person can answer you. Once answered, by invitation or not, the request and its address are deleted. Declining sends no email.
 - **Signing in** uses a one-time code. The site keeps your address's fingerprint, when you last signed in, and a session cookie that lasts seven days or until you sign out. Conversations with Minty while signed in are saved to your account until you delete them.
 
+## Free membership
+
+Membership is open and free. Confirming a sign-in code creates or opens your account; it does not subscribe you to email. Your display name is optional. Account details are private, and the owner’s member list does not expose your address or sign-in history.
+
+The [membership page](/amm/membership) lets you export your membership details, sign out, or close free membership. Closing removes your display name and ends existing member sessions, including sessions on other devices. The account record and one-way email fingerprint remain so you can rejoin after a fresh verification. Separately stored work and email subscriptions are retained; use their own controls or [request deletion](/contact?purpose=privacy). Closing membership does not silently change newsletter consent.
+
 ## Contact messages
 
 The [contact page](/contact) accepts project discussions, collaboration, writing, speaking, general messages, and privacy requests. No account is needed.
@@ -58,6 +64,7 @@ The site's server runs on Google Cloud, which keeps standard request logs (IP ad
 ## Your choices
 
 - Leave the reader list with the link in any message it sends.
+- Close free membership or export its details on the [membership page](/amm/membership).
 - To see or delete what the site holds about you, or to ask about anything on this page, use [Contact](/contact?purpose=privacy) or email **henok@sullix.com**.
 
 ## Changes

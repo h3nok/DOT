@@ -4,6 +4,10 @@
 - **Date:** 2026-06-11
 - **Deciders:** Founder
 
+Account admission was superseded by [ADR-0059](0059-open-free-membership.md)
+on 2026-11-03 at the founder's explicit request for open free membership.
+The ban on advertising, selling attention, and behavioral tracking remains binding.
+
 ## Context
 
 The product's entire premise (see `00-ATTENTION-MANIFESTO.md`) is to protect attention

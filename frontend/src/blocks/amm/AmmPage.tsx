@@ -9,6 +9,7 @@ import MEDIA from "../../content/amm-media.json";
 import { AmmFeature } from "./AmmFeature";
 import { AmmHomeOverview } from "./AmmHomeInquiry";
 import { AmmReadingPath } from "./AmmReadingPath";
+import { AmmParticipation } from "./AmmParticipation";
 import { AmmDotLineage, AmmSponsor } from "./AmmLineage";
 import { useReveal } from "../../attention-os/motion";
 import "../../attention-os/explainer/reading-scene.css";
@@ -51,6 +52,7 @@ export default function AmmPage() {
     </div>
     <AmmDotLineage />
     <AmmReadingPath id="amm-start" />
+    <AmmParticipation id="amm-participate" />
     <AmmSponsor />
   </div></AmmShell>;
 }

@@ -9,5 +9,16 @@
 .amm-source-library li a { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid var(--border); font-size: .9rem; }
 .amm-source-library li span { font-size: .7rem; color: var(--muted-foreground); }
 .amm-source-library svg { display: inline-block; }
+.amm-studio-tool { border-block: 1px solid var(--border); padding-block: .5rem; margin-bottom: 1.5rem; }
+.amm-studio-tool > summary { cursor: pointer; min-height: 44px; padding-block: .75rem; font-weight: 600; }
+.amm-discovery { padding-block: 1rem; }
+.amm-discovery p { margin-block: 1rem; color: var(--muted-foreground); font-size: .9rem; line-height: 1.8; max-width: 70ch; }
+.amm-discovery-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.amm-discovery-search, .amm-discovery-copies { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+.amm-discovery h3 { font: 500 1.3rem/1.3 var(--font-serif); }
+.amm-discovery dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem 1.25rem; font-size: .8rem; }
+.amm-discovery a { text-decoration: underline; text-underline-offset: .2em; }
+.amm-discovery-actions a { min-height: 44px; display: inline-flex; align-items: center; font-size: .85rem; }
+.amm-discovery-copies > label { display: block; font-size: .85rem; margin-top: 1rem; }
 .amm-source-library > p { font-size: .9rem; line-height: 1.6; margin-bottom: 1rem; color: var(--muted-foreground); }
 @media (max-width: 639px) { .amm-source-library li a { flex-direction: column; gap: .4rem; } }

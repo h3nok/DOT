@@ -3,7 +3,7 @@ import { authedFetch, type AuthedInit } from "./orchestratorHttp";
 
 export interface Subscriber { id: string; email: string | null; publication: string; confirmed_at: string | null }
 export interface JoinRequest { id: string; email: string | null; reason: string | null; created_at: string }
-export interface Member { id: string; display_name: string | null; role: string; status: "active" | "suspended"; invited_by: string | null; joined_at: string }
+export interface Member { id: string; display_name: string | null; role: string; status: "active" | "suspended" | "closed"; invited_by: string | null; joined_at: string }
 export interface Invitation { id: string; status: "open" | "accepted" | "revoked" | "expired"; accepted_by: string | null; created_at: string; expires_at: string }
 export interface SupportTotals { supporters: number; total_minor: number; currency: string }
 

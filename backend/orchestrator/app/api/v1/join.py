@@ -89,6 +89,7 @@ async def decline_request(
 
 @router.get("/requests", response_model=schemas.JoinQueue)
 async def read_queue(
+    response: fastapi.Response,
     _steward: app.auth.dependencies.OwnerContext = fastapi.Depends(
         app.auth.dependencies.require_steward
     ),
@@ -99,5 +100,6 @@ async def read_queue(
     Unsealing addresses is the single most sensitive read in the service, so it
     requires the owner write scope rather than mere membership.
     """
+    response.headers["Cache-Control"] = "no-store"
     rows = await join_service.list_requests(session)
     return schemas.JoinQueue(requests=[schemas.JoinRequestOut(**row) for row in rows])

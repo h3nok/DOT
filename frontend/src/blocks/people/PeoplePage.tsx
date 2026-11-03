@@ -83,8 +83,9 @@ function SubscriberRow({ item, onChange }: { item: Subscriber; onChange: () => v
   </Row>;
 }
 
-function Subscribers() {
-  const { data, error, reload } = useList(fetchSubscribers);
+function Subscribers({ ammOnly = false }: { ammOnly?: boolean }) {
+  const load = useCallback((signal: AbortSignal) => fetchSubscribers(signal).then(items => ammOnly ? items.filter(item => item.publication === "amm") : items), [ammOnly]);
+  const { data, error, reload } = useList(load);
   return <ListState data={data} error={error} empty="Nobody has confirmed a subscription yet.">{items => items.map(item => <SubscriberRow key={item.id} item={item} onChange={reload} />)}</ListState>;
 }
 
@@ -109,8 +110,9 @@ function Requests() {
 function MemberRow({ item, onChange }: { item: Member; onChange: () => void }) {
   const { busy, error, run } = useAction(onChange);
   const suspended = item.status === "suspended";
-  return <Row title={item.display_name ?? `Unnamed member …${item.id.slice(-6)}`} detail={`${item.role === "member" ? "Member" : "Owner"}${suspended ? " · Suspended" : ""} · Joined ${date(item.joined_at)}${item.invited_by ? ` · Invited by ${item.invited_by}` : ""}`} error={error}>
-    {item.role === "member" && (suspended
+  const closed = item.status === "closed";
+  return <Row title={item.display_name ?? `Unnamed member …${item.id.slice(-6)}`} detail={`${item.role === "member" ? "Member" : "Owner"}${suspended ? " · Suspended" : closed ? " · Closed by member" : ""} · Joined ${date(item.joined_at)}${item.invited_by ? ` · Invited by ${item.invited_by}` : ""}`} error={error}>
+    {item.role === "member" && !closed && (suspended
       ? <button type="button" className="contact-quiet-action" disabled={busy} onClick={() => void run(() => setMemberStatus(item.id, "active"))}>Restore access</button>
       : <ConfirmAction label="Suspend" question="Suspend this member? They are signed out now and cannot sign in until you restore them. Public reading stays open, and nothing they own is deleted." disabled={busy} onConfirm={() => void run(() => setMemberStatus(item.id, "suspended"))} />)}
   </Row>;
@@ -185,13 +187,14 @@ function Support() {
 export default function PeoplePage() {
   const [params] = useSearchParams();
   const view = VIEWS.find(item => item.id === params.get("view")) ?? VIEWS[0];
+  const ammOnly = view.id === "subscribers" && params.get("publication") === "amm";
   const [revision, setRevision] = useState(0);
   useEffect(() => { document.title = "People — Private workspace"; }, []);
   return <PageShell header={<PageHeader backTo="/studio" backLabel="Studio" />} className="contact-page contact-inbox">
-    <header className="contact-masthead"><p className="dot-label">Owner workspace</p><h1 className="dot-page-heading">{view.title}</h1><p>{view.lede}</p></header>
+    <header className="contact-masthead"><p className="dot-label">Owner workspace</p><h1 className="dot-page-heading">{ammOnly ? "AMM subscribers" : view.title}</h1><p>{ammOnly ? "Confirmed subscriptions to The American Millennial Manifesto." : view.lede}</p></header>
     <nav className="people-nav" aria-label="People">{VIEWS.map(item => <Link key={item.id} to={`?view=${item.id}`} aria-current={item.id === view.id ? "page" : undefined}>{item.title}</Link>)}</nav>
     <div key={`${view.id}-${revision}`}>
-      {view.id === "subscribers" && <Subscribers />}
+      {view.id === "subscribers" && <Subscribers ammOnly={ammOnly} />}
       {view.id === "requests" && <Requests />}
       {view.id === "members" && <Members />}
       {view.id === "invitations" && <Invitations />}

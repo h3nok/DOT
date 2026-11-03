@@ -171,6 +171,28 @@ private authoring sources and earlier editions retain their existing boundaries.
 Artwork remains still, locally served, and captioned; no newsletter is sent by
 website publication. This also serves L7 (portable text) and L9 (local media).
 
+The author subsequently withdrew the public Markdown download pending a
+membership or reader-request access policy. Remove both the public link and
+the static manuscript file; retain the working copy in the existing private
+authoring directory. Public chapters remain readable. Any later download gate
+must validate its own authorization server-side; newsletter confirmation and
+unsubscribe credentials do not confer membership or manuscript access.
+
+Chapter Four uses an original illustration of a person opening an external
+control harness carrying the Leech. Its caption identifies agency and the
+attitude of dominance, without representing the Leech as a person or mental
+illness. It replaces the borrowed 4Us image in the chapter and reading path.
+
+The first participation pass reuses verified AMM signup. The founder's explicit
+choice of open free membership is recorded in ADR-0059; reader consent and
+membership remain separate. The private newsletter desk links into the existing
+People desk and gains the existing released-writing distribution controls.
+It neither enrolls people nor emails, invites, or posts without an explicit
+action. Private list responses
+are marked `no-store`; public discovery uses canonical pages, chapter links,
+structured data, sitemap, and RSS. Search-account setup is not reported as
+completed automatically. This serves L1/L2/L3, L7, L9, L10, and L12, violating none.
+
 The author requested self-contained copies of two published chapters and two
 letters, and direct website editing. These and the supplied introduction form
 an explicit managed manuscript library. The initial Markdown files retain the
