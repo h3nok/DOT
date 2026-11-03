@@ -178,10 +178,11 @@ authoring directory. Public chapters remain readable. Any later download gate
 must validate its own authorization server-side; newsletter confirmation and
 unsubscribe credentials do not confer membership or manuscript access.
 
-Chapter Four uses an original illustration of a person opening an external
-control harness carrying the Leech. Its caption identifies agency and the
-attitude of dominance, without representing the Leech as a person or mental
-illness. It replaces the borrowed 4Us image in the chapter and reading path.
+Chapter Four retains the cattle and Leech visual sequence. At the author's
+direction, the free, alert cow represents people taking their own mental health
+and agency seriously. The detached Leech and opened collar remain visible;
+the Leech represents the attitude of dominance. The illustration and caption
+carry this meaning in both the chapter and its reading-path preview.
 
 The first participation pass reuses verified AMM signup. The founder's explicit
 choice of open free membership is recorded in ADR-0059; reader consent and

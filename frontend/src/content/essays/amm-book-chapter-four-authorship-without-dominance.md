@@ -10,7 +10,7 @@ draft: false
 
 > Working book · Version 1.1 · November 3, 2026. Pending line editing.
 
-![A resolute person forces open a restrictive harness carrying the Leech, with disconnected control cords falling away.](amm-book-chapter-four-authorship-without-dominance/authorship-resolve-v1.webp "Figure 5. Taking your life seriously. A person opens a controlling harness carrying the Leech. The image represents the work of reclaiming agency; the Leech represents the attitude of dominance.")
+![The flag-patterned Host steps forward, alert and unburdened, leaving the detached two-headed Leech, open collar, and disconnected tubes behind.](amm-book-chapter-four-authorship-without-dominance/authorship-host-care-v1.webp "Figure 5. Giving your own life attention. The Host's freedom represents people taking their own mental health and agency seriously. The Leech represents the attitude of dominance.")
 
 ## 1. A Different Meaning of Strength
 

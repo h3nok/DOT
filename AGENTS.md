@@ -112,6 +112,13 @@ did not — do not claim to have composed from primitives that are absent.
   Preserve sealed releases under ADR-0018; reconcile the book through a corrected
   edition rather than silently editing its released files.
 
+## AMM visual metaphors
+
+AMM artwork retains the cattle (Host) and Leech metaphors. The author clarified
+on 2026-11-03 that Chapter Four's free cow represents people taking their own
+mental health and agency seriously. Keep the cow recognizable and the Leech
+as the attitude of dominance throughout that visual sequence.
+
 ## Commands
 
 ```bash

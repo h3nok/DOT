@@ -30,7 +30,7 @@ test("AMM keeps frameless pictures without requesting video in reduced motion", 
   const path = page.getByRole("list", { name: "The manifesto, in reading order" });
   const artwork = path.locator(".amm-path-art img");
   await expect(artwork).toHaveCount(4);
-  const sources = [/\/amm\/media\/leech-\d+\.webp$/, /\/amm\/media\/host2-\d+\.webp$/, /\/amm\/media\/host-at-home-v1-\d+\.webp$/, /\/amm\/media\/authorship-resolve-v1-\d+\.webp$/];
+  const sources = [/\/amm\/media\/leech-\d+\.webp$/, /\/amm\/media\/host2-\d+\.webp$/, /\/amm\/media\/host-at-home-v1-\d+\.webp$/, /\/amm\/media\/authorship-host-care-v1-\d+\.webp$/];
   for (const [index, source] of sources.entries()) {
     const image = artwork.nth(index);
     await image.scrollIntoViewIfNeeded();

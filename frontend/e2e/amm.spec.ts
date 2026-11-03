@@ -279,8 +279,8 @@ for (const [slug, count] of [
     await expect(image).toHaveCSS("border-top-width", "0px");
     await expect(figure.locator("figcaption")).toContainText(/Figure [1-5]\./);
     if (slug.includes("chapter-four")) {
-      await expect(image).toHaveAttribute("src", /authorship-resolve-v1\.webp$/);
-      await expect(figure.locator("figcaption")).toContainText("Taking your life seriously");
+      await expect(image).toHaveAttribute("src", /authorship-host-care-v1\.webp$/);
+      await expect(figure.locator("figcaption")).toContainText("taking their own mental health and agency seriously");
     }
   }
   await expectNoHorizontalOverflow(page);
