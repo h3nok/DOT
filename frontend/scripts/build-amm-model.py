@@ -347,7 +347,7 @@ model["power"] = {
         "lines": [q(2, "Debt can become part of how a person interprets a supervisor's request. A threatened loss can make an otherwise visible refusal practically unavailable.", mark="refusal practically unavailable"), q(2, "The person is not free merely because a contract describes them as choosing.", mark="not free"), q(3, "Their dependence is part of the explanation, not evidence that they consented to the terms.", mark="not evidence that they consented")],
     },
     "concentrated": {
-        "lines": [q(1, "The Leech remains that behavior: wanting to dominate instead of to love. Extraction is one way it may become materially organized.", mark="wanting to dominate instead of to love"), q(1, "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.", mark="enforced dependence")],
+        "lines": [q(1, "The Leech remains that behavior: the tendency to dominate and to be dishonest. Extraction is one way it may become materially organized.", mark="the tendency to dominate and to be dishonest"), q(1, "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.", mark="enforced dependence")],
         "knowledge": q(2, "Dominance can arise where control of a method, credential, technical standard, or specialized language becomes a means of preventing effective challenge."),
         "records": {"state": "diu", "technology": "ftc"},
     },

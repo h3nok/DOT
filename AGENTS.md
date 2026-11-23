@@ -118,9 +118,11 @@ AMM artwork retains the cattle (Host) and Leech metaphors. The author clarified
 on 2026-11-03 that Chapter Four's free cow represents people taking their own
 mental health and agency seriously. Keep the cow recognizable and the Leech
 as the attitude of dominance throughout that visual sequence.
-On 2026-11-23 the author defined the Leech in his own words: a behavior, "wanting to
-dominate instead of to love", where the Inversion begins; "organized, protected, and
-repeated", and spotted by "the gap between what is said and what is done". Chapter One §1 restores his 9 October text; prefer "behavior" to "attitude" in
+On 2026-11-23 the author defined the Leech in his own words: a behavior, people's
+tendency to dominate and to be dishonest, "the infection of extractive tendencies",
+rooted in the West and its history of pillage; "organized, protected, and repeated",
+and spotted by "the gap between what is said and what is done". Not "instead of love":
+the author found that phrasing not literary. Chapter One §1 restores his 9 October text; prefer "behavior" to "attitude" in
 new copy, and follow his line edit chapter by chapter for the rest.
 
 ## Commands

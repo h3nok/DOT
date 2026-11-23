@@ -1,6 +1,6 @@
 ---
 title: "Chapter One: The Leech — The Attitude of Dominance"
-summary: "An application of DOT to the Leech, the behavior of wanting to dominate instead of to love: how fear, identification, and an uncivil cultural inheritance can make control seem necessary."
+summary: "An application of DOT to the Leech, the infection of extractive tendencies rooted in the West: how fear, identification, and an uncivil cultural inheritance can make control seem necessary."
 published: "2026-11-03"
 levels: [observation, model, hypothesis, speculation]
 concepts: [experience-loop, painting, intent, character, fear-gating, love]
@@ -22,7 +22,7 @@ That conditioning speaks in familiar instructions. Become someone. Get ahead. Se
 
 This book asks what happens when that instruction organizes how we see ourselves and one another. It examines the behavior through which security becomes a claim to control, achievement becomes a claim to superior standing, and institutions become instruments for protecting those claims against correction.
 
-I call that behavior **the Leech**: wanting to dominate instead of to love.
+I call that behavior **the Leech**: people's tendency to dominate and to be dishonest — the infection of extractive tendencies, rooted in the West and its history of pillage.
 
 The name refers only to that behavior. A person can adopt it, practice it, organize incentives around it, and revise it. A business or government can embody it in rules. Neither a person nor an institution becomes a different species by doing so. The metaphor must keep our attention on a relationship we can examine. It must never authorize treating people as parasites to be removed.
 
@@ -50,7 +50,7 @@ This book works primarily at the level of embodied life and its consequences. DO
 
 These distinctions matter. The Canvas is the capacity to carry a history; the Painting is how that history is organized. Character is neither the capacity nor the entire history. It is the pattern of response that history helps make available and familiar.
 
-Within this application of DOT, **the Leech is a behavior organized in the Painting, expressed through Intent, and stabilized in Character when domination is repeatedly chosen over love and reinforced.** Culture supplies possible lessons and the conditions under which they are learned. Institutions can give the attitude reach by protecting some choices and making others costly. The person remains responsible for the discretion they possess; the institution remains responsible for the conditions it imposes.
+Within this application of DOT, **the Leech is a behavior organized in the Painting, expressed through Intent, and stabilized in Character when domination is repeatedly chosen and reinforced.** Culture supplies possible lessons and the conditions under which they are learned. Institutions can give the attitude reach by protecting some choices and making others costly. The person remains responsible for the discretion they possess; the institution remains responsible for the conditions it imposes.
 
 That is the book's central argument. It makes dominance examinable as a process: acquired, interpreted, enacted, reinforced, transmitted, and sometimes revised. It does not require us to imagine an alien force entering an otherwise innocent public.
 
@@ -88,11 +88,11 @@ The ethical standard remains direct: every person has standing; power carries ob
 
 ## 1. What Is the Leech? How Do You Spot It?
 
-The Leech is not a race. It is not a people. It is a behavior — wanting to dominate instead of to love. That is where the Inversion begins for me. The behavior is organized, protected, and repeated. It may have a religious foundation. Anyone can become it. Anyone can be drawn to it. Anyone can resist it. A Leech is defined only by what it does — by its behavior.
+The Leech is not a race. It is not a people. It is a behavior: people's tendency to dominate and to be dishonest — the infection of extractive tendencies, rooted in the West and its history of pillage. That is where the Inversion begins for me. The behavior is organized, protected, and repeated. It may have a religious foundation. Anyone can become it. Anyone can be drawn to it. Anyone can resist it. A Leech is defined only by what it does — by its behavior.
 
 The Leech is not honest. It never has been. It presents itself as a defender of values, while carefully moving society toward oppression. This is not the work of a mindless parasite. This is deliberate. Layer by layer, institution by institution, the Leech tightens its grip. It uses deception as its primary tool. It hides behind admired faces. It speaks the language of love while practicing the craft of extraction. This is why I call it a Leech — because it feeds on the living while pretending to sustain them.
 
-![A two-headed mechanical Leech, used as a visual metaphor for the behavior of dominance.](amm-book-chapter-one-the-leech/attitude-of-dominance.webp "Figure 1. The Leech: wanting to dominate instead of to love, a behavior organized, protected, and repeated. Illustration directed by the author.")
+![A two-headed mechanical Leech, used as a visual metaphor for the behavior of dominance.](amm-book-chapter-one-the-leech/attitude-of-dominance.webp "Figure 1. The Leech: the infection of extractive tendencies, a behavior organized, protected, and repeated. Illustration directed by the author.")
 
 This pattern is old. It is, in the deepest sense, biblical. The scriptures are filled with warnings against those who "devour widows' houses and for a pretense make long prayers." The prophets did not rage against honest enemies; they raged against the ones who wore the robes of authority while grinding the face of the poor. The Leech is not a modern invention of finance or media. It is the same old wolf that has always haunted the human flock, updating only its costume. It is the gap between the righteous performance and the rotten heart. And that gap is as old as fallen man himself.
 
@@ -218,7 +218,7 @@ But the metaphor has limits. Payment is not automatically extraction. Intermedia
 
 To determine whether a relationship is extractive, we need to examine its contribution, terms, alternatives, distribution of risk, and mechanisms of correction. A high price alone does not answer every question. Neither does a signed agreement where refusal is practically unavailable.
 
-The Leech remains that behavior: wanting to dominate instead of to love. Extraction is one way it may become materially organized. Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions. Some yield little money. Some sacrifice money to preserve rank.
+The Leech remains that behavior: the tendency to dominate and to be dishonest. Extraction is one way it may become materially organized. Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions. Some yield little money. Some sacrifice money to preserve rank.
 
 This distinction keeps the analysis from collapsing into resentment of anyone who has more. It also keeps the analysis from overlooking domination where no obvious private fortune is involved. A public office can misuse dependence. A volunteer organization can become unanswerable. A family can organize its emotional life around one person's need to control.
 
