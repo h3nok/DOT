@@ -15,8 +15,8 @@ test("AMM signup confirms publication-specific consent without creating membersh
   await page.route("**/v1/readers/subscribe", route => { subscriptions.push(route.request().postDataJSON()); return route.fulfill({ json: { status: "awaiting_confirmation", expires_in: 900 } }); });
   await page.route("**/v1/readers/confirm", route => { expect(route.request().postDataJSON()).toEqual({ email: "reader@example.com", code: "123456", publication: "amm", include_all: false }); return route.fulfill({ json: { status: "subscribed", unsubscribe_token: "synthetic-amm-leave-token" } }); });
   await page.route("**/v1/auth/otp/request", route => { membershipCalls++; return route.abort(); });
-  await page.goto("/amm");
-  const participation = page.locator("#amm-participate");
+  await page.goto("/amm/editions");
+  const participation = page.locator("#amm-subscribe");
   await expect(participation.getByRole("heading", { name: "Give your own life attention." })).toBeVisible();
   await expect(participation.getByRole("checkbox")).not.toBeChecked();
   await participation.getByLabel("Email address").fill("reader@example.com");

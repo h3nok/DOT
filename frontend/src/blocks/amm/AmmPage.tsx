@@ -7,18 +7,19 @@ import { AmmShell } from "./AmmIdentity";
 import { AmmButton } from "./AmmControls";
 import MEDIA from "../../content/amm-media.json";
 import { AmmFeature } from "./AmmFeature";
-import { AmmHomeOverview } from "./AmmHomeInquiry";
-import { AmmReadingPath } from "./AmmReadingPath";
-import { AmmParticipation } from "./AmmParticipation";
-import { AmmDotLineage, AmmSponsor } from "./AmmLineage";
+import { AmmHomeScreens } from "./AmmHomeScreens";
+import { AmmMarked } from "./AmmScreens";
 import { useReveal } from "../../attention-os/motion";
 import "../../attention-os/explainer/reading-scene.css";
+import "./amm-home.css";
 
 /**
- * A finite front page read in one continuous scroll, one concept per screen: the claim,
- * what it does to the reader, the lines they were sold, the theory AMM applies (DOT),
- * the manifesto itself, then the movement it sponsors (4Us).
- * Each screen's content settles in once as the reader reaches it (Attention OS Reveal).
+ * The AMM home (the author, 2026-11-19): the opening shows the country lived in against
+ * the country described, the Inversion, carried by the painting, and gives the citizen the
+ * author's message. Its words are editable in Studio. Beneath it: what a stable society
+ * requires, the model (the Inversion, the Host, the Leech, its body today, how it feeds),
+ * and the book.
+ *
  * Reading never advances or loads more by itself (L1, L2, L3).
  * The public hero has one silent, pausable loop (ADR-0052).
  */
@@ -36,23 +37,18 @@ export default function AmmPage() {
     <section className="reading-scene amm-hero amm-hero--inquiry" aria-labelledby="amm-title">
       <div className="amm-hero-grid">
         <div className="amm-hero-copy">
-          <h1 id="amm-title" data-reveal>{AMM.headline[0]} <em>{AMM.headline[1]}</em></h1>
-          <p className="amm-home-premise" data-reveal="1">{AMM.home.premise}</p>
-        </div>
+          <h1 id="amm-title" className="amm-hero-title" data-reveal>{AMM.model.heroTitle}</h1>
+          {AMM.model.heroLine && <p className="amm-home-premise" data-reveal="1"><AmmMarked text={AMM.model.heroLine} /></p>}        </div>
         <div className="amm-hero-visual" data-reveal="2">
           <AmmFeature />
+          <p className="amm-hero-key">{AMM.model.mirrorKey}</p>
+          <p className="amm-art-disclosure">{AMM.reflect.disclosure}</p>
         </div>
-        <div className="amm-hero-actions">
-          <AmmButton variant="primary" href="#amm-overview" label={AMM.heroAction} endIcon={<ArrowRight />} />
+        <div className="amm-hero-actions" data-reveal="2">
+          <AmmButton variant="primary" to={AMM.introduction.route} label={AMM.heroAction} endIcon={<ArrowRight />} />
         </div>
       </div>
     </section>
-    <div className="amm-home-sections">
-      <AmmHomeOverview />
-    </div>
-    <AmmDotLineage />
-    <AmmReadingPath id="amm-start" />
-    <AmmParticipation id="amm-participate" />
-    <AmmSponsor />
+    <AmmHomeScreens />
   </div></AmmShell>;
 }

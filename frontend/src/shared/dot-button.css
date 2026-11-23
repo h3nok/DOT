@@ -64,8 +64,8 @@ html[data-contrast="high"] .dot-button {
 }
 
 .dot-button:focus-visible {
-  outline: 2px solid var(--foreground);
-  outline-offset: 4px;
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
 }
 
 .dot-button:focus-visible::before {
@@ -162,23 +162,25 @@ html[data-contrast="high"] .dot-button {
    and makes all feedback immediate, including children and pseudo elements. */
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .dot-button {
-    transition: background-color 180ms ease, box-shadow 220ms ease;
+    transition:
+      background-color var(--motion-quick, 160ms) var(--motion-ease, ease),
+      box-shadow var(--motion-base, 240ms) var(--motion-ease, ease);
   }
 
   html:not([data-motion="still"]) .dot-button__end-icon {
-    transition: background-color 180ms ease;
+    transition: background-color var(--motion-quick, 160ms) var(--motion-ease, ease);
   }
 
   html:not([data-motion="still"]) .dot-button::before {
-    transition: opacity 180ms ease;
+    transition: opacity var(--motion-quick, 160ms) var(--motion-ease, ease);
   }
 
   html:not([data-motion="still"]) .dot-button__copy strong {
-    transition: text-decoration-color 180ms ease;
+    transition: text-decoration-color var(--motion-quick, 160ms) var(--motion-ease, ease);
   }
 
   html:not([data-motion="still"]) .dot-button__end-icon > svg {
-    transition: transform 180ms ease;
+    transition: transform var(--motion-quick, 160ms) var(--motion-ease, ease);
   }
 
   html:not([data-motion="still"]) .dot-button[data-directional]:focus-visible .dot-button__end-icon > svg {

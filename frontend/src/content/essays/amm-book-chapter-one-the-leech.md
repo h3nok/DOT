@@ -10,13 +10,15 @@ draft: false
 
 > Working book · Version 1.1 · November 3, 2026. Pending line editing.
 
-## Before We Begin: A Life Is Being Shaped
+## Before We Begin
 
-You were born valuable before you produced anything.
+You are a living being shaped by your environment. Your worth was not earned by output. It preceded production. Whatever your culture has conditioned in you, your life carries intrinsic value.
 
-That sentence establishes the ethical starting point of this book. Your worth did not begin with a wage, a credential, a nationality, or someone else's permission. It does not increase when you command other people. It does not disappear when you need their care. A society can distribute responsibilities according to ability without distributing human dignity according to usefulness.
+That is the founding axiom of the American Millennial Manifesto. It is not a reward for productivity, conformity, or usefulness. It is the starting point.
 
-Much of our cultural instruction points elsewhere. Become someone. Get ahead. Secure your position. Make yourself indispensable. These messages can encourage useful effort. They can also teach a person to experience ordinary dependence as humiliation and another person's advance as a threat. A life becomes an examination whose passing grade keeps moving.
+Now the cultural diagnosis. In America, many people carry different civilizational inheritances. One dominant inheritance is the Western civilizational lineage, specifically, the white-European-descended cultural inheritance. This inheritance ties worth to output: to work, achievement, production, and measurable usefulness. That association is not human nature. It is inherited conditioning. It is one cultural lineage among many, and in America it has been powerful enough to present itself as universal.
+
+That conditioning speaks in familiar instructions. Become someone. Get ahead. Secure your position. Make yourself indispensable. These messages can encourage useful effort. They can also teach a person to experience ordinary dependence as humiliation and another person's advance as a threat. A life becomes an examination whose passing grade keeps moving.
 
 This book asks what happens when that instruction organizes how we see ourselves and one another. It examines the attitude through which security becomes a claim to control, achievement becomes a claim to superior standing, and institutions become instruments for protecting those claims against correction.
 

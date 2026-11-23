@@ -229,7 +229,7 @@ export default function HomePage() {
             <Link to="/privacy" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Privacy</Link>
             <Link to="/terms" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">Terms</Link>
             {!isOwner && (
-              // Membership is by invitation (ADR-0001); its sign-in stays quiet.
+              // Open, free membership (ADR-0059); member sign-in stays quiet in the colophon.
               <button
                 type="button"
                 onClick={() => setSignInOpen(true)}

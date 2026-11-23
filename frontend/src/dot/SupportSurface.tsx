@@ -2,9 +2,9 @@ import { ArrowUpRight, Check, Loader2 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { BloomSurface } from "./BloomSurface";
-import { DIRECT_SUPPORT_METHODS, DirectSupportSurface } from "./DirectSupportSurface";
+import { DirectSupportSurface } from "./DirectSupportSurface";
 import { SupportChoices } from "./SupportChoices";
-import { SUPPORT_PAYMENT_LINK } from "./supportLink";
+import { DIRECT_SUPPORT_METHODS, SUPPORT_PAYMENT_LINK } from "./supportLink";
 import { formatAmount, parseSupportAmount, useSupport } from "./useSupport";
 
 interface SupportSurfaceProps {

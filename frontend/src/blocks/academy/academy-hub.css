@@ -12,8 +12,8 @@
 }
 
 .academy-hub a:focus-visible {
-  outline: 2px solid var(--academy-hub-accent);
-  outline-offset: 4px;
+  outline: var(--focus-ring-width, 2px) solid var(--academy-hub-accent);
+  outline-offset: var(--focus-ring-offset, 4px);
 }
 
 .academy-hub-screen {
@@ -46,7 +46,7 @@
   font-family: var(--academy-hub-reading);
   font-size: clamp(2.25rem, 4.5vw, 3.75rem);
   font-weight: 600;
-  letter-spacing: -.025em;
+  letter-spacing: 0;
   line-height: 1.08;
   text-wrap: balance;
 }
@@ -111,6 +111,7 @@
   border: 1px solid var(--academy-hub-line);
   border-radius: 1rem;
   background: var(--academy-hub-surface);
+  box-shadow: var(--shadow-card, none);
 }
 
 .academy-hub-card {
@@ -125,7 +126,7 @@
   font-family: var(--academy-hub-reading);
   font-size: clamp(1.5rem, 2.4vw, 2.125rem);
   font-weight: 600;
-  letter-spacing: -.015em;
+  letter-spacing: 0;
   line-height: 1.15;
   text-wrap: balance;
 }
@@ -303,6 +304,7 @@
 
 .academy-hub :is(.academy-hub-card, .academy-hub-concept):is(:hover, :focus-visible) {
   border-color: var(--academy-hub-accent);
+  box-shadow: var(--shadow-card-hover, var(--shadow-card, none));
 }
 
 .academy-hub :is(.academy-hub-card, .academy-hub-concept):is(:hover, :focus-visible) :is(h2, h3),
@@ -337,7 +339,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]) .academy-hub :is(.academy-hub-card, .academy-hub-concept, .academy-hub-arrow) {
-    transition: border-color 180ms ease, transform 180ms ease;
+    transition: border-color var(--motion-quick, 180ms) ease, box-shadow var(--motion-quick, 180ms) ease, transform var(--motion-quick, 180ms) ease;
   }
 
   html:not([data-motion="still"]) .academy-hub :is(.academy-hub-card, .academy-hub-seams a):is(:hover, :focus-visible) .academy-hub-arrow {

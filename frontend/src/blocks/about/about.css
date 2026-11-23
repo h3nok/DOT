@@ -111,7 +111,7 @@
 .about-contact-address svg { width: 1rem; height: 1rem; flex: 0 0 auto; }
 .about-profiles { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin-top: .5rem; }
 .about-contact-note { margin-top: .75rem; font-size: .75rem; line-height: 1.8; color: var(--muted-foreground); }
-.about-page :is(a, summary):focus-visible { outline: 2px solid var(--foreground); outline-offset: 5px; border-radius: 2px; }
+.about-page :is(a, summary):focus-visible { outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground)); outline-offset: var(--focus-ring-offset, 3px); border-radius: 2px; }
 html[data-contrast="high"] .about-project-visual { background: var(--background); border-color: var(--foreground); }
 html[data-contrast="high"] .about-art-guide { opacity: .3; }
 html[data-contrast="high"] .about-movement-artwork { color: var(--foreground); background: var(--background); }

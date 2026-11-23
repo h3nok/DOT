@@ -1,0 +1,184 @@
+/*
+ * Your Infection (#crushing): set on the deeper band of the reader's own theme, light
+ * in light mode and dark in dark mode, reaching the window's edges like the other
+ * night scenes. Each movement holds a full screen: the surface (painting, and the
+ * turn from status to character), the turn (King's line about the reflex), the
+ * hollowing (faculties drained to their outlines, then the verdict), and the chain.
+ */
+.amm-infection {
+  --ember: color-mix(in oklab, var(--amm-rust) 16%, transparent);
+  position: relative;
+  display: grid;
+  scroll-margin-block-start: 4.5rem;
+  background: var(--band);
+  box-shadow: 0 0 0 100vmax var(--band);
+  clip-path: inset(0 -100vmax);
+}
+.amm-infection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: clamp(2rem, 5svh, 3.5rem);
+  background: linear-gradient(var(--amm-rust), transparent);
+}
+.amm-infection-surface {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  align-items: center;
+  padding-block: clamp(3.5rem, 8svh, 5.75rem) clamp(2rem, 4svh, 3.25rem);
+}
+@media (min-width: 960px) {
+  .amm-infection-surface { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr); }
+}
+.amm-infection-intro { display: grid; gap: .8rem; max-width: 42rem; min-width: 0; }
+.amm-infection-intro > .amm-screen-foot { margin-top: .35rem; padding-top: .55rem; border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent); }
+.amm-infection-title {
+  margin: 0;
+  font: 600 calc(clamp(2.1rem, 4.2vw, 3.25rem) * var(--scale))/1.06 var(--font-serif);
+  text-wrap: balance;
+}
+.amm-infection-title span { color: var(--amm-rust); }
+.amm-infection-label {
+  margin: 0;
+  font: 600 .85rem/1.25 var(--font-sans);
+  letter-spacing: 0;
+  color: var(--muted-foreground);
+}
+.amm-infection-surface-line {
+  margin: 0;
+  font: 400 calc(clamp(1.2rem, 1.75vw, 1.45rem) * var(--scale))/1.35 var(--font-serif);
+  color: var(--foreground);
+  text-wrap: pretty;
+}
+
+/* II. The hollowing: a calm, compact five-row ledger beneath the two-column surface. */
+.amm-infection-hollow {
+  display: grid;
+  gap: .85rem;
+  padding-block: clamp(1.5rem, 3svh, 2.5rem) clamp(3.75rem, 8svh, 6rem);
+}
+.amm-infection-hollow > .amm-infection-label { font-size: calc(clamp(1rem, 1.35vw, 1.15rem) * var(--scale)); color: var(--foreground); }
+.amm-hollow-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.amm-hollow {
+  display: grid;
+  gap: .35rem 2rem;
+  align-items: baseline;
+  padding-block: clamp(.75rem, 1.8svh, 1.15rem);
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  view-timeline: --amm-hollow block;
+}
+.amm-hollow:last-child { border-bottom: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); }
+@media (min-width: 800px) {
+  .amm-hollow { grid-template-columns: minmax(0, 1fr) minmax(12rem, 20rem); }
+  .amm-hollow-effect { text-align: right; }
+}
+.amm-hollow-word {
+  display: inline-grid;
+  min-width: 0;
+  font: 600 calc(clamp(1.65rem, 3.2vw, 2.5rem) * var(--scale))/1.08 var(--font-serif);
+  text-wrap: balance;
+}
+.amm-hollow-word > * { grid-area: 1 / 1; }
+.amm-hollow-outline {
+  color: transparent;
+  -webkit-text-stroke: max(1px, .016em) color-mix(in oklab, var(--foreground) 60%, transparent);
+}
+/* The substance: pale above, rust where it settles. The hollowed state is the default. */
+.amm-hollow-fill {
+  background: linear-gradient(180deg, var(--foreground) 50%, var(--amm-rust) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  clip-path: inset(80% 0 0 0);
+  pointer-events: none;
+  user-select: none;
+}
+.amm-hollow-effect {
+  font: italic 400 calc(clamp(1.12rem, 1.7vw, 1.4rem) * var(--scale))/1.25 var(--font-serif);
+  color: var(--amm-rust);
+}
+
+/*
+ * Scrolling is the only clock: a word arrives whole at the bottom of the screen and
+ * is drained by the time it passes the middle. Scrolling back refills it.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes amm-hollow-drain { from { clip-path: inset(0 0 0 0); } }
+    @keyframes amm-hollow-stroke { from { -webkit-text-stroke-color: transparent; } }
+    @keyframes amm-hollow-effect { from { opacity: .2; translate: 0 .6rem; } }
+    html:not([data-motion="still"]) .amm-hollow-fill {
+      animation: amm-hollow-drain linear both;
+      animation-timeline: --amm-hollow;
+      animation-range: entry 100% cover 60%;
+    }
+    html:not([data-motion="still"]) .amm-hollow-outline {
+      animation: amm-hollow-stroke linear both;
+      animation-timeline: --amm-hollow;
+      animation-range: entry 100% cover 60%;
+    }
+    html:not([data-motion="still"]) .amm-hollow-effect {
+      animation: amm-hollow-effect linear both;
+      animation-timeline: --amm-hollow;
+      animation-range: entry 100% cover 55%;
+    }
+  }
+}
+
+.amm-infection-verdict {
+  max-width: 24ch;
+  margin: clamp(2rem, 6svh, 3.5rem) 0 0;
+  font: 600 calc(clamp(1.7rem, 3.6vw, 2.8rem) * var(--scale))/1.12 var(--font-serif);
+  color: var(--foreground);
+  text-wrap: balance;
+}
+
+/* IV. The chain: how the condition travels. */
+.amm-infection-chain { display: grid; gap: 1rem; padding-block: 0 clamp(6rem, 14svh, 10rem); }
+.amm-infection-chain > .amm-infection-label { margin: 0; }
+.amm-chain { display: grid; gap: 2rem; margin: 0; }
+.amm-chain-step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: .3rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: .4rem;
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+.amm-chain-step--infection,
+.amm-chain-step--erosion {
+  background: color-mix(in oklab, var(--amm-rust) 14%, transparent);
+  box-shadow: inset 0 2px 0 var(--amm-rust);
+}
+.amm-chain-step dt { font: 600 .86rem/1.2 var(--font-sans); letter-spacing: 0; color: var(--amm-rust); }
+.amm-chain-step dd { margin: 0; font: 400 calc(1.02rem * var(--scale))/1.25 var(--font-serif); color: var(--foreground); }
+.amm-chain-step:not(:last-child)::after {
+  content: "↓";
+  position: absolute;
+  left: 50%;
+  bottom: -1rem;
+  translate: -50% 50%;
+  font: 600 1rem/1 var(--font-sans);
+  color: var(--amm-rust);
+}
+@media (min-width: 900px) {
+  .amm-chain { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5rem; }
+  .amm-chain-step:not(:last-child)::after {
+    content: "→";
+    left: auto;
+    right: -1.25rem;
+    top: 50%;
+    bottom: auto;
+    translate: 50% -50%;
+  }
+}
+
+@media (forced-colors: active) {
+  .amm-hollow-outline { color: CanvasText; -webkit-text-stroke: 0; }
+  .amm-hollow-fill { display: none; }
+  .amm-infection-injury-turn { color: CanvasText; background: none; }
+  .amm-infection-injury-erosion { color: CanvasText; border-color: CanvasText; }
+}

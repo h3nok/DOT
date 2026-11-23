@@ -49,4 +49,4 @@
 @media (max-width: 480px) { .amm-money-definitions dl { grid-template-columns: 1fr; gap: 1.75rem; } }
 .amm-money-poster { margin-block: .5rem 2rem; }
 .amm-money-poster img { width: 100%; height: auto; }
-.amm-money-poster figcaption { margin-top: .75rem; font: .62rem/1.7 var(--font-mono, monospace); color: var(--muted-foreground); }
+.amm-money-poster figcaption { margin-top: .75rem; font: .6875rem/1.7 var(--font-mono, monospace); color: var(--muted-foreground); }

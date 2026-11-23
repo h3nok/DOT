@@ -8,8 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   List,
-  Moon,
-  Sun,
   Type,
   X,
 } from "lucide-react";
@@ -18,6 +16,7 @@ import {
   getDoctrineNode,
   type DoctrineNode,
 } from "../../content/doctrine/doctrineData";
+import { AppearanceControl, useOrganism } from "../../organism";
 import { useTheme } from "../../shared/contexts/SimpleThemeContext";
 import { useSignalAccent } from "../../shared/hooks/useSignalAccent";
 import { useOwnerMode } from "../../dot/useOwnerMode";
@@ -29,7 +28,7 @@ import { SiteNav } from "../../shared/SiteNav";
 //
 // Resting surface = graph + single focus panel + quiet question input.
 // No ads, no feeds, no vanity metrics, no return-loop mechanics.
-// Light and dark are both first-class, driven by surface tokens.
+// Light and dark are both first-class, driven by shared Appearance tokens.
 
 const surfaceConfig = {
   accent: "#00a896",
@@ -38,59 +37,45 @@ const surfaceConfig = {
   motion: { settle: 0.5, appear: 0.4, focus: 0.46 },
 };
 
-// Token palette per theme. Every visible color resolves from here so the
-// surface renders legibly in both light and dark without hardcoded values.
-// The accent is the single user-selected signal color — never the shifting
-// organism accent — so the whole reading surface stays in one theme color.
+// Token palette derived from shared CSS theme and Appearance tokens so
+// changing theme, page tone, or signal color in Appearance updates the
+// surface cleanly without hardcoded hex overrides.
 const buildPalette = (isDark: boolean, accent: string): CSSProperties =>
   ({
-    "--surface-accent": accent,
+    "--surface-accent": `var(--organism-accent-strong, ${accent})`,
     "--surface-accent-soft":
       "color-mix(in oklch, var(--surface-accent) 22%, transparent)",
-    "--surface-bg": isDark ? "oklch(0.018 0 0)" : "oklch(0.982 0.006 205)",
-    "--surface-fg": isDark ? "oklch(0.96 0 0)" : "oklch(0.23 0.018 215)",
-    "--surface-body": isDark
-      ? "oklch(0.96 0 0 / 0.74)"
-      : "oklch(0.3 0.014 215 / 0.88)",
-    "--surface-muted": isDark
-      ? "oklch(0.96 0 0 / 0.45)"
-      : "oklch(0.38 0.014 215 / 0.58)",
-    "--surface-faint": isDark
-      ? "oklch(0.96 0 0 / 0.2)"
-      : "oklch(0.34 0.014 215 / 0.16)",
-    "--surface-panel": isDark
-      ? "oklch(0.09 0 0 / 0.82)"
-      : "oklch(0.998 0.003 205 / 0.9)",
-    "--surface-node": isDark
-      ? "oklch(0.12 0 0 / 0.72)"
-      : "oklch(0.996 0.004 205 / 0.86)",
-    "--surface-border": isDark
-      ? "color-mix(in oklch, var(--surface-accent) 30%, transparent)"
-      : "color-mix(in oklch, var(--surface-accent) 44%, transparent)",
-    "--surface-hairline": isDark
-      ? "oklch(0.96 0 0 / 0.12)"
-      : "oklch(0.32 0.014 205 / 0.12)",
-    "--surface-graph-line": isDark
-      ? "color-mix(in oklch, var(--surface-fg) 30%, transparent)"
-      : "color-mix(in oklch, var(--surface-fg) 42%, transparent)",
-    "--surface-node-border": isDark
-      ? "color-mix(in oklch, var(--surface-fg) 26%, transparent)"
-      : "color-mix(in oklch, var(--surface-fg) 34%, transparent)",
+    "--surface-bg": "var(--appearance-page-tone, var(--background))",
+    "--surface-fg": "var(--appearance-page-ink, var(--foreground))",
+    "--surface-body":
+      "color-mix(in oklab, var(--appearance-page-ink, var(--foreground)) 86%, var(--appearance-page-tone, var(--background)))",
+    "--surface-muted": "var(--muted-foreground)",
+    "--surface-faint":
+      "color-mix(in oklab, var(--appearance-page-ink, var(--foreground)) 18%, transparent)",
+    "--surface-panel":
+      "color-mix(in oklab, var(--appearance-page-tone, var(--background)) 92%, transparent)",
+    "--surface-node":
+      "color-mix(in oklab, var(--card, var(--background)) 88%, transparent)",
+    "--surface-border":
+      "color-mix(in oklch, var(--surface-accent) 36%, var(--border))",
+    "--surface-hairline":
+      "color-mix(in oklab, var(--appearance-page-ink, var(--foreground)) 14%, transparent)",
+    "--surface-graph-line":
+      "color-mix(in oklch, var(--surface-fg) 36%, transparent)",
+    "--surface-node-border":
+      "color-mix(in oklch, var(--surface-fg) 30%, transparent)",
     "--surface-shadow": isDark
       ? "0 28px 100px rgba(0,0,0,0.7)"
       : "0 28px 84px rgba(24,42,46,0.16)",
     "--surface-organism-shadow": isDark
       ? "0 0 calc(6px + var(--organism-glow, 0px)) var(--surface-accent-soft)"
       : "0 0 calc(4px + var(--organism-glow, 0px)) var(--surface-accent-soft)",
-    "--surface-card": isDark
-      ? "oklch(0.12 0 0 / 0.58)"
-      : "oklch(0.998 0.003 205 / 0.66)",
-    "--surface-scrollbar": isDark
-      ? "oklch(0.96 0 0 / 0.22)"
-      : "oklch(0.42 0.018 205 / 0.2)",
-    background: isDark
-      ? "radial-gradient(circle at 50% 46%, color-mix(in oklch, var(--surface-accent) 10%, transparent), transparent 30%), linear-gradient(180deg, #010101 0%, #040404 60%, #060606 100%)"
-      : "radial-gradient(circle at 50% 44%, color-mix(in oklch, var(--surface-accent) 7%, transparent), transparent 32%), radial-gradient(circle at 82% 18%, color-mix(in oklch, #2563eb 4%, transparent), transparent 30%), linear-gradient(180deg, #fbfdfc 0%, #f3f8f7 55%, #eaf2f1 100%)",
+    "--surface-card":
+      "color-mix(in oklab, var(--card, var(--background)) 78%, var(--appearance-page-tone, var(--background)))",
+    "--surface-scrollbar":
+      "color-mix(in oklab, var(--appearance-page-ink, var(--foreground)) 22%, transparent)",
+    background:
+      "radial-gradient(circle at 50% 44%, color-mix(in oklch, var(--surface-accent) 8%, transparent), transparent 36%), var(--surface-bg)",
   }) as CSSProperties;
 
 const relationLabel: Record<string, string> = {
@@ -227,8 +212,12 @@ const Typewriter = ({
 const DoctrinePage = () => {
   const navigate = useNavigate();
   const params = useParams<{ nodeId?: string }>();
-  const { theme, setTheme } = useTheme();
-  const prefersReducedMotion = useReducedMotion();
+  const { theme } = useTheme();
+  const { config, reducedMotion: organismReducedMotion } = useOrganism();
+  const systemReducedMotion = useReducedMotion();
+  const prefersReducedMotion = Boolean(
+    systemReducedMotion || organismReducedMotion || config.stillness || !config.enabled,
+  );
   const isDark = theme === "dark";
   const accent = useSignalAccent();
   const ownerTools = useOwnerMode();
@@ -452,16 +441,7 @@ const DoctrinePage = () => {
         >
           <List className="h-4 w-4" />
         </button>
-        <button
-          type="button"
-          onClick={() => setTheme(isDark ? "light" : "dark")}
-          className={controlButton}
-          style={{ borderColor: "transparent" }}
-          aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
-          title={`Switch to ${isDark ? "light" : "dark"} theme`}
-        >
-          {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </button>
+        <AppearanceControl placement="inline" />
       </div>
 
       {/* Single, focused reading surface */}
@@ -560,7 +540,7 @@ const DoctrinePage = () => {
               <Typewriter
                 key={`${focusNode.id}-${prefs.typewriter}`}
                 text={argument}
-                active={prefs.typewriter}
+                active={prefs.typewriter && !prefersReducedMotion}
                 className="font-serif text-[1.12em] leading-[1.95] tracking-[0.003em] text-[color:var(--surface-body)]"
               />
             </div>

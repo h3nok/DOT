@@ -93,7 +93,7 @@
   font-size: .75rem;
   line-height: 1.5;
 }
-.book-contents__illustration span { display: block; margin-bottom: .1rem; font-size: .625rem; }
+.book-contents__illustration span { display: block; margin-bottom: .1rem; font-size: var(--primitive-micro, .6875rem); }
 .book-contents__illustration:hover { color: var(--book-cinnabar); }
 
 .book-reader--publication .book-chapter-header--reading {

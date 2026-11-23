@@ -128,7 +128,7 @@
     color-mix(in oklab, var(--card) 86%, var(--intent-light)),
     color-mix(in oklab, var(--background) 94%, transparent)
   );
-  box-shadow: 0 24px 56px -32px rgb(0 0 0 / 0.22);
+  box-shadow: var(--shadow-editorial, 0 24px 56px -32px rgb(0 0 0 / 0.22));
 }
 
 .blog-feature-art {
@@ -318,6 +318,7 @@
   border: 1px solid color-mix(in oklab, var(--border) 72%, transparent);
   border-radius: 1.15rem;
   background: color-mix(in oklab, var(--card) 58%, transparent);
+  box-shadow: var(--shadow-card, none);
   transition:
     border-color 200ms ease,
     background-color 200ms ease,
@@ -327,7 +328,7 @@
 .blog-post:is(:hover, :focus-visible) {
   border-color: color-mix(in oklab, var(--organism-accent-strong, var(--foreground)) 42%, var(--border));
   background: color-mix(in oklab, var(--card) 82%, transparent);
-  box-shadow: 0 20px 48px -28px rgb(0 0 0 / 0.22);
+  box-shadow: var(--shadow-card-hover, 0 20px 48px -28px rgb(0 0 0 / 0.22));
 }
 
 .blog-post-art {
@@ -658,7 +659,7 @@
 
   .blog-feature-copy > .dot-label {
     min-height: 0;
-    font-size: 0.625rem;
+    font-size: var(--primitive-micro, 0.6875rem);
     letter-spacing: 0.09em;
   }
 

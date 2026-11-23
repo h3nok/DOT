@@ -14,7 +14,7 @@ test("AMM keeps frameless pictures without requesting video in reduced motion", 
   expect(films).toEqual([]);
   await expect(page.locator(".amm-chapter-image img")).toHaveCount(0);
   // Transparent artwork must sit on the page, including its chapter previews.
-  for (const selector of [".amm-feature", ".amm-feature .explainer-artwork-open", ".amm-path-art", ".amm-edition-art"]) {
+  for (const selector of [".amm-feature", ".amm-feature .explainer-artwork-open", ".amm-chapter-art", ".amm-path-art", ".amm-edition-art"]) {
     const elements = page.locator(selector);
     for (const element of await elements.all()) {
       await expect(element).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
@@ -37,8 +37,11 @@ test("AMM keeps frameless pictures without requesting video in reduced motion", 
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.currentSrc)).toMatch(source);
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
   }
-  await page.goto("/amm/power");
-  await expect(page.getByRole("img", { name: /The erosion of the public/ })).toBeVisible();
+  // The home shows the Leech's anatomy on its screen about the oligarchy, so the opening painting is not repeated.
+  await page.goto("/amm");
+  const anatomy = page.locator("#amm-anatomy .amm-art img").first();
+  await anatomy.scrollIntoViewIfNeeded();
+  await expect.poll(() => anatomy.evaluate((node: HTMLImageElement) => node.currentSrc)).toMatch(/leech-anatomy-\d+\.webp$/);
   expect(films).toEqual([]);
   await expectNoHorizontalOverflow(page);
 });
@@ -71,7 +74,7 @@ test("the transparent Host autoplays and loops, with pause and offscreen suspens
   await feature.getByRole("button", { name: "Play", exact: true }).click();
   await feature.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(false);
-  await page.locator("#amm-overview").scrollIntoViewIfNeeded();
+  await page.locator("#amm-book").scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
   await feature.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(false);

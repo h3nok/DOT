@@ -24,6 +24,46 @@
   --public-sand: #ead5b7;
   --public-sky: #cde0e6;
   --public-lilac: #dcd6e8;
+
+  /* Attention OS primitives share one focus ring, one label size, one small radius, and one
+     motion vocabulary, so every primitive answers the keyboard and the eye the same way. */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 3px;
+  --focus-ring-color: var(--foreground);
+  /* 11px: the floor `.dot-micro` names. Labels, counts, and captions never go below it. */
+  --primitive-micro: .6875rem;
+  /* Secondary copy beside a label or under a title. */
+  --primitive-small: .8125rem;
+  --primitive-radius-sm: .35rem;
+  --primitive-radius-field: min(var(--appearance-ui-control-radius, .65rem), .65rem);
+  --control-height: var(--touch-target, 2.75rem);
+  --control-radius: .45rem;
+  --control-pad-block: .65rem;
+  --control-pad-inline: 1.15rem;
+  --control-gap: .6rem;
+  --motion-quick: 160ms;
+  --motion-base: 240ms;
+  --motion-slow: 500ms;
+  --motion-reveal: 750ms;
+  --motion-ease: cubic-bezier(.2, .7, .2, 1);
+
+  /* Shared surface, hairline, and elevation tokens tuned for warm vellum (light)
+     and living obsidian-jade (dark). */
+  --surface-elevated: color-mix(in oklab, var(--card) 84%, var(--background));
+  --surface-sunken: color-mix(in oklab, var(--muted) 72%, var(--background));
+  --surface-floating: color-mix(in oklab, var(--popover) 92%, var(--background));
+  --hairline-subtle: color-mix(in oklab, var(--border) 74%, transparent);
+  --hairline-strong: color-mix(in oklab, var(--organism-accent-strong, var(--foreground)) 40%, var(--border));
+  --shadow-editorial:
+    inset 0 1px 0 color-mix(in oklab, #ffffff 46%, transparent),
+    0 20px 44px -28px color-mix(in oklab, var(--foreground) 18%, transparent);
+  --shadow-card:
+    inset 0 1px 0 color-mix(in oklab, #ffffff 38%, transparent),
+    0 14px 34px -24px color-mix(in oklab, var(--foreground) 15%, transparent);
+  --shadow-card-hover:
+    inset 0 1px 0 color-mix(in oklab, #ffffff 52%, transparent),
+    0 22px 48px -24px color-mix(in oklab, var(--foreground) 22%, transparent),
+    0 8px 24px -16px color-mix(in oklab, var(--organism-accent-strong, var(--foreground)) 20%, transparent);
 }
 
 .dark {
@@ -35,6 +75,16 @@
   --public-sand: #332515;
   --public-sky: #142c36;
   --public-lilac: #1f2336;
+  --shadow-editorial:
+    inset 0 1px 0 color-mix(in oklab, var(--foreground) 8%, transparent),
+    0 24px 52px -26px rgb(0 0 0 / .52);
+  --shadow-card:
+    inset 0 1px 0 color-mix(in oklab, var(--foreground) 7%, transparent),
+    0 16px 38px -22px rgb(0 0 0 / .44);
+  --shadow-card-hover:
+    inset 0 1px 0 color-mix(in oklab, var(--foreground) 12%, transparent),
+    0 24px 52px -22px rgb(0 0 0 / .56),
+    0 8px 26px -16px color-mix(in oklab, var(--organism-accent-strong, var(--foreground)) 22%, transparent);
 }
 
 [data-tone] { --intent-tone: var(--public-forest); --intent-light: var(--public-sage); }

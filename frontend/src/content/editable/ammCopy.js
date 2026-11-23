@@ -6,29 +6,77 @@ export function ammCopyFields(content) {
     const text = path.split('.').reduce((value, part) => value[part], content);
     fields.push({ group, path, label, key: `amm.${key.toLowerCase()}`, text });
   };
-  add('Opening', 'headline.0', 'Headline — first line');
-  add('Opening', 'headline.1', 'Headline — emphasis');
-  add('Opening', 'home.premise', 'Opening paragraph');
+  // The opening's words (the author, 2026-11-19): by default his title, "The American
+  // Condition", over Chapter Three's two countries.
+  add('Opening', 'model.heroTitle', 'Opening heading');
+  add('Opening', 'model.heroLine', 'Opening line');
   add('Opening', 'heroAction', 'Primary reading link');
   add('Opening', 'description', 'Search description');
+  add('Opening', 'artwork.alt', 'Image description');
   add('Opening', 'introduction.label', 'Introduction link label');
-  for (const [field, value] of Object.entries(content.home)) {
-    if (typeof value === 'string' && field !== 'premise') add('Home · Condition, diagnosis and response', `home.${field}`, words(field));
+  add('Footer', 'dot.footer', 'Digital Organism Theory line');
+  add('Footer', 'movement.footer', '4Us line');
+  // Studio offers what the live pages show (the author, 2026-11-18): the home's screens,
+  // the figures page, and the inquirer's page. The book's sentences come from the
+  // published chapters (amm-model.json) and change with the book, not here.
+  const each = (group, entries) => entries.forEach(([path, label]) => add(group, path, label));
+  // The thesis, set as a manifesto (2026-11-22): the author's articles, one per field. Its
+  // conviction ("You were born valuable…") and its hinge are the book's and are not edited here.
+  each('Home · The thesis', [
+    ['model.thesisTitle', 'Label above the thesis'],
+    ['model.thesisPurposeLabel', 'Left column label'],
+    ['model.thesisSociety', 'Article 1: what a society is for'],
+    ['model.thesisHonor', 'Article 2: how a society honors your worth'],
+    ['model.thesisInversionLabel', 'Right column label'],
+    ['model.thesisInverts', 'Article 4: the inversion'],
+    ['model.thesisMyth', 'Article 5: the myth'],
+    ['model.thesisBelief', 'Article 6: the belief'],
+    ['model.thesisCharacter', 'Article 7: the conditioned character'],
+  ]);
+  each('Home · The model', [
+    ['model.mirrorKey', 'Opening painting key'],
+    ['model.readDiagnosis', 'Diagnosis link'],
+    // Each part's heading is "Term: what it means"; the term before the colon is set in the flame.
+    ['model.hostTitle', 'Host heading (term: what it means)'],
+    ['model.leechTitle', 'Leech heading (term: what it means)'],
+    ['model.anatomyTitle', 'Oligarchy heading (term: what it means)'],
+    ['model.figuresLink', 'Chapter Two figures link'],
+    ['model.feedingTitle', 'Feeding heading (term: what it means)'],
+    ['model.revolutionEyebrow', 'Closing: label'],
+    ['model.revolutionLine', 'Closing: the way out'],
+    ['model.revolutionAction', 'Closing: link to Chapter Four'],
+  ]);
+  each('Home · The book', [
+    ['model.bookTitle', 'Book heading'],
+    ['model.closingBook', 'All chapters link'],
+    ['reflect.disclosure', 'AI illustration note'],
+  ]);
+  each('Figures page', [
+    ['power.figuresNav', 'Footer link'],
+    ['power.figuresTitle', 'Page heading'],
+    ['power.figuresIntro', 'Introduction'],
+    ['power.figuresBack', 'Link back to Chapter Two'],
+    ...['wealth', 'equity', 'savings', 'housing'].map(id => [`power.screens.${id}`, `Heading: ${id}`]),
+    ['power.wealthTitle', 'Wealth chart title'],
+    ['power.wealthBottom', 'Wealth figure caption'],
+    ['power.equityTop', 'Equity: top 1% caption'],
+    ['power.equityBottom', 'Equity: bottom half caption'],
+    ['power.savingsTitle', 'Savings chart title'],
+    ['power.managers', 'Savings figure caption'],
+    ['power.homesLabel', 'Housing figure caption'],
+    ['power.metrosTitle', 'Housing chart title'],
+    ['power.sourcesTitle', 'Sources heading'],
+  ]);
+  each('Shared labels', [
+    ['model.sourceLabel', 'Source line prefix'],
+    ['model.shareAction', 'Copy link button'],
+    ['model.shareDone', 'Copy link confirmation'],
+    ['model.shareUnavailable', 'Copy link fallback'],
+  ]);
+  for (const [field, text] of Object.entries(content.inquiry)) {
+    if (typeof text === 'string' && field !== 'route') add('Inquiry page', `inquiry.${field}`, words(field));
   }
-  content.home.concepts.forEach((concept, index) => {
-    for (const field of ['label', 'script', 'text', 'argument', 'source']) add(`Home · ${concept.label}`, `home.concepts.${index}.${field}`, words(field), `home.concepts.${concept.id}.${field}`);
-  });
-  for (const field of ['title', 'intro', 'action', 'footer']) add('Digital Organism Theory', `dot.${field}`, words(field));
-  content.dot.links.forEach((item, index) => {
-    for (const field of ['quote', 'applies']) add('Digital Organism Theory', `dot.links.${index}.${field}`, `${item.title} — ${field === 'quote' ? 'DOT’s words' : 'where it applies'}`, `dot.links.${item.id}.${field}`);
-  });
-  for (const field of ['sponsor', 'name', 'title', 'description', 'stage', 'action', 'footer']) add('4Us', `movement.${field}`, words(field));
-  add('Illustration', 'artwork.description', 'Illustration description');
-  add('Illustration', 'artwork.alt', 'Image description');
-  content.artwork.key.forEach((item, index) => {
-    add('Illustration', `artwork.key.${index}.label`, `${item.label} — label`, `artwork.key.${item.id}.label`);
-    add('Illustration', `artwork.key.${index}.meaning`, `${item.label} — meaning`, `artwork.key.${item.id}.meaning`);
-  });
+  each('Inquiry page', [['model.mapLabel', 'Map label'], ['model.mapCaption', 'Map caption']]);
   add('Chapters', 'chapterSection.title', 'Section heading');
   add('Chapters', 'chapterSection.description', 'Section introduction');
   add('Chapters', 'manuscript.status', 'Working edition status');
@@ -40,39 +88,10 @@ export function ammCopyFields(content) {
   for (const [field, label] of Object.entries({ signupTitle: 'Signup heading', signupDescription: 'Signup description', supportTitle: 'Support heading', supportDescription: 'Support description', supportAction: 'Support link label', supportNote: 'Support note' })) {
     add('End of each edition', `reading.${field}`, label);
   }
-  for (const [field, value] of Object.entries(content.capital)) {
-    if (typeof value === 'string') add('How power works · Page copy', `capital.${field}`, words(field));
-    else if (Array.isArray(value) && value.every(item => typeof item === 'string')) value.forEach((item, index) => add(`How power works · ${words(field)}`, `capital.${field}.${index}`, `${index + 1}. ${item}`));
-  }
-  content.capital.imageKey.forEach((item, index) => {
-    for (const field of ['label', 'meaning']) add('How power works · Read the metaphor', `capital.imageKey.${index}.${field}`, `${item.label} — ${field}`, `capital.imageKey.${item.id}.${field}`);
+  // Archive summaries for the earlier serialized editions (their keys predate the archive).
+  content.money.companions.forEach((item, index) => {
+    for (const [field, label] of Object.entries({ title: 'Heading', text: 'Explanation', summary: 'Archive summary' })) add(`Archive · ${item.title}`, `money.companions.${index}.${field}`, label, `money.companions.${item.id}.${field}`);
   });
-  content.capital.tiers.forEach((tier, index) => {
-    const group = `How power works · The power map · ${tier.label}`;
-    add(group, `capital.tiers.${index}.label`, 'Label', `capital.tiers.${tier.id}.label`);
-    if (tier.detail) add(group, `capital.tiers.${index}.detail`, 'Detail', `capital.tiers.${tier.id}.detail`);
-    tier.chips?.forEach((chip, part) => add(group, `capital.tiers.${index}.chips.${part}`, `${part + 1}. ${chip}`, `capital.tiers.${tier.id}.chips.${part}`));
-  });
-  content.capital.flows.forEach((flow, index) => flow.items.forEach((item, part) => add('How power works · The power map · Flows', `capital.flows.${index}.items.${part}.label`, `${flow.id}, ${item.direction}`, `capital.flows.${flow.id}.${part}`)));
-  for (const [field, label] of Object.entries({ label: 'Paid straight up', note: 'Paid straight up — note' })) add('How power works · The power map · Flows', `capital.rail.${field}`, label);
-  content.capital.story.forEach((step, index) => {
-    for (const [field, label] of Object.entries({ title: 'Heading', text: 'Explanation', quote: 'Chapter line', source: 'Where the line comes from' })) {
-      if (step[field]) add(`How power works · The story · ${step.title}`, `capital.story.${index}.${field}`, label, `capital.story.${step.id}.${field}`);
-    }
-  });
-  for (const id of Object.keys(content.capital.interfaceLabels)) add('How power works · Interface labels', `capital.interfaceLabels.${id}`, id);
-  content.capital.ledger.forEach((item, index) => {
-    for (const [field, label] of Object.entries({ term: 'What the citizen supplies', becomes: 'What it becomes' })) add(`How power works · The ledger · ${item.term}`, `capital.ledger.${index}.${field}`, label, `capital.ledger.${item.id}.${field}`);
-  });
-  for (const [field, value] of Object.entries(content.money)) {
-    if (typeof value === 'string') add('How power works · Shared copy', `money.${field}`, words(field));
-  }
-  for (const [collection, props] of Object.entries({ definitions: ['term', 'text'], examples: ['title', 'path', 'mechanic', 'pressure', 'question'], cycle: ['title', 'text'], tests: ['title', 'text'], companions: ['title', 'text', 'summary'] })) {
-    content.money[collection].forEach((item, index) => {
-      const labels = { title: 'Heading', term: 'Term', text: 'Explanation', path: 'Payment route', mechanic: 'How the payment works', pressure: 'AMM’s critique', question: 'Reader question', summary: 'Archive summary' };
-      for (const field of props) add(`How power works · ${item.title ?? item.term}`, `money.${collection}.${index}.${field}`, labels[field], `money.${collection}.${item.id}.${field}`);
-    });
-  }
   add('Archive', 'archiveTitle', 'Archive heading');
   add('Archive', 'archiveDescription', 'Archive introduction');
   add('Archive', 'emptyTitle', 'Empty archive heading');

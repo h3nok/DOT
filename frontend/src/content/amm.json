@@ -6,65 +6,65 @@
   "feed": "/amm/feed.xml",
   "eyebrow": "An independent publication by Henok Ghebrechristos",
   "headline": [
-    "The attitude of dominance.",
-    "The culture that teaches it."
+    "We live in two countries at once:",
+    "the one described, and the one lived in."
   ],
-  "heroAction": "Explore the analysis",
+  "heroAction": "Start reading",
   "description": "The American Millennial Manifesto applies Digital Organism Theory to American culture: how dominance is learned, organized, transmitted, and revised.",
   "home": {
-    "overviewTitle": "How culture becomes conduct.",
-    "overviewClaim": "What we learn to endure can become what we ask of others.",
-    "overviewIntro": "A work message interrupts dinner. A justified warning threatens a supervisor’s standing. Someone who once had little room to refuse begins setting terms for others. AMM follows these encounters through DOT: experience, interpretation, Intent, action, consequence, and what is carried into the next encounter.",
+    "overviewTitle": "The Pathology · Six Mechanisms",
+    "overviewClaim": "How the Host learns to carry the Leech.",
+    "overviewIntro": "Six cultural scripts turn extraction into obedience, obedience into enforcement, and the citizen into a carrier of dominance.",
     "overviewArgument": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
     "overviewSource": "Chapter One · The Leech — The Attitude of Dominance",
-    "premise": "AMM applies Digital Organism Theory to American culture: how fear, status, and inherited lessons can make control seem necessary; how institutions reinforce that attitude; and how people learn to carry it forward—or revise it.",
+    "premise": "The Leech is the attitude of dominance. The Host is the public that carries it. AMM diagnoses the Infection—and the path back to Authorship.",
     "conceptsLabel": "How cultural instructions become everyday conduct",
     "concepts": [
       {
         "id": "conditioning",
-        "label": "Worth",
+        "label": "01 · Conditional Worth",
         "script": "Your worth is what you earn.",
-        "text": "A credential, salary, or promotion can become proof that a person deserves to belong. DOT calls the carried organization of such expectations the Painting. AMM asks when a local measure of performance becomes a verdict on a whole life.",
+        "text": "Rank, salary, and credentials become the measure of human standing. Market value replaces unconditional dignity.",
         "argument": "A skill can improve a task; it cannot establish that another person has lesser standing.",
         "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "fear",
-        "label": "Fear",
+        "label": "02 · Obsequiousness & Fear",
         "script": "Do not risk your place.",
-        "text": "At dinner, a work message can carry a learned demand: answer now to remain indispensable. AMM distinguishes an expectation that can be questioned from a real employment threat that also requires material protection.",
+        "text": "Dependence trains compliance. When survival hangs on approval, surrendering your time and judgment feels like safety.",
         "argument": "If availability is treated as evidence of worth, another person's command of one's attention can feel like recognition.",
         "source": "Chapter Two · The Anatomy of Dominance"
       },
       {
         "id": "delusion",
-        "label": "Authority",
+        "label": "03 · Role Delusion",
         "script": "Being in charge means being right.",
-        "text": "A warning can be heard as information about a task, or as a threat to the person holding authority. AMM examines how identifying with a role can turn a revisable decision into a demand that others remain silent.",
+        "text": "The ego fuses with the title. Honest correction is treated as insubordination; truth yields to rank.",
         "argument": "A role can be corrected without the person ceasing to exist.",
         "source": "Chapter One · The Leech — The Attitude of Dominance"
       },
       {
         "id": "protection",
-        "label": "Belonging",
+        "label": "04 · Tribal Impunity",
         "script": "Protect your own.",
-        "text": "A group can provide care, memory, and solidarity. Its reputation can also become so bound to identity that criticism feels intolerable. AMM asks whether the same standard still applies when it reaches someone admired.",
+        "text": "Universal principles bend to protect insiders. Loyalty replaces accountability whenever the standard reaches your own side.",
         "argument": "A standard advertised as universal becomes conditional upon loyalty.",
         "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "erosion",
-        "label": "Transmission",
+        "label": "05 · Moral Erosion",
         "script": "I endured it. So should you.",
-        "text": "A person once silenced becomes a supervisor. Their history can lead them to protect a colleague’s warning or teach silence as professionalism. In DOT, the resulting action becomes part of another person’s experience.",
+        "text": "The carrier becomes the enforcer. What you once suffered to survive becomes the standard you impose on others.",
         "argument": "There is a threshold between learning that one must sometimes endure a condition and learning that the condition is right to impose.",
         "source": "Chapter Three · The Host and the Infection"
       },
       {
         "id": "accountability",
-        "label": "Revision",
+        "label": "06 · Authorship",
         "script": "This is just how things are.",
-        "text": "A new promise becomes credible through what happens next. A warning is protected, an error is corrected, a different response becomes affordable. Chapter Four follows how repeated encounters can revise expectations and Character.",
+        "text": "Fatalism protects the arrangement. Recovery begins when truth is protected, authority is answerable, and conduct changes.",
         "argument": "This is why cultural change requires consequences, not vocabulary alone.",
         "source": "Chapter Four · Authorship Without Dominance"
       }
@@ -218,7 +218,7 @@
   },
   "chapterSection": {
     "title": "The first book manuscript.",
-    "description": "Four chapters apply DOT to dominance, institutional power, the Host and infection, and the possibility of revision. The illustrated online edition is available for reading and line editing.",
+    "description": "Four chapters: The Leech, The Anatomy of Dominance, The Host and the Infection, and Authorship Without Dominance.",
     "chapters": [
       {
         "id": "amm-book-chapter-one-the-leech",
@@ -744,8 +744,8 @@
     ]
   },
   "dot": {
-    "title": "AMM applies Digital Organism Theory to public life.",
-    "intro": "DOT distinguishes the experiencer from the Painting: the carried expectations, fears, skills, and meanings through which a situation is interpreted. AMM follows how these interpretations shape Intent and action, and how consequences become the next person’s experience.",
+    "title": "The theoretical foundation: Digital Organism Theory.",
+    "intro": "DOT separates the conscious experiencer from the Painting—the learned fears, beliefs, and reflexes through which we interpret reality.",
     "action": "Go to Digital Organism Theory",
     "route": "/",
     "footer": "An application of Digital Organism Theory.",
@@ -754,23 +754,559 @@
         "id": "experience-loop",
         "title": "The Experience Loop",
         "quote": "Every loop begins from the state left by earlier loops. This is why conditioning matters, and also why repeated truthful action can make a different response increasingly available.",
-        "applies": "In AMM: an imposed condition becomes a learned expectation, an action, and then part of someone else’s environment."
+        "applies": "Conditioning → Conduct: an imposed rule becomes a learned reflex, an action, and someone else’s environment."
       },
       {
         "id": "fear-gating",
         "title": "The Fear-Gating Principle",
         "quote": "When Fear governs, the responses that feel available become fewer.",
-        "applies": "In AMM: distinguish a refusal that feels unavailable from one made unaffordable by wages, debt, care, or institutional power."
+        "applies": "Captivity vs. Conditioning: separate a refusal made impossible by fear from one made unaffordable by debt or wages."
       },
       {
         "id": "love",
         "title": "Love as an Epistemic Condition",
         "quote": "Love is the condition in which Fear no longer governs you.",
-        "applies": "In AMM: protect truthful participation, retain proportionate boundaries, and make authority capable of correction."
+        "applies": "Correction Without Dominance: remove fear so truth can be spoken and authority remains answerable."
       }
     ]
   },
   "manuscript": {
     "status": "Working edition · Pending line editing"
+  },
+  "reflect": {
+    "route": "/amm/reflect",
+    "eyebrow": "The Host & the Infection",
+    "title": "The Inversion",
+    "description": "The Host and its infection: the Inversion, its root cause, and what living inside it does to cognitive, mental, and moral health.",
+    "image": "belief-2-the-mirror",
+    "lead": [
+      {
+        "text": "In the mirror, what America says. In the room, what it does."
+      },
+      {
+        "text": "You were raised to look at the mirror."
+      }
+    ],
+    "inviteImage": "belief-2-the-mirror",
+    "inviteAction": "Examine the Host & its infection",
+    "fromPower": "Below the line: The Leech & Organized Power",
+    "disclosure": "AI-generated illustration, directed by the author. A visual metaphor.",
+    "civilization": {
+      "title": "What a civilization is",
+      "definitionSource": "In ordinary terms, from"
+    },
+    "origin": {
+      "eyebrow": "The Root Cause",
+      "lineage": "Western Civilization",
+      "title": "A Dishonest Culture",
+      "image": "belief-6-weight-of-history",
+      "lines": [
+        {
+          "text": "Two tiers from the start: those the arrangement serves, and those who carry it. The Leech and the Host. What keeps it standing is a lie: you are told the building is yours."
+        }
+      ],
+      "quote": {
+        "text": "…bring the Infidels and Savages, living in those parts, to human Civility…",
+        "source": "First Charter of Virginia, 1606"
+      },
+      "close": "The lie turns reality upside down: the taker civilized, the taken savage, the collar freedom. That is the Inversion."
+    },
+    "crushing": {
+      "eyebrow": "Where the Condition Lives",
+      "title": "Your Infection",
+      "image": "belief-1-host-at-home",
+      "calloutsLabel": "What the picture shows",
+      "callouts": [
+        {
+          "id": "leech",
+          "label": "The Leech",
+          "x": 0.62,
+          "y": 0.13,
+          "side": "right"
+        },
+        {
+          "id": "collar",
+          "label": "Trained reflexes",
+          "x": 0.43,
+          "y": 0.31,
+          "side": "right"
+        },
+        {
+          "id": "character",
+          "label": "Character, where it lives",
+          "x": 0.325,
+          "y": 0.41,
+          "side": "left"
+        }
+      ],
+      "surfaceLabel": "Look past the bills",
+      "hollowLabel": "What years of training and exposure to this culture hollow out",
+      "chainLabel": "How the condition travels",
+      "lines": [
+        {
+          "text": "The infection has nothing to do with status. It is in character, in your reflexes."
+        },
+        {
+          "text": "In his last speech, Martin Luther King Jr. remembered people “scratching where they didn’t itch, and laughing when they were not tickled.”"
+        },
+        {
+          "text": "That is now my people, everyone in the United States, and they don’t even know it."
+        },
+        {
+          "text": "This is the deepest injury: the erosion of mind and soul."
+        },
+        {
+          "text": "Character is the issue. People who cannot work together still defend the Leech together."
+        }
+      ],
+      "hollowed": [
+        {
+          "id": "honesty",
+          "word": "Honesty",
+          "effect": "You say what is safe."
+        },
+        {
+          "id": "conscience",
+          "word": "Conscience",
+          "effect": "You learn not to hear it."
+        },
+        {
+          "id": "thought",
+          "word": "Independent thought",
+          "effect": "You think the approved thought."
+        },
+        {
+          "id": "agency",
+          "word": "Agency",
+          "effect": "You wait for permission."
+        },
+        {
+          "id": "soul",
+          "word": "Soul",
+          "effect": "You forget it was ever yours."
+        }
+      ],
+      "terms": [
+        {
+          "id": "leech",
+          "term": "The Leech",
+          "definition": "The attitude of dominance."
+        },
+        {
+          "id": "host",
+          "term": "The Host",
+          "definition": "The citizen carrying the condition."
+        },
+        {
+          "id": "infection",
+          "term": "The Infection",
+          "definition": "Dominance trained into your character, as reflex."
+        },
+        {
+          "id": "erosion",
+          "term": "Moral Erosion",
+          "definition": "Erosion of mind and soul: honesty, conscience, and agency hollowed out."
+        }
+      ]
+    },
+    "claimed": {
+      "title": "The country described.",
+      "eyebrow": "The values the country proclaims",
+      "items": [
+        {
+          "text": "We hold these truths to be self-evident, that all men are created equal.",
+          "source": "Declaration of Independence, 1776"
+        },
+        {
+          "text": "…with liberty and justice for all.",
+          "source": "Pledge of Allegiance"
+        },
+        {
+          "text": "…the land of the free and the home of the brave.",
+          "source": "The Star-Spangled Banner"
+        },
+        {
+          "text": "In God We Trust.",
+          "source": "The national motto, on every dollar"
+        },
+        {
+          "text": "Integrity. Respect. Excellence.",
+          "source": "The values on the lobby wall"
+        },
+        {
+          "text": "We’re a family.",
+          "source": "The welcome"
+        },
+        {
+          "text": "Bring your whole self.",
+          "source": "The handbook"
+        }
+      ],
+      "note": "It shows a different image than it lives. You were not born to spend your life inside this contradiction."
+    },
+    "practiced": {
+      "eyebrow": "The Symptoms",
+      "title": "The country lived in.",
+      "lead": "Each one the opposite of a claim.",
+      "pairs": [
+        {
+          "id": "honesty",
+          "image": "inversion-empty-frame",
+          "claim": "Claimed: Honesty",
+          "practice": "Dishonesty",
+          "enforce": "Truth punished. Flattery rewarded."
+        },
+        {
+          "id": "speech",
+          "image": "belief-7-strings",
+          "claim": "Claimed: Free speech",
+          "practice": "Obsequiousness",
+          "enforce": "Deference upward. Dissent isolated."
+        },
+        {
+          "id": "merit",
+          "image": "the-stair",
+          "claim": "Claimed: Merit",
+          "practice": "Proximity to power",
+          "enforce": "Access beats competence."
+        },
+        {
+          "id": "teamwork",
+          "image": "belief-4-the-feeding",
+          "claim": "Claimed: Teamwork",
+          "practice": "Credit up, blame down",
+          "enforce": "Gain rises. Failure falls below."
+        },
+        {
+          "id": "accountability",
+          "image": "the-leech-portrait",
+          "claim": "Claimed: Accountability",
+          "practice": "Selective immunity",
+          "enforce": "Punishment below. Impunity above."
+        },
+        {
+          "id": "self",
+          "image": "belief-3-screens",
+          "claim": "Claimed: “Bring your whole self”",
+          "practice": "The approved self",
+          "enforce": "Only compliant traits permitted."
+        },
+        {
+          "id": "family",
+          "image": "belief-5-the-culling",
+          "claim": "Claimed: “We’re a family”",
+          "practice": "Disposability",
+          "enforce": "Loyalty demanded until discarding you pays."
+        },
+        {
+          "id": "worth",
+          "image": "crushed-or-compromised",
+          "claim": "Claimed: Human worth",
+          "practice": "Worth by title and salary",
+          "enforce": "Human standing measured by rank and pay."
+        },
+        {
+          "id": "freedom",
+          "image": "fear-the-closing-stall",
+          "claim": "Claimed: Freedom",
+          "practice": "Fear",
+          "enforce": "Silence called maturity. Compliance called realism."
+        }
+      ]
+    },
+    "enforce": {
+      "eyebrow": "Peer Enforcement",
+      "title": "The Host Polices the Host",
+      "image": "belief-8-the-chorus",
+      "lines": [
+        {
+          "text": "The captive defends the cage. Compliance passed on as care."
+        }
+      ]
+    },
+    "thoughts": {
+      "eyebrow": "Internal Symptoms · The Voice in Your Head",
+      "title": "Carrier and Enforcer Reflexes",
+      "lead": [
+        {
+          "text": "Recognize the voice."
+        }
+      ],
+      "carrierLabel": "Carrying the Infection",
+      "enforcerLabel": "Enforcing the Infection",
+      "carrier": [
+        {
+          "term": "Deferred Integrity",
+          "text": "Agree now. Fix it later."
+        },
+        {
+          "term": "Abdication",
+          "text": "It’s not my place."
+        },
+        {
+          "term": "Self-Silencing",
+          "text": "Don’t make enemies."
+        },
+        {
+          "term": "Normalized Corruption",
+          "text": "Everybody does it."
+        },
+        {
+          "term": "Surrender as Realism",
+          "text": "Be realistic."
+        },
+        {
+          "term": "Hostage Compliance",
+          "text": "I have a family."
+        }
+      ],
+      "enforcer": [
+        {
+          "term": "Initiation Cruelty",
+          "text": "I paid my dues. So will they."
+        },
+        {
+          "term": "Resentment of the Free",
+          "text": "Who do they think they are?"
+        },
+        {
+          "term": "Pathologizing Conscience",
+          "text": "They’re being difficult."
+        },
+        {
+          "term": "Protecting the Arrangement",
+          "text": "Don’t rock the boat."
+        },
+        {
+          "term": "Enforcing Hierarchy",
+          "text": "Know your place."
+        }
+      ]
+    },
+    "alibi": {
+      "eyebrow": "The Alibi",
+      "thought": "That’s just human nature.",
+      "line": "Conditioning blamed on nature so nothing has to change."
+    },
+    "twoWays": {
+      "eyebrow": "The Trap · Cynicism",
+      "title": "Crushed, Compromised, or Cynical",
+      "lines": [
+        {
+          "text": "Seeing the lie clearly—and conforming anyway."
+        }
+      ]
+    },
+    "separate": {
+      "eyebrow": "Not Your Nature",
+      "title": "The character carries the Infection.",
+      "image": "care-free-host",
+      "lines": [
+        {
+          "text": "Dishonesty, obsequiousness, and fear belong to the Infection—not to your nature."
+        },
+        {
+          "text": "Installed before consent. Not your fault; now your responsibility."
+        }
+      ]
+    },
+    "end": {
+      "line": "You were born valuable before you produced anything.",
+      "chapterAction": "Read the diagnosis in Chapter Three",
+      "chapterRoute": "/essays/amm-book-chapter-three-the-host-and-the-infection#3-the-inversion-in-practice",
+      "nextAction": "Chapter Four: Authorship Without Dominance",
+      "nextRoute": "/essays/amm-book-chapter-four-authorship-without-dominance",
+      "homeAction": "AMM home",
+      "homeRoute": "/amm"
+    }
+  },
+  "power": {
+    "route": "/amm/power",
+    "eyebrow": "The Leech · Below the Line",
+    "title": "Organized Power",
+    "description": "Who holds the wealth, how need becomes dependence, and how dependence narrows a person’s choices; then the state, technology and knowledge, and how it all enters a life.",
+    "image": "erosion",
+    "loopLabel": "How power reaches a person, and how the person carries it back and reinforces it",
+    "loopCentre": "The attitude of dominance",
+    "steps": [
+      {
+        "id": "wealth",
+        "label": "Power",
+        "title": "Power concentrates"
+      },
+      {
+        "id": "necessity",
+        "label": "Need",
+        "title": "Need becomes dependence"
+      },
+      {
+        "id": "choices",
+        "label": "Choice",
+        "title": "Dependence narrows choice"
+      },
+      {
+        "id": "enters",
+        "label": "You",
+        "title": "It enters you"
+      },
+      {
+        "id": "next",
+        "label": "Reinforcing it",
+        "title": "You carry it and reinforce it"
+      }
+    ],
+    "keyLabel": "How to read the colours",
+    "roles": {
+      "most": {
+        "label": "Most people"
+      },
+      "top": {
+        "label": "Concentration"
+      },
+      "gate": {
+        "label": "The gatekeepers"
+      }
+    },
+    "you": "You",
+    "screens": {
+      "wealth": "Who holds the wealth",
+      "equity": "Who owns the companies",
+      "savings": "Who directs your savings",
+      "income": "Where your income goes",
+      "housing": "When a home becomes a yield",
+      "necessity": "Depending on necessities",
+      "choices": "What dependence does to your choices",
+      "powers": "Beyond money",
+      "enters": "How it enters you",
+      "anchor": "No anchor",
+      "next": "How you carry it and reinforce it"
+    },
+    "wealthTitle": "Share of U.S. household wealth, by group",
+    "wealthBottom": "of household wealth belongs to the bottom half of households",
+    "wealthTop": "belongs to the top 1% of households",
+    "equityTop": "of corporate stock and mutual-fund shares belongs to the top 1% of households",
+    "equityBottom": "belongs to the bottom half of households",
+    "savingsTitle": "Client assets administered at year-end 2025, in trillions of dollars",
+    "managers": "in client assets, including workers’ retirement savings, is administered by three firms",
+    "homesLabel": "single-family homes owned and operated by mega-investors, as estimated by the FTC in 2025",
+    "metrosTitle": "Share of single-family rentals held by qualifying investors in 2024, by metro area (GAO)",
+    "betweenLabel": "Between you and what you need",
+    "powersLabel": "The other powers",
+    "powers": [
+      {
+        "id": "capital",
+        "term": "Capital and finance"
+      },
+      {
+        "id": "state",
+        "term": "The state"
+      },
+      {
+        "id": "technology",
+        "term": "Technology and platforms"
+      },
+      {
+        "id": "knowledge",
+        "term": "Knowledge and permission"
+      }
+    ],
+    "anchorAction": "The question of a higher order: Big C",
+    "carryAction": "Examine the Host & its infection",
+    "chapterAction": "Read Chapter Two",
+    "earlierAction": "Read the earlier Chapter Two, with all its figures",
+    "sourcesTitle": "Sources and limits",
+    "figuresRoute": "/amm/figures",
+    "figuresNav": "Figures",
+    "figuresTitle": "The figures behind Chapter Two",
+    "figuresIntro": "Who holds the wealth, who owns the companies, who directs the savings, and who owns the homes. Each figure keeps its source.",
+    "figuresBack": "Read Chapter Two"
+  },
+  "model": {
+    "heroTitle": "The American Condition",
+    "heroLine": "We live in two countries at once: the one described, and the one lived in.",
+    "thesisTitle": "The AMM thesis",
+    "thesisPurposeLabel": "The purpose",
+    "thesisSociety": "A society’s purpose is to make shared life more coherent and stable through cooperation, so that each person has room to grow.",
+    "thesisHonor": "A society honors that worth when you have the freedom to tell the truth as you see it, live by your conscience, and give your time and attention to the people you love.",
+    "thesisInversionLabel": "The Inversion",
+    "thesisInverts": "American culture inverts this purpose.",
+    "thesisMyth": "Concentrated power in business and politics protects itself by constructing a myth of reality, maintained through propaganda and long-term indoctrination.",
+    "thesisBelief": "Over time, that myth settles deep into the psyche as belief—teaching the citizen to measure worth by usefulness to power and to mistake fear and compliance for maturity.",
+    "thesisCharacter": "What emerges is a conditioned character: impulsive in thought, eroded in conscience, injured in spirit.",
+    "mirrorKey": "In the mirror, the country described. Outside it, the country lived in.",
+    "hostTitle": "The Host: us, the public",
+    "leechTitle": "The Leech: an ideology of dominance",
+    "anatomyTitle": "The oligarchy: the Leech’s body today",
+    "feedingTitle": "The feeding point: how the Leech feeds",
+    "sourceLabel": "From",
+    "readDiagnosis": "Read the diagnosis in Chapter Three",
+    "bookTitle": "The book",
+    "revolutionEyebrow": "The way out",
+    "revolutionLine": "Only a cultural revolution is our way out.",
+    "revolutionAction": "Read Chapter Four",
+    "figuresLink": "The figures behind Chapter Two",
+    "whyAction": "Examine the Leech: Organized Power",
+    "stepSpiral": "How the Host Polices the Host",
+    "stepSpiralHint": "From surviving the rule to enforcing it",
+    "usAction": "Examine the Host & its infection",
+    "shareAction": "Copy a link to this idea",
+    "shareDone": "Link copied.",
+    "shareUnavailable": "Copying is not available here. The link is:",
+    "closingBook": "All chapters and earlier writing",
+    "mapLabel": "The model of the American Millennial Manifesto",
+    "mapCaption": "Each part of the arrangement and where it sits. Select any part to see what it does.",
+    "spiralTitle": "The Host polices the Host",
+    "spiralLabel": "How a person is worn down, turn by turn, and what they come to say",
+    "spiralYou": "You",
+    "spiralCarrier": "1 · Carrier",
+    "spiralEnforcer": "2 · Enforcer",
+    "spiralInversion": "3 · The Alibi",
+    "warningLabel": "The Infection · Damage to the Host",
+    "warningCognitive": "Cognitive health",
+    "warningMental": "Mental health",
+    "warningMoral": "Moral health",
+    "threadLabel": "How a thought carried whole is broken into a few seconds at a time",
+    "splitLabel": "Who bears it, and what continues regardless",
+    "researchAttention": "Research, 2025: across 71 studies and 98,299 people, heavier short-form video use went with poorer attention and impulse control. The studies show association, not cause.",
+    "researchMind": "The same review: heavier short-form video use also went with more stress and anxiety. Association, not cause.",
+    "researchSource": "Psychological Bulletin, 2025",
+    "researchHref": "https://doi.org/10.1037/bul0000498"
+  },
+  "inquiry": {
+    "route": "/amm/inquiry",
+    "eyebrow": "For the serious inquirer",
+    "title": "Test it for yourself.",
+    "description": "Everything needed to examine the American Millennial Manifesto on its own terms: the model, levels of claim, working definitions, the method, what would weaken it, records, the DOT concepts it applies, and how to cite it.",
+    "contentsLabel": "On this page",
+    "modelTitle": "The model",
+    "levelsTitle": "Levels of claim",
+    "levelsLabel": "Book One's four levels of claim",
+    "argumentTitle": "What kind of argument this is",
+    "termsTitle": "Working definitions",
+    "termsLabel": "Working definitions from Chapter Four",
+    "appliesLabel": "Applies:",
+    "methodTitle": "Follow a relationship precisely",
+    "notebookTitle": "Apply the method to a relationship in your own life",
+    "notebookPrivacy": "What you write stays in this browser tab. Nothing is sent anywhere. It is gone when you close the tab, unless you save it as a file.",
+    "notebookFile": "amm-my-inquiry.txt",
+    "notebookSave": "Save as a text file",
+    "notebookClear": "Clear my answers",
+    "notebookConfirm": "Yes, clear everything",
+    "notebookKeep": "Keep my answers",
+    "notebookSaved": "Saved to your device.",
+    "notebookCleared": "Your answers are cleared.",
+    "weakenTitle": "What would weaken the account",
+    "changeTitle": "How we would know anything is changing",
+    "recordsTitle": "Records the argument rests on",
+    "recordsLabel": "Dated records cited in the chapters",
+    "dotTitle": "What it applies from Digital Organism Theory",
+    "dotLabel": "Digital Organism Theory concepts the working definitions apply",
+    "dotAction": "Read Book One",
+    "citeTitle": "Cite it",
+    "citeCopy": "Copy",
+    "citeCopied": "Copied.",
+    "citeUnavailable": "Copying is not available here. Select the text to copy it.",
+    "endAction": "Begin with Chapter One",
+    "homeAction": "AMM home"
   }
 }

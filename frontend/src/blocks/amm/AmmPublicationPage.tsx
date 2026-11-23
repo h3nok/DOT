@@ -8,7 +8,7 @@ import { AmmParticipation } from "./AmmParticipation";
 export default function AmmPublicationPage() {
   const AMM = useAmmContent();
   return <AmmShell>
-    <Helmet><title>{AMM.archiveTitle} — {AMM.title}</title><meta name="description" content={AMM.description} /><link rel="alternate" type="application/rss+xml" title={AMM.title} href={AMM.feed} /></Helmet>
+    <Helmet><title>{`${AMM.archiveTitle} — ${AMM.title}`}</title><meta name="description" content={AMM.description} /><link rel="alternate" type="application/rss+xml" title={AMM.title} href={AMM.feed} /></Helmet>
     <AmmEditions />
     <AmmParticipation />
   </AmmShell>;

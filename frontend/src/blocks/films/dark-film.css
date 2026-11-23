@@ -242,9 +242,9 @@ body:has(.dark-film-preview) .organism-hud { display: none; }
   gap: .7em;
   margin: 0;
   padding: .45em 1.1em;
-  border: 1px solid color-mix(in srgb, var(--film-jade) 45%, transparent);
+  border: 1px solid color-mix(in oklab, var(--film-jade) 45%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--film-jade) 9%, transparent);
+  background: color-mix(in oklab, var(--film-jade) 9%, transparent);
   font-size: .3em;
 }
 /* DOT's claims carry a small jade light. */

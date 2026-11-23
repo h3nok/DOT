@@ -1,17 +1,54 @@
 /* One continuous scroll, one concept per viewport. Images sit directly on the page. */
-.amm-hero--inquiry.reading-scene { min-block-size: calc(100svh - 5rem); display: grid; align-content: center; }
-.amm-hero--inquiry .amm-hero-grid { min-height: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); grid-template-rows: auto auto; align-content: center; column-gap: clamp(2rem, 4vw, 4rem); padding-block: 0; }
-.amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); max-width: none; }
-.amm-hero--inquiry .amm-hero-copy { align-self: center; }
-.amm-hero--inquiry h1 { font-size: clamp(2.75rem, 4.6vw, 4.75rem); margin-bottom: 1.1rem; }
-.amm-home-premise { max-width: 37ch; font: clamp(1.125rem, 1.45vw, 1.3rem)/1.7 var(--font-sans); color: var(--muted-foreground); text-wrap: pretty; }
-.amm-hero--inquiry .amm-hero-actions { margin-top: 1.35rem; align-self: end; padding-bottom: 1rem; }
-.amm-hero--inquiry .amm-hero-actions > .amm-button { width: min(100%, 21rem); justify-content: space-between; }
+/*
+ * The opening: the two-countries sentence as one banner across the top, a clause to a line,
+ * set whole in the flame of the mark (its thesis). Beneath it, the premise, its source and the
+ * one action on the left meet at the middle of the painting on the right. Compact by the
+ * author's request (2026-11-18).
+ */
+/*
+ * True two-column opening: thesis, premise, plain-language framing, source and primary
+ * action vertically centered together in the left column; the frameless Host painting
+ * and silent loop occupying the right column. On narrow screens (< 900px): copy, visual, action.
+ */
+.amm-hero--inquiry.reading-scene { min-block-size: calc(100svh - 4.5rem); display: grid; align-content: center; padding-block: clamp(2rem, 5vh, 3.75rem); }
+.amm-hero--inquiry .amm-hero-grid {
+  min-height: auto;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.15fr);
+  grid-template-areas:
+    ".       visual"
+    "copy    visual"
+    "actions visual"
+    ".       visual";
+  grid-template-rows: 1fr auto auto 1fr;
+  row-gap: 0;
+  align-items: center;
+  column-gap: clamp(2.5rem, 5vw, 5rem);
+  padding-block: 0;
+}
+.amm-hero--inquiry .amm-hero-copy { grid-area: copy; display: grid; gap: .65rem; align-self: end; max-width: 39rem; }
+.amm-hero--inquiry .amm-hero-title {
+  max-width: 18ch;
+  margin: 0;
+  font: 600 calc(clamp(2.25rem, 3.55vw, 3.25rem) * var(--reading-scale, 1))/1.05 var(--font-serif);
+  letter-spacing: 0;
+  text-wrap: balance;
+  background: var(--amm-flame-display);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+@media (forced-colors: active) { .amm-hero--inquiry .amm-hero-title { background: none; -webkit-text-fill-color: currentColor; } }
+.amm-home-premise { max-width: 38ch; margin: .05rem 0 0; font: 500 calc(clamp(1.24rem, 1.7vw, 1.5rem) * var(--reading-scale, 1))/1.24 var(--font-serif); color: var(--foreground); text-wrap: balance; filter: drop-shadow(0 .35rem 1rem rgba(25, 18, 10, .07)); }
+.amm-hero--inquiry .amm-screen-foot { margin-top: .15rem; }
+.amm-hero--inquiry .amm-hero-visual { grid-area: visual; width: 100%; max-width: none; align-self: center; }
+.amm-hero--inquiry .amm-hero-actions { grid-area: actions; align-self: start; margin-top: 1.35rem; padding: 0; }
 .amm-home-sections { --explainer-sticky-top: 0px; }
 
 /* The publication's flame marks the current thought; scrolling is its only trigger. */
-.amm-shell .amm-story-flame { width: 2.25rem; height: 2.25rem; }
-.amm-home-sections li:not([data-active]) .amm-story-flame { filter: grayscale(1); opacity: .38; }
+.amm-shell .amm-story-flame { width: 2.5rem; height: 2.5rem; transform: translateY(-.42rem); filter: drop-shadow(0 .15rem .3rem rgba(0, 0, 0, .38)); }
+.amm-home-sections li:not([data-active]) .amm-story-flame { filter: grayscale(1) brightness(.88); opacity: .42; }
 .amm-home-sections li[data-active] .amm-story-flame .amm-mark-heat { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]):not([data-organism="off"]) .amm-home-sections li[data-active] .amm-story-flame .amm-mark-fire { animation: amm-flame-answer 1s ease-out 1; }
@@ -22,28 +59,120 @@
 
 /* The introduction connects the economic claim to its source before the six scenes begin. */
 .amm-home-overview.reading-scene { padding-block: 0; }
-.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .85fr); gap: 2.5rem clamp(3rem, 6vw, 6rem); align-items: center; margin: 0; padding-block: clamp(3.5rem, 8svh, 6rem); border-block-start: 1px solid var(--border); }
-.amm-overview-heading h2 { margin: 0; font: 600 1rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-heading { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .85fr); gap: 2.5rem clamp(3rem, 6vw, 6rem); align-items: center; margin: 0; padding-block: clamp(5rem, 12svh, 9rem); border-block-start: 1px solid var(--border); }
+.amm-overview-heading h2 { margin: 0; font: 600 1rem/1.25 var(--font-sans); letter-spacing: 0; color: var(--amm-rust); }
 .amm-overview-argument { display: grid; gap: 1.5rem; }
-.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--foreground); font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: -.035em; text-wrap: balance; }
-.amm-overview-intro { max-width: 52ch; margin: 0; font: clamp(1.075rem, 1.35vw, 1.2rem)/1.7 var(--font-sans); color: var(--muted-foreground); }
+.amm-overview-claim { max-width: 20ch; margin: 0; color: var(--foreground); font: 500 clamp(2.25rem, 4.2vw, 4rem)/1.08 var(--font-serif); letter-spacing: 0; text-wrap: balance; }
+.amm-overview-intro { max-width: 48ch; margin: 0; font: clamp(1.075rem, 1.35vw, 1.2rem)/1.25 var(--font-sans); color: var(--muted-foreground); }
 .amm-overview-source { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem 1rem; }
 .amm-overview-source .amm-mark.amm-overview-flame { flex: 0 0 2.25rem; width: 2.25rem; height: 2.25rem; margin-top: .1rem; }
 .amm-overview-source .explainer-quote--quiet { flex: 1 1 13rem; min-width: 0; max-width: 100%; border: 0; padding: 0; }
-.amm-overview-source .explainer-quote--quiet p { font: 400 clamp(1.2rem, 1.8vw, 1.65rem)/1.5 var(--font-serif); letter-spacing: -.01em; text-wrap: pretty; }
-.amm-overview-source .explainer-quote cite { margin-top: .75rem; font: 500 .875rem/1.5 var(--font-sans); color: var(--amm-rust); }
+.amm-overview-source .explainer-quote--quiet p { font: 400 clamp(1.2rem, 1.8vw, 1.65rem)/1.25 var(--font-serif); letter-spacing: 0; text-wrap: pretty; }
+.amm-overview-source .explainer-quote cite { margin-top: .75rem; font: 500 .875rem/1.25 var(--font-sans); color: var(--amm-rust); }
 .amm-overview-source .amm-text-link { font: inherit; }
 
 /* Each concept leads with the line the reader was sold, at the size of a headline. */
-.amm-home-overview .explainer-story { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
-.amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: 100svh; justify-content: center; gap: 1.25rem; padding-block: var(--public-space-xl); }
-.amm-home-overview .explainer-story-steps h3 { max-width: 15ch; font-size: clamp(2.5rem, 4.4vw, 4.5rem); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
-.amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { max-width: 40ch; font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.65; }
-.amm-home-overview .explainer-story-steps li > .explainer-story-kicker { color: var(--amm-rust); font-size: 1rem; }
+.amm-home-overview .explainer-story { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: clamp(3rem, 6vw, 6.5rem); }
+.amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: 100svh; justify-content: center; gap: 1.35rem; padding-block: clamp(4.5rem, 10svh, 8rem); }
+.amm-home-overview .explainer-story-steps h3 { max-width: 15ch; font-size: clamp(2.5rem, 4.4vw, 4.5rem); line-height: 1.04; letter-spacing: 0; text-wrap: balance; }
+.amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { max-width: 40ch; font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.25; }
+
+/*
+ * Wood for the fire: each concept kicker is a borderless split-wood billet feeding the AMM flame,
+ * with natural sans-serif typography and zero artificial letter-spacing.
+ */
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  width: fit-content;
+  min-height: 2.5rem;
+  margin-top: .35rem;
+  padding: .28rem 1.7rem .28rem .6rem;
+  border: 0;
+  border-radius: 4px 12px 12px 4px / 8px 50% 50% 8px;
+  background-color: #3d2616;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='52' viewBox='0 0 320 52' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M0 8 Q75 4 150 9 T320 7' stroke='%23785032' stroke-width='1.1' opacity='.38'/%3E%3Cpath d='M0 15 Q90 19 175 13 T320 16' stroke='%2322130b' stroke-width='1.2' opacity='.5'/%3E%3Cpath d='M12 25 Q110 21 195 27 T315 24' stroke='%238c5e3c' stroke-width='.9' opacity='.32'/%3E%3Cpath d='M0 34 Q85 39 160 33 C172 31 182 36 194 34 T320 36' stroke='%231b0f08' stroke-width='1.35' opacity='.55'/%3E%3Cpath d='M28 43 Q130 40 220 45 T320 42' stroke='%23694429' stroke-width='1' opacity='.34'/%3E%3Cellipse cx='168' cy='26' rx='14' ry='4.5' stroke='%23201109' stroke-width='1' opacity='.42'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(90deg, #1f110a 0%, #311c11 16%, #4c2f1b 40%, #573720 72%, #432917 95%, #2f1c10 100%),
+    linear-gradient(180deg, #634027 0%, #482d1a 25%, #362012 78%, #20120a 100%);
+  background-blend-mode: normal, multiply, normal;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 214, 165, .14),
+    inset 0 -2px 4px rgba(10, 5, 2, .6),
+    0 4px 10px -3px rgba(24, 13, 6, .28);
+  color: #f5e6cc;
+  text-shadow: 0 1px 2px rgba(10, 5, 2, .85);
+  font: 600 1.02rem/1.25 var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+  overflow: visible;
+}
+
+/* Cut end-grain with concentric tree rings at the right end of the firewood billet (borderless). */
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1.05rem;
+  border: 0;
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 48'%3E%3Cellipse cx='12' cy='24' rx='11' ry='23' fill='%23b58554'/%3E%3Cellipse cx='12' cy='24' rx='8' ry='17' fill='none' stroke='%238c5e34' stroke-width='1.2' opacity='.85'/%3E%3Cellipse cx='12' cy='24' rx='5.2' ry='11' fill='none' stroke='%23734a26' stroke-width='1.1' opacity='.85'/%3E%3Cellipse cx='12' cy='24' rx='2.4' ry='5' fill='%2359371b' opacity='.9'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  box-shadow: inset 1px 0 2px rgba(25, 13, 5, .45), -1px 0 3px rgba(15, 8, 3, .35);
+  pointer-events: none;
+}
+
+/* Ember bed under the flame at the left hearth end. */
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker .explainer-story-marker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -.1rem;
+  margin-right: .05rem;
+  z-index: 1;
+}
+.amm-home-overview .explainer-story-steps li > .explainer-story-kicker .explainer-story-marker::before {
+  content: "";
+  position: absolute;
+  left: .15rem;
+  right: .15rem;
+  bottom: -.05rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #ffb52e 0%, #fa6717 45%, #881b14 78%, transparent 100%);
+  opacity: .2;
+  filter: blur(1px);
+  pointer-events: none;
+  transition: opacity .45s ease, transform .45s ease;
+}
+
+/* When the step is active, the firewood catches fire at the hearth end. */
+.amm-home-overview .explainer-story-steps > li[data-active] > .explainer-story-kicker {
+  background-image:
+    radial-gradient(ellipse 4.2rem 140% at 1.35rem 55%, rgba(255, 175, 45, .38) 0%, rgba(248, 92, 22, .3) 42%, rgba(167, 53, 36, .12) 72%, transparent 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='52' viewBox='0 0 320 52' preserveAspectRatio='none'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M0 8 Q75 4 150 9 T320 7' stroke='%23996640' stroke-width='1.1' opacity='.46'/%3E%3Cpath d='M0 15 Q90 19 175 13 T320 16' stroke='%2322130b' stroke-width='1.2' opacity='.52'/%3E%3Cpath d='M12 25 Q110 21 195 27 T315 24' stroke='%23b0784e' stroke-width='.95' opacity='.38'/%3E%3Cpath d='M0 34 Q85 39 160 33 C172 31 182 36 194 34 T320 36' stroke='%231b0f08' stroke-width='1.35' opacity='.58'/%3E%3Cpath d='M28 43 Q130 40 220 45 T320 42' stroke='%23855634' stroke-width='1' opacity='.38'/%3E%3Cpath d='M2 16 L28 21 M3 31 L34 28 M5 42 L24 37' stroke='%23ff6d1c' stroke-width='1.3' opacity='.8'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(90deg, #2a1107 0%, #431d0d 16%, #59361f 40%, #633e24 70%, #4a2d19 94%, #331e10 100%);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 220, 168, .2),
+    inset 0 -2px 5px rgba(10, 5, 2, .65),
+    inset 20px 0 22px -12px rgba(250, 103, 23, .32),
+    0 6px 14px -4px rgba(24, 13, 6, .35);
+  color: #fff6e5;
+}
+.amm-home-overview .explainer-story-steps > li[data-active] > .explainer-story-kicker .explainer-story-marker::before {
+  opacity: .9;
+  transform: scaleX(1.1);
+}
+
 /* AMM's own argument closes each concept: the author's sentence, larger than the explanation, with its chapter. */
 .amm-home-overview .explainer-story-steps .explainer-quote--quiet { max-width: 32rem; margin-top: .25rem; padding-left: 1.25rem; }
-.amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.38 var(--font-serif); letter-spacing: -.015em; color: var(--foreground); text-wrap: pretty; }
-.amm-home-overview .explainer-story .explainer-quote cite { font: 600 .8rem/1.5 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
+.amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font: 500 clamp(1.35rem, 2vw, 1.75rem)/1.25 var(--font-serif); letter-spacing: 0; color: var(--foreground); text-wrap: pretty; }
+.amm-home-overview .explainer-story .explainer-quote cite { font: 600 .8rem/1.25 var(--font-sans); color: var(--amm-rust); margin-top: .6rem; }
 
 /* Attentive scenes: the concept being read is fully present; the next waits a step back and settles in,
    in reading order, when the reader reaches it. The reader's scroll is the only trigger. */
@@ -64,11 +193,12 @@
 .amm-everyday-art .explainer-artwork-open img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 
 @media (max-width: 900px) {
-  .amm-hero--inquiry .amm-hero-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 1.75rem; }
-  .amm-hero--inquiry h1 { max-width: 17ch; font-size: clamp(2.8rem, 7vw, 4rem); }
-  .amm-home-premise { max-width: 42ch; }
-  .amm-hero--inquiry .amm-hero-visual { width: calc(100% + 2rem); justify-self: center; }
-  .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; }
+  .amm-hero--inquiry .amm-hero-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "visual" "actions"; grid-template-rows: auto; gap: 1.5rem; }
+  .amm-hero--inquiry .amm-hero-title { max-width: 18ch; font-size: calc(clamp(1.65rem, 6.4vw, 2.85rem) * var(--reading-scale, 1)); line-height: 1.1; }
+  .amm-hero--inquiry .amm-hero-copy { align-self: auto; max-width: none; min-width: 0; }
+  .amm-home-premise { max-width: 40ch; }
+  .amm-hero--inquiry .amm-hero-visual { width: 100%; min-width: 0; justify-self: center; }
+  .amm-hero--inquiry .amm-hero-actions { margin-top: 0; padding: 0; min-width: 0; }
   .amm-overview-heading { grid-template-columns: 1fr; gap: 2rem; padding-block: clamp(2.5rem, 7svh, 4rem); }
   .amm-overview-argument { gap: 1.25rem; }
   .amm-overview-claim { font-size: clamp(2rem, 7vw, 3rem); }
@@ -79,11 +209,31 @@
   /* The picture itself opens the viewer; its caption would cost the concept a line. */
   .amm-everyday-art .explainer-artwork-hint { display: none; }
   .amm-home-overview .explainer-story-steps > li, .amm-home-overview .explainer-story-steps > li:first-child, .amm-home-overview .explainer-story-steps > li:last-child { min-height: calc(70svh - .5rem - 1px); padding-block: 1.25rem; gap: 1rem; }
+  .amm-home-overview .explainer-story-steps li > .explainer-story-kicker { max-width: 100%; min-height: 2.2rem; margin-top: 0; padding: .2rem 1.3rem .2rem .45rem; gap: .4rem; letter-spacing: 0; }
+  .amm-shell .amm-story-flame { width: 1.95rem; height: 1.95rem; transform: translateY(-.28rem); }
   .amm-home-overview .explainer-story-steps h3 { font-size: clamp(2rem, 8.5vw, 2.6rem); }
   .amm-home-overview .explainer-story-steps .explainer-quote--quiet p { font-size: 1.15rem; }
-  .amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { font-size: 1.05rem; line-height: 1.6; }
+  .amm-home-overview .explainer-story-steps li > p:not(.explainer-story-note, .explainer-story-kicker) { font-size: 1.05rem; line-height: 1.25; }
 }
 @media (max-width: 600px) {
-  .amm-hero--inquiry h1 { font-size: clamp(2.5rem, 9vw, 3.5rem); }
-  .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; }
+  .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; justify-content: center; }
+}
+
+/* The opening painting's one-line key: the mirror is the country described; the Host stands in the country lived in. */
+.amm-hero-key {
+  margin: .3rem 0 0;
+  font: 500 calc(1rem * var(--reading-scale, 1))/1.25 var(--font-serif);
+  color: var(--foreground);
+  text-wrap: pretty;
+}
+
+/* Every AI-generated picture says so beside it, sharing one quiet caption rule across the page. */
+.amm-art-disclosure,
+.amm-diagnosis-disclosure {
+  margin: .2rem 0 0;
+  padding-top: .4rem;
+  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  font: 400 var(--primitive-small, .8125rem)/1.25 var(--font-sans);
+  letter-spacing: 0;
+  color: var(--muted-foreground);
 }

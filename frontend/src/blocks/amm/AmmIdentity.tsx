@@ -23,19 +23,26 @@ function AmmHeader() {
           <AmmMark kindle />
           <span className="amm-brand-name"><span>American</span><strong>Millennial Manifesto</strong></span>
         </Link>
-        <Link to={dot.route} className="amm-header-dot" aria-label="Digital Organism Theory — Home"><span className="amm-header-dot-full">Digital Organism Theory</span><abbr className="amm-header-dot-short" title="Digital Organism Theory">DOT</abbr></Link>
-        <div className="amm-appearance"><AppearanceControl placement="inline" /></div>
+        <div className="amm-header-tools">
+          <Link to={dot.route} className="amm-header-dot" aria-label="Digital Organism Theory — Home">
+            <span className="amm-header-dot-full">Digital Organism Theory</span>
+            <abbr className="amm-header-dot-short" title="Digital Organism Theory">DOT</abbr>
+          </Link>
+          <div className="amm-appearance"><AppearanceControl placement="inline" /></div>
+        </div>
       </div>
     </header>
   );
 }
 
 function AmmFooter() {
-  const { dot, movement } = useAmmContent();
+  const { dot, movement, power, inquiry } = useAmmContent();
   return (
     <footer className="amm-footer amm-container">
       <div className="amm-footer-signature"><AmmMark /><div><strong>The American Millennial Manifesto</strong><p>Manifesto and writing by <Link to="/about">Henok Ghebrechristos</Link>.</p><p className="amm-footer-lineage"><Link to={dot.route}>{dot.footer}</Link> <a href={movement.href} rel="noopener">{movement.footer}</a></p></div></div>
       <nav aria-label="AMM footer">
+        <Link to={power.figuresRoute}>{power.figuresNav}</Link>
+        <Link to={inquiry.route}>{inquiry.eyebrow}</Link>
         <Link to="/amm/editions">Editions</Link>
         <Link to="/amm/editions#amm-subscribe">Reader list</Link>
         <Link to="/amm/membership">Free membership</Link>
@@ -64,7 +71,7 @@ export function AmmShell({ children, reading = false, footer = true }: { childre
     <div className={`amm-shell${reading ? " amm-shell--reading" : ""}${pathname.replace(/\/+$/, "") === "/amm" ? " amm-shell--home" : ""}`}>
       <a className="amm-skip" href="#amm-main">Skip to content</a>
       <PageShell wide skipLink={false} className={reading ? "amm-reader" : "amm-page"} header={<AmmHeader />} footer={footer ? <AmmFooter /> : undefined}>
-        <div id="amm-main" tabIndex={-1}>{["/amm", "/amm/editions", "/amm/power"].includes(pathname.replace(/\/+$/, "")) && <OwnerEditLink to="/studio/pages/amm" label="Edit this page" />}{children}</div>
+        <div id="amm-main" tabIndex={-1}>{["/amm", "/amm/editions", "/amm/figures", "/amm/inquiry"].includes(pathname.replace(/\/+$/, "")) && <OwnerEditLink to="/studio/pages/amm" label="Edit this page" />}{children}</div>
       </PageShell>
     </div>
   );

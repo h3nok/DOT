@@ -1,0 +1,1668 @@
+{
+  "$comment": "The AMM model, written once. Every sentence is copied from the published chapters; AmmModel.test.ts fails if one drifts. Regenerate rather than edit by hand.",
+  "edition": {
+    "label": "Working book, version 1.1",
+    "published": "2026-11-03"
+  },
+  "chapters": [
+    {
+      "n": 1,
+      "label": "Chapter One",
+      "slug": "amm-book-chapter-one-the-leech",
+      "title": "Chapter One: The Leech — The Attitude of Dominance"
+    },
+    {
+      "n": 2,
+      "label": "Chapter Two",
+      "slug": "amm-book-chapter-two-the-anatomy-of-dominance",
+      "title": "Chapter Two: The Anatomy of Dominance"
+    },
+    {
+      "n": 3,
+      "label": "Chapter Three",
+      "slug": "amm-book-chapter-three-the-host-and-the-infection",
+      "title": "Chapter Three: The Host and the Infection"
+    },
+    {
+      "n": 4,
+      "label": "Chapter Four",
+      "slug": "amm-book-chapter-four-authorship-without-dominance",
+      "title": "Chapter Four: Authorship Without Dominance"
+    }
+  ],
+  "levels": {
+    "source": {
+      "label": "Book One · Four Levels of Claim",
+      "href": "/book/digital-organism-theory/preface#four-levels-of-claim"
+    },
+    "items": [
+      {
+        "id": "observation",
+        "label": "Observation",
+        "rank": 1,
+        "definition": "Observation names what can be encountered or measured without already accepting DOT. Experience occurs. Reports vary with attention. Neural injury can alter memory, perception, personality, and responsiveness. Institutions can shape the options available to a person. These observations require interpretation, but they are not unique predictions of this theory."
+      },
+      {
+        "id": "external-model",
+        "label": "External model",
+        "rank": 2,
+        "definition": "External model names an account developed in an established field and used here within its proper domain. Predictive processing, memory systems, interoception, threat learning, decoherence, and cosmological parameter estimation belong at this level. Their inclusion does not imply that their authors endorse DOT."
+      },
+      {
+        "id": "dot-derivation",
+        "label": "DOT derivation",
+        "rank": 3,
+        "definition": "DOT derivation names a claim that follows from the theory’s postulates. If Big C differentiates Little c and Little c participates in a rule-bound Reality Frame through an Avatar, then the body is an interface rather than the producer of the experiencer. This conclusion may be internally required by DOT while remaining externally unverified."
+      },
+      {
+        "id": "speculative-extension",
+        "label": "Speculative extension",
+        "rank": 4,
+        "definition": "Speculative extension names a possibility that the current architecture suggests but does not yet derive or test adequately. Claims about consciousness beyond biological death, communication across Reality Frames, or Intent changing quantum outcomes belong here unless and until a mechanism and discriminating evidence are supplied."
+      }
+    ]
+  },
+  "argument": [
+    {
+      "text": "DOT provides the organizing lens. Documentary records establish particular events and practices. Illustrative situations show how a proposed mechanism might operate. Ethical commitments state what this book believes people owe one another. These forms of reasoning have different jobs.",
+      "chapter": 1,
+      "section": "What Kind of Argument This Is"
+    },
+    {
+      "text": "A record of exploitation does not establish that consciousness is independent of the brain. A moving experience does not establish Big C. A useful description of learned behavior does not establish DOT's speculative account of T × E. Those questions require their own arguments and evidence. Applying DOT to culture cannot settle them by moral urgency.",
+      "chapter": 1,
+      "section": "What Kind of Argument This Is"
+    },
+    {
+      "text": "Equally, a person's disagreement with DOT is not evidence of fear, domination, or infection. Readers can question the framework and still examine the practical relationships described here. A serious school of thought must permit its own claims to be corrected.",
+      "chapter": 1,
+      "section": "What Kind of Argument This Is"
+    },
+    {
+      "text": "The situations presented without a named documentary source are illustrative, not reports of interviews or measured national patterns. Historical and research references support the limited claims attached to them. They do not establish the prevalence of every mechanism proposed in the book.",
+      "chapter": 1,
+      "section": "What Kind of Argument This Is"
+    },
+    {
+      "text": "The ethical standard remains direct: every person has standing; power carries obligations; claims should be open to evidence; and those affected by consequential decisions need a meaningful way to seek correction. This standard applies to governments and businesses, families and movements, critics and founders. It also applies to this manifesto.",
+      "chapter": 1,
+      "section": "What Kind of Argument This Is"
+    }
+  ],
+  "parts": [
+    {
+      "id": "described",
+      "name": "The country described",
+      "place": "above",
+      "members": [
+        "Idealism",
+        "Division"
+      ],
+      "summary": {
+        "text": "The culture shows a different image than it lives.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "id": "inversion",
+      "name": "The Inversion",
+      "place": "line",
+      "summary": {
+        "text": "The Inversion: professing virtue, and practicing the exact opposite.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "id": "citizen",
+      "name": "The citizen",
+      "place": "on",
+      "summary": {
+        "text": "The citizen lives and feels the contradiction without knowing it.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "id": "leech",
+      "name": "The Leech",
+      "place": "below",
+      "members": [
+        "Civilizational inheritance",
+        "Domination as human value",
+        "Dehumanization",
+        "Racial hierarchy"
+      ],
+      "summary": {
+        "text": "The culture is dominance-based, and people think it is normal.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "id": "authorship",
+      "name": "Authorship",
+      "place": "outside",
+      "summary": {
+        "text": "One is your nature and the other is somebody's business model.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      }
+    }
+  ],
+  "scenes": {
+    "model": {
+      "heading": {
+        "text": "We live in two countries at once: the one described, and the one lived in.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    "idealism": {
+      "heading": {
+        "text": "Look at what the culture says it is. Then look at what it does.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "lines": [
+        {
+          "text": "A civilization cannot establish its moral standing by reciting values its institutions are permitted to violate.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice"
+        },
+        {
+          "text": "That is our condition: no solid moral foundation.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice",
+          "mark": "no solid moral foundation"
+        }
+      ]
+    },
+    "division": {
+      "heading": {
+        "text": "A cultural bubble is a field of mutually reinforcing interpretations.",
+        "chapter": 3,
+        "section": "11. The Cultural Bubble"
+      },
+      "lines": [
+        {
+          "text": "our harm is always justified, their harm always reveals their nature; our members deserve explanation, theirs deserve suspicion.",
+          "chapter": 3,
+          "section": "14. Belonging without Superiority",
+          "fragment": "start"
+        },
+        {
+          "text": "A standard advertised as universal becomes conditional upon loyalty.",
+          "chapter": 3,
+          "section": "14. Belonging without Superiority",
+          "mark": "conditional upon loyalty"
+        }
+      ]
+    },
+    "inversion": {
+      "heading": {
+        "text": "The Inversion: professing virtue, and practicing the exact opposite.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "lines": [
+        {
+          "text": "We claim many values we do not practice. What we practice is who we are.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice"
+        },
+        {
+          "text": "None of these is a lapse. Obsequiousness and dishonesty are the values we practice.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice"
+        }
+      ]
+    },
+    "leech": {
+      "heading": {
+        "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+        "chapter": 1,
+        "section": "1. The Attitude Comes First"
+      },
+      "lines": [
+        {
+          "text": "It gives you your place, and expects you to keep it.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "expects you to keep it"
+        },
+        {
+          "text": "None of these statements turns a human being into the attitude they have learned.",
+          "chapter": 1,
+          "section": "1. The Attitude Comes First"
+        }
+      ]
+    },
+    "terms": {
+      "lines": [
+        {
+          "text": "A person does not have to invent an attitude that their surroundings already reward.",
+          "chapter": 1,
+          "section": "4. An Uncivil Inheritance"
+        }
+      ]
+    },
+    "citizen": {
+      "heading": {
+        "text": "Not the state, but the citizen trained to do it.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "lines": [
+        {
+          "text": "You inherited a mind that was already occupied.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "already occupied"
+        },
+        {
+          "text": "The Leech is protected by the Host itself.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ]
+    },
+    "erosion": {
+      "heading": {
+        "text": "You are pressed to choose: be crushed, or be compromised.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "term": "moral-erosion",
+      "lines": [
+        {
+          "text": "Moral erosion is therefore more than a single failure to act. It is a growing permission to treat the failure as reasonable, and to demand the same accommodation from others.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "You start asking whether a thought is permissible before whether it is sound.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ]
+    },
+    "nature": {
+      "heading": {
+        "text": "One is your nature and the other is somebody's business model.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "lines": [
+        {
+          "text": "Obsequiousness and dishonesty are not human nature. They belong to the infection, not to the person, and neither infection nor erosion places anyone beyond recovery.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "That is not your fault, but it is now your responsibility.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "it is now your responsibility"
+        }
+      ]
+    },
+    "inquire": {
+      "heading": {
+        "text": "A serious school of thought must permit its own claims to be corrected.",
+        "chapter": 1,
+        "section": "What Kind of Argument This Is"
+      }
+    }
+  },
+  "home": {
+    "thesis": {
+      "worth": {
+        "text": "You were born valuable before you produced anything.",
+        "chapter": 4,
+        "section": "13. What We Owe the Next Life"
+      },
+      "judged": {
+        "text": "A society must be judged by whether its institutions preserve that order or reverse it.",
+        "doc": "amm-1-earlier",
+        "section": "(opening)"
+      }
+    },
+    "revolution": {
+      "lines": [
+        {
+          "text": "The task is to revise the terms through which people learn what power permits. New leaders alone cannot accomplish that.",
+          "chapter": 4,
+          "section": "1. A Different Meaning of Strength",
+          "mark": "revise the terms through which people learn what power permits"
+        }
+      ]
+    },
+    "inversion": {
+      "heading": {
+        "text": "The Inversion: professing virtue, and practicing the exact opposite.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "lines": [
+        {
+          "text": "We claim many values we do not practice. What we practice is who we are.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice",
+          "mark": "What we practice is who we are."
+        },
+        {
+          "text": "You learn that human dignity can be called universal while protection remains conditional.",
+          "doc": "letter",
+          "section": "(opening)",
+          "mark": "called universal"
+        }
+      ]
+    },
+    "host": {
+      "lines": [
+        {
+          "text": "The Host is the living public and the conditions of shared life through which people develop, act, care, and carry a future forward.",
+          "chapter": 3,
+          "section": "1. Who the Host Is",
+          "mark": "the living public"
+        },
+        {
+          "text": "The host is the public, supplying labor, taxes, savings, purchases, debt, land, water, electricity, attention, data, and legitimacy.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy"
+        }
+      ]
+    },
+    "leech": {
+      "lines": [
+        {
+          "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+          "chapter": 1,
+          "section": "1. The Attitude Comes First",
+          "mark": "domination of other people"
+        },
+        {
+          "text": "People can express it. Institutions can reward it. A culture can make it appear admirable.",
+          "chapter": 1,
+          "section": "1. The Attitude Comes First"
+        }
+      ]
+    },
+    "anatomy": {
+      "lines": [
+        {
+          "text": "The Leech has a composition. In AMM, its two strategic centers are the Security-Industrial Oligarchy and the Technological-Platform Oligarchy.",
+          "doc": "amm-3-earlier",
+          "section": "The Leech and the logic it carries"
+        },
+        {
+          "text": "Government is a principal attachment point because it makes and enforces laws, awards contracts, supplies funding, and protects claims.",
+          "doc": "amm-3-earlier",
+          "section": "The Leech and the logic it carries",
+          "mark": "Government is a principal attachment point"
+        }
+      ],
+      "note": {
+        "text": "These names identify concentrations of power examined in Chapter 2. They do not make every worker within those industries equally responsible for their decisions.",
+        "doc": "amm-3-earlier",
+        "section": "The Leech and the logic it carries"
+      }
+    },
+    "feeding": {
+      "lines": [
+        {
+          "text": "The Leech attaches to an interface, converts dependence into recurring revenue, and uses concentrated power to make the interface harder to leave.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy",
+          "mark": "converts dependence into recurring revenue"
+        },
+        {
+          "text": "The public is told there is no alternative. That sentence marks the feeding point.",
+          "doc": "amm-2-earlier",
+          "section": "4. The Drainers",
+          "mark": "the feeding point"
+        }
+      ]
+    },
+    "gap": {
+      "heading": {
+        "text": "Look at what the culture says it is. Then look at what it does.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "pairs": [
+        0,
+        1,
+        5
+      ],
+      "lines": [
+        {
+          "text": "A standard advertised as universal becomes conditional upon loyalty.",
+          "chapter": 3,
+          "section": "14. Belonging without Superiority",
+          "mark": "conditional upon loyalty"
+        },
+        {
+          "text": "What we practice is who we are.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice",
+          "mark": "who we are"
+        }
+      ]
+    },
+    "why": {
+      "heading": {
+        "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+        "chapter": 1,
+        "section": "1. The Attitude Comes First"
+      },
+      "lines": [
+        {
+          "text": "It gives you your place, and expects you to keep it.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "expects you to keep it"
+        }
+      ]
+    },
+    "spiral": {
+      "lines": [
+        {
+          "text": "A rule once imposed from outside becomes a standard you carry into the next meeting, the next relationship, and the next generation.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "the next generation"
+        },
+        {
+          "text": "Repetition changes what the person can comfortably acknowledge and what they are prepared to impose.",
+          "chapter": 3,
+          "section": "12. How a Compromise Becomes a Principle",
+          "mark": "what they are prepared to impose"
+        }
+      ],
+      "carrier": [
+        {
+          "text": "Agree now. Fix it later.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "It's not my place.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "I have a family.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ],
+      "enforcer": [
+        {
+          "text": "I paid my dues. So will they.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "Know your place.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ],
+      "inversion": {
+        "text": "That's just human nature.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      }
+    },
+    "feeling": {
+      "heading": {
+        "text": "The dissatisfaction is real.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "lines": [
+        {
+          "text": "We see enough to grow cynical, and still most of us conform.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "still most of us conform"
+        },
+        {
+          "text": "You are pressed to choose: be crushed, or be compromised.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "Seeing the contradiction clearly can leave a person lonely, angry, and unsure where to go.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "lonely, angry, and unsure where to go"
+        }
+      ]
+    },
+    "attention": {
+      "heading": {
+        "text": "You should be able to carry a thought across years.",
+        "doc": "letter",
+        "section": "(opening)"
+      },
+      "lines": [
+        {
+          "text": "But you are trained to live from interruption to interruption.",
+          "doc": "letter",
+          "section": "(opening)",
+          "mark": "from interruption to interruption"
+        },
+        {
+          "text": "That is not a small inconvenience. That is part of the damage being done to you.",
+          "doc": "letter",
+          "section": "(opening)",
+          "mark": "part of the damage being done to you"
+        }
+      ],
+      "jammed": {
+        "text": "Your attention has been jammed with notifications, feeds, headlines, outrage, DMs, meetings, insecurities, and endless fragments competing for the next few seconds of your mind.",
+        "doc": "letter",
+        "section": "(opening)"
+      },
+      "thread": {
+        "whole": "a thought across years",
+        "broken": "the next few seconds of your mind",
+        "interruptions": [
+          "notifications",
+          "feeds",
+          "headlines",
+          "outrage",
+          "DMs",
+          "meetings",
+          "insecurities"
+        ]
+      }
+    },
+    "mind": {
+      "heading": {
+        "text": "A platform can study what frightens you, what angers you, what interrupts judgment, and what returns you to the screen.",
+        "doc": "amm-2-earlier",
+        "section": "1. The Digital Toll Collectors"
+      },
+      "lines": [
+        {
+          "text": "The consequences arise as distraction, agitation, compulsive comparison, or the persistent sense that reality is collapsing faster than it can be understood.",
+          "doc": "amm-2-earlier",
+          "section": "1. The Digital Toll Collectors",
+          "mark": "reality is collapsing faster than it can be understood"
+        }
+      ],
+      "suffering": {
+        "text": "The suffering feels intimate.",
+        "doc": "amm-2-earlier",
+        "section": "1. The Digital Toll Collectors"
+      },
+      "revenue": {
+        "text": "The revenue remains institutional.",
+        "doc": "amm-2-earlier",
+        "section": "1. The Digital Toll Collectors"
+      },
+      "still": [
+        {
+          "text": "An anxious person still scrolls.",
+          "doc": "amm-2-earlier",
+          "section": "The New Head: The Technological-Platform Oligarchy"
+        },
+        {
+          "text": "An isolated person still generates data.",
+          "doc": "amm-2-earlier",
+          "section": "The New Head: The Technological-Platform Oligarchy"
+        },
+        {
+          "text": "An exhausted household still pays subscriptions.",
+          "doc": "amm-2-earlier",
+          "section": "The New Head: The Technological-Platform Oligarchy"
+        },
+        {
+          "text": "A frightened public remains commercially valuable.",
+          "doc": "amm-2-earlier",
+          "section": "The New Head: The Technological-Platform Oligarchy"
+        }
+      ],
+      "rows": [
+        {
+          "before": "An anxious person",
+          "after": "still scrolls."
+        },
+        {
+          "before": "An isolated person",
+          "after": "still generates data."
+        },
+        {
+          "before": "An exhausted household",
+          "after": "still pays subscriptions."
+        },
+        {
+          "before": "A frightened public",
+          "after": "remains commercially valuable."
+        }
+      ]
+    },
+    "us": {
+      "heading": {
+        "text": "You inherited a mind that was already occupied.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "renamed": {
+        "text": "We call exhaustion adulthood, anxiety responsibility, isolation independence, and endless accumulation success.",
+        "doc": "dot",
+        "section": "The Performance of Normality",
+        "file": "the-painting"
+      },
+      "lines": [
+        {
+          "text": "What you have learned to call normal becomes part of the world another person must live in.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "part of the world another person must live in"
+        }
+      ],
+      "renames": {
+        "lead": "We call",
+        "pairs": [
+          {
+            "is": "exhaustion",
+            "called": "adulthood"
+          },
+          {
+            "is": "anxiety",
+            "called": "responsibility"
+          },
+          {
+            "is": "isolation",
+            "called": "independence"
+          },
+          {
+            "is": "endless accumulation",
+            "called": "success"
+          }
+        ]
+      }
+    },
+    "way": {
+      "heading": {
+        "text": "The character carries the infection. The two have to be separated.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      },
+      "lines": [
+        {
+          "text": "One is your nature and the other is somebody's business model.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "That is not your fault, but it is now your responsibility.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "it is now your responsibility"
+        },
+        {
+          "text": "Obsequiousness and dishonesty are not human nature. They belong to the infection, not to the person, and neither infection nor erosion places anyone beyond recovery.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "neither infection nor erosion places anyone beyond recovery"
+        }
+      ]
+    }
+  },
+  "leechTerms": [
+    {
+      "id": "inheritance",
+      "term": "Civilizational inheritance",
+      "line": {
+        "text": "America inherited institutions, vocabularies, and claims from Western histories in which declarations of human advancement coexisted with conquest, enslavement, and exclusion.",
+        "chapter": 1,
+        "section": "4. An Uncivil Inheritance"
+      }
+    },
+    {
+      "id": "value",
+      "term": "Domination as human value",
+      "line": {
+        "text": "Enough is a position above someone else.",
+        "chapter": 1,
+        "section": "7. The Promise of Getting Ahead"
+      }
+    },
+    {
+      "id": "dehumanization",
+      "term": "Dehumanization",
+      "line": {
+        "text": "another person's dependence is converted into a reason to discount their standing.",
+        "chapter": 1,
+        "section": "2. Power, Authority, and Domination",
+        "fragment": "start"
+      }
+    },
+    {
+      "id": "hierarchy",
+      "term": "Racial hierarchy",
+      "line": {
+        "text": "The country proclaimed human equality while allowing human beings to be property. That is the Inversion at the foundation.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "claim": {
+        "text": "We claim honesty and integrity.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice dishonesty.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we treat the honest person as naive, or as a threat.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim free speech and independence.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice obsequiousness.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we isolate the one who will not defer.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim merit.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice proximity to power.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we court the powerful while overlooking the able.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim teamwork.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice credit up, blame down.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we let the one with the least power carry the failure.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim accountability.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice accountability for those below and immunity for those above.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we make excuses for those above us.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim that every person has worth.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice worth by title and salary.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we measure one another by what we earn, what we own, and how useful we are.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    },
+    {
+      "claim": {
+        "text": "We claim freedom.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "practice": {
+        "text": "We practice fear.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      },
+      "consequence": {
+        "text": "And we teach one another what honesty might cost. You are rich enough to obey, and too poor to refuse. Fear makes obedience feel like prudence long after the danger has passed.",
+        "chapter": 3,
+        "section": "3. The Inversion in Practice"
+      }
+    }
+  ],
+  "terms": [
+    {
+      "id": "the-leech",
+      "term": "The Leech",
+      "definition": {
+        "text": "Exclusively the attitude that treats domination of other people as a legitimate route to security, worth, or advantage. People can adopt or resist it; institutions can organize or reward it. The term does not identify a person, class, nation, ethnicity, or separate organism.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "domination",
+      "term": "Domination",
+      "definition": {
+        "text": "Consequential control that subordinates others' agency to securing one's own position, or that of a favored group or institution, while withholding adequate justification, meaningful challenge, or reciprocal accountability. A justified, proportionate, reviewable constraint is not automatically domination.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "institutionalized-dominance",
+      "term": "Institutionalized dominance",
+      "definition": {
+        "text": "Rules, incentives, dependencies, or practices that organize and protect the exercise of that attitude. Its presence requires evidence about a particular arrangement.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "extraction",
+      "term": "Extraction",
+      "definition": {
+        "text": "In this argument, benefit secured through unjustified imposed costs or exploitation of dependence, particularly where effective challenge is obstructed. Payment, profit, wealth, and intermediation do not establish it by themselves.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "the-host",
+      "term": "The Host",
+      "definition": {
+        "text": "The living public and conditions of shared life. Membership is not earned through economic contribution, citizenship, social rank, or agreement with this book. The metaphor does not imply one collective consciousness or a single national will.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "the-head-of-the-host",
+      "term": "The head of the Host",
+      "definition": {
+        "text": "The function through which delegated authority and interpretive credibility direct shared activity. It can enable correction or protect a harmful arrangement. It does not assign a profession or a community a fixed moral nature.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "infection",
+      "term": "Infection",
+      "definition": {
+        "text": "A metaphor for learning, internalizing, and reproducing the attitude of dominance. It is not a pathogen, clinical diagnosis, or inference justified by disagreement or distress.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "experience-loop"
+      ]
+    },
+    {
+      "id": "canvas",
+      "term": "Canvas",
+      "definition": {
+        "text": "In DOT, the persistent capacity to carry and update state for a local instance of awareness. DOT's stronger claim that this capacity is not exhausted by biology remains unverified.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "canvas"
+      ]
+    },
+    {
+      "id": "painting",
+      "term": "Painting",
+      "definition": {
+        "text": "The accumulated organization of Canvas state: meanings, expectations, fears, loyalties, habits, skills, and other carried patterns. The Painting is not the Canvas itself or the entirety of the experiencer.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "painting"
+      ]
+    },
+    {
+      "id": "intent",
+      "term": "Intent",
+      "definition": {
+        "text": "A directional commitment that selects or stabilizes a move toward action. It is distinct from every thought, urge, or response that appears before commitment.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "intent"
+      ]
+    },
+    {
+      "id": "character",
+      "term": "Character",
+      "definition": {
+        "text": "The relatively stable policy of action expressed through repeated interpretation and response. It can be revised; it is not a permanent measure of intrinsic human worth.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "character"
+      ]
+    },
+    {
+      "id": "decision-space",
+      "term": "Decision-space",
+      "definition": {
+        "text": "Meaningful actions both available and visible under present bodily, psychological, relational, and structural conditions. Material impossibility cannot be repaired solely by noticing another interpretation.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "fear-and-fear",
+      "term": "fear and Fear",
+      "definition": {
+        "text": "Lower-case fear names a protective signal or state related to predicted threat. Capital Fear names threat becoming the governing organizer of interpretation and decision-space. The distinction concerns governance, not intensity alone.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "fear-gating"
+      ]
+    },
+    {
+      "id": "love",
+      "term": "Love",
+      "definition": {
+        "text": "At the human level in DOT, the condition and practice in which Fear no longer governs: accurate contact, truthful revision, proportionate boundaries, concern for others' agency, accountability, and repair. It does not require appeasement, reconciliation, or absence of fear.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "love"
+      ]
+    },
+    {
+      "id": "practical-decoupling",
+      "term": "Practical decoupling",
+      "definition": {
+        "text": "Noticing a bodily state or learned pattern without automatically identifying with or obeying it. The living body and Canvas remain functionally coupled. This practice does not establish DOT's ontological claims.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": [
+        "decoupling-principle"
+      ]
+    },
+    {
+      "id": "moral-erosion",
+      "term": "Moral erosion",
+      "definition": {
+        "text": "The ethical narrowing through which truth, care, agency, and responsibility become subordinate to protecting advantage or position. It describes a proposed pattern of conduct, not a mental illness or measured national condition.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    },
+    {
+      "id": "authorship",
+      "term": "Authorship",
+      "definition": {
+        "text": "Deliberate, answerable participation in shaping responses and shared conditions within real constraints. It is not independence from history, other people, the body, or consequence.",
+        "chapter": 4,
+        "section": "Working Definitions"
+      },
+      "applies": []
+    }
+  ],
+  "method": {
+    "intro": {
+      "text": "A serious claim about dominance should follow a complete enough relationship to be challenged.",
+      "chapter": 2,
+      "section": "10. Following a Relationship Precisely"
+    },
+    "steps": [
+      {
+        "id": "power",
+        "label": "Power",
+        "text": {
+          "text": "Begin with the power: who can decide what? Distinguish ownership, delegated authority, professional influence, and simple participation. A person may benefit from an arrangement without being able to set its terms.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        },
+        "prompt": {
+          "text": "Begin with the power: who can decide what?",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        }
+      },
+      {
+        "id": "dependence",
+        "label": "Dependence",
+        "text": {
+          "text": "Then identify the dependence. What does the affected person need? Which alternatives exist in practice? What would leaving, appealing, or refusing cost? Do not infer captivity from every inconvenience or freedom from every theoretical alternative.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        },
+        "prompt": {
+          "text": "Then identify the dependence. What does the affected person need? Which alternatives exist in practice? What would leaving, appealing, or refusing cost?",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        }
+      },
+      {
+        "id": "benefit-and-burden",
+        "label": "Benefit and burden",
+        "text": {
+          "text": "Next identify the benefit and the imposed burden. Money is one benefit, but status, discretion, secrecy, and protection from criticism can matter too. A burden may fall on people absent from the contract, including families, neighboring communities, or future participants.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        },
+        "prompt": {
+          "text": "Next identify the benefit and the imposed burden.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        }
+      },
+      {
+        "id": "justification-and-correction",
+        "label": "Justification and correction",
+        "text": {
+          "text": "Then examine justification and correction. What legitimate purpose does the restriction serve? Is it proportionate? Who can test the reason? What happens when the reason fails? A remedy dependent entirely upon the goodwill of the original decision-maker may be inadequate where the stakes and asymmetry are substantial.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        },
+        "prompt": {
+          "text": "Then examine justification and correction. What legitimate purpose does the restriction serve? Is it proportionate? Who can test the reason? What happens when the reason fails?",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        }
+      },
+      {
+        "id": "response-to-evidence",
+        "label": "Response to evidence",
+        "text": {
+          "text": "Finally, examine response to evidence. A mistake followed by prompt repair differs from a known injury concealed for advantage. A person constrained by a rule differs from one who can revise it and chooses not to. Responsibility must follow these distinctions.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        },
+        "prompt": {
+          "text": "Finally, examine response to evidence.",
+          "chapter": 2,
+          "section": "10. Following a Relationship Precisely"
+        }
+      }
+    ],
+    "counter": {
+      "text": "This method also identifies counterevidence. Realistic exit, independent review, effective protections against retaliation, transparent allocation of costs, and documented correction can weaken a particular claim of domination. They do not need to make an institution perfect to matter. An analysis that cannot recognize improvement has become a closed explanation.",
+      "chapter": 2,
+      "section": "10. Following a Relationship Precisely"
+    }
+  },
+  "weaken": [
+    {
+      "text": "A framework earns trust partly by specifying what it cannot claim.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    },
+    {
+      "text": "If a person complies with a harmful demand while openly distinguishing necessity from endorsement, that weakens the claim that they have internalized dominance. If an institution protects criticism and changes a rule after credible evidence, that weakens the claim that its purpose is insulated from correction. If a restriction is justified, proportionate, reviewable, and responsive to the people affected, the mere presence of authority does not establish domination.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    },
+    {
+      "text": "If someone rejects this analysis for reasons that survive scrutiny, rejection is counterargument, not a symptom. The account cannot become self-sealing by declaring that anyone who denies infection has proved its depth.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    },
+    {
+      "text": "An inference about fear also requires evidence. A person's conduct may support an interpretation of what they are protecting, but that interpretation remains revisable. Reward, convention, incomplete knowledge, institutional constraint, and a genuine competing obligation can provide other explanations. A serious account must consider them.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    },
+    {
+      "text": "The most reliable practical conclusion is often narrower than the most satisfying moral story. We may know that a procedure punishes justified objection without knowing the complete psychology of its designers. That can be enough to require changing the procedure. Accountability need not wait for access to a hidden interior.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    },
+    {
+      "text": "Precision strengthens the critique. It prevents the language of cultural analysis from becoming a claim to read minds. It also allows cooperation among people who disagree about ultimate explanations but can recognize a documented harm and a workable remedy.",
+      "chapter": 3,
+      "section": "17. What Would Weaken the Infection Account?"
+    }
+  ],
+  "change": [
+    {
+      "text": "The success of this argument cannot be measured by how many people repeat its vocabulary. Calling a habit a Painting does not establish that it has been revised. Calling an organization humane does not establish that participants can challenge it.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "At the personal level, ask what happens in a recurring situation where dominance previously appeared. Can a person notice the governing interpretation? Can they distinguish a feeling from a fact and a draft from a commitment? Do they respond differently when it matters? When they fail, do they acknowledge the consequence and make a specific repair?",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "At the relational level, ask whether other people have more room to speak accurately, set a reasonable boundary, and receive an explanation. Their accounts matter, particularly when they have less power. A leader's self-assessment cannot stand in for the experience of those affected.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "At the institutional level, ask whether justified concerns reach someone who can act, whether retaliation is prevented and addressed, whether errors produce remedies, and whether repeated failures change incentives or rules. A record of correction is more informative than the existence of a policy alone.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "These are directions for evaluation, not a newly validated measurement scale. Any assessment needs appropriate evidence and safeguards. It should avoid turning private distress into a public score or collecting intimate information merely because the framework has named an inner process.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "We also need to ask who has become less free. A reform can shift burdens to people outside its field of view. A convenient digital alternative can create a new gatekeeper. A protective rule can be used selectively. The inquiry must follow the consequence beyond the circle that celebrates the change.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "Progress will be uneven. Some practices can improve while others remain harmful. Recognizing a real improvement is not surrender; it is necessary to accurate judgment. Recognizing persistent harm is not disloyalty; it is necessary to the same standard.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    },
+    {
+      "text": "The practical measure is whether people gain truthful, meaningful possibility under conditions that remain answerable. That measure can guide work without pretending the work has already been completed.",
+      "chapter": 4,
+      "section": "12. How We Know Whether Anything Is Changing"
+    }
+  ],
+  "records": [
+    {
+      "id": "virginia",
+      "date": "1606-04-10",
+      "title": "The First Charter of Virginia",
+      "issuer": "Text preserved by Yale Law School's Avalon Project",
+      "href": "https://avalon.law.yale.edu/17th_century/va01.asp",
+      "use": "Used for its conjunction of a civilizing religious rationale with colonial authorization and claims.",
+      "chapter": 1
+    },
+    {
+      "id": "declaration",
+      "date": "1776-07-04",
+      "title": "Declaration of Independence",
+      "issuer": "National Archives transcription",
+      "href": "https://www.archives.gov/founding-docs/declaration-transcript",
+      "use": "Used for its stated principles of equality and government by consent.",
+      "chapter": 1
+    },
+    {
+      "id": "constitution",
+      "date": "1787-09-17",
+      "title": "Constitution of the United States, original Article IV, Section 2",
+      "issuer": "National Archives transcription",
+      "href": "https://www.archives.gov/founding-docs/constitution-transcript",
+      "use": "The discussion concerns the original constitutional accommodation of slavery, not a current obligation to return people to enslavement.",
+      "chapter": 1
+    },
+    {
+      "id": "voice",
+      "date": "2011-01-01",
+      "title": "Implicit Voice Theories: Taken-for-Granted Rules of Self-Censorship at Work",
+      "issuer": "James R. Detert and Amy C. Edmondson, Academy of Management Journal 54(3), 461–488",
+      "href": "https://journals.aom.org/doi/10.5465/amj.2011.61967925",
+      "use": "Used for the limited proposition that workplace self-censorship can involve taken-for-granted beliefs about speaking upward.",
+      "chapter": 3
+    },
+    {
+      "id": "ferguson",
+      "date": "2015-03-04",
+      "title": "Investigation of the Ferguson Police Department",
+      "issuer": "United States Department of Justice",
+      "href": "https://www.justice.gov/crt/case/united-states-v-city-ferguson",
+      "use": "Used for the investigation's findings on constitutional violations, revenue priorities, and racial bias in the specified police and municipal court practices.",
+      "chapter": 2
+    },
+    {
+      "id": "ftc",
+      "date": "2024-09-19",
+      "title": "Staff report on social media and video streaming services",
+      "issuer": "Federal Trade Commission",
+      "href": "https://www.ftc.gov/news-events/news/press-releases/2024/09/ftc-staff-report-finds-large-social-media-video-streaming-companies-have-engaged-vast-surveillance",
+      "use": "The cited findings describe the reviewed practices and period; they are not a current audit of every platform or an experimental test of DOT.",
+      "chapter": 2
+    },
+    {
+      "id": "diu",
+      "date": "2025-03-05",
+      "title": "DIU's Thunderforge Project to Integrate Commercial AI-Powered Decision-Making for Operational and Theater-Level Planning",
+      "issuer": "Defense Innovation Unit",
+      "href": "https://www.diu.mil/latest/dius-thunderforge-project-to-integrate-commercial-ai-powered-decision-making",
+      "use": "It documents the announced project and intended capabilities.",
+      "chapter": 2
+    }
+  ],
+  "sources": {
+    "dot": {
+      "label": "Book One",
+      "route": "/book/digital-organism-theory"
+    },
+    "amm-1-earlier": {
+      "label": "Chapter One, earlier edition",
+      "route": "/essays/amm-chapter-one-the-leech",
+      "path": "src/content/essays/amm-chapter-one-the-leech.md"
+    },
+    "amm-2-earlier": {
+      "label": "Chapter Two, earlier edition",
+      "route": "/essays/amm-chapter-two-the-leechs-anatomy",
+      "path": "src/content/essays/amm-chapter-two-the-leechs-anatomy.md"
+    },
+    "amm-3-earlier": {
+      "label": "Chapter Three, earlier edition",
+      "route": "/essays/amm-chapter-three-the-host-and-the-infection",
+      "path": "src/content/essays/amm-chapter-three-the-host-and-the-infection.md"
+    },
+    "letter": {
+      "label": "A Letter to an American Adult",
+      "route": "/essays/amm-letter-to-an-american-adult",
+      "path": "src/content/essays/amm-letter-to-an-american-adult.md"
+    }
+  },
+  "reflect": {
+    "civilization": {
+      "publisher": "National Geographic Education",
+      "title": "Key Components of Civilization",
+      "href": "https://education.nationalgeographic.org/resource/key-components-civilization/",
+      "definition": "Civilization describes a complex way of life characterized by urban areas, shared methods of communication, administrative infrastructure, and division of labor.",
+      "marksLead": "All civilizations have certain characteristics.",
+      "marks": [
+        "large population centers",
+        "monumental architecture and unique art styles",
+        "shared communication strategies",
+        "systems for administering territories",
+        "a complex division of labor",
+        "the division of people into social and economic classes"
+      ]
+    }
+  },
+  "power": {
+    "map": {
+      "heading": {
+        "text": "An attitude becomes institutionally consequential when it helps determine terms other people must live under.",
+        "chapter": 2,
+        "section": "1. From a Disposition to an Arrangement"
+      }
+    },
+    "wealth": {
+      "lines": [
+        {
+          "text": "In the first quarter of 2026, American households held roughly $174 trillion in net worth.",
+          "doc": "amm-2-earlier",
+          "section": "Where the Capital Lives"
+        },
+        {
+          "text": "The problem is distribution and control.",
+          "doc": "amm-2-earlier",
+          "section": "Where the Capital Lives",
+          "mark": "distribution and control"
+        }
+      ]
+    },
+    "equity": {
+      "lines": [
+        {
+          "text": "The imbalance becomes sharper when the asset is corporate equity.",
+          "doc": "amm-2-earlier",
+          "section": "Where the Capital Lives"
+        },
+        {
+          "text": "This is how rising market values can produce great national wealth without producing comparable economic sovereignty for most households.",
+          "doc": "amm-2-earlier",
+          "section": "Where the Capital Lives",
+          "mark": "without producing comparable economic sovereignty"
+        },
+        {
+          "text": "Ownership exists, yet immediate agency remains constrained.",
+          "doc": "amm-2-earlier",
+          "section": "Where the Capital Lives",
+          "mark": "immediate agency remains constrained"
+        }
+      ]
+    },
+    "savings": {
+      "lines": [
+        {
+          "text": "Your retirement account may hold the shares, but you rarely exercise meaningful authority over the corporate power attached to them.",
+          "doc": "amm-2-earlier",
+          "section": "2. The Asset Hoarders and Financial Gatekeepers",
+          "mark": "you rarely exercise meaningful authority"
+        },
+        {
+          "text": "This is the central contradiction: millions of workers collectively supply capital while its practical administration concentrates inside a small number of institutions.",
+          "doc": "amm-2-earlier",
+          "section": "2. The Asset Hoarders and Financial Gatekeepers",
+          "mark": "concentrates inside a small number of institutions"
+        }
+      ]
+    },
+    "income": {
+      "drain": {
+        "text": "Meanwhile the bottom half is drained, because nearly all its income must circulate immediately through housing, healthcare, debt service, food, transportation, utilities, and digital tolls.",
+        "doc": "amm-2-earlier",
+        "section": "The Bigger Danger: The Leech Is Abandoning America",
+        "mark": "the bottom half is drained"
+      },
+      "up": {
+        "text": "Wealth moves upward into claims that are liquid, diversified, and globally mobile.",
+        "doc": "amm-2-earlier",
+        "section": "The Bigger Danger: The Leech Is Abandoning America"
+      },
+      "down": {
+        "text": "Obligation moves downward into lives that remain embodied, indebted, taxable, and geographically fixed.",
+        "doc": "amm-2-earlier",
+        "section": "The Bigger Danger: The Leech Is Abandoning America"
+      },
+      "close": {
+        "text": "The Leech keeps the upside frictionless and returns the friction to the host.",
+        "doc": "amm-2-earlier",
+        "section": "The Bigger Danger: The Leech Is Abandoning America",
+        "mark": "returns the friction to the host"
+      },
+      "upWords": {
+        "line": "Wealth moves upward into claims that are",
+        "words": [
+          "liquid",
+          "diversified",
+          "globally mobile"
+        ]
+      },
+      "downWords": {
+        "line": "Obligation moves downward into lives that remain",
+        "words": [
+          "embodied",
+          "indebted",
+          "taxable",
+          "geographically fixed"
+        ]
+      }
+    },
+    "housing": {
+      "ftc": {
+        "text": "The Federal Trade Commission estimated in 2025 that mega-investors collectively owned and operated roughly 446,000 single-family homes nationwide.",
+        "doc": "amm-2-earlier",
+        "section": "2. The Asset Hoarders and Financial Gatekeepers"
+      },
+      "gao": {
+        "text": "A 2026 GAO analysis found that institutional ownership increased from 2018 through 2024 across six selected metropolitan areas; in 2024, qualifying investors held 22 percent of single-family rentals in Jacksonville, 13 percent in Phoenix, and 9 percent in Dallas, while remaining a much smaller share of all single-family homes.",
+        "doc": "amm-2-earlier",
+        "section": "2. The Asset Hoarders and Financial Gatekeepers"
+      },
+      "metros": [
+        {
+          "label": "Jacksonville",
+          "value": 22
+        },
+        {
+          "label": "Phoenix",
+          "value": 13
+        },
+        {
+          "label": "Dallas",
+          "value": 9
+        }
+      ],
+      "caveat": {
+        "text": "Institutional investors do not own most American homes, and the evidence on their national effect on homeownership is not conclusive.",
+        "doc": "amm-2-earlier",
+        "section": "2. The Asset Hoarders and Financial Gatekeepers"
+      },
+      "lines": [
+        {
+          "text": "A home remains shelter to the person inside it. To a financial model it becomes a yield stream composed of rent, fees, appreciation, maintenance cost, vacancy, and eviction probability.",
+          "doc": "amm-2-earlier",
+          "section": "2. The Asset Hoarders and Financial Gatekeepers",
+          "mark": "a yield stream"
+        },
+        {
+          "text": "The insecurity belongs to the host.",
+          "doc": "amm-2-earlier",
+          "section": "2. The Asset Hoarders and Financial Gatekeepers",
+          "mark": "insecurity"
+        }
+      ],
+      "sources": {
+        "ftc": "https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-seeks-public-comment-single-family-rental-home-mega-investors-study",
+        "gao": "https://www.gao.gov/assets/gao-26-108675.pdf"
+      }
+    },
+    "necessity": {
+      "lines": [
+        {
+          "text": "Necessity makes dependence unusually consequential. Refusing an entertainment purchase is different from refusing the only available source of an essential service.",
+          "chapter": 2,
+          "section": "6. Fourth Interface: Claims upon Public Necessity",
+          "mark": "the only available source of an essential service"
+        },
+        {
+          "text": "A person who controls access to a scarce necessity can receive continuing payments from people who cannot readily provide that necessity themselves.",
+          "chapter": 2,
+          "section": "4. Second Interface: Finance and Asset Gatekeeping",
+          "mark": "continuing payments"
+        }
+      ],
+      "between": [
+        {
+          "text": "Between you and shelter stands a landlord, lender, or fund.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy"
+        },
+        {
+          "text": "Between you and medical care stands an insurer, patent, or pharmaceutical pricing system.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy"
+        },
+        {
+          "text": "Between you and the market stands a tech platform.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy"
+        },
+        {
+          "text": "Between you and other people stands an algorithm.",
+          "doc": "amm-2-earlier",
+          "section": "The Leech’s Anatomy"
+        }
+      ],
+      "close": {
+        "text": "The public is told there is no alternative. That sentence marks the feeding point.",
+        "doc": "amm-2-earlier",
+        "section": "4. The Drainers"
+      }
+    },
+    "choices": {
+      "lines": [
+        {
+          "text": "Debt can become part of how a person interprets a supervisor's request. A threatened loss can make an otherwise visible refusal practically unavailable.",
+          "chapter": 2,
+          "section": "4. Second Interface: Finance and Asset Gatekeeping",
+          "mark": "refusal practically unavailable"
+        },
+        {
+          "text": "The person is not free merely because a contract describes them as choosing.",
+          "chapter": 2,
+          "section": "4. Second Interface: Finance and Asset Gatekeeping",
+          "mark": "not free"
+        },
+        {
+          "text": "Their dependence is part of the explanation, not evidence that they consented to the terms.",
+          "chapter": 3,
+          "section": "5. The Host's Unequal Positions",
+          "mark": "not evidence that they consented"
+        }
+      ]
+    },
+    "concentrated": {
+      "lines": [
+        {
+          "text": "The Leech remains the attitude of dominance. Extraction is one way the attitude may become materially organized.",
+          "chapter": 1,
+          "section": "8. The Material Expression of Dominance",
+          "mark": "the attitude of dominance"
+        },
+        {
+          "text": "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.",
+          "chapter": 1,
+          "section": "8. The Material Expression of Dominance",
+          "mark": "enforced dependence"
+        }
+      ],
+      "knowledge": {
+        "text": "Dominance can arise where control of a method, credential, technical standard, or specialized language becomes a means of preventing effective challenge.",
+        "chapter": 2,
+        "section": "5. Third Interface: Knowledge, Expertise, and Permission"
+      },
+      "records": {
+        "state": "diu",
+        "technology": "ftc"
+      }
+    },
+    "enters": {
+      "heading": {
+        "text": "By the time you are old enough to question your society, much of that society is already participating in the questioning.",
+        "doc": "dot",
+        "section": "The Culture Inside You",
+        "file": "the-painting"
+      },
+      "lines": [
+        {
+          "text": "Its categories are inside your language. Its fears are inside your body. Its measures of success are inside your ambitions.",
+          "doc": "dot",
+          "section": "The Culture Inside You",
+          "file": "the-painting",
+          "mark": "Its fears are inside your body"
+        },
+        {
+          "text": "Even your rebellion may be organized by the options it taught you to see.",
+          "doc": "dot",
+          "section": "The Culture Inside You",
+          "file": "the-painting",
+          "mark": "organized by the options it taught you to see"
+        },
+        {
+          "text": "This is how civilization becomes Painting.",
+          "doc": "dot",
+          "section": "The Culture Inside You",
+          "file": "the-painting"
+        }
+      ]
+    },
+    "anchor": {
+      "lines": [
+        {
+          "text": "A civilization cannot establish its moral standing by reciting values its institutions are permitted to violate.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice"
+        },
+        {
+          "text": "That is our condition: no solid moral foundation.",
+          "chapter": 3,
+          "section": "3. The Inversion in Practice",
+          "mark": "no solid moral foundation"
+        }
+      ]
+    },
+    "carry": {
+      "heading": {
+        "text": "A person does not have to intend the whole system for the system to continue through that person.",
+        "doc": "dot",
+        "section": "The Culture Inside You",
+        "file": "the-painting",
+        "mark": "continue through that person"
+      },
+      "lines": [
+        {
+          "text": "An arrangement gains a deeper hold when the people living under it supply the reasons to obey it.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "supply the reasons to obey it"
+        },
+        {
+          "text": "The institution no longer has to defend itself. People who need to stay inside it defend it to one another, and the bargain receives its moral defense from the person it constrains.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces",
+          "mark": "the bargain receives its moral defense from the person it constrains"
+        }
+      ]
+    },
+    "citizen": {
+      "carrier": [
+        {
+          "text": "Be realistic.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        },
+        {
+          "text": "Don't make enemies.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ],
+      "enforcer": [
+        {
+          "text": "Know your place.",
+          "chapter": 3,
+          "section": "4. The Citizen Enforces"
+        }
+      ],
+      "protects": {
+        "text": "That's just human nature.",
+        "chapter": 3,
+        "section": "4. The Citizen Enforces"
+      }
+    }
+  }
+}

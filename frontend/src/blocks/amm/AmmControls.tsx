@@ -4,8 +4,8 @@ import { DotButton, type DotButtonProps } from '../../shared/DotButton';
 import './amm-controls.css';
 
 /** Publication variants of the existing native button/link primitive. */
-export function AmmButton({ variant = 'secondary', className = '', ...props }: DotButtonProps & { variant?: 'primary' | 'secondary' }) {
-  return <DotButton {...props} className={`amm-button amm-button--${variant} ${className}`} />;
+export function AmmButton({ variant = 'secondary', className = '', ...props }: DotButtonProps & { variant?: 'primary' | 'secondary' | 'quiet' }) {
+  return <DotButton {...props} className={`amm-button amm-button--${variant} ${className}`.trim()} />;
 }
 
 /** A labelled, resizable authoring field using the shared appearance tokens. */

@@ -1,0 +1,319 @@
+/*
+ * Attention OS · Inquiry primitives. Everything a serious reader needs to test a
+ * claim: where it sits in the model, how strongly it is held, where it comes from,
+ * and a private place to work. Drawn only from shared tokens (tokens.css) and the
+ * surrounding theme, so a space (DOT, AMM) supplies its accent and nothing else.
+ *
+ * Layers (borrowed from Sullix and Green Elephant): raw values → roles (tokens.css)
+ * → primitives (this file) → page patterns. Pages never restyle a primitive's
+ * internals; they set --space-accent, --scene-band or --scene-pad-block on an ancestor.
+ */
+:where(.inq-scene, .inq-share, .inq-map, .inq-cited, .inq-terms, .inq-records, .inq-level, .inq-level-key, .inq-notebook, .inq-cite, .inq-eyebrow, .inq-locator) {
+  --inq-accent: var(--space-accent, var(--primary));
+  --inq-ink: var(--foreground);
+  --inq-muted: var(--muted-foreground);
+  --inq-rule: color-mix(in oklab, var(--foreground) 14%, transparent);
+  --inq-faint: color-mix(in oklab, var(--foreground) 30%, transparent);
+  --inq-scale: var(--reading-scale, 1);
+  --inq-display: calc(clamp(2.1rem, 4.6vw, 3.4rem) * var(--inq-scale));
+  --inq-statement: calc(clamp(1.7rem, 3.4vw, 2.6rem) * var(--inq-scale));
+  --inq-lead: calc(clamp(1.2rem, 1.9vw, 1.5rem) * var(--inq-scale));
+  --inq-body: calc(1.0625rem * var(--inq-scale));
+  --inq-small: calc(var(--primitive-small, .8125rem) * var(--inq-scale));
+  /* "Below the line" is the deeper country in both themes: darker than the page, light words. */
+  --inq-deep: color-mix(in oklab, var(--foreground) 82%, var(--background));
+  --inq-deep-ink: var(--background);
+}
+.dark :where(.inq-map) {
+  --inq-deep: color-mix(in oklab, black 45%, var(--background));
+  --inq-deep-ink: var(--foreground);
+}
+
+/* Every interactive element answers the keyboard the same way. */
+:is(.inq-map, .inq-cited, .inq-terms, .inq-records, .inq-level-key, .inq-notebook, .inq-cite, .inq-scene) :is(a, button, textarea, summary):focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset, 3px);
+}
+/* Text links only. A button that happens to be an <a> keeps its own colours, and a link inside a drawing keeps its own marks. */
+:is(.inq-map, .inq-cited, .inq-terms, .inq-records, .inq-level-key, .inq-cite, .inq-scene) a:not(.dot-button, svg a, .explainer-reach-layer, .explainer-partmark-part) {
+  color: inherit;
+  /* A link must look like one without colour (WCAG 1.4.1); the reset removes the line. */
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklab, var(--inq-accent) 60%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+}
+:is(.inq-map, .inq-cited, .inq-terms, .inq-records, .inq-level-key, .inq-cite, .inq-scene) a:not(.dot-button, svg a, .explainer-reach-layer, .explainer-partmark-part):hover { color: var(--inq-accent); text-decoration-color: currentColor; }
+
+/* ── Scene: one concept per screen ─────────────────────────────────────── */
+.inq-scene {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  min-height: clamp(36rem, 88svh, 62rem);
+  padding-block: var(--scene-pad-block, clamp(4.5rem, 12svh, 9rem));
+  scroll-margin-block-start: 4.5rem;
+}
+.inq-scene[data-tone="night"] {
+  --scene-surface: var(--scene-band, color-mix(in oklab, var(--foreground) 7%, var(--background)));
+  background: var(--scene-surface);
+  box-shadow: 0 0 0 100vmax var(--scene-surface);
+  clip-path: inset(0 -100vmax);
+}
+.inq-scene-frame { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(2.5rem, 5vw, 5.5rem); align-items: center; min-width: 0; }
+.inq-scene-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.1rem; min-width: 0; max-width: 48rem; }
+.inq-scene[data-align="center"] .inq-scene-frame { justify-items: center; text-align: center; }
+.inq-scene[data-align="center"] .inq-scene-body { justify-items: center; max-width: 62rem; }
+.inq-scene[data-wide="true"] .inq-scene-body { max-width: none; width: 100%; }
+@media (min-width: 960px) {
+  .inq-scene[data-media="true"] .inq-scene-frame { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .inq-scene[data-reverse="true"] .inq-scene-media { order: -1; }
+}
+.inq-scene-media { display: grid; gap: .75rem; min-width: 0; }
+
+.inq-eyebrow {
+  display: flex; align-items: center; gap: .75rem;
+  margin: 0;
+  font: 600 var(--inq-small)/1.3 var(--font-sans);
+  letter-spacing: 0;
+  color: var(--inq-accent);
+}
+.inq-scene h2, .inq-scene .inq-heading {
+  margin: 0;
+  font: 600 var(--inq-display)/1.08 var(--font-serif);
+  text-wrap: balance;
+}
+.inq-lead { margin: 0; max-width: 46ch; font: 400 var(--inq-lead)/1.35 var(--font-serif); text-wrap: pretty; }
+.inq-body { margin: 0; max-width: 62ch; font: 400 var(--inq-body)/1.6 var(--font-sans); color: var(--inq-muted); }
+
+/* ── Level of claim: shape first, colour second ─────────────────────────── */
+.inq-level { display: inline-flex; align-items: center; gap: .45rem; font: 600 var(--inq-small)/1.2 var(--font-sans); letter-spacing: 0; color: var(--inq-ink); }
+.inq-level-mark {
+  flex: none; width: .8rem; height: .8rem; border-radius: 50%;
+  border: 1.5px solid var(--inq-accent);
+  box-sizing: border-box;
+}
+.inq-level[data-rank="1"] .inq-level-mark { background: var(--inq-accent); }
+.inq-level[data-rank="2"] .inq-level-mark { background: linear-gradient(90deg, var(--inq-accent) 50%, transparent 50%); }
+.inq-level[data-rank="3"] .inq-level-mark { background: transparent; }
+.inq-level[data-rank="4"] .inq-level-mark { border-style: dashed; background: transparent; }
+
+.inq-level-key { display: grid; gap: 0; margin: 0; }
+.inq-level-key-row { display: grid; grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr); gap: .5rem 1.75rem; padding-block: 1rem; border-top: 1px solid var(--inq-rule); }
+.inq-level-key-row:last-child { border-bottom: 1px solid var(--inq-rule); }
+.inq-level-key dd { margin: 0; display: grid; gap: .4rem; }
+.inq-level-key dd p { margin: 0; font: 400 var(--inq-body)/1.55 var(--font-sans); }
+@media (max-width: 639px) { .inq-level-key-row { grid-template-columns: 1fr; } }
+
+/* ── Sourced sentence ──────────────────────────────────────────────────── */
+.inq-cited { display: grid; gap: .6rem; margin: 0; }
+.inq-cited blockquote { margin: 0; }
+.inq-cited-text { margin: 0; font: 400 var(--inq-lead)/1.35 var(--font-serif); text-wrap: pretty; }
+.inq-cited[data-size="statement"] .inq-cited-text { font: 600 var(--inq-statement)/1.15 var(--font-serif); text-wrap: balance; }
+.inq-cited[data-size="display"] .inq-cited-text { font: 600 var(--inq-display)/1.08 var(--font-serif); text-wrap: balance; }
+.inq-cited figcaption { margin: 0; }
+.inq-source {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .8rem;
+  margin: 0;
+  font: 500 var(--inq-small)/1.4 var(--font-sans);
+  letter-spacing: 0;
+  color: var(--inq-muted);
+}
+.inq-scene[data-align="center"] .inq-source { justify-content: center; }
+
+/* ── Terms and records ─────────────────────────────────────────────────── */
+.inq-terms { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); gap: 0 clamp(1.5rem, 4vw, 3.5rem); margin: 0; }
+.inq-term { display: grid; gap: .35rem; padding-block: 1.1rem; border-top: 1px solid var(--inq-rule); scroll-margin-block-start: 5rem; }
+.inq-term dt { font: 600 calc(1.2rem * var(--inq-scale))/1.25 var(--font-serif); }
+.inq-term dd { margin: 0; display: grid; gap: .45rem; }
+.inq-term dd > p:first-child { margin: 0; font: 400 var(--inq-body)/1.55 var(--font-sans); }
+.inq-term:target dt { color: var(--inq-accent); }
+.inq-term-applies { color: var(--inq-ink); font-weight: 600; }
+
+.inq-records { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.inq-record { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 1.25rem; padding-block: 1rem; border-top: 1px solid var(--inq-rule); }
+.inq-record:last-child { border-bottom: 1px solid var(--inq-rule); }
+.inq-record time { font: 600 calc(1.25rem * var(--inq-scale))/1.2 var(--font-serif); color: var(--inq-accent); }
+.inq-record p { margin: 0; }
+.inq-record-title { font: 600 var(--inq-body)/1.4 var(--font-sans); }
+.inq-record-issuer, .inq-record-use { font: 400 var(--inq-small)/1.5 var(--font-sans); color: var(--inq-muted); }
+
+/* ── Model map and locator ─────────────────────────────────────────────── */
+.inq-locator { flex: none; width: min(2.6rem, 44px); height: auto; overflow: visible; }
+.inq-locator-dome { fill: none; stroke: var(--inq-faint); stroke-width: 2; }
+.inq-locator-line, .inq-locator-band, .inq-locator-dot { fill: var(--inq-faint); }
+.inq-locator-dome[data-lit] { stroke: var(--inq-accent); fill: color-mix(in oklab, var(--inq-accent) 18%, transparent); }
+.inq-locator-line[data-lit], .inq-locator-band[data-lit], .inq-locator-dot[data-lit] { fill: var(--inq-accent); }
+.inq-locator-dot[data-lit] { stroke: var(--background); stroke-width: 1.5; }
+
+.inq-map { display: grid; gap: clamp(2rem, 4vw, 3.5rem); margin: 0; width: 100%; min-width: 0; }
+@media (min-width: 960px) { .inq-map { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; } }
+.inq-map-figure { display: grid; gap: 0; min-width: 0; font-family: var(--font-sans); }
+.inq-map-region { position: relative; display: grid; gap: .55rem; min-width: 0; justify-items: center; text-align: center; }
+.inq-map-region-name { font: 600 var(--inq-small)/1.3 var(--font-sans); letter-spacing: 0; color: var(--inq-muted); }
+.inq-map-members { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem .9rem; font: 500 calc(1.05rem * var(--inq-scale))/1.3 var(--font-serif); }
+.inq-map-region--above {
+  padding: clamp(2rem, 5vw, 4rem) min(1.5rem, 5vw) 1.6rem;
+  margin-inline: 6%;
+  border: 2px solid var(--inq-faint);
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: color-mix(in oklab, var(--inq-accent) 5%, transparent);
+}
+.inq-map-region--line { min-height: 2.75rem; align-content: center; border-top: 2px solid var(--inq-faint); padding-top: .6rem; }
+.inq-map-region--line > .inq-map-region-name { order: 2; }
+.inq-map-region--below {
+  padding: 1.6rem min(1.5rem, 5vw) 2rem;
+  margin-inline: 6%;
+  background: var(--inq-deep);
+  color: var(--inq-deep-ink);
+}
+.inq-map-region--below .inq-map-region-name { color: color-mix(in oklab, var(--inq-deep-ink) 78%, transparent); }
+.inq-map-region--outside { grid-auto-flow: column; justify-content: end; align-items: center; gap: .6rem; margin-top: 1.25rem; }
+.inq-map-dot {
+  position: absolute; top: -.6rem; left: min(30%, 2.5rem);
+  display: flex; align-items: center; gap: .5rem; max-width: calc(100% - 1rem);
+  font: 600 var(--inq-small)/1.15 var(--font-sans);
+  color: var(--inq-ink);
+}
+.inq-map-dot::before { content: ""; flex: none; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--inq-accent); box-shadow: 0 0 0 3px var(--background); }
+.inq-map-region--outside .inq-map-dot { position: static; }
+.inq-map-dot > span { padding-left: .1rem; }
+.inq-map-region[data-active] { border-color: var(--inq-accent); }
+.inq-map-region--line[data-active] { border-top-color: var(--inq-accent); }
+.inq-map-region[data-active] > .inq-map-region-name { color: var(--inq-accent); }
+.inq-map-region--below[data-active] { box-shadow: 0 0 0 3px var(--inq-accent); }
+.inq-map-region--below[data-active] > .inq-map-region-name { color: var(--inq-deep-ink); }
+.inq-map-dot[data-active]::before { box-shadow: 0 0 0 3px var(--background), 0 0 0 6px var(--inq-accent); }
+.inq-map-caption { grid-column: 1 / -1; margin: 0; font: 400 var(--inq-small)/1.5 var(--font-sans); color: var(--inq-muted); }
+@media (min-width: 960px) { .inq-map-caption { grid-column: 1; grid-row: 2; } }
+
+.inq-map-parts { display: grid; gap: 0; margin: 0; padding: 0; min-width: 0; list-style: none; }
+.inq-map-parts > li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: min(1rem, 4vw); align-items: start; padding-block: 1rem; border-top: 1px solid var(--inq-rule); }
+.inq-map-parts > li:last-child { border-bottom: 1px solid var(--inq-rule); }
+.inq-map-parts a { font: 600 calc(1.2rem * var(--inq-scale))/1.25 var(--font-serif); }
+.inq-map-parts a[aria-current] { color: var(--inq-accent); }
+.inq-map-parts p { margin: .3rem 0 0; font: 400 var(--inq-small)/1.5 var(--font-sans); color: var(--inq-muted); }
+.inq-map-parts > li[data-active] a { color: var(--inq-accent); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) :is(.inq-map-region, .inq-map-parts a, .inq-locator *),
+  html:not([data-motion="still"]):not([data-organism="off"]) .inq-map-dot::before {
+    transition: border-color var(--motion-quick) var(--motion-ease), box-shadow var(--motion-quick) var(--motion-ease), color var(--motion-quick) var(--motion-ease), fill var(--motion-quick) var(--motion-ease);
+  }
+}
+
+/* ── Share one idea: a quiet utility pill, distinct from source links, never a count ── */
+.inq-share { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .35rem .65rem; max-width: 100%; }
+.inq-share-button {
+  display: inline-flex; align-items: center; gap: .38rem;
+  max-width: 100%;
+  min-height: var(--control-height, 2.75rem); padding: .3rem .7rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 15%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--foreground) 3%, transparent);
+  cursor: pointer;
+  color: var(--inq-muted); font: 500 var(--inq-small)/1.25 var(--font-sans); letter-spacing: 0;
+  white-space: normal; text-align: left;
+  text-decoration: none;
+}
+.inq-share-button svg { width: .85rem; height: .85rem; flex: none; opacity: .82; }
+.inq-share-button:hover {
+  color: var(--inq-accent);
+  border-color: color-mix(in oklab, var(--inq-accent) 45%, var(--foreground));
+  background: color-mix(in oklab, var(--inq-accent) 7%, transparent);
+}
+.inq-share-button:focus-visible { outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset, 3px); }
+.inq-share-status { font: 500 var(--inq-small)/1.3 var(--font-sans); color: var(--inq-muted); }
+.inq-share-address { user-select: all; overflow-wrap: anywhere; color: var(--inq-ink); }
+
+/* ── Notebook and citation ─────────────────────────────────────────────── */
+.inq-notebook { display: grid; gap: 1.5rem; width: 100%; max-width: 52rem; }
+.inq-notebook-privacy { margin: 0; font: 500 var(--inq-small)/1.5 var(--font-sans); color: var(--inq-muted); }
+.inq-notebook-field { display: grid; gap: .45rem; }
+.inq-notebook-field label { display: flex; align-items: center; gap: .65rem; font: 600 calc(1.15rem * var(--inq-scale))/1.3 var(--font-serif); }
+.inq-notebook-step {
+  display: inline-grid; place-items: center; flex: none; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  border: 1.5px solid var(--inq-accent); color: var(--inq-accent);
+  font: 700 var(--inq-small)/1 var(--font-sans);
+}
+.inq-notebook-prompt { margin: 0; max-width: 64ch; font: 400 var(--inq-body)/1.55 var(--font-sans); color: var(--inq-muted); }
+.inq-notebook textarea {
+  width: 100%; min-height: 6.5rem; padding: .85rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 26%, transparent);
+  border-radius: var(--primitive-radius-field, .5rem);
+  background: color-mix(in oklab, var(--background) 92%, var(--foreground));
+  color: var(--foreground);
+  font: 400 var(--inq-body)/1.55 var(--font-sans);
+  resize: vertical;
+}
+.inq-notebook-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.inq-button {
+  display: inline-flex; align-items: center; gap: var(--control-gap, .6rem);
+  min-height: var(--control-height, 2.75rem);
+  padding: var(--control-pad-block, .65rem) var(--control-pad-inline, 1.15rem);
+  border: 1px solid var(--inq-accent);
+  border-radius: var(--control-radius, .45rem);
+  background: var(--inq-accent); color: var(--background);
+  font: 600 calc(.875rem * var(--inq-scale))/1.25 var(--font-sans); letter-spacing: 0;
+  cursor: pointer;
+}
+.inq-button--quiet {
+  background: color-mix(in oklab, var(--background) 85%, var(--foreground));
+  color: var(--inq-ink);
+  border-color: color-mix(in oklab, var(--foreground) 20%, transparent);
+}
+@media (hover: hover) {
+  .inq-button:not(:disabled):hover { background: color-mix(in oklab, var(--inq-accent) 86%, black); }
+  .inq-button--quiet:not(:disabled):hover {
+    color: var(--inq-accent);
+    border-color: color-mix(in oklab, var(--inq-accent) 50%, var(--foreground));
+    background: color-mix(in oklab, var(--inq-accent) 8%, var(--background));
+  }
+}
+.inq-button:disabled { cursor: not-allowed; opacity: .55; }
+.inq-status { min-height: 1.4em; margin: 0; font: 500 var(--inq-small)/1.4 var(--font-sans); color: var(--inq-muted); }
+
+.inq-cite ul { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.inq-cite li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .35rem 1.25rem; align-items: center; padding-block: 1rem; border-top: 1px solid var(--inq-rule); }
+.inq-cite li:last-child { border-bottom: 1px solid var(--inq-rule); }
+.inq-cite-label { grid-column: 1 / -1; margin: 0; font: 600 var(--inq-small)/1.3 var(--font-sans); color: var(--inq-accent); }
+.inq-cite-text { margin: 0; font: 400 var(--inq-body)/1.55 var(--font-sans); user-select: all; overflow-wrap: anywhere; }
+@media (max-width: 639px) { .inq-cite li { grid-template-columns: 1fr; } }
+
+@media print {
+  .inq-scene { min-height: 0; padding-block: 1.5rem; break-inside: avoid; }
+  .inq-scene[data-tone="night"] { background: none; box-shadow: none; }
+  .inq-notebook-actions, .inq-cite button { display: none; }
+}
+
+/* The key phrase of a published sentence: a highlighter stroke under the words, ink unchanged. */
+/* A space may paint the mark its own way (--space-mark-paint, sized and placed by
+   --space-mark-height and --space-mark-at); the default is a soft band of its accent.
+   Or it may paint the words themselves: --space-mark-clip: text with --space-mark-fill:
+   transparent sets the phrase in the paint, over --space-mark-base (the ink until the paint
+   arrives), at --space-mark-weight. A band needs a little room at its ends; painted words
+   do not (--space-mark-pad: 0), or every wrapped line of the phrase starts indented. */
+.inq-mark {
+  color: inherit;
+  font-weight: var(--space-mark-weight);
+  background-color: transparent;
+  background-image: var(--space-mark-paint, linear-gradient(transparent 58%, var(--space-mark, color-mix(in oklab, var(--inq-accent, currentColor) 22%, transparent)) 58%, var(--space-mark, color-mix(in oklab, var(--inq-accent, currentColor) 22%, transparent)) 94%, transparent 94%)), linear-gradient(var(--space-mark-base, transparent), var(--space-mark-base, transparent));
+  background-repeat: no-repeat;
+  background-position: var(--space-mark-at, 0 0), 0 0;
+  background-size: 100% var(--space-mark-height, 100%), 100% 100%;
+  -webkit-background-clip: var(--space-mark-clip, border-box);
+  background-clip: var(--space-mark-clip, border-box);
+  -webkit-text-fill-color: var(--space-mark-fill, currentColor);
+  padding-inline: var(--space-mark-pad, .06em);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+@media (forced-colors: active) { .inq-mark { background: none; -webkit-text-fill-color: currentColor; text-decoration: underline; text-decoration-thickness: 2px; } }
+/* The highlighter, or the paint, is drawn across the phrase once its sentence has arrived (Reveal). */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .inq-mark { transition: background-size calc(var(--motion-reveal) * 1.2) var(--motion-ease); transition-delay: calc(var(--cascade, 0) * var(--motion-base) / 2 + var(--motion-reveal) * .75); }
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-pending] .inq-mark { background-size: 0% var(--space-mark-height, 100%), 100% 100%; transition: none; }
+}

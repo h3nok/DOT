@@ -22,19 +22,7 @@ const SRC = join(process.cwd(), "src");
 const FLOOR_REM = 0.6875;
 
 /** Pre-existing rules under the floor. Only ever remove from this list. */
-const QUARANTINE = [
-  "index.css::.book-landing-spine-stop",
-  "index.css::.book-concept-definition-status",
-  "index.css::.book-contents-dialog .book-contents__cost",
-  "dot/agent-workspace.css::.agent-workspace-kicker",
-  "blocks/core/home/home.css::.home-scroll-cue",
-  "blocks/core/home/home.css::.arch-mobile-observer > span",
-  "blocks/core/home/home.css::.arch-mobile-node-copy small",
-  "blocks/core/home/home.css::.arch-mobile-detail > span",
-  "blocks/core/home/home.css::.arch-mobile-edge span",
-  "blocks/core/home/home.css::.arch-bottom-role",
-  "blocks/core/home/home.css::.arch-bottom-next",
-];
+const QUARANTINE: string[] = [];
 
 function stylesheets(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {

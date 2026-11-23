@@ -94,3 +94,20 @@ export async function openAppearancePanel(page: Page) {
   await expect(panel).toBeVisible();
   return panel;
 }
+
+/**
+ * WCAG 2.2 A/AA checks with axe-core (the checker Green Elephant runs). Scoped to
+ * a region when given, so a page's new work can be held to the standard before
+ * every older surface is. Reports each violation with the elements it found.
+ */
+export async function expectNoAxeViolations(page: Page, include?: string) {
+  await page.addScriptTag({ path: "node_modules/axe-core/axe.min.js" });
+  const violations = await page.evaluate(async (scope) => {
+    const axe = (window as unknown as { axe: { run: (context: unknown, options: unknown) => Promise<{ violations: { id: string; impact: string; help: string; nodes: { target: string[] }[] }[] }> } }).axe;
+    const result = await axe.run(scope ? { include: [scope] } : document, {
+      runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] },
+    });
+    return result.violations.map((violation) => `${violation.impact} ${violation.id}: ${violation.help} — ${violation.nodes.slice(0, 4).map((node) => node.target.join(" ")).join(", ")}`);
+  }, include ?? null);
+  expect(violations).toEqual([]);
+}

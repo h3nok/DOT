@@ -89,7 +89,7 @@ export function AmmFeature() {
     {enabled && <video ref={video} className="amm-hero-motion" src={MEDIA.heroMotion.src}
       width={MEDIA.heroMotion.width} height={MEDIA.heroMotion.height} muted loop playsInline preload="auto"
       aria-hidden="true" tabIndex={-1} disablePictureInPicture />}
-    {enabled && <AmmButton className="amm-media-toggle" icon={<PlaybackIcon />} disabled={!ready}
+    {enabled && <AmmButton variant="quiet" className="amm-media-toggle" icon={<PlaybackIcon />} disabled={!ready}
       label={playing ? "Pause" : "Play"} title="The Host · silent animation" onClick={() => setRequested(value => !value)} />}
   </div>;
 }

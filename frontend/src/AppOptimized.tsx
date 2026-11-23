@@ -16,15 +16,17 @@ import {
 import { SiteContentProvider } from "./content/editable";
 import { RouteLoadingBoundary } from "./shared/RouteLoadingBoundary";
 import { ViewportObserver } from "./shared/ViewportObserver";
-import AmmMovedGuide from "./blocks/amm/AmmMovedGuide";
+import AmmMovedGuide, { AmmMovedDiagnosis } from "./blocks/amm/AmmMovedGuide";
+import { DIAGNOSIS_ADDRESS, powerAddress } from "./blocks/amm/ammPowerMoves";
 
 function canonicalPathname(pathname: string, search: string): string {
   const clean = pathname.replace(/\/+$/, "") || "/";
   if (clean === "/essays") return "/blog";
   if (clean === "/videos" || clean === "/films") return "/academy/films";
-  if (clean === "/amm/capital" || clean === "/amm/money" || clean.startsWith("/amm/money/")) {
-    return "/amm";
+  if (clean === "/amm/capital" || clean === "/amm/money" || clean.startsWith("/amm/money/") || clean === "/amm/power") {
+    return powerAddress(clean, "").split("#")[0];
   }
+  if (clean === "/amm/reflect") return DIAGNOSIS_ADDRESS.split("#")[0];
   const version = new URLSearchParams(search).get("version");
   if (/^\/writing\/[^/]+$/.test(clean) && version && /^[1-9]\d*$/.test(version)) {
     return `${clean}/releases/${version}`;
@@ -98,12 +100,14 @@ const AcademyPage = React.lazy(() => import("./blocks/academy/AcademyPage"));
 const AmmPublicationPage = React.lazy(() => import("./blocks/amm/AmmPublicationPage"));
 const AmmMembershipPage = React.lazy(() => import("./blocks/amm/AmmMembershipPage"));
 const AmmPage = React.lazy(() => import("./blocks/amm/AmmPage"));
-const AmmPowerPage = React.lazy(() => import("./blocks/amm/AmmPowerPage"));
+const AmmFiguresPage = React.lazy(() => import("./blocks/amm/AmmFiguresPage"));
+const AmmInquiryPage = React.lazy(() => import("./blocks/amm/AmmInquiryPage"));
 const AmmStudioPage = React.lazy(() => import("./blocks/amm/AmmStudioPage"));
 const EssayPage = React.lazy(() => import("./blocks/essays/EssayPage"));
 const EssayDraftsPage = import.meta.env.DEV ? React.lazy(() => import("./blocks/essays/EssayDraftsPage")) : null;
 const DarkFilmPreview = import.meta.env.DEV ? React.lazy(() => import("./blocks/films/DarkFilmPreview")) : null;
 const BookV5Preview = import.meta.env.DEV ? React.lazy(() => import("./blocks/publication/BookV5Preview")) : null;
+const DesignSystemLab = import.meta.env.DEV ? React.lazy(() => import("./blocks/design/DesignSystemLab")) : null;
 const WritingStudioPage = React.lazy(() => import("./blocks/publication/WritingStudioPage"));
 const PublicationsPage = React.lazy(() => import("./blocks/publication/PublicationsPage"));
 const NativeWritingPage = React.lazy(() => import("./blocks/publication/NativeWritingPage"));
@@ -263,7 +267,10 @@ const App: React.FC = () => {
                 <Route path="/films" element={<AcademyFilmsRedirect />} />
                 <Route path="/videos" element={<AcademyFilmsRedirect />} />
                 <Route path="/amm" element={<AmmPage />} />
-                <Route path="/amm/power" element={<AmmPowerPage />} />
+                <Route path="/amm/figures" element={<AmmFiguresPage />} />
+                <Route path="/amm/power" element={<AmmMovedGuide />} />
+                <Route path="/amm/reflect" element={<AmmMovedDiagnosis />} />
+                <Route path="/amm/inquiry" element={<AmmInquiryPage />} />
                 <Route path="/amm/capital" element={<AmmMovedGuide />} />
                 <Route path="/amm/money/*" element={<AmmMovedGuide />} />
                 <Route path="/amm/editions" element={<AmmPublicationPage />} />
@@ -273,6 +280,7 @@ const App: React.FC = () => {
                 {import.meta.env.DEV && EssayDraftsPage && <Route path="/_preview/essays" element={<EssayDraftsPage />} />}
                 {import.meta.env.DEV && DarkFilmPreview && <Route path="/_preview/film-dark" element={<DarkFilmPreview />} />}
                 {import.meta.env.DEV && BookV5Preview && <Route path="/_preview/book-v5/:sectionSlug?" element={<BookV5Preview />} />}
+                {import.meta.env.DEV && DesignSystemLab && <Route path="/_preview/design-system" element={<DesignSystemLab />} />}
                 {import.meta.env.DEV && <Route path="/_preview/essays/:slug" element={<EssayPage preview />} />}
                 <Route path="/publications" element={<PublicationsPage />} />
                 <Route path="/writing/:workId" element={<NativeWritingPage />} />
