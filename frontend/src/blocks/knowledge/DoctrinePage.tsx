@@ -510,12 +510,8 @@ const DoctrinePage = () => {
 
             {/* Two-bullet synthesis */}
             <div
-              className="mt-8 rounded-xl border p-5"
-              style={{
-                borderColor:
-                  "color-mix(in oklch, var(--surface-accent) 22%, var(--surface-hairline))",
-                background: "var(--surface-card)",
-              }}
+              className="mt-8 border-t pt-5"
+              style={{ borderColor: "var(--surface-hairline)" }}
             >
               <p className="font-mono text-[0.66em] font-bold uppercase tracking-[0.24em] text-[color:var(--surface-muted)]">
                 Two-bullet synthesis
@@ -547,11 +543,10 @@ const DoctrinePage = () => {
 
             <Link
               to={focusNode.source.href}
-              className="mt-10 flex items-center justify-between gap-4 rounded-lg border px-4 py-3 text-[0.86em] transition-colors hover:border-[color:var(--surface-accent)]"
+              className="mt-10 flex items-center justify-between gap-4 rounded-lg px-4 py-3 text-[0.86em] transition-colors hover:text-[color:var(--surface-accent)]"
               style={{
-                borderColor: "var(--surface-hairline)",
                 background:
-                  "color-mix(in oklch, var(--surface-accent) 5%, transparent)",
+                  "color-mix(in oklch, var(--surface-accent) 8%, transparent)",
               }}
             >
               <span className="flex min-w-0 items-center gap-3">
@@ -586,11 +581,10 @@ const DoctrinePage = () => {
                         key={`${relation.to}-${relation.type}`}
                         type="button"
                         onClick={() => selectNode(relation.to)}
-                        className="group flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-left transition-colors hover:border-[color:var(--surface-accent)]"
+                        className="group flex items-center justify-between gap-3 rounded-lg px-4 py-3 text-left transition-colors hover:text-[color:var(--surface-accent)]"
                         style={{
-                          borderColor: "var(--surface-hairline)",
                           background:
-                            "color-mix(in oklch, var(--surface-fg) 3%, transparent)",
+                            "color-mix(in oklch, var(--surface-fg) 5%, transparent)",
                         }}
                       >
                         <span className="text-[0.95em]">
@@ -701,14 +695,11 @@ const DoctrinePage = () => {
                       key={node.id}
                       type="button"
                       onClick={() => selectNode(node.id)}
-                      className="rounded-lg border px-3 py-2.5 text-left transition-colors hover:border-[color:var(--surface-accent)]"
+                      className="rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-[color:color-mix(in_oklch,var(--surface-accent)_6%,transparent)]"
                       style={{
-                        borderColor: isCurrent
-                          ? "var(--surface-accent)"
-                          : "var(--surface-hairline)",
                         background: isCurrent
-                          ? "color-mix(in oklch, var(--surface-accent) 10%, transparent)"
-                          : "transparent",
+                          ? "color-mix(in oklch, var(--surface-accent) 12%, transparent)"
+                          : undefined,
                       }}
                     >
                       <span className="block text-sm font-semibold text-[color:var(--surface-fg)]">

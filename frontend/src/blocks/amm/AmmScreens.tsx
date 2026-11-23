@@ -14,14 +14,25 @@ const painting = (key: string): DiagnosisPainting | undefined =>
 const INVERSION = /(\b[Tt]he Inversion\b)/;
 
 /**
+ * In a heading or label, the word "Inversion" turns over as its screen arrives and stays inverted
+ * (the author, 2026-11-22: "Invert 'Inversion'… animated"). Only the look turns; the words read
+ * the same aloud. Running text is never inverted.
+ */
+export function Inverted({ text }: { text: string }) {
+  return <>{text.split(/(Inversion)/).map((part, index) => index % 2
+    ? <span key={index} className="amm-invert">{part}</span>
+    : part)}</>;
+}
+
+/**
  * A sentence with its key phrase marked, and the Inversion always marked too (the author,
  * 2026-11-19: "Always highlight the Inversion"). A key phrase that already holds the
- * Inversion is marked whole.
+ * Inversion is marked whole. In a heading or label, `invert` also turns the word over.
  */
-export function AmmMarked({ text, mark }: { text: string; mark?: string }) {
+export function AmmMarked({ text, mark, invert }: { text: string; mark?: string; invert?: boolean }) {
   if (mark?.includes("Inversion") && text.includes(mark)) return <Marked text={text} mark={mark} />;
   return <>{text.split(INVERSION).map((part, index) => index % 2
-    ? <mark key={index} className="inq-mark">{part}</mark>
+    ? <mark key={index} className="inq-mark">{invert ? <Inverted text={part} /> : part}</mark>
     : <Marked key={index} text={part} mark={mark} />)}</>;
 }
 
@@ -86,7 +97,7 @@ export function Screen({ id, heading, title, eyebrow, lines = [], art, media, re
       {eyebrow}
       {asTerm
         ? <h2 id={`${id}-title`} className="amm-screen-heading amm-term-heading">
-            <span className="amm-term">{term}</span>
+            <span className="amm-term"><Inverted text={term} /></span>
             {cue && <><span className="amm-term-sep">: </span><span className="amm-term-cue"><AmmMarked text={cue} /></span></>}
           </h2>
         : <h2 id={`${id}-title`} className={`amm-screen-heading${text.length > 60 ? " amm-screen-heading--long" : ""}`}><AmmMarked text={text} /></h2>}

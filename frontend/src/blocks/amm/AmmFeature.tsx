@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
 import { useInView } from "framer-motion";
 import { useAmmContent } from "../../content/editable/useAmmContent";
 import MEDIA from "../../content/amm-media.json";
 import { Artwork } from "../../attention-os/explainer/Artwork";
 import { useOrganism } from "../../organism/OrganismContext";
-import { AmmButton } from "./AmmControls";
 import "./amm-media.css";
 
-/** A silent, pausable public hero loop. The still artwork is always available. */
+/**
+ * A silent public hero loop that plays on its own (the author, 2026-11-22: "Remove the pause button
+ * from the hero. Auto play it."). It never plays for a reader who asked for stillness: reduced
+ * motion, Still in Appearance (offered on every page), the organism switched off, or Save-Data keep
+ * the still artwork, which is always there to inspect. It rests offscreen and in a hidden tab, and a
+ * browser that refuses autoplay simply keeps the still.
+ */
 export function AmmFeature() {
   const AMM = useAmmContent();
   const { config, reducedMotion } = useOrganism();
@@ -17,10 +21,9 @@ export function AmmFeature() {
   const video = useRef<HTMLVideoElement>(null);
   const inView = useInView(container, { amount: 0.35 });
   const [visible, setVisible] = useState(!document.hidden);
-  const [requested, setRequested] = useState(!still);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [playing, setPlaying] = useState(false);
+  const [blocked, setBlocked] = useState(false);
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
   const enabled = !still && !saveData && !failed;
   const art = MEDIA.illustration;
@@ -31,9 +34,10 @@ export function AmmFeature() {
     return () => document.removeEventListener("visibilitychange", update);
   }, []);
 
+  // A clip mounted again (after stillness is lifted) is checked again before it shows.
   useEffect(() => {
-    if (still) setRequested(false);
-  }, [still]);
+    if (!enabled) setReady(false);
+  }, [enabled]);
 
   useEffect(() => {
     const clip = video.current;
@@ -52,44 +56,32 @@ export function AmmFeature() {
         setReady(true);
       } catch { fail(); }
     };
-    const play = () => setPlaying(true);
-    const pause = () => setPlaying(false);
     clip.addEventListener("loadeddata", inspectAlpha);
     clip.addEventListener("error", fail);
-    clip.addEventListener("play", play);
-    clip.addEventListener("pause", pause);
     // Cached/local media can finish loading before React commits its handlers.
     if (clip.error) fail();
     else if (clip.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) inspectAlpha();
     return () => {
       clip.removeEventListener("loadeddata", inspectAlpha);
       clip.removeEventListener("error", fail);
-      clip.removeEventListener("play", play);
-      clip.removeEventListener("pause", pause);
     };
   }, [enabled]);
 
   useEffect(() => {
     const clip = video.current;
     if (!clip) return;
-    if (enabled && requested && ready && inView && visible) {
+    if (enabled && !blocked && ready && inView && visible) {
       let cancelled = false;
-      void clip.play().catch(() => { if (!cancelled) setRequested(false); });
+      void clip.play().catch(() => { if (!cancelled) setBlocked(true); });
       return () => { cancelled = true; clip.pause(); };
     }
     clip.pause();
-  }, [enabled, requested, ready, inView, visible]);
+  }, [enabled, blocked, ready, inView, visible]);
 
-  const PlaybackIcon = playing ? Pause : Play;
-
-  return <div ref={container} className="amm-feature amm-feature--motion" data-motion-ready={enabled && ready || undefined}>
-    <div onClickCapture={() => setRequested(false)}>
-      <Artwork priority image={{ ...art, full: AMM.artwork.src, title: AMM.artwork.title, alt: AMM.artwork.alt }} />
-    </div>
+  return <div ref={container} className="amm-feature amm-feature--motion" data-motion-ready={(enabled && ready && !blocked) || undefined}>
+    <Artwork priority image={{ ...art, full: AMM.artwork.src, title: AMM.artwork.title, alt: AMM.artwork.alt }} />
     {enabled && <video ref={video} className="amm-hero-motion" src={MEDIA.heroMotion.src}
       width={MEDIA.heroMotion.width} height={MEDIA.heroMotion.height} muted loop playsInline preload="auto"
       aria-hidden="true" tabIndex={-1} disablePictureInPicture />}
-    {enabled && <AmmButton variant="quiet" className="amm-media-toggle" icon={<PlaybackIcon />} disabled={!ready}
-      label={playing ? "Pause" : "Play"} title="The Host · silent animation" onClick={() => setRequested(value => !value)} />}
   </div>;
 }

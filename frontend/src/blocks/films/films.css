@@ -325,7 +325,7 @@ html:has(.films-page) .organism-membrane {
   width: 100%;
   max-width: 62rem;
   margin-inline: auto;
-  border: 1px solid var(--films-border-strong);
+  /* The player is lifted by its shadow, not outlined (2026-11-22). */
   border-radius: 1.1rem;
   background: var(--films-chrome);
   overflow: hidden;
@@ -1476,7 +1476,7 @@ html:has(.films-page) .organism-membrane {
 }
 
 .dark-film-public .dark-film-player.films-screening-shell {
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: 1rem;
   background: var(--card);
   box-shadow: 0 12px 36px -24px color-mix(in oklab, var(--foreground) 28%, transparent);

@@ -58,7 +58,7 @@ body:has(.site-page-header [data-appearance-control]) .app-floating-appearance {
   .contact-masthead { padding-bottom: 2rem; }
   .contact-layout { gap: 2rem; }
   .contact-form-body > .dot-button { width: 100%; max-width: none; }
-  .contact-aside, .contact-receipt, .contact-availability { padding: 1.25rem; }
+  .contact-aside, .contact-receipt, .contact-availability { padding: 1.25rem 0 0; }
   .intent-field > label { font-size: .875rem; }
   .contact-consent { align-items: center; padding-block: .5rem; }
   .contact-consent input { margin-top: 0; }

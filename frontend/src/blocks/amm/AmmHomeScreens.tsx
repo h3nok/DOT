@@ -4,6 +4,7 @@ import { Scene } from "../../attention-os/inquiry";
 import { AMM_MODEL as M, cite, splitTerm, type ModelQuote } from "../../content/ammModel";
 import { useAmmContent } from "../../content/editable/useAmmContent";
 import { AmmButton } from "./AmmControls";
+import { AmmMark } from "./AmmMark";
 import { AMM_PARTS } from "./ammReading";
 import { DIAGNOSIS_ADDRESS } from "./ammPowerMoves";
 import { AmmMarked, Screen, ScreenFoot } from "./AmmScreens";
@@ -62,10 +63,10 @@ function ModelScreen({ id, title, heading, lines, note, art, tone, reverse, path
   );
 }
 
-/** One numbered article of the thesis; the book's hinge is set apart and keeps its source. */
-function Article({ n, text, mark, hinge }: { n: number; text: string; mark?: string; hinge?: boolean }) {
+/** One numbered article of the thesis; each column opens on its lead article. */
+function Article({ n, text, mark, lead }: { n: number; text: string; mark?: string; lead?: boolean }) {
   return (
-    <li className={`amm-article${hinge ? " amm-article--hinge" : ""}`}>
+    <li className={`amm-article${lead ? " amm-article--lead" : ""}`}>
       <span className="amm-article-number" aria-hidden="true">{String(n).padStart(2, "0")}</span>
       <p className="amm-article-text"><AmmMarked text={text} mark={mark} /></p>
     </li>
@@ -74,44 +75,45 @@ function Article({ n, text, mark, hinge }: { n: number; text: string; mark?: str
 
 /**
  * The AMM thesis, set as a manifesto (the author, 2026-11-20; "Manifesto style", 2026-11-22): AMM's
- * conviction in the book's words, then numbered articles in two columns. The purpose, closed by
- * the book's hinge (a society is judged by whether it preserves that order or reverses it), faces
- * the Inversion: what American culture does instead, and the character it leaves behind.
+ * conviction in the book's words, then numbered articles in two columns. The purpose faces the
+ * Inversion, which is set in inverted colours, running to the edge of the screen: what American
+ * culture does instead, and the character it leaves behind.
  */
 function ThesisScreen() {
   const { model: L } = useAmmContent();
-  const { worth, judged } = HOME.thesis;
+  const { worth } = HOME.thesis;
   return (
     <Scene id="amm-thesis" labelledBy="amm-thesis-title" tone="night" wide reveal>
-      <h2 id="amm-thesis-title" className="amm-thesis-title">{L.thesisTitle}</h2>
+      <h2 id="amm-thesis-title" className="amm-thesis-title"><AmmMark className="amm-thesis-flame" /><span>{L.thesisTitle}</span></h2>
       <p className="amm-thesis-conviction">{cite(worth).text}</p>
       <div className="amm-thesis-columns">
         <div className="amm-thesis-column">
           <h3 className="amm-thesis-column-label">{L.thesisPurposeLabel}</h3>
           <ol className="amm-articles">
-            <Article n={1} text={L.thesisSociety} />
+            <Article n={1} text={L.thesisSociety} lead />
             <Article n={2} text={L.thesisHonor} />
-            <Article n={3} text={cite(judged).text} mark="preserve that order or reverse it" hinge />
           </ol>
         </div>
         <div className="amm-thesis-column amm-thesis-column--inverted">
-          <h3 className="amm-thesis-column-label"><AmmMarked text={L.thesisInversionLabel} /></h3>
-          <ol className="amm-articles" start={4}>
-            <Article n={4} text={L.thesisInverts} mark="inverts this purpose" />
-            <Article n={5} text={L.thesisMyth} />
-            <Article n={6} text={L.thesisBelief} />
-            <Article n={7} text={L.thesisCharacter} mark="a conditioned character" />
+          <h3 className="amm-thesis-column-label"><AmmMarked text={L.thesisInversionLabel} invert /></h3>
+          <ol className="amm-articles" start={3}>
+            <Article n={3} text={L.thesisInverts} mark="inverts this purpose" lead />
+            <Article n={4} text={L.thesisMyth} />
+            <Article n={5} text={L.thesisBelief} />
+            <Article n={6} text={L.thesisCharacter} mark="a conditioned character" />
           </ol>
         </div>
       </div>
-      <ScreenFoot quotes={[worth, judged]} />
+      <ScreenFoot quotes={[worth]} />
     </Scene>
   );
 }
 
 /**
- * The way out (the author, 2026-11-19): only a cultural revolution, in his
- * words, then the book's account of what it must change, and the chapter that takes it up.
+ * The way out, stated as a working process rather than an ultimatum (the author, 2026-11-22): his
+ * "Stability is maintained through continuous exchange and correction.", then his position that
+ * personal healing comes first and cohesion around it may heal the Host, then Chapter Four's line on
+ * the Host's freedom, and the chapter that takes it up.
  */
 function WayOutScreen() {
   const { model: L } = useAmmContent();
@@ -120,6 +122,7 @@ function WayOutScreen() {
     <Scene id="amm-way-out" labelledBy="amm-way-out-title" tone="night" align="center" wide reveal>
       <p className="amm-way-out-eyebrow">{L.revolutionEyebrow}</p>
       <h2 id="amm-way-out-title" className="amm-way-out-title">{L.revolutionLine}</h2>
+      {L.revolutionPosition && <p className="amm-way-out-position">{L.revolutionPosition}</p>}
       {lines.map((line) => <p key={line.text} className="amm-way-out-line"><AmmMarked text={cite(line).text} mark={line.mark} /></p>)}
       <ScreenFoot quotes={lines} />
       <div className="amm-screen-action"><AmmButton variant="primary" to={AMM_PARTS[AMM_PARTS.length - 1].route} label={L.revolutionAction} endIcon={<ArrowRight />} /></div>

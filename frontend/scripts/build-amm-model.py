@@ -51,7 +51,8 @@ def marked(item, mark):
 
 
 def q(chapter, text, fragment=None, mark=None):
-    hits = [section for section, _, para in DOCS[chapter] if text in para]
+    # A figure's published caption counts too (its Markdown title), as in Chapter Four's Figure 5.
+    hits = [section for section, raw, para in DOCS[chapter] if text in para or (raw.lstrip().startswith("![") and text in raw)]
     if not hits:
         sys.exit(f"Not in Chapter {chapter}: {text}")
     item = {"text": text, "chapter": chapter, "section": hits[0]}
@@ -68,7 +69,6 @@ def section_paragraphs(chapter, section):
 DOT_SECTIONS = "public/publications/henok/digital-organism-theory/v5/sections"
 OTHER = {
     "dot": {"label": "Book One", "route": "/book/digital-organism-theory", "files": ["the-digital-organism", "the-painting", "the-canvas", "preface"]},
-    "amm-1-earlier": {"label": "Chapter One, earlier edition", "route": "/essays/amm-chapter-one-the-leech", "path": f"{ESSAYS}/amm-chapter-one-the-leech.md"},
     "amm-2-earlier": {"label": "Chapter Two, earlier edition", "route": "/essays/amm-chapter-two-the-leechs-anatomy", "path": f"{ESSAYS}/amm-chapter-two-the-leechs-anatomy.md"},
     "amm-3-earlier": {"label": "Chapter Three, earlier edition", "route": "/essays/amm-chapter-three-the-host-and-the-infection", "path": f"{ESSAYS}/amm-chapter-three-the-host-and-the-infection.md"},
     "letter": {"label": "A Letter to an American Adult", "route": "/essays/amm-letter-to-an-american-adult", "path": f"{ESSAYS}/amm-letter-to-an-american-adult.md"},
@@ -127,8 +127,9 @@ model["scenes"] = {
                  "lines": [q(3, "our harm is always justified, their harm always reveals their nature; our members deserve explanation, theirs deserve suspicion.", "start"), q(3, "A standard advertised as universal becomes conditional upon loyalty.", mark="conditional upon loyalty")]},
     "inversion": {"heading": q(3, "The Inversion: professing virtue, and practicing the exact opposite."),
                   "lines": [q(3, "We claim many values we do not practice. What we practice is who we are."), q(3, "None of these is a lapse. Obsequiousness and dishonesty are the values we practice.")]},
-    "leech": {"heading": q(1, "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage."),
-              "lines": [q(3, "It gives you your place, and expects you to keep it.", mark="expects you to keep it"), q(1, "None of these statements turns a human being into the attitude they have learned.")]},
+    # Chapter One §1 restored to the author's 9 October text (2026-11-23): the Leech is a behavior, spotted by the gap.
+    "leech": {"heading": q(1, "You spot the Leech by looking for the gap between what is said and what is done."),
+              "lines": [q(3, "It gives you your place, and expects you to keep it.", mark="expects you to keep it"), q(1, "Anyone can serve it. Anyone can resist it.")]},
     "terms": {"lines": [q(1, "A person does not have to invent an attitude that their surroundings already reward.")]},
     "citizen": {"heading": q(3, "Not the state, but the citizen trained to do it."),
                 "lines": [q(3, "You inherited a mind that was already occupied.", mark="already occupied"), q(3, "The Leech is protected by the Host itself.")]},
@@ -145,13 +146,15 @@ model["scenes"] = {
 model["home"] = {
     # The AMM thesis the home opens on (the author, 2026-11-20; set as a manifesto on 2026-11-22).
     # Its conviction is AMM's own, first stated as the conviction that "comes before any economic
-    # argument" and kept in the working book's Chapter Four, and its hinge is the earlier Chapter
-    # One's next sentence. The articles between them are the author's (amm.json model.thesis*).
-    "thesis": {"worth": q(4, "You were born valuable before you produced anything."),
-               "judged": oq("amm-1-earlier", "A society must be judged by whether its institutions preserve that order or reverse it.")},
-    # The home closes on the way out (the author, 2026-11-19: "only a cultural revolution is our way
-    # out"), in the book's own account of what that revolution must change.
-    "revolution": {"lines": [q(4, "The task is to revise the terms through which people learn what power permits. New leaders alone cannot accomplish that.", mark="revise the terms through which people learn what power permits")]},
+    # argument" and kept in the working book's Chapter Four. The articles are the author's (amm.json
+    # model.thesis*); the earlier Chapter One's "A society must be judged…" was removed at his request.
+    "thesis": {"worth": q(4, "You were born valuable before you produced anything.")},
+    # The home closes on the way out: the author's "Stability is maintained through continuous exchange
+    # and correction." (2026-11-22, replacing "Only a cultural revolution is our way out": "no ultimatums.
+    # A pragmatic, scientific model based statement"), then his position that personal healing comes
+    # first (amm.json model.revolutionPosition), then Chapter Four's line on the Host's freedom. It
+    # replaced "The task is to revise the terms…", which the author found unclear.
+    "revolution": {"lines": [q(4, "The Host's freedom represents people taking their own mental health and agency seriously.", mark="taking their own mental health and agency seriously")]},
     # The model beneath the opening, set with the author on 2026-11-19: the Inversion, then the Host
     # ("us, the public") and the Leech (a dominance ideology whose body today is the oligarchy, and
     # whatever it is attached to). The oligarchy's composition is in the earlier serialized editions;
@@ -159,14 +162,15 @@ model["home"] = {
     # The letter's line on universality answers the author's "a universal society, only in our heads".
     "inversion": {"heading": q(3, "The Inversion: professing virtue, and practicing the exact opposite."), "lines": [q(3, "We claim many values we do not practice. What we practice is who we are.", mark="What we practice is who we are."), oq("letter", "You learn that human dignity can be called universal while protection remains conditional.", mark="called universal")]},
     "host": {"lines": [q(3, "The Host is the living public and the conditions of shared life through which people develop, act, care, and carry a future forward.", mark="the living public"), oq(E2, "The host is the public, supplying labor, taxes, savings, purchases, debt, land, water, electricity, attention, data, and legitimacy.")]},
-    "leech": {"lines": [q(1, "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.", mark="domination of other people"), q(1, "People can express it. Institutions can reward it. A culture can make it appear admirable.")]},
+    # The Leech in the author's own words (9 October, restored to Chapter One §1 on 2026-11-23): a behavior, spotted by the gap.
+    "leech": {"lines": [q(1, "You spot the Leech by looking for the gap between what is said and what is done.", mark="the gap between what is said and what is done"), q(1, "It speaks the language of love while practicing the craft of extraction.")]},
     "anatomy": {"lines": [oq(E3, "The Leech has a composition. In AMM, its two strategic centers are the Security-Industrial Oligarchy and the Technological-Platform Oligarchy."), oq(E3, "Government is a principal attachment point because it makes and enforces laws, awards contracts, supplies funding, and protects claims.", mark="Government is a principal attachment point")],
                 "note": oq(E3, "These names identify concentrations of power examined in Chapter 2. They do not make every worker within those industries equally responsible for their decisions.")},
     "feeding": {"lines": [oq(E2, "The Leech attaches to an interface, converts dependence into recurring revenue, and uses concentrated power to make the interface harder to leave.", mark="converts dependence into recurring revenue"), oq(E2, "The public is told there is no alternative. That sentence marks the feeding point.", mark="the feeding point")]},
     # "A standard advertised as universal…" qualifies the claims (worth for every person), so it
     # follows them here rather than closing the screen about what a person calls normal.
     "gap": {"heading": q(3, "Look at what the culture says it is. Then look at what it does."), "pairs": [0, 1, 5], "lines": [q(3, "A standard advertised as universal becomes conditional upon loyalty.", mark="conditional upon loyalty"), q(3, "What we practice is who we are.", mark="who we are")]},
-    "why": {"heading": q(1, "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage."), "lines": [q(3, "It gives you your place, and expects you to keep it.", mark="expects you to keep it")]},
+    "why": {"heading": q(1, "You spot the Leech by looking for the gap between what is said and what is done."), "lines": [q(3, "It gives you your place, and expects you to keep it.", mark="expects you to keep it")]},
     # Not "Not the state, but the citizen trained to do it.": that line completes its section title
     # ("The Citizen Enforces") and reads as a fragment on its own (the author, 2026-11-17).
     # The takeaway the author set on 2026-11-17: the citizen is in a spiral of erosion, damaged
@@ -343,7 +347,7 @@ model["power"] = {
         "lines": [q(2, "Debt can become part of how a person interprets a supervisor's request. A threatened loss can make an otherwise visible refusal practically unavailable.", mark="refusal practically unavailable"), q(2, "The person is not free merely because a contract describes them as choosing.", mark="not free"), q(3, "Their dependence is part of the explanation, not evidence that they consented to the terms.", mark="not evidence that they consented")],
     },
     "concentrated": {
-        "lines": [q(1, "The Leech remains the attitude of dominance. Extraction is one way the attitude may become materially organized.", mark="the attitude of dominance"), q(1, "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.", mark="enforced dependence")],
+        "lines": [q(1, "The Leech remains that behavior: wanting to dominate instead of to love. Extraction is one way it may become materially organized.", mark="wanting to dominate instead of to love"), q(1, "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.", mark="enforced dependence")],
         "knowledge": q(2, "Dominance can arise where control of a method, credential, technical standard, or specialized language becomes a means of preventing effective challenge."),
         "records": {"state": "diu", "technology": "ftc"},
     },

@@ -10,7 +10,7 @@ import { SiteColophon } from "../../shared/SiteColophon";
 export default function PublicationsPage() {
   return (
     <PageShell header={<PageHeader />} footer={<SiteColophon />}>
-      <Helmet><title>Books — {author.name}</title><meta name="description" content="Books by Henok Ghebrechristos, with links to the complete free edition and letters." /></Helmet>
+      <Helmet><title>{`Books — ${author.name}`}</title><meta name="description" content="Books by Henok Ghebrechristos, with links to the complete free edition and letters." /></Helmet>
       <div className="mx-auto max-w-3xl">
         <p className="dot-label">{author.name}</p><h1 className="dot-page-heading mt-3">Books</h1>
         <section aria-labelledby="books-title" className="mt-10 border-t border-border pt-6">

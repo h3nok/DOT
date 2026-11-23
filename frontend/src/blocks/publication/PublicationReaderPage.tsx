@@ -304,7 +304,7 @@ function ReaderLanding({ manifest }: { manifest: Manifest }) {
           {firstSection && (
             <Link
               to={sectionRoute(manifest, firstSection)}
-              className="group mt-12 inline-flex items-center gap-3 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.04] px-6 py-4 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.08]"
+              className="group mt-12 inline-flex items-center gap-3 rounded-2xl bg-foreground/[0.07] px-6 py-4 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/[0.08]"
             >
               Begin reading
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -412,7 +412,7 @@ function SectionReader({
 
         <footer className="book-focus-hidden border-t border-border/60 pt-8">
           {isLast && (
-            <div className="mb-8 rounded-2xl border border-[var(--organism-accent-soft)] bg-foreground/[0.03] p-6">
+            <div className="mb-8 border-t border-[color:var(--public-rule-strong)] pt-6">
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">
                   <Check className="h-3.5 w-3.5" />

@@ -14,6 +14,11 @@
   --public-space-xl: 3rem;
   --public-space-section: clamp(3rem, 7vw, 5rem);
   --public-radius: var(--radius, .8rem);
+  /* Surfaces are unframed (the author, 2026-11-22: "No borders like this"): no outline, rounded
+     box or card fill. Items are grouped by space and one hairline above each; in high contrast
+     the hairline is ink. Form fields and buttons keep their own edges. */
+  --public-rule: color-mix(in oklab, var(--foreground) 16%, transparent);
+  --public-rule-strong: color-mix(in oklab, var(--foreground) 32%, transparent);
   --public-title-size: clamp(2.125rem, 5vw, 4.5rem);
   --public-section-size: clamp(1.75rem, 3vw, 2.5rem);
   --public-forest: #285c4b;
@@ -92,3 +97,4 @@
 [data-tone="blue"] { --intent-tone: var(--public-blue); --intent-light: var(--public-sky); }
 [data-tone="plum"] { --intent-tone: var(--public-plum); --intent-light: var(--public-lilac); }
 html[data-contrast="high"] [data-tone] { --intent-tone: var(--foreground); }
+html[data-contrast="high"] { --public-rule: var(--foreground); --public-rule-strong: var(--foreground); }

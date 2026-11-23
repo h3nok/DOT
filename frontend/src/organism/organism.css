@@ -834,6 +834,14 @@ html[data-ui-style="cinematic"] {
   --appearance-ui-control-shadow: 0 8px 24px -14px rgb(0 0 0 / 0.55);
 }
 
+/* The support, join and sign-in cards (BloomSurface) are page-level cards, not chrome: in every
+   style they float on a solid surface and a shadow, never an outline or glow (2026-11-22). */
+html[data-ui-style] .bloom-surface.bloom-surface[role="dialog"] {
+  border: 0;
+  background: var(--surface-floating);
+  box-shadow: var(--premium-shadow);
+}
+
 /* --- Neural: fluid glass, living borders, synaptic glow -------------- */
 html[data-ui-style="neural"] {
   --radius: 1rem;

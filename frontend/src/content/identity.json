@@ -9,11 +9,11 @@
     "border": "#d4ded4"
   },
   "dark": {
-    "surface": "#0c1715",
+    "surface": "#111614",
     "ink": "#f2f0e8",
     "accent": "#91c8b1",
-    "muted": "#b0c5ba",
-    "border": "#284238"
+    "muted": "#b2c2b9",
+    "border": "#2f3935"
   },
   "fonts": {
     "display": "Space Grotesk",

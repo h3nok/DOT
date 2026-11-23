@@ -105,20 +105,18 @@
   list-style: none;
 }
 
+/* Unframed (2026-11-22): a hairline above each, which takes the accent on hover. */
 .academy-hub-card,
 .academy-hub-concept {
   height: 100%;
-  border: 1px solid var(--academy-hub-line);
-  border-radius: 1rem;
-  background: var(--academy-hub-surface);
-  box-shadow: var(--shadow-card, none);
+  border-top: 1px solid var(--public-rule, var(--academy-hub-line));
 }
 
 .academy-hub-card {
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   gap: .75rem;
-  padding: clamp(1.5rem, 2.2vw, 2.25rem);
+  padding: clamp(1.1rem, 2vw, 1.5rem) 0 0;
 }
 
 .academy-hub-card :is(h2, h3) {
@@ -165,7 +163,7 @@
   grid-template-columns: clamp(5.5rem, 10vw, 9rem) minmax(0, 1fr);
   align-items: start;
   gap: clamp(1rem, 1.8vw, 1.5rem);
-  padding: clamp(.875rem, 1.4vw, 1.25rem);
+  padding: clamp(.875rem, 1.4vw, 1.25rem) 0 0;
 }
 
 .academy-hub-concept-copy {
@@ -303,8 +301,7 @@
 }
 
 .academy-hub :is(.academy-hub-card, .academy-hub-concept):is(:hover, :focus-visible) {
-  border-color: var(--academy-hub-accent);
-  box-shadow: var(--shadow-card-hover, var(--shadow-card, none));
+  border-top-color: var(--academy-hub-accent);
 }
 
 .academy-hub :is(.academy-hub-card, .academy-hub-concept):is(:hover, :focus-visible) :is(h2, h3),

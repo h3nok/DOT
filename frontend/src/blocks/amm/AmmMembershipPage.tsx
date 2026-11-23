@@ -48,7 +48,7 @@ export default function AmmMembershipPage() {
     finally { setBusy(false); }
   }
   return <AmmShell reading><div className="amm-membership-page">
-    <Helmet><title>Free membership — {AMM.title}</title><meta name="robots" content="noindex" /></Helmet>
+    <Helmet><title>{`Free membership — ${AMM.title}`}</title><meta name="robots" content="noindex" /></Helmet>
     <header><p className="amm-eyebrow">The American Millennial Manifesto</p><h1>{user ? "Your free membership." : "Take your life seriously."}</h1><p>{user ? `Your account is active${user.display_name ? `, ${user.display_name}` : ""}. Choose what you came here to do.` : "Join with a verified email address. Membership is free and open; receiving email is a separate choice."}</p></header>
     {closed && <p role="status">Your free membership is closed and your sessions have ended. Email subscriptions remain under their own unsubscribe controls.</p>}
     {loading ? <p role="status">Checking your session…</p> : user ? <>

@@ -221,9 +221,9 @@
     },
     "leech": {
       "heading": {
-        "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+        "text": "You spot the Leech by looking for the gap between what is said and what is done.",
         "chapter": 1,
-        "section": "1. The Attitude Comes First"
+        "section": "1. What Is the Leech? How Do You Spot It?"
       },
       "lines": [
         {
@@ -233,9 +233,9 @@
           "mark": "expects you to keep it"
         },
         {
-          "text": "None of these statements turns a human being into the attitude they have learned.",
+          "text": "Anyone can serve it. Anyone can resist it.",
           "chapter": 1,
-          "section": "1. The Attitude Comes First"
+          "section": "1. What Is the Leech? How Do You Spot It?"
         }
       ]
     },
@@ -322,20 +322,15 @@
         "text": "You were born valuable before you produced anything.",
         "chapter": 4,
         "section": "13. What We Owe the Next Life"
-      },
-      "judged": {
-        "text": "A society must be judged by whether its institutions preserve that order or reverse it.",
-        "doc": "amm-1-earlier",
-        "section": "(opening)"
       }
     },
     "revolution": {
       "lines": [
         {
-          "text": "The task is to revise the terms through which people learn what power permits. New leaders alone cannot accomplish that.",
+          "text": "The Host's freedom represents people taking their own mental health and agency seriously.",
           "chapter": 4,
-          "section": "1. A Different Meaning of Strength",
-          "mark": "revise the terms through which people learn what power permits"
+          "section": "(opening)",
+          "mark": "taking their own mental health and agency seriously"
         }
       ]
     },
@@ -378,15 +373,15 @@
     "leech": {
       "lines": [
         {
-          "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+          "text": "You spot the Leech by looking for the gap between what is said and what is done.",
           "chapter": 1,
-          "section": "1. The Attitude Comes First",
-          "mark": "domination of other people"
+          "section": "1. What Is the Leech? How Do You Spot It?",
+          "mark": "the gap between what is said and what is done"
         },
         {
-          "text": "People can express it. Institutions can reward it. A culture can make it appear admirable.",
+          "text": "It speaks the language of love while practicing the craft of extraction.",
           "chapter": 1,
-          "section": "1. The Attitude Comes First"
+          "section": "1. What Is the Leech? How Do You Spot It?"
         }
       ]
     },
@@ -454,9 +449,9 @@
     },
     "why": {
       "heading": {
-        "text": "The Leech is the attitude that treats domination of other people as a legitimate route to security, worth, or advantage.",
+        "text": "You spot the Leech by looking for the gap between what is said and what is done.",
         "chapter": 1,
-        "section": "1. The Attitude Comes First"
+        "section": "1. What Is the Leech? How Do You Spot It?"
       },
       "lines": [
         {
@@ -1292,11 +1287,6 @@
       "label": "Book One",
       "route": "/book/digital-organism-theory"
     },
-    "amm-1-earlier": {
-      "label": "Chapter One, earlier edition",
-      "route": "/essays/amm-chapter-one-the-leech",
-      "path": "src/content/essays/amm-chapter-one-the-leech.md"
-    },
     "amm-2-earlier": {
       "label": "Chapter Two, earlier edition",
       "route": "/essays/amm-chapter-two-the-leechs-anatomy",
@@ -1548,10 +1538,10 @@
     "concentrated": {
       "lines": [
         {
-          "text": "The Leech remains the attitude of dominance. Extraction is one way the attitude may become materially organized.",
+          "text": "The Leech remains that behavior: wanting to dominate instead of to love. Extraction is one way it may become materially organized.",
           "chapter": 1,
           "section": "8. The Material Expression of Dominance",
-          "mark": "the attitude of dominance"
+          "mark": "wanting to dominate instead of to love"
         },
         {
           "text": "Humiliation, enforced dependence, exclusion from decisions, and punishment of justified objection are other possible expressions.",

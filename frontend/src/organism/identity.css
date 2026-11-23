@@ -57,9 +57,9 @@ html.dark[data-palette="dot"][data-theme] {
   --identity-rf: #f7c474;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: color-mix(in oklab, #142b24 58%, var(--identity-dark-surface));
+  --card: color-mix(in oklab, #18201d 58%, var(--identity-dark-surface));
   --card-foreground: var(--identity-ink);
-  --popover: color-mix(in oklab, #173129 72%, var(--identity-dark-surface));
+  --popover: color-mix(in oklab, #1b2521 72%, var(--identity-dark-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
   --primary-foreground: var(--identity-surface);
@@ -132,7 +132,8 @@ html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-envir
     );
 }
 
-/* DOT Daylight (#f2f0e8) and DOT Night (#0c1715) are already pre-toned for
+/* DOT Daylight (#f2f0e8) and DOT Night (#111614; calmed from a greener #0c1715 on 2026-11-22,
+   keeping the jade accent) are already pre-toned for
    warm reading in identity.json; prevent the generic warm-brown paper mix in
    appearance.css from neutralizing the obsidian-emerald ground or over-yellowing
    the botanical vellum. */

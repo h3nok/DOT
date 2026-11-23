@@ -41,7 +41,6 @@ export default function ReadersPage() {
               return <Surface as="li" key={topic.id} tone={topic.tone as IntentTone} className="readers-topic">
                 <Icon aria-hidden="true" />
                 <div><h2>{topic.label}</h2><p>{topic.description}</p></div>
-                <span className="readers-paper-lines" aria-hidden="true"><i /><i /><i /></span>
               </Surface>;
             })}
           </ul>

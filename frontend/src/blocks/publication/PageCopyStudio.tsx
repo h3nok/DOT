@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Check, Save } from 'lucide-react';
+import { ArrowLeft, Check, RotateCcw, Save } from 'lucide-react';
 import AMM from '../../content/amm.json';
 import { ammCopyFields, type CopyField } from '../../content/editable/ammCopy.js';
 import { useSiteContent } from '../../content/editable/SiteContentProvider';
@@ -62,7 +62,7 @@ export default function PageCopyStudio() {
 }
 
 function CopyEditor({ field, row, onDirty }: { field: CopyField; row?: SiteContentDraft; onDirty: (key: string, dirty: boolean) => void }) {
-  const { save } = useSiteContent();
+  const { save, revert } = useSiteContent();
   const [value, setValue] = useState(row?.draft_value ?? row?.published_value ?? field.text);
   const [saved, setSaved] = useState(value);
   const [live, setLive] = useState(row?.published_value ?? field.text);
@@ -70,8 +70,11 @@ function CopyEditor({ field, row, onDirty }: { field: CopyField; row?: SiteConte
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [updatedAt, setUpdatedAt] = useState(row?.updated_at ?? null);
+  const [confirmRestore, setConfirmRestore] = useState(false);
   const dirty = value !== saved;
   const unpublished = value.trim() !== live;
+  // The original wording is the released default; a field that differs from it can return to it.
+  const changed = Boolean(row) && (saved !== field.text || live !== field.text);
   useEffect(() => {
     onDirty(field.key, dirty);
     return () => onDirty(field.key, false);
@@ -88,13 +91,31 @@ function CopyEditor({ field, row, onDirty }: { field: CopyField; row?: SiteConte
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not save. Your changes remain here.'); }
     finally { setBusy(false); }
   }
+  // Restoring drops the override (draft and published) so the original wording returns to the page.
+  async function restore() {
+    setBusy(true); setError(''); setNotice('');
+    try {
+      await revert(field.key);
+      setValue(field.text); setSaved(field.text); setLive(field.text); setUpdatedAt(null); setConfirmRestore(false);
+      setNotice('Original wording restored on the page.');
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not restore. Nothing was changed.'); }
+    finally { setBusy(false); }
+  }
   return <section className="page-copy-field" aria-label={field.label}>
-    <AmmTextField label={field.label} id={field.key} value={value} rows={value.length > 150 ? 4 : 2} maxLength={4000} disabled={busy} onChange={event => { setValue(event.target.value); setNotice(''); }} />
+    <AmmTextField label={field.label} id={field.key} value={value} rows={Math.min(8, Math.max(2, Math.ceil(value.length / 70)))} maxLength={4000} disabled={busy} onChange={event => { setValue(event.target.value); setNotice(''); }} />
     <div className="page-copy-actions">
       <AmmButton label="Save draft" disabled={busy || !dirty || !value.trim()} onClick={() => void commit(false)} icon={<Save />} />
       <AmmButton label="Publish change" variant="primary" disabled={busy || !unpublished || !value.trim()} onClick={() => void commit(true)} icon={<Check />} />
       <span>{dirty ? 'Unsaved changes' : unpublished ? 'Private draft' : 'Published wording'}</span>
+      {changed && !confirmRestore && <AmmButton label="Restore original wording" variant="quiet" disabled={busy} onClick={() => setConfirmRestore(true)} icon={<RotateCcw />} />}
     </div>
+    {confirmRestore && <div className="page-copy-restore" role="group" aria-label="Restore original wording">
+      <p>Put the original wording back on the page? It reads: “{field.text}”</p>
+      <div className="page-copy-actions">
+        <AmmButton label="Restore it" variant="primary" disabled={busy} onClick={() => void restore()} />
+        <AmmButton label="Keep mine" disabled={busy} onClick={() => setConfirmRestore(false)} />
+      </div>
+    </div>}
     {unpublished && <details className="page-copy-current"><summary>Currently published</summary><p>{live}</p></details>}
     <p role="status">{notice}</p>{error && <p role="alert">{error}</p>}
   </section>;
