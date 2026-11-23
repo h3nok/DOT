@@ -71,7 +71,9 @@ const ACADEMY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "academy", "landi
 const AMM = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm.json"), "utf8"));
 const AMM_MEDIA = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-media.json"), "utf8"));
 const AMM_CAPITAL = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-capital.json"), "utf8"));
-const CAPITAL_ROUTE = "/amm/power";
+const AMM_MODEL = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-model.json"), "utf8"));
+const AMM_INQUIRY_ROUTE = "/amm/inquiry";
+const FIGURES_ROUTE = "/amm/figures";
 const AMM_LIBRARY = JSON.parse(readFileSync(path.join(CONTENT_DIR, "amm-library.json"), "utf8"));
 const ESSAY_MOVES = JSON.parse(readFileSync(path.join(CONTENT_DIR, "essays", "moves.json"), "utf8"));
 // Search engines resolve an author entity through profiles they already know,
@@ -673,7 +675,7 @@ function prerenderArticle(body, essaysPublished) {
 }
 
 function prerenderAmm(body, { footer = true } = {}) {
-  const closing = footer ? `<footer><p>Manifesto and writing by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link("/amm/editions", "Editions")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
+  const closing = footer ? `<footer><p>Manifesto and writing by ${link(ABOUT_ROUTE, AUTHOR.name)}.</p><p>${link(AMM.dot.route, AMM.dot.footer)} ${link(AMM.movement.href, AMM.movement.footer)}</p><nav aria-label="AMM footer">${link(AMM.power.figuresRoute, AMM.power.figuresNav)} · ${link("/amm/editions", "Editions")} · ${link("/amm/editions#amm-subscribe", "Reader list")} · ${link("/amm/membership", "Free membership")} · ${link("/contact?purpose=writing", "Correspondence")} · ${link(AMM.feed, "AMM RSS")} · ${link(PRIVACY_ROUTE, "Privacy")} · ${link(TERMS_ROUTE, "Terms")} · ${link("/", "Digital Organism Theory")}</nav></footer>` : "";
   return `<article data-prerender><header><a href="/amm"><img src="/amm/mark.svg" width="48" height="48" alt="" /> ${escapeHtml(AMM.title)}</a> ${link(AMM.dot.route, "Digital Organism Theory")}</header>${body}${closing}</article>`;
 }
 
@@ -686,16 +688,6 @@ function ammMembershipHtml(content) {
 
 function ammParticipationHtml(content, id = "amm-subscribe") {
   return `<section id="${id}" aria-label="Subscribe to AMM"><p>${escapeHtml(content.participation.eyebrow)}</p><h2>${escapeHtml(content.participation.title)}</h2><p>${escapeHtml(content.participation.description)}</p><h3>${escapeHtml(content.signupTitle)}</h3><p>${escapeHtml(content.signupDescription)}</p><p>Email signup requires JavaScript. ${link(content.feed, "Follow AMM with RSS")} without an account.</p>${ammMembershipHtml(content)}</section>`;
-}
-
-/** Where AMM comes from: three ideas in DOT's own words, each beside where it applies, and the way back to DOT. */
-function ammDotHtml({ dot }) {
-  return `<section id="amm-dot" aria-labelledby="amm-dot-title"><h2 id="amm-dot-title">${escapeHtml(dot.title)}</h2><p>${escapeHtml(dot.intro)}</p><p>${link(dot.route, dot.action)}</p><ol aria-label="From Digital Organism Theory to AMM and 4Us">${dot.links.map(item => `<li><h3>${link(`/doctrine/${item.id}`, item.title)}</h3><blockquote><p>${escapeHtml(item.quote)}</p></blockquote><p>${escapeHtml(item.applies)}</p></li>`).join("")}</ol></section>`;
-}
-
-/** The movement AMM sponsors. */
-function ammSponsorHtml({ movement }) {
-  return `<section id="amm-sponsor" aria-labelledby="amm-sponsor-title"><img src="${escapeHtml(movement.artwork)}" alt="${escapeHtml(movement.artworkAlt)}" width="1024" height="1536" loading="lazy" /><p>${escapeHtml(movement.sponsor)}</p><p>${escapeHtml(movement.name)}</p><h2 id="amm-sponsor-title">${escapeHtml(movement.title)}</h2><p>${escapeHtml(movement.description)}</p><p>${escapeHtml(movement.stage)}</p><p>${link(movement.href, movement.action)}</p></section>`;
 }
 
 /** The manifesto as a book (front page and archive): each chapter's full title, its own line, reading time and one way in. */
@@ -726,35 +718,142 @@ function ammEditionEndHtml(content, slug) {
   const next = index === -1 ? AMM_PARTS[0] : AMM_PARTS[index + 1];
   const previous = index > 0 ? AMM_PARTS[index - 1] : undefined;
   return [
-    `<nav aria-label="Continue reading">${next ? `<p>${escapeHtml(index === -1 ? content.reading.beginLabel : content.reading.nextLabel)}: ${ammPartLink(next)}</p>` : `<p>${escapeHtml(content.reading.latestNote)}</p>`}${previous ? `<p>Previous: ${ammPartLink(previous)}</p>` : ""}</nav>`,
+    `<nav aria-label="Continue reading">${next ? `<p>${escapeHtml(index === -1 ? content.reading.beginLabel : content.reading.nextLabel)}: ${ammPartLink(next)}</p>` : `<p>${escapeHtml(content.reading.latestNote)}</p><p>${link("/amm/editions", content.archiveTitle)}</p>`}${previous ? `<p>Previous: ${ammPartLink(previous)}</p>` : ""}</nav>`,
     `<section aria-label="Subscribe to AMM by email"><h2>${escapeHtml(content.signupTitle)}</h2><p>${escapeHtml(content.signupDescription)}</p><p>Email signup requires JavaScript. ${link(content.feed, "Follow AMM with RSS")} without an account.</p>${ammMembershipHtml(content)}</section>`,
     `<section><h2>${escapeHtml(content.reading.supportTitle)}</h2><p>${escapeHtml(content.reading.supportDescription)}</p><p>${link("/support?purpose=author&from=amm", content.reading.supportAction)}</p><p>${escapeHtml(content.reading.supportNote)}</p></section>`,
   ].join("");
 }
 
-/** How power works: the framework the chapters assume, in six scenes (the first follows one payment up the power map), then four questions and the next step. */
-function ammCapitalHtml(content) {
-  const m = content.money, c = content.capital;
-  const paragraph = text => `<p>${escapeHtml(text)}</p>`;
-  const quote = (text, source) => `<blockquote><p>${escapeHtml(text)}</p>${source ? `<cite>${escapeHtml(source)}</cite>` : ""}</blockquote>`;
-  const order = ["platforms", "housing", "borrowing", "knowledge", "public"];
-  const examples = order.flatMap(id => m.examples.filter(item => item.id === id));
-  const ids = ["power", "assault", "chain", "interfaces", "holders", "detachment"];
-  const equity = AMM_CAPITAL.charts.find(chart => chart.title === "Ownership of corporate equity");
-  const value = label => equity.rows.find(row => row.label === label).value;
-  const figure = chart => `<figure><figcaption>${escapeHtml(chart.title)} · ${escapeHtml(chart.period)} · ${escapeHtml(chart.unit)}. ${escapeHtml(chart.status)}</figcaption><table><tbody>${chart.rows.map(row => `<tr><th scope="row">${escapeHtml(row.label)}</th><td>${row.value}</td><td>${link(row.url, row.source)}</td></tr>`).join("")}</tbody></table><p>${escapeHtml(chart.limits)}</p></figure>`;
+/** A sentence of the AMM model with the passage it comes from, as the pages link it (src/content/ammModel.ts). */
+const ammChapter = (n) => AMM_MODEL.chapters.find((chapter) => chapter.n === n);
+function ammWork(quote) {
+  if (quote.doc) {
+    const source = AMM_MODEL.sources[quote.doc];
+    return { label: source.label, route: quote.file ? `${source.route}/${quote.file}` : source.route };
+  }
+  const chapter = ammChapter(quote.chapter);
+  return { label: chapter.label, route: `${ESSAYS_ROUTE}/${chapter.slug}` };
+}
+function ammCite(quote) {
+  const work = ammWork(quote);
+  // Text before a work's first heading is cited as the work itself.
+  const opening = quote.section === "(opening)";
+  return {
+    text: quote.fragment === "start" ? `…${quote.text}` : quote.text,
+    label: opening ? work.label : `${work.label} · ${quote.section.replace(/^\d+\.\s*/, "")}`,
+    href: opening ? work.route : `${work.route}#${headingSlug(quote.section)}`,
+  };
+}
+const AMM_MODEL_ANCHORS = { described: "amm-inversion", inversion: "amm-inversion", citizen: "amm-host", leech: "amm-leech", authorship: "amm-chapter-4" };
+
+function ammModelParts(base = "") {
+  return `<ol>${AMM_MODEL.parts.map((part) => `<li>${link(`${base}#${AMM_MODEL_ANCHORS[part.id]}`, part.name)}<p>${escapeHtml(ammCite(part.summary).text)}</p>${part.members ? `<ul>${part.members.map((member) => `<li>${escapeHtml(member)}</li>`).join("")}</ul>` : ""}</li>`).join("")}</ol>`;
+}
+
+/** The chapters a screen quotes, once each, linking to the first section quoted (src/content/ammModel.ts). */
+function ammChapterSources(quotes) {
+  const seen = new Map();
+  for (const quote of quotes) {
+    const { label } = ammWork(quote);
+    if (!seen.has(label)) seen.set(label, { label, href: ammCite(quote).href });
+  }
+  return [...seen.values()];
+}
+
+/**
+ * The AMM home without JavaScript (the author, 2026-11-19): the AMM thesis, set as a manifesto,
+ * then the model's five screens, each with its painting and the works it quotes (as
+ * src/blocks/amm/AmmHomeScreens.tsx), then the book, then the way out.
+ */
+const AMM_DIAGNOSIS_ROUTE = () => `${ESSAYS_ROUTE}/${ammChapter(3).slug}#3-the-inversion-in-practice`;
+function ammPaintingHtml(name) {
+  // The diagnosis set first, then the AMM's other illustrations, as the page itself resolves them.
+  const painting = AMM_MEDIA.reflect[name] ?? AMM_MEDIA[name];
+  return painting ? `<img src="${escapeHtml(painting.fallback)}" alt="${escapeHtml(painting.alt)}" width="${painting.width}" height="${painting.height}" loading="lazy" />` : "";
+}
+function ammHomeHtml(content) {
+  const L = content.model;
+  const H = AMM_MODEL.home;
+  const sourcesOf = (quotes) => ammChapterSources(quotes).map((source) => link(source.href, source.label)).join(" · ");
+  const { lines: revolution } = H.revolution;
+  const { worth, judged } = H.thesis;
+  const article = (text) => `<li>${escapeHtml(text)}</li>`;
+  const screen = (id, title, quotes, art, extra = "") => {
+    const { heading, lines, note } = quotes;
+    const cited = [...(heading ? [heading] : []), ...lines, ...(note ? [note] : [])];
+    const sources = ammChapterSources(cited).map((source) => link(source.href, source.label)).join(" · ");
+    return `<section id="${id}" aria-labelledby="${id}-title"><h2 id="${id}-title">${escapeHtml(title ?? ammCite(heading).text)}</h2>${lines.map((line) => `<p>${escapeHtml(ammCite(line).text)}</p>`).join("")}${note ? `<p><small>${escapeHtml(ammCite(note).text)}</small></p>` : ""}${extra}<p>${escapeHtml(L.sourceLabel)} ${sources}</p><figure>${ammPaintingHtml(art)}<figcaption>${escapeHtml(content.reflect.disclosure)}</figcaption></figure></section>`;
+  };
+  const chapter = (part) => `<li id="amm-chapter-${part.part}">${link(`${ESSAYS_ROUTE}/${part.slug}`, `${part.partLabel} · ${part.partTitle}`)}</li>`;
   return [
-    `<header><p>${escapeHtml(c.eyebrow)}</p><h1>${escapeHtml(c.title)}</h1>${paragraph(c.intro)}<figure><img src="${escapeHtml(AMM_MEDIA.erosion.fallback)}" alt="${escapeHtml(AMM_MEDIA.erosion.alt)}" width="${AMM_MEDIA.erosion.width}" height="${AMM_MEDIA.erosion.height}" /><figcaption>${escapeHtml(c.erosionCaption)}</figcaption></figure><dl aria-label="${escapeHtml(c.imageKeyLabel)}">${c.imageKey.map(item => `<dt>${link(item.href, item.label)}</dt><dd>${escapeHtml(item.meaning)}</dd>`).join("")}</dl><nav aria-label="${escapeHtml(c.contentsLabel)}"><ol>${c.glance.map((label, index) => `<li><a href="#${ids[index]}">${escapeHtml(label)}</a></li>`).join("")}</ol></nav></header>`,
-    `<section id="power"><h2>${escapeHtml(c.mapTitle)}</h2>${paragraph(c.mapIntro)}<figure><figcaption>${escapeHtml(c.mapLabel)}</figcaption><ol>${c.tiers.map(tier => `<li><strong>${escapeHtml(tier.label)}</strong>${tier.detail ? `: ${escapeHtml(tier.detail)}` : ""}${tier.chips ? ` (${tier.chips.map(escapeHtml).join(", ")})` : ""}${c.flows.filter(flow => flow.after === tier.id).map(flow => `<p>${flow.items.map(item => `${item.direction === "up" ? "Up" : "Down"}: ${escapeHtml(item.label)}`).join(" · ")}</p>`).join("")}</li>`).join("")}</ol><p>${escapeHtml(c.rail.label)}: ${escapeHtml(c.rail.note)}.</p></figure><ol>${c.story.map(step => `<li><h3>${escapeHtml(step.title)}</h3>${paragraph(step.text)}${step.quote ? quote(step.quote, step.source) : ""}</li>`).join("")}</ol></section>`,
-    `<section id="assault"><h2>${escapeHtml(c.assaultTitle)}</h2>${paragraph(c.assaultIntro)}<figure><img src="${escapeHtml(AMM_MEDIA.anatomy.fallback)}" alt="${escapeHtml(AMM_MEDIA.anatomy.alt)}" width="${AMM_MEDIA.anatomy.width}" height="${AMM_MEDIA.anatomy.height}" loading="lazy" /><figcaption>${escapeHtml(c.anatomyCaption)}</figcaption></figure><p><strong>${escapeHtml(c.assaultLine)}</strong></p><ol>${c.ledger.map(item => `<li><strong>${escapeHtml(item.term)}</strong> ${escapeHtml(item.becomes)}</li>`).join("")}</ol>${quote(c.assaultClose, c.assaultSource)}</section>`,
-    `<section id="chain"><h2>${escapeHtml(c.chainTitle)}</h2>${quote(c.chainIntro, c.chainSource)}<ol aria-label="${escapeHtml(c.chainLabel)}">${m.cycle.map((item, index) => `<li><p>${escapeHtml(c.links[index])}</p><h3>${escapeHtml(item.title)}</h3>${paragraph(item.text)}</li>`).join("")}</ol>${paragraph(c.chainReturn)}<details><summary>${escapeHtml(c.termsLabel)}</summary><dl>${m.definitions.map(item => `<dt>${escapeHtml(item.term)}</dt><dd>${escapeHtml(item.text)}</dd>`).join("")}</dl></details></section>`,
-    `<section id="interfaces"><h2>${escapeHtml(c.interfacesTitle)}</h2>${paragraph(c.interfacesIntro)}${examples.map(item => `<article id="${item.id}"><p>${escapeHtml(c.interfaceLabels[item.id])}</p><h3>${escapeHtml(item.title)}</h3>${paragraph(item.path)}<strong>${escapeHtml(item.question)}</strong>${paragraph(item.mechanic)}<p>${escapeHtml(c.leverageLabel)}: ${escapeHtml(item.pressure)}</p></article>`).join("")}</section>`,
-    `<section id="holders"><h2>${escapeHtml(c.holdersTitle)}</h2>${paragraph(c.holdersIntro)}<p><strong>${value("Top 1%")}%</strong> ${escapeHtml(c.equityTop)}; <strong>${value("Bottom 50%")}%</strong> ${escapeHtml(c.equityBottom)}.</p><p>${escapeHtml(c.managersTitle)}: ${AMM_CAPITAL.administration.rows.map(row => `${escapeHtml(row.label)} $${row.value} trillion`).join(", ")}. ${escapeHtml(c.managersNote)}</p>${quote(c.holdersQuote, c.holdersSource)}${[...AMM_CAPITAL.charts, AMM_CAPITAL.administration].map(figure).join("")}</section>`,
-    `<section id="detachment"><h2>${escapeHtml(c.detachmentTitle)}</h2><p>${escapeHtml(c.wealthLine)} ${c.wealthWords.map(escapeHtml).join(", ")}.</p><p>${escapeHtml(c.obligationLine)} ${c.obligationWords.map(escapeHtml).join(", ")}.</p><p>${escapeHtml(c.detachmentSource)}</p>${quote(c.detachmentQuote)}<p>${escapeHtml(c.detachmentExample)} ${link(c.detachmentExampleUrl, c.detachmentExampleLabel)}</p></section>`,
-    `<section id="tests"><h2>${escapeHtml(c.questionsTitle)}</h2>${paragraph(m.testIntro)}${m.tests.map(item => `<h3>${escapeHtml(item.title)}</h3>${paragraph(item.text)}`).join("")}</section>`,
-    `<section id="alternatives" aria-label="${escapeHtml(c.alternativeLabel)}"><p>${escapeHtml(c.alternativeLine)} ${link(content.artwork.movementUrl, c.movementLabel)}</p><p>${link(content.introduction.route, content.reading.prereqThen)}</p></section>`,
-    `<details id="sources"><summary>${escapeHtml(m.sourcesTitle)}</summary>${paragraph(m.sourcesIntro)}${paragraph(m.creditNote)}<ul>${m.sources.map(item => `<li>${link(item.url, item.title)}${paragraph(item.note)}</li>`).join("")}</ul></details>`,
-    `<nav aria-label="Continue reading">${link("/amm", "AMM home")} ${link(content.introduction.route, content.reading.prereqThen)}</nav>`,
+    // The thesis as a manifesto (2026-11-22): AMM's conviction, then the numbered articles, purpose facing the Inversion.
+    `<section id="amm-thesis" aria-labelledby="amm-thesis-title"><h2 id="amm-thesis-title">${escapeHtml(L.thesisTitle)}</h2><p>${escapeHtml(ammCite(worth).text)}</p><h3>${escapeHtml(L.thesisPurposeLabel)}</h3><ol>${[L.thesisSociety, L.thesisHonor, ammCite(judged).text].map(article).join("")}</ol><h3>${escapeHtml(L.thesisInversionLabel)}</h3><ol start="4">${[L.thesisInverts, L.thesisMyth, L.thesisBelief, L.thesisCharacter].map(article).join("")}</ol><p>${escapeHtml(L.sourceLabel)} ${sourcesOf([worth, judged])}</p></section>`,
+    screen("amm-inversion", undefined, H.inversion, "inversion-empty-frame", `<p>${link(AMM_DIAGNOSIS_ROUTE(), L.readDiagnosis)}</p>`),
+    screen("amm-host", L.hostTitle, H.host, "anatomy"),
+    screen("amm-leech", L.leechTitle, H.leech, "the-leech-portrait"),
+    screen("amm-anatomy", L.anatomyTitle, H.anatomy, "leechAnatomy", `<p>${link(content.power.figuresRoute, L.figuresLink)}</p>`),
+    screen("amm-feeding", L.feedingTitle, H.feeding, "belief-4-the-feeding"),
+    `<section id="amm-way-out" aria-labelledby="amm-way-out-title"><p>${escapeHtml(L.revolutionEyebrow)}</p><h2 id="amm-way-out-title">${escapeHtml(L.revolutionLine)}</h2>${revolution.map((line) => `<p>${escapeHtml(ammCite(line).text)}</p>`).join("")}<p>${escapeHtml(L.sourceLabel)} ${sourcesOf(revolution)}</p><p>${link(`${ESSAYS_ROUTE}/${AMM_PARTS[AMM_PARTS.length - 1].slug}`, L.revolutionAction)}</p></section>`,
+    `<section id="amm-book" aria-labelledby="amm-book-title"><h2 id="amm-book-title">${escapeHtml(L.bookTitle)}</h2><p>${escapeHtml(content.manuscript.status)}</p><ol>${AMM_PARTS.map(chapter).join("")}</ol><p>${link("/amm/editions", L.closingBook)}</p></section>`,
+  ].join("");
+}
+
+/** The inquirer's page without JavaScript: every section, sentence, source and citation (the notebook needs JavaScript). */
+function ammInquiryHtml(content) {
+  const M = AMM_MODEL;
+  const I = content.inquiry;
+  const published = new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${M.edition.published}T00:00:00Z`));
+  const paragraphs = (quotes) => { const cited = ammCite(quotes[0]); return `<blockquote cite="${escapeHtml(cited.href)}">${quotes.map((quote) => `<p>${escapeHtml(quote.text)}</p>`).join("")}</blockquote><p>${link(cited.href, cited.label)}</p>`; };
+  const section = (id, title, body) => `<section id="${id}" aria-labelledby="${id}-title"><h2 id="${id}-title">${escapeHtml(title)}</h2>${body}</section>`;
+  const concept = (id) => link(`/doctrine/${id}`, DOCTRINE_CONCEPTS.find((item) => item.id === id)?.name ?? id);
+  const concepts = [...new Set(M.terms.flatMap((term) => term.applies))];
+  const citation = (title, route) => `${AUTHOR.name}. ${title ? `${title} ` : ""}The American Millennial Manifesto. ${M.edition.label}. ${published}. ${SITE_URL}${route}`;
+  const sections = [
+    ["inquiry-model", I.modelTitle], ["inquiry-levels", I.levelsTitle], ["inquiry-terms", I.termsTitle], ["inquiry-method", I.methodTitle],
+    ["inquiry-notebook", I.notebookTitle], ["inquiry-weaken", I.weakenTitle], ["inquiry-change", I.changeTitle], ["inquiry-records", I.recordsTitle],
+    ["inquiry-dot", I.dotTitle], ["inquiry-cite", I.citeTitle],
+  ];
+  const inquire = ammCite(M.scenes.inquire.heading);
+  return [
+    `<section id="inquiry" aria-labelledby="inquiry-title"><p>${escapeHtml(I.eyebrow)}</p><h1 id="inquiry-title">${escapeHtml(I.title)}</h1><blockquote cite="${escapeHtml(inquire.href)}"><p>${escapeHtml(inquire.text)}</p></blockquote><p>${link(inquire.href, inquire.label)}</p><nav aria-label="${escapeHtml(I.contentsLabel)}"><ol>${sections.map(([id, title]) => `<li>${link(`#${id}`, title)}</li>`).join("")}</ol></nav></section>`,
+    section("inquiry-model", I.modelTitle, `<figure aria-label="${escapeHtml(content.model.mapLabel)}"><figcaption>${escapeHtml(content.model.mapCaption)}</figcaption>${ammModelParts(content.route)}</figure>`),
+    section("inquiry-levels", I.levelsTitle, `<dl aria-label="${escapeHtml(I.levelsLabel)}">${M.levels.items.map((level) => `<dt>${escapeHtml(level.label)}</dt><dd><p>${escapeHtml(level.definition)}</p><p>${link(M.levels.source.href, M.levels.source.label)}</p></dd>`).join("")}</dl><h3>${escapeHtml(I.argumentTitle)}</h3>${paragraphs(M.argument)}`),
+    section("inquiry-terms", I.termsTitle, `<dl aria-label="${escapeHtml(I.termsLabel)}">${M.terms.map((term) => { const cited = ammCite(term.definition); return `<div id="term-${term.id}"><dt>${escapeHtml(term.term)}</dt><dd><p>${escapeHtml(cited.text)}</p><p>${link(cited.href, cited.label)}${term.applies.length ? ` · ${escapeHtml(I.appliesLabel)} ${term.applies.map(concept).join(", ")}` : ""}</p></dd></div>`; }).join("")}</dl>`),
+    section("inquiry-method", I.methodTitle, `${paragraphs([M.method.intro])}<ol>${M.method.steps.map((step) => `<li><h3>${escapeHtml(step.label)}</h3><p>${escapeHtml(step.text.text)}</p></li>`).join("")}</ol>${paragraphs([M.method.counter])}`),
+    section("inquiry-notebook", I.notebookTitle, `<p>${escapeHtml(I.notebookPrivacy)}</p><ol>${M.method.steps.map((step) => `<li><strong>${escapeHtml(step.label)}</strong> ${escapeHtml(step.prompt.text)}</li>`).join("")}</ol><p>The notebook requires JavaScript. The questions above can be answered on paper.</p>`),
+    section("inquiry-weaken", I.weakenTitle, paragraphs(M.weaken)),
+    section("inquiry-change", I.changeTitle, paragraphs(M.change)),
+    section("inquiry-records", I.recordsTitle, `<ol aria-label="${escapeHtml(I.recordsLabel)}">${[...M.records].sort((a, b) => a.date.localeCompare(b.date)).map((record) => `<li><time datetime="${record.date}">${record.date.slice(0, 4)}</time> ${link(record.href, record.title)} · ${escapeHtml(record.issuer)}${record.use ? `<p>${escapeHtml(record.use)}</p>` : ""}</li>`).join("")}</ol>`),
+    section("inquiry-dot", I.dotTitle, `<ul aria-label="${escapeHtml(I.dotLabel)}">${concepts.map((id) => `<li>${concept(id)}</li>`).join("")}</ul><p>${link(BOOK_ROUTE, I.dotAction)}</p>`),
+    section("inquiry-cite", I.citeTitle, `<ul><li>${escapeHtml(citation("", content.route))}</li>${M.chapters.map((chapter) => `<li>${escapeHtml(citation(`“${chapter.title}.”`, `${ESSAYS_ROUTE}/${chapter.slug}`))}</li>`).join("")}</ul><p>${link(`${ESSAYS_ROUTE}/${ammChapter(1).slug}`, I.endAction)} · ${link(content.route, I.homeAction)}</p>`),
+  ].join("");
+}
+
+/** The figures behind Chapter Two without JavaScript: four screens and their sources, every sentence and figure present. */
+function ammFiguresHtml(content) {
+  const P = content.power;
+  const S = P.screens;
+  const W = AMM_MODEL.power;
+  const L = content.model;
+  const foot = (quotes) => quotes.length ? `<p>${escapeHtml(L.sourceLabel)} ${ammChapterSources(quotes).map((source) => link(source.href, source.label)).join(" · ")}</p>` : "";
+  const lines = (quotes) => quotes.map((quote) => `<p>${escapeHtml(ammCite(quote).text)}</p>`).join("");
+  const screen = (id, body) => `<section id="${id}" aria-labelledby="${id}-title"><h2 id="${id}-title">${escapeHtml(S[id])}</h2>${body}</section>`;
+  const chart = (title) => AMM_CAPITAL.charts.find((item) => item.title === title);
+  const wealth = chart("Household wealth is unevenly distributed");
+  const equity = chart("Ownership of corporate equity");
+  const admin = AMM_CAPITAL.administration;
+  const share = (rows, label) => rows.find((row) => row.label === label).value;
+  const managed = Math.round(admin.rows.reduce((sum, row) => sum + row.value, 0));
+  const homes = W.housing.ftc.text.match(/roughly ([\d,]+)/)[1];
+  const table = (caption, rows) => `<table><caption>${escapeHtml(caption)}</caption><tbody>${rows.map(([label, value]) => `<tr><th scope="row">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`).join("")}</tbody></table>`;
+  const sources = [...wealth.rows.slice(0, 1), ...equity.rows, ...admin.rows];
+  return [
+    `<header><h1>${escapeHtml(P.figuresTitle)}</h1><p>${escapeHtml(P.figuresIntro)}</p><p>${link(`${ESSAYS_ROUTE}/${ammChapter(2).slug}`, P.figuresBack)}</p></header>`,
+    screen("wealth", `${lines(W.wealth.lines)}<p><strong>${share(wealth.rows, "Bottom 50%")}%</strong> ${escapeHtml(P.wealthBottom)}</p>${table(`${P.wealthTitle} · ${wealth.period} · ${wealth.rows[0].source}`, ["Bottom 50%", "Middle 40%", "Next 9%", "Top 1%"].map((label) => [label, `${share(wealth.rows, label)}%`]))}${foot(W.wealth.lines)}`),
+    screen("equity", `${lines(W.equity.lines)}<p><strong>${share(equity.rows, "Top 1%")}%</strong> ${escapeHtml(P.equityTop)}</p><p><strong>${share(equity.rows, "Bottom 50%")}%</strong> ${escapeHtml(P.equityBottom)}</p><p>${escapeHtml(`${equity.period} · ${equity.rows.map((row) => row.source).join(", ")}`)}</p>${foot(W.equity.lines)}`),
+    screen("savings", `${lines(W.savings.lines)}<p><strong>$${managed} trillion</strong> ${escapeHtml(P.managers)}</p>${table(P.savingsTitle, admin.rows.map((row) => [row.label, `$${row.value} trillion`]))}<p>${escapeHtml(admin.limits)}</p>${foot(W.savings.lines)}`),
+    screen("housing", `${lines(W.housing.lines)}<p><strong>${homes}</strong> ${escapeHtml(P.homesLabel)}</p>${table(P.metrosTitle, W.housing.metros.map((metro) => [metro.label, `${metro.value}%`]))}${lines([W.housing.caveat])}${foot([W.housing.ftc, W.housing.gao, W.housing.caveat, ...W.housing.lines])}`),
+    `<details id="sources"><summary>${escapeHtml(P.sourcesTitle)}</summary>${[wealth, equity].map((item) => `<p>${escapeHtml(`${item.title} · ${item.period}. ${item.limits} ${item.status}`)}</p>`).join("")}<p>${escapeHtml(`${admin.title} · ${admin.period}. ${admin.limits}`)}</p><ul>${sources.map((row) => `<li>${link(row.url, row.source)} · ${escapeHtml(row.label)}</li>`).join("")}<li>${link(W.housing.sources.ftc, "Federal Trade Commission, single-family rental mega-investors study, 2025")}</li><li>${link(W.housing.sources.gao, "Government Accountability Office, GAO-26-108675, 2026")}</li></ul></details>`,
   ].join("");
 }
 
@@ -1253,32 +1352,38 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
     structuredData: graph({ ...webPageNode({ route: AMM.route, title: AMM.title, description: AMM.description }), "@type": "Blog", author: { "@id": PERSON_ID }, hasPart: AMM_PARTS.map(part => ({ "@type": "WebPage", name: `${part.partLabel}: ${part.partTitle}`, url: pageUrl(`${ESSAYS_ROUTE}/${part.slug}`), isAccessibleForFree: true })) }, breadcrumb([home, { name: AMM.title, route: AMM.route }])),
     prerender: prerenderAmm([
-      `<h1>${AMM.headline.map(escapeHtml).join(" ")}</h1>`,
-      `<p>${escapeHtml(AMM.home.premise)}</p>`,
-      `<figure><a href="${escapeHtml(AMM.artwork.src)}" aria-label="Open full-size illustration"><img src="${escapeHtml(AMM.artwork.src)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a></figure>`,
-      `<p>${link("#amm-overview", AMM.heroAction)}</p>`,
-      `<section id="amm-overview" aria-labelledby="amm-overview-title"><h2 id="amm-overview-title">${escapeHtml(AMM.home.overviewTitle)}</h2><p>${escapeHtml(AMM.home.overviewClaim)}</p><p>${escapeHtml(AMM.home.overviewIntro)}</p><blockquote><p>${escapeHtml(AMM.home.overviewArgument)}</p><cite>${overviewCitation}</cite></blockquote><ol aria-label="${escapeHtml(AMM.home.conceptsLabel)}">${AMM.home.concepts.map((item, index) => `<li>${index === 0 || AMM_MEDIA.homeScenes.concepts[item.id] !== AMM_MEDIA.homeScenes.concepts[AMM.home.concepts[index - 1].id] ? ammHomeSceneHtml("concepts", item.id, AMM.home) : ""}<p>${escapeHtml(item.label)}</p><h3>“${escapeHtml(item.script)}”</h3><p>${escapeHtml(item.text)}</p><blockquote><p>${escapeHtml(item.argument)}</p><cite>${escapeHtml(item.source)}</cite></blockquote></li>`).join("")}</ol></section>`,
-      ammDotHtml(AMM),
-      ammPathHtml(AMM, "amm-start", essays),
-      ammParticipationHtml(AMM, "amm-participate"),
-      ammSponsorHtml(AMM),
+      // The opening's words are the author's editable copy (2026-11-19).
+      `<h1>${escapeHtml(AMM.model.heroTitle)}</h1>`,
+      ...[AMM.model.heroLine].filter(Boolean).map((line) => `<p>${escapeHtml(line)}</p>`),
+      `<figure><a href="${escapeHtml(AMM.artwork.src)}" aria-label="Open full-size illustration"><img src="${escapeHtml(AMM.artwork.src)}" alt="${escapeHtml(AMM.artwork.alt)}" width="${AMM_MEDIA.illustration.width}" height="${AMM_MEDIA.illustration.height}" /></a><figcaption>${escapeHtml(AMM.model.mirrorKey)} ${escapeHtml(AMM.reflect.disclosure)}</figcaption></figure>`,
+      `<p>${link(AMM.introduction.route, AMM.heroAction)}</p>`,
+      ammHomeHtml(AMM),
     ].join("")),
   };
-  const ammCapitalRoute = {
-    // Hidden for now: built for its address, kept out of search and the sitemap, and linked from nowhere.
-    route: CAPITAL_ROUTE, title: `${AMM.capital.title} — ${AMM.title}`, description: AMM.capital.intro, publication: "amm", noindex: true,
-    image: AMM_MEDIA.erosion.full, imageAlt: AMM_MEDIA.erosion.alt,
-    imageWidth: AMM_MEDIA.erosion.width, imageHeight: AMM_MEDIA.erosion.height,
-    structuredData: graph(webPageNode({ route: CAPITAL_ROUTE, title: AMM.capital.title, description: AMM.capital.intro }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: AMM.capital.title, route: CAPITAL_ROUTE }])),
-    prerender: prerenderAmm(ammCapitalHtml(AMM)),
+  const ammFiguresRoute = {
+    route: FIGURES_ROUTE, title: `${AMM.power.figuresTitle} — ${AMM.title}`, description: AMM.power.figuresIntro, publication: "amm",
+    structuredData: graph(webPageNode({ route: FIGURES_ROUTE, title: AMM.power.figuresTitle, description: AMM.power.figuresIntro }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: AMM.power.figuresNav, route: FIGURES_ROUTE }])),
+    prerender: prerenderAmm(ammFiguresHtml(AMM)),
   };
-  // The former money guide's addresses open the AMM home while How power works is hidden.
-  const ammMovedGuideRoutes = ["/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"].map(route => ({
-    route, title: AMM.title, description: AMM.description,
-    canonicalRoute: AMM.route, noindex: true, publication: "amm",
-    structuredData: graph(webPageNode({ route, title: AMM.title, description: AMM.description })),
-    prerender: prerenderAmm(`<h1>${escapeHtml(AMM.title)}</h1><p>${link(AMM.route, "Open the manifesto")}</p>`),
+  const ammInquiryRoute = {
+    route: AMM_INQUIRY_ROUTE, title: `${AMM.inquiry.eyebrow} — ${AMM.title}`, description: AMM.inquiry.description, publication: "amm",
+    structuredData: graph(webPageNode({ route: AMM_INQUIRY_ROUTE, title: AMM.inquiry.eyebrow, description: AMM.inquiry.description }), breadcrumb([home, { name: AMM.title, route: AMM.route }, { name: AMM.inquiry.eyebrow, route: AMM_INQUIRY_ROUTE }])),
+    prerender: prerenderAmm(ammInquiryHtml(AMM)),
+  };
+  // The companion pages folded into the book (the author, 2026-11-18): each old address keeps a
+  // noindexed page whose canonical is the chapter that now carries it.
+  const chapterTwo = AMM_PARTS.find(part => part.part === 2);
+  const chapterThree = AMM_PARTS.find(part => part.part === 3);
+  const movedTo = (target, routes) => routes.map(route => ({
+    route, title: `${target.partLabel}: ${target.partTitle} — ${AMM.title}`, description: target.partNote ?? AMM.description,
+    canonicalRoute: `${ESSAYS_ROUTE}/${target.slug}`, noindex: true, publication: "amm",
+    structuredData: graph(webPageNode({ route, title: `${target.partLabel}: ${target.partTitle}`, description: target.partNote ?? AMM.description })),
+    prerender: prerenderAmm(`<h1>${escapeHtml(`${target.partLabel}: ${target.partTitle}`)}</h1><p>${ammPartLink(target)}</p>`),
   }));
+  const ammMovedGuideRoutes = [
+    ...movedTo(chapterTwo, ["/amm/power", "/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"]),
+    ...movedTo(chapterThree, [AMM.reflect.route]),
+  ];
   const ammEditionsRoute = {
     route: "/amm/editions", title: `${AMM.archiveTitle} — ${AMM.title}`, description: AMM.description, publication: "amm",
     image: AMM_MEDIA.illustration.fallback, imageAlt: AMM.artwork.alt,
@@ -1380,7 +1485,7 @@ async function publicRoutes(manifest, { essays = readEssays(), writing = [], sit
     prerender: page(`<h1>${escapeHtml(FILMS.title)}</h1><p>${escapeHtml(FILMS.description)}</p><p>${link(FILMS_ROUTE, "Open the Films & Screening Room")}</p>`),
   }));
 
-  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, filmRoute, ...filmAliasRoutes, ammRoute, ammCapitalRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
+  return [...staticRoutes, blogRoute, communityRoute, filmsRoute, filmRoute, ...filmAliasRoutes, ammRoute, ammFiguresRoute, ammInquiryRoute, ...ammMovedGuideRoutes, ammEditionsRoute, ...movedRoutes, publicationsRoute, ...authorRoutes, ...essayRoutes, ...writingRoutes, ...withdrawnRoutes, ...sectionRoutes, ...conceptRoutes];
 }
 
 /** Replace exactly the tag a pattern names, or fail: a silent miss ships the wrong page. */

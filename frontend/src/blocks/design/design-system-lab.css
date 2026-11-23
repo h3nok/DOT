@@ -1,0 +1,14 @@
+/* The design-system lab (development only). Layout for the specimens; primitives keep their own styles. */
+.ds-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem clamp(1rem, 4vw, 4rem); border-bottom: 1px solid var(--border); }
+.ds-lab { display: grid; gap: 1.5rem; }
+.ds-lab h1 { margin: 0; font: 600 2.4rem/1.1 var(--font-serif); }
+.ds-note { margin: 0; max-width: 72ch; color: var(--muted-foreground); }
+.ds-group { margin: 2rem 0 0; font: 600 1.6rem/1.2 var(--font-serif); }
+.ds-space { display: grid; gap: 1rem; padding: 1.25rem; border: 1px solid var(--border); border-radius: .5rem; }
+.ds-space h2 { margin: 0; font: 600 1rem/1.3 var(--font-sans); }
+.ds-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: center; }
+.ds-swatch { display: grid; gap: .35rem; margin: 0; width: 7.5rem; }
+.ds-swatch span { height: 3rem; border-radius: .35rem; border: 1px solid var(--border); }
+.ds-swatch figcaption { font: 500 .75rem/1.3 var(--font-mono); color: var(--muted-foreground); }
+.ds-locator { display: inline-flex; align-items: center; gap: .5rem; font: 500 .8125rem/1 var(--font-sans); }
+.ds-lab a:focus-visible { outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset, 3px); }

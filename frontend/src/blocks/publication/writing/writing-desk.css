@@ -21,7 +21,7 @@
 .writing-pipeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: .75rem .75rem 0 0; overflow: hidden; }
 .writing-pipeline button { display: flex; align-items: center; justify-content: center; gap: .75rem; min-height: 75px; padding: .75rem .4rem; font-size: .875rem; border-right: 1px solid var(--border); background: color-mix(in oklab, var(--muted) 30%, transparent); }
 .writing-pipeline button:last-child { border-right: 0; }
-.writing-pipeline small { display: block; color: var(--muted-foreground); font-family: var(--font-mono); font-size: .625rem; margin-bottom: .25rem; }
+.writing-pipeline small { display: block; color: var(--muted-foreground); font-family: var(--font-mono); font-size: var(--primitive-micro, .6875rem); margin-bottom: .25rem; }
 .writing-pipeline button[aria-current] { box-shadow: inset 0 -3px var(--organism-accent-strong); color: var(--organism-accent-strong); background: color-mix(in oklab, var(--organism-accent) 8%, var(--background)); }
 .writing-step-icon { display: none; }
 .writing-step-content { border: 1px solid var(--border); border-top: 0; padding: clamp(1rem, 3vw, 2.5rem); min-width: 0; }

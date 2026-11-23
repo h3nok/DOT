@@ -611,7 +611,7 @@ html[data-contrast="high"] .book-chrome {
 .book-contents-dialog .book-contents__cost {
   margin-top: 0.2rem;
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.62rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1249,7 +1249,7 @@ html:has(.book-opening-volume) {
 .book-substrate-register {
   position: absolute;
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.5rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.22em;
   line-height: 1;
   opacity: 0.38;
@@ -1462,8 +1462,8 @@ html[data-motion="still"] .book-substrate-flow {
   padding-left: 1rem;
   color: color-mix(in oklch, var(--book-cinnabar) 60%, var(--book-muted));
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.48rem;
-  letter-spacing: 0.2em;
+  font-size: var(--primitive-micro, 0.6875rem);
+  letter-spacing: 0.14em;
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2838,7 +2838,7 @@ html[data-motion="still"] .dot-emergence-signal {
   display: block;
   margin-bottom: 0.45rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: calc(0.62rem * var(--reading-scale, 1));
+  font-size: calc(var(--primitive-micro, 0.6875rem) * var(--reading-scale, 1));
   font-style: normal;
   font-weight: 650;
   color: var(--book-cinnabar);
@@ -2973,7 +2973,11 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-concept-marker:focus-visible {
   border-bottom-color: var(--book-cinnabar);
   color: color-mix(in oklch, var(--book-cinnabar) 72%, var(--book-ink));
-  outline: none;
+}
+
+.book-concept-marker:focus-visible {
+  outline: 1px solid color-mix(in oklch, var(--book-cinnabar) 55%, transparent);
+  outline-offset: 2px;
 }
 
 .book-reference-sheet {
@@ -3004,7 +3008,7 @@ html[data-motion="still"] .dot-emergence-signal {
   flex-wrap: wrap;
   gap: 0.45rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.66rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   font-weight: 650;
   color: var(--book-cinnabar);
   text-transform: uppercase;
@@ -3171,7 +3175,7 @@ html[data-motion="still"] .dot-emergence-signal {
   .book-loop-node {
     max-width: 5.5rem;
     padding: 0.36rem 0.42rem;
-    font-size: 0.46rem;
+    font-size: var(--primitive-micro, 0.6875rem);
     line-height: 1.35;
     text-align: center;
   }
@@ -3212,7 +3216,7 @@ html[data-motion="still"] .dot-emergence-signal {
   }
 
   .book-edition-ribbon span {
-    font-size: 0.48rem;
+    font-size: var(--primitive-micro, 0.6875rem);
     letter-spacing: 0.1em;
   }
 
@@ -3539,8 +3543,12 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-contents__entry:hover,
 .book-contents__entry:focus-visible {
   color: var(--foreground);
-  background: color-mix(in oklch, var(--foreground) 4%, transparent);
-  outline: none;
+  background: color-mix(in oklab, var(--foreground) 4%, transparent);
+}
+
+.book-contents__entry:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 /* Where you are: the number takes the accent and the title takes full weight.
@@ -3672,9 +3680,13 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-coda__tool:hover,
 .book-coda__tool:focus-visible {
-  background-color: color-mix(in oklch, var(--book-ink) 3.5%, transparent);
+  background-color: color-mix(in oklab, var(--book-ink) 3.5%, transparent);
   color: var(--book-ink);
-  outline: none;
+}
+
+.book-coda__tool:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: -2px;
 }
 
 .book-coda__tool-mark {
@@ -3769,9 +3781,13 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-private-note__clear:hover,
 .book-private-note__clear:focus-visible {
-  background: color-mix(in oklch, var(--book-ink) 5%, transparent);
+  background: color-mix(in oklab, var(--book-ink) 5%, transparent);
   color: var(--book-ink);
-  outline: none;
+}
+
+.book-private-note__clear:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 .book-private-note__status {
@@ -3813,7 +3829,11 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-coda__concept:focus-visible {
   border-color: color-mix(in oklch, var(--book-cinnabar) 54%, var(--book-hairline));
   background: color-mix(in oklch, var(--book-cinnabar) 6%, var(--book-paper));
-  outline: none;
+}
+
+.book-coda__concept:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 .book-coda__text-link {
@@ -3832,7 +3852,11 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-coda__text-link:hover,
 .book-coda__text-link:focus-visible {
   color: var(--book-ink);
-  outline: none;
+}
+
+.book-coda__text-link:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 .book-citation__formats {
@@ -3862,7 +3886,11 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-citation__format:hover,
 .book-citation__format:focus-visible {
   color: var(--book-ink);
-  outline: none;
+}
+
+.book-citation__format:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 .book-citation__format[aria-pressed="true"]:hover,
@@ -3897,8 +3925,12 @@ html[data-motion="still"] .dot-emergence-signal {
 .book-citation__copy:hover,
 .book-citation__copy:focus-visible {
   border-color: color-mix(in oklch, var(--book-cinnabar) 54%, var(--book-hairline));
-  background: color-mix(in oklch, var(--book-cinnabar) 6%, transparent);
-  outline: none;
+  background: color-mix(in oklab, var(--book-cinnabar) 6%, transparent);
+}
+
+.book-citation__copy:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: 2px;
 }
 
 .book-coda__navigation {
@@ -3925,8 +3957,13 @@ html[data-motion="still"] .dot-emergence-signal {
 
 .book-coda__previous:hover,
 .book-coda__previous:focus-visible {
-  background: color-mix(in oklch, var(--book-ink) 3%, transparent);
-  outline: none;
+  background: color-mix(in oklab, var(--book-ink) 3%, transparent);
+}
+
+.book-coda__previous:focus-visible,
+.book-coda__next:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--book-cinnabar);
+  outline-offset: -2px;
 }
 
 /* Continue outranks Previous. Both halves were identical, which left the
@@ -3939,7 +3976,7 @@ html[data-motion="still"] .dot-emergence-signal {
   background: linear-gradient(
     to right,
     transparent,
-    color-mix(in oklch, var(--organism-accent-strong) 7%, transparent)
+    color-mix(in oklab, var(--organism-accent-strong) 7%, transparent)
   );
 }
 
@@ -3948,9 +3985,8 @@ html[data-motion="still"] .dot-emergence-signal {
   background: linear-gradient(
     to right,
     transparent,
-    color-mix(in oklch, var(--organism-accent-strong) 14%, transparent)
+    color-mix(in oklab, var(--organism-accent-strong) 14%, transparent)
   );
-  outline: none;
 }
 
 @media (max-width: 640px) {

@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { BarList, CardGrid, CycleDiagram, FlowMap, Handoff, Ledger, ScrollStory, ShareGrid } from ".";
+import { BarList, CardGrid, CycleDiagram, ErosionSpiral, FlowMap, Handoff, InterruptedThread, Ledger, PartMark, ReachFunnel, Renaming, ScrollStory, ShareGrid, SplitSentences } from ".";
 
 const tiers = [{ id: "top", label: "Top", tone: "strong" as const }, { id: "bottom", label: "Bottom" }];
 const links = [{ id: "between", after: "top", items: [{ direction: "down" as const, label: "Rules" }, { direction: "up" as const, label: "Fees" }] }];
@@ -58,6 +58,41 @@ describe("explainer primitives", () => {
     expect(screen.getByText("It returns.")).toBeInTheDocument();
   });
 
+  it("draws the ring alone with its nodes as the links, named by their titles", () => {
+    const steps = ["Need", "Claim"].map(label => ({ id: label, label, title: `${label} title`, href: `#${label}` }));
+    const { container } = render(<CycleDiagram steps={steps} centre="Centre" label="The loop" list={false} />);
+    expect(screen.getByRole("group")).toHaveAccessibleName("The loop: Need, then Claim, and back to Need.");
+    expect(screen.getAllByRole("link").map(link => link.getAttribute("href"))).toEqual(["#Need", "#Claim"]);
+    expect(screen.getByRole("link", { name: "Claim title" })).toBeInTheDocument();
+    expect(container.querySelector(".explainer-cycle-list")).toBeNull();
+  });
+
+  it("reads a reach from the arrangement down to the person, then what the person sends back up", () => {
+    const layers = ["Power", "Need", "You"].map(title => ({ id: title, title, href: `#${title}` }));
+    const { container } = render(<ReachFunnel layers={layers} flow="What flows" back={{ title: "Back up", href: "#back", voices: ["Be calm."], crown: "It is natural." }} label="How it reaches you" />);
+    const figure = screen.getByRole("group", { name: "How it reaches you" });
+    // Each layer, and the return, is a link named by its title alone, in reading order.
+    expect(within(figure).getAllByRole("link").map(link => [link.getAttribute("aria-label"), link.getAttribute("href")])).toEqual([["Power", "#Power"], ["Need", "#Need"], ["You", "#You"], ["Back up", "#back"]]);
+    expect(container.querySelector(".explainer-reach-layer[data-core]")).toHaveTextContent("You");
+    expect(figure).toHaveTextContent("What flows");
+    expect(figure).toHaveTextContent("Be calm.");
+    expect(figure).toHaveTextContent("“It is natural.”");
+  });
+
+  it("draws a person worn down turn by turn, beside what they come to say, in order", () => {
+    const { container } = render(<ErosionSpiral who="You" label="Worn down" phases={[
+      { label: "Carrier", kind: "carry", voices: ["First.", "Second."] },
+      { label: "End", kind: "end", voices: ["Last."] },
+    ]} />);
+    const list = within(screen.getByRole("figure", { name: "Worn down" })).getByRole("list");
+    expect(within(list).getAllByRole("listitem").map(item => item.textContent)).toEqual(["CarrierFirst.", "Second.", "EndLast."]);
+    // One ring per thing said, each more worn than the one before.
+    const widths = [...container.querySelectorAll<SVGPathElement>(".explainer-spiral-near")].map(path => Number(path.style.strokeWidth));
+    expect(widths).toHaveLength(3);
+    expect([...widths].sort((a, b) => b - a)).toEqual(widths);
+    expect(container.querySelector(".explainer-spiral-coil")).toHaveAttribute("aria-hidden", "true");
+  });
+
   it("measures bars from zero against the largest value", () => {
     const { container } = render(<BarList title="Three firms" rows={[{ id: "a", label: "A", value: 10, display: "10" }, { id: "b", label: "B", value: 5, display: "5" }]} />);
     expect([...container.querySelectorAll(".explainer-bars-track i")].map(bar => (bar as HTMLElement).style.width)).toEqual(["100%", "50%"]);
@@ -76,5 +111,32 @@ describe("explainer primitives", () => {
     expect(within(card).getByText("Leverage")).toBeInTheDocument();
     expect(within(screen.getByRole("figure", { name: "You supply it" })).getAllByRole("listitem")).toHaveLength(1);
     expect(screen.getByRole("region", { name: "What comes next" })).toHaveTextContent("Then read on.");
+  });
+
+  it("draws a thought whole and then broken, named by the sentence it pictures", () => {
+    const { container } = render(<InterruptedThread whole="a thought across years" broken="the next few seconds" interruptions={["feeds", "outrage"]} label="Your attention has been jammed with feeds and outrage." />);
+    const figure = screen.getByRole("figure", { name: "Your attention has been jammed with feeds and outrage." });
+    expect(within(figure).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["feeds", "outrage"]);
+    expect(figure).toHaveTextContent("a thought across years");
+    expect(container.querySelectorAll(".explainer-thread-piece[aria-hidden='true']")).toHaveLength(2);
+  });
+
+  it("splits sentences into who bears it and what continues, each row still the whole sentence", () => {
+    render(<SplitSentences heads={["The suffering feels intimate.", "The revenue remains institutional."]} label="Who bears it" rows={[{ before: "An anxious person", after: "still scrolls." }]} />);
+    const figure = screen.getByRole("figure", { name: "Who bears it" });
+    expect(within(figure).getByRole("listitem").textContent).toBe("An anxious person still scrolls.");
+    expect(figure).toHaveTextContent("The suffering feels intimate.");
+  });
+
+  it("strikes each true word and keeps the sentence intact for reading and copying", () => {
+    const { container } = render(<Renaming lead="We call" pairs={[{ is: "exhaustion", called: "adulthood" }, { is: "anxiety", called: "responsibility" }, { is: "endless accumulation", called: "success" }]} />);
+    expect(container.querySelector(".explainer-rename")!.textContent).toBe("We call exhaustion adulthood, anxiety responsibility, and endless accumulation success.");
+  });
+
+  it("marks which part of a series a screen shows and links the others, without counting", () => {
+    render(<PartMark label="A warning" current={1} parts={[{ label: "Cognitive health", href: "#a" }, { label: "Mental health", href: "#b" }, { label: "Moral health", href: "#c" }]} />);
+    expect(screen.getByText("Mental health")).toHaveAttribute("aria-current", "true");
+    expect(screen.queryByRole("link", { name: "Mental health" })).toBeNull();
+    expect(screen.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(["#a", "#c"]);
   });
 });

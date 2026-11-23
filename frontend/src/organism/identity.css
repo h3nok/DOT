@@ -13,9 +13,9 @@ html[data-palette="dot"][data-theme] {
   --identity-rf: #9a5b25;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: color-mix(in oklab, #ffffff 68%, var(--identity-surface));
+  --card: color-mix(in oklab, #faf8f2 74%, var(--identity-surface));
   --card-foreground: var(--identity-ink);
-  --popover: color-mix(in oklab, #ffffff 78%, var(--identity-surface));
+  --popover: color-mix(in oklab, #fdfcf8 84%, var(--identity-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
   --primary-foreground: var(--identity-surface);
@@ -31,6 +31,11 @@ html[data-palette="dot"][data-theme] {
   --attention-ink: var(--identity-ink);
   --attention-line: color-mix(in oklab, var(--identity-accent) 62%, var(--identity-ink));
   --attention-field: color-mix(in oklab, var(--identity-lumen) 6%, var(--identity-surface));
+  --glass-bg: color-mix(in oklab, #faf8f2 82%, var(--identity-surface));
+  --glass-border: color-mix(in oklab, var(--identity-border) 84%, transparent);
+  --premium-shadow:
+    0 24px 56px -28px color-mix(in oklab, var(--identity-ink) 16%, transparent),
+    0 6px 20px -10px color-mix(in oklab, var(--identity-accent) 10%, transparent);
 }
 
 html[data-palette="dot"][data-identity-accent="signature"] {
@@ -52,9 +57,9 @@ html.dark[data-palette="dot"][data-theme] {
   --identity-rf: #f7c474;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: color-mix(in oklab, #153329 52%, var(--identity-dark-surface));
+  --card: color-mix(in oklab, #142b24 58%, var(--identity-dark-surface));
   --card-foreground: var(--identity-ink);
-  --popover: color-mix(in oklab, #153329 64%, var(--identity-dark-surface));
+  --popover: color-mix(in oklab, #173129 72%, var(--identity-dark-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
   --primary-foreground: var(--identity-surface);
@@ -70,6 +75,11 @@ html.dark[data-palette="dot"][data-theme] {
   --attention-ink: var(--identity-ink);
   --attention-line: color-mix(in oklab, var(--identity-accent) 56%, var(--identity-ink));
   --attention-field: color-mix(in oklab, #54d19f 8%, var(--identity-dark-surface));
+  --glass-bg: color-mix(in oklab, #11241e 84%, transparent);
+  --glass-border: color-mix(in oklab, var(--identity-dark-border) 86%, transparent);
+  --premium-shadow:
+    0 28px 68px -26px rgb(0 0 0 / 0.62),
+    0 8px 26px -14px color-mix(in oklab, var(--identity-lumen) 14%, transparent);
 }
 
 /* Bring the 4K inquiry films' emerald-jade (158°) + warm gold (#f0b865 / #9a5b25)

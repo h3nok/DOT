@@ -21,7 +21,8 @@ export function AmmReadingBar({ slug }: { slug?: string }) {
 
 /**
  * What follows the last paragraph. The next part follows the author's fixed
- * order, never a ranking (L2, L3). The two asks live only here, after the
+ * order, never a ranking (L2, L3); after the last part the book and its earlier
+ * writing are the way forward, so the book never ends in a dead end. The two asks live only here, after the
  * reader has finished, and neither changes what they can read (L6, L7).
  */
 export function AmmEditionEnd({ slug }: { slug?: string }) {
@@ -37,7 +38,12 @@ export function AmmEditionEnd({ slug }: { slug?: string }) {
             <span className="amm-eyebrow">{part ? reading.nextLabel : reading.beginLabel}</span>
             <span className="amm-reading-title"><span>{next.label} · {next.title}</span><ArrowRight className="amm-reading-arrow" aria-hidden="true" /></span>
           </AmmReadingLink>
-        : <p className="amm-continue-latest">{reading.latestNote}</p>}
+        : <>
+            <p className="amm-continue-latest">{reading.latestNote}</p>
+            <AmmReadingLink to="/amm/editions" label={AMM.archiveTitle} className="amm-continue-next">
+              <span className="amm-reading-title"><span>{AMM.archiveTitle}</span><ArrowRight className="amm-reading-arrow" aria-hidden="true" /></span>
+            </AmmReadingLink>
+          </>}
       {previous && <Link className="amm-text-link" to={previous.route}><ArrowLeft aria-hidden="true" />{previous.label} · {previous.title}</Link>}
     </nav>
     <section className="amm-end-signup" aria-label="Subscribe to AMM by email">

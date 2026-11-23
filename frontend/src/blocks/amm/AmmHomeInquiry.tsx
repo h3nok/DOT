@@ -22,7 +22,7 @@ function sceneArt(home: { sceneAlt: string }, id: string): ExplainerImage {
  * The picture holds for the scenes it belongs to.
  */
 export function AmmHomeOverview() {
-  const { home } = useAmmContent();
+  const { home, reflect } = useAmmContent();
   const sourceChapter = AMM_PARTS.find(part => home.overviewSource.startsWith(`${part.label} ·`));
   return <section id="amm-overview" tabIndex={-1} className="reading-scene amm-home-overview" aria-labelledby="amm-overview-title">
     <header className="amm-overview-heading">
@@ -37,6 +37,6 @@ export function AmmHomeOverview() {
     </header>
     <ScrollStory counted={false} label={home.conceptsLabel} marker={<AmmMark className="amm-story-flame" />}
       steps={home.concepts.map(concept => ({ id: concept.id, kicker: concept.label, title: `“${concept.script}”`, text: concept.text, quote: concept.argument, source: concept.source, context: home.scriptLabel }))}
-      figure={step => <div key={sequence[step.id]} className="amm-everyday-art"><Artwork image={sceneArt(home, step.id)} /></div>} />
+      figure={step => <div key={sequence[step.id]} className="amm-everyday-art"><Artwork image={sceneArt(home, step.id)} /><p className="amm-art-disclosure">{reflect.disclosure}</p></div>} />
   </section>;
 }

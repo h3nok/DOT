@@ -6,7 +6,14 @@
 .amm-hero-motion { position: absolute; inset: 0 0 auto; width: 100%; height: auto; aspect-ratio: 16 / 9; pointer-events: none; opacity: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
 .amm-feature[data-motion-ready] .amm-hero-motion { opacity: 1; }
 .amm-feature[data-motion-ready] .explainer-artwork-open picture { opacity: 0; }
-.dot-button.amm-media-toggle { position: absolute; bottom: 0; left: 0; z-index: 1; min-width: 6rem; min-height: 44px; padding: .5rem; border: 0; background: transparent; box-shadow: none; color: var(--muted-foreground); }
+.dot-button.amm-media-toggle {
+  position: absolute; bottom: 0; left: 0; z-index: 1;
+  min-width: 0; min-height: var(--touch-target, 2.75rem);
+  padding: .35rem .7rem .35rem 0;
+  gap: .4rem;
+  border: 0; background: transparent; box-shadow: none;
+  color: var(--muted-foreground);
+}
 .dot-button.amm-media-toggle:hover { color: var(--amm-rust); background: transparent; box-shadow: none; }
-.dot-button.amm-media-toggle .dot-button__copy strong { font-size: .8rem; }
-.dot-button.amm-media-toggle .dot-button__icon { background: transparent; }
+.dot-button.amm-media-toggle .dot-button__copy strong { font-size: var(--primitive-small, .8125rem); font-weight: 500; }
+.dot-button.amm-media-toggle .dot-button__icon { width: .9rem; height: .9rem; background: transparent; }

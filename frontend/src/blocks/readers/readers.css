@@ -25,7 +25,7 @@
 .readers-commitments li + li { margin-top: .4rem; }
 .readers-commitments .public-text-link { margin-top: .5rem; font-size: .75rem; }
 .readers-browse { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .6rem; border-top: 1px solid var(--border); margin-top: 3rem; padding-top: 1.25rem; font-size: .8125rem; color: var(--muted-foreground); }
-.reader-list-field:focus-visible, .reader-list-submit:focus-visible, .reader-list-change:focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
+.reader-list-field:focus-visible, .reader-list-submit:focus-visible, .reader-list-change:focus-visible { outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground)); outline-offset: var(--focus-ring-offset, 3px); }
 html[data-contrast="high"] .readers-signup .reader-list-form { background: var(--background); border-color: var(--foreground); }
 html[data-contrast="high"] .readers-paper-lines i { background: var(--foreground); }
 @media (max-width: 760px) {

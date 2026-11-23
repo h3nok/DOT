@@ -10,31 +10,33 @@ import AMM from '../../content/amm.json';
 vi.mock('../../dot/useAuth', () => ({ useAuth: () => ({ isOwner: true }) }));
 vi.mock('../amm/AmmIdentity', () => ({ AmmShell: ({ children }: { children: React.ReactNode }) => <main>{children}</main> }));
 vi.mock('../../services/SiteContentService', () => ({ siteContentAvailable: () => true, fetchDrafts: vi.fn(), fetchPublishedContent: async () => ({}), saveBlock: vi.fn(), revertBlock: vi.fn() }));
-const row: service.SiteContentDraft = { key: 'amm.headline.0', draft_value: 'My private opening', published_value: 'Published opening', updated_at: '2026-10-15T10:00:00Z', published_at: null };
+const row: service.SiteContentDraft = { key: 'amm.heroaction', draft_value: 'My private opening', published_value: 'Published opening', updated_at: '2026-10-15T10:00:00Z', published_at: null };
 beforeEach(() => { vi.resetAllMocks(); vi.mocked(service.fetchDrafts).mockResolvedValue([row]); });
 const open = () => render(<HelmetProvider><MemoryRouter><SiteContentProvider><PageCopyStudio /></SiteContentProvider></MemoryRouter></HelmetProvider>);
 
-it('offers the hero paragraph in Opening and preserves its existing saved-content key', async () => {
-  const paragraph = { ...row, key: 'amm.home.premise', draft_value: 'A saved private introduction', published_value: AMM.home.premise };
+it('offers the hero reading link in Opening and preserves its existing saved-content key', async () => {
+  // The opening headline and paragraph are the author's published sentences (2026-11-17), so Studio no longer offers them.
+  const paragraph = { ...row, key: 'amm.heroaction', draft_value: 'A saved private invitation', published_value: AMM.heroAction };
   vi.mocked(service.fetchDrafts).mockResolvedValue([paragraph]);
   vi.mocked(service.saveBlock).mockResolvedValue({ ...paragraph, draft_value: 'The revised introduction', published_value: 'The revised introduction' });
   open();
-  const input = await screen.findByRole('textbox', { name: 'Opening paragraph' });
+  expect(screen.queryByRole('textbox', { name: 'Opening paragraph' })).toBeNull();
+  const input = await screen.findByRole('textbox', { name: 'Primary reading link' });
   expect(input).toHaveValue(paragraph.draft_value);
   expect(input.closest('details')).toHaveAttribute('open');
   expect(input.closest('details')?.querySelector('summary')).toHaveTextContent('Opening');
   fireEvent.change(input, { target: { value: 'The revised introduction' } });
-  fireEvent.click(within(screen.getByRole('region', { name: 'Opening paragraph' })).getByRole('button', { name: 'Publish change' }));
+  fireEvent.click(within(screen.getByRole('region', { name: 'Primary reading link' })).getByRole('button', { name: 'Publish change' }));
   await screen.findByText('Published on the page.');
-  expect(service.saveBlock).toHaveBeenCalledWith('amm.home.premise', 'The revised introduction', { publish: true, expectedUpdatedAt: paragraph.updated_at });
+  expect(service.saveBlock).toHaveBeenCalledWith('amm.heroaction', 'The revised introduction', { publish: true, expectedUpdatedAt: paragraph.updated_at });
 });
 
 it('reopens saved drafts and separates saving from publishing with a revision check', async () => {
   vi.mocked(service.saveBlock).mockResolvedValue({ ...row, draft_value: 'Revised opening', updated_at: '2026-10-15T11:00:00Z' });
   open();
-  const input = await screen.findByRole('textbox', { name: 'Headline — first line' });
+  const input = await screen.findByRole('textbox', { name: 'Primary reading link' });
   expect(input).toHaveValue('My private opening');
-  const field = within(screen.getByRole('region', { name: 'Headline — first line' }));
+  const field = within(screen.getByRole('region', { name: 'Primary reading link' }));
   expect(field.getByText('Published opening')).toBeInTheDocument();
   fireEvent.change(input, { target: { value: 'Revised opening' } });
   fireEvent.click(field.getByRole('button', { name: 'Save draft' }));
@@ -48,9 +50,9 @@ it('reopens saved drafts and separates saving from publishing with a revision ch
 it('keeps a failed or conflicting edit in the field', async () => {
   vi.mocked(service.saveBlock).mockRejectedValue(new Error('A newer saved edit exists.'));
   open();
-  const input = await screen.findByRole('textbox', { name: 'Headline — first line' });
+  const input = await screen.findByRole('textbox', { name: 'Primary reading link' });
   fireEvent.change(input, { target: { value: 'Keep this text' } });
-  fireEvent.click(within(screen.getByRole('region', { name: 'Headline — first line' })).getByRole('button', { name: 'Save draft' }));
+  fireEvent.click(within(screen.getByRole('region', { name: 'Primary reading link' })).getByRole('button', { name: 'Save draft' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('A newer saved edit exists.');
   expect(input).toHaveValue('Keep this text');
 });

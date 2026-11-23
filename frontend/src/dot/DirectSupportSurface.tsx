@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { ArrowUpRight, Copy } from "lucide-react";
 
-import SUPPORT from "../content/support.json";
-import { resolveSupportMethods, type DirectSupportMethod } from "../content/supportMethods.js";
+import type { DirectSupportMethod } from "../content/supportMethods.js";
 import { BloomSurface } from "./BloomSurface";
-
-export const DIRECT_SUPPORT_METHODS = resolveSupportMethods(SUPPORT);
 
 export function DirectSupportSurface({ methods, origin, reducedMotion, titleAs, onClose, onCard }: {
   methods: DirectSupportMethod[];

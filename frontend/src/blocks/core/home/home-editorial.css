@@ -22,9 +22,11 @@
 }
 
 .home-entry-links a:hover { color: var(--foreground); }
-.home-entry-links a:focus-visible {
-  outline: 2px solid var(--foreground);
-  outline-offset: 5px;
+.home-entry-links a:focus-visible,
+.home-film-heading > a:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--primitive-radius-sm, 0.35rem);
 }
 
 .home-journey .home-theory-layer-environment .home-theory-layer-card {

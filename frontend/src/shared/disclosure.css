@@ -8,7 +8,7 @@
 .dot-disclosure > summary {
   display: flex;
   width: fit-content;
-  min-height: 2.75rem;
+  min-height: var(--touch-target, 2.75rem);
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -29,8 +29,8 @@
 }
 
 .dot-disclosure > summary:focus-visible {
-  outline: 2px solid var(--foreground);
-  outline-offset: 4px;
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
 }
 
 .dot-disclosure > summary > svg {
@@ -41,6 +41,16 @@
 
 .dot-disclosure[open] > summary > svg {
   transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]) .dot-disclosure > summary {
+    transition: color var(--motion-quick, 160ms) var(--motion-ease, ease);
+  }
+
+  html:not([data-motion="still"]) .dot-disclosure > summary > svg {
+    transition: transform var(--motion-quick, 160ms) var(--motion-ease, ease);
+  }
 }
 
 .dot-disclosure__content {

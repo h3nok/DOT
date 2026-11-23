@@ -111,6 +111,21 @@
     ],
     "alt": "The anatomy of the Host: the public depicted as a flag-patterned body, labeled labor and time, attention and data, savings and taxes, and debt. A government collar surrounds its neck. Above its head, a brain is labeled beliefs, identity, and perception."
   },
+  "leechAnatomy": {
+    "title": "The Leech’s anatomy",
+    "width": 1024,
+    "height": 683,
+    "fallback": "/amm/media/leech-anatomy-1024.webp",
+    "full": "/amm/media/leech-anatomy-1024.webp",
+    "sizes": "(min-width: 1440px) 650px, (min-width: 901px) 50vw, 100vw",
+    "sources": [
+      {
+        "type": "image/webp",
+        "srcset": "/amm/media/leech-anatomy-640.webp 640w, /amm/media/leech-anatomy-1024.webp 1024w"
+      }
+    ],
+    "alt": "The Leech’s anatomy: a two-headed leech. The old head is labeled Security–Industrial (war, energy, industry, procurement); the new head, Technological–Platform (platforms, data, cloud, AI); the body joining them, Private-Sector Oligarchy (ownership, finance, organized extraction)."
+  },
   "everyday": {
     "title": "The Host at home",
     "width": 1536,
@@ -148,6 +163,358 @@
       "protection": "everyday",
       "erosion": "erosion",
       "accountability": "erosion"
+    }
+  },
+  "reflect": {
+    "belief-2-the-mirror": {
+      "title": "The mirror",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-2-the-mirror-1024.webp",
+      "full": "/amm/media/reflect/belief-2-the-mirror-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-2-the-mirror-640.webp 640w, /amm/media/reflect/belief-2-the-mirror-1024.webp 1024w, /amm/media/reflect/belief-2-the-mirror-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A tired, collared cow with a flag on its hide looks into a mirror. In the mirror stands a healthy cow in a sunny field, with no collar.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-2-the-mirror-night-1024.webp",
+        "full": "/amm/media/reflect/belief-2-the-mirror-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-2-the-mirror-night-640.webp 640w, /amm/media/reflect/belief-2-the-mirror-night-1024.webp 1024w, /amm/media/reflect/belief-2-the-mirror-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-6-weight-of-history": {
+      "title": "The weight of history",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-6-weight-of-history-1024.webp",
+      "full": "/amm/media/reflect/belief-6-weight-of-history-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-6-weight-of-history-640.webp 640w, /amm/media/reflect/belief-6-weight-of-history-1024.webp 1024w, /amm/media/reflect/belief-6-weight-of-history-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "Three cows strain under the heavy, cracked pediment of a classical stone temple.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-6-weight-of-history-night-1024.webp",
+        "full": "/amm/media/reflect/belief-6-weight-of-history-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-6-weight-of-history-night-640.webp 640w, /amm/media/reflect/belief-6-weight-of-history-night-1024.webp 1024w, /amm/media/reflect/belief-6-weight-of-history-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "inversion-empty-frame": {
+      "title": "The empty frame",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/inversion-empty-frame-1024.webp",
+      "full": "/amm/media/reflect/inversion-empty-frame-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/inversion-empty-frame-640.webp 640w, /amm/media/reflect/inversion-empty-frame-1024.webp 1024w, /amm/media/reflect/inversion-empty-frame-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "Two cows in a pen at night. Above them hangs an ornate gold frame with nothing inside it.",
+      "night": {
+        "fallback": "/amm/media/reflect/inversion-empty-frame-night-1024.webp",
+        "full": "/amm/media/reflect/inversion-empty-frame-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/inversion-empty-frame-night-640.webp 640w, /amm/media/reflect/inversion-empty-frame-night-1024.webp 1024w, /amm/media/reflect/inversion-empty-frame-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-7-strings": {
+      "title": "Strings",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-7-strings-1024.webp",
+      "full": "/amm/media/reflect/belief-7-strings-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-7-strings-640.webp 640w, /amm/media/reflect/belief-7-strings-1024.webp 1024w, /amm/media/reflect/belief-7-strings-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "Puppet strings run down from a control held above to the wrists of a scientist working levers in a dark hall.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-7-strings-night-1024.webp",
+        "full": "/amm/media/reflect/belief-7-strings-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-7-strings-night-640.webp 640w, /amm/media/reflect/belief-7-strings-night-1024.webp 1024w, /amm/media/reflect/belief-7-strings-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "the-stair": {
+      "title": "The stair",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/the-stair-1024.webp",
+      "full": "/amm/media/reflect/the-stair-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/the-stair-640.webp 640w, /amm/media/reflect/the-stair-1024.webp 1024w, /amm/media/reflect/the-stair-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A figure in a top hat, like Uncle Sam, stands at the top of a staircase holding up a gold trophy. At the bottom, the scales of justice lie knocked over.",
+      "night": {
+        "fallback": "/amm/media/reflect/the-stair-night-1024.webp",
+        "full": "/amm/media/reflect/the-stair-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/the-stair-night-640.webp 640w, /amm/media/reflect/the-stair-night-1024.webp 1024w, /amm/media/reflect/the-stair-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-4-the-feeding": {
+      "title": "The feeding",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-4-the-feeding-1024.webp",
+      "full": "/amm/media/reflect/belief-4-the-feeding-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-4-the-feeding-640.webp 640w, /amm/media/reflect/belief-4-the-feeding-1024.webp 1024w, /amm/media/reflect/belief-4-the-feeding-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "The two-headed Leech sits high above a line of cows. Tubes run from its body into their backs, and something warm flows up the tubes.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-4-the-feeding-night-1024.webp",
+        "full": "/amm/media/reflect/belief-4-the-feeding-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-4-the-feeding-night-640.webp 640w, /amm/media/reflect/belief-4-the-feeding-night-1024.webp 1024w, /amm/media/reflect/belief-4-the-feeding-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "the-leech-portrait": {
+      "title": "The Leech",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/the-leech-portrait-1024.webp",
+      "full": "/amm/media/reflect/the-leech-portrait-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/the-leech-portrait-640.webp 640w, /amm/media/reflect/the-leech-portrait-1024.webp 1024w, /amm/media/reflect/the-leech-portrait-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "The two-headed Leech, coiled on itself, one head crowned and old, the other a machine.",
+      "night": {
+        "fallback": "/amm/media/reflect/the-leech-portrait-night-1024.webp",
+        "full": "/amm/media/reflect/the-leech-portrait-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/the-leech-portrait-night-640.webp 640w, /amm/media/reflect/the-leech-portrait-night-1024.webp 1024w, /amm/media/reflect/the-leech-portrait-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-3-screens": {
+      "title": "Screens",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-3-screens-1024.webp",
+      "full": "/amm/media/reflect/belief-3-screens-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-3-screens-640.webp 640w, /amm/media/reflect/belief-3-screens-1024.webp 1024w, /amm/media/reflect/belief-3-screens-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A tired cow stands surrounded by glowing screens close to its face.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-3-screens-night-1024.webp",
+        "full": "/amm/media/reflect/belief-3-screens-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-3-screens-night-640.webp 640w, /amm/media/reflect/belief-3-screens-night-1024.webp 1024w, /amm/media/reflect/belief-3-screens-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-5-the-culling": {
+      "title": "The culling",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-5-the-culling-1024.webp",
+      "full": "/amm/media/reflect/belief-5-the-culling-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-5-the-culling-640.webp 640w, /amm/media/reflect/belief-5-the-culling-1024.webp 1024w, /amm/media/reflect/belief-5-the-culling-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "One cow left alone, small, in empty space.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-5-the-culling-night-1024.webp",
+        "full": "/amm/media/reflect/belief-5-the-culling-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-5-the-culling-night-640.webp 640w, /amm/media/reflect/belief-5-the-culling-night-1024.webp 1024w, /amm/media/reflect/belief-5-the-culling-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-1-host-at-home": {
+      "title": "The Host at home",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-1-host-at-home-1024.webp",
+      "full": "/amm/media/reflect/belief-1-host-at-home-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-1-host-at-home-640.webp 640w, /amm/media/reflect/belief-1-host-at-home-1024.webp 1024w, /amm/media/reflect/belief-1-host-at-home-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A cow at a kitchen table at night with a laptop, bills, keys and an untouched meal. The Leech rides on its back.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-1-host-at-home-night-1024.webp",
+        "full": "/amm/media/reflect/belief-1-host-at-home-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-1-host-at-home-night-640.webp 640w, /amm/media/reflect/belief-1-host-at-home-night-1024.webp 1024w, /amm/media/reflect/belief-1-host-at-home-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "fear-the-closing-stall": {
+      "title": "The closing stall",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/fear-the-closing-stall-1024.webp",
+      "full": "/amm/media/reflect/fear-the-closing-stall-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/fear-the-closing-stall-640.webp 640w, /amm/media/reflect/fear-the-closing-stall-1024.webp 1024w, /amm/media/reflect/fear-the-closing-stall-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A cow in a narrow stall whose walls lean in. The gate is half shut.",
+      "night": {
+        "fallback": "/amm/media/reflect/fear-the-closing-stall-night-1024.webp",
+        "full": "/amm/media/reflect/fear-the-closing-stall-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/fear-the-closing-stall-night-640.webp 640w, /amm/media/reflect/fear-the-closing-stall-night-1024.webp 1024w, /amm/media/reflect/fear-the-closing-stall-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "belief-8-the-chorus": {
+      "title": "The chorus",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/belief-8-the-chorus-1024.webp",
+      "full": "/amm/media/reflect/belief-8-the-chorus-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/belief-8-the-chorus-640.webp 640w, /amm/media/reflect/belief-8-the-chorus-1024.webp 1024w, /amm/media/reflect/belief-8-the-chorus-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "A cow calls out inside a ring of loud brass horns, all pointed at it.",
+      "night": {
+        "fallback": "/amm/media/reflect/belief-8-the-chorus-night-1024.webp",
+        "full": "/amm/media/reflect/belief-8-the-chorus-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/belief-8-the-chorus-night-640.webp 640w, /amm/media/reflect/belief-8-the-chorus-night-1024.webp 1024w, /amm/media/reflect/belief-8-the-chorus-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "crushed-or-compromised": {
+      "title": "Crushed or compromised",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/crushed-or-compromised-1024.webp",
+      "full": "/amm/media/reflect/crushed-or-compromised-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/crushed-or-compromised-640.webp 640w, /amm/media/reflect/crushed-or-compromised-1024.webp 1024w, /amm/media/reflect/crushed-or-compromised-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "Two cows under a hanging stone slab: one lies crushed beneath it, the other bends low to fit.",
+      "night": {
+        "fallback": "/amm/media/reflect/crushed-or-compromised-night-1024.webp",
+        "full": "/amm/media/reflect/crushed-or-compromised-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/crushed-or-compromised-night-640.webp 640w, /amm/media/reflect/crushed-or-compromised-night-1024.webp 1024w, /amm/media/reflect/crushed-or-compromised-night-1536.webp 1536w"
+          }
+        ]
+      }
+    },
+    "care-free-host": {
+      "title": "The free Host",
+      "width": 1536,
+      "height": 1024,
+      "fallback": "/amm/media/reflect/care-free-host-1024.webp",
+      "full": "/amm/media/reflect/care-free-host-1536.webp",
+      "sources": [
+        {
+          "type": "image/webp",
+          "srcset": "/amm/media/reflect/care-free-host-640.webp 640w, /amm/media/reflect/care-free-host-1024.webp 1024w, /amm/media/reflect/care-free-host-1536.webp 1536w"
+        }
+      ],
+      "sizes": "(min-width: 960px) 55vw, 100vw",
+      "alt": "The cow walks free. Its collar lies open on the ground beside the detached Leech.",
+      "night": {
+        "fallback": "/amm/media/reflect/care-free-host-night-1024.webp",
+        "full": "/amm/media/reflect/care-free-host-night-1536.webp",
+        "sources": [
+          {
+            "type": "image/webp",
+            "srcset": "/amm/media/reflect/care-free-host-night-640.webp 640w, /amm/media/reflect/care-free-host-night-1024.webp 1024w, /amm/media/reflect/care-free-host-night-1536.webp 1536w"
+          }
+        ]
+      }
     }
   }
 }

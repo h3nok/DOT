@@ -5,13 +5,13 @@
 .intent-card-title { font-family: var(--font-serif, Georgia, serif); font-size: 1.6rem; line-height: 1.15; letter-spacing: -.025em; }
 .intent-card-description { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.75; }
 .intent-card-arrow { position: absolute; top: 1.65rem; right: 1.5rem; width: 1.25rem; height: 1.25rem; color: var(--intent-tone); }
-.intent-card:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
+.intent-card:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
 html[data-contrast="high"] .intent-card { border-color: var(--foreground); background: var(--background); }
 html[data-contrast="high"] .intent-card-label,
 html[data-contrast="high"] .intent-card-symbol,
 html[data-contrast="high"] .intent-card-arrow { color: var(--foreground); }
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="still"]) .intent-card { transition: border-color 200ms ease, background-color 200ms ease; }
-  html:not([data-motion="still"]) .intent-card-arrow { transition: transform 200ms ease; }
+  html:not([data-motion="still"]) .intent-card { transition: border-color var(--motion-base) var(--motion-ease), background-color var(--motion-base) var(--motion-ease); }
+  html:not([data-motion="still"]) .intent-card-arrow { transition: transform var(--motion-base) var(--motion-ease); }
   html:not([data-motion="still"]) .intent-card:is(:hover, :focus-visible) .intent-card-arrow { transform: translate(2px, -2px); }
 }

@@ -14,13 +14,12 @@ vi.mock("./useSupport", async (importOriginal) => {
 // hoisted cell rather than re-importing the module per case.
 const paymentLink = vi.hoisted(() => ({ current: null as string | null }));
 const directMethods = vi.hoisted(() => ({ current: [] as DirectSupportMethod[] }));
-vi.mock("./DirectSupportSurface", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./DirectSupportSurface")>();
-  return { ...actual, get DIRECT_SUPPORT_METHODS() { return directMethods.current; } };
-});
 vi.mock("./supportLink", () => ({
   get SUPPORT_PAYMENT_LINK() {
     return paymentLink.current;
+  },
+  get DIRECT_SUPPORT_METHODS() {
+    return directMethods.current;
   },
 }));
 

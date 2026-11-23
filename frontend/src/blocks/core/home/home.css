@@ -1498,26 +1498,32 @@ html[data-contrast="high"] .home-hero-kicker {
   bottom: 1.1rem;
   left: 50%;
   display: inline-flex;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
+  min-width: var(--touch-target, 2.75rem);
+  min-height: var(--touch-target, 2.75rem);
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.6rem;
-  opacity: 0.68;
+  font-size: var(--primitive-micro, 0.6875rem);
+  opacity: 0.72;
   text-transform: uppercase;
   transform: translateX(-50%);
   transition:
-    color 160ms ease,
-    opacity 160ms ease;
+    color var(--motion-quick, 160ms) var(--motion-ease, ease),
+    opacity var(--motion-quick, 160ms) var(--motion-ease, ease);
 }
 
 .home-scroll-cue:hover,
 .home-scroll-cue:focus-visible {
   color: var(--organism-accent-strong);
   opacity: 1;
+}
+
+.home-scroll-cue:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--primitive-radius-sm, 0.35rem);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1912,12 +1918,13 @@ html[data-contrast="high"] .home-hero-kicker {
   position: relative;
   display: grid;
   align-items: center;
-  min-height: 0;
+  align-content: center;
+  min-block-size: 100svh;
   overflow: clip;
-  padding: clamp(1.5rem, 3vw, 3rem) 0;
+  padding: clamp(3rem, 7svh, 5.5rem) 0;
   border: 0;
   background: transparent;
-  scroll-margin-top: 6rem;
+  scroll-margin-top: 0;
 }
 
 .home-theory-layer-environment[data-layer="big-c"] {
@@ -1934,7 +1941,7 @@ html[data-contrast="high"] .home-hero-kicker {
 
 .home-theory-layer-environment > .dot-page-container {
   width: 100%;
-  max-width: 82rem;
+  max-width: 86rem;
 }
 
 .home-theory-layer-environment::before {
@@ -2819,14 +2826,19 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
 
 /* Cultural conditioning introduces the inquiry before its architecture. */
 .home-culture-environment {
-  padding-block: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  align-items: center;
+  align-content: center;
+  min-block-size: 100svh;
+  padding-block: clamp(3rem, 7svh, 5.5rem);
   background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 96%, var(--foreground));
+  scroll-margin-top: 0;
 }
 
 .home-culture-layout {
   display: grid;
-  gap: 1.25rem;
-  max-width: 72rem;
+  gap: clamp(1.5rem, 2.5vw, 2.25rem);
+  max-width: 78rem;
   margin-inline: auto;
 }
 
@@ -2839,17 +2851,22 @@ html[data-motion="still"] .home-theory-layer-details > summary svg {
   padding: clamp(1.5rem, 3vw, 2.25rem);
   border: 1px solid var(--border);
   border-radius: 1.25rem;
+  box-shadow: var(--shadow-card, none);
 }
 
 .home-culture-card > * { margin: 0; }
 
 .home-culture-card--critique {
-  background: color-mix(in oklab, var(--appearance-page-tone, var(--background)) 94%, var(--foreground));
+  background: color-mix(in oklab, var(--card) 76%, var(--appearance-page-tone, var(--background)));
 }
 
 .home-culture-card--love {
-  border-color: color-mix(in oklab, var(--organism-accent-strong) 32%, var(--border));
-  background: color-mix(in oklab, var(--organism-accent-strong) 6%, var(--background));
+  border-color: color-mix(in oklab, var(--organism-accent-strong) 34%, var(--border));
+  background: linear-gradient(
+    155deg,
+    color-mix(in oklab, var(--organism-accent-strong) 9%, var(--card)),
+    color-mix(in oklab, var(--organism-accent-strong) 4%, var(--background))
+  );
 }
 
 .home-culture-card h2 {
@@ -3062,19 +3079,15 @@ html[data-field="off"] .home-love-statement::before {
   overflow: hidden;
   margin: 0;
   padding: 2.15rem 2.25rem 2.25rem;
-  border: 1px solid color-mix(in oklch, var(--organism-accent-strong) 25%, var(--border));
+  border: 1px solid color-mix(in oklab, var(--organism-accent-strong) 26%, var(--border));
   border-radius: 1rem;
   background: linear-gradient(
     145deg,
-    color-mix(in oklch, var(--background) 82%, white) 0%,
-    color-mix(in oklch, var(--background) 94%, var(--organism-accent-soft)) 54%,
-    color-mix(in oklch, var(--background) 88%, var(--organism-accent-soft)) 100%
+    color-mix(in oklab, var(--card) 92%, var(--background)) 0%,
+    color-mix(in oklab, var(--background) 94%, var(--organism-accent-soft)) 54%,
+    color-mix(in oklab, var(--background) 88%, var(--organism-accent-soft)) 100%
   );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 68%, transparent),
-    inset 0 -1px 0 color-mix(in oklch, var(--foreground) 5%, transparent),
-    0 3px 0 color-mix(in oklch, var(--foreground) 7%, transparent),
-    0 1.2rem 3rem color-mix(in oklch, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-editorial, 0 1.2rem 3rem color-mix(in oklab, var(--foreground) 10%, transparent));
 }
 
 .home-preface-copy::before {
@@ -3083,7 +3096,7 @@ html[data-field="off"] .home-love-statement::before {
   top: 0.35rem;
   right: 1rem;
   z-index: -1;
-  color: color-mix(in oklch, var(--organism-accent-strong) 18%, transparent);
+  color: color-mix(in oklab, var(--organism-accent-strong) 18%, transparent);
   font-family: var(--font-serif, ui-serif, Georgia, serif);
   font-size: 5.5rem;
   line-height: 1;
@@ -3314,7 +3327,7 @@ html[data-field="off"] .home-love-statement::before {
   flex-direction: column;
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.6rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -3344,54 +3357,42 @@ html[data-field="off"] .home-love-statement::before {
   border-radius: 0.55rem;
   background: linear-gradient(
     145deg,
-    color-mix(in oklch, var(--background) 87%, white) 0%,
+    color-mix(in oklab, var(--card) 88%, var(--background)) 0%,
     var(--background) 52%,
-    color-mix(in oklch, var(--background) 94%, var(--foreground)) 100%
+    color-mix(in oklab, var(--background) 94%, var(--foreground)) 100%
   );
   color: var(--muted-foreground);
   text-align: left;
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 68%, transparent),
-    inset 0 -1px 0 color-mix(in oklch, var(--foreground) 6%, transparent),
-    0 2px 0 color-mix(in oklch, var(--foreground) 8%, transparent),
-    0 0.55rem 1.1rem color-mix(in oklch, var(--foreground) 9%, transparent);
+  box-shadow: var(--shadow-card);
   transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
+    border-color var(--motion-quick, 160ms) var(--motion-ease, ease),
+    box-shadow var(--motion-quick, 160ms) var(--motion-ease, ease),
+    transform var(--motion-quick, 160ms) var(--motion-ease, ease);
 }
 
 .arch-mobile-node.is-active {
-  border-color: color-mix(in oklch, var(--organism-accent-strong) 78%, var(--border));
+  border-color: color-mix(in oklab, var(--organism-accent-strong) 78%, var(--border));
   border-radius: 0.55rem 0.55rem 0 0;
   background: linear-gradient(
     145deg,
-    color-mix(in oklch, var(--background) 76%, white) 0%,
-    color-mix(in oklch, var(--background) 89%, var(--organism-accent-soft)) 50%,
-    color-mix(in oklch, var(--background) 80%, var(--organism-accent-soft)) 100%
+    color-mix(in oklab, var(--card) 82%, var(--organism-accent-soft)) 0%,
+    color-mix(in oklab, var(--background) 89%, var(--organism-accent-soft)) 50%,
+    color-mix(in oklab, var(--background) 80%, var(--organism-accent-soft)) 100%
   );
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 76%, transparent),
-    inset 0 -1px 0 color-mix(in oklch, var(--organism-accent-strong) 12%, transparent),
-    0 3px 0 color-mix(in oklch, var(--organism-accent-strong) 16%, transparent),
-    0 0.8rem 1.5rem color-mix(in oklch, var(--organism-accent-strong) 17%, transparent);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
 }
 
 .arch-mobile-node:not(.is-active):hover {
-  border-color: color-mix(in oklch, var(--organism-accent-strong) 52%, var(--border));
-  box-shadow:
-    inset 0 1px 0 color-mix(in oklch, white 72%, transparent),
-    inset 0 -1px 0 color-mix(in oklch, var(--foreground) 7%, transparent),
-    0 3px 0 color-mix(in oklch, var(--foreground) 9%, transparent),
-    0 0.7rem 1.3rem color-mix(in oklch, var(--foreground) 11%, transparent);
+  border-color: color-mix(in oklab, var(--organism-accent-strong) 52%, var(--border));
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
 }
 
 .arch-mobile-node-number {
   color: var(--organism-accent-strong);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.6rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   font-weight: 600;
 }
 
@@ -3414,7 +3415,7 @@ html[data-field="off"] .home-love-statement::before {
   margin-top: 0.15rem;
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.51rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -3423,17 +3424,17 @@ html[data-field="off"] .home-love-statement::before {
   width: calc(100% - 0.75rem);
   margin: -1px auto 0;
   padding: 0.7rem 0.85rem 0.8rem;
-  border: 1px solid color-mix(in oklch, var(--organism-accent-strong) 78%, var(--border));
+  border: 1px solid color-mix(in oklab, var(--organism-accent-strong) 78%, var(--border));
   border-top: 0;
   border-radius: 0 0 0.55rem 0.55rem;
-  background: color-mix(in oklch, var(--background) 94%, var(--organism-accent-soft));
-  box-shadow: 0 0.65rem 1.3rem color-mix(in oklch, var(--organism-accent-strong) 10%, transparent);
+  background: color-mix(in oklab, var(--background) 94%, var(--organism-accent-soft));
+  box-shadow: 0 0.65rem 1.3rem color-mix(in oklab, var(--organism-accent-strong) 10%, transparent);
 }
 
 .arch-mobile-detail > span {
   color: var(--organism-accent-strong);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.52rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3459,7 +3460,7 @@ html[data-field="off"] .home-love-statement::before {
 .arch-mobile-edge span {
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.56rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -3678,7 +3679,7 @@ html[data-field="off"] .home-love-statement::before {
 .arch-bottom-role {
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.56rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -3706,7 +3707,7 @@ html[data-field="off"] .home-love-statement::before {
   gap: 0.5rem;
   color: var(--muted-foreground);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.6rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.03em;
   line-height: 1.45;
   text-transform: uppercase;
@@ -3963,9 +3964,9 @@ html[data-contrast="high"] .arch-mobile-detail {
 
 .home-concept-ledger-number {
   padding-top: 0.2rem;
-  color: color-mix(in oklch, var(--organism-accent-strong) 62%, var(--muted-foreground));
+  color: color-mix(in oklab, var(--organism-accent-strong) 62%, var(--muted-foreground));
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.65rem;
+  font-size: var(--primitive-micro, 0.6875rem);
   letter-spacing: 0.08em;
 }
 
@@ -4052,6 +4053,12 @@ html[data-contrast="high"] .arch-mobile-detail {
   color: var(--organism-accent-strong);
 }
 
+.home-path-secondary:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--primitive-radius-sm, 0.35rem);
+}
+
 /* Invitation: the field opens outward again, now around participation. */
 .home-invitation-environment {
   overflow: hidden;
@@ -4132,6 +4139,12 @@ html[data-contrast="high"] .arch-mobile-detail {
 .home-invitation-link:hover,
 .home-invitation-link:focus-visible {
   color: var(--organism-accent-strong);
+}
+
+.home-invitation-link:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--primitive-radius-sm, 0.35rem);
 }
 
 @media (min-width: 768px) {
@@ -4872,4 +4885,10 @@ html[data-field="off"] .home-hero-stage::before {
 
 .home-film-loop-card__link:hover {
   color: var(--foreground);
+}
+
+.home-film-loop-card__link:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--foreground));
+  outline-offset: var(--focus-ring-offset, 3px);
+  border-radius: var(--primitive-radius-sm, 0.35rem);
 }

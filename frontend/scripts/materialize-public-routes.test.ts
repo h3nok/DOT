@@ -26,6 +26,7 @@ import { doctrineNodes } from "../src/content/doctrine/doctrineData";
 import { siteConfig } from "../src/content/site.config";
 import { builder, builderProjects, career, projectInquiryHref, resumeHref } from "../src/content/builder";
 import AMM from "../src/content/amm.json";
+import AMM_MODEL from "../src/content/amm-model.json";
 import ACADEMY from "../src/content/academy/landing.json";
 import { READING_PATHS } from "../src/attention-os/reader/readingPaths";
 
@@ -47,6 +48,9 @@ const routes: PublicRoute[] = await publicRoutes(manifest);
 
 const nodeOfType = (route: PublicRoute, type: string) =>
   route.structuredData["@graph"].find((node) => node["@type"] === type);
+
+/** As the materializer escapes text: ampersands, quotes and angle brackets, not apostrophes. */
+const escapeForHtml = (text: string) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 describe("public route metadata", () => {
   it("points the retired Community address to Contact, out of search", () => {
@@ -73,53 +77,77 @@ describe("public route metadata", () => {
     expect(film.prerender).toContain('href="/book/digital-organism-theory"');
     expect(sitemapXml(routes, manifest.release.updated_at)).toContain("https://dotheory.org/film/");
   });
-  it("keeps how power works built for its address but hidden: out of search, unlinked, old addresses home", async () => {
-    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: {
-      "amm.money.examples.borrowing.mechanic": "<strong>Owner’s debt explanation</strong>",
-    } });
-    const capital = revised.find(route => route.route === "/amm/power")!;
-    expect(capital.noindex).toBe(true);
-    expect(capital.prerender).toContain("&lt;strong&gt;Owner’s debt explanation&lt;/strong&gt;");
-    expect(capital.prerender).not.toContain("<strong>Owner’s debt explanation</strong>");
-    for (const example of AMM.money.examples) expect(capital.prerender).toContain(`id="${example.id}"`);
-    for (const id of ["power", "assault", "chain", "interfaces", "holders", "detachment", "tests", "alternatives", "sources"]) expect(capital.prerender).toContain(`id="${id}"`);
-    for (const step of AMM.capital.story) expect(capital.prerender).toContain(`<h3>${step.title}</h3>`);
-    expect(capital.prerender).toContain(AMM.capital.rail.label);
-    expect(capital.prerender).toContain(AMM.capital.assaultClose);
-    expect(capital.prerender).toContain("not independently verified");
-    expect(capital.prerender).toContain('alt="The erosion of the public:');
-    expect(capital.prerender).toContain('/amm/media/host-anatomy-v2-1024.webp');
-    expect(capital.prerender).toContain(AMM.capital.anatomyCaption);
-    expect(capital.prerender).not.toContain('/amm/media/slow-erosion-');
-    expect(capital.prerender).toContain("https://books.core-econ.org/the-economy-v1/book/text/10.html");
+  it("publishes the figures behind Chapter Two, and sends the folded companion pages to their chapters", async () => {
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.power.figurestitle": "<strong>Owner’s figures title</strong>" } });
+    const figures = revised.find(route => route.route === AMM.power.figuresRoute)!;
+    expect(figures.noindex).toBeFalsy();
+    expect(figures.prerender).toContain("<h1>&lt;strong&gt;Owner’s figures title&lt;/strong&gt;</h1>");
+    expect(figures.prerender).not.toContain("<strong>Owner’s figures title</strong>");
+    // Four sourced screens and their sources; the argument itself lives in Chapter Two (the author, 2026-11-18).
+    for (const id of ["wealth", "equity", "savings", "housing", "sources"]) expect(figures.prerender).toContain(`id="${id}"`);
+    for (const id of ["organized-power", "income", "necessity", "choices", "powers", "enters", "anchor", "next"]) expect(figures.prerender).not.toContain(`id="${id}"`);
+    for (const figure of ["<strong>2.5%</strong>", "<td>31.6%</td>", "<strong>50.2%</strong>", "<strong>1.1%</strong>", "<strong>$32 trillion</strong>", "<strong>446,000</strong>", "<td>22%</td>"]) expect(figures.prerender).toContain(figure);
+    expect(figures.prerender).toContain(AMM_MODEL.power.housing.caveat.text);
+    expect(figures.prerender).toContain(`<a href="/essays/${AMM.chapterSection.chapters[1].id}">${AMM.power.figuresBack}</a>`);
+    expect(figures.prerender).not.toMatch(/<(form|input|textarea)\b/);
     const sitemap = sitemapXml(revised, manifest.release.updated_at);
-    expect(sitemap).not.toContain("/amm/power");
-    // No public AMM page links to it while it is hidden, chapters included.
-    for (const route of revised.filter(item => item.publication === "amm" && item.route !== "/amm/power")) expect(route.prerender).not.toContain('href="/amm/power');
-    // The former guide's addresses open the AMM home and stay out of the sitemap.
-    for (const path of ["/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"]) {
-      const moved = revised.find(route => route.route === path)!;
-      expect(moved.canonicalRoute).toBe("/amm");
-      expect(moved.prerender).toContain('href="/amm"');
-      expect(sitemap).not.toContain(`${path}</loc>`);
+    expect(sitemap).toContain(`${AMM.power.figuresRoute}/</loc>`);
+    // Reached from the home's screen on the oligarchy, and from every AMM footer.
+    const home = revised.find(route => route.route === "/amm")!;
+    const homeHtml = home.prerender ?? "";
+    const anatomy = homeHtml.slice(homeHtml.indexOf('id="amm-anatomy"'), homeHtml.indexOf('id="amm-feeding"'));
+    expect(anatomy).toContain(`<a href="${AMM.power.figuresRoute}">${AMM.model.figuresLink}</a>`);
+    expect(home.prerender).toContain(`<a href="${AMM.power.figuresRoute}">${AMM.power.figuresNav}</a>`);
+    // The former companion pages keep their addresses, out of search, each pointing to its chapter.
+    const moved: [string, string][] = [
+      ...["/amm/power", "/amm/money", "/amm/money/ownership", "/amm/money/alternatives", "/amm/capital"].map((path): [string, string] => [path, AMM.chapterSection.chapters[1].id]),
+      [AMM.reflect.route, AMM.chapterSection.chapters[2].id],
+    ];
+    for (const [path, chapter] of moved) {
+      const page = revised.find(route => route.route === path)!;
+      expect(page.noindex).toBe(true);
+      expect(page.canonicalRoute).toBe(`/essays/${chapter}`);
+      expect(page.prerender).toContain(`href="/essays/${chapter}"`);
+      expect(sitemap).not.toContain(`${path}/</loc>`);
+    }
+    for (const page of revised.filter(route => route.prerender?.includes("<footer>") && route.route.startsWith("/amm"))) {
+      expect(page.prerender).not.toContain(`href="${AMM.reflect.route}"`);
+      expect(page.prerender).not.toContain('href="/amm/power"');
     }
   });
+  it("builds the inquirer's page without JavaScript: model, levels, definitions, method, tests, records, concepts and citations", () => {
+    const inquiry = routes.find(route => route.route === AMM.inquiry.route)!;
+    expect(inquiry.noindex).toBeFalsy();
+    expect(inquiry.prerender).toContain(`<h1 id="inquiry-title">${AMM.inquiry.title}</h1>`);
+    for (const id of ["inquiry-model", "inquiry-levels", "inquiry-terms", "inquiry-method", "inquiry-notebook", "inquiry-weaken", "inquiry-change", "inquiry-records", "inquiry-dot", "inquiry-cite"]) expect(inquiry.prerender).toContain(`id="${id}"`);
+    for (const level of AMM_MODEL.levels.items) expect(inquiry.prerender).toContain(level.definition);
+    for (const term of AMM_MODEL.terms) expect(inquiry.prerender).toContain(`id="term-${term.id}"`);
+    for (const record of AMM_MODEL.records) expect(inquiry.prerender).toContain(`href="${record.href}"`);
+    expect(inquiry.prerender).toContain('href="/doctrine/fear-gating"');
+    expect(inquiry.prerender).toContain("Henok Ghebrechristos. “Chapter One: The Leech — The Attitude of Dominance.” The American Millennial Manifesto. Working book, version 1.1. November 3, 2026. https://dotheory.org/essays/amm-book-chapter-one-the-leech");
+    // The notebook needs JavaScript; without it the questions remain, and nothing asks for input.
+    for (const step of AMM_MODEL.method.steps) expect(inquiry.prerender).toContain(step.prompt.text);
+    expect(inquiry.prerender).not.toMatch(/<(form|input|textarea)\b/);
+    expect(sitemapXml(routes, manifest.release.updated_at)).toContain(`${AMM.inquiry.route}/</loc>`);
+  });
   it("materializes only published AMM copy and keeps its editor out of search", async () => {
-    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Published opening", "amm.home.premise": "Published opening paragraph.", "amm.heroaction": "Published reading invitation", "amm.home.overviewsource": "Chapter Three · Updated source title", "amm.chaptersection.title": "<script>unsafe</script>", "amm.capital.chaintitle": "Published visual question", "amm.home.concepts.fear.text": "A published definition of fear.", "amm.chaptersection.chapters.amm-book-chapter-two-the-anatomy-of-dominance.line": "An edited line for Chapter Two." } });
+    const revised: PublicRoute[] = await publicRoutes(manifest, { siteContent: { "amm.headline.0": "Retired headline override", "amm.home.premise": "Retired opening paragraph.", "amm.model.herotitle": "A published opening.", "amm.model.heromessage": "Retired message to the citizen.", "amm.heroaction": "Published reading invitation", "amm.model.readdiagnosis": "Published diagnosis link", "amm.model.booktitle": "<script>unsafe</script>", "amm.power.figuresintro": "Published figures introduction", "amm.chaptersection.chapters.amm-book-chapter-two-the-anatomy-of-dominance.line": "An edited line for Chapter Two." } });
     const amm = revised.find(route => route.route === "/amm")!;
-    expect(amm.prerender).toContain("Published opening");
-    expect(amm.prerender).toContain('<p>Published opening paragraph.</p>');
-    expect(amm.prerender).not.toContain(AMM.home.premise);
-    expect(amm.prerender).toContain(`href="#amm-overview">Published reading invitation`);
-    expect(amm.prerender).toContain('<cite><a href="/essays/amm-book-chapter-three-the-host-and-the-infection">Chapter Three · Updated source title</a></cite>');
-    // Published concepts and chapter lines share the owner editor's stable keys.
-    expect(amm.prerender).toContain("A published definition of fear.");
-    expect(amm.prerender).toContain("An edited line for Chapter Two.");
-    // One reading action; the hidden power guide stays separate.
+    // The opening's words are editable (the author, 2026-11-19): published words replace the defaults, an
+    // unpublished line keeps its default, and the retired headline, premise and message overrides no longer apply.
+    expect(amm.prerender).toContain(`<h1>A published opening.</h1><p>${AMM.model.heroLine}</p><figure>`);
+    expect(amm.prerender).not.toContain("Retired message to the citizen.");
+    expect(amm.prerender).not.toContain("Retired headline override");
+    expect(amm.prerender).not.toContain("Retired opening paragraph.");
+    expect(amm.prerender).toContain(`href="${AMM.introduction.route}">Published reading invitation`);
+    // Published labels and chapter lines share the owner editor's stable keys.
+    expect(amm.prerender).toContain(`<a href="/essays/${AMM.chapterSection.chapters[2].id}#3-the-inversion-in-practice">Published diagnosis link</a>`);
+    expect(revised.find(route => route.route === "/amm/editions")!.prerender).toContain("An edited line for Chapter Two.");
+    // One reading action; the figures stay on their own page.
     expect(amm.prerender).not.toContain(AMM.reading.prereqTitle);
     expect(amm.prerender).not.toContain(AMM.reading.pathEyebrow);
-    expect(amm.prerender).not.toContain("Published visual question");
-    expect(revised.find(route => route.route === "/amm/power")?.prerender).toContain("Published visual question");
+    expect(amm.prerender).not.toContain("Published figures introduction");
+    expect(revised.find(route => route.route === AMM.power.figuresRoute)?.prerender).toContain("Published figures introduction");
     expect(amm.prerender).toContain("&lt;script&gt;unsafe&lt;/script&gt;");
     expect(amm.prerender).not.toContain("<script>unsafe</script>");
     expect(revised.find(route => route.route === "/studio/pages/amm")?.noindex).toBe(true);
@@ -150,70 +178,81 @@ describe("public route metadata", () => {
     expect(chapter.prerender).toContain("not independently verified");
     expect(chapter.prerender).not.toContain('language-evidence-chart');
   });
-  it("materializes AMM as a public publication and keeps its newsletter desk private", () => {
+  it("materializes the AMM home as the author set it: the opening, why stability matters, the Inversion, the Host, the Leech and its body, the book, then the way out, without mentioning 'model'", () => {
     const publicPage = routes.find(route => route.route === "/amm")!;
+    const html = publicPage.prerender ?? "";
     expect(publicPage.title).toBe(AMM.title);
-    expect(publicPage.prerender).toContain(AMM.headline.join(" "));
-    expect(publicPage.prerender).toContain(`<h2 id="amm-overview-title">${AMM.home.overviewTitle}</h2>`);
-    expect(publicPage.prerender).not.toContain('<nav aria-label="On this page">');
-    // The argument stays readable without opening a disclosure.
-    expect(publicPage.prerender).not.toContain('id="amm-concerns"');
-    expect(publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-overview"'), publicPage.prerender.indexOf('id="amm-dot"'))).not.toContain("<details>");
-    for (const concept of AMM.home.concepts) {
-      expect(publicPage.prerender).toContain(concept.text);
-      expect(publicPage.prerender).toContain(concept.script);
-      // Each scene closes on AMM's own argument with its chapter, not on a question.
-      expect(publicPage.prerender).toContain(concept.argument);
-      expect(publicPage.prerender).toContain(concept.source);
-
+    expect(html).toContain(`<h1>${AMM.model.heroTitle}</h1><p>${AMM.model.heroLine}</p><figure>`);
+    expect(html).not.toContain("The system is dying");
+    expect(html).toContain(`<a href="${AMM.introduction.route}">${AMM.heroAction}</a>`);
+    expect(html).toContain(escapeForHtml(AMM.model.mirrorKey));
+    const ids = ["amm-thesis", "amm-inversion", "amm-host", "amm-leech", "amm-anatomy", "amm-feeding", "amm-way-out", "amm-book"];
+    for (const id of ids) expect(html).toContain(`<section id="${id}" aria-labelledby="${id}-title">`);
+    expect(ids.map((id) => html.indexOf(`id="${id}"`))).toEqual(ids.map((id) => html.indexOf(`id="${id}"`)).sort((a, b) => a - b));
+    for (const id of ["amm-stability", "amm-love", "amm-diagnosis", "amm-purpose", "amm-arrangement", "amm-closing", "amm-us", "amm-why", "amm-gap", "amm-spiral", "amm-dot", "amm-sponsor"]) expect(html).not.toContain(`id="${id}"`);
+    expect(html).not.toMatch(/\bmodel\b/i);
+    const section = (id: string) => html.slice(html.indexOf(`id="${id}"`), html.indexOf("</section>", html.indexOf(`id="${id}"`)));
+    // Each screen is the book's own sentences, its sources, and its painting with the AI note.
+    const H = AMM_MODEL.home;
+    for (const [id, quotes] of [["amm-inversion", H.inversion], ["amm-host", H.host], ["amm-leech", H.leech], ["amm-anatomy", H.anatomy], ["amm-feeding", H.feeding]] as const) {
+      for (const line of quotes.lines) expect(section(id), id).toContain(escapeForHtml(line.text));
+      expect(section(id), id).toContain("<img");
+      expect(section(id), id).toContain(AMM.reflect.disclosure);
     }
-    expect(publicPage.prerender).not.toContain("Conditioning, character, and responsibility");
-    expect(publicPage.prerender).not.toContain("The cost of refusal");
-    expect(publicPage.prerender).toContain(AMM.home.sceneAlt);
-    // Each picture appears once: the mirror in the hero, two scenes, then each chapter's own artwork.
-    for (const scene of ['host-at-home-v1', 'erosion']) {
-      expect(publicPage.prerender.split(`/amm/media/${scene}-1024.webp`)).toHaveLength(2);
-    }
-    expect(publicPage.prerender).not.toContain('/amm/media/host-reflection-1024.webp');
-    expect(publicPage.prerender).toContain(AMM.artwork.caption);
+    expect(section("amm-inversion")).toContain(`<h2 id="amm-inversion-title">${escapeForHtml(H.inversion.heading.text)}</h2>`);
+    expect(section("amm-inversion")).toContain(`<a href="/essays/${AMM.chapterSection.chapters[2].id}#3-the-inversion-in-practice">${AMM.model.readDiagnosis}</a>`);
+    expect(section("amm-inversion")).toContain('<a href="/essays/amm-letter-to-an-american-adult">A Letter to an American Adult</a>');
+    expect(section("amm-host")).toContain(`<h2 id="amm-host-title">${AMM.model.hostTitle}</h2>`);
+    expect(section("amm-leech")).toContain(`<h2 id="amm-leech-title">${AMM.model.leechTitle}</h2>`);
+    // The oligarchy is quoted from the earlier serialized Chapter Three, with its caution about workers.
+    expect(section("amm-anatomy")).toContain(`<h2 id="amm-anatomy-title">${AMM.model.anatomyTitle}</h2>`);
+    expect(section("amm-anatomy")).toContain(H.anatomy.note.text);
+    expect(section("amm-anatomy")).toContain('<a href="/essays/amm-chapter-three-the-host-and-the-infection#the-leech-and-the-logic-it-carries">Chapter Three, earlier edition</a>');
+    expect(section("amm-anatomy")).toContain("/amm/media/leech-anatomy-1024.webp");
+    // The AMM thesis opens the screens as a manifesto (the author, 2026-11-20 and 2026-11-22): AMM's conviction
+    // in the book's words, then seven numbered articles, the purpose (closed by the book's hinge) facing the Inversion.
+    const thesis = section("amm-thesis");
+    expect(thesis).toContain(`<h2 id="amm-thesis-title">${AMM.model.thesisTitle}</h2><p>${H.thesis.worth.text}</p>`);
+    expect(thesis).toContain(`<h3>${AMM.model.thesisPurposeLabel}</h3><ol>${[AMM.model.thesisSociety, AMM.model.thesisHonor, H.thesis.judged.text].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
+    expect(thesis).toContain(`<h3>${AMM.model.thesisInversionLabel}</h3><ol start="4">${[AMM.model.thesisInverts, AMM.model.thesisMyth, AMM.model.thesisBelief, AMM.model.thesisCharacter].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
+    expect(thesis).toContain('<a href="/essays/amm-book-chapter-four-authorship-without-dominance#13-what-we-owe-the-next-life">Chapter Four</a> · <a href="/essays/amm-chapter-one-the-leech">Chapter One, earlier edition</a>');
+    // The conviction is AMM's published sentence; Book One never says "worthy of care".
+    expect(html).not.toContain("worthy of care");
+    expect(html).not.toContain("Why stability matters");
+    expect(html).not.toContain("Every person needs some degree of safety");
+    expect(html).not.toContain("The purpose of life is Love.");
+    expect(html).not.toContain("Stability is not inactivity");
+    // The home closes on the way out (the author, 2026-11-19): only a cultural revolution, then Chapter Four's sentence, cited.
+    expect(section("amm-way-out")).toContain(`<h2 id="amm-way-out-title">${AMM.model.revolutionLine}</h2>`);
+    for (const line of H.revolution.lines) expect(section("amm-way-out")).toContain(escapeForHtml(line.text));
+    expect(section("amm-way-out")).toContain(`<a href="/essays/${AMM.chapterSection.chapters[3].id}">${AMM.model.revolutionAction}</a>`);
+    // Each painting appears once, and every picture says it is an AI illustration: the opening and five screens.
+    for (const src of ["inversion-empty-frame-1024", "host-anatomy-v2-1024", "the-leech-portrait-1024", "leech-anatomy-1024", "belief-4-the-feeding-1024"]) expect(html.split(src)).toHaveLength(2);
+    for (const scene of ["belief-2-the-mirror", "fear-the-closing-stall"]) expect(html).not.toContain(`/amm/media/reflect/${scene}`);
+    expect(html.split(AMM.reflect.disclosure).length - 1).toBe(6);
+    expect(html).not.toContain("<table>");
     expect(publicPage.prerender).toContain(AMM.artwork.alt);
     expect(publicPage.prerender).toContain('src="/amm/mark.svg"');
     expect(publicPage.prerender).not.toContain('aria-label="Site"');
     expect(publicPage.prerender).not.toContain(AMM.analysis.title);
     expect(publicPage.prerender).not.toContain(AMM.principle.quote);
-    expect(publicPage.prerender).not.toContain(AMM.archiveTitle);
     expect(publicPage.prerender).not.toContain('id="amm-subscribe"');
+    expect(publicPage.prerender).not.toContain("<details>");
     expect(publicPage.prerender).toContain('<footer>');
-    // The home presents the argument, then the manifesto itself as a book, in the author's order.
-    expect(publicPage.prerender).toContain(AMM.home.overviewClaim);
-    expect(publicPage.prerender).toContain(AMM.home.overviewIntro);
-    expect(publicPage.prerender).toContain(`<cite><a href="/essays/amm-book-chapter-one-the-leech">${AMM.home.overviewSource}</a></cite>`);
-    expect(publicPage.prerender.indexOf('id="amm-overview"')).toBeLessThan(publicPage.prerender.indexOf('id="amm-start"'));
-    const book = publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-start"'));
-    for (const chapter of AMM.chapterSection.chapters) {
-      expect(book).toContain(chapter.line);
+    // The book: the four chapters in the author's order, each linked, and one link to every edition.
+    const book = publicPage.prerender.slice(publicPage.prerender.indexOf('id="amm-book"'), publicPage.prerender.indexOf("<footer>"));
+    AMM.chapterSection.chapters.forEach((chapter, index) => {
+      expect(book).toContain(`id="amm-chapter-${index + 1}"`);
       expect(book).toContain(`href="/essays/${chapter.id}"`);
-    }
-    expect(book.indexOf("Chapter One: The Leech")).toBeLessThan(book.indexOf("Chapter Two: The Anatomy of Dominance"));
-    expect(book.indexOf("Chapter Two: The Anatomy of Dominance")).toBeLessThan(book.indexOf("Chapter Three: The Host and the Infection"));
-    expect(book.indexOf("Chapter Three: The Host and the Infection")).toBeLessThan(book.indexOf("Chapter Four: Authorship Without Dominance"));
-    expect(book).toContain(`>${AMM.introduction.label}</a>`);
+    });
+    expect(book.indexOf("Chapter One · The Leech")).toBeLessThan(book.indexOf("Chapter Two · The Anatomy of Dominance"));
+    expect(book.indexOf("Chapter Three · The Host and the Infection")).toBeLessThan(book.indexOf("Chapter Four · Authorship Without Dominance"));
+    expect(book).toContain(AMM.manuscript.status);
     expect(book).not.toContain("Download the working manuscript");
     expect(existsSync(join(process.cwd(), "public/amm/american-millennial-manifesto-v1.1.md"))).toBe(false);
-    expect(book).toContain(AMM.manuscript.status);
-    expect(book).toContain("min read");
+    expect(book).toContain(`<a href="/amm/editions">${AMM.model.closingBook}</a>`);
     expect(publicPage.prerender).not.toContain('class="amm-latest"');
-    expect(publicPage.prerender).toContain('id="amm-participate"');
-    expect(publicPage.prerender).toContain('href="/amm/membership"');
-    expect(publicPage.prerender).toContain(AMM.participation.membershipDescription);
     expect(nodeOfType(publicPage, "Blog")?.hasPart).toEqual(AMM.chapterSection.chapters.map((chapter, index) => ({ "@type": "WebPage", name: `${["Chapter One", "Chapter Two", "Chapter Three", "Chapter Four"][index]}: ${["The Leech — The Attitude of Dominance", "The Anatomy of Dominance", "The Host and the Infection", "Authorship Without Dominance"][index]}`, url: `${SITE_URL}/essays/${chapter.id}/`, isAccessibleForFree: true })));
-    // AMM reads as an application of DOT and a sponsor of 4Us: the theory before the book, the movement after it.
-    const order = ['id="amm-overview"', 'id="amm-dot"', 'id="amm-start"', 'id="amm-sponsor"'].map(id => publicPage.prerender.indexOf(id));
-    expect(order.every(index => index > 0)).toBe(true);
-    expect([...order].sort((a, b) => a - b)).toEqual(order);
-    for (const item of AMM.dot.links) expect(publicPage.prerender).toContain(`href="/doctrine/${item.id}"`);
-    expect(publicPage.prerender).toContain(AMM.movement.sponsor);
-    expect(publicPage.prerender).toContain(`href="${AMM.movement.href}"`);
     expect(publicPage.prerender).toContain('href="/essays/amm-book-chapter-four-authorship-without-dominance');
     expect(publicPage.prerender).not.toContain(AMM.reading.supportAction);
     const editions = routes.find(route => route.route === "/amm/editions")!;

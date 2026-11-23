@@ -2,7 +2,7 @@
    and absent for anyone who prefers stillness. Only elements armed by useReveal are ever hidden. */
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal] {
-    transition: opacity .75s cubic-bezier(.2, .7, .2, 1), translate .75s cubic-bezier(.2, .7, .2, 1);
+    transition: opacity var(--motion-reveal) var(--motion-ease), translate var(--motion-reveal) var(--motion-ease);
     transition-delay: calc(var(--reveal-order, 0) * 110ms);
   }
   /* Holding back is instant; only the arrival is animated. */
@@ -16,3 +16,19 @@
 [data-reveal="6"] { --reveal-order: 6; }
 [data-reveal]:focus-within { opacity: 1; translate: none; transition: none !important; }
 @media print { [data-reveal-pending] { opacity: 1 !important; translate: none !important; } }
+
+/* A cascade: the container holds its place and its children arrive one after another,
+   heading first. Used by a screen's words (Scene with `reveal`). */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-cascade] > * {
+    transition: opacity var(--motion-reveal) var(--motion-ease), translate var(--motion-reveal) var(--motion-ease);
+    transition-delay: calc((var(--reveal-order, 0) + var(--cascade, 0)) * 110ms);
+  }
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-cascade][data-reveal-pending] { opacity: 1; translate: none; }
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-cascade][data-reveal-pending] > * { opacity: 0; translate: 0 1rem; transition: none; }
+}
+[data-reveal-cascade] > :nth-child(2) { --cascade: 1; }
+[data-reveal-cascade] > :nth-child(3) { --cascade: 2; }
+[data-reveal-cascade] > :nth-child(4) { --cascade: 3; }
+[data-reveal-cascade] > :nth-child(5) { --cascade: 4; }
+[data-reveal-cascade] > :nth-child(n+6) { --cascade: 5; }

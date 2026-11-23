@@ -1,0 +1,107 @@
+{
+  "set": "AMM diagnosis illustrations",
+  "created": "2026-11-08",
+  "generator": "image_generation tool (Copilot session), directed by the author",
+  "processing": "Cut out to transparent illustrations in two versions. Light pages: a BiRefNet subject mask (rembg 2.0.67, birefnet-general) with the painting's brightest props, or, where the scene carries the meaning, the painting as one smooth pool of its own darkness. Dark pages: the subject mask combined with a key of the painting's lit areas and a soft elliptical fade. The free Host is one crisp cut-out (BiRefNet and isnet masks combined). Responsive WebP with alpha at 640, 1024 and 1536 px. Originals are unaltered; lossless cut-outs are kept with the author's design files.",
+  "kind": "AI-generated editorial illustration; a visual metaphor, not documentary evidence.",
+  "images": [
+    {
+      "file": "belief-2-the-mirror-1536.webp",
+      "title": "The mirror",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image as the reference for the scene idea and the Host cow (faded flag dyed into short smooth-haired cowhide, star field over face and left eye, riveted bronze collar with ring, no horns).\nScene: in a dark room, the collared, tired Host cow stands in profile on the right, facing a tall old mirror on the left. In the mirror, instead of its own reflection, a healthy cow without a collar stands in a sunlit green pasture — the only colourful, bright area of the painting. The real cow is lit only by the spill of light from the mirror. Longing, quiet, serious. No Leech in this frame.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, soft film grain; heavily desaturated except the pasture in the mirror (muted, not saturated); no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep heads and hooves clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "belief-6-weight-of-history-1536.webp",
+      "title": "The weight of history",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the character reference for the Host cow: a full-size ADULT COW with a long body, long legs and a long bovine face; faded American flag dyed into the hide; star field over the face and left eye; riveted bronze collar with ring; no horns.\nScene: three full-size adult Host cows, side by side but each in a DIFFERENT strained pose, bearing on their backs an enormous carved stone pediment from a classical monument — a heavy triangular gable over two short column stubs, its relief carving weathered and blank (no letters, no inscriptions). The left cow's foreleg is buckling; the middle cow's head is bowed almost to the ground; the right cow braces with its legs spread. One warm light from the upper left rakes across the carved stone; a thin dark crack runs down through the pediment's centre. The weight of an inherited history. Grave, monumental, not comic, not pigs.\nHide like short velvet, no visible pores, dots, or weave. Oil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no inscriptions, no logos. Keep heads, hooves and the pediment's apex clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "inversion-empty-frame-1536.webp",
+      "title": "The empty frame",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the character reference for the Host cow: faded American flag dyed into short, smooth-haired cowhide (not knitted, not fabric), star field over the face and left eye, riveted bronze collar with a hanging ring, no horns, adult.\nScene: a night feedlot pen of rough timber rails. Two Host cows stand in the pen, heads low, in the warm light of a single hidden lamp above. On the dark wall above them hangs a large, ornate, EMPTY gilded picture frame — nothing inside it, only darkness — catching the lamp light, grand and hollow. Behind, a few cows in silhouette. The contrast: a frame made for honour, hanging empty over animals kept as stock. Grave, quiet. Leave the left third of the frame darker for type.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep heads and hooves clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "belief-7-strings-1536.webp",
+      "title": "Strings",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the image ONLY as the painting-style master. Scene, in a dark laboratory hall: high up in the upper left, a tall figure in a dark tailcoat and striped top hat (an Uncle Sam silhouette, face in shadow) holds a wooden marionette control. Thick visible strings run down from it to the wrists of a scientist in a white lab coat standing at a long bench in the middle ground, face turned away, working brass levers and dials. From the levers, thin cables run down and away to the dark lower right, where a few flag-patterned cows stand in silhouette, faintly lit. One warm light on the scientist's hands; everything else near-black. Serious editorial painting, not cartoonish, no caricature of a real person.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated; no photorealism, no HDR, no digital-render sheen; no text, no letters, no labels on dials, no logos. 16:9 composition."
+    },
+    {
+      "file": "the-stair-1536.webp",
+      "title": "The stair",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Repaint this exact scene, keeping the staircase, the top-hatted figure with his back to us raising the golden trophy into the only warm light, the palette and the brushwork. One change: the brass balance scale is no longer upright — it lies tipped over on its side on the bottom step at the foot of the staircase, one pan fallen onto the floor, its chains slack, dust on the brass, neglected in the dark. Move it to the foot of the stairs, out of the upper-left area so the left side stays open for type. Oil on linen, visible brushwork, cinematic chiaroscuro, near-black, one warm light source, soft film grain, desaturated; no text, no letters, no logos. 16:9 composition."
+    },
+    {
+      "file": "belief-4-the-feeding-1536.webp",
+      "title": "The feeding",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the reference for the Leech (glistening segmented body; LEFT head aged brass with crown spikes; RIGHT head black machine with dim cold-blue lights; red tendrils) and for the Host cows (faded flag dyed into the hide; riveted bronze collar with ring; NO HORNS).\nScene: in a dark industrial hall, the Leech is coiled high in the upper right, both heads raised. From its body, several thin dark feeding tubes run down and to the left. Below, seen from behind and slightly above, stands a line of four or five recognizable hornless cows — clear cow backs, necks, ears and tails, standing in a row — each tube attached between a cow's shoulder blades. A faint warm glow travels up the tubes toward the Leech. Only the two nearest cows show the faded flag on their hides; the rest fall into dark silhouette. No round objects, no barrels, no bulbs visible; light comes from a hidden warm source. Ominous, quiet, not gory, not comic.\nHide like short velvet, no visible pores, dots, or weave. Oil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep the Leech's heads clear of the top edge. 16:9 composition."
+    },
+    {
+      "file": "the-leech-portrait-1536.webp",
+      "title": "The Leech",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second and third images as the character reference for the Leech: a glistening segmented worm-like creature with TWO DISTINCT HEADS — LEFT head aged brass with crown spikes and a round red mouth, RIGHT head a black machine with dim cold-blue lights and a round red mouth — with red tendrils trailing.\nScene: a formal portrait of the Leech alone, coiled on a dark stone plinth against a near-black background, both heads raised and turned slightly toward the viewer, lit by one warm light from above-left that glints on the brass head and on the wet segments, while the black head's blue lights glow faintly. It should read as an emblem of an attitude — dominance, appetite — not as a monster from a horror film. Composed slightly right of centre with space on the left for type.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep both heads clear of the top edge. 16:9 composition."
+    },
+    {
+      "file": "belief-3-screens-1536.webp",
+      "title": "Screens",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the character reference for the Host cow (faded flag dyed into short smooth-haired cowhide, star field over face and left eye, riveted bronze collar with ring, no horns).\nScene: the Host cow stands alone in total darkness, head slightly lowered, eyes half-closed and tired. It is surrounded by a loose ring of floating glowing rectangles — phone and screen shapes, blank and glowing cold white-blue with no readable content — at different distances, some close to its face. Their cold light is the only light; the cow's body falls away into shadow. Overwhelmed, scattered attention, quiet unease. Leave the left third darker for type.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no icons, no logos on the screens. Keep head and hooves clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "belief-5-the-culling-1536.webp",
+      "title": "The culling",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master and setting (the same stone stockyard). Use the second image ONLY as the character reference for the Host cow (faded flag dyed into short smooth-haired cowhide, star field over face and left eye, riveted bronze collar with ring, no horns, adult).\nScene: the same stockyard, now emptied. Long empty pens and an empty feeding trough recede into darkness. One Host cow stands alone in the middle distance, small in the frame, looking back over its shoulder down the empty passage. The light is fading from warm to grey: a weak, failing lamp; most of the frame is cold grey and near-black. Loss, quiet, slow wearing-away. Not gory, no bodies, no blood.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, soft film grain; heavily desaturated, colder and greyer than the master; flag colours barely visible; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. 16:9 composition."
+    },
+    {
+      "file": "belief-1-host-at-home-1536.webp",
+      "title": "The Host at home",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Repaint the first image, keeping its composition, room, table, laptop, bills, keys, empty chair and the Host cow, with these corrections: (1) THE LEECH on the cow's back must match the second image's design: a glistening segmented worm-like body with TWO DISTINCT HEADS — the LEFT head aged brass with crown spikes, the RIGHT head a black machine with dim cold-blue lights — and red tendrils biting into the hide; (2) light comes only from the warm lamp on the left and the cold laptop glow on the cow's face, so the cow's hindquarters and the Leech's far end fall into shadow — no even lighting; (3) flag colours on the hide muted further to dusty brick red, slate blue and aged cream; short, smooth-haired hide; (4) the small photo on the table should read as a pale rectangle of green pasture. Weary, heavy, serious. Oil on linen, visible brushwork, cinematic chiaroscuro, near-black, soft film grain; no text, no letters, no logos. 16:9 composition."
+    },
+    {
+      "file": "fear-the-closing-stall-1536.webp",
+      "title": "The closing stall",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the character reference for the Host cow (faded flag dyed into short smooth-haired cowhide, star field over face and left eye, riveted bronze collar with ring, no horns, adult).\nScene: one Host cow inside a narrow wooden stall whose plank walls are visibly closing in — the walls slightly angled inward, a gate half-shut. The only light is a cold blue moonlight falling through a high slatted window, striping the cow and the floor. Beyond the closing gate, in the dark, faint paths of pale ground lead away in several directions, barely visible. The cow stands still, wary, ears back. Fear narrowing a life. Not horror, no gore.\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, cold blue light only, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep head and hooves clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "belief-8-the-chorus-1536.webp",
+      "title": "The chorus",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master. Use the second image ONLY as the character reference for the Host cow (faded flag dyed into the hide, star field over face and left eye, riveted bronze collar with ring, no horns, adult).\nScene: one Host cow in the centre of a dark room, head raised, mouth open, lowing — calling out — in a single warm pool of light. Around it, close in the surrounding darkness, a tight ring of old brass megaphones and gramophone horns on stands, their dark open bells all pointed at the cow from every side, crowding it, drowning it out. NO human faces, no mouths, no figures — only the horns. The cow is small against the ring of horns. Isolating and unsettling, not horror, no gore, no red streaks.\nHide like short velvet, no visible pores, dots, or weave. Oil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep head and hooves clear of the top and bottom edges. 16:9 composition."
+    },
+    {
+      "file": "crushed-or-compromised-1536.webp",
+      "title": "Crushed or compromised",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Use the first image ONLY as the painting-style master (oil on linen, chiaroscuro, near-black, one warm light, soft grain). Use the second image ONLY as the character reference for the Host cow: faded American flag dyed into SHORT, SMOOTH-HAIRED cowhide (not knitted, not braided, not fabric), star field over the face and left eye, riveted bronze collar with a hanging ring, NO horns. Both cows are the same adult size.\n\nScene, side view, 16:9 composition: a dim stone stockyard passage at night. Light comes from one warm lamp above-left whose bulb is hidden inside a deep shade, so the brightest area is the cows, not the lamp. A massive rough stone slab hangs on iron chains across the frame, sloping: low on the left, higher on the right.\nLEFT cow — crushed: the slab's lower edge sinks into its back; its body is visibly flattened against the stone floor, legs splayed outward, eyes squeezed shut in strain.\nRIGHT cow — compromised: standing under the higher end with a clear dark gap of air between its back and the slab, knees bent, neck bowed low to fit.\nBehind them, a few dim silhouettes of a waiting line, faintly visible in the dark. Grave and dignified; not gory, no blood, not comic.\n\nOil on linen, visible brushwork, cinematic chiaroscuro, near-black background, one warm motivated light source, soft film grain; heavily desaturated: flag colours muted to dusty brick red, slate blue and aged cream; no photorealism, no HDR, no digital-render sheen; no text, no letters, no logos. Keep heads and hooves clear of the top and bottom edges."
+    },
+    {
+      "file": "care-free-host-1536.webp",
+      "title": "The free Host",
+      "width": 1536,
+      "height": 1024,
+      "prompt": "Repaint this exact scene, keeping the free Host cow walking calmly without its collar, the open collar on the ground, and the limp detached two-headed Leech on the ground, with these changes: (1) the background is open rolling American hills and prairie grass with NO buildings, no castle, no spires, no towers; (2) it is DAWN, not sunset: the sun just clearing the horizon at the right, a pale gold band low in the sky with cool blue still in the upper sky, soft early light; (3) the Leech's blue lights are dark and dead; (4) colours desaturated to match a near-black chiaroscuro film: warmth only in the low sunlight, flag colours on the hide muted to dusty brick red, slate blue and aged cream. Hide like short velvet, no visible pores, dots, or weave. Dignified, hopeful, quiet. Oil on linen, visible brushwork, cinematic chiaroscuro, soft film grain; no text, no letters, no logos. 16:9 composition."
+    }
+  ]
+}

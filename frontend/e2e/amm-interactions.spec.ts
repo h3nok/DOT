@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, openAppearancePanel } from "./helpers";
+import AMM from "../src/content/amm.json" with { type: "json" };
 
 test.beforeEach(async ({ page }) => {
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
@@ -36,20 +37,24 @@ test("each part's artwork and reading button share a destination and clear inter
   await expect(page.getByRole("heading", { level: 1, name: "Chapter Three: The Host and the Infection" })).toBeVisible();
 });
 
-test("how power works exposes real section links, keyboard focus and a return path", async ({ page }) => {
-  await page.goto("/amm/power");
-  const nav = page.getByRole("navigation", { name: "The framework at a glance" });
-  const capital = nav.getByRole("link", { name: "Power has moved", exact: true });
-  const chain = nav.getByRole("link", { name: "The assault is economic", exact: true });
-  await capital.focus();
-  await page.keyboard.press("Tab");
-  await expect(chain).toBeFocused();
-  await expect(chain).toHaveCSS("outline-style", "solid");
-  await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/amm\/power#assault$/);
-  await expect(page.locator("#assault")).toBeInViewport();
+test("the figures page reaches each screen by keyboard and leads back to Chapter Two", async ({ page }) => {
+  await page.goto("/amm/figures");
+  const share = page.locator("#wealth").getByRole("button", { name: AMM.model.shareAction });
+  await share.focus();
+  await expect(share).toHaveCSS("outline-style", "solid");
+  await page.locator("#housing").scrollIntoViewIfNeeded();
+  await expect(page.locator("#housing")).toBeInViewport();
   await expectNoHorizontalOverflow(page);
-  await expect(page.getByRole("link", { name: "AMM home", exact: true })).toHaveAttribute("href", "/amm");
+  await expect(page.getByRole("link", { name: AMM.power.figuresBack, exact: true })).toHaveAttribute("href", "/essays/amm-book-chapter-two-the-anatomy-of-dominance");
+});
+
+test("each chapter on the home opens by keyboard and shows its focus", async ({ page }) => {
+  await page.goto("/amm");
+  const chapter = page.locator("#amm-chapter-4 .amm-chapter-link");
+  await chapter.focus();
+  await expect(chapter).toHaveCSS("outline-style", "solid");
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { level: 1, name: "Chapter Four: Authorship Without Dominance" })).toBeVisible();
 });
 
 for (const mode of ["reduced motion", "Hold still"] as const) {
@@ -73,8 +78,8 @@ for (const mode of ["reduced motion", "Hold still"] as const) {
     await part.locator("img").hover();
     await expect(part.locator("img")).toHaveCSS("transform", "none");
     await expect(part.locator(".amm-path-art")).toHaveCSS("animation-name", "none");
-    await page.goto("/amm/power#detachment");
-    await expect(page.getByRole("heading", { name: "Capital leaves. Obligation stays." })).toBeVisible();
+    await page.goto("/amm/figures#housing");
+    await expect(page.locator("#housing-title")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
 }

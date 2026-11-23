@@ -7,14 +7,13 @@ const TITLE = "The American Millennial Manifesto";
 test.beforeEach(async ({ page }) => {
   await page.route("**/v1/site-content", route => route.fulfill({ json: { blocks: {} } }));
 });
-test("the hidden power page, chapters and portable figures work on a narrow screen", async ({ page }) => {
+test("the figures, chapters and portable figures work on a narrow screen", async ({ page }) => {
   await page.route("**/v1/academy/delivery/catalog*", route => route.fulfill({ json: [] }));
   await page.route("**/v1/readers/status", route => route.fulfill({ json: { available: false } }));
   await page.emulateMedia({ reducedMotion: "reduce" });
-  // How power works is hidden for now, but still opens at its own address.
-  await page.goto("/amm/power");
-  await expect(page.getByRole("heading", { level: 1, name: "The new power is economic." })).toBeVisible();
-  await expect(page.locator("#holders .evidence-chart")).toHaveCount(3);
+  await page.goto("/amm/figures");
+  await expect(page.getByRole("heading", { level: 1, name: AMM.power.figuresTitle })).toBeVisible();
+  await expect(page.locator("#wealth .explainer-bars li")).toHaveCount(4);
   await expectNoHorizontalOverflow(page);
   await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
   await page.getByRole('link', { name: 'Chapter Two: The Leech’s Anatomy', exact: true }).click();
@@ -102,7 +101,8 @@ test("Chapter Three opens from the archive and the illustration has a readable d
   await expect(page.getByRole("link", { name: "The American Millennial Manifesto — Home", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "All AMM editions", exact: true })).toHaveAttribute("href", "/amm/editions");
   await expect(page.getByText("Infection is the metaphor for learning, internalizing, and reproducing the attitude of dominance.")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "5. The Infection, Step by Step", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "3. The Inversion in Practice", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "7. The Infection, Step by Step", exact: true })).toBeVisible();
   await expect(page.getByText(/There is a threshold between learning that one must sometimes endure/)).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
@@ -114,10 +114,10 @@ test("the landing has one reading action and keeps chapter and archive bookmarks
   await expect(page.locator(".amm-hero-actions .amm-button")).toHaveCount(1);
   await expect(page.locator(".amm-chapters")).toHaveCount(0);
   await expect(page.locator(".amm-analysis, .amm-principle, .amm-editions, .amm-movement, .amm-end-support")).toHaveCount(0);
-  await expect(page.locator("#amm-participate.amm-subscribe")).toHaveCount(1);
-  // The finite home leads from its key ideas into the four-chapter working book.
-  await expect(page.getByRole("list", { name: "The manifesto, in reading order" })).toHaveCount(1);
-  await expect(page.getByRole('link', { name: 'Start with Chapter One', exact: true })).toHaveAttribute('href', AMM.introduction.route);
+  await expect(page.locator(".amm-subscribe")).toHaveCount(0);
+  // The finite home leads into the four-chapter working book, listed once in its last screen.
+  await expect(page.getByRole("list", { name: AMM.model.bookTitle }).locator(".amm-chapter-link")).toHaveCount(4);
+  await expect(page.getByRole('link', { name: 'Chapter Four: Authorship Without Dominance', exact: true })).toHaveAttribute('href', '/essays/amm-book-chapter-four-authorship-without-dominance');
   await expect(page.locator(".amm-footer")).toBeVisible();
   await page.getByRole("contentinfo").getByRole("link", { name: "Editions", exact: true }).click();
   await expect(page).toHaveURL(/\/amm\/editions$/);
@@ -143,7 +143,7 @@ test("AMM has its own landing, scoped signup and mobile layout", async ({ page }
   await page.route("**/v1/readers/subscribe", route => { selected = route.request().postDataJSON(); return route.fulfill({ status: 202, json: { status: "awaiting_confirmation", expires_in: 900 } }); });
   await page.route("**/v1/readers/confirm", route => { expect(route.request().postDataJSON()).toEqual({ email: "fixture@example.com", code: "123456", publication: "amm", include_all: false }); return route.fulfill({ json: { status: "subscribed", unsubscribe_token: "a".repeat(64) } }); });
   await page.goto("/amm");
-  await expect(page.getByRole("heading", { name: AMM.headline.join(' ') })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: AMM.model.heroTitle })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await page.goto("/amm/editions#amm-subscribe");
   await expect(page.getByRole("heading", { name: "The next chapter starts here." })).toBeVisible();

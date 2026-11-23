@@ -1,8 +1,8 @@
 /* Shared feedback for AMM. Movement only follows an intentional interaction. */
 .amm-shell {
-  --amm-feedback-fast: 160ms;
-  --amm-feedback-slow: 280ms;
-  --amm-feedback-ease: cubic-bezier(.2, .7, .2, 1);
+  --amm-feedback-fast: var(--motion-quick, 160ms);
+  --amm-feedback-slow: var(--motion-base, 260ms);
+  --amm-feedback-ease: var(--motion-ease, cubic-bezier(.2, .7, .2, 1));
 }
 
 .amm-feature .explainer-artwork-open { cursor: zoom-in; }
@@ -14,7 +14,7 @@
 .amm-reading-link:focus-visible .amm-reading-arrow,
 .amm-reading-link:active .amm-reading-arrow { opacity: 1; }
 .amm-choice-group button:focus-visible,
-.amm-choice-group button:active { color: var(--amm-rust); background: color-mix(in srgb, var(--amm-rust) 7%, transparent); }
+.amm-choice-group button:active { color: var(--amm-rust); background: color-mix(in oklab, var(--amm-rust) 7%, transparent); }
 
 .page-copy-sections > details > summary,
 .page-copy-current > summary {
@@ -45,7 +45,7 @@
   .amm-reading-link:hover .amm-reading-arrow { opacity: 1; }
   .amm-shell :is(.amm-brand, .amm-text-link, .amm-footer a, .amm-pagination a, .amm-source-library a, .page-copy-back):hover { color: var(--amm-rust); }
   .amm-shell summary:hover { color: var(--amm-rust); }
-  .amm-choice-group button:hover { color: var(--amm-rust); background: color-mix(in srgb, var(--amm-rust) 5%, transparent); }
+  .amm-choice-group button:hover { color: var(--amm-rust); background: color-mix(in oklab, var(--amm-rust) 5%, transparent); }
   .amm-text-field textarea:hover:not(:disabled),
   .amm-shell .reader-list-field:hover { border-color: var(--amm-rust); }
   .amm-studio-select li button:hover { background: var(--muted); }

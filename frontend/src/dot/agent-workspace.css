@@ -49,8 +49,8 @@
 
 .agent-workspace-kicker {
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
+  font-size: var(--primitive-micro, 0.6875rem);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
@@ -99,7 +99,16 @@
 .agent-command-tool:focus-visible {
   border-color: var(--agent-line-strong);
   color: var(--foreground);
-  background: color-mix(in oklch, var(--organism-accent) 8%, transparent);
+  background: color-mix(in oklab, var(--organism-accent) 8%, transparent);
+}
+
+.agent-icon-button:focus-visible,
+.agent-command-tool:focus-visible,
+.agent-command-send:focus-visible,
+.agent-lens-button:focus-visible,
+.agent-prompt-row:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--organism-accent-strong));
+  outline-offset: 2px;
 }
 
 .agent-scope-row,

@@ -1,11 +1,82 @@
-/* How power works: AMM's palette for the explainer primitives. The layout belongs to the primitives. */
-.amm-shell {
-  --explainer-accent: var(--amm-rust);
-  --explainer-strong: var(--amm-night);
-  --explainer-on-strong: var(--amm-paper);
+/*
+ * The figures behind Chapter Two (/amm/figures), formerly Organized Power: the shared AMM screens (amm-model.css) and the
+ * explainer figures, plus the few patterns this page needs. Scoped to the page so
+ * nothing leaks into the rest of the AMM.
+ *
+ * Colour carries one meaning everywhere on the page, named in the key on the first
+ * screen: --amm-most (blue) where most people are, --amm-top (rust) where wealth
+ * and control concentrate, --amm-gate (brass) the gatekeepers between people and
+ * what they need. Positions, never verdicts. The key phrase of a sentence carries
+ * the highlighter (--space-mark); a screen of the loop carries its CycleMark.
+ */
+.amm-power { --explainer-accent: var(--amm-rust); --explainer-bars-label: 8.5rem; }
+.amm-power-title { margin: 0 0 .25rem; font: 600 calc(clamp(1.8rem, 3.6vw, 3.1rem) * var(--scale))/1.08 var(--font-serif); text-wrap: balance; }
+.amm-power-lead { max-width: 34ch; }
+/* The opening: the title and its sentence on one side, the loop on the other, the colours in one line. */
+.amm-power #organized-power .explainer-key { margin: .75rem 0 0; }
+.amm-power #organized-power .explainer-key li { font: 600 .9375rem/1.3 var(--font-sans); }
+.amm-power .explainer-cyclemark { --ex-accent: var(--amm-rust); flex-wrap: wrap; min-width: 0; }
+
+/* A definition in ordinary words, quoted with its source. */
+
+/* A sum or count that leads a screen: the figure in its role's colour, its meaning beneath. */
+.amm-power-sum { margin: 0; max-width: 34rem; min-width: 0; font: 400 calc(1.05rem * var(--scale))/1.5 var(--font-serif); color: var(--muted-foreground); }
+.amm-power-sum strong { display: block; margin-bottom: .2rem; font: 400 calc(clamp(1.9rem, 5vw, 3.6rem) * var(--scale))/1.04 var(--font-serif); letter-spacing: -.04em; color: var(--foreground); }
+.amm-power-sum[data-role="most"] strong { color: var(--amm-most-ink); }
+.amm-power-sum[data-role="gate"] strong { color: var(--amm-gate-ink); }
+.amm-power-sum[data-role="top"] strong { color: var(--amm-top-ink); }
+.amm-power-figure-note, .amm-power-caveat { margin: 0; max-width: 40rem; font: 400 .8125rem/1.6 var(--font-sans); color: var(--muted-foreground); }
+.amm-power .explainer-bars { max-width: 34rem; }
+.amm-power .explainer-bars-track { height: .75rem; border-radius: 2px; }
+.amm-power .explainer-bars-track i { border-radius: 2px; }
+.amm-power .inq-scene-media .explainer-figure-row { border-top-color: var(--foreground); }
+/* Figures standing where a painting would: the sum, then the bars, then their limits. */
+.amm-power-figures { display: grid; gap: 1.75rem; padding-top: 1.5rem; border-top: 2px solid var(--foreground); }
+.amm-power-figures .explainer-bars { max-width: none; }
+
+/* Where the income goes: wealth rises in the colour of concentration, obligation falls in the colour of most people. */
+.amm-power #income .explainer-contrast { max-width: 38rem; border-top: 0; }
+.amm-power #income .explainer-contrast-side { padding-block: 1.25rem 1rem; }
+.amm-power #income .explainer-contrast-side li { font-size: calc(clamp(1.25rem, 1.85vw, 1.6rem) * var(--scale)); line-height: 1.15; }
+.amm-power #income .explainer-contrast-side p { margin-block: .5rem .65rem; font-size: .875rem; line-height: 1.45; }
+.amm-power #income .explainer-contrast-side svg { width: 1.3rem; height: 1.3rem; }
+.amm-power #income .explainer-contrast-side--up :is(svg, li) { color: var(--amm-top-ink); }
+.amm-power #income .explainer-contrast-side--down :is(svg, li) { color: var(--amm-most-ink); }
+.amm-power #income .explainer-contrast-side--up { box-shadow: inset 0 3px 0 var(--amm-top); }
+.amm-power #income .explainer-contrast-side--down { box-shadow: inset 0 3px 0 var(--amm-most); }
+.amm-power #income .amm-screen-line:last-of-type { font-style: italic; }
+
+/* Between you and what you need: you, the gate (brass), the need. */
+.amm-power-between { display: grid; gap: 1rem; }
+.amm-power-between-label { margin: 0; font: 500 .8125rem/1.5 var(--font-sans); color: var(--muted-foreground); }
+.amm-power-between-close { margin: .25rem 0 0; font: italic 400 calc(1.15rem * var(--scale))/1.5 var(--font-serif); }
+.amm-power .explainer-gates { --gate-you: var(--amm-most); --gate-you-ink: #ffffff; --gate-gate: var(--amm-gate); --gate-gate-ink: var(--amm-gate-ink); }
+.dark .amm-power .explainer-gates { --gate-you-ink: #0d1520; }
+
+/* The other powers: an icon, a name, one record or sentence each, standing cleanly as the screen's figure. */
+.amm-power-four { display: grid; gap: 0; margin: 0; padding-top: .5rem; border-top: 2px solid var(--foreground); max-width: 44rem; }
+.amm-power-four > div { display: grid; grid-template-columns: minmax(9rem, 13.5rem) minmax(0, 1fr); gap: .25rem 1.25rem; padding-block: .95rem; border-top: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent); }
+.amm-power-four > div:first-child { border-top: 0; }
+.amm-power-four > div:last-child { border-bottom: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent); }
+.amm-power-four dt { display: flex; align-items: center; gap: .55rem; font: 600 .9375rem/1.35 var(--font-sans); letter-spacing: 0; color: var(--foreground); }
+.amm-power-four dt svg { flex: none; width: 1.15rem; height: 1.15rem; color: var(--amm-gate-ink); }
+.amm-power-four dd { margin: 0; display: grid; gap: .35rem; min-width: 0; }
+.amm-power-four p { margin: 0; font: 400 calc(1.02rem * var(--scale))/1.5 var(--font-serif); }
+.amm-power-four span { color: var(--muted-foreground); }
+
+@media (max-width: 599px) {
+  .amm-power-four > div { grid-template-columns: 1fr; gap: .2rem; }
 }
-.dark .amm-shell {
-  --explainer-strong: #0f1010;
-  --explainer-on-strong: var(--foreground);
+
+.amm-power-sources { max-width: 72ch; margin-inline: auto; padding-block: 2rem 4rem; }
+
+/* The loop's links travel to their screen rather than jump. Only here: bookmarks elsewhere land while content still renders. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):has(.amm-power) { scroll-behavior: smooth; }
 }
-.amm-power-sources { max-width: 72ch; padding-block: 1rem 3rem; }
+
+/* The figures page opens with its title, one sentence, and the way back to Chapter Two. */
+.amm-figures-head { display: grid; justify-items: start; gap: .75rem; padding-block: clamp(2.5rem, 6svh, 4rem) clamp(1rem, 2.5svh, 1.5rem); }
+.amm-figures-intro { margin: 0; max-width: 56ch; font: 450 calc(clamp(1.14rem, 1.45vw, 1.3rem) * var(--scale))/1.32 var(--font-serif); color: var(--muted-foreground); text-wrap: pretty; }
+/* The first figure shares the opening viewport with the header; subsequent figures each own a full 100svh view. */
+.amm-figures-head + .inq-scene { min-block-size: calc(100svh - 14rem); padding-top: clamp(1rem, 2.5svh, 1.75rem); }

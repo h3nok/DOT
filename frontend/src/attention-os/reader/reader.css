@@ -29,7 +29,7 @@
   margin-block: 2rem;
   padding: 1rem 1.15rem;
   border-inline-start: 3px solid var(--statement-tone);
-  border-radius: 0 .35rem .35rem 0;
+  border-radius: 0 var(--primitive-radius-sm) var(--primitive-radius-sm) 0;
   background: color-mix(in oklab, var(--statement-tone) 6%, transparent);
   color: var(--book-ink, var(--foreground));
   break-inside: avoid;
@@ -67,8 +67,7 @@ html[data-contrast="high"] .book-numbered-statement { --statement-tone: var(--bo
 }
 
 .book-reference-sheet__close:focus-visible {
-  outline: 2px solid var(--book-cinnabar);
-  outline-offset: 3px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset);
 }
 
 @media screen and (max-width: 639px) {

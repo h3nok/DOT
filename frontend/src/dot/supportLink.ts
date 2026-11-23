@@ -15,6 +15,9 @@
  * and this path goes quiet on its own.
  */
 
+import SUPPORT from "../content/support.json";
+import { resolveSupportMethods, type DirectSupportMethod } from "../content/supportMethods.js";
+
 const RAW = import.meta.env.VITE_SUPPORT_PAYMENT_LINK?.trim() ?? "";
 
 /**
@@ -27,3 +30,5 @@ const RAW = import.meta.env.VITE_SUPPORT_PAYMENT_LINK?.trim() ?? "";
 export const SUPPORT_PAYMENT_LINK: string | null = /^https:\/\/\S+$/.test(RAW)
   ? RAW
   : null;
+
+export const DIRECT_SUPPORT_METHODS: DirectSupportMethod[] = resolveSupportMethods(SUPPORT);
