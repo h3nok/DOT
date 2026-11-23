@@ -210,12 +210,14 @@ describe("public route metadata", () => {
     expect(section("amm-anatomy")).toContain('<a href="/essays/amm-chapter-three-the-host-and-the-infection#the-leech-and-the-logic-it-carries">Chapter Three, earlier edition</a>');
     expect(section("amm-anatomy")).toContain("/amm/media/leech-anatomy-1024.webp");
     // The AMM thesis opens the screens as a manifesto (the author, 2026-11-20 and 2026-11-22): AMM's conviction
-    // in the book's words, then seven numbered articles, the purpose (closed by the book's hinge) facing the Inversion.
+    // in the book's words, then six numbered articles, the purpose facing the Inversion. The earlier Chapter One's
+    // "A society must be judged…" was removed at the author's request.
     const thesis = section("amm-thesis");
     expect(thesis).toContain(`<h2 id="amm-thesis-title">${AMM.model.thesisTitle}</h2><p>${H.thesis.worth.text}</p>`);
-    expect(thesis).toContain(`<h3>${AMM.model.thesisPurposeLabel}</h3><ol>${[AMM.model.thesisSociety, AMM.model.thesisHonor, H.thesis.judged.text].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
-    expect(thesis).toContain(`<h3>${AMM.model.thesisInversionLabel}</h3><ol start="4">${[AMM.model.thesisInverts, AMM.model.thesisMyth, AMM.model.thesisBelief, AMM.model.thesisCharacter].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
-    expect(thesis).toContain('<a href="/essays/amm-book-chapter-four-authorship-without-dominance#13-what-we-owe-the-next-life">Chapter Four</a> · <a href="/essays/amm-chapter-one-the-leech">Chapter One, earlier edition</a>');
+    expect(thesis).toContain(`<h3>${AMM.model.thesisPurposeLabel}</h3><ol>${[AMM.model.thesisSociety, AMM.model.thesisHonor].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
+    expect(thesis).toContain(`<h3>${AMM.model.thesisInversionLabel}</h3><ol start="3">${[AMM.model.thesisInverts, AMM.model.thesisMyth, AMM.model.thesisBelief, AMM.model.thesisCharacter].map((text) => `<li>${escapeForHtml(text)}</li>`).join("")}</ol>`);
+    expect(thesis).toContain('<a href="/essays/amm-book-chapter-four-authorship-without-dominance#13-what-we-owe-the-next-life">Chapter Four</a></p>');
+    expect(html).not.toContain("A society must be judged by whether its institutions");
     // The conviction is AMM's published sentence; Book One never says "worthy of care".
     expect(html).not.toContain("worthy of care");
     expect(html).not.toContain("Why stability matters");
@@ -223,7 +225,7 @@ describe("public route metadata", () => {
     expect(html).not.toContain("The purpose of life is Love.");
     expect(html).not.toContain("Stability is not inactivity");
     // The home closes on the way out (the author, 2026-11-19): only a cultural revolution, then Chapter Four's sentence, cited.
-    expect(section("amm-way-out")).toContain(`<h2 id="amm-way-out-title">${AMM.model.revolutionLine}</h2>`);
+    expect(section("amm-way-out")).toContain(`<h2 id="amm-way-out-title">${AMM.model.revolutionLine}</h2><p>${AMM.model.revolutionPosition}</p>`);
     for (const line of H.revolution.lines) expect(section("amm-way-out")).toContain(escapeForHtml(line.text));
     expect(section("amm-way-out")).toContain(`<a href="/essays/${AMM.chapterSection.chapters[3].id}">${AMM.model.revolutionAction}</a>`);
     // Each painting appears once, and every picture says it is an AI illustration: the opening and five screens.

@@ -14,3 +14,7 @@
 .page-copy-field [role=status] { font-size: .85rem; }
 .page-copy-field [role=alert] { color: var(--destructive); }
 .page-copy-studio :is(button, a, textarea, summary):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+/* Each box grows with its wording, so the whole line is in view while it is edited (2026-11-22).
+   Browsers without field-sizing keep the row count set by length. */
+.page-copy-field textarea { field-sizing: content; min-height: 3.25rem; max-height: 22rem; resize: vertical; }
+.page-copy-restore { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--public-rule, var(--border)); font-size: .875rem; }

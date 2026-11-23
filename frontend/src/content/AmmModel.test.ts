@@ -26,7 +26,8 @@ function sections(path: string): Map<string, string> {
   for (const line of readFileSync(join(ROOT, path), "utf8").split("\n")) {
     const heading = /^#{2,3} (.+)/.exec(line);
     if (heading) current = heading[1].trim();
-    else out.set(current, `${out.get(current) ?? ""} ${plain(line)}`);
+    // A figure's published caption (its Markdown title) is part of its section, as the model build reads it.
+    else out.set(current, `${out.get(current) ?? ""} ${plain(line)} ${/^\s*!\[[^\]]*\]\([^)\s]+ "([^"]+)"\)/.exec(line)?.[1] ?? ""}`);
   }
   return out;
 }

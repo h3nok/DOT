@@ -25,6 +25,10 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   await page.getByRole("link", { name: "Edit this page", exact: true }).click();
   const field = page.getByRole("region", { name: "Primary reading link", exact: true });
   await expect(field.getByRole('textbox')).toHaveValue(AMM.heroAction);
+  // The groups follow the page as a reader meets it (2026-11-22), with what every page shares last.
+  const groups = await page.locator('.page-copy-sections > details > summary').allTextContents();
+  expect(groups.slice(0, 5)).toEqual(['Opening', 'Home · The thesis', 'Home · The model', 'Home · The way out', 'Home · The book']);
+  expect(groups.slice(-2)).toEqual(['Shared labels', 'Footer']);
   await field.getByRole("textbox").fill("Synthetic private reading link");
   await field.getByRole("button", { name: "Save draft", exact: true }).click();
   await expect(field.getByText("Draft saved privately.")).toBeVisible();
@@ -65,6 +69,45 @@ test("the owner can edit AMM copy privately, reopen it, and publish deliberately
   await page.goto("/studio/pages/amm");
   await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeVisible();
   await expect(page.getByRole("textbox")).toHaveCount(0);
+});
+
+test("the owner can put a field's original wording back, after confirming", async ({ page }) => {
+  const rows: Record<string, { key: string; draft_value: string; published_value: string | null; updated_at: string; published_at: string | null }> = {
+    "amm.heroaction": { key: "amm.heroaction", draft_value: "An owner's published reading link", published_value: "An owner's published reading link", updated_at: "2026-11-22T10:00:00Z", published_at: "2026-11-22T10:00:00Z" },
+  };
+  const deleted: string[] = [];
+  await page.route("**/v1/**", async route => {
+    const path = new URL(route.request().url()).pathname.replace(/^\/__dot-api/, "");
+    if (path === "/v1/auth/session") return route.fulfill({ json: { user: { id: "fixture-owner", role: "owner", is_owner: true } } });
+    if (path === "/v1/site-content/drafts") return route.fulfill({ json: { blocks: Object.values(rows) } });
+    if (path === "/v1/site-content") return route.fulfill({ json: { blocks: Object.fromEntries(Object.values(rows).filter(row => row.published_value).map(row => [row.key, row.published_value])) } });
+    if (path.startsWith("/v1/site-content/") && route.request().method() === "DELETE") {
+      const key = decodeURIComponent(path.split("/").at(-1)!);
+      deleted.push(key); delete rows[key];
+      return route.fulfill({ status: 204, body: "" });
+    }
+    if (path.startsWith("/v1/academy/delivery/catalog")) return route.fulfill({ json: [] });
+    if (path === "/v1/readers/status") return route.fulfill({ json: { available: false } });
+    return route.fulfill({ status: 404, json: { detail: "No fixture" } });
+  });
+  await page.goto("/studio/pages/amm");
+  const field = page.getByRole("region", { name: "Primary reading link", exact: true });
+  await expect(field.getByRole("textbox")).toHaveValue("An owner's published reading link");
+  // Untouched fields offer nothing to restore.
+  await expect(page.getByRole("region", { name: "Opening heading", exact: true }).getByRole("button", { name: "Restore original wording" })).toHaveCount(0);
+  await field.getByRole("button", { name: "Restore original wording", exact: true }).click();
+  const confirm = field.getByRole("group", { name: "Restore original wording" });
+  await expect(confirm).toContainText(AMM.heroAction);
+  await confirm.getByRole("button", { name: "Keep mine", exact: true }).click();
+  expect(deleted).toEqual([]);
+  await field.getByRole("button", { name: "Restore original wording", exact: true }).click();
+  await field.getByRole("group", { name: "Restore original wording" }).getByRole("button", { name: "Restore it", exact: true }).click();
+  await expect(field.getByText("Original wording restored on the page.")).toBeVisible();
+  expect(deleted).toEqual(["amm.heroaction"]);
+  await expect(field.getByRole("textbox")).toHaveValue(AMM.heroAction);
+  await expect(field.getByRole("button", { name: "Restore original wording" })).toHaveCount(0);
+  await page.getByRole("link", { name: "View the page", exact: true }).click();
+  await expect(page.locator(".amm-hero-actions .amm-button")).toContainText(AMM.heroAction);
 });
 
 for (const chapter of [

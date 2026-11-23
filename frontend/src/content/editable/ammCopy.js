@@ -6,14 +6,15 @@ export function ammCopyFields(content) {
     const text = path.split('.').reduce((value, part) => value[part], content);
     fields.push({ group, path, label, key: `amm.${key.toLowerCase()}`, text });
   };
-  // The opening's words (the author, 2026-11-19): by default his title, "The American
-  // Condition", over Chapter Three's two countries.
+  // The opening's words: by default the author's title and line as he published them in Studio
+  // ("The American Culture", "Profess values we never practice.", 2026-11-22).
   add('Opening', 'model.heroTitle', 'Opening heading');
   add('Opening', 'model.heroLine', 'Opening line');
   add('Opening', 'heroAction', 'Primary reading link');
   add('Opening', 'description', 'Search description');
   add('Opening', 'artwork.alt', 'Image description');
   add('Opening', 'introduction.label', 'Introduction link label');
+  add('Opening', 'model.mirrorKey', 'Painting caption');
   add('Footer', 'dot.footer', 'Digital Organism Theory line');
   add('Footer', 'movement.footer', '4Us line');
   // Studio offers what the live pages show (the author, 2026-11-18): the home's screens,
@@ -21,20 +22,19 @@ export function ammCopyFields(content) {
   // published chapters (amm-model.json) and change with the book, not here.
   const each = (group, entries) => entries.forEach(([path, label]) => add(group, path, label));
   // The thesis, set as a manifesto (2026-11-22): the author's articles, one per field. Its
-  // conviction ("You were born valuable…") and its hinge are the book's and are not edited here.
+  // conviction ("You were born valuable…") is the book's and is not edited here.
   each('Home · The thesis', [
     ['model.thesisTitle', 'Label above the thesis'],
     ['model.thesisPurposeLabel', 'Left column label'],
     ['model.thesisSociety', 'Article 1: what a society is for'],
     ['model.thesisHonor', 'Article 2: how a society honors your worth'],
     ['model.thesisInversionLabel', 'Right column label'],
-    ['model.thesisInverts', 'Article 4: the inversion'],
-    ['model.thesisMyth', 'Article 5: the myth'],
-    ['model.thesisBelief', 'Article 6: the belief'],
-    ['model.thesisCharacter', 'Article 7: the conditioned character'],
+    ['model.thesisInverts', 'Article 3: the inversion'],
+    ['model.thesisMyth', 'Article 4: the myth'],
+    ['model.thesisBelief', 'Article 5: the belief'],
+    ['model.thesisCharacter', 'Article 6: the conditioned character'],
   ]);
   each('Home · The model', [
-    ['model.mirrorKey', 'Opening painting key'],
     ['model.readDiagnosis', 'Diagnosis link'],
     // Each part's heading is "Term: what it means"; the term before the colon is set in the flame.
     ['model.hostTitle', 'Host heading (term: what it means)'],
@@ -42,14 +42,16 @@ export function ammCopyFields(content) {
     ['model.anatomyTitle', 'Oligarchy heading (term: what it means)'],
     ['model.figuresLink', 'Chapter Two figures link'],
     ['model.feedingTitle', 'Feeding heading (term: what it means)'],
-    ['model.revolutionEyebrow', 'Closing: label'],
-    ['model.revolutionLine', 'Closing: the way out'],
-    ['model.revolutionAction', 'Closing: link to Chapter Four'],
+  ]);
+  each('Home · The way out', [
+    ['model.revolutionEyebrow', 'Label'],
+    ['model.revolutionLine', 'Heading: the way out'],
+    ['model.revolutionPosition', 'Your position: what comes first'],
+    ['model.revolutionAction', 'Link to Chapter Four'],
   ]);
   each('Home · The book', [
     ['model.bookTitle', 'Book heading'],
     ['model.closingBook', 'All chapters link'],
-    ['reflect.disclosure', 'AI illustration note'],
   ]);
   each('Figures page', [
     ['power.figuresNav', 'Footer link'],
@@ -72,6 +74,7 @@ export function ammCopyFields(content) {
     ['model.shareAction', 'Copy link button'],
     ['model.shareDone', 'Copy link confirmation'],
     ['model.shareUnavailable', 'Copy link fallback'],
+    ['reflect.disclosure', 'AI illustration note (under every painting)'],
   ]);
   for (const [field, text] of Object.entries(content.inquiry)) {
     if (typeof text === 'string' && field !== 'route') add('Inquiry page', `inquiry.${field}`, words(field));
@@ -82,7 +85,7 @@ export function ammCopyFields(content) {
   add('Chapters', 'manuscript.status', 'Working edition status');
   for (const field of Object.keys(content.participation)) add('Readers and membership', `participation.${field}`, words(field));
   content.chapterSection.chapters.forEach((chapter, index) => add('Chapters', `chapterSection.chapters.${index}.line`, `Chapter ${index + 1} — one line`, `chapterSection.chapters.${chapter.id}.line`));
-  for (const [field, label] of Object.entries({ pathEyebrow: 'Reading path label', orderLabel: 'Orientation label', contentsLabel: 'Contents label', letterLabel: 'Letter orientation label', lettersEyebrow: 'Letters label', lettersTitle: 'Letters heading', lettersDescription: 'Letters introduction', nextLabel: 'Next part label', beginLabel: 'Begin label', latestNote: 'Latest part note' })) {
+  for (const [field, label] of Object.entries({ orderLabel: 'Orientation label', contentsLabel: 'Contents label', letterLabel: 'Letter orientation label', lettersEyebrow: 'Letters label', lettersTitle: 'Letters heading', lettersDescription: 'Letters introduction', nextLabel: 'Next part label', beginLabel: 'Begin label', latestNote: 'Latest part note' })) {
     add('Reading order', `reading.${field}`, label);
   }
   for (const [field, label] of Object.entries({ signupTitle: 'Signup heading', signupDescription: 'Signup description', supportTitle: 'Support heading', supportDescription: 'Support description', supportAction: 'Support link label', supportNote: 'Support note' })) {
@@ -98,7 +101,14 @@ export function ammCopyFields(content) {
   add('Archive', 'emptyDescription', 'Empty archive description');
   add('Subscription', 'signupTitle', 'Signup heading');
   add('Subscription', 'signupDescription', 'Signup description');
-  return fields;
+  // Studio lists the groups in the order a reader meets them (2026-11-22): the home from top to
+  // bottom, then the other pages, the archive, and what every page shares.
+  const order = ['Opening', 'Home · The thesis', 'Home · The model', 'Home · The way out', 'Home · The book', 'Figures page', 'Inquiry page', 'Chapters', 'Reading order', 'End of each edition', 'Readers and membership', 'Subscription', 'Archive', 'Shared labels', 'Footer'];
+  const rank = group => {
+    const at = order.indexOf(group.startsWith('Archive · ') ? 'Archive' : group);
+    return (at < 0 ? order.length : at) + (group.startsWith('Archive · ') ? 0.5 : 0);
+  };
+  return fields.map((field, index) => ({ field, index })).sort((a, b) => rank(a.field.group) - rank(b.field.group) || a.index - b.index).map(({ field }) => field);
 }
 
 export function resolveAmmCopy(content, resolve) {

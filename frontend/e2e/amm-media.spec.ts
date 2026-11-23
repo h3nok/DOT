@@ -46,7 +46,7 @@ test("AMM keeps frameless pictures without requesting video in reduced motion", 
   await expectNoHorizontalOverflow(page);
 });
 
-test("the transparent Host autoplays and loops, with pause and offscreen suspension", async ({ page }) => {
+test("the transparent Host plays on its own and loops, without controls, resting offscreen", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/amm");
   const feature = page.locator(".amm-feature");
@@ -66,31 +66,26 @@ test("the transparent Host autoplays and loops, with pause and offscreen suspens
   await expect(video).toHaveCSS("border-top-width", "0px");
   await expect(video).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(video).toHaveCSS("box-shadow", "none");
-  // A click retried while the hero settles can scroll its button to the top
-  // edge, leaving the clip offscreen and suspended. Bring it back before judging.
-  await feature.getByRole("button", { name: "Pause", exact: true }).click();
-  await feature.scrollIntoViewIfNeeded();
-  await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
-  await feature.getByRole("button", { name: "Play", exact: true }).click();
-  await feature.scrollIntoViewIfNeeded();
-  await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(false);
+  // No pause or play button (the author, 2026-11-22); Still in Appearance and reduced motion stop it.
+  await expect(feature.getByRole("button", { name: /^(Pause|Play|Replay)$/ })).toHaveCount(0);
+  // It rests offscreen and plays again on return, and it loops.
   await page.locator("#amm-book").scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
   await feature.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(false);
   await video.evaluate((clip: HTMLVideoElement) => { clip.currentTime = clip.duration - 0.2; });
   await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => !clip.paused && clip.currentTime < 3)).toBe(true);
-  await expect(feature.getByRole("button", { name: "Replay", exact: true })).toHaveCount(0);
+  // The still painting stays inspectable.
   await feature.getByRole("button", { name: "Inspect The Host", exact: true }).click();
-  await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
   await page.keyboard.press("Escape");
   await expectNoHorizontalOverflow(page);
+  // Reduced motion keeps the still; lifting it lets the Host play on its own again.
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(video).toHaveCount(0);
   await expect(feature.locator("picture")).toHaveCSS("opacity", "1");
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(feature.getByRole("button", { name: "Play", exact: true })).toBeEnabled();
-  expect(await video.evaluate((clip: HTMLVideoElement) => clip.paused)).toBe(true);
+  await expect(feature).toHaveAttribute("data-motion-ready", "true");
+  await expect.poll(() => video.evaluate((clip: HTMLVideoElement) => !clip.paused)).toBe(true);
 });
 
 test("a failed hero clip leaves the original illustration and its inspection available", async ({ page }) => {

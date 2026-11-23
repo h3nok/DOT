@@ -109,7 +109,7 @@ export const ReaderListForm: React.FC<ReaderListFormProps> = ({
   };
 
   return (
-    <section className="reader-list-form mb-8 rounded-2xl border border-border/60 bg-foreground/[0.02] p-6" aria-busy={busy}>
+    <section className="reader-list-form mb-8 border-t border-[color:var(--public-rule)] pt-6" aria-busy={busy}>
       {stage === "done" ? (
         <div className="flex items-start gap-3" role="status">
           <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--organism-accent-soft)]">

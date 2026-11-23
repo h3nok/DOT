@@ -90,9 +90,9 @@ test.describe("appearance controls change the rendered document", () => {
     await expect.poll(() => page.locator('meta[name="theme-color"]').getAttribute("content")).toBe("#f2f0e8");
     await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
     await expect.poll(() => htmlAttribute(page, "data-theme")).toBe("dark");
-    await expect.poll(() => renderedStyle(page, "body", "background-color")).toBe("rgb(12, 23, 21)");
+    await expect.poll(() => renderedStyle(page, "body", "background-color")).toBe("rgb(17, 22, 20)");
     await expect.poll(() => renderedStyle(page, ".nucleus-mark-core", "fill")).toBe("rgb(145, 200, 177)");
-    await expect.poll(() => page.locator('meta[name="theme-color"]').getAttribute("content")).toBe("#0c1715");
+    await expect.poll(() => page.locator('meta[name="theme-color"]').getAttribute("content")).toBe("#111614");
     expect(await page.evaluate(() => ({
       base: localStorage.getItem("dot_theme"),
       appearance: localStorage.getItem("dot_organism"),

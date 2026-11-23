@@ -1,14 +1,9 @@
 /* One continuous scroll, one concept per viewport. Images sit directly on the page. */
 /*
- * The opening: the two-countries sentence as one banner across the top, a clause to a line,
- * set whole in the flame of the mark (its thesis). Beneath it, the premise, its source and the
- * one action on the left meet at the middle of the painting on the right. Compact by the
- * author's request (2026-11-18).
- */
-/*
- * True two-column opening: thesis, premise, plain-language framing, source and primary
- * action vertically centered together in the left column; the frameless Host painting
- * and silent loop occupying the right column. On narrow screens (< 900px): copy, visual, action.
+ * The opening (the author, 2026-11-19 and 2026-11-22): the title (by default "The American
+ * Culture") as a two-line display in the flame, its line beneath it, and the one action, centred
+ * together on the left; the frameless Host painting and its silent loop on the right, playing on
+ * its own. On narrow screens (< 900px): copy, painting, action.
  */
 .amm-hero--inquiry.reading-scene { min-block-size: calc(100svh - 4.5rem); display: grid; align-content: center; padding-block: clamp(2rem, 5vh, 3.75rem); }
 .amm-hero--inquiry .amm-hero-grid {
@@ -25,12 +20,13 @@
   column-gap: clamp(2.5rem, 5vw, 5rem);
   padding-block: 0;
 }
-.amm-hero--inquiry .amm-hero-copy { grid-area: copy; display: grid; gap: .65rem; align-self: end; max-width: 39rem; }
+.amm-hero--inquiry .amm-hero-copy { grid-area: copy; display: grid; gap: clamp(.9rem, 1.6vw, 1.25rem); align-self: end; max-width: 39rem; }
 .amm-hero--inquiry .amm-hero-title {
-  max-width: 18ch;
+  max-width: 13ch;
   margin: 0;
-  font: 600 calc(clamp(2.25rem, 3.55vw, 3.25rem) * var(--reading-scale, 1))/1.05 var(--font-serif);
-  letter-spacing: 0;
+  padding-bottom: .06em;
+  font: 650 calc(clamp(3rem, 5.4vw, 5.1rem) * var(--reading-scale, 1))/.98 var(--font-serif);
+  letter-spacing: -.022em;
   text-wrap: balance;
   background: var(--amm-flame-display);
   -webkit-background-clip: text;
@@ -194,7 +190,7 @@
 
 @media (max-width: 900px) {
   .amm-hero--inquiry .amm-hero-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "visual" "actions"; grid-template-rows: auto; gap: 1.5rem; }
-  .amm-hero--inquiry .amm-hero-title { max-width: 18ch; font-size: calc(clamp(1.65rem, 6.4vw, 2.85rem) * var(--reading-scale, 1)); line-height: 1.1; }
+  .amm-hero--inquiry .amm-hero-title { max-width: 13ch; font-size: calc(clamp(2.4rem, 10.5vw, 3.6rem) * var(--reading-scale, 1)); line-height: 1; }
   .amm-hero--inquiry .amm-hero-copy { align-self: auto; max-width: none; min-width: 0; }
   .amm-home-premise { max-width: 40ch; }
   .amm-hero--inquiry .amm-hero-visual { width: 100%; min-width: 0; justify-self: center; }
@@ -219,21 +215,11 @@
   .amm-hero--inquiry .amm-hero-actions > .amm-button { width: 100%; justify-content: center; }
 }
 
-/* The opening painting's one-line key: the mirror is the country described; the Host stands in the country lived in. */
+/* The opening painting's key: an italic caption under the picture (the shared caption rules are in amm-reflect.css). */
 .amm-hero-key {
-  margin: .3rem 0 0;
-  font: 500 calc(1rem * var(--reading-scale, 1))/1.25 var(--font-serif);
-  color: var(--foreground);
-  text-wrap: pretty;
-}
-
-/* Every AI-generated picture says so beside it, sharing one quiet caption rule across the page. */
-.amm-art-disclosure,
-.amm-diagnosis-disclosure {
+  max-width: 56ch;
   margin: .2rem 0 0;
-  padding-top: .4rem;
-  border-top: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
-  font: 400 var(--primitive-small, .8125rem)/1.25 var(--font-sans);
-  letter-spacing: 0;
-  color: var(--muted-foreground);
+  font: italic 400 calc(1rem * var(--reading-scale, 1))/1.45 var(--font-serif);
+  color: color-mix(in oklab, var(--foreground) 82%, var(--background));
+  text-wrap: pretty;
 }

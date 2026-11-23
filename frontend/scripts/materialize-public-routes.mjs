@@ -776,7 +776,7 @@ function ammHomeHtml(content) {
   const H = AMM_MODEL.home;
   const sourcesOf = (quotes) => ammChapterSources(quotes).map((source) => link(source.href, source.label)).join(" · ");
   const { lines: revolution } = H.revolution;
-  const { worth, judged } = H.thesis;
+  const { worth } = H.thesis;
   const article = (text) => `<li>${escapeHtml(text)}</li>`;
   const screen = (id, title, quotes, art, extra = "") => {
     const { heading, lines, note } = quotes;
@@ -787,13 +787,13 @@ function ammHomeHtml(content) {
   const chapter = (part) => `<li id="amm-chapter-${part.part}">${link(`${ESSAYS_ROUTE}/${part.slug}`, `${part.partLabel} · ${part.partTitle}`)}</li>`;
   return [
     // The thesis as a manifesto (2026-11-22): AMM's conviction, then the numbered articles, purpose facing the Inversion.
-    `<section id="amm-thesis" aria-labelledby="amm-thesis-title"><h2 id="amm-thesis-title">${escapeHtml(L.thesisTitle)}</h2><p>${escapeHtml(ammCite(worth).text)}</p><h3>${escapeHtml(L.thesisPurposeLabel)}</h3><ol>${[L.thesisSociety, L.thesisHonor, ammCite(judged).text].map(article).join("")}</ol><h3>${escapeHtml(L.thesisInversionLabel)}</h3><ol start="4">${[L.thesisInverts, L.thesisMyth, L.thesisBelief, L.thesisCharacter].map(article).join("")}</ol><p>${escapeHtml(L.sourceLabel)} ${sourcesOf([worth, judged])}</p></section>`,
+    `<section id="amm-thesis" aria-labelledby="amm-thesis-title"><h2 id="amm-thesis-title">${escapeHtml(L.thesisTitle)}</h2><p>${escapeHtml(ammCite(worth).text)}</p><h3>${escapeHtml(L.thesisPurposeLabel)}</h3><ol>${[L.thesisSociety, L.thesisHonor].map(article).join("")}</ol><h3>${escapeHtml(L.thesisInversionLabel)}</h3><ol start="3">${[L.thesisInverts, L.thesisMyth, L.thesisBelief, L.thesisCharacter].map(article).join("")}</ol><p>${escapeHtml(L.sourceLabel)} ${sourcesOf([worth])}</p></section>`,
     screen("amm-inversion", undefined, H.inversion, "inversion-empty-frame", `<p>${link(AMM_DIAGNOSIS_ROUTE(), L.readDiagnosis)}</p>`),
     screen("amm-host", L.hostTitle, H.host, "anatomy"),
     screen("amm-leech", L.leechTitle, H.leech, "the-leech-portrait"),
     screen("amm-anatomy", L.anatomyTitle, H.anatomy, "leechAnatomy", `<p>${link(content.power.figuresRoute, L.figuresLink)}</p>`),
     screen("amm-feeding", L.feedingTitle, H.feeding, "belief-4-the-feeding"),
-    `<section id="amm-way-out" aria-labelledby="amm-way-out-title"><p>${escapeHtml(L.revolutionEyebrow)}</p><h2 id="amm-way-out-title">${escapeHtml(L.revolutionLine)}</h2>${revolution.map((line) => `<p>${escapeHtml(ammCite(line).text)}</p>`).join("")}<p>${escapeHtml(L.sourceLabel)} ${sourcesOf(revolution)}</p><p>${link(`${ESSAYS_ROUTE}/${AMM_PARTS[AMM_PARTS.length - 1].slug}`, L.revolutionAction)}</p></section>`,
+    `<section id="amm-way-out" aria-labelledby="amm-way-out-title"><p>${escapeHtml(L.revolutionEyebrow)}</p><h2 id="amm-way-out-title">${escapeHtml(L.revolutionLine)}</h2>${L.revolutionPosition ? `<p>${escapeHtml(L.revolutionPosition)}</p>` : ""}${revolution.map((line) => `<p>${escapeHtml(ammCite(line).text)}</p>`).join("")}<p>${escapeHtml(L.sourceLabel)} ${sourcesOf(revolution)}</p><p>${link(`${ESSAYS_ROUTE}/${AMM_PARTS[AMM_PARTS.length - 1].slug}`, L.revolutionAction)}</p></section>`,
     `<section id="amm-book" aria-labelledby="amm-book-title"><h2 id="amm-book-title">${escapeHtml(L.bookTitle)}</h2><p>${escapeHtml(content.manuscript.status)}</p><ol>${AMM_PARTS.map(chapter).join("")}</ol><p>${link("/amm/editions", L.closingBook)}</p></section>`,
   ].join("");
 }

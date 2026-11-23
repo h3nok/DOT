@@ -81,7 +81,7 @@
  * never displayed, so its lazy image is never fetched. They lift a little under the
  * pointer; nothing moves on its own, and readers who prefer stillness see them flat (L1).
  */
-.amm-diagnosis-art { --tilt: -4deg; display: grid; gap: .75rem; min-width: 0; perspective: 1600px; }
+.amm-diagnosis-art { --tilt: -4deg; display: grid; gap: .3rem; min-width: 0; perspective: 1600px; }
 .amm-diagnosis-scene--reverse .amm-diagnosis-art { --tilt: 4deg; }
 .amm-art--dark,
 .dark .amm-art--light { display: none; }
@@ -115,7 +115,6 @@ html[data-motion="still"] .amm-diagnosis-art .explainer-artwork img { transform:
   86% { transform: rotate(176deg); }
   100% { transform: rotate(180deg); color: var(--amm-rust); }
 }
-.amm-diagnosis-disclosure { margin: 0; font-size: .82rem; line-height: 1.5; color: var(--muted-foreground); }
 
 .amm-diagnosis-words {
   display: grid;
@@ -449,3 +448,26 @@ html[data-motion="still"] .amm-diagnosis-art .explainer-artwork img { transform:
   .amm-power-invite .amm-diagnosis-art { order: 2; --tilt: 4deg; }
 }
 .amm-diagnosis-index + .amm-diagnosis-link { justify-self: start; margin-top: .35rem; }
+
+/*
+ * Captions under a painting, set close and quiet (the author, 2026-11-22: "Cleaner"): a small
+ * "Inspect illustration" cue (the whole picture is the button), the opening painting's key as an
+ * italic caption, then the AI note as one small muted line. No rules between them.
+ */
+:is(.amm-feature, .amm-diagnosis-art) .explainer-artwork-hint {
+  min-height: 0;
+  margin-top: .45rem;
+  font-size: calc(.75rem * var(--reading-scale, 1));
+}
+
+/* Every AI-generated picture says so beside it, in the same small line across the site. */
+.amm-art-disclosure,
+.amm-diagnosis-disclosure {
+  margin: .1rem 0 0;
+  padding: 0;
+  border: 0;
+  font: 400 calc(.75rem * var(--reading-scale, 1))/1.45 var(--font-sans);
+  letter-spacing: .01em;
+  color: var(--muted-foreground);
+  text-wrap: pretty;
+}

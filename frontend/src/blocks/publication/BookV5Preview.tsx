@@ -114,7 +114,7 @@ export default function BookV5Preview() {
   return (
     <div className="book-surface book-v5-preview min-h-screen bg-background text-foreground">
       <Helmet>
-        <title>{title} · v5 editorial proof</title>
+        <title>{`${title} · v5 editorial proof`}</title>
         <meta name="robots" content="noindex, nofollow, noarchive" />
       </Helmet>
       <a className="book-v5-preview__skip" href="#proof-main">Skip to the manuscript</a>

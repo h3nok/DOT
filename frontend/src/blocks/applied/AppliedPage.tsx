@@ -201,6 +201,7 @@ export default function AppliedPage() {
               <>
                 <Link
                   to="/book/digital-organism-theory"
+                  aria-label="Book One"
                   className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
                 >
                   <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
@@ -208,6 +209,7 @@ export default function AppliedPage() {
                 </Link>
                 <Link
                   to="/doctrine"
+                  aria-label="Concept Map"
                   className="inline-flex min-h-9 items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-foreground/[0.04] hover:text-foreground"
                 >
                   <Map className="h-3.5 w-3.5" aria-hidden="true" />

@@ -141,7 +141,8 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
         </div>
       )}
 
-      {/* The card, blooming from the nucleus to the centre. */}
+      {/* The card, blooming from the nucleus to the centre: a solid floating surface with a shadow,
+          never an outline or glow (2026-11-22). */}
       <motion.section
         role="dialog"
         aria-label={title}
@@ -149,7 +150,7 @@ export const BloomSurface: React.FC<BloomSurfaceProps> = ({
         animate={bloom.animate}
         exit={bloom.exit}
         transition={bloom.transition}
-        className={`bloom-surface organism-alive relative z-10 flex max-h-[82vh] w-full ${WIDTHS[size]} flex-col overflow-hidden rounded-3xl border border-white/10 dark:border-white/5 bg-background/20 shadow-[var(--premium-shadow),0_0_80px_var(--organism-accent-soft)] backdrop-blur-3xl`}
+        className={`bloom-surface relative z-10 flex max-h-[82vh] w-full ${WIDTHS[size]} flex-col overflow-hidden rounded-3xl bg-[color:var(--surface-floating)] shadow-[var(--premium-shadow)] backdrop-blur-3xl`}
         style={{ transformOrigin: "center center" }}
       >
         {/* Living top edge. */}

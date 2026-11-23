@@ -126,15 +126,37 @@
   inline-size: 100%;
   margin-inline: auto;
 }
+/* The thesis is lit by AMM's flame (2026-11-22: "we need some flame here"): the mark beside the
+   label, and the label set in the flame. The mark kindles once when the thesis arrives. */
 .inq-scene .amm-thesis-title,
 .amm-thesis-title {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
   margin: 0;
-  padding-top: .8rem;
-  border-top: 4px solid var(--foreground);
-  font: 700 calc(.8125rem * var(--scale))/1.2 var(--font-sans);
-  letter-spacing: .16em;
+  font: 700 calc(.875rem * var(--scale))/1.2 var(--font-sans);
+  letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--amm-rust);
+}
+.amm-thesis-title > span {
+  padding-block: .1em;
+  background: var(--amm-flame);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (forced-colors: active) { .amm-thesis-title > span { background: none; -webkit-text-fill-color: currentColor; } }
+.amm-thesis-flame { flex: none; width: calc(2.4rem * var(--scale)); height: calc(2.4rem * var(--scale)); margin-block: -.5rem -.2rem; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame :is(.amm-mark-flame, .amm-mark-seam) { animation: amm-flame-kindle 4.4s ease-in-out .3s 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-heart { animation: amm-flame-heart 4.4s ease-in-out .3s 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-core { animation: amm-flame-core 4.4s ease-in-out .3s 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-tongue--left { animation: amm-flame-left 4.4s ease-in-out .3s 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-tongue--right { animation: amm-flame-right 4.4s ease-in-out .3s 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-heat { animation: amm-heat-rise 4.4s ease-in-out .3s 1; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-ember--one { animation: amm-ember-rise 1.8s .65s ease-out 1 both; }
+  html:not([data-motion="still"]):not([data-organism="off"]) #amm-thesis .inq-scene-body:not([data-reveal-pending]) .amm-thesis-flame .amm-mark-ember--two { animation: amm-ember-rise 1.6s 1.65s ease-out 1 both; }
 }
 .amm-thesis-conviction {
   max-inline-size: 21ch;
@@ -154,18 +176,55 @@
 .amm-thesis-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding-top: clamp(1rem, 2.2svh, 1.5rem);
-  border-top: 1px solid color-mix(in oklab, var(--foreground) 22%, transparent);
+  align-items: stretch;
+  margin-top: clamp(.25rem, 1svh, .75rem);
 }
-.amm-thesis-column { padding-right: clamp(1.5rem, 3.5vw, 3.5rem); }
-/* The Inversion faces the purpose across a rule. */
+.amm-thesis-column {
+  padding: clamp(1.6rem, 3.4svh, 2.5rem) clamp(1.5rem, 3.5vw, 3.5rem) clamp(1.6rem, 3.4svh, 2.5rem) 0;
+}
+/*
+ * The Inversion turns the page over (2026-11-22, "Missing something"): its column is set in
+ * inverted colours, ink for paper and paper for ink, running to the edge of the screen. The flame
+ * and numbers take the other theme's values so they still read on it.
+ */
 .amm-thesis-column--inverted {
-  padding-right: 0;
+  --amm-rust: #f09279;
+  --amm-flame: linear-gradient(90deg, #ffb52e, #ff8d1c 50%, #fa6717);
+  --space-mark-paint: var(--amm-flame);
+  position: relative;
+  isolation: isolate;
   padding-left: clamp(1.5rem, 3.5vw, 3.5rem);
-  border-left: 1px solid color-mix(in oklab, var(--foreground) 22%, transparent);
+  padding-right: clamp(1rem, 3vw, 2.5rem);
+  border-top: 0;
+  color: var(--background);
 }
+.dark .amm-thesis-column--inverted {
+  --amm-rust: #a73524;
+  --amm-flame: linear-gradient(90deg, #9e4a00, #b03a0e 50%, #881b14);
+}
+/*
+ * A turned page, not a slab: rounded where it faces the purpose, warmed from that corner by the
+ * flame, and running on to the screen's edge. The run is a spread shadow clipped to the right, as
+ * the scene bands are drawn, so it never widens the page.
+ */
+.amm-thesis-column--inverted {
+  --turn-radius: clamp(1.75rem, 3.2vw, 3rem);
+}
+.amm-thesis-column--inverted::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: var(--turn-radius) 0 0 var(--turn-radius);
+  background:
+    radial-gradient(120% 90% at 0% 0%, color-mix(in oklab, var(--amm-rust) 16%, transparent), transparent 60%),
+    var(--foreground);
+  box-shadow: 0 0 0 100vmax var(--foreground);
+  clip-path: inset(0 -100vmax 0 0 round var(--turn-radius) 0 0 var(--turn-radius));
+}
+@media (forced-colors: active) { .amm-thesis-column--inverted::before { background: CanvasText; } }
 .inq-scene .amm-thesis-column-label {
-  margin: 0 0 .8rem;
+  margin: 0 0 .9rem;
   font: 700 calc(.75rem * var(--scale))/1.3 var(--font-sans);
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -186,17 +245,22 @@
   color: var(--foreground);
   text-wrap: pretty;
 }
-/* The book's hinge: the judgment the right-hand column answers. */
-.amm-article--hinge .amm-article-text { font-weight: 600; }
+/* Each column opens on its lead article, a size up. */
+.amm-article--lead { margin-bottom: .2rem; }
+.amm-article--lead .amm-article-text { font-size: calc(clamp(1.3rem, 1.9vw, 1.62rem) * var(--scale)); font-weight: 500; line-height: 1.3; text-wrap: balance; }
+.amm-thesis-column--inverted :is(.amm-thesis-column-label, .amm-article-text) { color: var(--background); }
 @media (max-width: 48rem) {
-  .amm-thesis-columns { grid-template-columns: 1fr; row-gap: 1.6rem; }
-  .amm-thesis-column { padding-right: 0; }
-  .amm-thesis-column--inverted { padding-left: 0; padding-top: 1.4rem; border-left: 0; border-top: 1px solid color-mix(in oklab, var(--foreground) 22%, transparent); }
+  .amm-thesis-columns { grid-template-columns: 1fr; }
+  .amm-thesis-column { padding: 1.4rem 0; }
+  /* Stacked, the block spans the band and keeps its words off its edges. */
+  .amm-thesis-column--inverted { padding: 1.75rem 1.25rem; }
+  .amm-thesis-column--inverted::before { border-radius: 1.75rem; box-shadow: none; clip-path: none; }
 }
 
 .dark :is(.amm-thesis-conviction, .amm-article-text, .amm-way-out-title, .amm-way-out-line, .amm-screen-line, .amm-term-cue) {
   filter: drop-shadow(0 .55rem 1.5rem rgba(0, 0, 0, .5));
 }
+.dark .amm-thesis-column--inverted .amm-article-text { filter: none; }
 
 /* ── The way out (#amm-way-out) ───────────────────────────────────────────
  * Framed directly above the book chapters: wide, center-justified, and floating. */
@@ -226,8 +290,9 @@
 .amm-way-out-title {
   margin: 0;
   padding-bottom: .05em;
-  max-inline-size: 22ch;
-  font: 650 calc(clamp(2.35rem, 5vw, 4rem) * var(--scale))/1.04 var(--font-serif);
+  /* Sized for a sentence, not a slogan (2026-11-22): two or three lines on a wide screen. */
+  max-inline-size: 26ch;
+  font: 650 calc(clamp(1.95rem, 3.6vw, 3.1rem) * var(--scale))/1.08 var(--font-serif);
   letter-spacing: 0;
   text-wrap: balance;
   background: var(--amm-flame-display);
@@ -241,22 +306,25 @@
 @media (forced-colors: active) {
   .amm-way-out-title { background: none; -webkit-text-fill-color: currentColor; }
 }
-.amm-way-out-line {
+/* The author's position on the way out (2026-11-22): personal healing first, then cohesion, then the Host. */
+.amm-way-out-position {
+  max-inline-size: 40ch;
   margin: 0 auto;
-  inline-size: min(100%, 66rem);
-  max-inline-size: 62ch;
-  padding: clamp(1.15rem, 2.2svh, 1.65rem) clamp(1.5rem, 3.4vw, 3rem);
-  border: 0;
-  border-radius: .5rem;
-  background: color-mix(in oklab, var(--background) 82%, var(--scene-band));
-  box-shadow: 0 1rem 2.6rem -1.1rem rgba(25, 18, 10, .13);
-  font: 450 calc(clamp(1.24rem, 1.82vw, 1.52rem) * var(--scale))/1.26 var(--font-serif);
+  font: 500 calc(clamp(1.3rem, 2vw, 1.7rem) * var(--scale))/1.32 var(--font-serif);
   color: var(--foreground);
   text-align: center;
   text-wrap: balance;
 }
-.dark .amm-way-out-line {
-  box-shadow: 0 1.2rem 2.8rem -1.1rem rgba(0, 0, 0, .6);
+.amm-way-out-line {
+  margin: 0 auto;
+  inline-size: min(100%, 66rem);
+  max-inline-size: 48ch;
+  /* Plain text under the heading, not a card (2026-11-22). */
+  padding: 0;
+  font: 450 calc(clamp(1.24rem, 1.82vw, 1.52rem) * var(--scale))/1.26 var(--font-serif);
+  color: var(--foreground);
+  text-align: center;
+  text-wrap: balance;
 }
 #amm-way-out .amm-screen-foot { justify-content: center; }
 
@@ -395,10 +463,8 @@
   gap: .25rem .6rem;
   width: fit-content;
   margin: 0 0 .35rem;
-  padding: .32rem .75rem;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--background) 85%, transparent);
-  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  /* Unframed (2026-11-22): the current part's flame dot is the only mark, never a pill. */
+  padding: 0;
   list-style: none;
   font: 600 calc(.75rem * var(--scale))/1.25 var(--font-sans);
   letter-spacing: 0;
@@ -513,3 +579,31 @@
 .amm-inquiry-concepts a { display: block; padding-block: .8rem; border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); color: var(--foreground); font: 600 calc(1.1rem * var(--scale))/1.3 var(--font-serif); text-decoration: none; }
 .amm-inquiry-concepts a:hover { color: var(--amm-rust); }
 .amm-inquiry-subtitle { margin: 1.5rem 0 0; font: 600 calc(1.35rem * var(--scale))/1.3 var(--font-serif); }
+
+/*
+ * "Inversion", turned over (the author, 2026-11-22: "Invert 'Inversion'… animated"). In a heading
+ * or label the word flips on its horizontal axis once its screen arrives and stays inverted, like
+ * a reflection. It carries its parent's paint, since a turned word does not share the parent's
+ * clipped text. Without motion (reduced motion, Still) it is simply shown inverted.
+ */
+.amm-invert {
+  display: inline-block;
+  transform: perspective(40em) rotateX(180deg);
+  transform-origin: 50% 54%;
+}
+:is(.amm-term, .inq-mark) .amm-invert {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (forced-colors: active) { :is(.amm-term, .inq-mark) .amm-invert { background: none; -webkit-text-fill-color: currentColor; } }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="still"]):not([data-organism="off"]) .amm-invert {
+    transition: transform 1.1s cubic-bezier(.65, 0, .35, 1) calc(var(--motion-reveal, .6s) + .35s);
+  }
+  html:not([data-motion="still"]):not([data-organism="off"]) [data-reveal-pending] .amm-invert {
+    transform: perspective(40em) rotateX(0deg);
+    transition: none;
+  }
+}

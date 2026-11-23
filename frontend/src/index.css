@@ -3898,12 +3898,11 @@ html[data-motion="still"] .dot-emergence-signal {
   color: var(--book-paper);
 }
 
+/* The citation is set off by its cinnabar rule alone, not boxed (2026-11-22). */
 .book-citation__text {
   margin-top: 0.9rem;
-  border: 1px solid var(--book-hairline);
   border-left: 2px solid color-mix(in oklch, var(--book-cinnabar) 58%, var(--book-ink));
-  background: color-mix(in oklab, var(--book-paper) 76%, transparent);
-  padding: 1rem;
+  padding: 0.25rem 0 0.25rem 1rem;
 }
 
 .book-citation__copy {

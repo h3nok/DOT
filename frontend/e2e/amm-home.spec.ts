@@ -106,6 +106,10 @@ test('the home opens on why stability matters, then the Inversion, the Host, the
   await expect(inversion.getByRole('heading', { level: 2 })).toHaveText(MODEL.home.inversion.heading.text);
   // The Inversion is always set in the flame (the author, 2026-11-19): here as the term heading, and in the thesis.
   await expect(inversion.locator('h2 .amm-term')).toHaveText('The Inversion');
+  // The word turns over once its screen arrives and stays inverted (2026-11-22); it still reads "The Inversion".
+  await inversion.locator('h2 .amm-invert').scrollIntoViewIfNeeded();
+  await expect.poll(() => inversion.locator('h2 .amm-invert').evaluate(node => new DOMMatrix(getComputedStyle(node).transform).m22)).toBeLessThan(0);
+  await expect(page.locator('#amm-thesis .amm-thesis-column-label .amm-invert')).toHaveText('Inversion');
   await expect(inversion.locator('h2 .amm-term-cue')).toHaveText('professing virtue, and practicing the exact opposite.');
   await expect(page.locator('#amm-thesis .amm-thesis-column-label mark.inq-mark')).toHaveText('The Inversion');
   await expect(inversion.locator('.amm-screen-line')).toHaveText(MODEL.home.inversion.lines.map(line => line.text));
@@ -145,16 +149,20 @@ test('the home opens on why stability matters, then the Inversion, the Host, the
   }
 
   // The AMM thesis as a manifesto (the author, 2026-11-20; "Manifesto style", 2026-11-22): AMM's conviction in
-  // the book's words, then seven numbered articles, the purpose (closed by the book's hinge) facing the Inversion.
+  // the book's words, then six numbered articles, the purpose facing the Inversion, which is set in inverted colours.
   const thesis = page.locator('#amm-thesis');
   await expect(thesis.getByRole('heading', { level: 2 })).toHaveText(AMM.model.thesisTitle);
   await expect(thesis.locator('.amm-thesis-conviction')).toHaveText(MODEL.home.thesis.worth.text);
   await expect(thesis.getByRole('heading', { level: 3 })).toHaveText([AMM.model.thesisPurposeLabel, AMM.model.thesisInversionLabel]);
-  await expect(thesis.locator('.amm-article-number')).toHaveText(['01', '02', '03', '04', '05', '06', '07']);
-  await expect(thesis.locator('.amm-article-text')).toHaveText([AMM.model.thesisSociety, AMM.model.thesisHonor, MODEL.home.thesis.judged.text, AMM.model.thesisInverts, AMM.model.thesisMyth, AMM.model.thesisBelief, AMM.model.thesisCharacter]);
-  await expect(thesis.locator('.amm-article-text mark.inq-mark')).toHaveText(['preserve that order or reverse it', 'inverts this purpose', 'a conditioned character']);
+  await expect(thesis.locator('.amm-article-number')).toHaveText(['01', '02', '03', '04', '05', '06']);
+  await expect(thesis.locator('.amm-article-text')).toHaveText([AMM.model.thesisSociety, AMM.model.thesisHonor, AMM.model.thesisInverts, AMM.model.thesisMyth, AMM.model.thesisBelief, AMM.model.thesisCharacter]);
+  await expect(thesis.locator('.amm-article-text mark.inq-mark')).toHaveText(['inverts this purpose', 'a conditioned character']);
+  // Each column opens on its lead article; the Inversion's column turns the page's colours over.
+  await expect(thesis.locator('.amm-article--lead .amm-article-text')).toHaveText([AMM.model.thesisSociety, AMM.model.thesisInverts]);
+  const [page_ink, inverted_ink] = await Promise.all([thesis.locator('.amm-article-text').first(), thesis.locator('.amm-thesis-column--inverted .amm-article-text').first()].map(node => node.evaluate(el => getComputedStyle(el).color)));
+  expect(inverted_ink).not.toBe(page_ink);
+  await expect(page.getByText('A society must be judged by whether its institutions')).toHaveCount(0);
   await expect(thesis.getByRole('link', { name: 'Chapter Four', exact: true })).toHaveAttribute('href', '/essays/amm-book-chapter-four-authorship-without-dominance#13-what-we-owe-the-next-life');
-  await expect(thesis.getByRole('link', { name: 'Chapter One, earlier edition', exact: true })).toHaveAttribute('href', '/essays/amm-chapter-one-the-leech');
   // Set in type, not boxes: no card background or shadow on the articles.
   await expect(thesis.locator('.amm-articles').first()).toHaveCSS('box-shadow', 'none');
   // Side by side on a wide screen, the Inversion after the purpose on a narrow one.
@@ -177,6 +185,9 @@ test('the home opens on why stability matters, then the Inversion, the Host, the
   // The way out closes the home (the author, 2026-11-19): only a cultural revolution, Chapter Four's sentence, and the chapter.
   const wayOut = page.locator('#amm-way-out');
   await expect(wayOut.getByRole('heading', { level: 2 })).toHaveText(AMM.model.revolutionLine);
+  // The author's position (2026-11-22): personal healing first, then cohesion around it, then the Host.
+  await expect(wayOut.locator('.amm-way-out-position')).toHaveText(AMM.model.revolutionPosition);
+  await expect(page.getByText('Only a cultural revolution is our way out.')).toHaveCount(0);
   await expect(wayOut.locator('.amm-way-out-line')).toHaveText(MODEL.home.revolution.lines.map(line => line.text));
   await expect(wayOut.locator('.amm-screen-source a')).toHaveText('Chapter Four');
   await expect(wayOut.getByRole('link', { name: AMM.model.revolutionAction })).toHaveAttribute('href', `/essays/${AMM.chapterSection.chapters[3].id}`);
