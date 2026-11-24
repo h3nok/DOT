@@ -21,8 +21,7 @@ for (const route of ["/", "/about"]) {
     await expect(mark.locator(".nucleus-mark-core")).toHaveCSS("opacity", "1");
 
     const panel = await openAppearancePanel(page);
-    await panel.locator("summary").filter({ hasText: "Fine tune environment" }).click();
-    await panel.getByRole("switch", { name: "Hold the background still" }).click();
+    await panel.getByRole("switch", { name: "Hold the page still" }).click();
     await expect.poll(animations).toEqual([]);
     await page.reload();
     await expect(mark).toBeVisible();
@@ -44,13 +43,13 @@ for (const route of ["/", "/about"]) {
   });
 }
 
-test("disabling the environment also keeps the shared page signature still", async ({ page }) => {
+test("a field switched off before the single theme keeps the shared page signature still", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("dot_organism", JSON.stringify({ enabled: false }));
   });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/about");
-  await expect(page.locator("html")).toHaveAttribute("data-organism", "off");
+  await expect(page.locator("html")).toHaveAttribute("data-motion", "still");
   const mark = page.getByRole("link", { name: "DOT — Home", exact: true }).getByRole("img", { name: "DOT", exact: true });
   await expect(mark).toBeVisible();
   expect(await mark.evaluate((node) => node.getAnimations({ subtree: true }).length)).toBe(0);

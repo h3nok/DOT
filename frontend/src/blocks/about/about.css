@@ -95,7 +95,7 @@
 .about-toolkit dd { margin-top: .25rem; font-size: .8125rem; line-height: 1.8; color: var(--muted-foreground); }
 .about-writing, .about-contact { display: grid; gap: 1.25rem; }
 .about-writing { align-items: center; padding-top: 2.5rem; border-top: 1px solid var(--border); }
-.about-writing-jacket { display: grid; place-items: center; padding: 1.75rem; background: radial-gradient(ellipse, color-mix(in oklab, var(--public-sage) 18%, transparent), transparent 70%); }
+.about-writing-jacket { display: grid; place-items: center; padding: 1.75rem; background: radial-gradient(ellipse, color-mix(in oklab, var(--public-rust-light) 18%, transparent), transparent 70%); }
 .about-writing-jacket a { display: block; width: min(100%, 11rem); }
 .about-writing-jacket .book-one-cover { width: 100%; }
 .about-writing .public-section-heading, .about-contact .public-section-heading { margin-bottom: 0; align-self: start; }

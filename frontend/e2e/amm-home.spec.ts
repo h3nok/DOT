@@ -34,16 +34,15 @@ test('the open flame kindles, settles, and responds to keyboard focus without lo
   expect(await page.locator('.amm-footer .amm-mark').evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0);
 });
 
-for (const mode of ['system reduced motion', 'saved stillness', 'environment disabled'] as const) {
+for (const mode of ['system reduced motion', 'saved stillness', 'field switched off before'] as const) {
   test(`${mode} keeps the AMM flame still on entry and focus`, async ({ page }) => {
-    if (mode === 'environment disabled') await page.addInitScript(() => localStorage.setItem('dot_organism', JSON.stringify({ enabled: false })));
+    if (mode === 'field switched off before') await page.addInitScript(() => localStorage.setItem('dot_organism', JSON.stringify({ enabled: false })));
     await page.emulateMedia({ reducedMotion: mode === 'system reduced motion' ? 'reduce' : 'no-preference' });
     await page.goto('/amm');
     await expect(page.locator('.amm-brand .amm-mark')).toBeVisible();
     if (mode === 'saved stillness') {
       const panel = await openAppearancePanel(page);
-      await panel.locator('summary').filter({ hasText: 'Fine tune environment' }).click();
-      await panel.getByRole('switch', { name: 'Hold the background still' }).click();
+      await panel.getByRole('switch', { name: 'Hold the page still' }).click();
       await page.reload();
     }
     const brand = page.locator('.amm-brand');
@@ -207,16 +206,15 @@ test('the home opens on why stability matters, then the Inversion, the Host, the
   await expectNoHorizontalOverflow(page);
 });
 
-for (const mode of ['system reduced motion', 'saved stillness', 'environment disabled'] as const) {
+for (const mode of ['system reduced motion', 'saved stillness', 'field switched off before'] as const) {
   test(`${mode} keeps the home and its paintings still`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: mode === 'system reduced motion' ? 'reduce' : 'no-preference' });
-    if (mode === 'environment disabled') await page.addInitScript(() => localStorage.setItem('dot_organism', JSON.stringify({ enabled: false })));
+    if (mode === 'field switched off before') await page.addInitScript(() => localStorage.setItem('dot_organism', JSON.stringify({ enabled: false })));
     await page.goto('/amm');
     await expect(page.locator('.amm-brand .amm-mark')).toBeVisible();
     if (mode === 'saved stillness') {
       const panel = await openAppearancePanel(page);
-      await panel.locator('summary').filter({ hasText: 'Fine tune environment' }).click();
-      await panel.getByRole('switch', { name: 'Hold the background still' }).click();
+      await panel.getByRole('switch', { name: 'Hold the page still' }).click();
       await page.reload();
     }
     await page.locator('#amm-book').scrollIntoViewIfNeeded();

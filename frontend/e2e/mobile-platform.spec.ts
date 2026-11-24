@@ -185,7 +185,6 @@ test("appearance fits a short phone viewport and larger high-contrast reading st
   const close = panel.getByRole("button", { name: "Close appearance panel" });
   await thumbControl(close);
   await expect(close).toBeInViewport({ ratio: 1 });
-  await panel.getByRole("tab", { name: "Reading", exact: true }).click();
   await panel.getByRole("button", { name: "Text size XL" }).click();
   await panel.getByRole("switch", { name: "High contrast" }).click();
   await expect(close).toBeInViewport({ ratio: 1 });

@@ -226,133 +226,16 @@ html {
   --appearance-page-ink: var(--foreground);
 }
 
-html[data-paper="warm"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 88%,
-    oklch(0.85 0.09 76)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 94%,
-    oklch(0.3 0.03 55)
-  );
-}
-
-html[data-paper="sepia"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 72%,
-    oklch(0.82 0.1 72)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 86%,
-    oklch(0.26 0.05 46)
-  );
-}
-
-html[data-paper="cool"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 87%,
-    oklch(0.82 0.06 232)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 93%,
-    oklch(0.28 0.04 248)
-  );
-}
-
-html.dark[data-paper="warm"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 82%,
-    oklch(0.3 0.11 62)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 92%,
-    oklch(0.93 0.045 82)
-  );
-}
-
-html.dark[data-paper="sepia"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 70%,
-    oklch(0.3 0.12 54)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 86%,
-    oklch(0.91 0.065 78)
-  );
-}
-
-html.dark[data-paper="cool"] {
-  --appearance-page-tone: color-mix(
-    in oklab,
-    var(--background) 82%,
-    oklch(0.32 0.09 245)
-  );
-  --appearance-page-ink: color-mix(
-    in oklab,
-    var(--foreground) 92%,
-    oklch(0.92 0.035 230)
-  );
-}
-
-html[data-paper="warm"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 88%, oklch(0.85 0.09 76));
-  --book-ink: color-mix(in oklab, var(--foreground) 94%, oklch(0.3 0.03 55));
-}
-
-html[data-paper="sepia"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 72%, oklch(0.82 0.1 72));
-  --book-ink: color-mix(in oklab, var(--foreground) 86%, oklch(0.26 0.05 46));
-  --book-vellum: color-mix(in oklab, var(--background) 64%, oklch(0.74 0.09 68));
-}
-
-html[data-paper="cool"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 87%, oklch(0.82 0.06 232));
-  --book-ink: color-mix(in oklab, var(--foreground) 93%, oklch(0.28 0.04 248));
-}
-
-/* In the dark the same tones have to work in reverse: the ground is what takes
-   the cast, and the ink stays light or the text sinks into the page.
-   The mixed-in colours are far more saturated than their light-mode
-   counterparts and barely lighter than the ground — at this lightness a tint
-   has to buy its visibility in chroma, because buying it in lightness would
-   just make the page grey. */
-html.dark[data-paper="warm"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 82%, oklch(0.3 0.11 62));
-  --book-ink: color-mix(in oklab, var(--foreground) 92%, oklch(0.93 0.045 82));
-}
-
-html.dark[data-paper="sepia"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 70%, oklch(0.3 0.12 54));
-  --book-ink: color-mix(in oklab, var(--foreground) 86%, oklch(0.91 0.065 78));
-  --book-vellum: color-mix(in oklab, var(--background) 60%, oklch(0.36 0.1 58));
-}
-
-html.dark[data-paper="cool"] .book-surface {
-  --book-paper: color-mix(in oklab, var(--background) 82%, oklch(0.32 0.09 245));
-  --book-ink: color-mix(in oklab, var(--foreground) 92%, oklch(0.92 0.035 230));
-}
-
-/* The reading surface is transparent by design so the member's field shows
-   through it, and the page panel behind the column is the only thing actually
-   painting `--book-paper`. At 78% a tone barely survived that dilution, so a
-   chosen tone raises the panel's opacity until the page reads as paper —
-   still short of opaque, so the field is present at the margins. */
-html[data-paper]:not([data-paper="neutral"]) .book-reader::before {
+/* The reading surface is transparent by design so the field shows through it,
+   and the page panel behind the column is the only thing actually painting
+   `--book-paper`. The signature's paper is raised until the page reads as paper,
+   still short of opaque, so the field is present at the margins (ADR-0061). */
+html[data-paper] .book-reader::before {
   background: color-mix(in oklab, var(--book-paper) 94%, transparent);
 }
 
-/* High contrast is a stated accessibility need and outranks a colour
-   preference: keep the tone on the paper, hand the ink back to the token. The
+/* High contrast is a stated accessibility need and outranks the theme's ink:
+   keep the paper, hand the ink back to the token. The
    extra attribute is load-bearing — it wins on specificity rather than on
    stylesheet order, which is not ours to depend on. */
 html[data-contrast="high"][data-paper] .book-surface {
@@ -547,11 +430,6 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   border-top: 1px solid var(--appearance-divider);
 }
 
-.appearance-tabs {
-  border: 1px solid var(--appearance-divider);
-  background: color-mix(in oklch, var(--foreground) 5%, transparent);
-}
-
 /* ── The rail ───────────────────────────────────────────────────────────────
    Left to the browser, this is a light-grey thumb on a light-grey track: on a
    dark panel it was the brightest thing in the component. It is drawn from the
@@ -583,80 +461,15 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   background-color: var(--appearance-rail-hover);
 }
 
-/* The miniature page on a preset card: ground, three lines of text, an accent
-   rule. Small enough to be a swatch, structured enough to be a preview. */
-.appearance-preset-page {
-  position: relative;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, currentColor 14%, transparent);
+/* The theme choice draws the page it selects. Sized here, not by a host's icon rule
+   (the AMM shell sets every bare svg to 1rem). */
+.appearance-theme-option > svg {
+  display: block;
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.45rem;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 12%, transparent);
 }
-
-.appearance-preset-page::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.16), transparent 62%);
-  pointer-events: none;
-}
-
-/* The option catalogue exposes stable identities; CSS owns their paint. This
-   keeps the configuration reusable and prevents the settings component from
-   becoming a second, inline theme engine. */
-.appearance-tint[data-tint="auto"] {
-  background: conic-gradient(
-    hsl(212 52% 55%),
-    hsl(265 48% 60%),
-    hsl(348 52% 58%),
-    hsl(28 62% 55%),
-    hsl(158 42% 45%),
-    hsl(212 52% 55%)
-  );
-}
-
-.appearance-tint[data-tint="mono"] {
-  background: linear-gradient(135deg, hsl(0 0% 12%), hsl(0 0% 88%));
-}
-
-.appearance-tint[data-tint="indigo"] { background: hsl(212 52% 55%); }
-.appearance-tint[data-tint="violet"] { background: hsl(265 48% 60%); }
-.appearance-tint[data-tint="jade"] { background: hsl(158 42% 45%); }
-.appearance-tint[data-tint="amber"] { background: hsl(28 62% 55%); }
-.appearance-tint[data-tint="rose"] { background: hsl(348 52% 58%); }
-.appearance-tint[data-tint="cyan"] { background: hsl(190 55% 50%); }
-.appearance-tint[data-tint="sage"] { background: hsl(82 35% 48%); }
-
-.dot-slider.appearance-hue-track {
-  background: linear-gradient(
-    to right,
-    hsl(0 62% 55%),
-    hsl(30 62% 55%),
-    hsl(60 62% 55%),
-    hsl(90 62% 55%),
-    hsl(120 62% 55%),
-    hsl(150 62% 55%),
-    hsl(180 62% 55%),
-    hsl(210 62% 55%),
-    hsl(240 62% 55%),
-    hsl(270 62% 55%),
-    hsl(300 62% 55%),
-    hsl(330 62% 55%),
-    hsl(360 62% 55%)
-  );
-}
-
-.appearance-hue-track[data-auto="true"] { opacity: 0.45; }
-
-.appearance-preset-page[data-base="light"] { color: hsl(30 14% 22%); }
-.appearance-preset-page[data-base="dark"] { color: hsl(40 12% 88%); }
-.appearance-preset-page[data-base="light"][data-paper-tone="neutral"] { background: hsl(40 6% 97%); }
-.appearance-preset-page[data-base="light"][data-paper-tone="warm"] { background: hsl(40 42% 95%); }
-.appearance-preset-page[data-base="light"][data-paper-tone="sepia"] { background: hsl(38 54% 91%); }
-.appearance-preset-page[data-base="light"][data-paper-tone="cool"] { background: hsl(215 30% 96%); }
-.appearance-preset-page[data-base="dark"][data-paper-tone="neutral"] { background: hsl(220 14% 12%); }
-.appearance-preset-page[data-base="dark"][data-paper-tone="warm"] { background: hsl(30 16% 13%); }
-.appearance-preset-page[data-base="dark"][data-paper-tone="sepia"] { background: hsl(28 20% 14%); }
-.appearance-preset-page[data-base="dark"][data-paper-tone="cool"] { background: hsl(220 20% 12%); }
 
 /* Reading styles are arrangements, not decorative themes. Their previews use
    one quiet glyph and the actual line geometry each choice will produce, so
@@ -812,9 +625,9 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
     position: relative;
   }
 
-  .appearance-tint::after,
   .appearance-panel button[aria-label="Close appearance panel"]::after,
-  .appearance-panel button[aria-label="Hold the background still"]::after {
+  .appearance-panel button[aria-label="Hold the page still"]::after,
+  .appearance-panel button[aria-label="High contrast"]::after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -825,7 +638,6 @@ html.dark[data-ui-style] .appearance-panel[role="dialog"] {
   }
 
   /* Text rows sit at 16px; they need a real row to be tappable. */
-  .appearance-panel .appearance-save,
   .appearance-panel .appearance-reset {
     min-height: 2.75rem;
   }

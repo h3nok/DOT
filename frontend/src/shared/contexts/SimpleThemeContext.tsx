@@ -13,18 +13,18 @@ export interface ThemeInfo {
 // Available themes with metadata
 const THEMES: Record<string, ThemeInfo> = {
   light: {
-    name: 'DOT Daylight',
+    name: 'Light',
     category: 'Focus',
     icon: '☀️',
     dark: false,
-    description: 'Warm ivory, deep green ink, and restrained jade.'
+    description: 'The AMM signature by day: warm paper, charcoal ink, and rust.'
   },
   dark: {
-    name: 'DOT Night',
+    name: 'Dark',
     category: 'Focus',
     icon: '🌙',
     dark: true,
-    description: 'Living-ink dark, warm-white text, and the same jade identity.'
+    description: 'The AMM signature at night: charcoal ground, warm-white ink, and rust.'
   }
 };
 
@@ -114,8 +114,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Set data-theme attribute for compatibility
     document.documentElement.setAttribute('data-theme', newTheme);
-    const root = document.documentElement;
-    applyIdentityPalette(root, root.dataset.palette === 'classic' ? 'classic' : 'dot');
+    applyIdentityPalette(document.documentElement);
   };
 
   const applyTheme = (newTheme: string) => {

@@ -1,26 +1,26 @@
-/* The writing shelf uses the shared DOT Daylight / DOT Night emerald-and-gold harmonic. */
+/* The writing shelf wears the signature theme's rust with the gold harmonic (ADR-0061). */
 .blog-page {
-  --blog-ink: var(--identity-ink, #142822);
-  --blog-green: var(--public-forest, #285c4b);
-  --blog-sage: var(--public-sage, #cfe0d6);
+  --blog-ink: var(--identity-ink, #232525);
+  --blog-green: var(--public-rust, #a73524);
+  --blog-sage: var(--public-rust-light, #efd6cc);
   --blog-copper: var(--public-copper, #9a5b25);
   --blog-sun-light: #e8c382;
   --blog-cream: #f8f5ee;
   --blog-paper: color-mix(in oklab, var(--background) 92%, var(--public-sand, #ead5b7));
-  --blog-art-paper: color-mix(in oklab, var(--background) 82%, var(--public-sage, #cfe0d6));
+  --blog-art-paper: color-mix(in oklab, var(--background) 82%, var(--public-rust-light, #efd6cc));
   padding-top: clamp(2rem, 4vw, 3.5rem);
   padding-bottom: clamp(4.5rem, 8vw, 7rem);
 }
 
 .dark .blog-page {
-  --blog-ink: var(--identity-ink, #f2f0e8);
-  --blog-green: #54d19f;
-  --blog-sage: #244b3d;
+  --blog-ink: var(--identity-ink, #f2ecdf);
+  --blog-green: var(--public-rust, #f09279);
+  --blog-sage: var(--public-rust-light, #3b2622);
   --blog-copper: #f0b865;
   --blog-sun-light: #f0b865;
-  --blog-cream: #152923;
-  --blog-paper: color-mix(in oklab, var(--background) 86%, #1f332b);
-  --blog-art-paper: color-mix(in oklab, var(--background) 78%, #163027);
+  --blog-cream: #2a2c2b;
+  --blog-paper: color-mix(in oklab, var(--background) 86%, #2d2a27);
+  --blog-art-paper: color-mix(in oklab, var(--background) 78%, #33261f);
 }
 
 .blog-masthead-line {

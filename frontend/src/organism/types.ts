@@ -18,6 +18,7 @@
  */
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
+import theme from "../content/theme.json";
 
 export type OrganismMood =
   | "dormant" // night + idle: slow, dim, barely breathing
@@ -400,8 +401,6 @@ export interface OrganismConfig {
   paragraphStyle: ParagraphStyle;
   /** Colour temperature of the page, applied in both light and dark. */
   paperTone: PaperTone;
-  /** Old saved appearances retain their original palette unless explicitly changed. */
-  palette: "classic" | "dot";
 }
 
 export interface OrganismFieldAnchor {
@@ -451,20 +450,30 @@ export const DEFAULT_VITALS: VitalSigns = {
   mood: "calm",
 };
 
-export const DEFAULT_CONFIG: OrganismConfig = {
-  palette: "classic",
+/**
+ * The site has one theme, the AMM signature, in light and dark (ADR-0061). These
+ * are its settings: the radial field in AMM's rust, the neural surface, and the
+ * theme's own paper with no extra cast. A reader chooses light or dark, reading
+ * type, contrast, and stillness; nothing here is theirs to change.
+ */
+export const SIGNATURE_THEME = {
   enabled: true,
-  intensity: 0.85,
+  intensity: 0.42,
   preset: "radial",
   showMembrane: true,
-  showHud: false,
-  tint: "auto",
-  stillness: false,
+  tint: theme.accentHue,
   fieldScale: 1,
   fieldSpeed: 1,
   fieldContrast: 1,
-  contrast: "standard",
   uiStyle: "neural",
+  paperTone: "neutral",
+} as const satisfies Partial<OrganismConfig>;
+
+export const DEFAULT_CONFIG: OrganismConfig = {
+  ...SIGNATURE_THEME,
+  showHud: false,
+  stillness: false,
+  contrast: "standard",
   readingFont: "serif",
   // Medium is 1; the S/M/L/XL scale is 0.92 / 1 / 1.12 / 1.26.
   readingScale: 1,
@@ -476,7 +485,6 @@ export const DEFAULT_CONFIG: OrganismConfig = {
   readingAlign: "justify",
   readingMeasure: "standard",
   paragraphStyle: "spaced",
-  paperTone: "neutral",
 };
 
 export const ORGANISM_STORAGE_KEY = "dot_organism";
@@ -488,11 +496,11 @@ function resolveBoolean(value: unknown, fallback: boolean): boolean {
 /**
  * One boundary for every appearance configuration entering the app.
  *
- * Local storage and named environments can outlive the UI that wrote them.
- * Reconstructing every field here prevents a stale or hand-edited value from
- * becoming a document attribute that no stylesheet understands. The control,
- * persistence layer, and first-visit presets therefore all resolve to the same
- * complete shape rather than maintaining parallel partial validators.
+ * Local storage can outlive the UI that wrote it. Reconstructing every field
+ * here prevents a stale or hand-edited value from becoming a document attribute
+ * that no stylesheet understands. A configuration saved under the retired
+ * environments keeps its reading choices and lands in the signature theme; one
+ * that had switched the living field off keeps the page still instead.
  */
 export function resolveOrganismConfig(value: unknown): OrganismConfig {
   const saved = value && typeof value === "object"
@@ -500,30 +508,20 @@ export function resolveOrganismConfig(value: unknown): OrganismConfig {
     : {};
 
   return {
-    palette: saved.palette === "dot" ? "dot" : "classic",
-    enabled: resolveBoolean(saved.enabled, DEFAULT_CONFIG.enabled),
-    intensity: resolveDial(saved.intensity, 0, 1, DEFAULT_CONFIG.intensity),
-    preset: resolvePreset(saved.preset),
-    showMembrane: resolveBoolean(saved.showMembrane, DEFAULT_CONFIG.showMembrane),
+    ...SIGNATURE_THEME,
     showHud: resolveBoolean(saved.showHud, DEFAULT_CONFIG.showHud),
-    tint: resolveTint(saved.tint),
-    stillness: resolveBoolean(saved.stillness, DEFAULT_CONFIG.stillness),
-    fieldScale: resolveDial(saved.fieldScale, 0.5, 1.6, DEFAULT_CONFIG.fieldScale),
-    fieldSpeed: resolveDial(saved.fieldSpeed, 0, 1.6, DEFAULT_CONFIG.fieldSpeed),
-    fieldContrast: resolveDial(
-      saved.fieldContrast,
-      0.5,
-      2,
-      DEFAULT_CONFIG.fieldContrast,
-    ),
+    stillness:
+      saved.stillness === true ||
+      saved.enabled === false ||
+      saved.showMembrane === false ||
+      saved.preset === "off" ||
+      saved.fieldSpeed === 0,
     contrast: resolveContrast(saved.contrast),
-    uiStyle: resolveUIStyle(saved.uiStyle),
     readingFont: resolveReadingFont(saved.readingFont),
     readingScale: resolveDial(saved.readingScale, 0.9, 1.3, DEFAULT_CONFIG.readingScale),
     readingLeading: resolveReadingLeading(saved.readingLeading),
     readingAlign: resolveReadingAlign(saved.readingAlign),
     readingMeasure: resolveMeasure(saved.readingMeasure),
     paragraphStyle: resolveParagraphStyle(saved.paragraphStyle),
-    paperTone: resolvePaperTone(saved.paperTone),
   };
 }
