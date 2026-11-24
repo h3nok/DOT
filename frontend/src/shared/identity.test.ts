@@ -3,8 +3,7 @@ import { join } from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import identity from "../content/identity.json";
-import { defaultConfigFor, themePreset } from "../organism/themePresets";
-import { resolveOrganismConfig } from "../organism/types";
+import theme from "../content/theme.json";
 import { applyIdentityPalette } from "./identity";
 
 function luminance(hex: string): number {
@@ -20,7 +19,7 @@ function contrast(first: string, second: string): number {
   return (values[0] + 0.05) / (values[1] + 0.05);
 }
 
-describe("shared DOT identity", () => {
+describe("the AMM signature theme (ADR-0061)", () => {
   beforeEach(() => {
     document.documentElement.className = "";
     document.head.innerHTML = '<meta name="theme-color" content="#ffffff">';
@@ -28,57 +27,47 @@ describe("shared DOT identity", () => {
 
   it("keeps body text at AAA contrast and supporting text/actions at AA in both lights", () => {
     for (const base of ["light", "dark"] as const) {
-      const palette = identity[base];
+      const palette = theme[base];
       expect(contrast(palette.ink, palette.surface)).toBeGreaterThanOrEqual(7);
       expect(contrast(palette.muted, palette.surface)).toBeGreaterThanOrEqual(4.5);
       expect(contrast(palette.accent, palette.surface)).toBeGreaterThanOrEqual(4.5);
     }
   });
 
-  it("publishes the shared colours and font roles, and matches the browser chrome", () => {
+  it("publishes the theme, the book's own brand, and the font roles, and matches the browser chrome", () => {
     const root = document.documentElement;
-    applyIdentityPalette(root, "dot");
-    expect(root.dataset.palette).toBe("dot");
-    expect(root.style.getPropertyValue("--identity-light-surface")).toBe(identity.light.surface);
-    expect(root.style.getPropertyValue("--identity-dark-accent")).toBe(identity.dark.accent);
+    applyIdentityPalette(root);
+    expect(root.dataset.palette).toBe("amm");
+    expect(root.style.getPropertyValue("--identity-light-surface")).toBe(theme.light.surface);
+    expect(root.style.getPropertyValue("--identity-dark-accent")).toBe(theme.dark.accent);
+    expect(root.style.getPropertyValue("--brand-dark-surface")).toBe(identity.dark.surface);
     expect(root.style.getPropertyValue("--identity-display-font")).toBe('"Space Grotesk"');
-    expect(document.querySelector("meta")?.getAttribute("content")).toBe(identity.light.surface);
+    expect(document.querySelector("meta")?.getAttribute("content")).toBe(theme.light.surface);
     root.classList.add("dark");
-    applyIdentityPalette(root, "dot");
-    expect(document.querySelector("meta")?.getAttribute("content")).toBe(identity.dark.surface);
+    applyIdentityPalette(root);
+    expect(document.querySelector("meta")?.getAttribute("content")).toBe(theme.dark.surface);
   });
 
-  it("does not rebrand an older saved appearance, even if it already used warm jade", () => {
-    const old = { tint: identity.accentHue, paperTone: "warm", readingFont: "humanist", readingScale: 1.26 };
-    const restored = resolveOrganismConfig(old);
-    expect(restored.palette).toBe("classic");
-    expect(restored).toMatchObject(old);
-    expect(themePreset("quiet").config.palette).toBe("classic");
-    expect(themePreset("quiet-night").config.palette).toBe("classic");
-  });
-
-  it("restores the new palette without changing a saved reading arrangement", () => {
-    const config = { ...defaultConfigFor("dark"), readingScale: 1.26, readingFont: "humanist", readingLeading: "loose" };
-    expect(resolveOrganismConfig(JSON.parse(JSON.stringify(config)))).toMatchObject(config);
-  });
-
-  it("uses the same environment settings on both sides of a system-theme change", () => {
-    expect(defaultConfigFor("light")).toEqual(defaultConfigFor("dark"));
-  });
-
-  it("aligns DOT Daylight and DOT Night with the emerald-jade + warm-gold harmonic and preserves pure paper grounds", () => {
+  it("paints every page from the theme, keeps the theory's diagram colours, and the jacket's brand", () => {
     const identityCss = readFileSync(join(process.cwd(), "src/organism/identity.css"), "utf8");
     const tokensCss = readFileSync(join(process.cwd(), "src/shared/design-system/tokens.css"), "utf8");
+    const indexHtml = readFileSync(join(process.cwd(), "index.html"), "utf8");
 
+    expect(identityCss).toContain('html.dark[data-palette="amm"]');
+    expect(identityCss).toContain("--organism-accent-strong: var(--identity-accent);");
+    expect(identityCss).not.toContain("data-paper");
+    expect(identityCss).not.toContain("data-identity-accent");
+    // Big C, RF, and the field keep their meaning on the home's architecture.
     expect(identityCss).toContain("--identity-emerald: #5ee0ae;");
-    expect(identityCss).toContain("--identity-rf: #f7c474;");
-    expect(identityCss).toContain("--architecture-loop-outer: var(--identity-emerald);");
     expect(identityCss).toContain("--architecture-loop-inner: var(--identity-rf);");
-    expect(identityCss).toContain('html.dark[data-palette="dot"][data-paper="warm"]');
+    expect(identityCss).toContain("--book-paper: var(--brand-dark-surface);");
 
-    expect(tokensCss).toContain("--public-forest: #54d19f;");
-    expect(tokensCss).toContain("--public-copper: #f0b865;");
-    expect(tokensCss).toContain("--public-sage: #153329;");
-    expect(tokensCss).toContain("--public-sand: #332515;");
+    expect(tokensCss).toContain(`--public-rust: ${theme.light.accent};`);
+    expect(tokensCss).toContain(`--public-rust: ${theme.dark.accent};`);
+    expect(tokensCss).not.toContain("--public-forest");
+
+    // Before scripts run, the page already wears the theme.
+    expect(indexHtml).toContain(`background: ${theme.light.surface}`);
+    expect(indexHtml).toContain(`background: ${theme.dark.surface}`);
   });
 });

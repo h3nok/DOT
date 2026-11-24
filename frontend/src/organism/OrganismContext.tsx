@@ -18,9 +18,7 @@ import {
   type OrganismMood,
   type VitalSigns,
 } from "./types";
-import { defaultConfigFor } from "./themePresets";
 import { applyIdentityPalette } from "../shared/identity";
-import identity from "../content/identity.json";
 import { useReducedMotion } from "./signals/useReducedMotion";
 import { useCircadian } from "./signals/useCircadian";
 import { useArousal } from "./signals/useArousal";
@@ -32,31 +30,16 @@ const BACKEND_SIGNALS_ENABLED =
   import.meta.env.VITE_ORGANISM_BACKEND_SIGNALS === "1";
 
 /**
- * What a first-time reader gets, before they have chosen anything.
- *
- * The two bases want genuinely different colour, so the starting environment
- * is picked from whichever one their system asked for. Everything outside the
- * environment's remit — measure, leading, size, alignment — stays at
- * {@link DEFAULT_CONFIG}, because those are reading decisions rather than
- * decisions about light.
+ * The reader's saved choices, inside the one signature theme. A first visit is
+ * {@link DEFAULT_CONFIG}; light or dark is the theme context's, not this one's.
  */
-function firstVisitConfig(): OrganismConfig {
-  const dark =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  const stored = typeof window !== "undefined" && window.localStorage.getItem("dot_theme");
-  const base = stored === "dark" || stored === "light" ? stored : dark ? "dark" : "light";
-  return defaultConfigFor(base);
-}
-
 function loadConfig(): OrganismConfig {
   if (typeof window === "undefined") return DEFAULT_CONFIG;
   try {
     const raw = window.localStorage.getItem(ORGANISM_STORAGE_KEY);
-    if (!raw) return firstVisitConfig();
-    return resolveOrganismConfig(JSON.parse(raw));
+    return raw ? resolveOrganismConfig(JSON.parse(raw)) : DEFAULT_CONFIG;
   } catch {
-    return firstVisitConfig();
+    return DEFAULT_CONFIG;
   }
 }
 
@@ -130,13 +113,8 @@ export const OrganismProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Reflect state onto the document for pure-CSS consumers.
   useEffect(() => {
-    applyIdentityPalette(document.documentElement, config.palette);
-  }, [config.palette]);
-
-  useEffect(() => {
-    document.documentElement.dataset.identityAccent =
-      config.tint === identity.accentHue ? "signature" : "custom";
-  }, [config.tint]);
+    applyIdentityPalette(document.documentElement);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

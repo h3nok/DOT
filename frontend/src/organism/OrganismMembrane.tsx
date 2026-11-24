@@ -48,6 +48,9 @@ interface Ripple {
   life: number; // 1 → 0
 }
 
+/** Hue of the radial field's rings: AMM's rust (#a73524 ≈ 8°, #f09279 ≈ 13° in HSL). */
+const SIGNATURE_RING_HUE = 10;
+
 /** Depth tiers for the constellation. Parallax is what makes it read as space. */
 const DEPTHS = [0.28, 0.62, 1];
 const POINT_BUDGET = 120;
@@ -1092,15 +1095,16 @@ export const OrganismMembrane: React.FC = () => {
       canvas.style.transformOrigin = `${cx}px ${cy}px`;
       radialOrigin.current = { x: cx, y: cy, loading: fieldAnchor?.kind === "loading" };
       ctx.translate(-w / 2, -h / 2);
-      const dotBrand = config.palette === "dot" && config.tint !== "mono";
+      // The signature field: rust rings (AMM's accent) with the gold harmonic (ADR-0061).
+      const dotBrand = config.tint !== "mono";
       const spokeSat = dotBrand ? Math.max(sat, 54) : sat;
       const spokeLight = dotBrand ? (document.documentElement.classList.contains("dark") ? 70 : 36) : light;
       ctx.lineWidth = dotBrand ? 0.7 : 0.6;
       if (dotBrand) {
         const darkMode = document.documentElement.classList.contains("dark");
         ctx.strokeStyle = darkMode
-          ? `hsla(158, 48%, 66%, ${Math.min(0.22, alpha * 0.15)})`
-          : `hsla(158, 42%, 34%, ${Math.min(0.18, alpha * 0.13)})`;
+          ? `hsla(${SIGNATURE_RING_HUE}, 64%, 68%, ${Math.min(0.22, alpha * 0.15)})`
+          : `hsla(${SIGNATURE_RING_HUE}, 58%, 38%, ${Math.min(0.18, alpha * 0.13)})`;
         ctx.beginPath();
         for (const ring of mesh) {
           ctx.moveTo(ring[0].x, ring[0].y);
@@ -1155,7 +1159,7 @@ export const OrganismMembrane: React.FC = () => {
           ring.forEach((point, spokeIndex) => {
             if ((index * 3 + spokeIndex) % 14 !== 0) return;
             const isGold = (index + spokeIndex) % 3 === 0;
-            const nodeHue = isGold ? 38 : 158;
+            const nodeHue = isGold ? 38 : SIGNATURE_RING_HUE;
             const nodeSat = isGold ? 74 : 58;
             ctx.fillStyle = `hsla(${nodeHue}, ${nodeSat}%, ${darkMode ? 64 : 46}%, ${Math.min(0.2, alpha * fade * 0.26)})`;
             ctx.beginPath();
@@ -1425,7 +1429,6 @@ export const OrganismMembrane: React.FC = () => {
     config.enabled,
     config.showMembrane,
     config.intensity,
-    config.palette,
     config.preset,
     config.tint,
     // Scale changes the point budget, so the field has to be rebuilt, not

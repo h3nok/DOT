@@ -170,7 +170,7 @@ export const ScreeningRoomPlayer: React.FC<ScreeningRoomPlayerProps> = ({
     return audioEngineRef.current;
   }, [muted, voiceoverEnabled]);
 
-  // Observe site theme changes (DOT Daylight / DOT Night) so the player stays in lockstep
+  // Observe site theme changes (light / dark) so the player stays in lockstep
   // with AppearanceControl.
   useEffect(() => {
     if (typeof MutationObserver === "undefined") return;

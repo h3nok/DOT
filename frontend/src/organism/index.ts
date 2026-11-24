@@ -23,15 +23,11 @@ export { OrganismHud } from "./OrganismHud";
 export { AppearanceControl } from "./AppearanceControl";
 export { ORGANISM_PRESETS } from "./types";
 export {
-  DEFAULT_PINNED_HUE,
   LEADING_OPTIONS,
   MEASURE_OPTIONS,
-  PAPER_TONE_OPTIONS,
   PARAGRAPH_OPTIONS,
   READING_FONT_OPTIONS,
   READING_SIZE_OPTIONS,
-  TINT_OPTIONS,
-  UI_STYLE_OPTIONS,
 } from "./appearanceOptions";
 export {
   EASE_SETTLE,

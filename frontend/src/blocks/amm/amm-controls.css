@@ -38,17 +38,18 @@
   border-radius: 0;
   background: transparent;
 }
+/* The primary is one smooth fill: no ring and no highlight line, which read as a rough
+   edge on the dark ground. Its fill and ink carry it in high contrast too (about 7.7:1). */
 .dot-button.amm-button--primary,
-.dark .dot-button.amm-button--primary {
+.dark .dot-button.amm-button--primary,
+html[data-contrast="high"] .dot-button.amm-button--primary {
   --dot-button-paper: #8e2e24;
-  --dot-button-edge: color-mix(in oklab, #2a0d0a 35%, transparent);
-  --dot-button-edge-strong: color-mix(in oklab, #2a0d0a 50%, transparent);
+  --dot-button-edge: transparent;
+  --dot-button-edge-strong: transparent;
   color: #fff8ed;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 237, .16),
-    0 0 0 1px var(--dot-button-edge),
-    0 2px 6px rgba(35, 20, 16, .14);
+  box-shadow: 0 1px 2px rgba(35, 20, 16, .12), 0 6px 14px -8px rgba(35, 20, 16, .28);
 }
+.dark .dot-button.amm-button--primary { box-shadow: none; }
 .dot-button.amm-button--primary .dot-button__copy > span { color: #fff8edd9; }
 .dot-button.amm-button--primary:focus-visible { outline-color: var(--foreground); }
 .dot-button.amm-button--primary .dot-button__end-icon { background: transparent; }
@@ -78,10 +79,11 @@
   .dot-button.amm-button--primary:not(:disabled):hover {
     --dot-button-paper: #74241c;
     color: #fff8ed;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 248, 237, .12),
-      0 0 0 1px var(--dot-button-edge-strong),
-      0 6px 14px -6px rgba(35, 20, 16, .28);
+    box-shadow: 0 1px 2px rgba(35, 20, 16, .14), 0 8px 18px -8px rgba(35, 20, 16, .34);
+  }
+  .dark .dot-button.amm-button--primary:not(:disabled):hover {
+    --dot-button-paper: #9d3529;
+    box-shadow: none;
   }
   .dot-button.amm-button--primary:not(:disabled):hover .dot-button__end-icon { background: transparent; }
   .dot-button.amm-button--quiet:not(:disabled):hover {
@@ -92,7 +94,7 @@
 }
 .dot-button.amm-button:focus-visible .dot-button__end-icon { background: transparent; }
 .dot-button.amm-button:disabled { box-shadow: none; }
-html[data-contrast="high"] .dot-button.amm-button { --dot-button-edge: var(--foreground); --dot-button-edge-strong: var(--foreground); }
+html[data-contrast="high"] .dot-button.amm-button:not(.amm-button--primary) { --dot-button-edge: var(--foreground); --dot-button-edge-strong: var(--foreground); }
 .amm-hero-actions > .amm-button { margin-top: .25rem; }
 .page-copy-studio header > .amm-button { margin-block: .85rem; }
 .amm-text-field { display: grid; gap: .6rem; }

@@ -1,4 +1,4 @@
-.contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, var(--public-sage)); }
+.contact-page { --contact-paper: color-mix(in oklab, var(--background) 90%, var(--public-rust-light)); }
 .contact-masthead { max-width: 44rem; padding-block: .5rem 3rem; }
 .contact-masthead > p:last-child { max-width: 46ch; margin-top: 1.4rem; color: var(--muted-foreground); font-size: 1rem; line-height: 1.8; }
 .contact-layout { display: grid; gap: 3rem; align-items: start; }

@@ -1,51 +1,54 @@
-/* Translucent paper consumers mix in OKLab: polar OKLCH interpolation with
-   transparent can discard a low-chroma paper's hue and produce a pink cast. */
-html[data-palette="dot"],
-html[data-palette="dot"][data-theme] {
+/* The site's one theme: the AMM signature in two lights (ADR-0061). Warm paper and charcoal ink
+   by day, charcoal ground and warm-white ink at night, with AMM's rust as the one accent.
+   Translucent paper consumers mix in OKLab: polar OKLCH interpolation with transparent can
+   discard a low-chroma paper's hue and produce a pink cast. */
+html[data-palette="amm"],
+html[data-palette="amm"][data-theme] {
   --identity-surface: var(--identity-light-surface);
   --identity-ink: var(--identity-light-ink);
   --identity-accent: var(--identity-light-accent);
   --identity-muted: var(--identity-light-muted);
   --identity-border: var(--identity-light-border);
+  /* Theory-diagram semantics (Big C, RF, the living field), not theme colours. */
   --identity-emerald: #146c4e;
   --identity-lumen: #1b8762;
   --identity-origin: #1f5e4b;
   --identity-rf: #9a5b25;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: color-mix(in oklab, #faf8f2 74%, var(--identity-surface));
+  --card: color-mix(in oklab, #fffdf8 60%, var(--identity-surface));
   --card-foreground: var(--identity-ink);
-  --popover: color-mix(in oklab, #fdfcf8 84%, var(--identity-surface));
+  --popover: color-mix(in oklab, #fffdf8 78%, var(--identity-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
-  --primary-foreground: var(--identity-surface);
-  --secondary: color-mix(in oklab, var(--identity-lumen) 14%, var(--identity-surface));
+  --primary-foreground: #fff9ef;
+  --secondary: color-mix(in oklab, var(--identity-ink) 6%, var(--identity-surface));
   --secondary-foreground: var(--identity-ink);
-  --muted: color-mix(in oklab, var(--identity-lumen) 8%, var(--identity-surface));
+  --muted: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
   --muted-foreground: var(--identity-muted);
-  --accent: color-mix(in oklab, var(--identity-lumen) 16%, var(--identity-surface));
+  --accent: color-mix(in oklab, var(--identity-accent) 8%, var(--identity-surface));
   --accent-foreground: var(--identity-ink);
   --border: var(--identity-border);
   --input: var(--identity-border);
   --ring: var(--identity-accent);
   --attention-ink: var(--identity-ink);
   --attention-line: color-mix(in oklab, var(--identity-accent) 62%, var(--identity-ink));
-  --attention-field: color-mix(in oklab, var(--identity-lumen) 6%, var(--identity-surface));
-  --glass-bg: color-mix(in oklab, #faf8f2 82%, var(--identity-surface));
+  --attention-field: color-mix(in oklab, var(--identity-accent) 5%, var(--identity-surface));
+  --glass-bg: color-mix(in oklab, #fffdf8 82%, var(--identity-surface));
   --glass-border: color-mix(in oklab, var(--identity-border) 84%, transparent);
   --premium-shadow:
     0 24px 56px -28px color-mix(in oklab, var(--identity-ink) 16%, transparent),
-    0 6px 20px -10px color-mix(in oklab, var(--identity-accent) 10%, transparent);
-}
-
-html[data-palette="dot"][data-identity-accent="signature"] {
+    0 6px 20px -10px color-mix(in oklab, var(--identity-accent) 8%, transparent);
   --organism-accent: var(--identity-accent);
   --organism-accent-strong: var(--identity-accent);
-  --organism-accent-soft: color-mix(in oklab, var(--identity-lumen) 34%, transparent);
+  --organism-accent-soft: color-mix(in oklab, var(--identity-accent) 26%, transparent);
+  /* The page itself is the paper: no extra cast on top of the theme. */
+  --appearance-page-tone: var(--identity-surface);
+  --appearance-page-ink: var(--identity-ink);
 }
 
-html.dark[data-palette="dot"],
-html.dark[data-palette="dot"][data-theme] {
+html.dark[data-palette="amm"],
+html.dark[data-palette="amm"][data-theme] {
   --identity-surface: var(--identity-dark-surface);
   --identity-ink: var(--identity-dark-ink);
   --identity-accent: var(--identity-dark-accent);
@@ -57,37 +60,38 @@ html.dark[data-palette="dot"][data-theme] {
   --identity-rf: #f7c474;
   --background: var(--identity-surface);
   --foreground: var(--identity-ink);
-  --card: color-mix(in oklab, #18201d 58%, var(--identity-dark-surface));
+  --card: color-mix(in oklab, #2b2d2c 70%, var(--identity-surface));
   --card-foreground: var(--identity-ink);
-  --popover: color-mix(in oklab, #1b2521 72%, var(--identity-dark-surface));
+  --popover: color-mix(in oklab, #2d2f2e 82%, var(--identity-surface));
   --popover-foreground: var(--identity-ink);
   --primary: var(--identity-accent);
   --primary-foreground: var(--identity-surface);
-  --secondary: color-mix(in oklab, #54d19f 14%, var(--identity-dark-surface));
+  --secondary: color-mix(in oklab, var(--identity-ink) 8%, var(--identity-surface));
   --secondary-foreground: var(--identity-ink);
-  --muted: color-mix(in oklab, #54d19f 9%, var(--identity-dark-surface));
+  --muted: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
   --muted-foreground: var(--identity-muted);
-  --accent: color-mix(in oklab, #54d19f 16%, var(--identity-dark-surface));
+  --accent: color-mix(in oklab, var(--identity-accent) 12%, var(--identity-surface));
   --accent-foreground: var(--identity-ink);
   --border: var(--identity-border);
   --input: var(--identity-border);
   --ring: var(--identity-accent);
   --attention-ink: var(--identity-ink);
   --attention-line: color-mix(in oklab, var(--identity-accent) 56%, var(--identity-ink));
-  --attention-field: color-mix(in oklab, #54d19f 8%, var(--identity-dark-surface));
-  --glass-bg: color-mix(in oklab, #11241e 84%, transparent);
+  --attention-field: color-mix(in oklab, var(--identity-accent) 6%, var(--identity-surface));
+  --glass-bg: color-mix(in oklab, #1b1d1d 84%, transparent);
   --glass-border: color-mix(in oklab, var(--identity-dark-border) 86%, transparent);
   --premium-shadow:
     0 28px 68px -26px rgb(0 0 0 / 0.62),
-    0 8px 26px -14px color-mix(in oklab, var(--identity-lumen) 14%, transparent);
+    0 8px 26px -14px color-mix(in oklab, var(--identity-accent) 10%, transparent);
+  --organism-accent-soft: color-mix(in oklab, var(--identity-accent) 22%, transparent);
 }
 
-/* Bring the 4K inquiry films' emerald-jade (158°) + warm gold (#f0b865 / #9a5b25)
-   architectural harmonic onto the default DOT Daylight / DOT Night surfaces. */
-html[data-palette="dot"][data-identity-accent="signature"] .home-journey,
-html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment,
-html[data-palette="dot"][data-identity-accent="signature"] .home-hero-stage,
-html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-stage {
+/* The home's architecture keeps the inquiry films' emerald-jade (158°) + warm gold
+   (#f0b865 / #9a5b25) harmonic: there each colour names a layer of the theory. */
+html[data-palette="amm"] .home-journey,
+html[data-palette="amm"] .home-hero-environment,
+html[data-palette="amm"] .home-hero-stage,
+html.dark[data-palette="amm"] .home-hero-stage {
   --theory-origin: var(--identity-origin);
   --theory-big-c: var(--identity-emerald);
   --theory-rf: var(--identity-rf);
@@ -112,41 +116,30 @@ html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-stage
   --architecture-local-wash-opacity: 0.26;
 }
 
-html[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment::before {
+/* The page's own light is the theme's: a low rust glow with an amber edge. */
+html[data-palette="amm"] .home-hero-environment::before {
   background-image:
     radial-gradient(
       ellipse at 72% 46%,
-      color-mix(in oklab, var(--identity-lumen) 16%, transparent),
+      color-mix(in oklab, var(--identity-accent) 9%, transparent),
+      color-mix(in oklab, var(--identity-rf) 5%, transparent) 44%,
+      transparent 68%
+    );
+}
+
+html.dark[data-palette="amm"] .home-hero-environment::before {
+  background-image:
+    radial-gradient(
+      ellipse at 72% 46%,
+      color-mix(in oklab, var(--identity-accent) 12%, transparent),
       color-mix(in oklab, var(--identity-rf) 6%, transparent) 44%,
       transparent 68%
     );
 }
 
-html.dark[data-palette="dot"][data-identity-accent="signature"] .home-hero-environment::before {
-  background-image:
-    radial-gradient(
-      ellipse at 72% 46%,
-      color-mix(in oklab, var(--identity-lumen) 22%, transparent),
-      color-mix(in oklab, var(--identity-rf) 8%, transparent) 44%,
-      transparent 68%
-    );
-}
-
-/* DOT Daylight (#f2f0e8) and DOT Night (#111614; calmed from a greener #0c1715 on 2026-11-22,
-   keeping the jade accent) are already pre-toned for
-   warm reading in identity.json; prevent the generic warm-brown paper mix in
-   appearance.css from neutralizing the obsidian-emerald ground or over-yellowing
-   the botanical vellum. */
-html[data-palette="dot"][data-paper="warm"],
-html.dark[data-palette="dot"][data-paper="warm"],
-html[data-palette="dot"][data-paper="warm"][data-reading] {
-  --appearance-page-tone: var(--identity-surface);
-  --appearance-page-ink: var(--identity-ink);
-}
-
-html[data-palette="dot"][data-paper="warm"] .book-surface,
-html.dark[data-palette="dot"][data-paper="warm"] .book-surface,
-html[data-palette="dot"][data-paper="warm"][data-reading] .book-surface {
+html[data-palette="amm"] .book-surface,
+html.dark[data-palette="amm"] .book-surface,
+html[data-palette="amm"][data-reading] .book-surface {
   --book-paper: var(--identity-surface);
   --book-ink: var(--identity-ink);
   --book-muted: var(--identity-muted);
@@ -155,39 +148,41 @@ html[data-palette="dot"][data-paper="warm"][data-reading] .book-surface {
   --book-vellum: color-mix(in oklab, var(--identity-ink) 5%, var(--identity-surface));
 }
 
-html[data-palette="dot"] .appearance-panel {
-  --appearance-ground: color-mix(in oklab, #ffffff 55%, var(--identity-light-surface));
+html[data-palette="amm"] .appearance-panel {
+  --appearance-ground: color-mix(in oklab, #fffdf8 55%, var(--identity-light-surface));
 }
 
-html[data-palette="dot"][data-ui-style] .appearance-panel[role="dialog"] {
+html[data-palette="amm"][data-ui-style] .appearance-panel[role="dialog"] {
   background: var(--appearance-ground);
 }
 
-html.dark[data-palette="dot"] .appearance-panel {
-  --appearance-ground: color-mix(in oklab, #08110f 72%, var(--identity-dark-surface));
+html.dark[data-palette="amm"] .appearance-panel {
+  --appearance-ground: color-mix(in oklab, #2a2c2b 70%, var(--identity-dark-surface));
 }
 
-html.dark[data-palette="dot"][data-ui-style] .appearance-panel[role="dialog"] {
+html.dark[data-palette="amm"][data-ui-style] .appearance-panel[role="dialog"] {
   background: var(--appearance-ground);
 }
 
-html[data-palette="dot"][data-reading="serif"] .book-surface,
-html[data-palette="dot"][data-reading="serif"] .home-theory-layer-card {
+html[data-palette="amm"][data-reading="serif"] .book-surface,
+html[data-palette="amm"][data-reading="serif"] .home-theory-layer-card {
   --book-reading-font: var(--identity-reading-font), Charter, Georgia, serif;
   --book-reading-heading-font: var(--identity-display-font), ui-sans-serif, sans-serif;
 }
 
-html[data-palette="dot"] .book-one-cover {
-  --book-paper: var(--identity-dark-surface);
-  --book-ink: var(--identity-dark-ink);
-  --book-muted: var(--identity-dark-muted);
-  --book-cinnabar: var(--identity-dark-accent);
-  --book-hairline: var(--identity-dark-border);
-  --organism-accent: var(--identity-dark-accent);
-  --organism-accent-strong: var(--identity-dark-accent);
-  --organism-accent-soft: color-mix(in oklab, var(--identity-dark-accent) 32%, transparent);
-  --background: var(--identity-dark-surface);
-  background: var(--identity-dark-surface);
+/* The on-page Book One cover depicts the printed jacket, so it keeps the book's own
+   ink-and-jade brand (identity.json) rather than the site theme. */
+html[data-palette="amm"] .book-one-cover {
+  --book-paper: var(--brand-dark-surface);
+  --book-ink: var(--brand-dark-ink);
+  --book-muted: var(--brand-dark-muted);
+  --book-cinnabar: var(--brand-dark-accent);
+  --book-hairline: var(--brand-dark-border);
+  --organism-accent: var(--brand-dark-accent);
+  --organism-accent-strong: var(--brand-dark-accent);
+  --organism-accent-soft: color-mix(in oklab, var(--brand-dark-accent) 32%, transparent);
+  --background: var(--brand-dark-surface);
+  background: var(--brand-dark-surface);
 }
 
 .book-one-cover-mark {

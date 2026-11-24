@@ -64,8 +64,7 @@ for (const mode of ["reduced motion", "Hold still"] as const) {
     await expect(page.locator("#amm-title")).toBeVisible();
     if (mode === "Hold still") {
       const panel = await openAppearancePanel(page);
-      await panel.locator("summary").filter({ hasText: "Fine tune environment" }).click();
-      await panel.getByRole("switch", { name: "Hold the background still" }).click();
+      await panel.getByRole("switch", { name: "Hold the page still" }).click();
       await page.keyboard.press("Escape");
     }
     await expect(page.locator("html")).toHaveAttribute("data-motion", "still");

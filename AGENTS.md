@@ -58,6 +58,10 @@ did not — do not claim to have composed from primitives that are absent.
   publishing controls remain required.
 
 - Project root is `DOT/` (this folder). Frontend: `frontend/`, backend: `backend/`.
+- **One theme, two lights** (ADR-0061): the site wears the AMM signature in light and dark.
+  `src/content/theme.json` is the site palette; `identity.json` is the print/channel brand.
+  Do not add environments, tints, paper tones, or surface styles; reading and accessibility
+  controls (size, face, contrast, Hold still) stay the reader's.
 - **Frontend entry is `src/AppOptimized.tsx`**, not `src/App.tsx` (consolidating — ADR-0005).
 - Package manager: **pnpm**. Stack: React 19 + Vite 6 + TS + Tailwind v4 + shadcn/Radix.
 - Backend: **one service** — the FastAPI orchestrator at `backend/orchestrator/`

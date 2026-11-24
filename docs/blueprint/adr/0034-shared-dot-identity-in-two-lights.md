@@ -1,6 +1,6 @@
 # ADR-0034: One DOT Identity in Two Lights
 
-- **Status:** Proposed
+- **Status:** Proposed; site palette and alternate environments superseded by ADR-0061 (one AMM signature theme). The print, PDF, and channel identity stands.
 - **Date:** 2026-09-30
 - **Deciders:** Founder (system-following defaults and complete Word/PDF design selected)
 

@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { UI_STYLE_OPTIONS } from "./appearanceOptions";
-import { UI_STYLE_IDS } from "./types";
+import { SIGNATURE_THEME } from "./types";
 
 /**
  * The surface styles reach onto the reading surface by class name, and a class
@@ -64,12 +63,8 @@ describe("surface styles", () => {
     expect(orphans).toEqual([]);
   });
 
-  it("connects every selectable surface style to the shared UI contract", () => {
-    expect(UI_STYLE_OPTIONS.map((option) => option.value)).toEqual(UI_STYLE_IDS);
-
-    for (const style of UI_STYLE_IDS.filter((value) => value !== "default")) {
-      expect(organismCss).toContain(`html[data-ui-style="${style}"]`);
-    }
+  it("connects the signature's surface style to the shared UI contract", () => {
+    expect(organismCss).toContain(`html[data-ui-style="${SIGNATURE_THEME.uiStyle}"]`);
 
     for (const role of [
       "appearance-ui-panel",

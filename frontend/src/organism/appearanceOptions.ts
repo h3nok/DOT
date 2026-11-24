@@ -1,11 +1,8 @@
 import type {
-  OrganismTint,
-  PaperTone,
   ParagraphStyle,
   ReadingFont,
   ReadingLeading,
   ReadingMeasure,
-  UIStyle,
 } from "./types";
 
 /**
@@ -16,42 +13,6 @@ import type {
  * the control, tests, and future settings surfaces share the same vocabulary.
  * Visual rendering lives in appearance.css through the stable `id` values.
  */
-
-export interface UIStyleOption {
-  value: UIStyle;
-  label: string;
-  hint: string;
-}
-
-export const UI_STYLE_OPTIONS: readonly UIStyleOption[] = [
-  { value: "default", label: "Glass", hint: "Translucent surfaces, soft blur" },
-  { value: "editorial", label: "Editorial", hint: "Typographic, high contrast" },
-  { value: "minimal", label: "Minimal", hint: "Flat, sharp, no effects" },
-  { value: "organic", label: "Organic", hint: "Warm, rounded, tinted" },
-  { value: "cinematic", label: "Cinematic", hint: "Deep shadows, dramatic" },
-  { value: "neural", label: "Neural", hint: "Lit edges, network surfaces" },
-];
-
-export interface TintOption {
-  value: OrganismTint;
-  id: "mono" | "auto" | "indigo" | "violet" | "jade" | "amber" | "rose" | "cyan" | "sage";
-  label: string;
-}
-
-/** Pinned tints are named for their character, not their degrees. */
-export const TINT_OPTIONS: readonly TintOption[] = [
-  { value: "mono", id: "mono", label: "Monochrome" },
-  { value: "auto", id: "auto", label: "Follow the time of day" },
-  { value: 212, id: "indigo", label: "Indigo" },
-  { value: 265, id: "violet", label: "Violet" },
-  { value: 158, id: "jade", label: "Jade" },
-  { value: 28, id: "amber", label: "Amber" },
-  { value: 348, id: "rose", label: "Rose" },
-  { value: 190, id: "cyan", label: "Cyan" },
-  { value: 82, id: "sage", label: "Sage" },
-];
-
-export const DEFAULT_PINNED_HUE = 212;
 
 export interface ReadingSizeOption {
   value: number;
@@ -113,16 +74,4 @@ export interface ParagraphOption {
 export const PARAGRAPH_OPTIONS: readonly ParagraphOption[] = [
   { value: "spaced", label: "Spaced", hint: "A blank line between paragraphs" },
   { value: "indented", label: "Indented", hint: "Set continuous, as in print" },
-];
-
-export interface PaperToneOption {
-  value: PaperTone;
-  label: string;
-}
-
-export const PAPER_TONE_OPTIONS: readonly PaperToneOption[] = [
-  { value: "neutral", label: "Neutral" },
-  { value: "warm", label: "Warm" },
-  { value: "sepia", label: "Sepia" },
-  { value: "cool", label: "Cool" },
 ];

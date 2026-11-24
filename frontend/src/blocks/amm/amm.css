@@ -1,10 +1,5 @@
-/* AMM is a publication within the platform, with a locally scoped print identity. */
+/* AMM's paper, ink, and rust are the site theme (theme.json, ADR-0061); the shell adds the flame. */
 .amm-shell {
-  --background: #f6f1e7;
-  --foreground: #232525;
-  --muted: #ece5d9;
-  --muted-foreground: #656157;
-  --border: #d3cbbd;
   --amm-rust: #a73524;
   /*
    * The flame of the mark (public/amm/mark.svg), amber to orange to red, set in words.
@@ -16,10 +11,6 @@
   --amm-night: #232525;
   --amm-paper: var(--background);
   --amm-ink: var(--foreground);
-  --organism-accent-strong: var(--amm-rust);
-  --organism-accent-soft: color-mix(in oklab, var(--amm-rust) 30%, var(--background));
-  --primary: var(--amm-rust);
-  --primary-foreground: #fff9ef;
   background: var(--background);
   color: var(--foreground);
   min-height: 100vh;
@@ -32,15 +23,9 @@ body:has(.amm-shell) .app-floating-appearance,
 body:has(.amm-shell) .organism-membrane { display: none; }
 .amm-shell input { accent-color: var(--amm-rust); }
 .dark .amm-shell {
-  --background: #202222;
-  --foreground: #f2ecdf;
-  --muted: #2a2c2b;
-  --muted-foreground: #bab5a9;
-  --border: #484a45;
   --amm-rust: #f09279;
   --amm-flame: linear-gradient(90deg, #ffb52e, #ff8d1c 50%, #fa6717);
   --amm-flame-display: linear-gradient(170deg, #ffd34a, #ff8d1c 50%, #fa6717);
-  --primary-foreground: #202222;
 }
 .amm-shell a, .amm-shell button { text-underline-offset: .25em; }
 .amm-shell :is(a, button, summary, [tabindex]):focus-visible { outline: 2px solid var(--amm-rust); outline-offset: 5px; }
